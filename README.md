@@ -22,7 +22,7 @@ cd ..
 cd server_extensions_extra
 ant
 cd ..
-cp server_extensions_extra/dist/server_extensions_extra/dist/batm_server_extensions_extra.jar /batm/app/master/extensions/
+cp server_extensions_extra/dist/batm_server_extensions_extra.jar /batm/app/master/extensions/
 ```
 
 Note for developers
