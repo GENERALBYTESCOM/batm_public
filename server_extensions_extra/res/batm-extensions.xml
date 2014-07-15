@@ -51,4 +51,20 @@
         </ratesource>
         <cryptologo cryptocurrency="LTC" file="ltc.png"/>
     </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.maxcoin.MaxcoinExtension" >
+        <wallet prefix="maxcoind" name="Maxcoind">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>MAX</cryptocurrency>
+        </wallet>
+        <ratesource prefix="maxcointicker" name="Maxcointicker.com" >
+            <cryptocurrency>MAX</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="MAX" file="max.png"/>
+    </extension>
+
 </extensions>

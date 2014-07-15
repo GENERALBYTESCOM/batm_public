@@ -15,18 +15,17 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
+package com.generalbytes.batm.server.extensions.extra.maxcoin.sources;
 
-package com.generalbytes.batm.server.extensions;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
-public interface ICurrencies {
-    public static final String BTC = "BTC";
-    public static final String LTC = "LTC";
-    public static final String DOGE = "DOGE";
-    public static final String MAX = "MAX";
-
-
-    public static final String CZK = "CZK";
-    public static final String EUR = "EUR";
-    public static final String USD = "USD";
-    public static final String NONE = "";
+@Path("/")
+@Produces(MediaType.APPLICATION_JSON)
+public interface IMaxcoinTickerRateAPI {
+    @GET
+    @Path("stats.php")
+    MaxcoinTickerResponse getTicker();
 }
