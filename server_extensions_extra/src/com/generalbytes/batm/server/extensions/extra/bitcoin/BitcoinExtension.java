@@ -19,8 +19,10 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin;
 
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.BitcoinAverageRateSource;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitcoind.BATMBitcoindRPCWallet;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 public class BitcoinExtension implements IExtension{
@@ -82,6 +84,15 @@ public class BitcoinExtension implements IExtension{
 
             if ("bitcoinaverage".equalsIgnoreCase(exchangeType)) {
                 return new BitcoinAverageRateSource();
+            }else if ("btcfix".equalsIgnoreCase(exchangeType)) {
+                BigDecimal rate = BigDecimal.ZERO;
+                if (st.hasMoreTokens()) {
+                    try {
+                        rate = new BigDecimal(st.nextToken());
+                    } catch (Throwable e) {
+                    }
+                }
+                return new FixPriceRateSource(rate);
             }
         }
         return null;

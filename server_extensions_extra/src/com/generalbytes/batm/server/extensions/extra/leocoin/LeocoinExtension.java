@@ -15,21 +15,21 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.dogecoin;
+package com.generalbytes.batm.server.extensions.extra.leocoin;
 
 import com.generalbytes.batm.server.extensions.*;
-import com.generalbytes.batm.server.extensions.extra.dogecoin.sources.DogeAPIRateSource;
-import com.generalbytes.batm.server.extensions.extra.dogecoin.sources.FixPriceRateSource;
-import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.dogeapi.DogeAPIWallet;
-import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.dogecoind.DogecoindRPCWallet;
+import com.generalbytes.batm.server.extensions.extra.leocoin.sources.FixPriceRateSource;
+import com.generalbytes.batm.server.extensions.extra.leocoin.wallets.leocoind.LeocoindRPCWallet;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.StringTokenizer;
 
-public class DogecoinExtension implements IExtension{
+public class LeocoinExtension implements IExtension{
     @Override
     public String getName() {
-        return "BATM Dogecoin extra extension";
+        return "BATM Leocoin extension";
     }
 
     @Override
@@ -43,12 +43,8 @@ public class DogecoinExtension implements IExtension{
             StringTokenizer st = new StringTokenizer(walletLogin,":");
             String walletType = st.nextToken();
 
-            if ("dogeapi".equalsIgnoreCase(walletType)) {
-                String apikey = st.nextToken();
-                String pin = st.nextToken();
-                return new DogeAPIWallet(apikey,pin);
-            }else if ("dogecoind".equalsIgnoreCase(walletType)) {
-                //"dogecoind:protocol:user:password:ip:port:accountname"
+            if ("leocoind".equalsIgnoreCase(walletType)) {
+                //"leocoind:protocol:user:password:ip:port:accountname"
 
                 String protocol = st.nextToken();
                 String username = st.nextToken();
@@ -63,18 +59,17 @@ public class DogecoinExtension implements IExtension{
 
                 if (protocol != null && username != null && password != null && hostname !=null && port != null && accountName != null) {
                     String rpcURL = protocol +"://" + username +":" + password + "@" + hostname +":" + port;
-                    return new DogecoindRPCWallet(rpcURL,accountName);
+                    return new LeocoindRPCWallet(rpcURL,accountName);
                 }
             }
-
         }
         return null;
     }
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (ICurrencies.DOGE.equalsIgnoreCase(cryptoCurrency)) {
-            return new DogecoinAddressValidator();
+        if (ICurrencies.LEO.equalsIgnoreCase(cryptoCurrency)) {
+            return new LeocoinAddressValidator();
         }
         return null;
     }
@@ -86,14 +81,11 @@ public class DogecoinExtension implements IExtension{
 
     @Override
     public IRateSource createRateSource(String sourceLogin) {
-        //NOTE: (Bitstamp is in built-in extension)
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(sourceLogin,":");
             String exchangeType = st.nextToken();
 
-            if ("dogeapi".equalsIgnoreCase(exchangeType)) {
-                return new DogeAPIRateSource();
-            }else if ("dogefix".equalsIgnoreCase(exchangeType)) {
+            if ("leofix".equalsIgnoreCase(exchangeType)) {
                 BigDecimal rate = BigDecimal.ZERO;
                 if (st.hasMoreTokens()) {
                     try {
@@ -103,14 +95,14 @@ public class DogecoinExtension implements IExtension{
                 }
                 return new FixPriceRateSource(rate);
             }
+
         }
         return null;
     }
-
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.DOGE);
+        result.add(ICurrencies.LEO);
         return result;
     }
 

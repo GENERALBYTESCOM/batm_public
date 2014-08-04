@@ -18,9 +18,11 @@
 package com.generalbytes.batm.server.extensions.extra.maxcoin;
 
 import com.generalbytes.batm.server.extensions.*;
+import com.generalbytes.batm.server.extensions.extra.maxcoin.sources.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.maxcoin.sources.MaxcoinTickerRateSource;
 import com.generalbytes.batm.server.extensions.extra.maxcoin.wallets.maxcoind.MaxcoindRPCWallet;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -86,7 +88,17 @@ public class MaxcoinExtension implements IExtension{
 
             if ("maxcointicker".equalsIgnoreCase(exchangeType)) {
                 return new MaxcoinTickerRateSource();
+            }else if ("maxfix".equalsIgnoreCase(exchangeType)) {
+                BigDecimal rate = BigDecimal.ZERO;
+                if (st.hasMoreTokens()) {
+                    try {
+                        rate = new BigDecimal(st.nextToken());
+                    } catch (Throwable e) {
+                    }
+                }
+                return new FixPriceRateSource(rate);
             }
+
         }
         return null;
     }

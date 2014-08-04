@@ -18,9 +18,11 @@
 package com.generalbytes.batm.server.extensions.extra.litecoin;
 
 import com.generalbytes.batm.server.extensions.*;
+import com.generalbytes.batm.server.extensions.extra.litecoin.sources.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.litecoin.sources.btce.BTCeRateSource;
 import com.generalbytes.batm.server.extensions.extra.litecoin.wallets.litecoind.LitecoindRPCWallet;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 public class LitecoinExtension implements IExtension{
@@ -84,7 +86,17 @@ public class LitecoinExtension implements IExtension{
 
             if ("btce".equalsIgnoreCase(exchangeType)) {
                 return new BTCeRateSource();
+            }else if ("ltcfix".equalsIgnoreCase(exchangeType)) {
+                BigDecimal rate = BigDecimal.ZERO;
+                if (st.hasMoreTokens()) {
+                    try {
+                        rate = new BigDecimal(st.nextToken());
+                    } catch (Throwable e) {
+                    }
+                }
+                return new FixPriceRateSource(rate);
             }
+
         }
         return null;
     }

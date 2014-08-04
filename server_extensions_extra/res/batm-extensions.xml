@@ -13,6 +13,10 @@
             <ratesource prefix="bitcoinaverage" name ="BitcoinAverage.com" >
                 <cryptocurrency>BTC</cryptocurrency>
             </ratesource>
+            <ratesource prefix="btcfix" name ="Fix Price" >
+                <param name="price" />
+                <cryptocurrency>BTC</cryptocurrency>
+            </ratesource>
             <cryptologo cryptocurrency="BTC" file="btc.png"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.dogecoin.DogecoinExtension">
@@ -33,6 +37,10 @@
         <ratesource prefix="dogeapi" name="DogeAPI.com" >
             <cryptocurrency>DOGE</cryptocurrency>
         </ratesource>
+        <ratesource prefix="dogefix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>DOGE</cryptocurrency>
+        </ratesource>
         <cryptologo cryptocurrency="DOGE" file="doge.png"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.litecoin.LitecoinExtension" >
@@ -49,6 +57,10 @@
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
         </ratesource>
+        <ratesource prefix="ltcfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>LTC</cryptocurrency>
+        </ratesource>
         <cryptologo cryptocurrency="LTC" file="ltc.png"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.maxcoin.MaxcoinExtension" >
@@ -64,7 +76,27 @@
         <ratesource prefix="maxcointicker" name="Maxcointicker.com" >
             <cryptocurrency>MAX</cryptocurrency>
         </ratesource>
+        <ratesource prefix="maxfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>MAX</cryptocurrency>
+        </ratesource>
         <cryptologo cryptocurrency="MAX" file="max.png"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.leocoin.LeocoinExtension" >
+        <wallet prefix="leocoind" name="Leocoind">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>LEO</cryptocurrency>
+        </wallet>
+        <ratesource prefix="leofix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>LEO</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="LEO" file="leo.png"/>
     </extension>
 
 </extensions>
