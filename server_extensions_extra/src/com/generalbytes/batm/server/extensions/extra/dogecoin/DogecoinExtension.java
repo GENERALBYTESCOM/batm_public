@@ -18,9 +18,9 @@
 package com.generalbytes.batm.server.extensions.extra.dogecoin;
 
 import com.generalbytes.batm.server.extensions.*;
-import com.generalbytes.batm.server.extensions.extra.dogecoin.sources.DogeAPIRateSource;
 import com.generalbytes.batm.server.extensions.extra.dogecoin.sources.FixPriceRateSource;
-import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.dogeapi.DogeAPIWallet;
+import com.generalbytes.batm.server.extensions.extra.dogecoin.sources.chainso.ChainSoRateSource;
+import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.BlockIOWallet;
 import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.dogecoind.DogecoindRPCWallet;
 
 import java.math.BigDecimal;
@@ -43,10 +43,10 @@ public class DogecoinExtension implements IExtension{
             StringTokenizer st = new StringTokenizer(walletLogin,":");
             String walletType = st.nextToken();
 
-            if ("dogeapi".equalsIgnoreCase(walletType)) {
+            if ("blockio".equalsIgnoreCase(walletType)) {
                 String apikey = st.nextToken();
                 String pin = st.nextToken();
-                return new DogeAPIWallet(apikey,pin);
+                return new BlockIOWallet(apikey,pin);
             }else if ("dogecoind".equalsIgnoreCase(walletType)) {
                 //"dogecoind:protocol:user:password:ip:port:accountname"
 
@@ -86,13 +86,12 @@ public class DogecoinExtension implements IExtension{
 
     @Override
     public IRateSource createRateSource(String sourceLogin) {
-        //NOTE: (Bitstamp is in built-in extension)
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(sourceLogin,":");
             String exchangeType = st.nextToken();
 
-            if ("dogeapi".equalsIgnoreCase(exchangeType)) {
-                return new DogeAPIRateSource();
+            if ("chainso".equalsIgnoreCase(exchangeType)) {
+                return new ChainSoRateSource();
             }else if ("dogefix".equalsIgnoreCase(exchangeType)) {
                 BigDecimal rate = BigDecimal.ZERO;
                 if (st.hasMoreTokens()) {

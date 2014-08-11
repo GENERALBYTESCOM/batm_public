@@ -20,10 +20,12 @@
             <cryptologo cryptocurrency="BTC" file="btc.png"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.dogecoin.DogecoinExtension">
-        <wallet prefix="dogeapi" name="DogeAPI Wallet">
+        <wallet prefix="blockio" name="Block.io Wallet">
             <param name="apikey" />
             <param name="pin" />
             <cryptocurrency>DOGE</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
         </wallet>
         <wallet prefix="dogecoind" name="Dogecoind">
             <param name="protocol" />
@@ -34,7 +36,7 @@
             <param name="accountname" />
             <cryptocurrency>DOGE</cryptocurrency>
         </wallet>
-        <ratesource prefix="dogeapi" name="DogeAPI.com" >
+        <ratesource prefix="chainso" name="Chain.so - Cryptsy" >
             <cryptocurrency>DOGE</cryptocurrency>
         </ratesource>
         <ratesource prefix="dogefix" name ="Fix Price" >
