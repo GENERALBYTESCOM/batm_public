@@ -11,7 +11,7 @@ All source code is released under GPL2.
 Content
 =======
 * **server_extensions_api** - contains extension api that all extensions use to extend BATM Server's functionality.
-* **server_extensions_extra** - reference extension implementation that implements BTC, LTC, DOGE and MAX coin support functionality.
+* **server_extensions_extra** - reference extension implementation that implements BTC, LTC, DOGE, GLD and MAX coin support functionality.
 
 Build information
 =================

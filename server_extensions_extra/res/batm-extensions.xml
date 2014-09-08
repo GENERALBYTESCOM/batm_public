@@ -114,7 +114,7 @@
             <param name="price" />
             <cryptocurrency>GLD</cryptocurrency>
         </ratesource>
-        <cryptologo cryptocurrency="GLD" file="gulden.png"/>
+        <cryptologo cryptocurrency="GLD" file="gld.png"/>
     </extension>
 
 </extensions>

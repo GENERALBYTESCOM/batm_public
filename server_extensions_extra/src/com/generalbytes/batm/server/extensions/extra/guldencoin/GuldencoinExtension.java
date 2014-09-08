@@ -85,7 +85,7 @@ public class GuldencoinExtension implements IExtension{
             StringTokenizer st = new StringTokenizer(sourceLogin,":");
             String exchangeType = st.nextToken();
 
-            if ("guldenfix".equalsIgnoreCase(exchangeType)) {
+            if ("gldfix".equalsIgnoreCase(exchangeType)) {
                 BigDecimal rate = BigDecimal.ZERO;
                 if (st.hasMoreTokens()) {
                     try {
