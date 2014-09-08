@@ -20,13 +20,13 @@ public class FixPriceRateSource implements IRateSource {
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.GLD);
+        result.add(ICurrencies.NLG);
         return result;
     }
 
     @Override
     public BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency) {
-        if (ICurrencies.GLD.equalsIgnoreCase(cryptoCurrency)) {
+        if (ICurrencies.NLG.equalsIgnoreCase(cryptoCurrency)) {
             return rate;
         }
         return null;
@@ -35,7 +35,6 @@ public class FixPriceRateSource implements IRateSource {
     @Override
     public Set<String> getFiatCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.USD);
         result.add(ICurrencies.EUR);
         return result;
     }
