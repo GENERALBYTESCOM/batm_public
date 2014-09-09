@@ -17,10 +17,14 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.guldencoin.sources;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.math.BigDecimal;
 
 public class GuldencoinTickerResponse {
+    @JsonProperty("EUR")
     private EUR euro;
+    @JsonProperty("BTC")
     private BTC btc;
 
     public class BTC {
@@ -45,34 +49,37 @@ public class GuldencoinTickerResponse {
             this.symbol = symbol;
         }
 
-        public String getBuy() {
+        public BigDecimal getBuy() {
             return buy;
         }
+
         public void setBuy(BigDecimal buy) {
             this.buy = buy;
         }
 
-        public String getSell() {
+        public BigDecimal getSell() {
             return sell;
         }
+
         public void setSell(BigDecimal sell) {
             this.sell = sell;
         }
 
-        public String getBuy15m() {
+        public BigDecimal getBuy15m() {
             return buy15m;
         }
+
         public void setBuy15m(BigDecimal buy15m) {
             this.buy15m = buy15m;
         }
 
-        public String getSell15m() {
+        public BigDecimal getSell15m() {
             return sell15m;
         }
+
         public void setSell15m(BigDecimal sell15m) {
             this.sell15m = sell15m;
         }
-
     }
 
     public class EUR {
@@ -97,43 +104,46 @@ public class GuldencoinTickerResponse {
             this.symbol = symbol;
         }
 
-        public String getBuy() {
+        public BigDecimal getBuy() {
             return buy;
         }
+
         public void setBuy(BigDecimal buy) {
             this.buy = buy;
         }
 
-        public String getSell() {
+        public BigDecimal getSell() {
             return sell;
         }
+
         public void setSell(BigDecimal sell) {
             this.sell = sell;
         }
 
-        public String getBuy15m() {
+        public BigDecimal getBuy15m() {
             return buy15m;
         }
+
         public void setBuy15m(BigDecimal buy15m) {
             this.buy15m = buy15m;
         }
 
-        public String getSell15m() {
+        public BigDecimal getSell15m() {
             return sell15m;
         }
+
         public void setSell15m(BigDecimal sell15m) {
             this.sell15m = sell15m;
         }
-
     }
-	
+
+
 	public EUR getEUR() {
 		return euro;
 	}
 	public void setEUR(EUR euro) {
 		this.euro = euro;
 	}
-	
 	public BTC getBTC() {
 		return btc;
 	}

@@ -110,4 +110,10 @@ public class MaxcoinTickerRateSource implements IRateSource{
         result.add(ICurrencies.EUR);
         return result;
     }
+
+    public static void main(String[] args) {
+        MaxcoinTickerRateSource rs = new MaxcoinTickerRateSource();
+        BigDecimal exchangeRateLast = rs.getExchangeRateLast(ICurrencies.MAX, ICurrencies.USD);
+        System.out.println("exchangeRateLast = " + exchangeRateLast);
+    }
 }

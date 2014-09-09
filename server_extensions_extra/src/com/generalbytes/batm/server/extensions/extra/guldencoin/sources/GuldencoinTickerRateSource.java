@@ -107,4 +107,5 @@ public class GuldencoinTickerRateSource implements IRateSource{
         result.add(ICurrencies.EUR);
         return result;
     }
+
 }

@@ -108,13 +108,16 @@
             <param name="host" />
             <param name="port" />
             <param name="accountname" />
-            <cryptocurrency>GLD</cryptocurrency>
+            <cryptocurrency>NLG</cryptocurrency>
         </wallet>
-        <ratesource prefix="gldfix" name ="Fix Price" >
+        <ratesource prefix="nlgfix" name ="Fix Price" >
             <param name="price" />
-            <cryptocurrency>GLD</cryptocurrency>
+            <cryptocurrency>NLG</cryptocurrency>
         </ratesource>
-        <cryptologo cryptocurrency="GLD" file="gld.png"/>
+        <ratesource prefix="guldencoincom" name ="Guldencoin.com" >
+            <cryptocurrency>NLG</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="NLG" file="nlg.png"/>
     </extension>
 
 </extensions>

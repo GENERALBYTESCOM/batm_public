@@ -19,6 +19,7 @@ package com.generalbytes.batm.server.extensions.extra.guldencoin;
 
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.extra.guldencoin.sources.FixPriceRateSource;
+import com.generalbytes.batm.server.extensions.extra.guldencoin.sources.GuldencoinTickerRateSource;
 import com.generalbytes.batm.server.extensions.extra.guldencoin.wallets.guldencoind.GuldencoindRPCWallet;
 
 import java.math.BigDecimal;
@@ -83,9 +84,9 @@ public class GuldencoinExtension implements IExtension{
     public IRateSource createRateSource(String sourceLogin) {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(sourceLogin,":");
-            String exchangeType = st.nextToken();
+            String prefix = st.nextToken();
 
-            if ("gldfix".equalsIgnoreCase(exchangeType)) {
+            if ("nlgfix".equalsIgnoreCase(prefix)) {
                 BigDecimal rate = BigDecimal.ZERO;
                 if (st.hasMoreTokens()) {
                     try {
@@ -94,7 +95,12 @@ public class GuldencoinExtension implements IExtension{
                     }
                 }
                 return new FixPriceRateSource(rate);
+            }else if ("guldencoincom".equalsIgnoreCase(prefix)) {
+                return new GuldencoinTickerRateSource();
             }
+
+
+
 
         }
         return null;
