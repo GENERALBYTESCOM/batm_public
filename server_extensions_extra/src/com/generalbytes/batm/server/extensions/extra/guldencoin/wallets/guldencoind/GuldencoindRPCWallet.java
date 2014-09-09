@@ -32,7 +32,7 @@ import java.util.Set;
 
 public class GuldencoindRPCWallet implements IWallet{
     private static final Logger log = LoggerFactory.getLogger(GuldencoindRPCWallet.class);
-    private static final String CRYPTO_CURRENCY = ICurrencies.GLD;
+    private static final String CRYPTO_CURRENCY = ICurrencies.NLG;
 
     public GuldencoindRPCWallet(String rpcURL, String accountName) {
         this.rpcURL = rpcURL;

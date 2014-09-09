@@ -68,7 +68,7 @@ public class GuldencoinExtension implements IExtension{
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (ICurrencies.GLD.equalsIgnoreCase(cryptoCurrency)) {
+        if (ICurrencies.NLG.equalsIgnoreCase(cryptoCurrency)) {
             return new GuldencoinAddressValidator();
         }
         return null;
@@ -102,7 +102,7 @@ public class GuldencoinExtension implements IExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.GLD);
+        result.add(ICurrencies.NLG);
         return result;
     }
 
