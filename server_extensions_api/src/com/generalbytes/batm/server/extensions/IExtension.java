@@ -47,6 +47,15 @@ public interface IExtension {
     public IExchange createExchange(String exchangeLogin);
 
     /**
+     * This method is used for creating implementation of payment processor
+     * @param paymentProcessorLogin
+     * @return
+     *
+     * @see com.generalbytes.batm.server.extensions.IPaymentProcessor
+     */
+    public IPaymentProcessor createPaymentProcessor(String paymentProcessorLogin);
+
+    /**
      * This method is used for creating implementation of coin price source
      * @param sourceLogin
      * @return

@@ -108,4 +108,8 @@ public class GuldencoinTickerRateSource implements IRateSource{
         return result;
     }
 
+    public static void main(String[] args) {
+        BigDecimal exchangeRateLast = (new GuldencoinTickerRateSource()).getExchangeRateLast("NLG", "EUR");
+        System.out.println("exchangeRateLast = " + exchangeRateLast);
+    }
 }

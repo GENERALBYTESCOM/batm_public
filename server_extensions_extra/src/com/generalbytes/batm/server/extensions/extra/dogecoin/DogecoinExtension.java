@@ -38,6 +38,11 @@ public class DogecoinExtension implements IExtension{
     }
 
     @Override
+    public IPaymentProcessor createPaymentProcessor(String paymentProcessorLogin) {
+        return null; //no payment processors available
+    }
+
+    @Override
     public IWallet createWallet(String walletLogin) {
         if (walletLogin !=null && !walletLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(walletLogin,":");

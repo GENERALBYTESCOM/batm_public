@@ -105,6 +105,12 @@ public class GuldencoinExtension implements IExtension{
         }
         return null;
     }
+
+    @Override
+    public IPaymentProcessor createPaymentProcessor(String paymentProcessorLogin) {
+        return null; //no payment processors available
+    }
+
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();

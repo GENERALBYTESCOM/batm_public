@@ -18,6 +18,7 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin;
 
 import com.generalbytes.batm.server.extensions.*;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.bitcoinpay.BitcoinPayPP;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.BitcoinAverageRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitcoind.BATMBitcoindRPCWallet;
@@ -35,6 +36,21 @@ public class BitcoinExtension implements IExtension{
     @Override
     public IExchange createExchange(String exchangeLogin) {
         return null; //no BTC exchange available in open source version so far (Bitstamp is in built-in extension)
+    }
+
+    @Override
+    public IPaymentProcessor createPaymentProcessor(String paymentProcessorLogin) {
+        if (paymentProcessorLogin !=null && !paymentProcessorLogin.trim().isEmpty()) {
+            StringTokenizer st = new StringTokenizer(paymentProcessorLogin,":");
+            String processorType = st.nextToken();
+            if ("bitcoinpay".equalsIgnoreCase(processorType)) { //bitcoinpay:msciu823jes
+                if (st.hasMoreTokens()) {
+                    String apiKey = st.nextToken();
+                    return new BitcoinPayPP(apiKey);
+                }
+            }
+        }
+        return null;
     }
 
     @Override

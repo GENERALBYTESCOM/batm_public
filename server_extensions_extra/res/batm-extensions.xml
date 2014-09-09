@@ -17,6 +17,10 @@
                 <param name="price" />
                 <cryptocurrency>BTC</cryptocurrency>
             </ratesource>
+            <paymentprocessor prefix="bitcoinpay" name="BitcoinPay.com" >
+                <param name="apikey" />
+                <cryptocurrency>BTC</cryptocurrency>
+            </paymentprocessor>
             <cryptologo cryptocurrency="BTC" file="btc.png"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.dogecoin.DogecoinExtension">
@@ -114,7 +118,7 @@
             <param name="price" />
             <cryptocurrency>NLG</cryptocurrency>
         </ratesource>
-        <ratesource prefix="guldencoincom" name ="Guldencoin.com" >
+        <ratesource prefix="guldencoincom" name="Guldencoin.com" >
             <cryptocurrency>NLG</cryptocurrency>
         </ratesource>
         <cryptologo cryptocurrency="NLG" file="nlg.png"/>
