@@ -8,6 +8,16 @@ More information about the products can be found here: http://www.generalbytes.c
 
 All source code is released under GPL2.
 
+Overview
+========
+Here is the list of functionality that can be extended with extenstions API:
+* **Implement support for different cryptocurrency wallets** - for more see IWallet interface
+* **Implement support for different cryptocurrency exchanges** - for more see IExchange interface
+* **Implement support for different cryptocurrency rate tickers** - for more see IRateSource interface
+* **Implement support for different cryptocurrency payment processors** - for more see IPaymentProcessor interface
+
+
+
 Content
 =======
 * **server_extensions_api** - contains extension api that all extensions use to extend BATM Server's functionality.
