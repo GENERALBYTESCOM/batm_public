@@ -123,5 +123,23 @@
         </ratesource>
         <cryptologo cryptocurrency="NLG" file="nlg.png"/>
     </extension>
-
+    <extension class="com.generalbytes.batm.server.extensions.extra.incognitocoin.IncognitocoinExtension" >
+        <wallet prefix="incognitocoind" name="Incognitocoind">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>ICG</cryptocurrency>
+        </wallet>
+        <ratesource prefix="incognitocointicker" name="Incognitocointicker.com" >
+            <cryptocurrency>ICG</cryptocurrency>
+        </ratesource>
+        <ratesource prefix="icgfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>ICG</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="ICG" file="icg.png"/>
+    </extension>
 </extensions>
