@@ -19,7 +19,6 @@ package com.generalbytes.batm.server.extensions.extra.incognitocoin;
 
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.extra.incognitocoin.sources.FixPriceRateSource;
-import com.generalbytes.batm.server.extensions.extra.incognitocoin.sources.IncognitocoinTickerRateSource;
 import com.generalbytes.batm.server.extensions.extra.incognitocoin.wallets.incognitocoind.IncognitocoindRPCWallet;
 
 import java.math.BigDecimal;
@@ -86,9 +85,7 @@ public class IncognitocoinExtension implements IExtension{
             StringTokenizer st = new StringTokenizer(sourceLogin,":");
             String exchangeType = st.nextToken();
 
-            if ("incognitocointicker".equalsIgnoreCase(exchangeType)) {
-                return new IncognitocoinTickerRateSource();
-            }else if ("icgfix".equalsIgnoreCase(exchangeType)) {
+            if ("icgfix".equalsIgnoreCase(exchangeType)) {
                 BigDecimal rate = BigDecimal.ZERO;
                 if (st.hasMoreTokens()) {
                     try {
