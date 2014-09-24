@@ -25,6 +25,7 @@ public interface ICurrencies {
     public static final String MAX = "MAX";
     public static final String LEO = "LEO";
     public static final String NLG = "NLG";
+    public static final String ICG = "ICG";
 
     public static final String CZK = "CZK";
     public static final String EUR = "EUR";
