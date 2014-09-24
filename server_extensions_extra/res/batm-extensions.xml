@@ -133,9 +133,6 @@
             <param name="accountname" />
             <cryptocurrency>ICG</cryptocurrency>
         </wallet>
-        <ratesource prefix="incognitocointicker" name="Incognitocointicker.com" >
-            <cryptocurrency>ICG</cryptocurrency>
-        </ratesource>
         <ratesource prefix="icgfix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>ICG</cryptocurrency>
