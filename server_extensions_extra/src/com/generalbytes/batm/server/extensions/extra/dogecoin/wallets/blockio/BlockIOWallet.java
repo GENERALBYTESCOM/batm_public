@@ -73,7 +73,7 @@ public class BlockIOWallet implements IWallet {
     }
 
     @Override
-    public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency) {
+    public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
         if (!(cryptoCurrency.equalsIgnoreCase(ICurrencies.DOGE) || cryptoCurrency.equalsIgnoreCase(ICurrencies.BTC) || cryptoCurrency.equalsIgnoreCase(ICurrencies.LTC))) {
             return null;
         }

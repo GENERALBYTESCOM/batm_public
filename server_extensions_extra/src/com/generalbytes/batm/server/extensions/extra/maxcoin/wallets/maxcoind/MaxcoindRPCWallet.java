@@ -56,7 +56,7 @@ public class MaxcoindRPCWallet implements IWallet{
     }
 
     @Override
-    public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency) {
+    public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
         if (!CRYPTO_CURRENCY.equalsIgnoreCase(cryptoCurrency)) {
             log.error("Maxcoind wallet error: unknown cryptocurrency.");
             return null;
