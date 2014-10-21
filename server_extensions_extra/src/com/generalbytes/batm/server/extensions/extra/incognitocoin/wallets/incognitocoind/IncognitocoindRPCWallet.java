@@ -15,7 +15,7 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.maxcoin.wallets.maxcoind;
+package com.generalbytes.batm.server.extensions.extra.incognitocoin.wallets.incognitocoind;
 
 import com.azazar.bitcoin.jsonrpcclient.BitcoinException;
 import com.azazar.bitcoin.jsonrpcclient.BitcoinJSONRPCClient;
@@ -30,11 +30,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class MaxcoindRPCWallet implements IWallet{
-    private static final Logger log = LoggerFactory.getLogger(MaxcoindRPCWallet.class);
-    private static final String CRYPTO_CURRENCY = ICurrencies.MAX;
+public class IncognitocoindRPCWallet implements IWallet{
+    private static final Logger log = LoggerFactory.getLogger(IncognitocoindRPCWallet.class);
+    private static final String CRYPTO_CURRENCY = ICurrencies.ICG;
 
-    public MaxcoindRPCWallet(String rpcURL, String accountName) {
+    public IncognitocoindRPCWallet(String rpcURL, String accountName) {
         this.rpcURL = rpcURL;
         this.accountName = accountName;
     }
@@ -58,11 +58,11 @@ public class MaxcoindRPCWallet implements IWallet{
     @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
         if (!CRYPTO_CURRENCY.equalsIgnoreCase(cryptoCurrency)) {
-            log.error("Maxcoind wallet error: unknown cryptocurrency.");
+            log.error("Incognitocoind wallet error: unknown cryptocurrency.");
             return null;
         }
 
-        log.info("Maxcoind sending coins from " + accountName + " to: " + destinationAddress + " " + amount);
+        log.info("Incognitocoind sending coins from " + accountName + " to: " + destinationAddress + " " + amount);
         try {
             String result = getClient(rpcURL).sendFrom(accountName, destinationAddress,amount.doubleValue());
             log.debug("result = " + result);
@@ -76,7 +76,7 @@ public class MaxcoindRPCWallet implements IWallet{
     @Override
     public String getCryptoAddress(String cryptoCurrency) {
         if (!CRYPTO_CURRENCY.equalsIgnoreCase(cryptoCurrency)) {
-            log.error("Maxcoind wallet error: unknown cryptocurrency.");
+            log.error("Incognitocoind wallet error: unknown cryptocurrency.");
             return null;
         }
 
@@ -96,7 +96,7 @@ public class MaxcoindRPCWallet implements IWallet{
     @Override
     public BigDecimal getCryptoBalance(String cryptoCurrency) {
         if (!CRYPTO_CURRENCY.equalsIgnoreCase(cryptoCurrency)) {
-            log.error("Maxcoind wallet error: unknown cryptocurrency: " + cryptoCurrency);
+            log.error("Incognitocoind wallet error: unknown cryptocurrency: " + cryptoCurrency);
             return null;
         }
         try {

@@ -15,7 +15,7 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.maxcoin.sources;
+package com.generalbytes.batm.server.extensions.extra.guldencoin.sources;
 
 import com.generalbytes.batm.server.extensions.ICurrencies;
 import com.generalbytes.batm.server.extensions.IRateSource;
@@ -28,25 +28,25 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-public class MaxcoinTickerRateSource implements IRateSource{
-    private static final Logger log = LoggerFactory.getLogger(MaxcoinTickerRateSource.class);
+public class GuldencoinTickerRateSource implements IRateSource{
+    private static final Logger log = LoggerFactory.getLogger(GuldencoinTickerRateSource.class);
 
     private static HashMap<String,BigDecimal> rateAmounts = new HashMap<String, BigDecimal>();
     private static HashMap<String,Long> rateTimes = new HashMap<String, Long>();
     private static final long MAXIMUM_ALLOWED_TIME_OFFSET = 30 * 1000; //30sec
 
-    private IMaxcoinTickerRateAPI api;
+    private IGuldencoinTickerRateAPI api;
 
-    public MaxcoinTickerRateSource() {
-        api = RestProxyFactory.createProxy(IMaxcoinTickerRateAPI.class, "http://www.maxcointicker.com");
+    public GuldencoinTickerRateSource() {
+        api = RestProxyFactory.createProxy(IGuldencoinTickerRateAPI.class, "https://markets.guldencoin.com");
     }
 
     @Override
     public BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency) {
-        if (!(ICurrencies.MAX.equalsIgnoreCase(cryptoCurrency))) {
+        if (!(ICurrencies.NLG.equalsIgnoreCase(cryptoCurrency))) {
             return null;
         }
-        if (!(ICurrencies.USD.equalsIgnoreCase(fiatCurrency) || ICurrencies.EUR.equalsIgnoreCase(fiatCurrency))) {
+        if (!(ICurrencies.EUR.equalsIgnoreCase(fiatCurrency))) {
             return null;
         }
 
@@ -56,7 +56,7 @@ public class MaxcoinTickerRateSource implements IRateSource{
             BigDecimal amount = rateAmounts.get(key);
             if (amount == null) {
                 BigDecimal result = getExchangeRateLastSync(cryptoCurrency, fiatCurrency);
-                log.debug("Called MaxTicker exchange for rate: " + key + " = " + result);
+                log.debug("Called GuldencoinTicker exchange for rate: " + key + " = " + result);
                 rateAmounts.put(key,result);
                 rateTimes.put(key,now+MAXIMUM_ALLOWED_TIME_OFFSET);
                 return result;
@@ -67,7 +67,7 @@ public class MaxcoinTickerRateSource implements IRateSource{
                 }else{
                     //do the job;
                     BigDecimal result = getExchangeRateLastSync(cryptoCurrency, fiatCurrency);
-                    log.debug("Called MaxTicker exchange for rate: " + key + " = " + result);
+                    log.debug("Called GuldencoinTicker exchange for rate: " + key + " = " + result);
                     rateAmounts.put(key,result);
                     rateTimes.put(key,now+MAXIMUM_ALLOWED_TIME_OFFSET);
                     return result;
@@ -78,18 +78,16 @@ public class MaxcoinTickerRateSource implements IRateSource{
     }
 
     private BigDecimal getExchangeRateLastSync(String cryptoCurrency, String fiatCurrency) {
-        if (!(ICurrencies.MAX.equalsIgnoreCase(cryptoCurrency))) {
+        if (!(ICurrencies.NLG.equalsIgnoreCase(cryptoCurrency))) {
             return null;
         }
-        if (!(ICurrencies.USD.equalsIgnoreCase(fiatCurrency) || ICurrencies.EUR.equalsIgnoreCase(fiatCurrency))) {
+        if (!(ICurrencies.EUR.equalsIgnoreCase(fiatCurrency))) {
             return null;
         }
-        MaxcoinTickerResponse ticker = api.getTicker();
-        if (ticker != null) {
-            if (ICurrencies.USD.equalsIgnoreCase(fiatCurrency)){
-                return ticker.getMpusd();
-            }else if (ICurrencies.USD.equalsIgnoreCase(fiatCurrency)){
-                return ticker.getBtceuro();
+        GuldencoinTickerResponse ticker = api.getTicker();
+        if (ticker != null && ticker.getEUR() != null) {
+			if (ICurrencies.EUR.equalsIgnoreCase(fiatCurrency)){
+                return ticker.getEUR().getSell15m();
             }
             return null;
         }
@@ -99,21 +97,19 @@ public class MaxcoinTickerRateSource implements IRateSource{
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.MAX);
+        result.add(ICurrencies.NLG);
         return result;
     }
 
     @Override
     public Set<String> getFiatCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.USD);
         result.add(ICurrencies.EUR);
         return result;
     }
 
     public static void main(String[] args) {
-        MaxcoinTickerRateSource rs = new MaxcoinTickerRateSource();
-        BigDecimal exchangeRateLast = rs.getExchangeRateLast(ICurrencies.MAX, ICurrencies.USD);
+        BigDecimal exchangeRateLast = (new GuldencoinTickerRateSource()).getExchangeRateLast("NLG", "EUR");
         System.out.println("exchangeRateLast = " + exchangeRateLast);
     }
 }

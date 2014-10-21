@@ -1,4 +1,4 @@
-package com.generalbytes.batm.server.extensions.extra.guldencoin.sources;
+package com.generalbytes.batm.server.extensions.extra.incognitocoin.sources;
 
 import com.generalbytes.batm.server.extensions.ICurrencies;
 import com.generalbytes.batm.server.extensions.IRateSource;
@@ -20,13 +20,13 @@ public class FixPriceRateSource implements IRateSource {
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.NLG);
+        result.add(ICurrencies.ICG);
         return result;
     }
 
     @Override
     public BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency) {
-        if (ICurrencies.NLG.equalsIgnoreCase(cryptoCurrency)) {
+        if (ICurrencies.ICG.equalsIgnoreCase(cryptoCurrency)) {
             return rate;
         }
         return null;
@@ -35,6 +35,7 @@ public class FixPriceRateSource implements IRateSource {
     @Override
     public Set<String> getFiatCurrencies() {
         Set<String> result = new HashSet<String>();
+        result.add(ICurrencies.USD);
         result.add(ICurrencies.EUR);
         return result;
     }

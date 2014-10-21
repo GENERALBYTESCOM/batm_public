@@ -16,19 +16,25 @@
  *
  ************************************************************************************/
 
-package com.generalbytes.batm.server.extensions;
+package com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.bitcoinpay;
 
-public interface ICurrencies {
-    public static final String BTC = "BTC";
-    public static final String LTC = "LTC";
-    public static final String DOGE = "DOGE";
-    public static final String MAX = "MAX";
-    public static final String LEO = "LEO";
-    public static final String NLG = "NLG";
-    public static final String ICG = "ICG";
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 
-    public static final String CZK = "CZK";
-    public static final String EUR = "EUR";
-    public static final String USD = "USD";
-    public static final String NONE = "";
+@Path("/api/v1")
+@Produces(MediaType.APPLICATION_JSON)
+public interface IBitcoinPay {
+
+    @POST
+    @Path("/payment/btc")
+    @Consumes(MediaType.APPLICATION_JSON)
+    BitcoinPayPaymentResponseDTO createNewPaymentRequest(@HeaderParam("Authorization") String token, BitcoinPayPaymentRequestRequestDTO request);
+
+
+    @GET
+    @Path("/payment/btc/{payment_id}")
+    BitcoinPayPaymentResponseDTO getPaymentStatus(@HeaderParam("Authorization") String token, @PathParam("payment_id") String paymentId);
+
+
+
 }

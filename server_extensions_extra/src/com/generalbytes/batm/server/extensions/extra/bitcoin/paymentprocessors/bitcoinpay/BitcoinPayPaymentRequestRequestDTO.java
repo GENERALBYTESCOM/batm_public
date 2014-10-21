@@ -15,20 +15,28 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
+package com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.bitcoinpay;
 
-package com.generalbytes.batm.server.extensions;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-public interface ICurrencies {
-    public static final String BTC = "BTC";
-    public static final String LTC = "LTC";
-    public static final String DOGE = "DOGE";
-    public static final String MAX = "MAX";
-    public static final String LEO = "LEO";
-    public static final String NLG = "NLG";
-    public static final String ICG = "ICG";
+import java.math.BigDecimal;
 
-    public static final String CZK = "CZK";
-    public static final String EUR = "EUR";
-    public static final String USD = "USD";
-    public static final String NONE = "";
+public class BitcoinPayPaymentRequestRequestDTO {
+    @JsonProperty("currency")
+    String currency;
+    @JsonProperty("price")
+    BigDecimal price;
+
+    @JsonProperty("settled_currency")
+    String settled_currency;
+
+    @JsonProperty("reference")
+    String reference;
+
+    public BitcoinPayPaymentRequestRequestDTO(String currency, BigDecimal price, String settled_currency, String reference) {
+        this.currency = currency;
+        this.price = price;
+        this.settled_currency = settled_currency;
+        this.reference = reference;
+    }
 }

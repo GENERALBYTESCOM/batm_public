@@ -32,7 +32,7 @@ import java.util.Set;
 
 public class GuldencoindRPCWallet implements IWallet{
     private static final Logger log = LoggerFactory.getLogger(GuldencoindRPCWallet.class);
-    private static final String CRYPTO_CURRENCY = ICurrencies.GLD;
+    private static final String CRYPTO_CURRENCY = ICurrencies.NLG;
 
     public GuldencoindRPCWallet(String rpcURL, String accountName) {
         this.rpcURL = rpcURL;
@@ -56,7 +56,7 @@ public class GuldencoindRPCWallet implements IWallet{
     }
 
     @Override
-    public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency) {
+    public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
         if (!CRYPTO_CURRENCY.equalsIgnoreCase(cryptoCurrency)) {
             log.error("Guldencoind wallet error: unknown cryptocurrency.");
             return null;

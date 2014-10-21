@@ -15,20 +15,15 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-
 package com.generalbytes.batm.server.extensions;
 
-public interface ICurrencies {
-    public static final String BTC = "BTC";
-    public static final String LTC = "LTC";
-    public static final String DOGE = "DOGE";
-    public static final String MAX = "MAX";
-    public static final String LEO = "LEO";
-    public static final String NLG = "NLG";
-    public static final String ICG = "ICG";
+public interface IPaymentProcessorPaymentStatus {
+    public static final int STATUS_PENDING                  = 0;
+    public static final int STATUS_RECEIVED                 = 1;
+    public static final int STATUS_INSUFFICIENT_AMOUNT      = 2;
+    public static final int STATUS_INVALID                  = 3;
+    public static final int STATUS_TIMEOUT                  = 4;
+    public static final int STATUS_CONFIRMED                = 5;
 
-    public static final String CZK = "CZK";
-    public static final String EUR = "EUR";
-    public static final String USD = "USD";
-    public static final String NONE = "";
+    public int getStatus();
 }

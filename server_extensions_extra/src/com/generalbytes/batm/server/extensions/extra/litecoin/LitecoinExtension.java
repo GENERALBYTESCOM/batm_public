@@ -79,6 +79,11 @@ public class LitecoinExtension implements IExtension{
     }
 
     @Override
+    public IPaymentProcessor createPaymentProcessor(String paymentProcessorLogin) {
+        return null; //no payment processors available
+    }
+
+    @Override
     public IRateSource createRateSource(String sourceLogin) {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(sourceLogin,":");

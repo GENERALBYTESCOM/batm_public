@@ -22,7 +22,7 @@ import java.math.BigDecimal;
 import java.util.Set;
 
 public interface IWallet {
-    public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency); //returns txid
+    public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description); //returns txid
     public String getCryptoAddress(String cryptoCurrency);
     public Set<String> getCryptoCurrencies();
     public String getPreferredCryptoCurrency();

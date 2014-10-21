@@ -15,22 +15,21 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.guldencoin;
+package com.generalbytes.batm.server.extensions.extra.incognitocoin;
 
 import com.generalbytes.batm.server.extensions.*;
-import com.generalbytes.batm.server.extensions.extra.guldencoin.sources.FixPriceRateSource;
-import com.generalbytes.batm.server.extensions.extra.guldencoin.sources.GuldencoinTickerRateSource;
-import com.generalbytes.batm.server.extensions.extra.guldencoin.wallets.guldencoind.GuldencoindRPCWallet;
+import com.generalbytes.batm.server.extensions.extra.incognitocoin.sources.FixPriceRateSource;
+import com.generalbytes.batm.server.extensions.extra.incognitocoin.wallets.incognitocoind.IncognitocoindRPCWallet;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-public class GuldencoinExtension implements IExtension{
+public class IncognitocoinExtension implements IExtension{
     @Override
     public String getName() {
-        return "BATM Guldencoin extension";
+        return "BATM Incognitocoin extension";
     }
 
     @Override
@@ -44,8 +43,8 @@ public class GuldencoinExtension implements IExtension{
             StringTokenizer st = new StringTokenizer(walletLogin,":");
             String walletType = st.nextToken();
 
-            if ("guldencoind".equalsIgnoreCase(walletType)) {
-                //"guldencoind:protocol:user:password:ip:port:accountname"
+            if ("incognitocoind".equalsIgnoreCase(walletType)) {
+                //"incognitocoind:protocol:user:password:ip:port:accountname"
 
                 String protocol = st.nextToken();
                 String username = st.nextToken();
@@ -60,7 +59,7 @@ public class GuldencoinExtension implements IExtension{
 
                 if (protocol != null && username != null && password != null && hostname !=null && port != null && accountName != null) {
                     String rpcURL = protocol +"://" + username +":" + password + "@" + hostname +":" + port;
-                    return new GuldencoindRPCWallet(rpcURL,accountName);
+                    return new IncognitocoindRPCWallet(rpcURL,accountName);
                 }
             }
         }
@@ -69,8 +68,8 @@ public class GuldencoinExtension implements IExtension{
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (ICurrencies.NLG.equalsIgnoreCase(cryptoCurrency)) {
-            return new GuldencoinAddressValidator();
+        if (ICurrencies.ICG.equalsIgnoreCase(cryptoCurrency)) {
+            return new IncognitocoinAddressValidator();
         }
         return null;
     }
@@ -84,9 +83,9 @@ public class GuldencoinExtension implements IExtension{
     public IRateSource createRateSource(String sourceLogin) {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(sourceLogin,":");
-            String prefix = st.nextToken();
+            String exchangeType = st.nextToken();
 
-            if ("nlgfix".equalsIgnoreCase(prefix)) {
+            if ("icgfix".equalsIgnoreCase(exchangeType)) {
                 BigDecimal rate = BigDecimal.ZERO;
                 if (st.hasMoreTokens()) {
                     try {
@@ -95,12 +94,7 @@ public class GuldencoinExtension implements IExtension{
                     }
                 }
                 return new FixPriceRateSource(rate);
-            }else if ("guldencoincom".equalsIgnoreCase(prefix)) {
-                return new GuldencoinTickerRateSource();
             }
-
-
-
 
         }
         return null;
@@ -114,7 +108,7 @@ public class GuldencoinExtension implements IExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.NLG);
+        result.add(ICurrencies.ICG);
         return result;
     }
 

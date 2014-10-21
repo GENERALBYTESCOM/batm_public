@@ -17,6 +17,10 @@
                 <param name="price" />
                 <cryptocurrency>BTC</cryptocurrency>
             </ratesource>
+            <paymentprocessor prefix="bitcoinpay" name="BitcoinPay.com" >
+                <param name="apikey" />
+                <cryptocurrency>BTC</cryptocurrency>
+            </paymentprocessor>
             <cryptologo cryptocurrency="BTC" file="btc.png"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.dogecoin.DogecoinExtension">
@@ -108,13 +112,31 @@
             <param name="host" />
             <param name="port" />
             <param name="accountname" />
-            <cryptocurrency>GLD</cryptocurrency>
+            <cryptocurrency>NLG</cryptocurrency>
         </wallet>
-        <ratesource prefix="gldfix" name ="Fix Price" >
+        <ratesource prefix="nlgfix" name ="Fix Price" >
             <param name="price" />
-            <cryptocurrency>GLD</cryptocurrency>
+            <cryptocurrency>NLG</cryptocurrency>
         </ratesource>
-        <cryptologo cryptocurrency="GLD" file="gld.png"/>
+        <ratesource prefix="guldencoincom" name="Guldencoin.com" >
+            <cryptocurrency>NLG</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="NLG" file="nlg.png"/>
     </extension>
-
+    <extension class="com.generalbytes.batm.server.extensions.extra.incognitocoin.IncognitocoinExtension" >
+        <wallet prefix="incognitocoind" name="Incognitocoind">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>ICG</cryptocurrency>
+        </wallet>
+        <ratesource prefix="icgfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>ICG</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="ICG" file="icg.png"/>
+    </extension>
 </extensions>

@@ -18,17 +18,16 @@
 
 package com.generalbytes.batm.server.extensions;
 
-public interface ICurrencies {
-    public static final String BTC = "BTC";
-    public static final String LTC = "LTC";
-    public static final String DOGE = "DOGE";
-    public static final String MAX = "MAX";
-    public static final String LEO = "LEO";
-    public static final String NLG = "NLG";
-    public static final String ICG = "ICG";
+import java.math.BigDecimal;
 
-    public static final String CZK = "CZK";
-    public static final String EUR = "EUR";
-    public static final String USD = "USD";
-    public static final String NONE = "";
+public interface IPaymentProcessorPaymentResponse {
+    public String getCryptoAddress();
+    public BigDecimal getCryptoAmount();
+    public String getCryptoCurrency();
+
+    public BigDecimal getFiatAmount();
+    public String getFiatCurrency();
+
+    public String getId();
+    public String getReference();
 }
