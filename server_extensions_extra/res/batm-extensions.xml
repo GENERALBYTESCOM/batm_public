@@ -1,27 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extensions>
     <extension class="com.generalbytes.batm.server.extensions.extra.bitcoin.BitcoinExtension" >
-            <wallet prefix="bitcoind" name="Bitcoin Core - bitcoind" >
-                <param name="protocol" />
-                <param name="user" />
-                <param name="password" />
-                <param name="host" />
-                <param name="port" />
-                <param name="accountname" />
-                <cryptocurrency>BTC</cryptocurrency>
-            </wallet>
-            <ratesource prefix="bitcoinaverage" name ="BitcoinAverage.com" >
-                <cryptocurrency>BTC</cryptocurrency>
-            </ratesource>
-            <ratesource prefix="btcfix" name ="Fix Price" >
-                <param name="price" />
-                <cryptocurrency>BTC</cryptocurrency>
-            </ratesource>
-            <paymentprocessor prefix="bitcoinpay" name="BitcoinPay.com" >
-                <param name="apikey" />
-                <cryptocurrency>BTC</cryptocurrency>
-            </paymentprocessor>
-            <cryptologo cryptocurrency="BTC" file="btc.png"/>
+        <wallet prefix="bitcoind" name="Bitcoin Core - bitcoind" >
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>BTC</cryptocurrency>
+        </wallet>
+        <ratesource prefix="bitcoinaverage" name ="BitcoinAverage.com" >
+            <cryptocurrency>BTC</cryptocurrency>
+        </ratesource>
+        <ratesource prefix="btcfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>BTC</cryptocurrency>
+        </ratesource>
+        <paymentprocessor prefix="bitcoinpay" name="BitcoinPay.com" >
+            <param name="apikey" />
+            <cryptocurrency>BTC</cryptocurrency>
+        </paymentprocessor>
+        
+        <!-- Bitfinex extensions by Orillia BVBA -->
+        <ratesource prefix="bitfinex" name ="Bitfinex.com Exchange" >
+            <cryptocurrency>BTC</cryptocurrency>
+        </ratesource>
+        <exchange prefix="bitfinex" name="Bitfinex.com Exchange">
+            <param name="ID" />
+            <param name="secret" />
+            <cryptocurrency>BTC</cryptocurrency>
+        </exchange>
+        <!-- -------------------------------- -->
+            
+        <cryptologo cryptocurrency="BTC" file="btc.png"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.dogecoin.DogecoinExtension">
         <wallet prefix="blockio" name="Block.io Wallet">

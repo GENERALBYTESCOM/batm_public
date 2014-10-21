@@ -17,14 +17,24 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.bitcoin;
 
-import com.generalbytes.batm.server.extensions.*;
+import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.StringTokenizer;
+
+import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
+import com.generalbytes.batm.server.extensions.ICurrencies;
+import com.generalbytes.batm.server.extensions.IExchange;
+import com.generalbytes.batm.server.extensions.IExtension;
+import com.generalbytes.batm.server.extensions.IPaperWalletGenerator;
+import com.generalbytes.batm.server.extensions.IPaymentProcessor;
+import com.generalbytes.batm.server.extensions.IRateSource;
+import com.generalbytes.batm.server.extensions.IWallet;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.BitfinexExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.bitcoinpay.BitcoinPayPP;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.BitcoinAverageRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitcoind.BATMBitcoindRPCWallet;
-
-import java.math.BigDecimal;
-import java.util.*;
 
 public class BitcoinExtension implements IExtension{
 
@@ -34,10 +44,20 @@ public class BitcoinExtension implements IExtension{
     }
 
     @Override
-    public IExchange createExchange(String exchangeLogin) {
-        return null; //no BTC exchange available in open source version so far (Bitstamp is in built-in extension)
+    public IExchange createExchange(String paramString)
+    {
+      if ((paramString != null) && (!paramString.trim().isEmpty()))
+      {
+        StringTokenizer paramTokenizer = new StringTokenizer(paramString, ":");
+        String prefix = paramTokenizer.nextToken();
+        if ("bitfinex".equalsIgnoreCase(prefix)) {
+          String keyID = paramTokenizer.nextToken();
+          String keySecret = paramTokenizer.nextToken();
+          return new BitfinexExchange(keyID, keySecret);
+        }
+      }
+      return null;
     }
-
     @Override
     public IPaymentProcessor createPaymentProcessor(String paymentProcessorLogin) {
         if (paymentProcessorLogin !=null && !paymentProcessorLogin.trim().isEmpty()) {
@@ -93,7 +113,7 @@ public class BitcoinExtension implements IExtension{
 
     @Override
     public IRateSource createRateSource(String sourceLogin) {
-        //NOTE: (Bitstamp is in built-in extension)
+        //NOTE: (Bitstamp is in built-in extension and Bitfinex is in the Bitfinex Exchange class)
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(sourceLogin,":");
             String exchangeType = st.nextToken();
