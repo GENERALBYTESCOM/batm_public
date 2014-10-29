@@ -18,6 +18,7 @@
 package com.generalbytes.batm.server.extensions.extra.litecoin;
 
 import com.generalbytes.batm.server.extensions.*;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinkite.CoinkiteWallet;
 import com.generalbytes.batm.server.extensions.extra.litecoin.sources.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.litecoin.sources.btce.BTCeRateSource;
 import com.generalbytes.batm.server.extensions.extra.litecoin.wallets.litecoind.LitecoindRPCWallet;
@@ -60,6 +61,14 @@ public class LitecoinExtension implements IExtension{
                     String rpcURL = protocol +"://" + username +":" + password + "@" + hostname +":" + port;
                     return new LitecoindRPCWallet(rpcURL,accountName);
                 }
+            }else if ("coinkite".equalsIgnoreCase(walletType)) {
+                String apikey = st.nextToken();
+                String apiSecret = st.nextToken();
+                String accountNumber ="0";
+                if (st.hasMoreTokens()) {
+                    accountNumber = st.nextToken();
+                }
+                return new CoinkiteWallet(apikey,apiSecret,accountNumber);
             }
         }
         return null;

@@ -22,6 +22,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.b
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.BitcoinAverageRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitcoind.BATMBitcoindRPCWallet;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinkite.CoinkiteWallet;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -76,6 +77,14 @@ public class BitcoinExtension implements IExtension{
                     String rpcURL = protocol +"://" + username +":" + password + "@" + hostname +":" + port;
                     return new BATMBitcoindRPCWallet(rpcURL,accountName);
                 }
+            }else if ("coinkite".equalsIgnoreCase(walletType)) {
+                String apikey = st.nextToken();
+                String apiSecret = st.nextToken();
+                String accountNumber ="0";
+                if (st.hasMoreTokens()) {
+                    accountNumber = st.nextToken();
+                }
+                return new CoinkiteWallet(apikey,apiSecret,accountNumber);
             }
         }
         return null;

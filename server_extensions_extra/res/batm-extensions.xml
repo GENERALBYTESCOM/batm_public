@@ -10,6 +10,13 @@
                 <param name="accountname" />
                 <cryptocurrency>BTC</cryptocurrency>
             </wallet>
+            <wallet prefix="coinkite" name="Coinkite.com Wallet" >
+                <param name="apikey" />
+                <param name="apisecret" />
+                <param name="accountnumber" />
+                <cryptocurrency>BTC</cryptocurrency>
+                <cryptocurrency>LTC</cryptocurrency>
+            </wallet>
             <ratesource prefix="bitcoinaverage" name ="BitcoinAverage.com" >
                 <cryptocurrency>BTC</cryptocurrency>
             </ratesource>
