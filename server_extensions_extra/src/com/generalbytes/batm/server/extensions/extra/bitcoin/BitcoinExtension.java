@@ -131,14 +131,7 @@ public class BitcoinExtension implements IExtension{
                 }
                 return new FixPriceRateSource(rate);
             }else if ("bitfinex".equalsIgnoreCase(exchangeType)) {
-                BigDecimal rate = BigDecimal.ZERO;
-                if (st.hasMoreTokens()) {
-                    try {
-                        rate = new BigDecimal(st.nextToken());
-                    } catch (Throwable e) {
-                    }
-                }
-                return new BitfinexExchange("**","**");
+               return new BitfinexExchange("**","**");
             }
         }
         return null;
