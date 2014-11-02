@@ -18,6 +18,7 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin;
 
 import com.generalbytes.batm.server.extensions.*;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitfinex.BitfinexExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.bitcoinpay.BitcoinPayPP;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.BitcoinAverageRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.FixPriceRateSource;
@@ -35,8 +36,19 @@ public class BitcoinExtension implements IExtension{
     }
 
     @Override
-    public IExchange createExchange(String exchangeLogin) {
-        return null; //no BTC exchange available in open source version so far (Bitstamp is in built-in extension)
+    public IExchange createExchange(String paramString) //(Bitstamp is in built-in extension)
+    {
+        if ((paramString != null) && (!paramString.trim().isEmpty()))
+        {
+            StringTokenizer paramTokenizer = new StringTokenizer(paramString, ":");
+            String prefix = paramTokenizer.nextToken();
+            if ("bitfinex".equalsIgnoreCase(prefix)) {
+                String apiKey = paramTokenizer.nextToken();
+                String apiSecret = paramTokenizer.nextToken();
+                return new BitfinexExchange(apiKey, apiSecret);
+            }
+        }
+        return null;
     }
 
     @Override
@@ -118,6 +130,15 @@ public class BitcoinExtension implements IExtension{
                     }
                 }
                 return new FixPriceRateSource(rate);
+            }else if ("bitfinex".equalsIgnoreCase(exchangeType)) {
+                BigDecimal rate = BigDecimal.ZERO;
+                if (st.hasMoreTokens()) {
+                    try {
+                        rate = new BigDecimal(st.nextToken());
+                    } catch (Throwable e) {
+                    }
+                }
+                return new BitfinexExchange("**","**");
             }
         }
         return null;
