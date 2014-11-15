@@ -168,7 +168,7 @@ public class BitfinexExchange implements IExchange, IRateSource {
 
         PollingAccountService accountService = getExchange().getPollingAccountService();
         try {
-            accountService.withdrawFunds(destinationAddress, amount, destinationAddress);
+            accountService.withdrawFunds(cryptoCurrency, amount, destinationAddress);
         } catch (IOException e) {
             e.printStackTrace();
             log.error("Bitfinex exchange (withdrawFunds) failed with message: " + e.getMessage());
