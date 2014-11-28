@@ -36,6 +36,11 @@ public interface IPaperWallet {
     public String getAddress();
 
     /**
+     * Returns private key - used when printing paper wallet
+     * @return
+     */
+    public String getPrivateKey();
+    /**
      * Attachment extension (ie "zip")
      * @return
      */
@@ -52,5 +57,6 @@ public interface IPaperWallet {
      * @return
      */
     public String getMessage();
+
 
 }
