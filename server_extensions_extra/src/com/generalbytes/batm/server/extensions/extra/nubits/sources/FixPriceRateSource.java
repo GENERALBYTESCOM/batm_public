@@ -26,7 +26,7 @@ public class FixPriceRateSource implements IRateSource {
 
     @Override
     public BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency) {
-        if (ICurrencies.ICG.equalsIgnoreCase(cryptoCurrency)) {
+        if (ICurrencies.NBT.equalsIgnoreCase(cryptoCurrency)) {
             return rate;
         }
         return null;
