@@ -15,7 +15,7 @@ import java.util.StringTokenizer;
  */
 public class NubitsExtension implements IExtension{
     @Override
-    public String getName() { return "BATM Nubits extension"; }
+    public String getName() { return "BATM NuBits extension"; }
 
     @Override
     public IExchange createExchange(String exchangeLogin) { return null; }
@@ -26,7 +26,7 @@ public class NubitsExtension implements IExtension{
             StringTokenizer st = new StringTokenizer(walletLogin,":");
             String walletType = st.nextToken();
 
-            if ("nudd".equalsIgnoreCase(walletType)) {
+            if ("nud".equalsIgnoreCase(walletType)) {
                 //"nud:protocol:user:password:ip:port:accountname"
 
                 String protocol = st.nextToken();
