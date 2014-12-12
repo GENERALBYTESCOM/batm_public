@@ -35,6 +35,18 @@ public class BitcoinAverageRateSource implements IRateSource{
     private static HashMap<String,Long> rateTimes = new HashMap<String, Long>();
     private static final long MAXIMUM_ALLOWED_TIME_OFFSET = 30 * 1000; //30sec
 
+    private String preferedFiatCurrency = ICurrencies.USD;
+
+    public BitcoinAverageRateSource(String preferedFiatCurrency) {
+        if (ICurrencies.EUR.equalsIgnoreCase(preferedFiatCurrency)) {
+            this.preferedFiatCurrency = ICurrencies.EUR;
+        }
+        if (ICurrencies.USD.equalsIgnoreCase(preferedFiatCurrency)) {
+            this.preferedFiatCurrency = ICurrencies.USD;
+        }
+
+    }
+
     @Override
     public BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency) {
         if (!ICurrencies.BTC.equalsIgnoreCase(cryptoCurrency)) {
@@ -113,6 +125,11 @@ public class BitcoinAverageRateSource implements IRateSource{
         if (fiatCurrenciesAndURLs != null) {
             fiatCurrenciesAndURLs = currenciesAndURLs;
         }
+    }
+
+    @Override
+    public String getPreferredFiatCurrency() {
+        return preferedFiatCurrency;
     }
 
 }

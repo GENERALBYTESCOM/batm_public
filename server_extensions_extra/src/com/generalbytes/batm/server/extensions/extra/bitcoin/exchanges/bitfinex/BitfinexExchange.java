@@ -47,7 +47,7 @@ import com.xeiam.xchange.service.polling.PollingTradeService;
 
 public class BitfinexExchange implements IExchange, IRateSource {
 
-    private static final Logger log = LoggerFactory.getLogger("batm.master.BitfinexEchange");
+    private static final Logger log = LoggerFactory.getLogger("batm.master.BitfinexExchange");
     private Exchange exchange = null;
     private String apiKey;
     private String apiSecret;
@@ -249,4 +249,17 @@ public class BitfinexExchange implements IExchange, IRateSource {
         return null;
     }
 
+    public static void main(String[] args) {
+        BitfinexExchange ex = new BitfinexExchange("UKe2l4ij2jKg8zwaCIJ9qpwIasJ4EhfxiiB0KToG9Ky","35XkZ6IJD9EOfRex80xHwXSgaun7uXdBgzVdiOg5XOi");
+        BigDecimal btc = ex.getCryptoBalance(ICurrencies.BTC);
+        System.out.println("btc = " + btc);
+
+        BigDecimal fiatBalance = ex.getFiatBalance(ICurrencies.USD);
+        System.out.println("fiatBalance = " + fiatBalance);
+
+        String test = ex.sendCoins("15nvjrMZbxyLAAr9RAnqkoMXcFriAmbeLE", new BigDecimal("0.02"), ICurrencies.BTC, "Test");
+        System.out.println("test = " + test);
+
+
+    }
 }

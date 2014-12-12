@@ -12,9 +12,17 @@ import java.util.Set;
  */
 public class FixPriceRateSource implements IRateSource {
     private BigDecimal rate = BigDecimal.ZERO;
+    private String preferedFiatCurrency = ICurrencies.USD;
 
-    public FixPriceRateSource(BigDecimal rate) {
+
+    public FixPriceRateSource(BigDecimal rate,String preferedFiatCurrency) {
         this.rate = rate;
+        if (ICurrencies.EUR.equalsIgnoreCase(preferedFiatCurrency)) {
+            this.preferedFiatCurrency = ICurrencies.EUR;
+        }
+        if (ICurrencies.USD.equalsIgnoreCase(preferedFiatCurrency)) {
+            this.preferedFiatCurrency = ICurrencies.USD;
+        }
     }
 
     @Override
@@ -40,4 +48,8 @@ public class FixPriceRateSource implements IRateSource {
         return result;
     }
 
+    @Override
+    public String getPreferredFiatCurrency() {
+        return preferedFiatCurrency;
+    }
 }

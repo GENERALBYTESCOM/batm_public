@@ -120,16 +120,23 @@ public class BitcoinExtension implements IExtension{
             String exchangeType = st.nextToken();
 
             if ("bitcoinaverage".equalsIgnoreCase(exchangeType)) {
-                return new BitcoinAverageRateSource();
+                if (st.hasMoreTokens()) {
+                    return new BitcoinAverageRateSource(st.nextToken());
+                }
+                return new BitcoinAverageRateSource(ICurrencies.USD);
             }else if ("btcfix".equalsIgnoreCase(exchangeType)) {
                 BigDecimal rate = BigDecimal.ZERO;
+                String preferedFiatCurrency = ICurrencies.USD;
                 if (st.hasMoreTokens()) {
                     try {
                         rate = new BigDecimal(st.nextToken());
                     } catch (Throwable e) {
                     }
                 }
-                return new FixPriceRateSource(rate);
+                if (st.hasMoreTokens()) {
+                    preferedFiatCurrency = st.nextToken();
+                }
+                return new FixPriceRateSource(rate,preferedFiatCurrency);
             }else if ("bitfinex".equalsIgnoreCase(exchangeType)) {
                return new BitfinexExchange("**","**");
             }

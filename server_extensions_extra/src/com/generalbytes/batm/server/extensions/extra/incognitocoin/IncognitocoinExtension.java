@@ -93,7 +93,11 @@ public class IncognitocoinExtension implements IExtension{
                     } catch (Throwable e) {
                     }
                 }
-                return new FixPriceRateSource(rate);
+                String preferedFiatCurrency = ICurrencies.USD;
+                if (st.hasMoreTokens()) {
+                    preferedFiatCurrency = st.nextToken();
+                }
+                return new FixPriceRateSource(rate,preferedFiatCurrency);
             }
 
         }

@@ -98,4 +98,9 @@ public class ChainSoRateSource implements IRateSource{
         result.add(ICurrencies.USD);
         return result;
     }
+
+    @Override
+    public String getPreferredFiatCurrency() {
+        return ICurrencies.USD;
+    }
 }

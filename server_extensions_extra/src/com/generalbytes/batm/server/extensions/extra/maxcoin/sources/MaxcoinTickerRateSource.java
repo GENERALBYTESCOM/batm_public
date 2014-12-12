@@ -111,6 +111,11 @@ public class MaxcoinTickerRateSource implements IRateSource{
         return result;
     }
 
+    @Override
+    public String getPreferredFiatCurrency() {
+        return ICurrencies.USD;
+    }
+
     public static void main(String[] args) {
         MaxcoinTickerRateSource rs = new MaxcoinTickerRateSource();
         BigDecimal exchangeRateLast = rs.getExchangeRateLast(ICurrencies.MAX, ICurrencies.USD);

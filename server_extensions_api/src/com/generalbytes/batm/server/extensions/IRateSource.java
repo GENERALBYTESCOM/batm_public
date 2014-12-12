@@ -45,4 +45,11 @@ public interface IRateSource {
      * @return
      */
     public BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency);
+
+    /**
+     * Returns fiat currency that is used for actual purchases of cryptocurrency by server
+     * @return
+     */
+    public String getPreferredFiatCurrency();
+
 }

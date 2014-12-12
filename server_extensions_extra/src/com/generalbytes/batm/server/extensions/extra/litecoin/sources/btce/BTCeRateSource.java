@@ -33,7 +33,18 @@ public class BTCeRateSource implements IRateSource{
     private static HashMap<String,Long> rateTimes = new HashMap<String, Long>();
     private static final long MAXIMUM_ALLOWED_TIME_OFFSET = 30 * 1000; //30sec
 
+    private String preferedFiatCurrency = ICurrencies.USD;
     private IBTCeRateAPI api;
+
+    public BTCeRateSource(String preferedFiatCurrency) {
+        this();
+        if (ICurrencies.EUR.equalsIgnoreCase(preferedFiatCurrency)) {
+            this.preferedFiatCurrency = ICurrencies.EUR;
+        }
+        if (ICurrencies.USD.equalsIgnoreCase(preferedFiatCurrency)) {
+            this.preferedFiatCurrency = ICurrencies.USD;
+        }
+    }
 
     public BTCeRateSource() {
         api = RestProxyFactory.createProxy(IBTCeRateAPI.class, "https://btc-e.com");
@@ -103,5 +114,10 @@ public class BTCeRateSource implements IRateSource{
         result.add(ICurrencies.USD);
         result.add(ICurrencies.EUR);
         return result;
+    }
+
+    @Override
+    public String getPreferredFiatCurrency() {
+        return preferedFiatCurrency;
     }
 }

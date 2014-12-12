@@ -99,6 +99,9 @@ public class LitecoinExtension implements IExtension{
             String exchangeType = st.nextToken();
 
             if ("btce".equalsIgnoreCase(exchangeType)) {
+                if (st.hasMoreTokens()) {
+                    return new BTCeRateSource(st.nextToken());
+                }
                 return new BTCeRateSource();
             }else if ("ltcfix".equalsIgnoreCase(exchangeType)) {
                 BigDecimal rate = BigDecimal.ZERO;
@@ -108,7 +111,11 @@ public class LitecoinExtension implements IExtension{
                     } catch (Throwable e) {
                     }
                 }
-                return new FixPriceRateSource(rate);
+                String preferedFiatCurrency = ICurrencies.USD;
+                if (st.hasMoreTokens()) {
+                    preferedFiatCurrency = st.nextToken();
+                }
+                return new FixPriceRateSource(rate,preferedFiatCurrency);
             }
 
         }
