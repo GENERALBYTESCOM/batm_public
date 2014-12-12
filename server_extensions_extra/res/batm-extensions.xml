@@ -155,4 +155,20 @@
         </ratesource>
         <cryptologo cryptocurrency="ICG" file="icg.png"/>
     </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.nubits.NubitsExtension" >
+        <wallet prefix="nud" name="Nud">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>NBT</cryptocurrency>
+        </wallet>
+        <ratesource prefix="nbtfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>NBT</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="NBT" file="nbt.png"/>
+    </extension>
 </extensions>
