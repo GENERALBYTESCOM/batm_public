@@ -80,4 +80,10 @@ public interface IExchange {
      */
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description);
 
+    /**
+     * This method is used when depositing coins on exchange (address can be new with every call)
+     * @param cryptoCurrency
+     * @return
+     */
+    public String getDepositAddress(String cryptoCurrency);
 }

@@ -249,6 +249,21 @@ public class BitfinexExchange implements IExchange, IRateSource {
         return null;
     }
 
+    @Override
+    public String getDepositAddress(String cryptoCurrency) {
+        if (!ICurrencies.BTC.equalsIgnoreCase(cryptoCurrency)) {
+            log.error("Bitfinex implementation supports only " + ICurrencies.BTC);
+            return null;
+        }
+        PollingAccountService accountService = getExchange().getPollingAccountService();
+        try {
+            return accountService.requestDepositAddress(cryptoCurrency);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static void main(String[] args) {
         BitfinexExchange ex = new BitfinexExchange("UKe2l4ij2jKg8zwaCIJ9qpwIasJ4EhfxiiB0KToG9Ky","35XkZ6IJD9EOfRex80xHwXSgaun7uXdBgzVdiOg5XOi");
         BigDecimal btc = ex.getCryptoBalance(ICurrencies.BTC);
