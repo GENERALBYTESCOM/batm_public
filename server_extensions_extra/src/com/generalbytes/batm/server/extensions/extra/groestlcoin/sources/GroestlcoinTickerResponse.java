@@ -15,7 +15,7 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.Groestlcoin.sources;
+package com.generalbytes.batm.server.extensions.extra.groestlcoin.sources;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
