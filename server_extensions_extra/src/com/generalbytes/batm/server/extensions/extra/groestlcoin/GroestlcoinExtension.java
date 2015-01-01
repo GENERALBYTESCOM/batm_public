@@ -86,7 +86,7 @@ public class GroestlcoinExtension implements IExtension{
             StringTokenizer st = new StringTokenizer(sourceLogin,":");
             String prefix = st.nextToken();
 
-            if ("nlgfix".equalsIgnoreCase(prefix)) {
+            if ("grsfix".equalsIgnoreCase(prefix)) {
                 BigDecimal rate = BigDecimal.ZERO;
                 if (st.hasMoreTokens()) {
                     try {
