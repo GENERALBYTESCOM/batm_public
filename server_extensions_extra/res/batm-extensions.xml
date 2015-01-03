@@ -120,6 +120,25 @@
         </ratesource>
         <cryptologo cryptocurrency="LEO" file="leo.png"/>
     </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.guldencoin.GuldencoinExtension" >
+        <wallet prefix="guldencoind" name="guldencoind">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>NLG</cryptocurrency>
+        </wallet>
+        <ratesource prefix="nlgfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>NLG</cryptocurrency>
+        </ratesource>
+        <ratesource prefix="guldencoincom" name="Guldencoin.com" >
+            <cryptocurrency>NLG</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="NLG" file="nlg.png"/>
+    </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.groestlcoin.GroestlcoinExtension" >
         <wallet prefix="groestlcoind" name="groestlcoind">
             <param name="protocol" />
