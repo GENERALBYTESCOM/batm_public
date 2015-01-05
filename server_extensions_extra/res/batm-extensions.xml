@@ -139,6 +139,25 @@
         </ratesource>
         <cryptologo cryptocurrency="NLG" file="nlg.png"/>
     </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.groestlcoin.GroestlcoinExtension" >
+        <wallet prefix="groestlcoind" name="groestlcoind">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>GRS</cryptocurrency>
+        </wallet>
+        <ratesource prefix="nlgfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>GRS</cryptocurrency>
+        </ratesource>
+        <ratesource prefix="groestlcoincom" name="Groestlcoin.org" >
+            <cryptocurrency>GRS</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="GRS" file="groestl.png"/>
+    </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.incognitocoin.IncognitocoinExtension" >
         <wallet prefix="incognitocoind" name="Incognitocoind">
             <param name="protocol" />
