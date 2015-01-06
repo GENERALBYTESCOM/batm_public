@@ -149,7 +149,7 @@
             <param name="accountname" />
             <cryptocurrency>GRS</cryptocurrency>
         </wallet>
-        <ratesource prefix="nlgfix" name ="Fix Price" >
+        <ratesource prefix="grsfix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>GRS</cryptocurrency>
         </ratesource>
