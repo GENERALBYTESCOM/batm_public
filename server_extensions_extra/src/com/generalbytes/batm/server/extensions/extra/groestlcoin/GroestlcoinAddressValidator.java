@@ -34,7 +34,7 @@ public class GroestlcoinAddressValidator implements ICryptoAddressValidator {
     }
 
     private static boolean isGroestlcoinAddressValid(String address) {
-        if (address.startsWith("G")) {
+        if (address.startsWith("F")) {
             try {
                 Base58.decodeToBigInteger(address);
                 Base58.decodeChecked(address);
