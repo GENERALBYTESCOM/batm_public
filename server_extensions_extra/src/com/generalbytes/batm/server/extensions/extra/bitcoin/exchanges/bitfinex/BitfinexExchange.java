@@ -171,6 +171,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSource {
             }else if ("success".equalsIgnoreCase(result)){
                 return "success";
             }else{
+                log.warn("Bitfinex exchange (withdrawFunds) failed with message no message");
                 return null;
             }
         } catch (IOException e) {
