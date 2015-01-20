@@ -32,4 +32,16 @@ public interface IExchangeAdvanced extends IExchange{
      * @return
      */
     public ITask createPurchaseCoinsTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description);
+
+    /**
+     * This method is used for instantiating task that is later called to sell coins on the exchange for specified fiat currency.
+     * If something fails this method should return NULL otherwise it should return orderId or any other identifier that exchange provides for later tracking
+     *
+     * @param amount
+     * @param cryptoCurrency
+     * @param fiatCurrencyToUse
+     * @param description
+     * @return
+     */
+    public ITask createSellCoinsTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description);
 }

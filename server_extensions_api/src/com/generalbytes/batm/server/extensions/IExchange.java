@@ -70,6 +70,18 @@ public interface IExchange {
     public String purchaseCoins(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description);
 
     /**
+     * This method is used for selling coins on the exchange for specified fiat currency.
+     * If something fails this method should return NULL otherwise it should return orderId or any other identifier that exchange provides for later tracking
+     *
+     * @param cryptoAmount
+     * @param cryptoCurrency
+     * @param fiatCurrencyToUse
+     * @param description
+     * @return
+     */
+    public String sellCoins(BigDecimal cryptoAmount, String cryptoCurrency, String fiatCurrencyToUse, String description);
+
+    /**
      * This method is used for withdrawing coins from the exchange by sending them to specified address
      *
      * @param destinationAddress
@@ -86,4 +98,5 @@ public interface IExchange {
      * @return
      */
     public String getDepositAddress(String cryptoCurrency);
+
 }

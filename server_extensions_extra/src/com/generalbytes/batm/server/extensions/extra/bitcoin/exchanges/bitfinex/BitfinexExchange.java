@@ -276,6 +276,17 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSource {
         return null;
     }
 
+    @Override
+    public String sellCoins(BigDecimal cryptoAmount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
+        //TODO: NOT SUPPORTED YET
+        return null;
+    }
+
+    @Override
+    public ITask createSellCoinsTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
+        //TODO: NOT SUPPORTED YET
+        return null;
+    }
 
     class PurchaseCoinsTaks implements ITask {
         private long MAXIMUM_TIME_TO_WAIT_FOR_ORDER_TO_FINISH = 5 * 60 * 60 * 1000; //5 hours
