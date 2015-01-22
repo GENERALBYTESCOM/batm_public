@@ -167,8 +167,10 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSource {
         try {
             String result = accountService.withdrawFunds(cryptoCurrency, amount, destinationAddress);
             if (result == null) {
+                log.warn("Bitfinex exchange (withdrawFunds) failed with null");
                 return null;
             }else if ("success".equalsIgnoreCase(result)){
+                log.warn("Bitfinex exchange (withdrawFunds) finished successfully");
                 return "success";
             }else{
                 log.warn("Bitfinex exchange (withdrawFunds) failed with message no message");
