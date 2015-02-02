@@ -29,6 +29,7 @@ public interface ICurrencies {
     public static final String ICG = "ICG";
     public static final String NBT = "NBT";
 
+    public static final String CAD = "CAD";
     public static final String CZK = "CZK";
     public static final String EUR = "EUR";
     public static final String USD = "USD";
