@@ -30,8 +30,12 @@ public interface ICurrencies {
     public static final String NBT = "NBT";
 
     public static final String CAD = "CAD";
+    public static final String CNY = "CNY";
     public static final String CZK = "CZK";
     public static final String EUR = "EUR";
+    public static final String GBP = "GBP";
+    public static final String JPY = "JPY";
     public static final String USD = "USD";
+    public static final String XAU = "XAU"; //gold
     public static final String NONE = "";
 }
