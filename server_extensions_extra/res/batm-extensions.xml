@@ -190,4 +190,22 @@
         </ratesource>
         <cryptologo cryptocurrency="NBT" file="nbt.png"/>
     </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.nxt.NXTExtension" >
+        <wallet prefix="mynxt" name="MyNXT.info">
+            <param name="email" />
+            <param name="password" />
+            <param name="masterPassword" />
+            <param name="accountId" />
+            <cryptocurrency>NXT</cryptocurrency>
+        </wallet>
+        <ratesource prefix="ntxfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>NXT</cryptocurrency>
+        </ratesource>
+        <ratesource prefix="poloniexrs" name ="Poloniex.com vs bitcoinaverage.com" >
+            <param name="fiatcurrency" />
+            <cryptocurrency>NXT</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="NXT" file="nxt.png"/>
+    </extension>
 </extensions>
