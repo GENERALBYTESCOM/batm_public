@@ -20,6 +20,7 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitfinex.BitfinexExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.bitcoinpay.BitcoinPayPP;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.coinofsale.CoinOfSalePP;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.BitcoinAverageRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitcoind.BATMBitcoindRPCWallet;
@@ -61,6 +62,10 @@ public class BitcoinExtension implements IExtension{
                     String apiKey = st.nextToken();
                     return new BitcoinPayPP(apiKey);
                 }
+            }else if ("coinofsale".equalsIgnoreCase(processorType)) { //coinofsale:token:pin
+                String token = st.nextToken();
+                String pin = st.nextToken();
+                return new CoinOfSalePP(token,pin);
             }
         }
         return null;

@@ -31,6 +31,11 @@
                 <param name="apikey" />
                 <cryptocurrency>BTC</cryptocurrency>
             </paymentprocessor>
+            <paymentprocessor prefix="coinofsale" name="CoinOfSale.com" >
+                <param name="token" />
+                <param name="pin" />
+                <cryptocurrency>BTC</cryptocurrency>
+            </paymentprocessor>
             <!-- Bitfinex extension by Orillia BVBA -->
             <exchange prefix="bitfinex" name="Bitfinex.com Exchange">
                 <param name="apikey" />
