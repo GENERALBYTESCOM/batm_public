@@ -112,7 +112,7 @@ public class PoloniexRateSource implements IRateSource{
 
             for (int i = 0; i < asks.length; i++) {
                 BigDecimal[] ask = asks[i];
-                log.debug("ask = " + ask);
+//                log.debug("ask = " + ask);
                 asksTotal = asksTotal.add(ask[1]);
                 if (targetAmount.compareTo(asksTotal) <= 0) {
                     tradableLimit = ask[0];
@@ -120,7 +120,7 @@ public class PoloniexRateSource implements IRateSource{
                 }
             }
 
-            System.out.println("tradableLimit = " + tradableLimit);;
+//            System.out.println("tradableLimit = " + tradableLimit);;
             if (tradableLimit != null) {
                 BigDecimal btcRate = btcRs.getExchangeRateLast(ICurrencies.BTC, fiatCurrency);
                 if (btcRate != null) {
