@@ -130,7 +130,7 @@ public class MynxtWallet implements IWallet{
             recipient = recipientInt.toString();
         }
 
-        SendResponse res = api.send2(email, password, masterPassword, accId, recipient, amount.multiply(NQT), DEFAULT_FEE_IN_NXT.multiply(NQT), 1440, "sendMoney");
+        SendResponse res = api.send2(email, password, masterPassword, accId, recipient, amount.multiply(NQT).stripTrailingZeros(), DEFAULT_FEE_IN_NXT.multiply(NQT).stripTrailingZeros(), 1440, "sendMoney");
         if (res != null) {
             log.debug("Transaction " + res.getTransaction() + " sent.");
             return res.getTransaction();
