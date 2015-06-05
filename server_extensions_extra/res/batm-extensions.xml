@@ -200,7 +200,7 @@
             <param name="email" />
             <param name="password" />
             <param name="masterPassword" />
-            <param name="accountId" />
+            <param name="accountRS" />
             <cryptocurrency>NXT</cryptocurrency>
         </wallet>
         <ratesource prefix="ntxfix" name ="Fix Price" >
