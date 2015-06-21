@@ -37,6 +37,7 @@ public interface ICurrencies {
     public static final String GBP = "GBP";
     public static final String JPY = "JPY";
     public static final String USD = "USD";
+    public static final String XAF = "XAF";
     public static final String XAU = "XAU"; //gold
     public static final String NONE = "";
 }
