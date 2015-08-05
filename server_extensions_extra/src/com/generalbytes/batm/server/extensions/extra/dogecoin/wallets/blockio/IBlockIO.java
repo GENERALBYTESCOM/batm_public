@@ -9,7 +9,7 @@ import javax.ws.rs.core.MediaType;
 /**
  * Created by b00lean on 8/11/14.
  */
-@Path("/api/v1/")
+@Path("/api/v2/")
 @Produces(MediaType.APPLICATION_JSON)
 public interface IBlockIO {
     @GET
@@ -21,7 +21,7 @@ public interface IBlockIO {
     BlockIOResponseBalance getBalance(@PathParam("apikey") String apikey);
 
     @GET
-    @Path("withdraw/?api_key={apikey}&amount={amount}&payment_address={payment_address}&pin={pin}")
+    @Path("withdraw/?api_key={apikey}&amounts={amount}&to_addresses={payment_address}&pin={pin}")
     BlockIOResponseWithdrawal withdraw(@PathParam("apikey") String apikey, @PathParam("pin") String pin, @PathParam("amount") String amount, @PathParam("payment_address") String payment_address);
 
 }

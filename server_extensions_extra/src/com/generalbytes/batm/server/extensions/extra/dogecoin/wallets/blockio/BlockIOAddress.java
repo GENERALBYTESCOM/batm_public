@@ -10,6 +10,7 @@ public class BlockIOAddress {
     private String available_balance;
     private String unconfirmed_sent_balance;
     private String unconfirmed_received_balance;
+    private String pending_received_balance;
 
     public BlockIOAddress() {
     }
@@ -60,5 +61,13 @@ public class BlockIOAddress {
 
     public void setAvailable_balance(String available_balance) {
         this.available_balance = available_balance;
+    }
+
+    public String getPending_received_balance() {
+        return pending_received_balance;
+    }
+
+    public void setPending_received_balance(String pending_received_balance) {
+        this.pending_received_balance = pending_received_balance;
     }
 }

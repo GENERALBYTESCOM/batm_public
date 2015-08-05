@@ -2,6 +2,7 @@ package com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio;
 
 import com.generalbytes.batm.server.extensions.ICurrencies;
 import com.generalbytes.batm.server.extensions.IWallet;
+import org.slf4j.spi.LocationAwareLogger;
 import si.mazi.rescu.RestProxyFactory;
 
 import java.math.BigDecimal;
