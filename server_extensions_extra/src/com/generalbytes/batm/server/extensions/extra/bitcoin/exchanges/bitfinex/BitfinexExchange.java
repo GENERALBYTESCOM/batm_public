@@ -25,6 +25,8 @@ import java.math.BigDecimal;
 import java.util.*;
 
 import com.generalbytes.batm.server.extensions.*;
+import com.xeiam.xchange.ExchangeException;
+import com.xeiam.xchange.dto.marketdata.OrderBook;
 import com.xeiam.xchange.dto.trade.LimitOrder;
 import com.xeiam.xchange.dto.trade.OpenOrders;
 import org.slf4j.Logger;
@@ -42,7 +44,7 @@ import com.xeiam.xchange.service.polling.PollingMarketDataService;
 import com.xeiam.xchange.service.polling.PollingTradeService;
 import org.slf4j.spi.LocationAwareLogger;
 
-public class BitfinexExchange implements IExchangeAdvanced, IRateSource {
+public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced {
 
     private static final Logger log = LoggerFactory.getLogger("batm.master.BitfinexExchange");
     private Exchange exchange = null;
@@ -52,6 +54,9 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSource {
     private static HashMap<String,BigDecimal> rateAmounts = new HashMap<String, BigDecimal>();
     private static HashMap<String,Long> rateTimes = new HashMap<String, Long>();
     private static final long MAXIMUM_ALLOWED_TIME_OFFSET = 30 * 1000;
+
+    private static volatile long lastCall = -1;
+    public static final int CALL_PERIOD_MINIMUM = 2100; //cannot be called more often than once in 2 seconds
 
     public BitfinexExchange(String apiKey, String apiSecret) {
         this.apiKey = apiKey;
@@ -604,5 +609,133 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSource {
             return 5 * 1000; //it doesn't make sense to run step sooner than after 5 seconds
         }
     }
+
+    private BigDecimal getMeasureCryptoAmount() {
+        return new BigDecimal(10);
+    }
+
+
+    @Override
+    public BigDecimal getExchangeRateForBuy(String cryptoCurrency, String fiatCurrency) {
+        BigDecimal result = calculateBuyPrice(cryptoCurrency, fiatCurrency, getMeasureCryptoAmount());
+        if (result != null) {
+            return result.divide(getMeasureCryptoAmount(), 2, BigDecimal.ROUND_UP);
+        }
+        return null;
+    }
+
+    @Override
+    public BigDecimal getExchangeRateForSell(String cryptoCurrency, String fiatCurrency) {
+        BigDecimal result = calculateSellPrice(cryptoCurrency, fiatCurrency, getMeasureCryptoAmount());
+        if (result != null) {
+            return result.divide(getMeasureCryptoAmount(), 2, BigDecimal.ROUND_DOWN);
+        }
+        return null;
+    }
+
+    @Override
+    public BigDecimal calculateBuyPrice(String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount) {
+        waitForPossibleCall();
+        PollingMarketDataService marketDataService = getExchange().getPollingMarketDataService();
+        try {
+            CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrency);
+            OrderBook orderBook = marketDataService.getOrderBook(currencyPair);
+            List<LimitOrder> asks = orderBook.getAsks();
+            BigDecimal targetAmount = cryptoAmount;
+            BigDecimal asksTotal = BigDecimal.ZERO;
+            BigDecimal tradableLimit = null;
+            Collections.sort(asks, new Comparator<LimitOrder>() {
+                @Override
+                public int compare(LimitOrder lhs, LimitOrder rhs) {
+                    return lhs.getLimitPrice().compareTo(rhs.getLimitPrice());
+                }
+            });
+
+//            log.debug("Selected asks:");
+            for (LimitOrder ask : asks) {
+//                log.debug("ask = " + ask);
+                asksTotal = asksTotal.add(ask.getTradableAmount());
+                if (targetAmount.compareTo(asksTotal) <= 0) {
+                    tradableLimit = ask.getLimitPrice();
+                    break;
+                }
+            }
+
+            if (tradableLimit != null) {
+                log.debug("Called Bitfinex exchange for BUY rate: " + cryptoCurrency + fiatCurrency + " = " + tradableLimit);
+                return tradableLimit.multiply(cryptoAmount);
+            }
+        } catch (ExchangeException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private void waitForPossibleCall() {
+        long now = System.currentTimeMillis();
+        if (lastCall != -1) {
+            long diff = now - lastCall;
+            if (diff < CALL_PERIOD_MINIMUM) {
+                try {
+                    long sleeping = CALL_PERIOD_MINIMUM - diff;
+                    Thread.sleep(sleeping);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        lastCall = now;
+        return;
+    }
+
+    @Override
+    public BigDecimal calculateSellPrice(String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount) {
+        waitForPossibleCall();
+        PollingMarketDataService marketDataService = getExchange().getPollingMarketDataService();
+        try {
+            CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrency);
+
+            OrderBook orderBook = marketDataService.getOrderBook(currencyPair);
+            List<LimitOrder> bids = orderBook.getBids();
+
+            BigDecimal targetAmount = cryptoAmount;
+            BigDecimal bidsTotal = BigDecimal.ZERO;
+            BigDecimal tradableLimit = null;
+
+            Collections.sort(bids, new Comparator<LimitOrder>() {
+                @Override
+                public int compare(LimitOrder lhs, LimitOrder rhs) {
+                    return rhs.getLimitPrice().compareTo(lhs.getLimitPrice());
+                }
+            });
+
+            for (LimitOrder bid : bids) {
+                bidsTotal = bidsTotal.add(bid.getTradableAmount());
+                if (targetAmount.compareTo(bidsTotal) <= 0) {
+                    tradableLimit = bid.getLimitPrice();
+                    break;
+                }
+            }
+
+            if (tradableLimit != null) {
+                log.debug("Called Bitfinex exchange for SELL rate: " + cryptoCurrency + fiatCurrency + " = " + tradableLimit);
+                return tradableLimit.multiply(cryptoAmount);
+            }
+        } catch (ExchangeException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+        return null;
+
+    }
+
+
 
 }
