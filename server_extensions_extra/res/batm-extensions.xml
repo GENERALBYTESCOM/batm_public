@@ -27,6 +27,9 @@
             <ratesource prefix="bitfinex" name ="Bitfinex.com Exchange" >
                 <cryptocurrency>BTC</cryptocurrency>
             </ratesource>
+            <ratesource prefix="itbit" name ="itBit.com Exchange" >
+                <cryptocurrency>BTC</cryptocurrency>
+            </ratesource>
             <paymentprocessor prefix="bitcoinpay" name="BitcoinPay.com" >
                 <param name="apikey" />
                 <cryptocurrency>BTC</cryptocurrency>
@@ -38,6 +41,13 @@
             </paymentprocessor>
             <!-- Bitfinex extension by Orillia BVBA -->
             <exchange prefix="bitfinex" name="Bitfinex.com Exchange">
+                <param name="apikey" />
+                <param name="apisecret" />
+                <cryptocurrency>BTC</cryptocurrency>
+            </exchange>
+            <exchange prefix="itbit" name="itBit.com Exchange">
+                <param name="userId" />
+                <param name="walletId" />
                 <param name="apikey" />
                 <param name="apisecret" />
                 <cryptocurrency>BTC</cryptocurrency>
