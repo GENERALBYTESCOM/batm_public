@@ -35,7 +35,7 @@ import java.util.TimeZone;
 
 public class CoinkiteWallet implements IWallet{
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
-    public static final int CALL_PERIOD_MINIMUM = 2100; //Coinkite cannot be called more often than once in 2 seconds
+    public static final int CALL_PERIOD_MINIMUM = 4100; //Coinkite cannot be called more often than once in 2 seconds
 
     private String apiKey;
     private String apiSecret;
