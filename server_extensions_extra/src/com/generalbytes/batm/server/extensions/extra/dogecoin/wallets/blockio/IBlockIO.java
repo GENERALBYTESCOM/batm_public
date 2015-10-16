@@ -12,6 +12,10 @@ import javax.ws.rs.core.MediaType;
 @Path("/api/v2/")
 @Produces(MediaType.APPLICATION_JSON)
 public interface IBlockIO {
+    public static final String PRIORITY_LOW = "low";
+    public static final String PRIORITY_MEDIUM = "medium";
+    public static final String PRIORITY_HIGH = "high";
+
     @GET
     @Path("get_my_addresses/?api_key={apikey}")
     BlockIOResponseAddresses getAddresses(@PathParam("apikey") String apikey);
