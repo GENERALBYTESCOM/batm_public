@@ -43,6 +43,8 @@ public class BitcoinAverageRateSource implements IRateSource{
         }
         if (ICurrencies.USD.equalsIgnoreCase(preferedFiatCurrency)) {
             this.preferedFiatCurrency = ICurrencies.USD;
+        }else{
+            this.preferedFiatCurrency = preferedFiatCurrency;
         }
 
     }
