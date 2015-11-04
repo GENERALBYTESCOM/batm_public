@@ -20,54 +20,722 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitfinex;
 
-import com.generalbytes.batm.server.extensions.ICurrencies;
-import com.generalbytes.batm.server.extensions.IExchangeAdvanced;
-import com.generalbytes.batm.server.extensions.IRateSource;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.XChangeExchange;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.*;
+
+import com.generalbytes.batm.server.extensions.*;
+import com.xeiam.xchange.exceptions.ExchangeException;
+import com.xeiam.xchange.dto.marketdata.OrderBook;
+import com.xeiam.xchange.dto.trade.LimitOrder;
+import com.xeiam.xchange.dto.trade.OpenOrders;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.xeiam.xchange.Exchange;
+import com.xeiam.xchange.ExchangeFactory;
 import com.xeiam.xchange.ExchangeSpecification;
+import com.xeiam.xchange.currency.CurrencyPair;
+import com.xeiam.xchange.dto.Order.OrderType;
+import com.xeiam.xchange.dto.marketdata.Ticker;
+import com.xeiam.xchange.dto.trade.MarketOrder;
+import com.xeiam.xchange.service.polling.account.PollingAccountService;
+import com.xeiam.xchange.service.polling.marketdata.PollingMarketDataService;
+import com.xeiam.xchange.service.polling.trade.PollingTradeService;
+import org.slf4j.spi.LocationAwareLogger;
 
-import java.util.HashSet;
-import java.util.Set;
+public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced {
 
-public class BitfinexExchange extends XChangeExchange implements IExchangeAdvanced, IRateSource {
+    private static final Logger log = LoggerFactory.getLogger("batm.master.BitfinexExchange");
+    private Exchange exchange = null;
+    private String apiKey;
+    private String apiSecret;
 
-    private static ExchangeSpecification getSpecification(String apiKey, String apiSecret) {
-        ExchangeSpecification spec = new com.xeiam.xchange.bitfinex.v1.BitfinexExchange().getDefaultExchangeSpecification();
-        spec.setApiKey(apiKey);
-        spec.setSecretKey(apiSecret);
-        return spec;
-    }
+    private static HashMap<String,BigDecimal> rateAmounts = new HashMap<String, BigDecimal>();
+    private static HashMap<String,Long> rateTimes = new HashMap<String, Long>();
+    private static final long MAXIMUM_ALLOWED_TIME_OFFSET = 30 * 1000;
+
+    private static volatile long lastCall = -1;
+    public static final int CALL_PERIOD_MINIMUM = 2100; //cannot be called more often than once in 2 seconds
 
     public BitfinexExchange(String apiKey, String apiSecret) {
-        super(getSpecification(apiKey, apiSecret));
+        this.apiKey = apiKey;
+        this.apiSecret = apiSecret;
     }
 
-    @Override
+    private synchronized Exchange getExchange() {
+        if (this.exchange == null) {
+            ExchangeSpecification bfxSpec = new com.xeiam.xchange.bitfinex.v1.BitfinexExchange().getDefaultExchangeSpecification();
+            bfxSpec.setApiKey(this.apiKey);
+            bfxSpec.setSecretKey(this.apiSecret);
+            this.exchange = ExchangeFactory.INSTANCE.createExchange(bfxSpec);
+        }
+        return this.exchange;
+    }
+
     public Set<String> getCryptoCurrencies() {
         Set<String> cryptoCurrencies = new HashSet<String>();
         cryptoCurrencies.add(ICurrencies.BTC);
         return cryptoCurrencies;
     }
 
-    @Override
     public Set<String> getFiatCurrencies() {
         Set<String> fiatCurrencies = new HashSet<String>();
         fiatCurrencies.add(ICurrencies.USD);
         return fiatCurrencies;
     }
 
-    @Override
     public String getPreferredFiatCurrency() {
         return ICurrencies.USD;
     }
 
+
     @Override
-    protected boolean isWithdrawSuccessful(String result) {
-        return "success".equalsIgnoreCase(result);
+    public synchronized BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency) {
+        String key = cryptoCurrency +"_" + fiatCurrency;
+        synchronized (rateAmounts) {
+            long now  = System.currentTimeMillis();
+            BigDecimal amount = rateAmounts.get(key);
+            if (amount == null) {
+                BigDecimal result = getExchangeRateLastSync(cryptoCurrency, fiatCurrency);
+                log.debug("Called bitfinex exchange for rate: " + key + " = " + result);
+                rateAmounts.put(key,result);
+                rateTimes.put(key,now+MAXIMUM_ALLOWED_TIME_OFFSET);
+                return result;
+            }else {
+                Long expirationTime = rateTimes.get(key);
+                if (expirationTime > now) {
+                    return rateAmounts.get(key);
+                }else{
+                    //do the job;
+                    BigDecimal result = getExchangeRateLastSync(cryptoCurrency, fiatCurrency);
+                    log.debug("Called bitfinex exchange for rate: " + key + " = " + result);
+                    rateAmounts.put(key,result);
+                    rateTimes.put(key,now+MAXIMUM_ALLOWED_TIME_OFFSET);
+                    return result;
+                }
+            }
+        }
+    }
+
+    private BigDecimal getExchangeRateLastSync(String cryptoCurrency, String cashCurrency) {
+        PollingMarketDataService marketDataService = getExchange().getPollingMarketDataService();
+        try {
+            Ticker ticker = marketDataService.getTicker(new CurrencyPair(cryptoCurrency,cashCurrency));
+            return ticker.getLast();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public BigDecimal getCryptoBalance(String cryptoCurrency) {
+        // [TODO] Can be extended to support LTC and DRK (and other currencies supported by BFX)
+        if (!ICurrencies.BTC.equalsIgnoreCase(cryptoCurrency)) {
+            return BigDecimal.ZERO;
+        }
+        log.debug("Calling Bitfinex exchange (getBalance)");
+
+        try {
+            return getExchange().getPollingAccountService().getAccountInfo().getBalance(cryptoCurrency);
+        } catch (IOException e) {
+            e.printStackTrace();
+            log.error("Bitfinex exchange (getBalance) failed with message: " + e.getMessage());
+        }
+        return null;
+    }
+
+    public BigDecimal getFiatBalance(String fiatCurrency) {
+        if (!ICurrencies.USD.equalsIgnoreCase(fiatCurrency)) {
+            return BigDecimal.ZERO;
+        }
+        log.debug("Calling Bitfinex exchange (getBalance)");
+
+        try {
+            return getExchange().getPollingAccountService().getAccountInfo().getBalance(fiatCurrency);
+        } catch (IOException e) {
+            e.printStackTrace();
+            log.error("Bitfinex exchange (getBalance) failed with message: " + e.getMessage());
+        }
+        return null;
+    }
+
+    public final String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
+        if (!ICurrencies.BTC.equalsIgnoreCase(cryptoCurrency)) {
+            log.error("Bitfinex supports only " + ICurrencies.BTC);
+            return null;
+        }
+
+        log.info("Calling bitfinex exchange (withdrawal destination: " + destinationAddress + " amount: " + amount + " " + cryptoCurrency + ")");
+
+        PollingAccountService accountService = getExchange().getPollingAccountService();
+        try {
+            String result = accountService.withdrawFunds(cryptoCurrency, amount, destinationAddress);
+            if (result == null) {
+                log.warn("Bitfinex exchange (withdrawFunds) failed with null");
+                return null;
+            }else if ("success".equalsIgnoreCase(result)){
+                log.warn("Bitfinex exchange (withdrawFunds) finished successfully");
+                return "success";
+            }else{
+                log.warn("Bitfinex exchange (withdrawFunds) failed with message: " + result);
+                return null;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            log.error("Bitfinex exchange (withdrawFunds) failed with message: " + e.getMessage());
+        }
+        return null;
+    }
+
+    public String purchaseCoins(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
+        if (!ICurrencies.BTC.equalsIgnoreCase(cryptoCurrency)) {
+            log.error("Bitfinex implementation supports only " + ICurrencies.BTC);
+            return null;
+        }
+        if (!ICurrencies.USD.equalsIgnoreCase(fiatCurrencyToUse)) {
+            log.error("Bitfinex supports only " + ICurrencies.USD );
+            return null;
+        }
+
+        log.info("Calling Bitfinex exchange (purchase " + amount + " " + cryptoCurrency + ")");
+        PollingAccountService accountService = getExchange().getPollingAccountService();
+        PollingTradeService tradeService = getExchange().getPollingTradeService();
+
+        try {
+            log.debug("AccountInfo as String: " + accountService.getAccountInfo().toString());
+
+            CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrencyToUse);
+
+            MarketOrder order = new MarketOrder(OrderType.BID, amount, currencyPair);
+            log.debug("marketOrder = " + order);
+
+            String orderId = tradeService.placeMarketOrder(order);
+            log.debug("orderId = " + orderId + " " + order);
+
+            try {
+                Thread.sleep(2000); //give exchange 2 seconds to reflect open order in order book
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            // get open orders
+            log.debug("Open orders:");
+            boolean orderProcessed = false;
+            int numberOfChecks = 0;
+            while (!orderProcessed && numberOfChecks < 10) {
+                boolean orderFound = false;
+                OpenOrders openOrders = tradeService.getOpenOrders();
+                for (LimitOrder openOrder : openOrders.getOpenOrders()) {
+                    log.debug("openOrder = " + openOrder);
+                    if (orderId.equals(openOrder.getId())) {
+                        orderFound = true;
+                        break;
+                    }
+                }
+                if (orderFound) {
+                    log.debug("Waiting for order to be processed.");
+                    try {
+                        Thread.sleep(3000); //don't get your ip address banned
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }else{
+                    orderProcessed = true;
+                }
+                numberOfChecks++;
+            }
+            if (orderProcessed) {
+                return orderId;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            log.error("Bitfinex exchange (purchaseCoins) failed with message: " + e.getMessage());
+        }
+        return null;
     }
 
     @Override
-    protected double getAllowedCallsPerSecond() {
-        return 0.5;
+    public ITask createPurchaseCoinsTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
+        if (!ICurrencies.BTC.equalsIgnoreCase(cryptoCurrency)) {
+            log.error("Bitfinex implementation supports only " + ICurrencies.BTC);
+            return null;
+        }
+        if (!ICurrencies.USD.equalsIgnoreCase(fiatCurrencyToUse)) {
+            log.error("Bitfinex supports only " + ICurrencies.USD );
+            return null;
+        }
+        return new PurchaseCoinsTask(amount,cryptoCurrency,fiatCurrencyToUse,description);
     }
+
+    @Override
+    public String getDepositAddress(String cryptoCurrency) {
+        if (!ICurrencies.BTC.equalsIgnoreCase(cryptoCurrency)) {
+            log.error("Bitfinex implementation supports only " + ICurrencies.BTC);
+            return null;
+        }
+        PollingAccountService accountService = getExchange().getPollingAccountService();
+        try {
+            return accountService.requestDepositAddress(cryptoCurrency);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public String sellCoins(BigDecimal cryptoAmount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
+        if (!ICurrencies.BTC.equalsIgnoreCase(cryptoCurrency)) {
+            log.error("Bitfinex implementation supports only " + ICurrencies.BTC);
+            return null;
+        }
+        if (!ICurrencies.USD.equalsIgnoreCase(fiatCurrencyToUse)) {
+            log.error("Bitfinex supports only " + ICurrencies.USD );
+            return null;
+        }
+
+        log.info("Calling Bitfinex exchange (sell " + cryptoAmount + " " + cryptoCurrency + ")");
+        PollingAccountService accountService = getExchange().getPollingAccountService();
+        PollingTradeService tradeService = getExchange().getPollingTradeService();
+
+        try {
+            log.debug("AccountInfo as String: " + accountService.getAccountInfo().toString());
+
+            CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrencyToUse);
+
+            MarketOrder order = new MarketOrder(OrderType.ASK, cryptoAmount, currencyPair);
+            log.debug("marketOrder = " + order);
+
+            String orderId = tradeService.placeMarketOrder(order);
+            log.debug("orderId = " + orderId + " " + order);
+
+            try {
+                Thread.sleep(2000); //give exchange 2 seconds to reflect open order in order book
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            // get open orders
+            log.debug("Open orders:");
+            boolean orderProcessed = false;
+            int numberOfChecks = 0;
+            while (!orderProcessed && numberOfChecks < 10) {
+                boolean orderFound = false;
+                OpenOrders openOrders = tradeService.getOpenOrders();
+                for (LimitOrder openOrder : openOrders.getOpenOrders()) {
+                    log.debug("openOrder = " + openOrder);
+                    if (orderId.equals(openOrder.getId())) {
+                        orderFound = true;
+                        break;
+                    }
+                }
+                if (orderFound) {
+                    log.debug("Waiting for order to be processed.");
+                    try {
+                        Thread.sleep(3000); //don't get your ip address banned
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }else{
+                    orderProcessed = true;
+                }
+                numberOfChecks++;
+            }
+            if (orderProcessed) {
+                return orderId;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            log.error("Bitfinex exchange (sellCoins) failed with message: " + e.getMessage());
+        }
+        return null;
+    }
+
+    @Override
+    public ITask createSellCoinsTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
+        if (!ICurrencies.BTC.equalsIgnoreCase(cryptoCurrency)) {
+            log.error("Bitfinex implementation supports only " + ICurrencies.BTC);
+            return null;
+        }
+        if (!ICurrencies.USD.equalsIgnoreCase(fiatCurrencyToUse)) {
+            log.error("Bitfinex supports only " + ICurrencies.USD );
+            return null;
+        }
+        return new SellCoinsTask(amount,cryptoCurrency,fiatCurrencyToUse,description);
+    }
+
+    class PurchaseCoinsTask implements ITask {
+        private long MAXIMUM_TIME_TO_WAIT_FOR_ORDER_TO_FINISH = 5 * 60 * 60 * 1000; //5 hours
+
+        private BigDecimal amount;
+        private String cryptoCurrency;
+        private String fiatCurrencyToUse;
+        private String description;
+
+        private String orderId;
+        private String result;
+        private boolean finished;
+
+        PurchaseCoinsTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
+            this.amount = amount;
+            this.cryptoCurrency = cryptoCurrency;
+            this.fiatCurrencyToUse = fiatCurrencyToUse;
+            this.description = description;
+        }
+
+        @Override
+        public boolean onCreate() {
+            log.info("Calling Bitfinex exchange (purchase " + amount + " " + cryptoCurrency + ")");
+            PollingAccountService accountService = getExchange().getPollingAccountService();
+            PollingTradeService tradeService = getExchange().getPollingTradeService();
+
+            try {
+                log.debug("AccountInfo as String: " + accountService.getAccountInfo().toString());
+
+                CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrencyToUse);
+
+                MarketOrder order = new MarketOrder(OrderType.BID, amount, currencyPair);
+                log.debug("marketOrder = " + order);
+
+                orderId = tradeService.placeMarketOrder(order);
+                log.debug("orderId = " + orderId + " " + order);
+
+                try {
+                    Thread.sleep(2000); //give exchange 2 seconds to reflect open order in order book
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                log.error("Bitfinex exchange (purchaseCoins) failed with message: " + e.getMessage());
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+            return (orderId != null);
+        }
+
+        @Override
+        public boolean onDoStep() {
+            if (orderId == null) {
+                log.debug("Giving up on waiting for trade to complete. Because it did not happen");
+                finished = true;
+                result = "Skipped";
+                return false;
+            }
+            PollingTradeService tradeService = getExchange().getPollingTradeService();
+            // get open orders
+            boolean orderProcessed = false;
+            long checkTillTime = System.currentTimeMillis() + MAXIMUM_TIME_TO_WAIT_FOR_ORDER_TO_FINISH;
+            if (System.currentTimeMillis() > checkTillTime) {
+                log.debug("Giving up on waiting for trade " + orderId + " to complete");
+                finished = true;
+                return false;
+            }
+
+            log.debug("Open orders:");
+            boolean orderFound = false;
+            try {
+                OpenOrders openOrders = tradeService.getOpenOrders();
+                for (LimitOrder openOrder : openOrders.getOpenOrders()) {
+                    log.debug("openOrder = " + openOrder);
+                    if (orderId.equals(openOrder.getId())) {
+                        orderFound = true;
+                        break;
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if (orderFound) {
+                log.debug("Waiting for order to be processed.");
+            }else{
+                orderProcessed = true;
+            }
+
+            if (orderProcessed) {
+                result = orderId;
+                finished = true;
+            }
+
+            return result != null;
+        }
+
+        @Override
+        public boolean isFinished() {
+            return finished;
+        }
+
+        @Override
+        public String getResult() {
+            return result;
+        }
+
+        @Override
+        public boolean isFailed() {
+            return finished && result == null;
+        }
+
+        @Override
+        public void onFinish() {
+            log.debug("Purchase task finished.");
+        }
+
+        @Override
+        public long getShortestTimeForNexStepInvocation() {
+            return 5 * 1000; //it doesn't make sense to run step sooner than after 5 seconds
+        }
+    }
+
+    class SellCoinsTask implements ITask {
+        private long MAXIMUM_TIME_TO_WAIT_FOR_ORDER_TO_FINISH = 5 * 60 * 60 * 1000; //5 hours
+
+        private BigDecimal cryptoAmount;
+        private String cryptoCurrency;
+        private String fiatCurrencyToUse;
+        private String description;
+
+        private String orderId;
+        private String result;
+        private boolean finished;
+
+        SellCoinsTask(BigDecimal cryptoAmount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
+            this.cryptoAmount = cryptoAmount;
+            this.cryptoCurrency = cryptoCurrency;
+            this.fiatCurrencyToUse = fiatCurrencyToUse;
+            this.description = description;
+        }
+
+        @Override
+        public boolean onCreate() {
+            log.info("Calling Bitfinex exchange (sell " + cryptoAmount + " " + cryptoCurrency + ")");
+            PollingAccountService accountService = getExchange().getPollingAccountService();
+            PollingTradeService tradeService = getExchange().getPollingTradeService();
+
+            try {
+                log.debug("AccountInfo as String: " + accountService.getAccountInfo().toString());
+
+                CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrencyToUse);
+
+                MarketOrder order = new MarketOrder(OrderType.ASK, cryptoAmount, currencyPair);
+                log.debug("marketOrder = " + order);
+
+                orderId = tradeService.placeMarketOrder(order);
+                log.debug("orderId = " + orderId + " " + order);
+
+                try {
+                    Thread.sleep(2000); //give exchange 2 seconds to reflect open order in order book
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                log.error("Bitfinex exchange (sellCoins) failed with message: " + e.getMessage());
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+            return (orderId != null);
+        }
+
+        @Override
+        public boolean onDoStep() {
+            if (orderId == null) {
+                log.debug("Giving up on waiting for trade to complete. Because it did not happen");
+                finished = true;
+                result = "Skipped";
+                return false;
+            }
+            PollingTradeService tradeService = getExchange().getPollingTradeService();
+            // get open orders
+            boolean orderProcessed = false;
+            long checkTillTime = System.currentTimeMillis() + MAXIMUM_TIME_TO_WAIT_FOR_ORDER_TO_FINISH;
+            if (System.currentTimeMillis() > checkTillTime) {
+                log.debug("Giving up on waiting for trade " + orderId + " to complete");
+                finished = true;
+                return false;
+            }
+
+            log.debug("Open orders:");
+            boolean orderFound = false;
+            try {
+                OpenOrders openOrders = tradeService.getOpenOrders();
+                for (LimitOrder openOrder : openOrders.getOpenOrders()) {
+                    log.debug("openOrder = " + openOrder);
+                    if (orderId.equals(openOrder.getId())) {
+                        orderFound = true;
+                        break;
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if (orderFound) {
+                log.debug("Waiting for order to be processed.");
+            }else{
+                orderProcessed = true;
+            }
+
+            if (orderProcessed) {
+                result = orderId;
+                finished = true;
+            }
+
+            return result != null;
+        }
+
+        @Override
+        public boolean isFinished() {
+            return finished;
+        }
+
+        @Override
+        public String getResult() {
+            return result;
+        }
+
+        @Override
+        public boolean isFailed() {
+            return finished && result == null;
+        }
+
+        @Override
+        public void onFinish() {
+            log.debug("Sell task finished.");
+        }
+
+        @Override
+        public long getShortestTimeForNexStepInvocation() {
+            return 5 * 1000; //it doesn't make sense to run step sooner than after 5 seconds
+        }
+    }
+
+    private BigDecimal getMeasureCryptoAmount() {
+        return new BigDecimal(10);
+    }
+
+
+    @Override
+    public BigDecimal getExchangeRateForBuy(String cryptoCurrency, String fiatCurrency) {
+        BigDecimal result = calculateBuyPrice(cryptoCurrency, fiatCurrency, getMeasureCryptoAmount());
+        if (result != null) {
+            return result.divide(getMeasureCryptoAmount(), 2, BigDecimal.ROUND_UP);
+        }
+        return null;
+    }
+
+    @Override
+    public BigDecimal getExchangeRateForSell(String cryptoCurrency, String fiatCurrency) {
+        BigDecimal result = calculateSellPrice(cryptoCurrency, fiatCurrency, getMeasureCryptoAmount());
+        if (result != null) {
+            return result.divide(getMeasureCryptoAmount(), 2, BigDecimal.ROUND_DOWN);
+        }
+        return null;
+    }
+
+    @Override
+    public BigDecimal calculateBuyPrice(String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount) {
+        waitForPossibleCall();
+        PollingMarketDataService marketDataService = getExchange().getPollingMarketDataService();
+        try {
+            CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrency);
+            OrderBook orderBook = marketDataService.getOrderBook(currencyPair);
+            List<LimitOrder> asks = orderBook.getAsks();
+            BigDecimal targetAmount = cryptoAmount;
+            BigDecimal asksTotal = BigDecimal.ZERO;
+            BigDecimal tradableLimit = null;
+            Collections.sort(asks, new Comparator<LimitOrder>() {
+                @Override
+                public int compare(LimitOrder lhs, LimitOrder rhs) {
+                    return lhs.getLimitPrice().compareTo(rhs.getLimitPrice());
+                }
+            });
+
+//            log.debug("Selected asks:");
+            for (LimitOrder ask : asks) {
+//                log.debug("ask = " + ask);
+                asksTotal = asksTotal.add(ask.getTradableAmount());
+                if (targetAmount.compareTo(asksTotal) <= 0) {
+                    tradableLimit = ask.getLimitPrice();
+                    break;
+                }
+            }
+
+            if (tradableLimit != null) {
+                log.debug("Called Bitfinex exchange for BUY rate: " + cryptoCurrency + fiatCurrency + " = " + tradableLimit);
+                return tradableLimit.multiply(cryptoAmount);
+            }
+        } catch (ExchangeException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private void waitForPossibleCall() {
+        long now = System.currentTimeMillis();
+        if (lastCall != -1) {
+            long diff = now - lastCall;
+            if (diff < CALL_PERIOD_MINIMUM) {
+                try {
+                    long sleeping = CALL_PERIOD_MINIMUM - diff;
+                    Thread.sleep(sleeping);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        lastCall = now;
+        return;
+    }
+
+    @Override
+    public BigDecimal calculateSellPrice(String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount) {
+        waitForPossibleCall();
+        PollingMarketDataService marketDataService = getExchange().getPollingMarketDataService();
+        try {
+            CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrency);
+
+            OrderBook orderBook = marketDataService.getOrderBook(currencyPair);
+            List<LimitOrder> bids = orderBook.getBids();
+
+            BigDecimal targetAmount = cryptoAmount;
+            BigDecimal bidsTotal = BigDecimal.ZERO;
+            BigDecimal tradableLimit = null;
+
+            Collections.sort(bids, new Comparator<LimitOrder>() {
+                @Override
+                public int compare(LimitOrder lhs, LimitOrder rhs) {
+                    return rhs.getLimitPrice().compareTo(lhs.getLimitPrice());
+                }
+            });
+
+            for (LimitOrder bid : bids) {
+                bidsTotal = bidsTotal.add(bid.getTradableAmount());
+                if (targetAmount.compareTo(bidsTotal) <= 0) {
+                    tradableLimit = bid.getLimitPrice();
+                    break;
+                }
+            }
+
+            if (tradableLimit != null) {
+                log.debug("Called Bitfinex exchange for SELL rate: " + cryptoCurrency + fiatCurrency + " = " + tradableLimit);
+                return tradableLimit.multiply(cryptoAmount);
+            }
+        } catch (ExchangeException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+        return null;
+
+    }
+
+
+
 }

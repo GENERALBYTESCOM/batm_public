@@ -25,15 +25,17 @@ import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
 import com.generalbytes.batm.server.extensions.ITask;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.util.concurrent.RateLimiter;
 import com.xeiam.xchange.Exchange;
 import com.xeiam.xchange.ExchangeFactory;
 import com.xeiam.xchange.ExchangeSpecification;
 import com.xeiam.xchange.currency.CurrencyPair;
 import com.xeiam.xchange.dto.Order.OrderType;
+import com.xeiam.xchange.dto.marketdata.OrderBook;
 import com.xeiam.xchange.dto.marketdata.Ticker;
 import com.xeiam.xchange.dto.trade.LimitOrder;
+import com.xeiam.xchange.dto.trade.MarketOrder;
 import com.xeiam.xchange.dto.trade.OpenOrders;
-import com.xeiam.xchange.exceptions.ExchangeException;
 import com.xeiam.xchange.service.polling.account.PollingAccountService;
 import com.xeiam.xchange.service.polling.marketdata.PollingMarketDataService;
 import com.xeiam.xchange.service.polling.trade.PollingTradeService;
@@ -42,11 +44,14 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-public abstract class XChangeExchange implements IExchangeAdvanced, IRateSource {
+public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceAdvanced {
 
     private static final long cacheRefreshSeconds = 30;
     private static final Cache<String, BigDecimal> balanceCache = createCache();
@@ -62,11 +67,13 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSource 
     private final Exchange exchange;
     private final String name;
     private final Logger log;
+    private final RateLimiter rateLimiter;
 
     public XChangeExchange(ExchangeSpecification specification) {
         exchange = ExchangeFactory.INSTANCE.createExchange(specification);
         name = exchange.getExchangeSpecification().getExchangeName();
         log = LoggerFactory.getLogger("batm.master." + name);
+        rateLimiter = RateLimiter.create(getAllowedCallsPerSecond());
     }
 
     protected abstract boolean isWithdrawSuccessful(String result);
