@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2015 GENERAL BYTES s.r.o. All rights reserved.
  * <p/>
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -16,20 +16,27 @@
  * <p/>
  * Other information:
  * <p/>
- * This implementation was created in cooperation with Orillia BVBA
+ * This implementation was created in cooperation with Sumbits http://www.getsumbits.com/
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.itbit;
 
 import com.generalbytes.batm.server.extensions.ICurrencies;
-import com.generalbytes.batm.server.extensions.IExchangeAdvanced;
-import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.XChangeExchange;
 import com.xeiam.xchange.ExchangeSpecification;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class ItBitExchange extends XChangeExchange implements IExchangeAdvanced, IRateSource {
+public class ItBitExchange extends XChangeExchange {
+
+    public ItBitExchange(String preferredFiatCurrency) {
+        super(getDefaultSpecification(), preferredFiatCurrency);
+    }
+
+    public ItBitExchange(String userId, String walletId, String clientKey, String clientSecret, String preferredFiatCurrency) {
+        super(getSpecification(userId, walletId, clientKey, clientSecret), preferredFiatCurrency);
+    }
+
 
     private static ExchangeSpecification getDefaultSpecification() {
         return new com.xeiam.xchange.itbit.v1.ItBitExchange().getDefaultExchangeSpecification();
@@ -44,18 +51,10 @@ public class ItBitExchange extends XChangeExchange implements IExchangeAdvanced,
         return spec;
     }
 
-    public ItBitExchange() {
-        super(getDefaultSpecification());
-    }
-
-    public ItBitExchange(String userId, String walletId, String clientKey, String clientSecret) {
-        super(getSpecification(userId, walletId, clientKey, clientSecret));
-    }
-
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> cryptoCurrencies = new HashSet<String>();
-        cryptoCurrencies.add(ICurrencies.XBT);
+        cryptoCurrencies.add(ICurrencies.BTC);
         return cryptoCurrencies;
     }
 
@@ -64,12 +63,8 @@ public class ItBitExchange extends XChangeExchange implements IExchangeAdvanced,
         Set<String> fiatCurrencies = new HashSet<String>();
         fiatCurrencies.add(ICurrencies.USD);
         fiatCurrencies.add(ICurrencies.EUR);
+        fiatCurrencies.add(ICurrencies.SGD);
         return fiatCurrencies;
-    }
-
-    @Override
-    public String getPreferredFiatCurrency() {
-        return ICurrencies.USD;
     }
 
     @Override
@@ -83,7 +78,10 @@ public class ItBitExchange extends XChangeExchange implements IExchangeAdvanced,
     }
 
     @Override
-    protected String mapCurrency(String currency) {
-        return currency.equals(ICurrencies.BTC) ? ICurrencies.XBT : currency;
+    protected String translateCryptoCurrencySymbolToExchangeSpecificSymbol(String from) {
+        if (ICurrencies.BTC.equalsIgnoreCase(from)) {
+            return "XBT";
+        }
+        return from;
     }
 }

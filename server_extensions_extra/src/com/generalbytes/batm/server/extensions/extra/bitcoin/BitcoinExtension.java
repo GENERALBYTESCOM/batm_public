@@ -49,11 +49,15 @@ public class BitcoinExtension implements IExtension{
                 String apiSecret = paramTokenizer.nextToken();
                 return new BitfinexExchange(apiKey, apiSecret);
             } else if ("itbit".equalsIgnoreCase(prefix)) {
+                String preferredFiatCurrency = ICurrencies.USD;
                 String userId = paramTokenizer.nextToken();
                 String walletId = paramTokenizer.nextToken();
                 String clientKey = paramTokenizer.nextToken();
                 String clientSecret = paramTokenizer.nextToken();
-                return new ItBitExchange(userId, walletId, clientKey, clientSecret);
+                if (paramTokenizer.hasMoreTokens()) {
+                    preferredFiatCurrency = paramTokenizer.nextToken();
+                }
+                return new ItBitExchange(userId, walletId, clientKey, clientSecret, preferredFiatCurrency);
             }
         }
         return null;
@@ -138,7 +142,7 @@ public class BitcoinExtension implements IExtension{
                 return new BitcoinAverageRateSource(ICurrencies.USD);
             }else if ("btcfix".equalsIgnoreCase(exchangeType)) {
                 BigDecimal rate = BigDecimal.ZERO;
-                String preferedFiatCurrency = ICurrencies.USD;
+                String preferredFiatCurrency = ICurrencies.USD;
                 if (st.hasMoreTokens()) {
                     try {
                         rate = new BigDecimal(st.nextToken());
@@ -146,13 +150,17 @@ public class BitcoinExtension implements IExtension{
                     }
                 }
                 if (st.hasMoreTokens()) {
-                    preferedFiatCurrency = st.nextToken();
+                    preferredFiatCurrency = st.nextToken();
                 }
-                return new FixPriceRateSource(rate,preferedFiatCurrency);
+                return new FixPriceRateSource(rate,preferredFiatCurrency);
             }else if ("bitfinex".equalsIgnoreCase(exchangeType)) {
                return new BitfinexExchange("**","**");
             }else if ("itbit".equalsIgnoreCase(exchangeType)) {
-                return new ItBitExchange();
+                String preferredFiatCurrency = ICurrencies.USD;
+                if (st.hasMoreTokens()) {
+                    preferredFiatCurrency = st.nextToken();
+                }
+                return new ItBitExchange(preferredFiatCurrency);
             }
         }
         return null;
