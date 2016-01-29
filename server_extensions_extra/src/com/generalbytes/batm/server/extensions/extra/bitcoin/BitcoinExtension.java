@@ -25,6 +25,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.c
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.BitcoinAverageRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitcoind.BATMBitcoindRPCWallet;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitcore.BitcoreWallet;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinkite.CoinkiteWallet;
 
 import java.math.BigDecimal;
@@ -113,6 +114,12 @@ public class BitcoinExtension implements IExtension{
                     accountNumber = st.nextToken();
                 }
                 return new CoinkiteWallet(apikey,apiSecret,accountNumber);
+            }else if ("bitcore".equalsIgnoreCase(walletType)) { //bitcore:apiKey:proxyUrl
+                String apiKey = st.nextToken();
+                // the next token is a URL, so we can't use : as a delimiter
+                // instead use \n and then remove the leading :
+                String proxyUrl = st.nextToken("\n").replaceFirst(":", "");
+                return new BitcoreWallet(apiKey, proxyUrl);
             }
         }
         return null;
