@@ -18,8 +18,8 @@
                 <cryptocurrency>LTC</cryptocurrency>
             </wallet>
             <wallet prefix="bitcore" name="BitCore Wallet">
-                <param name="apiKey" />
-                <param name="proxyUrl" />
+                <param name="apikey" />
+                <param name="proxyurl" />
                 <cryptocurrency>BTC</cryptocurrency>
             </wallet>
             <ratesource prefix="bitcoinaverage" name ="BitcoinAverage.com" >
