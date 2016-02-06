@@ -24,8 +24,13 @@ import com.generalbytes.batm.server.extensions.IWallet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.net.ssl.*;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -34,13 +39,14 @@ public class BATMBitcoindRPCWallet implements IWallet{
     private static final Logger log = LoggerFactory.getLogger(BATMBitcoindRPCWallet.class);
     private static final String CRYPTO_CURRENCY = ICurrencies.BTC;
 
-    public BATMBitcoindRPCWallet(String rpcURL, String accountName) {
-        this.rpcURL = rpcURL;
-        this.accountName = accountName;
-    }
-
-    private String rpcURL;
     private String accountName;
+    private BitcoinJSONRPCClient client;
+
+
+    public BATMBitcoindRPCWallet(String rpcURL, String accountName) {
+        this.accountName = accountName;
+        client = createClient(rpcURL);
+    }
 
     @Override
     public Set<String> getCryptoCurrencies() {
@@ -64,7 +70,7 @@ public class BATMBitcoindRPCWallet implements IWallet{
 
         log.info("Bitcoind sending coins from " + accountName + " to: " + destinationAddress + " " + amount);
         try {
-            String result = getClient(rpcURL).sendFrom(accountName, destinationAddress,amount.doubleValue());
+            String result = client.sendFrom(accountName, destinationAddress, amount.doubleValue());
             log.debug("result = " + result);
             return result;
         } catch (BitcoinException e) {
@@ -81,7 +87,7 @@ public class BATMBitcoindRPCWallet implements IWallet{
         }
 
         try {
-            List<String> addressesByAccount = getClient(rpcURL).getAddressesByAccount(accountName);
+            List<String> addressesByAccount = client.getAddressesByAccount(accountName);
             if (addressesByAccount == null || addressesByAccount.size() == 0) {
                 return null;
             }else{
@@ -100,7 +106,7 @@ public class BATMBitcoindRPCWallet implements IWallet{
             return null;
         }
         try {
-            double balance = getClient(rpcURL).getBalance(accountName);
+            double balance = client.getBalance(accountName);
             return new BigDecimal(balance);
         } catch (BitcoinException e) {
             e.printStackTrace();
@@ -108,13 +114,44 @@ public class BATMBitcoindRPCWallet implements IWallet{
         }
     }
 
-    private BitcoinJSONRPCClient getClient(String rpcURL) {
+    private static BitcoinJSONRPCClient createClient(String rpcURL) {
         try {
-            return new BitcoinJSONRPCClient(rpcURL);
+            final BitcoinJSONRPCClient bitcoinJSONRPCClient = new BitcoinJSONRPCClient(rpcURL);
+            bitcoinJSONRPCClient.setHostnameVerifier(new HostnameVerifier() {
+                @Override
+                public boolean verify(String s, SSLSession sslSession) {
+                    return true;
+                }
+            });
+            try {
+                SSLContext sslcontext = SSLContext.getInstance("TLS");
+                sslcontext.init(null, new TrustManager[] {new X509TrustManager() {
+                    @Override
+                    public void checkClientTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {}
+
+                    @Override
+                    public void checkServerTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {}
+
+                    @Override
+                    public X509Certificate[] getAcceptedIssuers() { return new X509Certificate[0]; }
+                }}, null);
+                bitcoinJSONRPCClient.setSslSocketFactory(sslcontext.getSocketFactory());
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (KeyManagementException e) {
+                e.printStackTrace();
+            }
+            return bitcoinJSONRPCClient;
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static void main(String[] args) {
+        final BATMBitcoindRPCWallet batmBitcoindRPCWallet = new BATMBitcoindRPCWallet("https://127.0.0.1:8332","");
+        final String cryptoAddress = batmBitcoindRPCWallet.getCryptoAddress(ICurrencies.BTC);
+        System.out.println("cryptoAddress = " + cryptoAddress);
     }
 
 }
