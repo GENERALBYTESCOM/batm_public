@@ -147,11 +147,4 @@ public class BATMBitcoindRPCWallet implements IWallet{
         }
         return null;
     }
-
-    public static void main(String[] args) {
-        final BATMBitcoindRPCWallet batmBitcoindRPCWallet = new BATMBitcoindRPCWallet("https://127.0.0.1:8332","");
-        final String cryptoAddress = batmBitcoindRPCWallet.getCryptoAddress(ICurrencies.BTC);
-        System.out.println("cryptoAddress = " + cryptoAddress);
-    }
-
 }
