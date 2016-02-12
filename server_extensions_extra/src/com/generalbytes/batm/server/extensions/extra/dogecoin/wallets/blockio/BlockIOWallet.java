@@ -2,15 +2,9 @@ package com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio;
 
 import com.generalbytes.batm.server.extensions.ICurrencies;
 import com.generalbytes.batm.server.extensions.IWallet;
-import org.slf4j.ILoggerFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.impl.SimpleLoggerFactory;
-import org.slf4j.impl.StaticLoggerBinder;
-import org.slf4j.spi.LocationAwareLogger;
+
 import si.mazi.rescu.RestProxyFactory;
 
-import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.*;
 
