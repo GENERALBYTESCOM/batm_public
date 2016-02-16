@@ -22,6 +22,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinkite.Co
 import com.generalbytes.batm.server.extensions.extra.litecoin.sources.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.litecoin.sources.btce.BTCeRateSource;
 import com.generalbytes.batm.server.extensions.extra.litecoin.wallets.litecoind.LitecoindRPCWallet;
+import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -128,4 +129,13 @@ public class LitecoinExtension implements IExtension{
         return result;
     }
 
+    @Override
+    public Set<String> getSupportedWatchLists() {
+        return null;
+    }
+
+    @Override
+    public IWatchList getWatchList(String name) {
+        return null;
+    }
 }

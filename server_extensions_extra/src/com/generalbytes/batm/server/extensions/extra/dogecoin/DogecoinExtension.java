@@ -22,6 +22,7 @@ import com.generalbytes.batm.server.extensions.extra.dogecoin.sources.FixPriceRa
 import com.generalbytes.batm.server.extensions.extra.dogecoin.sources.chainso.ChainSoRateSource;
 import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.BlockIOWallet;
 import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.dogecoind.DogecoindRPCWallet;
+import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -122,4 +123,13 @@ public class DogecoinExtension implements IExtension{
         return result;
     }
 
+    @Override
+    public Set<String> getSupportedWatchLists() {
+        return null;
+    }
+
+    @Override
+    public IWatchList getWatchList(String name) {
+        return null;
+    }
 }

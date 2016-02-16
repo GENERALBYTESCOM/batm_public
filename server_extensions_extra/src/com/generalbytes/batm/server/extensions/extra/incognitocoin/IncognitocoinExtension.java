@@ -20,6 +20,7 @@ package com.generalbytes.batm.server.extensions.extra.incognitocoin;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.extra.incognitocoin.sources.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.incognitocoin.wallets.incognitocoind.IncognitocoindRPCWallet;
+import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -116,4 +117,13 @@ public class IncognitocoinExtension implements IExtension{
         return result;
     }
 
+    @Override
+    public Set<String> getSupportedWatchLists() {
+        return null;
+    }
+
+    @Override
+    public IWatchList getWatchList(String name) {
+        return null;
+    }
 }

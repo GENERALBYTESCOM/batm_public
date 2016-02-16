@@ -4,6 +4,7 @@ import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.extra.nubits.NubitsAddressValidator;
 import com.generalbytes.batm.server.extensions.extra.nubits.sources.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.nubits.wallets.nud.NubitsRPCWallet;
+import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -97,5 +98,15 @@ public class NubitsExtension implements IExtension{
         Set<String> result = new HashSet<String>();
         result.add(ICurrencies.NBT);
         return result;
+    }
+
+    @Override
+    public Set<String> getSupportedWatchLists() {
+        return null;
+    }
+
+    @Override
+    public IWatchList getWatchList(String name) {
+        return null;
     }
 }

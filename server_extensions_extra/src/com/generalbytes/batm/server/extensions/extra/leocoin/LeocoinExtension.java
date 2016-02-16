@@ -20,6 +20,7 @@ package com.generalbytes.batm.server.extensions.extra.leocoin;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.extra.leocoin.sources.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.leocoin.wallets.leocoind.LeocoindRPCWallet;
+import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -117,4 +118,13 @@ public class LeocoinExtension implements IExtension{
         return result;
     }
 
+    @Override
+    public Set<String> getSupportedWatchLists() {
+        return null;
+    }
+
+    @Override
+    public IWatchList getWatchList(String name) {
+        return null;
+    }
 }

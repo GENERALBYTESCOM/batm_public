@@ -21,6 +21,7 @@ import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.extra.groestlcoin.sources.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.groestlcoin.sources.GroestlcoinTickerRateSource;
 import com.generalbytes.batm.server.extensions.extra.groestlcoin.wallets.groestlcoind.GroestlcoindRPCWallet;
+import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -122,4 +123,13 @@ public class GroestlcoinExtension implements IExtension{
         return result;
     }
 
+    @Override
+    public Set<String> getSupportedWatchLists() {
+        return null;
+    }
+
+    @Override
+    public IWatchList getWatchList(String name) {
+        return null;
+    }
 }

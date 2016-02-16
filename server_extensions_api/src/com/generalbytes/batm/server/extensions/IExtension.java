@@ -18,6 +18,8 @@
 
 package com.generalbytes.batm.server.extensions;
 
+import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
+
 import java.util.Set;
 
 /**
@@ -91,5 +93,20 @@ public interface IExtension {
      * @see com.generalbytes.batm.server.extensions.IPaperWallet
      */
     public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency);
+
+    /**
+     * Returns the list of watchlists that extenstion contains
+     * @return
+     */
+    public Set<String> getSupportedWatchLists();
+
+
+    /**
+     * Returns watchlist by name
+     * @param name
+     * @return
+     */
+    public IWatchList getWatchList(String name);
+
 
 }

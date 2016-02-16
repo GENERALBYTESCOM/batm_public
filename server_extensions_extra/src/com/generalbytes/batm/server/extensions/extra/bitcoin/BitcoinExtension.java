@@ -27,6 +27,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.FixPriceRat
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitcoind.BATMBitcoindRPCWallet;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitcore.BitcoreWallet;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinkite.CoinkiteWallet;
+import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -180,4 +181,13 @@ public class BitcoinExtension implements IExtension{
         return result;
     }
 
+    @Override
+    public Set<String> getSupportedWatchLists() {
+        return null;
+    }
+
+    @Override
+    public IWatchList getWatchList(String name) {
+        return null;
+    }
 }

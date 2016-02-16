@@ -21,6 +21,7 @@ import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.extra.guldencoin.sources.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.guldencoin.sources.GuldencoinTickerRateSource;
 import com.generalbytes.batm.server.extensions.extra.guldencoin.wallets.guldencoind.GuldencoindRPCWallet;
+import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -122,4 +123,13 @@ public class GuldencoinExtension implements IExtension{
         return result;
     }
 
+    @Override
+    public Set<String> getSupportedWatchLists() {
+        return null;
+    }
+
+    @Override
+    public IWatchList getWatchList(String name) {
+        return null;
+    }
 }

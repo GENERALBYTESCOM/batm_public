@@ -22,6 +22,7 @@ import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.extra.nxt.sources.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.nxt.sources.poloniex.PoloniexRateSource;
 import com.generalbytes.batm.server.extensions.extra.nxt.wallets.mynxt.MynxtWallet;
+import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -115,5 +116,15 @@ public class NXTExtension implements IExtension{
         Set<String> result = new HashSet<String>();
         result.add(ICurrencies.NXT);
         return result;
+    }
+
+    @Override
+    public Set<String> getSupportedWatchLists() {
+        return null;
+    }
+
+    @Override
+    public IWatchList getWatchList(String name) {
+        return null;
     }
 }

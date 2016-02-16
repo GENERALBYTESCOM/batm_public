@@ -21,6 +21,7 @@ import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.extra.maxcoin.sources.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.maxcoin.sources.MaxcoinTickerRateSource;
 import com.generalbytes.batm.server.extensions.extra.maxcoin.wallets.maxcoind.MaxcoindRPCWallet;
+import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -119,4 +120,13 @@ public class MaxcoinExtension implements IExtension{
         return result;
     }
 
+    @Override
+    public Set<String> getSupportedWatchLists() {
+        return null;
+    }
+
+    @Override
+    public IWatchList getWatchList(String name) {
+        return null;
+    }
 }
