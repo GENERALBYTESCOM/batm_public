@@ -40,8 +40,9 @@ public interface IWatchList {
     /**
      * Performs the re-download of the watchlist from the remote side @see LIST_NOT_CHANGED or LIST_CHANGED or LIST_REFRESH_FAILED if download fails.
      * @return
+     * @param downloadDirectory
      */
-    public int refresh();
+    public int refresh(String downloadDirectory);
 
     /**
      * This method returns number of recommended minutes for which the watchlist is considered valid. After this period method refresh() should be called again.

@@ -229,4 +229,5 @@
         </ratesource>
         <cryptologo cryptocurrency="NXT" file="nxt.png"/>
     </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.watchlists.BasicWatchlistsExtension" />
 </extensions>

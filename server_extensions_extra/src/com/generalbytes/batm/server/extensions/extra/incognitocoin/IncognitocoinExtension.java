@@ -118,7 +118,7 @@ public class IncognitocoinExtension implements IExtension{
     }
 
     @Override
-    public Set<String> getSupportedWatchLists() {
+    public Set<String> getSupportedWatchListsNames() {
         return null;
     }
 

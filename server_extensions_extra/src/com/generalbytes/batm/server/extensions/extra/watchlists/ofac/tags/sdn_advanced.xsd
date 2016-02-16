@@ -1,0 +1,1693 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:un="http://www.un.org/sanctions/1.0"
+            xmlns="http://www.un.org/sanctions/1.0"
+            targetNamespace="http://www.un.org/sanctions/1.0"
+            elementFormDefault="qualified">
+  <xsd:element name="Sanctions">
+      <xsd:complexType>
+         <xsd:sequence>
+            <xsd:element name="DateOfIssue" type="DateSchemaType"/>
+            <xsd:element name="ReferenceValueSets" type="ReferenceValueSetsSchemaType"/>
+            <xsd:element name="Locations">
+               <xsd:complexType>
+                  <xsd:sequence>
+                     <xsd:element name="Location" type="LocationSchemaType" minOccurs="0" maxOccurs="unbounded"/>
+                  </xsd:sequence>
+               </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="IDRegDocuments">
+               <xsd:complexType>
+                  <xsd:sequence>
+                     <xsd:element name="IDRegDocument" type="IDRegDocumentSchemaType" minOccurs="0"
+                                  maxOccurs="unbounded"/>
+                  </xsd:sequence>
+               </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="DistinctParties">
+               <xsd:complexType>
+                  <xsd:sequence>
+                     <xsd:element name="DistinctParty" type="DistinctPartySchemaType" minOccurs="0"
+                                  maxOccurs="unbounded"/>
+                  </xsd:sequence>
+               </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="ProfileRelationships">
+               <xsd:complexType>
+                  <xsd:sequence>
+                     <xsd:element name="ProfileRelationship" type="ProfileRelationshipSchemaType" minOccurs="0"
+                                  maxOccurs="unbounded"/>
+                  </xsd:sequence>
+               </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="SanctionsEntries">
+               <xsd:complexType>
+                  <xsd:sequence>
+                     <xsd:element name="SanctionsEntry" type="SanctionsEntrySchemaType" minOccurs="0"
+                                  maxOccurs="unbounded"/>
+                  </xsd:sequence>
+               </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="SanctionsEntryLinks">
+               <xsd:complexType>
+                  <xsd:sequence>
+                     <xsd:element name="SanctionsEntryLink" type="SanctionsEntryLinkSchemaType" minOccurs="0"
+                                  maxOccurs="unbounded"/>
+                  </xsd:sequence>
+               </xsd:complexType>
+            </xsd:element>
+         </xsd:sequence>
+         <xsd:attribute name="Version" type="xsd:nonNegativeInteger" use="required"/>
+         <xsd:attribute name="DeltaBaseVersion" type="xsd:nonNegativeInteger"/>
+      </xsd:complexType>
+      <xsd:key name="AliasTypeKey">
+         <xsd:selector xpath=".//un:AliasType"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="AreaCodeKey">
+         <xsd:selector xpath=".//un:AreaCode"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="AreaCodeTypeKey">
+         <xsd:selector xpath=".//un:AreaCodeType"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="CalendarTypeKey">
+         <xsd:selector xpath=".//un:CalendarType"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="CountryKey">
+         <xsd:selector xpath=".//un:Country"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="CountryRelevanceKey">
+         <xsd:selector xpath=".//un:CountryRelevance"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="DecisionMakingBodyKey">
+         <xsd:selector xpath=".//un:DecisionMakingBody"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="DetailReferenceKey">
+         <xsd:selector xpath=".//un:DetailReference"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="DetailTypeKey">
+         <xsd:selector xpath=".//un:DetailType"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="DocNameStatusKey">
+         <xsd:selector xpath=".//un:DocNameStatus"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="EntryEventTypeKey">
+         <xsd:selector xpath=".//un:EntryEventType"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="EntryLinkTypeKey">
+         <xsd:selector xpath=".//un:EntryLinkType"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="ExRefTypeKey">
+         <xsd:selector xpath=".//un:ExRefType"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="FeatureTypeKey">
+         <xsd:selector xpath=".//un:FeatureType"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="FeatureTypeGroupKey">
+         <xsd:selector xpath=".//un:FeatureTypeGroup"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="IDRegDocDateTypeKey">
+         <xsd:selector xpath=".//un:IDRegDocDateType"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="IDRegDocTypeKey">
+         <xsd:selector xpath=".//un:IDRegDocType"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="IdentityFeatureLinkTypeKey">
+         <xsd:selector xpath=".//un:IdentityFeatureLinkType"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="LegalBasisKey">
+         <xsd:selector xpath=".//un:LegalBasis"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="LegalBasisTypeKey">
+         <xsd:selector xpath=".//un:LegalBasisType"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="ListKey">
+         <xsd:selector xpath=".//un:List"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="LocPartTypeKey">
+         <xsd:selector xpath=".//un:LocPartType"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="LocPartValueStatusKey">
+         <xsd:selector xpath=".//un:LocPartValueStatus"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="LocPartValueTypeKey">
+         <xsd:selector xpath=".//un:LocPartValueType"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="NamePartTypeKey">
+         <xsd:selector xpath=".//un:NamePartType"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="OrganisationKey">
+         <xsd:selector xpath=".//un:Organisation"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="PartySubTypeKey">
+         <xsd:selector xpath=".//un:PartySubType"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="PartyTypeKey">
+         <xsd:selector xpath=".//un:PartyType"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="RelationQualityKey">
+         <xsd:selector xpath=".//un:RelationQuality"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="RelationTypeKey">
+         <xsd:selector xpath=".//un:RelationType"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="ReliabilityKey">
+         <xsd:selector xpath=".//un:Reliability"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="SanctionsProgramKey">
+         <xsd:selector xpath=".//un:SanctionsProgram"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="SanctionsTypeKey">
+         <xsd:selector xpath=".//un:SanctionsType"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="ScriptKey">
+         <xsd:selector xpath=".//un:Script"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="ScriptStatusKey">
+         <xsd:selector xpath=".//un:ScriptStatus"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="SubsidiaryBodyKey">
+         <xsd:selector xpath=".//un:SubsidiaryBody"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="SupInfoTypeKey">
+         <xsd:selector xpath=".//un:SupInfoType"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="TargetTypeKey">
+         <xsd:selector xpath=".//un:TargetType"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="ValidityKey">
+         <xsd:selector xpath=".//un:Validity"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="LocationKey">
+         <xsd:selector xpath=".//un:Location"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="IDRegDocumentKey">
+         <xsd:selector xpath=".//un:IDRegDocument"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="ProfileKey">
+         <xsd:selector xpath=".//un:Profile"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="FeatureVersionKey">
+         <xsd:selector xpath=".//un:FeatureVersion"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="FeatureKey">
+         <xsd:selector xpath=".//un:Feature"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="NamePartGroupKey">
+         <xsd:selector xpath=".//un:NamePartGroup"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="IdentityKey">
+         <xsd:selector xpath=".//un:Identity"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="DocumentedNameKey">
+         <xsd:selector xpath=".//un:DocumentedName"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="ProfileRelationshipKey">
+         <xsd:selector xpath=".//un:ProfileRelationship"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="EntryEventKey">
+         <xsd:selector xpath=".//un:EntryEvent"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="SanctionsMeasureKey">
+         <xsd:selector xpath=".//un:SanctionsMeasure"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="SupportingInfoKey">
+         <xsd:selector xpath=".//un:SupportingInfo"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="SanctionsEntryKey">
+         <xsd:selector xpath=".//un:SanctionsEntry"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:key name="SanctionsEntryLinkKey">
+         <xsd:selector xpath=".//un:SanctionsEntryLink"/>
+         <xsd:field xpath="@ID"/>
+      </xsd:key>
+      <xsd:keyref name="FeatureVersionIDKeyRef" refer="FeatureVersionKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@FeatureVersionID"/>
+      </xsd:keyref>
+      <xsd:keyref name="IDRegDocumentIDKeyRef" refer="IDRegDocumentKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@IDRegDocumentID"/>
+      </xsd:keyref>
+      <xsd:keyref name="ProfileRelationshipIDKeyRef" refer="ProfileRelationshipKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@ProfileRelationshipID"/>
+      </xsd:keyref>
+      <xsd:keyref name="CalendarTypeIDKeyRef" refer="CalendarTypeKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@CalendarTypeID"/>
+      </xsd:keyref>
+      <xsd:keyref name="CountryIDKeyRef" refer="CountryKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@CountryID"/>
+      </xsd:keyref>
+      <xsd:keyref name="AreaCodeTypeIDKeyRef" refer="AreaCodeTypeKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@AreaCodeTypeID"/>
+      </xsd:keyref>
+      <xsd:keyref name="OrganisationIDKeyRef" refer="OrganisationKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@OrganisationID"/>
+      </xsd:keyref>
+      <xsd:keyref name="FeatureTypeGroupIDKeyRef" refer="FeatureTypeGroupKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@FeatureTypeGroupID"/>
+      </xsd:keyref>
+      <xsd:keyref name="LegalBasisTypeIDKeyRef" refer="LegalBasisTypeKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@LegalBasisTypeID"/>
+      </xsd:keyref>
+      <xsd:keyref name="SanctionsProgramIDKeyRef" refer="SanctionsProgramKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@SanctionsProgramID"/>
+      </xsd:keyref>
+      <xsd:keyref name="PartyTypeIDKeyRef" refer="PartyTypeKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@PartyTypeID"/>
+      </xsd:keyref>
+      <xsd:keyref name="SubsidiaryBodyIDKeyRef" refer="SubsidiaryBodyKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@SubsidiaryBodyID"/>
+      </xsd:keyref>
+      <xsd:keyref name="DecisionMakingBodyIDKeyRef" refer="DecisionMakingBodyKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@DecisionMakingBodyID"/>
+      </xsd:keyref>
+      <xsd:keyref name="AreaCodeIDKeyRef" refer="AreaCodeKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@AreaCodeID"/>
+      </xsd:keyref>
+      <xsd:keyref name="CountryRelevanceIDKeyRef" refer="CountryRelevanceKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@CountryRelevanceID"/>
+      </xsd:keyref>
+      <xsd:keyref name="LocPartValueTypeIDKeyRef" refer="LocPartValueTypeKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@LocPartValueTypeID"/>
+      </xsd:keyref>
+      <xsd:keyref name="LocPartValueStatusIDKeyRef" refer="LocPartValueStatusKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@LocPartValueStatusID"/>
+      </xsd:keyref>
+      <xsd:keyref name="LocPartTypeIDKeyRef" refer="LocPartTypeKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@LocPartTypeID"/>
+      </xsd:keyref>
+      <xsd:keyref name="IDRegDocDateTypeIDKeyRef" refer="IDRegDocDateTypeKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@IDRegDocDateTypeID"/>
+      </xsd:keyref>
+      <xsd:keyref name="DocumentedNameIDKeyRef" refer="DocumentedNameKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@DocumentedNameID"/>
+      </xsd:keyref>
+      <xsd:keyref name="IDRegDocTypeIDKeyRef" refer="IDRegDocTypeKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@IDRegDocTypeID"/>
+      </xsd:keyref>
+      <xsd:keyref name="IdentityIDKeyRef" refer="IdentityKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@IdentityID"/>
+      </xsd:keyref>
+      <xsd:keyref name="IssuedBy-CountryIDKeyRef" refer="CountryKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@IssuedBy-CountryID"/>
+      </xsd:keyref>
+      <xsd:keyref name="IssuedIn-LocationIDKeyRef" refer="LocationKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@IssuedIn-LocationID"/>
+      </xsd:keyref>
+      <xsd:keyref name="ValidityIDKeyRef" refer="ValidityKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@ValidityID"/>
+      </xsd:keyref>
+      <xsd:keyref name="SanctionsEntryIDKeyRef" refer="SanctionsEntryKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@SanctionsEntryID"/>
+      </xsd:keyref>
+      <xsd:keyref name="TargetTypeIDKeyRef" refer="TargetTypeKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@TargetTypeID"/>
+      </xsd:keyref>
+      <xsd:keyref name="ExRefTypeIDKeyRef" refer="ExRefTypeKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@ExRefTypeID"/>
+      </xsd:keyref>
+      <xsd:keyref name="PartySubTypeIDKeyRef" refer="PartySubTypeKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@PartySubTypeID"/>
+      </xsd:keyref>
+      <xsd:keyref name="DetailTypeIDKeyRef" refer="DetailTypeKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@DetailTypeID"/>
+      </xsd:keyref>
+      <xsd:keyref name="DetailReferenceIDKeyRef" refer="DetailReferenceKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@DetailReferenceID"/>
+      </xsd:keyref>
+      <xsd:keyref name="LocationIDKeyRef" refer="LocationKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@LocationID"/>
+      </xsd:keyref>
+      <xsd:keyref name="ReliabilityIDKeyRef" refer="ReliabilityKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@ReliabilityID"/>
+      </xsd:keyref>
+      <xsd:keyref name="IdentityFeatureLinkTypeIDKeyRef" refer="IdentityFeatureLinkTypeKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@IdentityFeatureLinkTypeID"/>
+      </xsd:keyref>
+      <xsd:keyref name="FeatureTypeIDKeyRef" refer="FeatureTypeKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@FeatureTypeID"/>
+      </xsd:keyref>
+      <xsd:keyref name="AliasTypeIDKeyRef" refer="AliasTypeKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@AliasTypeID"/>
+      </xsd:keyref>
+      <xsd:keyref name="NamePartTypeIDKeyRef" refer="NamePartTypeKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@NamePartTypeID"/>
+      </xsd:keyref>
+      <xsd:keyref name="NamePartGroupIDKeyRef" refer="NamePartGroupKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@NamePartGroupID"/>
+      </xsd:keyref>
+      <xsd:keyref name="ScriptIDKeyRef" refer="ScriptKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@ScriptID"/>
+      </xsd:keyref>
+      <xsd:keyref name="ScriptStatusIDKeyRef" refer="ScriptStatusKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@ScriptStatusID"/>
+      </xsd:keyref>
+      <xsd:keyref name="DocNameStatusIDKeyRef" refer="DocNameStatusKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@DocNameStatusID"/>
+      </xsd:keyref>
+      <xsd:keyref name="From-ProfileIDKeyRef" refer="ProfileKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@From-ProfileID"/>
+      </xsd:keyref>
+      <xsd:keyref name="To-ProfileIDKeyRef" refer="ProfileKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@To-ProfileID"/>
+      </xsd:keyref>
+      <xsd:keyref name="RelationTypeIDKeyRef" refer="RelationTypeKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@RelationTypeID"/>
+      </xsd:keyref>
+      <xsd:keyref name="RelationQualityIDKeyRef" refer="RelationQualityKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@RelationQualityID"/>
+      </xsd:keyref>
+      <xsd:keyref name="EntryEventTypeIDKeyRef" refer="EntryEventTypeKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@EntryEventTypeID"/>
+      </xsd:keyref>
+      <xsd:keyref name="LegalBasisIDKeyRef" refer="LegalBasisKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@LegalBasisID"/>
+      </xsd:keyref>
+      <xsd:keyref name="SanctionsTypeIDKeyRef" refer="SanctionsTypeKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@SanctionsTypeID"/>
+      </xsd:keyref>
+      <xsd:keyref name="SupInfoTypeIDKeyRef" refer="SupInfoTypeKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@SupInfoTypeID"/>
+      </xsd:keyref>
+      <xsd:keyref name="ProfileIDKeyRef" refer="ProfileKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@ProfileID"/>
+      </xsd:keyref>
+      <xsd:keyref name="ListIDKeyRef" refer="ListKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@ListID"/>
+      </xsd:keyref>
+      <xsd:keyref name="EntryA-SanctionsEntryIDKeyRef" refer="SanctionsEntryKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@EntryA-SanctionsEntryID"/>
+      </xsd:keyref>
+      <xsd:keyref name="EntryB-SanctionsEntryIDKeyRef" refer="SanctionsEntryKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@EntryB-SanctionsEntryID"/>
+      </xsd:keyref>
+      <xsd:keyref name="EntryLinkTypeIDKeyRef" refer="EntryLinkTypeKey">
+         <xsd:selector xpath=".//un:*"/>
+         <xsd:field xpath="@EntryLinkTypeID"/>
+      </xsd:keyref>
+   </xsd:element>
+  <xsd:element name="Comment">
+      <xsd:complexType>
+         <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+               <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+            </xsd:extension>
+         </xsd:simpleContent>
+      </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="FeatureVersionReference">
+      <xsd:complexType>
+         <xsd:attribute name="FeatureVersionID" type="xsd:nonNegativeInteger" use="required"/>
+         <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+      </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="IDRegDocumentReference">
+      <xsd:complexType>
+         <xsd:attribute name="IDRegDocumentID" type="xsd:nonNegativeInteger" use="required"/>
+         <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+      </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="ProfileRelationshipReference">
+      <xsd:complexType>
+         <xsd:attribute name="ProfileRelationshipID" type="xsd:nonNegativeInteger" use="required"/>
+         <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+      </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="DatePeriod">
+      <xsd:complexType>
+         <xsd:sequence>
+            <xsd:element ref="Comment" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="Start" type="DateBoundarySchemaType" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="End" type="DateBoundarySchemaType" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="DurationMinimum" type="DurationSchemaType" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="DurationMaximum" type="DurationSchemaType" minOccurs="0" maxOccurs="1"/>
+         </xsd:sequence>
+         <xsd:attribute name="CalendarTypeID" type="xsd:nonNegativeInteger" use="required"/>
+         <xsd:attribute name="YearFixed" type="xsd:boolean" use="required"/>
+         <xsd:attribute name="MonthFixed" type="xsd:boolean" use="required"/>
+         <xsd:attribute name="DayFixed" type="xsd:boolean" use="required"/>
+         <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+      </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="DirectURL">
+      <xsd:complexType>
+         <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+               <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+            </xsd:extension>
+         </xsd:simpleContent>
+      </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="Year">
+      <xsd:complexType>
+         <xsd:simpleContent>
+            <xsd:extension base="xsd:nonNegativeInteger">
+               <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+            </xsd:extension>
+         </xsd:simpleContent>
+      </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="Month">
+      <xsd:complexType>
+         <xsd:simpleContent>
+            <xsd:extension base="xsd:nonNegativeInteger">
+               <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+            </xsd:extension>
+         </xsd:simpleContent>
+      </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="Day">
+      <xsd:complexType>
+         <xsd:simpleContent>
+            <xsd:extension base="xsd:nonNegativeInteger">
+               <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+            </xsd:extension>
+         </xsd:simpleContent>
+      </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="From" type="DatePointSchemaType"/>
+  <xsd:element name="To" type="DatePointSchemaType"/>
+  <xsd:complexType name="ReferenceValueSetsSchemaType">
+      <xsd:sequence>
+         <xsd:element name="AliasTypeValues">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="AliasType" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:simpleContent>
+                           <xsd:extension base="xsd:string">
+                              <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                           </xsd:extension>
+                        </xsd:simpleContent>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="AreaCodeValues">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="AreaCode" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:simpleContent>
+                           <xsd:extension base="xsd:string">
+                              <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="CountryID" type="xsd:nonNegativeInteger"/>
+                              <xsd:attribute name="Description" type="xsd:string"/>
+                              <xsd:attribute name="AreaCodeTypeID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                           </xsd:extension>
+                        </xsd:simpleContent>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="AreaCodeTypeValues">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="AreaCodeType" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:simpleContent>
+                           <xsd:extension base="xsd:string">
+                              <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                           </xsd:extension>
+                        </xsd:simpleContent>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="CalendarTypeValues">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="CalendarType" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:simpleContent>
+                           <xsd:extension base="xsd:string">
+                              <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                           </xsd:extension>
+                        </xsd:simpleContent>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="CountryValues">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="Country" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:simpleContent>
+                           <xsd:extension base="xsd:string">
+                              <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="Comment" type="xsd:string"/>
+                              <xsd:attribute name="IS03166-3Code" type="xsd:string"/>
+                              <xsd:attribute name="ISO3" type="xsd:string"/>
+                              <xsd:attribute name="ISO2" type="xsd:string"/>
+                              <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                           </xsd:extension>
+                        </xsd:simpleContent>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="CountryRelevanceValues">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="CountryRelevance" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:simpleContent>
+                           <xsd:extension base="xsd:string">
+                              <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                           </xsd:extension>
+                        </xsd:simpleContent>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="DecisionMakingBodyValues">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="DecisionMakingBody" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:simpleContent>
+                           <xsd:extension base="xsd:string">
+                              <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="OrganisationID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                           </xsd:extension>
+                        </xsd:simpleContent>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="DetailReferenceValues">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="DetailReference" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:simpleContent>
+                           <xsd:extension base="xsd:string">
+                              <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="DetailCode" type="xsd:string"/>
+                              <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                           </xsd:extension>
+                        </xsd:simpleContent>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="DetailTypeValues">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="DetailType" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:simpleContent>
+                           <xsd:extension base="xsd:string">
+                              <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                           </xsd:extension>
+                        </xsd:simpleContent>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="DocNameStatusValues">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="DocNameStatus" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:simpleContent>
+                           <xsd:extension base="xsd:string">
+                              <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                           </xsd:extension>
+                        </xsd:simpleContent>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="EntryEventTypeValues">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="EntryEventType" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:simpleContent>
+                           <xsd:extension base="xsd:string">
+                              <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                           </xsd:extension>
+                        </xsd:simpleContent>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="EntryLinkTypeValues">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="EntryLinkType" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:simpleContent>
+                           <xsd:extension base="xsd:string">
+                              <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                           </xsd:extension>
+                        </xsd:simpleContent>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="ExRefTypeValues">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="ExRefType" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:simpleContent>
+                           <xsd:extension base="xsd:string">
+                              <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                           </xsd:extension>
+                        </xsd:simpleContent>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="FeatureTypeValues">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="FeatureType" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:simpleContent>
+                           <xsd:extension base="xsd:string">
+                              <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="FeatureTypeGroupID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                           </xsd:extension>
+                        </xsd:simpleContent>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="FeatureTypeGroupValues">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="FeatureTypeGroup" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:simpleContent>
+                           <xsd:extension base="xsd:string">
+                              <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                           </xsd:extension>
+                        </xsd:simpleContent>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="IDRegDocDateTypeValues">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="IDRegDocDateType" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:simpleContent>
+                           <xsd:extension base="xsd:string">
+                              <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                           </xsd:extension>
+                        </xsd:simpleContent>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="IDRegDocTypeValues">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="IDRegDocType" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:simpleContent>
+                           <xsd:extension base="xsd:string">
+                              <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                           </xsd:extension>
+                        </xsd:simpleContent>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="IdentityFeatureLinkTypeValues">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="IdentityFeatureLinkType" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:simpleContent>
+                           <xsd:extension base="xsd:string">
+                              <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                           </xsd:extension>
+                        </xsd:simpleContent>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="LegalBasisValues">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="LegalBasis" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:simpleContent>
+                           <xsd:extension base="xsd:string">
+                              <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="LegalBasisShortRef" type="xsd:string"/>
+                              <xsd:attribute name="LegalBasisTypeID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="SanctionsProgramID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                           </xsd:extension>
+                        </xsd:simpleContent>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="LegalBasisTypeValues">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="LegalBasisType" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:simpleContent>
+                           <xsd:extension base="xsd:string">
+                              <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                           </xsd:extension>
+                        </xsd:simpleContent>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="ListValues">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="List" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:simpleContent>
+                           <xsd:extension base="xsd:string">
+                              <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="Comment" type="xsd:string"/>
+                              <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                           </xsd:extension>
+                        </xsd:simpleContent>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="LocPartTypeValues">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="LocPartType" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:simpleContent>
+                           <xsd:extension base="xsd:string">
+                              <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                           </xsd:extension>
+                        </xsd:simpleContent>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="LocPartValueStatusValues">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="LocPartValueStatus" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:simpleContent>
+                           <xsd:extension base="xsd:string">
+                              <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                           </xsd:extension>
+                        </xsd:simpleContent>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="LocPartValueTypeValues">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="LocPartValueType" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:simpleContent>
+                           <xsd:extension base="xsd:string">
+                              <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                           </xsd:extension>
+                        </xsd:simpleContent>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="NamePartTypeValues">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="NamePartType" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:simpleContent>
+                           <xsd:extension base="xsd:string">
+                              <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                           </xsd:extension>
+                        </xsd:simpleContent>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="OrganisationValues">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="Organisation" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:simpleContent>
+                           <xsd:extension base="xsd:string">
+                              <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="CountryID" type="xsd:nonNegativeInteger"/>
+                              <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                           </xsd:extension>
+                        </xsd:simpleContent>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="PartySubTypeValues">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="PartySubType" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:simpleContent>
+                           <xsd:extension base="xsd:string">
+                              <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="PartyTypeID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                           </xsd:extension>
+                        </xsd:simpleContent>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="PartyTypeValues">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="PartyType" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:simpleContent>
+                           <xsd:extension base="xsd:string">
+                              <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                           </xsd:extension>
+                        </xsd:simpleContent>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="RelationQualityValues">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="RelationQuality" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:simpleContent>
+                           <xsd:extension base="xsd:string">
+                              <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                           </xsd:extension>
+                        </xsd:simpleContent>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="RelationTypeValues">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="RelationType" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:simpleContent>
+                           <xsd:extension base="xsd:string">
+                              <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="Symmetrical" type="xsd:boolean" use="required"/>
+                              <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                           </xsd:extension>
+                        </xsd:simpleContent>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="ReliabilityValues">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="Reliability" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:simpleContent>
+                           <xsd:extension base="xsd:string">
+                              <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                           </xsd:extension>
+                        </xsd:simpleContent>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="SanctionsProgramValues">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="SanctionsProgram" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:simpleContent>
+                           <xsd:extension base="xsd:string">
+                              <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="SubsidiaryBodyID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                           </xsd:extension>
+                        </xsd:simpleContent>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="SanctionsTypeValues">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="SanctionsType" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:simpleContent>
+                           <xsd:extension base="xsd:string">
+                              <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                           </xsd:extension>
+                        </xsd:simpleContent>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="ScriptValues">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="Script" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:simpleContent>
+                           <xsd:extension base="xsd:string">
+                              <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="ScriptCode" type="xsd:string"/>
+                              <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                           </xsd:extension>
+                        </xsd:simpleContent>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="ScriptStatusValues">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="ScriptStatus" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:simpleContent>
+                           <xsd:extension base="xsd:string">
+                              <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                           </xsd:extension>
+                        </xsd:simpleContent>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="SubsidiaryBodyValues">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="SubsidiaryBody" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:simpleContent>
+                           <xsd:extension base="xsd:string">
+                              <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="Notional" type="xsd:boolean" use="required"/>
+                              <xsd:attribute name="DecisionMakingBodyID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                           </xsd:extension>
+                        </xsd:simpleContent>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="SupInfoTypeValues">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="SupInfoType" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:simpleContent>
+                           <xsd:extension base="xsd:string">
+                              <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                           </xsd:extension>
+                        </xsd:simpleContent>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="TargetTypeValues">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="TargetType" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:simpleContent>
+                           <xsd:extension base="xsd:string">
+                              <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                           </xsd:extension>
+                        </xsd:simpleContent>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="ValidityValues">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="Validity" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:simpleContent>
+                           <xsd:extension base="xsd:string">
+                              <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                           </xsd:extension>
+                        </xsd:simpleContent>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+      </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="DateBoundarySchemaType">
+      <xsd:choice>
+         <xsd:sequence>
+            <xsd:element ref="From"/>
+            <xsd:element ref="To" minOccurs="0" maxOccurs="1"/>
+         </xsd:sequence>
+         <xsd:element ref="To"/>
+      </xsd:choice>
+      <xsd:attribute name="Approximate" type="xsd:boolean" use="required"/>
+      <xsd:attribute name="YearFixed" type="xsd:boolean" use="required"/>
+      <xsd:attribute name="MonthFixed" type="xsd:boolean" use="required"/>
+      <xsd:attribute name="DayFixed" type="xsd:boolean" use="required"/>
+      <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+  </xsd:complexType>
+  <xsd:complexType name="DatePointSchemaType">
+      <xsd:sequence>
+         <xsd:element ref="Year"/>
+         <xsd:element ref="Month"/>
+         <xsd:element ref="Day"/>
+      </xsd:sequence>
+      <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+  </xsd:complexType>
+  <xsd:complexType name="DurationSchemaType">
+      <xsd:sequence>
+         <xsd:element name="Years">
+            <xsd:complexType>
+               <xsd:simpleContent>
+                  <xsd:extension base="xsd:nonNegativeInteger">
+                     <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                  </xsd:extension>
+               </xsd:simpleContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="Months">
+            <xsd:complexType>
+               <xsd:simpleContent>
+                  <xsd:extension base="xsd:nonNegativeInteger">
+                     <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                  </xsd:extension>
+               </xsd:simpleContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="Days">
+            <xsd:complexType>
+               <xsd:simpleContent>
+                  <xsd:extension base="xsd:nonNegativeInteger">
+                     <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                  </xsd:extension>
+               </xsd:simpleContent>
+            </xsd:complexType>
+         </xsd:element>
+      </xsd:sequence>
+      <xsd:attribute name="Approximate" type="xsd:boolean" use="required"/>
+      <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+  </xsd:complexType>
+  <xsd:complexType name="DateSchemaType">
+      <xsd:sequence>
+         <xsd:element ref="Year"/>
+         <xsd:element ref="Month"/>
+         <xsd:element ref="Day"/>
+      </xsd:sequence>
+      <xsd:attribute name="CalendarTypeID" type="xsd:nonNegativeInteger" use="required"/>
+      <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+  </xsd:complexType>
+  <xsd:complexType name="LocationSchemaType">
+      <xsd:sequence>
+         <xsd:element ref="Comment" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="LocationAreaCode" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:attribute name="AreaCodeID" type="xsd:nonNegativeInteger" use="required"/>
+               <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="LocationCountry" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:attribute name="CountryID" type="xsd:nonNegativeInteger" use="required"/>
+               <xsd:attribute name="CountryRelevanceID" type="xsd:nonNegativeInteger" use="required"/>
+               <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="LocationPart" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="LocationPartValue" minOccurs="1" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:sequence>
+                           <xsd:element ref="Comment" minOccurs="0" maxOccurs="1"/>
+                           <xsd:element name="Value">
+                              <xsd:complexType>
+                                 <xsd:simpleContent>
+                                    <xsd:extension base="xsd:string">
+                                       <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                                    </xsd:extension>
+                                 </xsd:simpleContent>
+                              </xsd:complexType>
+                           </xsd:element>
+                        </xsd:sequence>
+                        <xsd:attribute name="Primary" type="xsd:boolean" use="required"/>
+                        <xsd:attribute name="LocPartValueTypeID" type="xsd:nonNegativeInteger" use="required"/>
+                        <xsd:attribute name="LocPartValueStatusID" type="xsd:nonNegativeInteger" use="required"/>
+                        <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+               <xsd:attribute name="LocPartTypeID" type="xsd:nonNegativeInteger" use="required"/>
+               <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element ref="FeatureVersionReference" minOccurs="0" maxOccurs="unbounded"/>
+         <xsd:element ref="IDRegDocumentReference" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+      <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+  </xsd:complexType>
+  <xsd:complexType name="IDRegDocumentSchemaType">
+      <xsd:sequence>
+         <xsd:element ref="Comment" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="IDRegistrationNo" minOccurs="0" maxOccurs="1">
+            <xsd:complexType>
+               <xsd:simpleContent>
+                  <xsd:extension base="xsd:string">
+                     <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                  </xsd:extension>
+               </xsd:simpleContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="IssuingAuthority" minOccurs="0" maxOccurs="1">
+            <xsd:complexType>
+               <xsd:simpleContent>
+                  <xsd:extension base="xsd:string">
+                     <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                  </xsd:extension>
+               </xsd:simpleContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="DocumentDate" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element ref="DatePeriod"/>
+               </xsd:sequence>
+               <xsd:attribute name="IDRegDocDateTypeID" type="xsd:nonNegativeInteger" use="required"/>
+               <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="IDRegDocumentMention" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:attribute name="IDRegDocumentID" type="xsd:nonNegativeInteger" use="required"/>
+               <xsd:attribute name="ReferenceType" type="ReferenceSchemaType" use="required"/>
+               <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element ref="FeatureVersionReference" minOccurs="0" maxOccurs="unbounded"/>
+         <xsd:element name="DocumentedNameReference" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:attribute name="DocumentedNameID" type="xsd:nonNegativeInteger" use="required"/>
+               <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element ref="ProfileRelationshipReference" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+      <xsd:attribute name="IDRegDocTypeID" type="xsd:nonNegativeInteger" use="required"/>
+      <xsd:attribute name="IdentityID" type="xsd:nonNegativeInteger" use="required"/>
+      <xsd:attribute name="IssuedBy-CountryID" type="xsd:nonNegativeInteger"/>
+      <xsd:attribute name="IssuedIn-LocationID" type="xsd:nonNegativeInteger"/>
+      <xsd:attribute name="ValidityID" type="xsd:nonNegativeInteger"/>
+      <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+  </xsd:complexType>
+  <xsd:complexType name="DistinctPartySchemaType">
+      <xsd:sequence>
+         <xsd:element ref="Comment" minOccurs="0" maxOccurs="unbounded"/>
+         <xsd:element name="Profile" minOccurs="1" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element ref="Comment" minOccurs="0" maxOccurs="unbounded"/>
+                  <xsd:element name="Identity" type="IdentitySchemaType" minOccurs="1" maxOccurs="unbounded"/>
+                  <xsd:element name="Feature" type="FeatureSchemaType" minOccurs="0" maxOccurs="unbounded"/>
+                  <xsd:element name="SanctionsEntryReference" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:attribute name="SanctionsEntryID" type="xsd:nonNegativeInteger" use="required"/>
+                        <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                     </xsd:complexType>
+                  </xsd:element>
+                  <xsd:element name="ExternalReference" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:sequence>
+                           <xsd:element ref="Comment" minOccurs="0" maxOccurs="1"/>
+                           <xsd:element name="ExRefValue" minOccurs="0" maxOccurs="1">
+                              <xsd:complexType>
+                                 <xsd:simpleContent>
+                                    <xsd:extension base="xsd:string">
+                                       <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                                    </xsd:extension>
+                                 </xsd:simpleContent>
+                              </xsd:complexType>
+                           </xsd:element>
+                           <xsd:element ref="DirectURL" minOccurs="0" maxOccurs="1"/>
+                           <xsd:element name="SubLink" minOccurs="0" maxOccurs="unbounded">
+                              <xsd:complexType>
+                                 <xsd:sequence>
+                                    <xsd:element name="Description" minOccurs="0" maxOccurs="1">
+                                       <xsd:complexType>
+                                          <xsd:simpleContent>
+                                             <xsd:extension base="xsd:string">
+                                                <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                                             </xsd:extension>
+                                          </xsd:simpleContent>
+                                       </xsd:complexType>
+                                    </xsd:element>
+                                    <xsd:element ref="DirectURL"/>
+                                 </xsd:sequence>
+                                 <xsd:attribute name="TargetTypeID" type="xsd:nonNegativeInteger" use="required"/>
+                                 <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                              </xsd:complexType>
+                           </xsd:element>
+                        </xsd:sequence>
+                        <xsd:attribute name="ExRefTypeID" type="xsd:nonNegativeInteger" use="required"/>
+                        <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+               <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+               <xsd:attribute name="PartySubTypeID" type="xsd:nonNegativeInteger" use="required"/>
+               <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+            </xsd:complexType>
+         </xsd:element>
+      </xsd:sequence>
+      <xsd:attribute name="FixedRef" type="xsd:string" use="required"/>
+      <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+  </xsd:complexType>
+  <xsd:complexType name="FeatureSchemaType">
+      <xsd:sequence>
+         <xsd:element name="FeatureVersion" minOccurs="1" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element ref="Comment" minOccurs="0" maxOccurs="1"/>
+                  <xsd:element ref="DatePeriod" minOccurs="0" maxOccurs="unbounded"/>
+                  <xsd:element name="VersionDetail" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:simpleContent>
+                           <xsd:extension base="xsd:string">
+                              <xsd:attribute name="DetailTypeID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="DetailReferenceID" type="xsd:nonNegativeInteger"/>
+                              <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                           </xsd:extension>
+                        </xsd:simpleContent>
+                     </xsd:complexType>
+                  </xsd:element>
+                  <xsd:element name="VersionLocation" minOccurs="0" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:attribute name="LocationID" type="xsd:nonNegativeInteger" use="required"/>
+                        <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                     </xsd:complexType>
+                  </xsd:element>
+                  <xsd:element ref="IDRegDocumentReference" minOccurs="0" maxOccurs="unbounded"/>
+               </xsd:sequence>
+               <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+               <xsd:attribute name="ReliabilityID" type="xsd:nonNegativeInteger" use="required"/>
+               <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="IdentityReference" minOccurs="1" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:attribute name="IdentityID" type="xsd:nonNegativeInteger" use="required"/>
+               <xsd:attribute name="IdentityFeatureLinkTypeID" type="xsd:nonNegativeInteger" use="required"/>
+               <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+            </xsd:complexType>
+         </xsd:element>
+      </xsd:sequence>
+      <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+      <xsd:attribute name="FeatureTypeID" type="xsd:nonNegativeInteger" use="required"/>
+      <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+  </xsd:complexType>
+  <xsd:complexType name="IdentitySchemaType">
+      <xsd:sequence>
+         <xsd:element ref="Comment" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="Alias" minOccurs="1" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element ref="Comment" minOccurs="0" maxOccurs="1"/>
+                  <xsd:element ref="DatePeriod" minOccurs="0" maxOccurs="1"/>
+                  <xsd:element name="DocumentedName" type="DocumentedNameSchemaType" minOccurs="1"
+                               maxOccurs="unbounded"/>
+               </xsd:sequence>
+               <xsd:attribute name="FixedRef" type="xsd:string" use="required"/>
+               <xsd:attribute name="AliasTypeID" type="xsd:nonNegativeInteger" use="required"/>
+               <xsd:attribute name="Primary" type="xsd:boolean" use="required"/>
+               <xsd:attribute name="LowQuality" type="xsd:boolean" use="required"/>
+               <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="NamePartGroups">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="MasterNamePartGroup" minOccurs="1" maxOccurs="unbounded">
+                     <xsd:complexType>
+                        <xsd:sequence>
+                           <xsd:element name="NamePartGroup" minOccurs="1" maxOccurs="unbounded">
+                              <xsd:complexType>
+                                 <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+                                 <xsd:attribute name="NamePartTypeID" type="xsd:nonNegativeInteger" use="required"/>
+                                 <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                              </xsd:complexType>
+                           </xsd:element>
+                        </xsd:sequence>
+                        <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+               <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element ref="IDRegDocumentReference" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+      <xsd:attribute name="FixedRef" type="xsd:string" use="required"/>
+      <xsd:attribute name="Primary" type="xsd:boolean" use="required"/>
+      <xsd:attribute name="False" type="xsd:boolean" use="required"/>
+      <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+  </xsd:complexType>
+  <xsd:complexType name="DocumentedNameSchemaType">
+      <xsd:sequence>
+         <xsd:element ref="Comment" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="DocumentedNamePart" minOccurs="1" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="NamePartValue">
+                     <xsd:complexType>
+                        <xsd:simpleContent>
+                           <xsd:extension base="xsd:string">
+                              <xsd:attribute name="NamePartGroupID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="ScriptID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="ScriptStatusID" type="xsd:nonNegativeInteger" use="required"/>
+                              <xsd:attribute name="Acronym" type="xsd:boolean" use="required"/>
+                              <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                           </xsd:extension>
+                        </xsd:simpleContent>
+                     </xsd:complexType>
+                  </xsd:element>
+               </xsd:sequence>
+               <xsd:attribute name="LeadingChars" type="xsd:string"/>
+               <xsd:attribute name="TrailingChars" type="xsd:string"/>
+               <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="DocumentedNameCountry" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element ref="Comment" minOccurs="0" maxOccurs="1"/>
+               </xsd:sequence>
+               <xsd:attribute name="CountryID" type="xsd:nonNegativeInteger" use="required"/>
+               <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element ref="IDRegDocumentReference" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+      <xsd:attribute name="FixedRef" type="xsd:string" use="required"/>
+      <xsd:attribute name="DocNameStatusID" type="xsd:nonNegativeInteger" use="required"/>
+      <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+  </xsd:complexType>
+  <xsd:complexType name="ProfileRelationshipSchemaType">
+      <xsd:sequence>
+         <xsd:element ref="Comment" minOccurs="0" maxOccurs="1"/>
+         <xsd:element ref="DatePeriod" minOccurs="0" maxOccurs="1"/>
+         <xsd:element ref="IDRegDocumentReference" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+      <xsd:attribute name="From-ProfileID" type="xsd:nonNegativeInteger" use="required"/>
+      <xsd:attribute name="To-ProfileID" type="xsd:nonNegativeInteger" use="required"/>
+      <xsd:attribute name="RelationTypeID" type="xsd:nonNegativeInteger" use="required"/>
+      <xsd:attribute name="RelationQualityID" type="xsd:nonNegativeInteger" use="required"/>
+      <xsd:attribute name="Former" type="xsd:boolean" use="required"/>
+      <xsd:attribute name="SanctionsEntryID" type="xsd:nonNegativeInteger" use="required"/>
+      <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+  </xsd:complexType>
+  <xsd:complexType name="SanctionsEntrySchemaType">
+      <xsd:sequence>
+         <xsd:element ref="Comment" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="LimitationsToListing" minOccurs="0" maxOccurs="1">
+            <xsd:complexType>
+               <xsd:simpleContent>
+                  <xsd:extension base="xsd:string">
+                     <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                  </xsd:extension>
+               </xsd:simpleContent>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="EntryEvent" minOccurs="1" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element ref="Comment" minOccurs="0" maxOccurs="1"/>
+                  <xsd:element name="Date" type="DateSchemaType"/>
+               </xsd:sequence>
+               <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+               <xsd:attribute name="EntryEventTypeID" type="xsd:nonNegativeInteger" use="required"/>
+               <xsd:attribute name="LegalBasisID" type="xsd:nonNegativeInteger"/>
+               <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="SanctionsMeasure" minOccurs="1" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element ref="Comment" minOccurs="0" maxOccurs="1"/>
+                  <xsd:element ref="DatePeriod"/>
+               </xsd:sequence>
+               <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+               <xsd:attribute name="SanctionsTypeID" type="xsd:nonNegativeInteger" use="required"/>
+               <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="SupportingInfo" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="Text" minOccurs="0" maxOccurs="1">
+                     <xsd:complexType>
+                        <xsd:simpleContent>
+                           <xsd:extension base="xsd:string">
+                              <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+                           </xsd:extension>
+                        </xsd:simpleContent>
+                     </xsd:complexType>
+                  </xsd:element>
+                  <xsd:element ref="DirectURL" minOccurs="0" maxOccurs="1"/>
+               </xsd:sequence>
+               <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+               <xsd:attribute name="SupInfoTypeID" type="xsd:nonNegativeInteger" use="required"/>
+               <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element ref="ProfileRelationshipReference" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+      <xsd:attribute name="ProfileID" type="xsd:nonNegativeInteger" use="required"/>
+      <xsd:attribute name="ListID" type="xsd:nonNegativeInteger"/>
+      <xsd:attribute name="EntryProfileRef" type="xsd:string"/>
+      <xsd:attribute name="EntryDeltaFlag" type="EntryDeltaFlagSchemaType"/>
+      <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+  </xsd:complexType>
+  <xsd:complexType name="SanctionsEntryLinkSchemaType">
+      <xsd:sequence>
+         <xsd:element ref="Comment" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="Date" type="DateSchemaType"/>
+      </xsd:sequence>
+      <xsd:attribute name="ID" type="xsd:nonNegativeInteger" use="required"/>
+      <xsd:attribute name="EntryA-SanctionsEntryID" type="xsd:nonNegativeInteger" use="required"/>
+      <xsd:attribute name="EntryB-SanctionsEntryID" type="xsd:nonNegativeInteger" use="required"/>
+      <xsd:attribute name="EntryLinkTypeID" type="xsd:nonNegativeInteger" use="required"/>
+      <xsd:attribute name="DeltaAction" type="DeltaActionSchemaType"/>
+  </xsd:complexType>
+  <xsd:simpleType name="DeltaActionSchemaType">
+      <xsd:restriction base="xsd:string">
+         <xsd:enumeration value="add"/>
+         <xsd:enumeration value="amend"/>
+         <xsd:enumeration value="delete"/>
+         <xsd:enumeration value="revise"/>
+      </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="ReferenceSchemaType">
+      <xsd:restriction base="xsd:string">
+         <xsd:enumeration value="RefersTo"/>
+         <xsd:enumeration value="ReferencedBy"/>
+      </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="EntryDeltaFlagSchemaType">
+      <xsd:restriction base="xsd:string">
+         <xsd:enumeration value="NewEntry"/>
+         <xsd:enumeration value="DeletedEntry"/>
+         <xsd:enumeration value="ModifiedEntry"/>
+      </xsd:restriction>
+  </xsd:simpleType>
+</xsd:schema>

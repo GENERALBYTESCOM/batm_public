@@ -98,7 +98,7 @@ public interface IExtension {
      * Returns the list of watchlists that extenstion contains
      * @return
      */
-    public Set<String> getSupportedWatchLists();
+    public Set<String> getSupportedWatchListsNames();
 
 
     /**
