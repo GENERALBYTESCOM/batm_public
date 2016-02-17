@@ -195,6 +195,22 @@
         </ratesource>
         <cryptologo cryptocurrency="ICG" file="icg.png"/>
     </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.startcoin.StartcoinExtension" >
+        <wallet prefix="startcoind" name="Startcoind">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>START</cryptocurrency>
+        </wallet>
+        <ratesource prefix="startfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>START</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="START" file="start.png"/>
+    </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.nubits.NubitsExtension" >
         <wallet prefix="nud" name="Nud">
             <param name="protocol" />

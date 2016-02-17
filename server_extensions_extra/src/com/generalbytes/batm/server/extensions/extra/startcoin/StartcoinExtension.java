@@ -69,7 +69,7 @@ public class StartcoinExtension implements IExtension{
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (ICurrencies.ICG.equalsIgnoreCase(cryptoCurrency)) {
+        if (ICurrencies.START.equalsIgnoreCase(cryptoCurrency)) {
             return new StartcoinAddressValidator();
         }
         return null;
@@ -86,7 +86,7 @@ public class StartcoinExtension implements IExtension{
             StringTokenizer st = new StringTokenizer(sourceLogin,":");
             String exchangeType = st.nextToken();
 
-            if ("icgfix".equalsIgnoreCase(exchangeType)) {
+            if ("startfix".equalsIgnoreCase(exchangeType)) {
                 BigDecimal rate = BigDecimal.ZERO;
                 if (st.hasMoreTokens()) {
                     try {
@@ -113,7 +113,7 @@ public class StartcoinExtension implements IExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.ICG);
+        result.add(ICurrencies.START);
         return result;
     }
 
