@@ -25,6 +25,13 @@ public interface IWatchList {
     public static final int LIST_CHANGED        = 1;
     public static final int LIST_REFRESH_FAILED = 2;
 
+
+    /**
+     * Ths method is called just once and before refresh method is called
+     * @param downloadDirectory
+     */
+    public void init(String downloadDirectory);
+
     /**
      * Unique name of the watchlist
      * @return
@@ -40,9 +47,8 @@ public interface IWatchList {
     /**
      * Performs the re-download of the watchlist from the remote side @see LIST_NOT_CHANGED or LIST_CHANGED or LIST_REFRESH_FAILED if download fails.
      * @return
-     * @param downloadDirectory
      */
-    public int refresh(String downloadDirectory);
+    public int refresh();
 
     /**
      * This method returns number of recommended minutes for which the watchlist is considered valid. After this period method refresh() should be called again.

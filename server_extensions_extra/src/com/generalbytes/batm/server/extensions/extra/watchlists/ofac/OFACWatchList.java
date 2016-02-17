@@ -69,12 +69,17 @@ public class OFACWatchList implements IWatchList{
     }
 
     @Override
+    public void init(String downloadDirectory) {
+        this.downloadDirectory = downloadDirectory;
+    }
+
+    @Override
     public int recommendedRefreshPeriodInMins() {
         return UPDATE_PERIOD_IN_MINS;
     }
 
     @Override
-    public int refresh(String downloadDirectory) {
+    public int refresh() {
         this.downloadDirectory = downloadDirectory;
         File watchlistsDir = new File(downloadDirectory);
         if (!watchlistsDir.exists()) {
@@ -147,7 +152,7 @@ public class OFACWatchList implements IWatchList{
             final ArrayList<WatchListMatch> matches = new ArrayList<WatchListMatch>();
             for (String partyId : result) {
                 final String partyIndex = sanctions.getPartyIndexByPartyId(partyId);
-                matches.add(new WatchListMatch(100,"Matched SDN Number: " + partyId + " partyIndex: "+ partyIndex + ". For more details click <a href=\"https://sanctionssearch.ofac.treas.gov/Details.aspx?id=" + partyIndex + "\">here</a>.",getName()));
+                matches.add(new WatchListMatch(100,"Matched SDN Number: " + partyId + " partyIndex: "+ partyIndex + ". For more details click <a href=\'https://sanctionssearch.ofac.treas.gov/Details.aspx?id=" + partyIndex + "\'>here</a>.",getName()));
             }
             return new WatchListResult(matches);
         }
