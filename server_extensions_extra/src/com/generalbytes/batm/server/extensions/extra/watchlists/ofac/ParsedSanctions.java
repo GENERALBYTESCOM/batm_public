@@ -65,13 +65,13 @@ public class ParsedSanctions {
     public static ParsedSanctions parse(Sanctions sanctions) {
         List<ParsedNamePart> names = new ArrayList<ParsedNamePart>();
         Map<String,String> partyIndexes = new HashMap<String, String>();
-        long partyIndex = 0;
         final Sanctions.DistinctParties distinctParties = sanctions.getDistinctParties();
         final List<DistinctPartySchemaType> distinctParty = distinctParties.getDistinctParty();
+
         for (int i = 0; i < distinctParty.size(); i++) {
             DistinctPartySchemaType dp = distinctParty.get(i);
             final String profileId = dp.getFixedRef();
-            partyIndexes.put(profileId,partyIndex++ +"");
+            partyIndexes.put(profileId,i +"");
 
             final List<DistinctPartySchemaType.Profile> profile = dp.getProfile();
             for (int j = 0; j < profile.size(); j++) {

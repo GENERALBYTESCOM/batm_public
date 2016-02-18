@@ -80,7 +80,6 @@ public class OFACWatchList implements IWatchList{
 
     @Override
     public int refresh() {
-        this.downloadDirectory = downloadDirectory;
         File watchlistsDir = new File(downloadDirectory);
         if (!watchlistsDir.exists()) {
             watchlistsDir.mkdirs();
