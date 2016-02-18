@@ -143,16 +143,16 @@ public class OFACWatchList implements IWatchList{
         }
 
         //do the actual matching
-        final Set<String> result = sanctions.search(query.getFirstName(), query.getLastName());
+        final Set<Match> result = sanctions.search(query.getFirstName(), query.getLastName());
 
 
         if (result.isEmpty()) {
             return new WatchListResult(WatchListResult.RESULT_TYPE_WATCHLIST_SEARCHED);
         }else{
             final ArrayList<WatchListMatch> matches = new ArrayList<WatchListMatch>();
-            for (String partyId : result) {
-                final String partyIndex = sanctions.getPartyIndexByPartyId(partyId);
-                matches.add(new WatchListMatch(100,"Matched SDN Number: " + partyId + " partyIndex: "+ partyIndex + ". For more details click <a href=\'https://sanctionssearch.ofac.treas.gov/Details.aspx?id=" + partyIndex + "\'>here</a>.",getName()));
+            for (Match match : result) {
+                final String partyIndex = sanctions.getPartyIndexByPartyId(match.getPartyId());
+                matches.add(new WatchListMatch(match.getScore(),"Matched SDN Number: " + match.getPartyId() + " partyIndex: "+ partyIndex + ". For more details click <a href=\'https://sanctionssearch.ofac.treas.gov/Details.aspx?id=" + partyIndex + "\'>here</a>.",getName()));
             }
             return new WatchListResult(matches);
         }

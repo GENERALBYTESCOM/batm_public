@@ -62,10 +62,6 @@ public class ParsedSanctions {
         this.partyIndexes = partyIndexes;
     }
 
-    private ParsedSanctions(Map<String, List<ParsedNamePart>> nameParts) {
-        this.nameParts = nameParts;
-    }
-
     public static ParsedSanctions parse(Sanctions sanctions) {
         List<ParsedNamePart> names = new ArrayList<ParsedNamePart>();
         Map<String,String> partyIndexes = new HashMap<String, String>();
@@ -144,12 +140,12 @@ public class ParsedSanctions {
      * @param lastName
      * @return
      */
-    public Set<String> search(String firstName, String lastName) {
+    public Set<Match> search(String firstName, String lastName) {
         lastName = lastName.trim();
         firstName = firstName.trim();
 
         Set<String> candidateParties = new HashSet<String>();
-        Set<String> matchedParties = new HashSet<String>();
+        Set<Match> matchedParties = new HashSet<Match>();
 
 
         if (firstName.isEmpty()) {
@@ -160,7 +156,7 @@ public class ParsedSanctions {
                 for (int i = 0; i < parsedNameParts.size(); i++) {
                     ParsedNamePart namePart = parsedNameParts.get(i);
                     if (namePart.getValue().trim().equalsIgnoreCase(lastName)) {
-                        matchedParties.add(namePart.getPartyId());
+                        matchedParties.add(new Match(namePart.getPartyId(),100));
                     }
                 }
             }
@@ -184,9 +180,17 @@ public class ParsedSanctions {
                     if (candidateParties.contains(namePart.getPartyId())) {
                         if (namePart.getValue().trim().equalsIgnoreCase(firstName)) {
                             //ok seems like we have a winner
-                            matchedParties.add(namePart.getPartyId());
+                            matchedParties.add(new Match(namePart.getPartyId(),100));
                         }
                     }
+                }
+            }
+
+            if (matchedParties.size() == 0) {
+                //both first name and last name didn't match
+                //so lets report at least lastname matches with 50% score/confidence
+                for (String candidateParty : candidateParties) {
+                    matchedParties.add(new Match(candidateParty,50));
                 }
             }
         }
