@@ -34,7 +34,7 @@ public class StartcoinAddressValidator implements ICryptoAddressValidator {
     }
 
     private boolean isStartcoinAddressValid(String address) {
-        if (address.startsWith("I")) {
+        if (address.startsWith("S")) {
             try {
                 Base58.decodeToBigInteger(address);
                 Base58.decodeChecked(address);
