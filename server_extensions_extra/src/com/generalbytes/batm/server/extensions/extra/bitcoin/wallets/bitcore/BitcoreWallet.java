@@ -33,6 +33,7 @@ import java.util.Set;
 public class BitcoreWallet implements IWallet {
     private static final Logger log = LoggerFactory.getLogger(BitcoreWallet.class);
     private static final BigDecimal coin = BigDecimal.valueOf(Math.pow(10, 8));
+    private static final Integer readTimeout = 90 * 1000; //90 seconds
 
     private final String apiKey;
     private final IBitcoreProxyAPI api;
@@ -47,7 +48,9 @@ public class BitcoreWallet implements IWallet {
 
     public BitcoreWallet(String apiKey, String proxyUrl) {
         this.apiKey = apiKey;
-        api = RestProxyFactory.createProxy(IBitcoreProxyAPI.class, proxyUrl);
+        ClientConfig config = new ClientConfig();
+        config.setHttpReadTimeout(readTimeout);
+        api = RestProxyFactory.createProxy(IBitcoreProxyAPI.class, proxyUrl, config);
     }
 
     @Override
