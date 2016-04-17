@@ -14,7 +14,7 @@
  * GENERAL BYTES s.r.o.
  * Web      :  http://www.generalbytes.com
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.shadowcash.wallets;
+package com.generalbytes.batm.server.extensions.extra.shadowcash;
 
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.ICurrencies;
@@ -28,17 +28,19 @@ import com.generalbytes.batm.server.extensions.extra.shadowcash.sources.FixPrice
 import com.generalbytes.batm.server.extensions.extra.shadowcash.sources.poloniex.PoloniexRateSource;
 import com.generalbytes.batm.server.extensions.extra.shadowcash.wallets.shadowcashd.ShadowcashdRPCWallet;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
+import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+@Slf4j
 public class ShadowcashExtension implements IExtension {
 
     @Override
     public String getName() {
-        return "BATM Shadowcash extra extension";
+        return "BATM Shadowcash extension";
     }
 
     @Override
@@ -137,12 +139,12 @@ public class ShadowcashExtension implements IExtension {
                     preferredFiatCurrency = st.nextToken();
                 }
                 return new FixPriceRateSource(rate, preferredFiatCurrency);
-            } else if ("poloniexrs".equalsIgnoreCase(rateSourceType)) {
+            } else if ("sdcpoloniexrs".equalsIgnoreCase(rateSourceType)) {
                 if (st.hasMoreTokens()) {
                     preferredFiatCurrency = st.nextToken();
                 }
                 return new PoloniexRateSource(preferredFiatCurrency);
-            } else if ("bittrexrs".equalsIgnoreCase(rateSourceType)) {
+            } else if ("sdcbittrexrs".equalsIgnoreCase(rateSourceType)) {
                 //if (st.hasMoreTokens()) {
                 //    preferredFiatCurrency = st.nextToken();
                 //}

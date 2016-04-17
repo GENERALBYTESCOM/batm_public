@@ -94,7 +94,7 @@ public class NXTExtension implements IExtension{
                     preferedFiatCurrency = st.nextToken();
                 }
                 return new FixPriceRateSource(rate,preferedFiatCurrency);
-            }else if ("poloniexrs".equalsIgnoreCase(rsType)) {
+            }else if ("nxtpoloniexrs".equalsIgnoreCase(rsType)) {
                 String preferredFiatCurrency = ICurrencies.USD;
                 if (st.hasMoreTokens()) {
                     preferredFiatCurrency = st.nextToken();

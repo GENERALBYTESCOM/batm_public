@@ -14,7 +14,7 @@
  * GENERAL BYTES s.r.o.
  * Web      :  http://www.generalbytes.com
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.shadowcash.wallets;
+package com.generalbytes.batm.server.extensions.extra.shadowcash;
 
 import com.generalbytes.batm.server.coinutil.AddressFormatException;
 import com.generalbytes.batm.server.coinutil.Base58;

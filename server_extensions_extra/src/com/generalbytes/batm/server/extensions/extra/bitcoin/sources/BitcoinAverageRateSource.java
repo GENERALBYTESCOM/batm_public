@@ -1,19 +1,18 @@
 /*************************************************************************************
  * Copyright (C) 2014-2016 GENERAL BYTES s.r.o. All rights reserved.
- *
+ * <p/>
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
  * Foundation and appearing in the file GPL2.TXT included in the packaging of
  * this file. Please note that GPL2 Section 2[b] requires that all works based
  * on this software must also be made publicly available under the terms of
  * the GPL2 ("Copyleft").
- *
+ * <p/>
  * Contact information
  * -------------------
- *
+ * <p/>
  * GENERAL BYTES s.r.o.
  * Web      :  http://www.generalbytes.com
- *
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.bitcoin.sources;
 
@@ -27,24 +26,24 @@ import java.math.BigDecimal;
 import java.util.*;
 
 
-public class BitcoinAverageRateSource implements IRateSource{
+public class BitcoinAverageRateSource implements IRateSource {
     private static final Logger log = LoggerFactory.getLogger(BitcoinAverageRateSource.class);
 
     private static Map<String, String> fiatCurrenciesAndURLs = new HashMap<String, String>();
-    private static HashMap<String,BigDecimal> rateAmounts = new HashMap<String, BigDecimal>();
-    private static HashMap<String,Long> rateTimes = new HashMap<String, Long>();
+    private static HashMap<String, BigDecimal> rateAmounts = new HashMap<String, BigDecimal>();
+    private static HashMap<String, Long> rateTimes = new HashMap<String, Long>();
     private static final long MAXIMUM_ALLOWED_TIME_OFFSET = 30 * 1000; //30sec
 
-    private String preferedFiatCurrency = ICurrencies.USD;
+    private String preferredFiatCurrency = ICurrencies.USD;
 
-    public BitcoinAverageRateSource(String preferedFiatCurrency) {
-        if (ICurrencies.EUR.equalsIgnoreCase(preferedFiatCurrency)) {
-            this.preferedFiatCurrency = ICurrencies.EUR;
-        }
-        if (ICurrencies.USD.equalsIgnoreCase(preferedFiatCurrency)) {
-            this.preferedFiatCurrency = ICurrencies.USD;
-        }else{
-            this.preferedFiatCurrency = preferedFiatCurrency;
+    public BitcoinAverageRateSource(String preferredFiatCurrency) {
+
+        if (ICurrencies.EUR.equalsIgnoreCase(preferredFiatCurrency)) {
+            this.preferredFiatCurrency = ICurrencies.EUR;
+        } else if (ICurrencies.USD.equalsIgnoreCase(preferredFiatCurrency)) {
+            this.preferredFiatCurrency = ICurrencies.USD;
+        } else {
+            this.preferredFiatCurrency = preferredFiatCurrency;
         }
 
     }
@@ -54,26 +53,26 @@ public class BitcoinAverageRateSource implements IRateSource{
         if (!ICurrencies.BTC.equalsIgnoreCase(cryptoCurrency)) {
             return null;
         }
-        String key = cryptoCurrency +"_" + fiatCurrency;
+        String key = cryptoCurrency + "_" + fiatCurrency;
         synchronized (rateAmounts) {
-            long now  = System.currentTimeMillis();
+            long now = System.currentTimeMillis();
             BigDecimal amount = rateAmounts.get(key);
             if (amount == null) {
                 BigDecimal result = getExchangeRateLastSync(cryptoCurrency, fiatCurrency);
                 log.debug("Called bitcoinaverage exchange for rate: " + key + " = " + result);
-                rateAmounts.put(key,result);
-                rateTimes.put(key,now+MAXIMUM_ALLOWED_TIME_OFFSET);
+                rateAmounts.put(key, result);
+                rateTimes.put(key, now + MAXIMUM_ALLOWED_TIME_OFFSET);
                 return result;
-            }else {
+            } else {
                 Long expirationTime = rateTimes.get(key);
                 if (expirationTime > now) {
                     return rateAmounts.get(key);
-                }else{
+                } else {
                     //do the job;
                     BigDecimal result = getExchangeRateLastSync(cryptoCurrency, fiatCurrency);
                     log.debug("Called bitcoinaverage exchange for rate: " + key + " = " + result);
-                    rateAmounts.put(key,result);
-                    rateTimes.put(key,now+MAXIMUM_ALLOWED_TIME_OFFSET);
+                    rateAmounts.put(key, result);
+                    rateTimes.put(key, now + MAXIMUM_ALLOWED_TIME_OFFSET);
                     return result;
                 }
             }
@@ -98,7 +97,7 @@ public class BitcoinAverageRateSource implements IRateSource{
                 return btcRate.getLast();
             }
             return null;
-        }else {
+        } else {
             return null; //unsupported fiat currency
         }
     }
@@ -131,7 +130,7 @@ public class BitcoinAverageRateSource implements IRateSource{
 
     @Override
     public String getPreferredFiatCurrency() {
-        return preferedFiatCurrency;
+        return preferredFiatCurrency;
     }
 
 }

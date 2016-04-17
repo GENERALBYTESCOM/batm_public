@@ -33,19 +33,20 @@ public class PoloniexRateSource implements IRateSource{
     private static final Logger log = LoggerFactory.getLogger(PoloniexRateSource.class);
 
     private BitcoinAverageRateSource btcRs;
-    private String preferedFiatCurrency;
+    private String preferredFiatCurrency = ICurrencies.USD;
     private com.generalbytes.batm.server.extensions.extra.shadowcash.sources.poloniex.IPoloniexAPI api;
 
     private static HashMap<String,BigDecimal> rateAmounts = new HashMap<String, BigDecimal>();
     private static HashMap<String,Long> rateTimes = new HashMap<String, Long>();
     private static final long MAXIMUM_ALLOWED_TIME_OFFSET = 30 * 1000; //30sec
 
-    public PoloniexRateSource(String preferedFiatCurrency) {
-        if (preferedFiatCurrency == null) {
-            preferedFiatCurrency = ICurrencies.USD;
+    public PoloniexRateSource(String preferredFiatCurrency) {
+
+        if (preferredFiatCurrency != null) {
+            this.preferredFiatCurrency = preferredFiatCurrency;
         }
-        this.preferedFiatCurrency = preferedFiatCurrency;
-        btcRs = new BitcoinAverageRateSource(preferedFiatCurrency);
+
+        btcRs = new BitcoinAverageRateSource(this.preferredFiatCurrency);
         api = RestProxyFactory.createProxy(IPoloniexAPI.class, "https://poloniex.com");
     }
 
