@@ -14,7 +14,7 @@
  * GENERAL BYTES s.r.o
  * Web      :  http://www.generalbytes.com
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.shadowcash.sources.poloniex;
+package com.generalbytes.batm.server.extensions.extra.shadowcash.sources.bittrex;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -24,9 +24,10 @@ import javax.ws.rs.core.MediaType;
 
 @Path("/")
 @Produces(MediaType.APPLICATION_JSON)
-public interface IPoloniexAPI {
+public interface IBittrexAPI {
 
     @GET
-    @Path("/public")
-    PoloniexOrderBookResponse returnOrderBook(@QueryParam("command") String command, @QueryParam("currencyPair") String currencyPair, @QueryParam("depth") long depth);
+    @Path("/api/v1.1/public/getorderbook")
+    BittrexOrderBookResponse returnOrderBook(@QueryParam("market") String market, @QueryParam("type") String type, @QueryParam("depth") long depth);
+
 }

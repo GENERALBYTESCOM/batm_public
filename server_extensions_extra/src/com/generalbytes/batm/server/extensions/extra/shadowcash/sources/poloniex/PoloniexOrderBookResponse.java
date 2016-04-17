@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 /**
  * Created by b00lean on 3/8/15.
  */
-public class OrderBookResponse {
+public class PoloniexOrderBookResponse {
     private BigDecimal[][] asks;
     private BigDecimal[][] bids;
     private String isFrozen;

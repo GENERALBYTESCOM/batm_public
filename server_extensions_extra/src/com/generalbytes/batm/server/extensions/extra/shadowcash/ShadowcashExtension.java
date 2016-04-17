@@ -25,6 +25,7 @@ import com.generalbytes.batm.server.extensions.IPaymentProcessor;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.shadowcash.sources.FixPriceRateSource;
+import com.generalbytes.batm.server.extensions.extra.shadowcash.sources.bittrex.BittrexRateSource;
 import com.generalbytes.batm.server.extensions.extra.shadowcash.sources.poloniex.PoloniexRateSource;
 import com.generalbytes.batm.server.extensions.extra.shadowcash.wallets.shadowcashd.ShadowcashdRPCWallet;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
@@ -145,11 +146,10 @@ public class ShadowcashExtension implements IExtension {
                 }
                 return new PoloniexRateSource(preferredFiatCurrency);
             } else if ("sdcbittrexrs".equalsIgnoreCase(rateSourceType)) {
-                //if (st.hasMoreTokens()) {
-                //    preferredFiatCurrency = st.nextToken();
-                //}
-                //return new PoloniexRateSource(preferredFiatCurrency);
-                return null;
+                if (st.hasMoreTokens()) {
+                    preferredFiatCurrency = st.nextToken();
+                }
+                return new BittrexRateSource(preferredFiatCurrency);
             }
 
         }
