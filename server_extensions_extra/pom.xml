@@ -82,30 +82,30 @@
             <version>1.8.1</version> <!-- was: 1.7.2-SNAPSHOT -->
         </dependency>
 
-        <dependency>
-            <groupId>com.xeiam.xchange</groupId>
+        <!-- need to support more exchanges so these SNAPSHOT deps need to go -->
+        <!--dependency>
+            <groupId>com.xeiam.xchange./groupId>
             <artifactId>xchange-core</artifactId>
             <version>4.0.0-SNAPSHOT</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/libs/xchange-core-4.0.0-SNAPSHOT.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>com.xeiam.xchange</groupId>
+            <groupId>com.xeiam.xchange./groupId>
             <artifactId>xchange-bitfinex</artifactId>
             <version>4.0.0-SNAPSHOT</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/libs/xchange-bitfinex-4.0.0-SNAPSHOT.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>com.xeiam.xchange</groupId>
+            <groupId>com.xeiam.xchange./groupId>
             <artifactId>xchange-itbit</artifactId>
             <version>4.0.0-SNAPSHOT</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/libs/xchange-itbit-4.0.0-SNAPSHOT.jar</systemPath>
-        </dependency>
+        </dependency-->
 
-        <!-- TODO: upgrade xchange -->
-        <!--dependency>
+        <dependency>
             <groupId>org.knowm.xchange</groupId>
             <artifactId>xchange-core</artifactId>
             <version>4.0.0</version>
@@ -119,7 +119,17 @@
             <groupId>org.knowm.xchange</groupId>
             <artifactId>xchange-itbit</artifactId>
             <version>4.0.0</version>
-        </dependency-->
+        </dependency>
+        <dependency>
+            <groupId>org.knowm.xchange</groupId>
+            <artifactId>xchange-bittrex</artifactId>
+            <version>4.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.knowm.xchange</groupId>
+            <artifactId>xchange-poloniex</artifactId>
+            <version>4.0.0</version>
+        </dependency>
 
         <!-- TODO: make a release and use that -->
         <dependency>

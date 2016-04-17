@@ -20,29 +20,30 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges;
 
-import com.generalbytes.batm.server.extensions.ICurrencies;
 import com.generalbytes.batm.server.extensions.IExchangeAdvanced;
 import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
 import com.generalbytes.batm.server.extensions.ITask;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.util.concurrent.RateLimiter;
-import com.xeiam.xchange.Exchange;
-import com.xeiam.xchange.ExchangeFactory;
-import com.xeiam.xchange.ExchangeSpecification;
-import com.xeiam.xchange.currency.CurrencyPair;
-import com.xeiam.xchange.dto.Order.OrderType;
-import com.xeiam.xchange.dto.marketdata.OrderBook;
-import com.xeiam.xchange.dto.marketdata.Ticker;
-import com.xeiam.xchange.dto.trade.LimitOrder;
-import com.xeiam.xchange.dto.trade.MarketOrder;
-import com.xeiam.xchange.dto.trade.OpenOrders;
-import com.xeiam.xchange.exceptions.ExchangeException;
-import com.xeiam.xchange.exceptions.NotAvailableFromExchangeException;
-import com.xeiam.xchange.exceptions.NotYetImplementedForExchangeException;
-import com.xeiam.xchange.service.polling.account.PollingAccountService;
-import com.xeiam.xchange.service.polling.marketdata.PollingMarketDataService;
-import com.xeiam.xchange.service.polling.trade.PollingTradeService;
+import org.knowm.xchange.Exchange;
+import org.knowm.xchange.ExchangeFactory;
+import org.knowm.xchange.ExchangeSpecification;
+import org.knowm.xchange.currency.Currency;
+import org.knowm.xchange.currency.CurrencyPair;
+import org.knowm.xchange.dto.Order.OrderType;
+import org.knowm.xchange.dto.account.Balance;
+import org.knowm.xchange.dto.marketdata.OrderBook;
+import org.knowm.xchange.dto.marketdata.Ticker;
+import org.knowm.xchange.dto.trade.LimitOrder;
+import org.knowm.xchange.dto.trade.MarketOrder;
+import org.knowm.xchange.dto.trade.OpenOrders;
+import org.knowm.xchange.exceptions.ExchangeException;
+import org.knowm.xchange.exceptions.NotAvailableFromExchangeException;
+import org.knowm.xchange.exceptions.NotYetImplementedForExchangeException;
+import org.knowm.xchange.service.polling.account.PollingAccountService;
+import org.knowm.xchange.service.polling.marketdata.PollingMarketDataService;
+import org.knowm.xchange.service.polling.trade.PollingTradeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,7 +58,7 @@ import java.util.concurrent.TimeUnit;
 
 public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceAdvanced {
 
-    private String preferredFiatCurrency;
+    private Currency preferredFiatCurrency;
     private static final long cacheRefreshSeconds = 30;
     private static final Cache<String, BigDecimal> rateCache = createCache();
 
@@ -74,7 +75,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
     private final RateLimiter rateLimiter;
 
 
-    public XChangeExchange(ExchangeSpecification specification, String preferredFiatCurrency) {
+    public XChangeExchange(ExchangeSpecification specification, Currency preferredFiatCurrency) {
         exchange = ExchangeFactory.INSTANCE.createExchange(specification);
         name = exchange.getExchangeSpecification().getExchangeName();
         log = LoggerFactory.getLogger("batm.master.exchange." + name);
@@ -153,53 +154,58 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
     }
 
     @Override
-    public BigDecimal getCryptoBalance(String cryptoCurrency) {
-        if (!isCryptoCurrencySupported(cryptoCurrency)) {
+    public BigDecimal getCryptoBalance(String cryptoCurrencyCode) {
+
+        if (!isCryptoCurrencySupported(cryptoCurrencyCode)) {
             return BigDecimal.ZERO;
         }
         try {
-            BigDecimal balance = exchange.getPollingAccountService()
+            Currency cryptoCurrency = Currency.getInstance(cryptoCurrencyCode);
+            Balance balance = exchange.getPollingAccountService()
                     .getAccountInfo()
-                    .getWallet(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency))
-                    .getBalance();
+                    .getWallet(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrencyCode))
+                    .getBalance(cryptoCurrency);
             log.debug("{} exchange balance request: {} = {}", name, cryptoCurrency, balance);
-            return balance;
+            return balance.getTotal();
         } catch (IOException e) {
             e.printStackTrace();
-            log.error("{} exchange balance request: {}", name, cryptoCurrency, e);
+            log.error("{} exchange balance request: {}", name, cryptoCurrencyCode, e);
         }
         return null;
     }
 
     @Override
-    public BigDecimal getFiatBalance(String fiatCurrency) {
-        if (!isFiatCurrencySupported(fiatCurrency)) {
+    public BigDecimal getFiatBalance(String fiatCurrencyCode) {
+        if (!isFiatCurrencySupported(fiatCurrencyCode)) {
             return BigDecimal.ZERO;
         }
         try {
-            BigDecimal balance = exchange.getPollingAccountService()
+            Currency fiatCurrency = Currency.getInstance(fiatCurrencyCode);
+
+            Balance balance = exchange.getPollingAccountService()
                     .getAccountInfo()
-                    .getWallet(fiatCurrency)
-                    .getBalance();
+                    .getWallet(fiatCurrencyCode)
+                    .getBalance(fiatCurrency);
             log.debug("{} exchange balance request: {} = {}", name, fiatCurrency, balance);
-            return balance;
+            return balance.getTotal();
         } catch (IOException e) {
             e.printStackTrace();
-            log.error("{} exchange balance request: {}", name, fiatCurrency, e);
+            log.error("{} exchange balance request: {}", name, fiatCurrencyCode, e);
         }
         return null;
     }
 
-    public final String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
-        if (!isCryptoCurrencySupported(cryptoCurrency)){
+    public final String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrencyCode, String description) {
+        if (!isCryptoCurrencySupported(cryptoCurrencyCode)){
             return null;
         }
 
-        log.info("{} exchange withdrawing {} {} to {}", name, amount, cryptoCurrency, destinationAddress);
+        log.info("{} exchange withdrawing {} {} to {}", name, amount, cryptoCurrencyCode, destinationAddress);
 
         PollingAccountService accountService = exchange.getPollingAccountService();
         try {
-            String result = accountService.withdrawFunds(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency), amount, destinationAddress);
+            Currency cryptoCurrency = Currency.getInstance(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrencyCode));
+            String result = accountService.withdrawFunds(cryptoCurrency, amount, destinationAddress);
             if (isWithdrawSuccessful(result)) {
                 log.debug("{} exchange withdrawal completed with result: {}", name, result);
                 return "success";
@@ -299,17 +305,18 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
     }
 
     @Override
-    public String getDepositAddress(String cryptoCurrency) {
-        if (cryptoCurrency == null) {
+    public String getDepositAddress(String cryptoCurrencyCode) {
+        if (cryptoCurrencyCode == null) {
             return null;
         }
-        if (!isCryptoCurrencySupported(cryptoCurrency)) {
+        if (!isCryptoCurrencySupported(cryptoCurrencyCode)) {
             return null;
         }
 
         PollingAccountService accountService = exchange.getPollingAccountService();
         try {
-            return accountService.requestDepositAddress(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency));
+            Currency cryptoCurrency = Currency.getInstance(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrencyCode));
+            return accountService.requestDepositAddress(cryptoCurrency);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -768,7 +775,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
 
     @Override
     public String getPreferredFiatCurrency() {
-        return preferredFiatCurrency;
+        return preferredFiatCurrency.getCurrencyCode();
     }
 
     protected String translateCryptoCurrencySymbolToExchangeSpecificSymbol(String from) {

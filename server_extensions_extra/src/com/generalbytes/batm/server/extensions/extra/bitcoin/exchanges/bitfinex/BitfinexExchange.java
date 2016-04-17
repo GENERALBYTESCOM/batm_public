@@ -20,29 +20,35 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitfinex;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.*;
-
-import com.generalbytes.batm.server.extensions.*;
-import com.xeiam.xchange.exceptions.ExchangeException;
-import com.xeiam.xchange.dto.marketdata.OrderBook;
-import com.xeiam.xchange.dto.trade.LimitOrder;
-import com.xeiam.xchange.dto.trade.OpenOrders;
+import com.generalbytes.batm.server.extensions.ICurrencies;
+import com.generalbytes.batm.server.extensions.IExchangeAdvanced;
+import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
+import com.generalbytes.batm.server.extensions.ITask;
+import org.knowm.xchange.Exchange;
+import org.knowm.xchange.ExchangeFactory;
+import org.knowm.xchange.ExchangeSpecification;
+import org.knowm.xchange.currency.CurrencyPair;
+import org.knowm.xchange.dto.Order.OrderType;
+import org.knowm.xchange.dto.marketdata.OrderBook;
+import org.knowm.xchange.dto.marketdata.Ticker;
+import org.knowm.xchange.dto.trade.LimitOrder;
+import org.knowm.xchange.dto.trade.MarketOrder;
+import org.knowm.xchange.dto.trade.OpenOrders;
+import org.knowm.xchange.exceptions.ExchangeException;
+import org.knowm.xchange.service.polling.account.PollingAccountService;
+import org.knowm.xchange.service.polling.marketdata.PollingMarketDataService;
+import org.knowm.xchange.service.polling.trade.PollingTradeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.xeiam.xchange.Exchange;
-import com.xeiam.xchange.ExchangeFactory;
-import com.xeiam.xchange.ExchangeSpecification;
-import com.xeiam.xchange.currency.CurrencyPair;
-import com.xeiam.xchange.dto.Order.OrderType;
-import com.xeiam.xchange.dto.marketdata.Ticker;
-import com.xeiam.xchange.dto.trade.MarketOrder;
-import com.xeiam.xchange.service.polling.account.PollingAccountService;
-import com.xeiam.xchange.service.polling.marketdata.PollingMarketDataService;
-import com.xeiam.xchange.service.polling.trade.PollingTradeService;
-import org.slf4j.spi.LocationAwareLogger;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced {
 
@@ -65,7 +71,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
     private synchronized Exchange getExchange() {
         if (this.exchange == null) {
-            ExchangeSpecification bfxSpec = new com.xeiam.xchange.bitfinex.v1.BitfinexExchange().getDefaultExchangeSpecification();
+            ExchangeSpecification bfxSpec = new org.knowm.xchange.bitfinex.v1.BitfinexExchange().getDefaultExchangeSpecification();
             bfxSpec.setApiKey(this.apiKey);
             bfxSpec.setSecretKey(this.apiSecret);
             this.exchange = ExchangeFactory.INSTANCE.createExchange(bfxSpec);
@@ -129,15 +135,16 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
         return null;
     }
 
-    public BigDecimal getCryptoBalance(String cryptoCurrency) {
+    public BigDecimal getCryptoBalance(String cryptoCurrencyCode) {
         // [TODO] Can be extended to support LTC and DRK (and other currencies supported by BFX)
-        if (!ICurrencies.BTC.equalsIgnoreCase(cryptoCurrency)) {
+        if (!ICurrencies.BTC.equalsIgnoreCase(cryptoCurrencyCode)) {
             return BigDecimal.ZERO;
         }
         log.debug("Calling Bitfinex exchange (getBalance)");
 
         try {
-            return getExchange().getPollingAccountService().getAccountInfo().getBalance(cryptoCurrency);
+            org.knowm.xchange.currency.Currency cryptoCurrency = org.knowm.xchange.currency.Currency.getInstance(cryptoCurrencyCode);
+            return getExchange().getPollingAccountService().getAccountInfo().getWallet().getBalance(cryptoCurrency).getTotal();
         } catch (IOException e) {
             e.printStackTrace();
             log.error("Bitfinex exchange (getBalance) failed with message: " + e.getMessage());
@@ -145,14 +152,15 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
         return null;
     }
 
-    public BigDecimal getFiatBalance(String fiatCurrency) {
-        if (!ICurrencies.USD.equalsIgnoreCase(fiatCurrency)) {
+    public BigDecimal getFiatBalance(String fiatCurrencyCode) {
+        if (!ICurrencies.USD.equalsIgnoreCase(fiatCurrencyCode)) {
             return BigDecimal.ZERO;
         }
         log.debug("Calling Bitfinex exchange (getBalance)");
 
         try {
-            return getExchange().getPollingAccountService().getAccountInfo().getBalance(fiatCurrency);
+            org.knowm.xchange.currency.Currency fiatCurrency = org.knowm.xchange.currency.Currency.getInstance(fiatCurrencyCode);
+            return getExchange().getPollingAccountService().getAccountInfo().getWallet().getBalance(fiatCurrency).getTotal();
         } catch (IOException e) {
             e.printStackTrace();
             log.error("Bitfinex exchange (getBalance) failed with message: " + e.getMessage());
@@ -160,16 +168,18 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
         return null;
     }
 
-    public final String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
-        if (!ICurrencies.BTC.equalsIgnoreCase(cryptoCurrency)) {
+    public final String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrencyCode, String description) {
+        if (!ICurrencies.BTC.equalsIgnoreCase(cryptoCurrencyCode)) {
             log.error("Bitfinex supports only " + ICurrencies.BTC);
             return null;
         }
 
-        log.info("Calling bitfinex exchange (withdrawal destination: " + destinationAddress + " amount: " + amount + " " + cryptoCurrency + ")");
+        log.info("Calling bitfinex exchange (withdrawal destination: {}, amount: {}, currency: {})", destinationAddress, amount, cryptoCurrencyCode);
 
         PollingAccountService accountService = getExchange().getPollingAccountService();
         try {
+
+            org.knowm.xchange.currency.Currency cryptoCurrency = org.knowm.xchange.currency.Currency.getInstance(cryptoCurrencyCode);
             String result = accountService.withdrawFunds(cryptoCurrency, amount, destinationAddress);
             if (result == null) {
                 log.warn("Bitfinex exchange (withdrawFunds) failed with null");
@@ -269,13 +279,14 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
     }
 
     @Override
-    public String getDepositAddress(String cryptoCurrency) {
-        if (!ICurrencies.BTC.equalsIgnoreCase(cryptoCurrency)) {
-            log.error("Bitfinex implementation supports only " + ICurrencies.BTC);
+    public String getDepositAddress(String cryptoCurrencyCode) {
+        if (!ICurrencies.BTC.equalsIgnoreCase(cryptoCurrencyCode)) {
+            log.error("Bitfinex implementation supports only {}", ICurrencies.BTC);
             return null;
         }
         PollingAccountService accountService = getExchange().getPollingAccountService();
         try {
+            org.knowm.xchange.currency.Currency cryptoCurrency = org.knowm.xchange.currency.Currency.getInstance(cryptoCurrencyCode);
             return accountService.requestDepositAddress(cryptoCurrency);
         } catch (IOException e) {
             e.printStackTrace();
