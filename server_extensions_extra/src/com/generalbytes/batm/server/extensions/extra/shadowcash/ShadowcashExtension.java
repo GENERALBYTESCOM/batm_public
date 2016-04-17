@@ -79,6 +79,8 @@ public class ShadowcashExtension implements IExtension {
     @Override
     public IWallet createWallet(String walletLogin) {
 
+        System.out.println( "createWallet, walletLogin: " + walletLogin);
+
         if (walletLogin != null && !walletLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(walletLogin, ":");
             String walletType = st.nextToken();
@@ -91,14 +93,11 @@ public class ShadowcashExtension implements IExtension {
                 String password = st.nextToken();
                 String hostname = st.nextToken();
                 String port = st.nextToken();
-                String accountName = "";
-                if (st.hasMoreTokens()) {
-                    accountName = st.nextToken();
-                }
+                //String accountName = "";
 
-                if (protocol != null && username != null && password != null && hostname != null && port != null && accountName != null) {
+                if (protocol != null && username != null && password != null && hostname != null && port != null) {
                     String rpcURL = protocol + "://" + hostname + ":" + port;
-                    return new ShadowcashdRPCWallet(rpcURL, username, password, accountName);
+                    return new ShadowcashdRPCWallet(rpcURL, username, password);
                 }
             }
 

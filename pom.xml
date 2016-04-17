@@ -35,6 +35,10 @@
             <snapshots/>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
+        <repository>
+            <id>local-maven-repository</id>
+            <url>file://${basedir}/local-maven-repository</url>
+        </repository>
     </repositories>
 
     <pluginRepositories>

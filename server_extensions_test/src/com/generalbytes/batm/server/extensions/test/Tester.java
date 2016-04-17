@@ -165,6 +165,8 @@ public class Tester {
             }
             final String name = (String) options.valueOf("n");
             final String params = (String) options.valueOf("p");
+            System.out.println( "name: " + name);
+            System.out.println( "params: " + params);
             getWalletBalance(name, params);
         } else if ("get-ebalance".equalsIgnoreCase(action)) {
             if (!options.hasArgument("n")) {
@@ -444,10 +446,10 @@ public class Tester {
     private void getWalletBalance(String name, String params) {
         for (int i = 0; i < extensions.size(); i++) {
             IExtension extension = extensions.get(i);
-            final IWallet w = extension.createWallet(name + ":" + params);
-            if (w != null) {
-                final String preferredCryptoCurrency = w.getPreferredCryptoCurrency();
-                final Set<String> cryptoCurrencies = w.getCryptoCurrencies();
+            final IWallet wallet = extension.createWallet(name + ":" + params);
+            if (wallet != null) {
+                final String preferredCryptoCurrency = wallet.getPreferredCryptoCurrency();
+                final Set<String> cryptoCurrencies = wallet.getCryptoCurrencies();
 
                 System.out.println("Preferred Crypto Currency = " + preferredCryptoCurrency);
                 System.out.println("Crypto Currencies:");
@@ -455,9 +457,9 @@ public class Tester {
                     System.out.println("  " + cryptoCurrency);
                 }
 
-                final String cryptoAddress = w.getCryptoAddress(preferredCryptoCurrency);
+                final String cryptoAddress = wallet.getCryptoAddress(preferredCryptoCurrency);
                 System.out.println("CryptoAddress = " + cryptoAddress);
-                final BigDecimal balance = w.getCryptoBalance(preferredCryptoCurrency);
+                final BigDecimal balance = wallet.getCryptoBalance(preferredCryptoCurrency);
                 if (balance != null) {
                     System.out.println("Balance: " + balance.stripTrailingZeros().toPlainString() + " " + preferredCryptoCurrency);
                 } else {

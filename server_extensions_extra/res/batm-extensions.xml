@@ -253,7 +253,6 @@
             <param name="password" />
             <param name="host" />
             <param name="port" />
-            <param name="accountname" />
             <cryptocurrency>SDC</cryptocurrency>
         </wallet>
 

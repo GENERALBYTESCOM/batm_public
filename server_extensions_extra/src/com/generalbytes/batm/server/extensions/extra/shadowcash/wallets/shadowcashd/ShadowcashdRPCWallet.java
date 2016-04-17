@@ -28,22 +28,16 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class ShadowcashdRPCWallet implements IWallet{
     private static final Logger log = LoggerFactory.getLogger(ShadowcashdRPCWallet.class);
     private static final String CRYPTO_CURRENCY = ICurrencies.SDC;
 
-    private static String accountName;
-
     private static ShadowcashdInterface client;
 
-    public ShadowcashdRPCWallet(final String rpcURL, final String username, final String password, final String accountName ) {
-        this.accountName = accountName;
-
+    public ShadowcashdRPCWallet(final String rpcURL, final String username, final String password ) {
         client = createClient(rpcURL, username, password);
-
     }
 
     @Override
@@ -65,8 +59,8 @@ public class ShadowcashdRPCWallet implements IWallet{
             return null;
         }
 
-        log.info("Shadowcashd sending {} coins from {} to: {} amount: {}", amount.doubleValue(), accountName, destinationAddress);
-        String result = client.sendfrom(accountName, destinationAddress, amount);
+        log.info("Shadowcashd sending {} coins to: {} ", amount.doubleValue(), destinationAddress);
+        String result = client.sendtoaddress(destinationAddress, amount);
         log.debug("result: {} ", result);
         return result;
     }
@@ -78,12 +72,8 @@ public class ShadowcashdRPCWallet implements IWallet{
             return null;
         }
 
-        List<String> addressesByAccount = client.getaddressesbyaccount(accountName);
-        if (addressesByAccount == null || addressesByAccount.size() == 0) {
-            return null;
-        }else{
-            return addressesByAccount.get(0);
-        }
+        String newAddress = client.getnewaddress();
+        return newAddress;
     }
 
     @Override
@@ -92,7 +82,7 @@ public class ShadowcashdRPCWallet implements IWallet{
             log.error("Shadowcashd wallet error: unknown cryptocurrency: {}", cryptoCurrency);
             return null;
         }
-        return client.getbalance(accountName);
+        return client.getbalance();
 
     }
 
