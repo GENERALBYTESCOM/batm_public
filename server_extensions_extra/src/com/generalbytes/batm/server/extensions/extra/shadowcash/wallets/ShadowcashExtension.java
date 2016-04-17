@@ -24,9 +24,12 @@ import com.generalbytes.batm.server.extensions.IPaperWalletGenerator;
 import com.generalbytes.batm.server.extensions.IPaymentProcessor;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.IWallet;
+import com.generalbytes.batm.server.extensions.extra.shadowcash.sources.FixPriceRateSource;
+import com.generalbytes.batm.server.extensions.extra.shadowcash.sources.poloniex.PoloniexRateSource;
 import com.generalbytes.batm.server.extensions.extra.shadowcash.wallets.shadowcashd.ShadowcashdRPCWallet;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -116,20 +119,14 @@ public class ShadowcashExtension implements IExtension {
 
     @Override
     public IRateSource createRateSource(String sourceLogin) {
-    /*
-        //NOTE: (Bitstamp is in built-in extension)
-        if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
-            StringTokenizer st = new StringTokenizer(sourceLogin,":");
-            String exchangeType = st.nextToken();
 
-            if ("bitcoinaverage".equalsIgnoreCase(exchangeType)) {
-                if (st.hasMoreTokens()) {
-                    return new BitcoinAverageRateSource(st.nextToken());
-                }
-                return new BitcoinAverageRateSource(ICurrencies.USD);
-            }else if ("btcfix".equalsIgnoreCase(exchangeType)) {
+        if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
+            StringTokenizer st = new StringTokenizer(sourceLogin, ":");
+            String rateSourceType = st.nextToken();
+            String preferredFiatCurrency = ICurrencies.USD;
+
+            if ("sdcfix".equalsIgnoreCase(rateSourceType)) {
                 BigDecimal rate = BigDecimal.ZERO;
-                String preferredFiatCurrency = ICurrencies.USD;
                 if (st.hasMoreTokens()) {
                     try {
                         rate = new BigDecimal(st.nextToken());
@@ -139,18 +136,21 @@ public class ShadowcashExtension implements IExtension {
                 if (st.hasMoreTokens()) {
                     preferredFiatCurrency = st.nextToken();
                 }
-                return new com.generalbytes.batm.server.extensions.extra.bitcoin.sources.FixPriceRateSource(rate,preferredFiatCurrency);
-            }else if ("bitfinex".equalsIgnoreCase(exchangeType)) {
-                return new BitfinexExchange("**","**");
-            }else if ("itbit".equalsIgnoreCase(exchangeType)) {
-                String preferredFiatCurrency = ICurrencies.USD;
+                return new FixPriceRateSource(rate, preferredFiatCurrency);
+            } else if ("poloniexrs".equalsIgnoreCase(rateSourceType)) {
                 if (st.hasMoreTokens()) {
                     preferredFiatCurrency = st.nextToken();
                 }
-                return new ItBitExchange(preferredFiatCurrency);
+                return new PoloniexRateSource(preferredFiatCurrency);
+            } else if ("bittrexrs".equalsIgnoreCase(rateSourceType)) {
+                //if (st.hasMoreTokens()) {
+                //    preferredFiatCurrency = st.nextToken();
+                //}
+                //return new PoloniexRateSource(preferredFiatCurrency);
+                return null;
             }
+
         }
-        */
         return null;
     }
 
