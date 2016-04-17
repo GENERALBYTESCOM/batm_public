@@ -17,12 +17,12 @@
     </prerequisites>
 
 	<dependencies>
-        <dependency>
+        <!--dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.16.8</version>
             <optional>true</optional>
-        </dependency>
+        </dependency-->
         <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>
