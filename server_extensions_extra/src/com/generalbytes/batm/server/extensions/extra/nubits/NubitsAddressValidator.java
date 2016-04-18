@@ -11,14 +11,6 @@ import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 public class NubitsAddressValidator implements ICryptoAddressValidator {
     @Override
     public boolean isAddressValid(String address) {
-        boolean result = isNubitsAddressValid(address);
-        if (!result) {
-            result = isPaperWalletSupported() && ExtensionsUtil.isValidEmailAddress(address);
-        }
-        return result;
-    }
-
-    private boolean isNubitsAddressValid(String address) {
         if (address.startsWith("B")) {
             try {
                 Base58.decodeToBigInteger(address);

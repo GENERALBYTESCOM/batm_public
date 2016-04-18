@@ -26,14 +26,6 @@ public class GroestlcoinAddressValidator implements ICryptoAddressValidator {
 
     @Override
     public boolean isAddressValid(String address) {
-        boolean result = isGroestlcoinAddressValid(address);
-        if (!result) {
-            result = isPaperWalletSupported() && ExtensionsUtil.isValidEmailAddress(address);
-        }
-        return result;
-    }
-
-    private static boolean isGroestlcoinAddressValid(String address) {
         if (address.startsWith("F")) {
             try {
                 Base58.decodeToBigInteger(address);

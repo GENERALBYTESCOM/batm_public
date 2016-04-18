@@ -26,14 +26,6 @@ public class GuldencoinAddressValidator implements ICryptoAddressValidator {
 
     @Override
     public boolean isAddressValid(String address) {
-        boolean result = isGuldencoinAddressValid(address);
-        if (!result) {
-            result = isPaperWalletSupported() && ExtensionsUtil.isValidEmailAddress(address);
-        }
-        return result;
-    }
-
-    private static boolean isGuldencoinAddressValid(String address) {
         if (address.startsWith("G")) {
             try {
                 Base58.decodeToBigInteger(address);

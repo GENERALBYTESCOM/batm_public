@@ -25,14 +25,6 @@ import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 public class DogecoinAddressValidator implements ICryptoAddressValidator {
     @Override
     public boolean isAddressValid(String address) {
-        boolean result = isDogecoinAddressValid(address);
-        if (!result) {
-            result = isPaperWalletSupported() && ExtensionsUtil.isValidEmailAddress(address);
-        }
-        return result;
-    }
-
-    private boolean isDogecoinAddressValid(String address) {
         if (address.startsWith("D")) {
             try {
                 Base58.decodeToBigInteger(address);

@@ -26,14 +26,6 @@ public class LeocoinAddressValidator implements ICryptoAddressValidator {
 
     @Override
     public boolean isAddressValid(String address) {
-        boolean result = isLeocoinAddressValid(address);
-        if (!result) {
-            result = isPaperWalletSupported() && ExtensionsUtil.isValidEmailAddress(address);
-        }
-        return result;
-    }
-
-    private static boolean isLeocoinAddressValid(String address) {
         if (address.startsWith("L")) {
             try {
                 Base58.decodeToBigInteger(address);

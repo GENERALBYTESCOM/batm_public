@@ -26,14 +26,6 @@ public class IncognitocoinAddressValidator implements ICryptoAddressValidator {
 
     @Override
     public boolean isAddressValid(String address) {
-        boolean result = isIncognitocoinAddressValid(address);
-        if (!result) {
-            result = isPaperWalletSupported() && ExtensionsUtil.isValidEmailAddress(address);
-        }
-        return result;
-    }
-
-    private boolean isIncognitocoinAddressValid(String address) {
         if (address.startsWith("I")) {
             try {
                 Base58.decodeToBigInteger(address);

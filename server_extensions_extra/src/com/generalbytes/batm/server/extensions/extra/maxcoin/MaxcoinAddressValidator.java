@@ -26,14 +26,6 @@ public class MaxcoinAddressValidator implements ICryptoAddressValidator {
 
     @Override
     public boolean isAddressValid(String address) {
-        boolean result = isMaxcoinAddressValid(address);
-        if (!result) {
-            result = isPaperWalletSupported() && ExtensionsUtil.isValidEmailAddress(address);
-        }
-        return result;
-    }
-
-    private boolean isMaxcoinAddressValid(String address) {
         if (address.startsWith("m")) {
             try {
                 Base58.decodeToBigInteger(address);

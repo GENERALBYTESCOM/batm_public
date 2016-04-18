@@ -25,11 +25,7 @@ import java.math.BigInteger;
 public class NXTAddressValidator implements ICryptoAddressValidator {
     @Override
     public boolean isAddressValid(String address) {
-        boolean result = isNXTAddressValid(address);
-        if (!result) {
-            result = isPaperWalletSupported() && ExtensionsUtil.isValidEmailAddress(address);
-        }
-        return result;
+        return isNXTAddressValid(address);
     }
 
     public static BigInteger getAccountIdFromRS(String address) {
