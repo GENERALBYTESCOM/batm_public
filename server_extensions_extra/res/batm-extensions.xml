@@ -106,6 +106,22 @@
         </ratesource>
         <cryptologo cryptocurrency="LTC" file="ltc.png"/>
     </extension>
+	<extension class="com.generalbytes.batm.server.extensions.extra.gamecredits.GamecreditsExtension" >
+        <wallet prefix="gamecreditsd" name="Gamecreditsd">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>GAME</cryptocurrency>
+        </wallet>
+        <ratesource prefix="gamefix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>GAME</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="GAME" file="game.png"/>
+    </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.maxcoin.MaxcoinExtension" >
         <wallet prefix="maxcoind" name="Maxcoind">
             <param name="protocol" />
