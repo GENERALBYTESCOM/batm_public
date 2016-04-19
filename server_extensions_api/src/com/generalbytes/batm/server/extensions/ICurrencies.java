@@ -21,15 +21,15 @@ package com.generalbytes.batm.server.extensions;
 public interface ICurrencies {
     public static final String BTC = "BTC";
     public static final String LTC = "LTC";
+    public static final String GAME = "GAME";
     public static final String DOGE = "DOGE";
     public static final String MAX = "MAX";
     public static final String LEO = "LEO";
     public static final String NLG = "NLG";
-	public static final String GRS = "GRS";
+    public static final String GRS = "GRS";
     public static final String ICG = "ICG";
     public static final String NBT = "NBT";
     public static final String NXT = "NXT";
-
     public static final String CAD = "CAD";
     public static final String CNY = "CNY";
     public static final String CZK = "CZK";
