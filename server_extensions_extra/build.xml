@@ -22,8 +22,8 @@
         BATM server extra extensions
     </description>
   <!-- set global properties for this build -->
-  <property name="src" location="src"/>
-  <property name="res" location="res"/>
+  <property name="src" location="src/main/java"/>
+  <property name="res" location="src/main/resources"/>
   <property name="build" location="build"/>
   <property name="dist"  location="dist"/>
   <property name="libs"  location="libs"/>

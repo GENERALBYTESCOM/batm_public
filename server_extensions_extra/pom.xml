@@ -122,12 +122,12 @@
     </repositories>
 
     <build>
-        <sourceDirectory>src</sourceDirectory> <!-- TODO: should be moved to src/main/java -->
+        <!--sourceDirectory>src</sourceDirectory>
         <resources>
             <resource>
-                <directory>res</directory> <!-- TODO: should be moved to src/main/resources -->
+                <directory>res</directory>
             </resource>
-        </resources>
+        </resources-->
 
         <plugins>
             <plugin>
