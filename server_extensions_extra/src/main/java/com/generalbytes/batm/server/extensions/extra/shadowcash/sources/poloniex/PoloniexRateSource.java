@@ -20,8 +20,6 @@ package com.generalbytes.batm.server.extensions.extra.shadowcash.sources.polonie
 import com.generalbytes.batm.server.extensions.ICurrencies;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.BitcoinAverageRateSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import si.mazi.rescu.RestProxyFactory;
 
 import java.math.BigDecimal;
@@ -30,34 +28,54 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class PoloniexRateSource implements IRateSource{
-    private static final Logger log = LoggerFactory.getLogger(PoloniexRateSource.class);
 
-    private BitcoinAverageRateSource btcRs;
+    private BitcoinAverageRateSource bitcoinAverageRateSource;
     private String preferredFiatCurrency = ICurrencies.USD;
-    private com.generalbytes.batm.server.extensions.extra.shadowcash.sources.poloniex.IPoloniexAPI api;
+    private IPoloniexAPI api;
 
+    private static String baseUrl = "https://poloniex.com";
     private static HashMap<String,BigDecimal> rateAmounts = new HashMap<String, BigDecimal>();
     private static HashMap<String,Long> rateTimes = new HashMap<String, Long>();
-    private static final long MAXIMUM_ALLOWED_TIME_OFFSET = 30 * 1000; //30sec
+    private static final long MAXIMUM_ALLOWED_TIME_OFFSET = 30 * 1000;
+
+    public static final String BTC_SDC_MARKET = "BTC_SDC";
+    public static final String ORDERBOOK_COMMAND = "returnOrderBook";
+    public static final int ORDERBOOK_DEPTH = 50;
+    private static final int SDC_AMOUNT_FOR_PRICE = 10000;
+
+    public PoloniexRateSource(String preferredFiatCurrency, String baseUrl, BitcoinAverageRateSource bitcoinAverageRateSource) {
+        this.baseUrl = baseUrl;
+        setup(preferredFiatCurrency, bitcoinAverageRateSource);
+    }
 
     public PoloniexRateSource(String preferredFiatCurrency) {
+        setup(preferredFiatCurrency);
+    }
 
+    private void setup(String preferredFiatCurrency, BitcoinAverageRateSource bitcoinAverageRateSource) {
+        this.bitcoinAverageRateSource = bitcoinAverageRateSource;
+        setup(preferredFiatCurrency);
+    }
+
+    private void setup(String preferredFiatCurrency) {
         if (preferredFiatCurrency != null) {
             this.preferredFiatCurrency = preferredFiatCurrency;
         }
 
-        btcRs = new BitcoinAverageRateSource(this.preferredFiatCurrency);
-        api = RestProxyFactory.createProxy(IPoloniexAPI.class, "https://poloniex.com");
+        if (this.bitcoinAverageRateSource == null) {
+            this.bitcoinAverageRateSource = new BitcoinAverageRateSource(this.preferredFiatCurrency);
+        }
+        api = RestProxyFactory.createProxy(IPoloniexAPI.class, baseUrl);
     }
 
     @Override
     public Set<String> getFiatCurrencies() {
-        return btcRs.getFiatCurrencies();
+        return bitcoinAverageRateSource.getFiatCurrencies();
     }
 
     @Override
     public String getPreferredFiatCurrency() {
-        return btcRs.getPreferredFiatCurrency();
+        return bitcoinAverageRateSource.getPreferredFiatCurrency();
     }
 
     @Override
@@ -79,7 +97,6 @@ public class PoloniexRateSource implements IRateSource{
             BigDecimal amount = rateAmounts.get(key);
             if (amount == null) {
                 BigDecimal result = getExchangeRateLastSync(cryptoCurrency, fiatCurrency);
-                log.debug("Called bitcoinaverage exchange for rate: " + key + " = " + result);
                 rateAmounts.put(key,result);
                 rateTimes.put(key,now+MAXIMUM_ALLOWED_TIME_OFFSET);
                 return result;
@@ -90,7 +107,6 @@ public class PoloniexRateSource implements IRateSource{
                 }else{
                     //do the job;
                     BigDecimal result = getExchangeRateLastSync(cryptoCurrency, fiatCurrency);
-                    log.debug("Called bitcoinaverage exchange for rate: " + key + " = " + result);
                     rateAmounts.put(key,result);
                     rateTimes.put(key,now+MAXIMUM_ALLOWED_TIME_OFFSET);
                     return result;
@@ -104,16 +120,15 @@ public class PoloniexRateSource implements IRateSource{
         if (!ICurrencies.SDC.equalsIgnoreCase(cryptoCurrency)) {
             return null; //unsupported currency
         }
-        PoloniexOrderBookResponse orderBookResponse = api.returnOrderBook("returnOrderBook", "BTC_SDC", 10000);
+        PoloniexOrderBookResponse orderBookResponse = api.returnOrderBook(ORDERBOOK_COMMAND, BTC_SDC_MARKET, ORDERBOOK_DEPTH);
         if (orderBookResponse != null) {
             BigDecimal[][] asks = orderBookResponse.getAsks();
             BigDecimal asksTotal = BigDecimal.ZERO;
-            BigDecimal targetAmount = new BigDecimal(10000); //calculate price based on this amount of SDC
+            BigDecimal targetAmount = new BigDecimal(SDC_AMOUNT_FOR_PRICE); //calculate price based on this amount of SDC
             BigDecimal tradableLimit = BigDecimal.ZERO;
 
             for (int i = 0; i < asks.length; i++) {
                 BigDecimal[] ask = asks[i];
-                log.debug("ask = " + ask);
                 asksTotal = asksTotal.add(ask[1]);
                 if (targetAmount.compareTo(asksTotal) <= 0) {
                     tradableLimit = ask[0];
@@ -122,7 +137,7 @@ public class PoloniexRateSource implements IRateSource{
             }
 
             if (tradableLimit != null) {
-                BigDecimal btcRate = btcRs.getExchangeRateLast(ICurrencies.BTC, fiatCurrency);
+                BigDecimal btcRate = bitcoinAverageRateSource.getExchangeRateLast(ICurrencies.BTC, fiatCurrency);
                 if (btcRate != null) {
                     return btcRate.multiply(tradableLimit);
                 }

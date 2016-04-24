@@ -23,20 +23,35 @@ import org.slf4j.LoggerFactory;
 import si.mazi.rescu.RestProxyFactory;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 
 public class BitcoinAverageRateSource implements IRateSource {
-    private static final Logger log = LoggerFactory.getLogger(BitcoinAverageRateSource.class);
 
+    private static final Logger log = LoggerFactory.getLogger(BitcoinAverageRateSource.class);
     private static Map<String, String> fiatCurrenciesAndURLs = new HashMap<String, String>();
     private static HashMap<String, BigDecimal> rateAmounts = new HashMap<String, BigDecimal>();
     private static HashMap<String, Long> rateTimes = new HashMap<String, Long>();
     private static final long MAXIMUM_ALLOWED_TIME_OFFSET = 30 * 1000; //30sec
 
+    private static String baseUrl = "https://api.bitcoinaverage.com";
+    private IBitcoinAverage api;
+
     private String preferredFiatCurrency = ICurrencies.USD;
 
     public BitcoinAverageRateSource(String preferredFiatCurrency) {
+        setup(preferredFiatCurrency);
+    }
+
+    public BitcoinAverageRateSource(String preferredFiatCurrency, String baseUrl) {
+        this.baseUrl = baseUrl;
+        setup(preferredFiatCurrency);
+    }
+
+    private void setup(String preferredFiatCurrency) {
 
         if (ICurrencies.EUR.equalsIgnoreCase(preferredFiatCurrency)) {
             this.preferredFiatCurrency = ICurrencies.EUR;
@@ -45,6 +60,9 @@ public class BitcoinAverageRateSource implements IRateSource {
         } else {
             this.preferredFiatCurrency = preferredFiatCurrency;
         }
+
+        api = RestProxyFactory.createProxy(IBitcoinAverage.class, baseUrl);
+        loadFiatCurrencies();
 
     }
 
@@ -82,24 +100,18 @@ public class BitcoinAverageRateSource implements IRateSource {
 
     private BigDecimal getExchangeRateLastSync(String cryptoCurrency, String fiatCurrency) {
         if (!ICurrencies.BTC.equalsIgnoreCase(cryptoCurrency)) {
-            return null; //unsupported currency
+            return null; // unsupported currency
         }
 
-        if (fiatCurrenciesAndURLs.isEmpty()) {
-            loadFiatCurrencies();
+        if( !fiatCurrenciesAndURLs.containsKey(fiatCurrency)) {
+            return null; // unsupported fiat currency
         }
 
-        String url = fiatCurrenciesAndURLs.get(fiatCurrency);
-        if (url != null) {
-            IBitcoinAverage api = RestProxyFactory.createProxy(IBitcoinAverage.class, url);
-            BitcoinAverageRate btcRate = api.getBTCRate();
-            if (btcRate != null) {
-                return btcRate.getLast();
-            }
-            return null;
-        } else {
-            return null; //unsupported fiat currency
+        BitcoinAverageRate btcRate = api.getBTCRate(fiatCurrency);
+        if (btcRate != null) {
+            return btcRate.getLast();
         }
+        return null;
     }
 
     @Override
@@ -112,7 +124,6 @@ public class BitcoinAverageRateSource implements IRateSource {
     @Override
     public Set<String> getFiatCurrencies() {
         if (fiatCurrenciesAndURLs == null || fiatCurrenciesAndURLs.isEmpty()) {
-            //load them from the website
             loadFiatCurrencies();
         }
 
@@ -121,11 +132,7 @@ public class BitcoinAverageRateSource implements IRateSource {
     }
 
     private void loadFiatCurrencies() {
-        IBitcoinAverage api = RestProxyFactory.createProxy(IBitcoinAverage.class, "https://api.bitcoinaverage.com/ticker/global/");
-        HashMap<String, String> currenciesAndURLs = api.getFiatCurrenciesAndURLs();
-        if (fiatCurrenciesAndURLs != null) {
-            fiatCurrenciesAndURLs = currenciesAndURLs;
-        }
+        fiatCurrenciesAndURLs = api.getFiatCurrenciesAndURLs();
     }
 
     @Override

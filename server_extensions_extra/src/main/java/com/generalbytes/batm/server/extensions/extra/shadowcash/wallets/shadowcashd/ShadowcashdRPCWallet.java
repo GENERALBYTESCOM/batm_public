@@ -21,6 +21,7 @@ import com.generalbytes.batm.server.extensions.ICurrencies;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.rutherford.jsonrpc.CryptocoinClientFactory;
 import com.rutherford.jsonrpc.ShadowcashdInterface;
+import com.rutherford.jsonrpc.value.shadowcash.ShadowInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +32,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ShadowcashdRPCWallet implements IWallet{
+
     private static final Logger log = LoggerFactory.getLogger(ShadowcashdRPCWallet.class);
     private static final String CRYPTO_CURRENCY = ICurrencies.SDC;
 
@@ -83,7 +85,10 @@ public class ShadowcashdRPCWallet implements IWallet{
             return null;
         }
         return client.getbalance();
+    }
 
+    public ShadowInfo getInfo() {
+        return client.getinfo();
     }
 
     private static ShadowcashdInterface createClient(final String rpcURL, final String username, final String password) {

@@ -22,12 +22,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-@Path("/")
+@Path("/api/v1.1/public")
 @Produces(MediaType.APPLICATION_JSON)
 public interface IBittrexAPI {
 
     @GET
-    @Path("/api/v1.1/public/getorderbook")
+    @Path("/getorderbook")
     BittrexOrderBookResponse returnOrderBook(@QueryParam("market") String market, @QueryParam("type") String type, @QueryParam("depth") long depth);
 
 }

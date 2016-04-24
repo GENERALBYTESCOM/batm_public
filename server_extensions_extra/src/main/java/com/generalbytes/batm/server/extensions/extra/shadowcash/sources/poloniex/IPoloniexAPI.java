@@ -27,6 +27,6 @@ import javax.ws.rs.core.MediaType;
 public interface IPoloniexAPI {
 
     @GET
-    @Path("/public")
+    @Path("public")
     PoloniexOrderBookResponse returnOrderBook(@QueryParam("command") String command, @QueryParam("currencyPair") String currencyPair, @QueryParam("depth") long depth);
 }
