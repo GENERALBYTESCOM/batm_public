@@ -1,19 +1,18 @@
 /*************************************************************************************
  * Copyright (C) 2014-2016 GENERAL BYTES s.r.o. All rights reserved.
- *
+ * <p/>
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
  * Foundation and appearing in the file GPL2.TXT included in the packaging of
  * this file. Please note that GPL2 Section 2[b] requires that all works based
  * on this software must also be made publicly available under the terms of
  * the GPL2 ("Copyleft").
- *
+ * <p/>
  * Contact information
  * -------------------
- *
+ * <p/>
  * GENERAL BYTES s.r.o.
  * Web      :  http://www.generalbytes.com
- *
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.shadowcash.wallets.shadowcashd;
 
@@ -31,14 +30,14 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ShadowcashdRPCWallet implements IWallet{
+public class ShadowcashdRPCWallet implements IWallet {
 
     private static final Logger log = LoggerFactory.getLogger(ShadowcashdRPCWallet.class);
     private static final String CRYPTO_CURRENCY = ICurrencies.SDC;
 
     private static ShadowcashdInterface client;
 
-    public ShadowcashdRPCWallet(final String rpcURL, final String username, final String password ) {
+    public ShadowcashdRPCWallet(final String rpcURL, final String username, final String password) {
         client = createClient(rpcURL, username, password);
     }
 

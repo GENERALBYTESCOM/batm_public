@@ -58,7 +58,7 @@ public class FixPriceRateSource implements IRateSource {
     public BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency) {
         fiatCurrency = fiatCurrency.toUpperCase();
         if (ICurrencies.SDC.equalsIgnoreCase(cryptoCurrency)) {
-            if( currencyRates.containsKey(fiatCurrency)){
+            if (currencyRates.containsKey(fiatCurrency)) {
                 return currencyRates.get(fiatCurrency);
             }
             return BigDecimal.ZERO;

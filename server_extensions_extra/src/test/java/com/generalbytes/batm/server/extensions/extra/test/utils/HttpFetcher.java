@@ -6,7 +6,6 @@ import org.apache.http.client.fluent.Request;
 import java.io.IOException;
 
 /**
- *
  * @author ludx
  */
 public class HttpFetcher {

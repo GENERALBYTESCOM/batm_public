@@ -19,6 +19,7 @@ package com.generalbytes.batm.server.extensions.extra.shadowcash.sources.bittrex
 import com.generalbytes.batm.server.extensions.ICurrencies;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.BitcoinAverageRateSource;
+import org.knowm.xchange.bittrex.v1.dto.marketdata.BittrexDepthResponse;
 import org.knowm.xchange.bittrex.v1.dto.marketdata.BittrexLevel;
 import si.mazi.rescu.RestProxyFactory;
 
@@ -120,7 +121,7 @@ public class BittrexRateSource implements IRateSource {
         if (!ICurrencies.SDC.equalsIgnoreCase(cryptoCurrency)) {
             return null; //unsupported currency
         }
-        BittrexOrderBookResponse orderBookResponse = api.returnOrderBook(BTC_SDC_MARKET, ORDERBOOK_TYPE, ORDERBOOK_DEPTH);
+        BittrexDepthResponse orderBookResponse = api.returnOrderBook(BTC_SDC_MARKET, ORDERBOOK_TYPE, ORDERBOOK_DEPTH);
         if (orderBookResponse != null) {
             BittrexLevel[] asks = orderBookResponse.getDepth().getAsks();
             BigDecimal asksTotal = BigDecimal.ZERO;

@@ -46,28 +46,6 @@ public class ShadowcashExtension implements IExtension {
 
     @Override
     public IExchange createExchange(String exchangeLogin) {
-    /*
-        if ((paramString != null) && (!paramString.trim().isEmpty()))
-        {
-            StringTokenizer paramTokenizer = new StringTokenizer(paramString, ":");
-            String prefix = paramTokenizer.nextToken();
-            if ("bitfinex".equalsIgnoreCase(prefix)) {
-                String apiKey = paramTokenizer.nextToken();
-                String apiSecret = paramTokenizer.nextToken();
-                return new BitfinexExchange(apiKey, apiSecret);
-            } else if ("itbit".equalsIgnoreCase(prefix)) {
-                String preferredFiatCurrency = ICurrencies.USD;
-                String userId = paramTokenizer.nextToken();
-                String walletId = paramTokenizer.nextToken();
-                String clientKey = paramTokenizer.nextToken();
-                String clientSecret = paramTokenizer.nextToken();
-                if (paramTokenizer.hasMoreTokens()) {
-                    preferredFiatCurrency = paramTokenizer.nextToken();
-                }
-                return new ItBitExchange(userId, walletId, clientKey, clientSecret, preferredFiatCurrency);
-            }
-        }
-    */
         return null; // TODO: add exchange
     }
 
@@ -79,7 +57,7 @@ public class ShadowcashExtension implements IExtension {
     @Override
     public IWallet createWallet(String walletLogin) {
 
-        System.out.println( "createWallet, walletLogin: " + walletLogin);
+        System.out.println("createWallet, walletLogin: " + walletLogin);
 
         if (walletLogin != null && !walletLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(walletLogin, ":");

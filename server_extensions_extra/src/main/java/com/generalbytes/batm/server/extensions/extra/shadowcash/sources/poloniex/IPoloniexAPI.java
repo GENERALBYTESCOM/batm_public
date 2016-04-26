@@ -16,6 +16,8 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.shadowcash.sources.poloniex;
 
+import org.knowm.xchange.poloniex.dto.marketdata.PoloniexDepth;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -28,5 +30,5 @@ public interface IPoloniexAPI {
 
     @GET
     @Path("public")
-    PoloniexOrderBookResponse returnOrderBook(@QueryParam("command") String command, @QueryParam("currencyPair") String currencyPair, @QueryParam("depth") long depth);
+    PoloniexDepth returnOrderBook(@QueryParam("command") String command, @QueryParam("currencyPair") String currencyPair, @QueryParam("depth") long depth);
 }

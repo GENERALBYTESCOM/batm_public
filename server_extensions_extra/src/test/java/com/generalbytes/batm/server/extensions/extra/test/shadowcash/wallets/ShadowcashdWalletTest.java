@@ -67,8 +67,6 @@ public class ShadowcashdWalletTest extends BaseTest {
         // getinfo
         stubFor(
                 post(urlEqualTo("/"))
-                        // .withRequestBody(equalToJson("{\"jsonrpc\":\"2.0\",\"method\":\"getinfo\"}", JSONCompareMode.LENIENT))
-                        //.withRequestBody(matchingJsonPath("$.method[ ? ( @.method == 'getinfo')]"))
                         .withRequestBody(containing("\"method\":\"getinfo\""))
                         .willReturn(aResponse()
                                 .withStatus(200)
@@ -78,8 +76,6 @@ public class ShadowcashdWalletTest extends BaseTest {
         // getnewaddress
         stubFor(
                 post(urlEqualTo("/"))
-                        // .withRequestBody(equalToJson("{\"jsonrpc\":\"2.0\",\"method\":\"getinfo\"}", JSONCompareMode.LENIENT))
-                        //.withRequestBody(matchingJsonPath("$.method[ ? ( @.method == 'getinfo')]"))
                         .withRequestBody(containing("\"method\":\"getnewaddress\""))
                         .willReturn(aResponse()
                                 .withStatus(200)
@@ -89,8 +85,6 @@ public class ShadowcashdWalletTest extends BaseTest {
         // getbalance
         stubFor(
                 post(urlEqualTo("/"))
-                        // .withRequestBody(equalToJson("{\"jsonrpc\":\"2.0\",\"method\":\"getinfo\"}", JSONCompareMode.LENIENT))
-                        //.withRequestBody(matchingJsonPath("$.method[ ? ( @.method == 'getinfo')]"))
                         .withRequestBody(containing("\"method\":\"getbalance\""))
                         .willReturn(aResponse()
                                 .withStatus(200)
@@ -100,8 +94,6 @@ public class ShadowcashdWalletTest extends BaseTest {
         // sendtoaddress
         stubFor(
                 post(urlEqualTo("/"))
-                        // .withRequestBody(equalToJson("{\"jsonrpc\":\"2.0\",\"method\":\"getinfo\"}", JSONCompareMode.LENIENT))
-                        //.withRequestBody(matchingJsonPath("$.method[ ? ( @.method == 'getinfo')]"))
                         .withRequestBody(containing("\"method\":\"sendtoaddress\""))
                         .willReturn(aResponse()
                                 .withStatus(200)

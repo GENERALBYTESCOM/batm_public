@@ -32,7 +32,7 @@
         <dependency>
             <groupId>net.iharder</groupId>
             <artifactId>base64</artifactId>
-            <version>2.3.9</version> <!-- was: 2.3.8 -->
+            <version>2.3.9</version>
         </dependency>
         <dependency>
             <groupId>com.azazar.bitcoin.jsonrpcclient</groupId>
@@ -47,22 +47,22 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>19.0</version> <!-- was: 18.0 -->
+            <version>19.0</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
-            <version>2.7.3</version> <!-- was: 2.4.0 -->
+            <version>2.7.3</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-            <version>2.7.3</version> <!-- was: 2.4.0 -->
+            <version>2.7.3</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.7.3</version> <!-- was: 2.4.0 -->
+            <version>2.7.3</version>
         </dependency>
         <dependency>
             <groupId>javax.ws.rs</groupId>
@@ -72,7 +72,7 @@
         <dependency>
             <groupId>com.github.mmazi</groupId>
             <artifactId>rescu</artifactId>
-            <version>1.8.1</version> <!-- was: 1.7.2-SNAPSHOT -->
+            <version>1.8.1</version>
         </dependency>
 
         <dependency>
@@ -123,15 +123,6 @@
             <version>4.5.2</version>
         </dependency>
 
-        <!--dependency>
-            <groupId>com.google.inject</groupId>
-            <artifactId>guice</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-collections4</artifactId>
-        </dependency-->
-
         <!-- testing -->
         <dependency>
             <groupId>com.github.tomakehurst</groupId>
@@ -146,7 +137,7 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>6.9.9</version> <!-- 6.9.10: https://youtrack.jetbrains.com/issue/IDEA-149750 -->
+            <version>6.9.9</version>
         </dependency>
 
 	</dependencies>
@@ -159,13 +150,6 @@
     </repositories>
 
     <build>
-        <!--sourceDirectory>src</sourceDirectory>
-        <resources>
-            <resource>
-                <directory>res</directory>
-            </resource>
-        </resources-->
-
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

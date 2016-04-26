@@ -16,6 +16,8 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.shadowcash.sources.bittrex;
 
+import org.knowm.xchange.bittrex.v1.dto.marketdata.BittrexDepthResponse;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -28,6 +30,6 @@ public interface IBittrexAPI {
 
     @GET
     @Path("/getorderbook")
-    BittrexOrderBookResponse returnOrderBook(@QueryParam("market") String market, @QueryParam("type") String type, @QueryParam("depth") long depth);
+    BittrexDepthResponse returnOrderBook(@QueryParam("market") String market, @QueryParam("type") String type, @QueryParam("depth") long depth);
 
 }
