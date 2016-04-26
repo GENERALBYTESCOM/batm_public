@@ -39,12 +39,10 @@ cp server_extensions_extra/dist/batm_server_extensions_extra.jar /batm/app/maste
 ```
 
 
-
 Build with Maven:
 ```bash
 mvn clean install
 
-cp server_extensions_extra/target/batm-server-extensions-extra-0.1-SNAPSHOT-jar-with-dependencies.jar /batm/app/master/extensions/
 ```
 
 

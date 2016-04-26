@@ -43,8 +43,6 @@
 	</dependencies>
 
     <build>
-        <sourceDirectory>src</sourceDirectory> <!-- TODO: should be moved to src/main/java -->
-
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -73,5 +71,5 @@
             </plugin>
         </plugins>
     </build>
-
+    
 </project>
