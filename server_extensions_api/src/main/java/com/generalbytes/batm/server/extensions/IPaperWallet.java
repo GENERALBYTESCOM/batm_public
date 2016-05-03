@@ -40,6 +40,7 @@ public interface IPaperWallet {
      * @return
      */
     public String getPrivateKey();
+
     /**
      * Attachment extension (ie "zip")
      * @return

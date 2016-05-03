@@ -27,6 +27,7 @@ import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.shadowcash.sources.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.shadowcash.sources.bittrex.BittrexRateSource;
 import com.generalbytes.batm.server.extensions.extra.shadowcash.sources.poloniex.PoloniexRateSource;
+import com.generalbytes.batm.server.extensions.extra.shadowcash.wallets.paperwallet.ShadowcashPaperWalletGenerator;
 import com.generalbytes.batm.server.extensions.extra.shadowcash.wallets.shadowcashd.ShadowcashdRPCWallet;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 import lombok.extern.slf4j.Slf4j;
@@ -64,14 +65,11 @@ public class ShadowcashExtension implements IExtension {
             String walletType = st.nextToken();
 
             if ("shadowcashd".equalsIgnoreCase(walletType)) {
-                //"shadowcashd:protocol:user:password:ip:port:accountname"
-
                 String protocol = st.nextToken();
                 String username = st.nextToken();
                 String password = st.nextToken();
                 String hostname = st.nextToken();
                 String port = st.nextToken();
-                //String accountName = "";
 
                 if (protocol != null && username != null && password != null && hostname != null && port != null) {
                     String rpcURL = protocol + "://" + hostname + ":" + port;
@@ -93,7 +91,9 @@ public class ShadowcashExtension implements IExtension {
 
     @Override
     public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency) {
-        // TODO: implement ShadowcashPaperWalletGenerator
+        if (ICurrencies.SDC.equalsIgnoreCase(cryptoCurrency)) {
+            return new ShadowcashPaperWalletGenerator();
+        }
         return null;
     }
 

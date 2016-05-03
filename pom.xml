@@ -35,9 +35,13 @@
             <snapshots/>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
-        <repository>
+        <!--repository>
             <id>local-maven-repository</id>
             <url>file://${basedir}/local-maven-repository</url>
+        </repository-->
+        <repository>
+            <id>clojars.org</id>
+            <url>http://clojars.org/repo</url>
         </repository>
     </repositories>
 
