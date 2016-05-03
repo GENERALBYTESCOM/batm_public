@@ -5,6 +5,7 @@ import com.generalbytes.batm.server.extensions.IPaperWallet;
 import com.generalbytes.batm.server.extensions.IPaperWalletGenerator;
 import com.generalbytes.batm.server.extensions.extra.shadowcash.ShadowcashMainNetParams;
 import com.google.common.base.Joiner;
+import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
@@ -45,7 +46,9 @@ public class ShadowcashPaperWalletGenerator implements IPaperWalletGenerator {
     @Override
     public IPaperWallet generateWallet(String cryptoCurrency, String passphrase, String language) {
 
-        if (!cryptoCurrency.equalsIgnoreCase(CRYPTOCURRENCY)) {
+        if (!cryptoCurrency.equalsIgnoreCase(CRYPTOCURRENCY)
+                || Strings.isNullOrEmpty(passphrase)
+                || Strings.isNullOrEmpty(language)) {
             return null;
         }
 
@@ -82,7 +85,7 @@ public class ShadowcashPaperWalletGenerator implements IPaperWalletGenerator {
         byte[] zipFileBytes = null;
 
         try {
-            File mnemonicTextFile = new File( "mnemonic.txt");
+            File mnemonicTextFile = new File("mnemonic.txt");
             Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(mnemonicTextFile), "UTF8"));
             out.append(mnemonic).append("\r\n");
             out.flush();
