@@ -27,6 +27,7 @@ import com.generalbytes.batm.server.extensions.ITask;
 import org.knowm.xchange.Exchange;
 import org.knowm.xchange.ExchangeFactory;
 import org.knowm.xchange.ExchangeSpecification;
+import org.knowm.xchange.currency.Currency;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.Order.OrderType;
 import org.knowm.xchange.dto.marketdata.OrderBook;
@@ -143,7 +144,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
         log.debug("Calling Bitfinex exchange (getBalance)");
 
         try {
-            org.knowm.xchange.currency.Currency cryptoCurrency = org.knowm.xchange.currency.Currency.getInstance(cryptoCurrencyCode);
+            Currency cryptoCurrency = Currency.getInstance(cryptoCurrencyCode);
             return getExchange().getPollingAccountService().getAccountInfo().getWallet().getBalance(cryptoCurrency).getTotal();
         } catch (IOException e) {
             e.printStackTrace();
@@ -159,7 +160,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
         log.debug("Calling Bitfinex exchange (getBalance)");
 
         try {
-            org.knowm.xchange.currency.Currency fiatCurrency = org.knowm.xchange.currency.Currency.getInstance(fiatCurrencyCode);
+            Currency fiatCurrency = Currency.getInstance(fiatCurrencyCode);
             return getExchange().getPollingAccountService().getAccountInfo().getWallet().getBalance(fiatCurrency).getTotal();
         } catch (IOException e) {
             e.printStackTrace();
@@ -179,7 +180,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
         PollingAccountService accountService = getExchange().getPollingAccountService();
         try {
 
-            org.knowm.xchange.currency.Currency cryptoCurrency = org.knowm.xchange.currency.Currency.getInstance(cryptoCurrencyCode);
+            Currency cryptoCurrency = Currency.getInstance(cryptoCurrencyCode);
             String result = accountService.withdrawFunds(cryptoCurrency, amount, destinationAddress);
             if (result == null) {
                 log.warn("Bitfinex exchange (withdrawFunds) failed with null");
@@ -286,7 +287,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
         }
         PollingAccountService accountService = getExchange().getPollingAccountService();
         try {
-            org.knowm.xchange.currency.Currency cryptoCurrency = org.knowm.xchange.currency.Currency.getInstance(cryptoCurrencyCode);
+            Currency cryptoCurrency = Currency.getInstance(cryptoCurrencyCode);
             return accountService.requestDepositAddress(cryptoCurrency);
         } catch (IOException e) {
             e.printStackTrace();
