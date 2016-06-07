@@ -20,6 +20,7 @@ package com.generalbytes.batm.server.extensions;
 
 public interface ICurrencies {
     public static final String BTC = "BTC";
+    public static final String ETH = "ETH";
     public static final String LTC = "LTC";
     public static final String DOGE = "DOGE";
     public static final String MAX = "MAX";
