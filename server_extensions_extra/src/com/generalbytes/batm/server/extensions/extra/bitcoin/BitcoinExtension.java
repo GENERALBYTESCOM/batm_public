@@ -178,6 +178,8 @@ public class BitcoinExtension implements IExtension{
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
         result.add(ICurrencies.BTC);
+        result.add(ICurrencies.ETH);
+        result.add(ICurrencies.LTC);
         return result;
     }
 

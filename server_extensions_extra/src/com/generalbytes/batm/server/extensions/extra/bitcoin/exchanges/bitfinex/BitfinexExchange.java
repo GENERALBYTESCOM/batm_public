@@ -42,7 +42,6 @@ import com.xeiam.xchange.dto.trade.MarketOrder;
 import com.xeiam.xchange.service.polling.account.PollingAccountService;
 import com.xeiam.xchange.service.polling.marketdata.PollingMarketDataService;
 import com.xeiam.xchange.service.polling.trade.PollingTradeService;
-import org.slf4j.spi.LocationAwareLogger;
 
 public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced {
 
@@ -76,6 +75,8 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
     public Set<String> getCryptoCurrencies() {
         Set<String> cryptoCurrencies = new HashSet<String>();
         cryptoCurrencies.add(ICurrencies.BTC);
+        cryptoCurrencies.add(ICurrencies.ETH);
+        cryptoCurrencies.add(ICurrencies.LTC);
         return cryptoCurrencies;
     }
 
@@ -131,7 +132,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
     public BigDecimal getCryptoBalance(String cryptoCurrency) {
         // [TODO] Can be extended to support LTC and DRK (and other currencies supported by BFX)
-        if (!ICurrencies.BTC.equalsIgnoreCase(cryptoCurrency)) {
+        if (!getCryptoCurrencies().contains(cryptoCurrency)) {
             return BigDecimal.ZERO;
         }
         log.debug("Calling Bitfinex exchange (getBalance)");
@@ -161,8 +162,8 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
     }
 
     public final String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
-        if (!ICurrencies.BTC.equalsIgnoreCase(cryptoCurrency)) {
-            log.error("Bitfinex supports only " + ICurrencies.BTC);
+        if (!getCryptoCurrencies().contains(cryptoCurrency)) {
+            log.error("Bitfinex implementation supports only " + Arrays.toString(getCryptoCurrencies().toArray()));
             return null;
         }
 
@@ -189,8 +190,8 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
     }
 
     public String purchaseCoins(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
-        if (!ICurrencies.BTC.equalsIgnoreCase(cryptoCurrency)) {
-            log.error("Bitfinex implementation supports only " + ICurrencies.BTC);
+        if (!getCryptoCurrencies().contains(cryptoCurrency)) {
+            log.error("Bitfinex implementation supports only " + Arrays.toString(getCryptoCurrencies().toArray()));
             return null;
         }
         if (!ICurrencies.USD.equalsIgnoreCase(fiatCurrencyToUse)) {
@@ -257,8 +258,8 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
     @Override
     public ITask createPurchaseCoinsTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
-        if (!ICurrencies.BTC.equalsIgnoreCase(cryptoCurrency)) {
-            log.error("Bitfinex implementation supports only " + ICurrencies.BTC);
+        if (!getCryptoCurrencies().contains(cryptoCurrency)) {
+            log.error("Bitfinex implementation supports only " + Arrays.toString(getCryptoCurrencies().toArray()));
             return null;
         }
         if (!ICurrencies.USD.equalsIgnoreCase(fiatCurrencyToUse)) {
@@ -270,8 +271,8 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
     @Override
     public String getDepositAddress(String cryptoCurrency) {
-        if (!ICurrencies.BTC.equalsIgnoreCase(cryptoCurrency)) {
-            log.error("Bitfinex implementation supports only " + ICurrencies.BTC);
+        if (!getCryptoCurrencies().contains(cryptoCurrency)) {
+            log.error("Bitfinex implementation supports only " + Arrays.toString(getCryptoCurrencies().toArray()));
             return null;
         }
         PollingAccountService accountService = getExchange().getPollingAccountService();
@@ -285,8 +286,8 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
     @Override
     public String sellCoins(BigDecimal cryptoAmount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
-        if (!ICurrencies.BTC.equalsIgnoreCase(cryptoCurrency)) {
-            log.error("Bitfinex implementation supports only " + ICurrencies.BTC);
+        if (!getCryptoCurrencies().contains(cryptoCurrency)) {
+            log.error("Bitfinex implementation supports only " + Arrays.toString(getCryptoCurrencies().toArray()));
             return null;
         }
         if (!ICurrencies.USD.equalsIgnoreCase(fiatCurrencyToUse)) {
@@ -353,8 +354,8 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
     @Override
     public ITask createSellCoinsTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
-        if (!ICurrencies.BTC.equalsIgnoreCase(cryptoCurrency)) {
-            log.error("Bitfinex implementation supports only " + ICurrencies.BTC);
+        if (!getCryptoCurrencies().contains(cryptoCurrency)) {
+            log.error("Bitfinex implementation supports only " + Arrays.toString(getCryptoCurrencies().toArray()));
             return null;
         }
         if (!ICurrencies.USD.equalsIgnoreCase(fiatCurrencyToUse)) {
@@ -735,7 +736,4 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
         return null;
 
     }
-
-
-
 }
