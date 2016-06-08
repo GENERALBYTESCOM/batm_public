@@ -26,7 +26,6 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.BitcoinAver
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitcoind.BATMBitcoindRPCWallet;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitcore.BitcoreWallet;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinkite.CoinkiteWallet;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.math.BigDecimal;
@@ -107,14 +106,6 @@ public class BitcoinExtension implements IExtension{
                     String rpcURL = protocol +"://" + username +":" + password + "@" + hostname +":" + port;
                     return new BATMBitcoindRPCWallet(rpcURL,accountName);
                 }
-            }else if ("coinkite".equalsIgnoreCase(walletType)) {
-                String apikey = st.nextToken();
-                String apiSecret = st.nextToken();
-                String accountNumber ="0";
-                if (st.hasMoreTokens()) {
-                    accountNumber = st.nextToken();
-                }
-                return new CoinkiteWallet(apikey,apiSecret,accountNumber);
             }else if ("bitcore".equalsIgnoreCase(walletType)) { //bitcore:apiKey:proxyUrl
                 String apiKey = st.nextToken();
                 // the next token is a URL, so we can't use : as a delimiter
