@@ -22,7 +22,7 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.itbit;
 
 import com.generalbytes.batm.server.extensions.ICurrencies;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.XChangeExchange;
-import com.xeiam.xchange.ExchangeSpecification;
+import org.knowm.xchange.ExchangeSpecification;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -39,7 +39,7 @@ public class ItBitExchange extends XChangeExchange {
 
 
     private static ExchangeSpecification getDefaultSpecification() {
-        return new com.xeiam.xchange.itbit.v1.ItBitExchange().getDefaultExchangeSpecification();
+        return new org.knowm.xchange.itbit.v1.ItBitExchange().getDefaultExchangeSpecification();
     }
 
     private static ExchangeSpecification getSpecification(String userId, String walletId, String clientKey, String clientSecret) {

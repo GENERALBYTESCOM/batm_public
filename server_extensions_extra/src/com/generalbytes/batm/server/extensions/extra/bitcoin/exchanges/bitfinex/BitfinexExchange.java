@@ -25,23 +25,24 @@ import java.math.BigDecimal;
 import java.util.*;
 
 import com.generalbytes.batm.server.extensions.*;
-import com.xeiam.xchange.exceptions.ExchangeException;
-import com.xeiam.xchange.dto.marketdata.OrderBook;
-import com.xeiam.xchange.dto.trade.LimitOrder;
-import com.xeiam.xchange.dto.trade.OpenOrders;
+import org.knowm.xchange.Exchange;
+import org.knowm.xchange.ExchangeFactory;
+import org.knowm.xchange.ExchangeSpecification;
+import org.knowm.xchange.currency.Currency;
+import org.knowm.xchange.currency.CurrencyPair;
+import org.knowm.xchange.dto.Order;
+import org.knowm.xchange.dto.marketdata.OrderBook;
+import org.knowm.xchange.dto.marketdata.Ticker;
+import org.knowm.xchange.dto.trade.LimitOrder;
+import org.knowm.xchange.dto.trade.MarketOrder;
+import org.knowm.xchange.dto.trade.OpenOrders;
+import org.knowm.xchange.exceptions.ExchangeException;
+import org.knowm.xchange.service.polling.account.PollingAccountService;
+import org.knowm.xchange.service.polling.marketdata.PollingMarketDataService;
+import org.knowm.xchange.service.polling.trade.PollingTradeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.xeiam.xchange.Exchange;
-import com.xeiam.xchange.ExchangeFactory;
-import com.xeiam.xchange.ExchangeSpecification;
-import com.xeiam.xchange.currency.CurrencyPair;
-import com.xeiam.xchange.dto.Order.OrderType;
-import com.xeiam.xchange.dto.marketdata.Ticker;
-import com.xeiam.xchange.dto.trade.MarketOrder;
-import com.xeiam.xchange.service.polling.account.PollingAccountService;
-import com.xeiam.xchange.service.polling.marketdata.PollingMarketDataService;
-import com.xeiam.xchange.service.polling.trade.PollingTradeService;
 
 public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced {
 
@@ -64,7 +65,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
     private synchronized Exchange getExchange() {
         if (this.exchange == null) {
-            ExchangeSpecification bfxSpec = new com.xeiam.xchange.bitfinex.v1.BitfinexExchange().getDefaultExchangeSpecification();
+            ExchangeSpecification bfxSpec = new org.knowm.xchange.bitfinex.v1.BitfinexExchange().getDefaultExchangeSpecification();
             bfxSpec.setApiKey(this.apiKey);
             bfxSpec.setSecretKey(this.apiSecret);
             this.exchange = ExchangeFactory.INSTANCE.createExchange(bfxSpec);
@@ -138,7 +139,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
         log.debug("Calling Bitfinex exchange (getBalance)");
 
         try {
-            return getExchange().getPollingAccountService().getAccountInfo().getBalance(cryptoCurrency);
+            return getExchange().getPollingAccountService().getAccountInfo().getWallet().getBalance(Currency.getInstance(cryptoCurrency)).getAvailable();
         } catch (IOException e) {
             e.printStackTrace();
             log.error("Bitfinex exchange (getBalance) failed with message: " + e.getMessage());
@@ -153,7 +154,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
         log.debug("Calling Bitfinex exchange (getBalance)");
 
         try {
-            return getExchange().getPollingAccountService().getAccountInfo().getBalance(fiatCurrency);
+            return getExchange().getPollingAccountService().getAccountInfo().getWallet().getBalance(Currency.getInstance(fiatCurrency)).getAvailable();
         } catch (IOException e) {
             e.printStackTrace();
             log.error("Bitfinex exchange (getBalance) failed with message: " + e.getMessage());
@@ -171,7 +172,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
         PollingAccountService accountService = getExchange().getPollingAccountService();
         try {
-            String result = accountService.withdrawFunds(cryptoCurrency, amount, destinationAddress);
+            String result = accountService.withdrawFunds(Currency.getInstance(cryptoCurrency), amount, destinationAddress);
             if (result == null) {
                 log.warn("Bitfinex exchange (withdrawFunds) failed with null");
                 return null;
@@ -208,7 +209,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
             CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrencyToUse);
 
-            MarketOrder order = new MarketOrder(OrderType.BID, amount, currencyPair);
+            MarketOrder order = new MarketOrder(Order.OrderType.BID, amount, currencyPair);
             log.debug("marketOrder = " + order);
 
             String orderId = tradeService.placeMarketOrder(order);
@@ -277,7 +278,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
         }
         PollingAccountService accountService = getExchange().getPollingAccountService();
         try {
-            return accountService.requestDepositAddress(cryptoCurrency);
+            return accountService.requestDepositAddress(Currency.getInstance(cryptoCurrency));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -304,7 +305,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
             CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrencyToUse);
 
-            MarketOrder order = new MarketOrder(OrderType.ASK, cryptoAmount, currencyPair);
+            MarketOrder order = new MarketOrder(Order.OrderType.ASK, cryptoAmount, currencyPair);
             log.debug("marketOrder = " + order);
 
             String orderId = tradeService.placeMarketOrder(order);
@@ -395,7 +396,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
                 CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrencyToUse);
 
-                MarketOrder order = new MarketOrder(OrderType.BID, amount, currencyPair);
+                MarketOrder order = new MarketOrder(Order.OrderType.BID, amount, currencyPair);
                 log.debug("marketOrder = " + order);
 
                 orderId = tradeService.placeMarketOrder(order);
@@ -518,7 +519,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
                 CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrencyToUse);
 
-                MarketOrder order = new MarketOrder(OrderType.ASK, cryptoAmount, currencyPair);
+                MarketOrder order = new MarketOrder(Order.OrderType.ASK, cryptoAmount, currencyPair);
                 log.debug("marketOrder = " + order);
 
                 orderId = tradeService.placeMarketOrder(order);
@@ -736,4 +737,5 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
         return null;
 
     }
+
 }

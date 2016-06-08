@@ -20,29 +20,29 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges;
 
-import com.generalbytes.batm.server.extensions.ICurrencies;
 import com.generalbytes.batm.server.extensions.IExchangeAdvanced;
 import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
 import com.generalbytes.batm.server.extensions.ITask;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.util.concurrent.RateLimiter;
-import com.xeiam.xchange.Exchange;
-import com.xeiam.xchange.ExchangeFactory;
-import com.xeiam.xchange.ExchangeSpecification;
-import com.xeiam.xchange.currency.CurrencyPair;
-import com.xeiam.xchange.dto.Order.OrderType;
-import com.xeiam.xchange.dto.marketdata.OrderBook;
-import com.xeiam.xchange.dto.marketdata.Ticker;
-import com.xeiam.xchange.dto.trade.LimitOrder;
-import com.xeiam.xchange.dto.trade.MarketOrder;
-import com.xeiam.xchange.dto.trade.OpenOrders;
-import com.xeiam.xchange.exceptions.ExchangeException;
-import com.xeiam.xchange.exceptions.NotAvailableFromExchangeException;
-import com.xeiam.xchange.exceptions.NotYetImplementedForExchangeException;
-import com.xeiam.xchange.service.polling.account.PollingAccountService;
-import com.xeiam.xchange.service.polling.marketdata.PollingMarketDataService;
-import com.xeiam.xchange.service.polling.trade.PollingTradeService;
+import org.knowm.xchange.Exchange;
+import org.knowm.xchange.ExchangeFactory;
+import org.knowm.xchange.ExchangeSpecification;
+import org.knowm.xchange.currency.Currency;
+import org.knowm.xchange.currency.CurrencyPair;
+import org.knowm.xchange.dto.Order;
+import org.knowm.xchange.dto.marketdata.OrderBook;
+import org.knowm.xchange.dto.marketdata.Ticker;
+import org.knowm.xchange.dto.trade.LimitOrder;
+import org.knowm.xchange.dto.trade.MarketOrder;
+import org.knowm.xchange.dto.trade.OpenOrders;
+import org.knowm.xchange.exceptions.ExchangeException;
+import org.knowm.xchange.exceptions.NotAvailableFromExchangeException;
+import org.knowm.xchange.exceptions.NotYetImplementedForExchangeException;
+import org.knowm.xchange.service.polling.account.PollingAccountService;
+import org.knowm.xchange.service.polling.marketdata.PollingMarketDataService;
+import org.knowm.xchange.service.polling.trade.PollingTradeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -161,7 +161,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
             BigDecimal balance = exchange.getPollingAccountService()
                     .getAccountInfo()
                     .getWallet(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency))
-                    .getBalance();
+                    .getBalance(Currency.getInstance(cryptoCurrency)).getAvailable();
             log.debug("{} exchange balance request: {} = {}", name, cryptoCurrency, balance);
             return balance;
         } catch (IOException e) {
@@ -180,7 +180,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
             BigDecimal balance = exchange.getPollingAccountService()
                     .getAccountInfo()
                     .getWallet(fiatCurrency)
-                    .getBalance();
+                    .getBalance(Currency.getInstance(fiatCurrency)).getAvailable();
             log.debug("{} exchange balance request: {} = {}", name, fiatCurrency, balance);
             return balance;
         } catch (IOException e) {
@@ -199,7 +199,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
 
         PollingAccountService accountService = exchange.getPollingAccountService();
         try {
-            String result = accountService.withdrawFunds(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency), amount, destinationAddress);
+            String result = accountService.withdrawFunds(Currency.getInstance(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency)), amount, destinationAddress);
             if (isWithdrawSuccessful(result)) {
                 log.debug("{} exchange withdrawal completed with result: {}", name, result);
                 return "success";
@@ -234,7 +234,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
 
             Ticker ticker = marketService.getTicker(currencyPair);
 
-            LimitOrder order = new LimitOrder.Builder(OrderType.BID, currencyPair)
+            LimitOrder order = new LimitOrder.Builder(Order.OrderType.BID, currencyPair)
                     .limitPrice(ticker.getAsk())
                     .tradableAmount(amount)
                     .build();
@@ -309,7 +309,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
 
         PollingAccountService accountService = exchange.getPollingAccountService();
         try {
-            return accountService.requestDepositAddress(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency));
+            return accountService.requestDepositAddress(Currency.getInstance(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency)));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -339,7 +339,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
 
             CurrencyPair currencyPair = new CurrencyPair(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency), fiatCurrencyToUse);
 
-            MarketOrder order = new MarketOrder(OrderType.ASK, cryptoAmount, currencyPair);
+            MarketOrder order = new MarketOrder(Order.OrderType.ASK, cryptoAmount, currencyPair);
             log.debug("marketOrder = {}", order);
 
             String orderId = tradeService.placeMarketOrder(order);
@@ -548,7 +548,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
                 CurrencyPair currencyPair = new CurrencyPair(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency), fiatCurrencyToUse);
 
                 Ticker ticker = marketService.getTicker(currencyPair);
-                LimitOrder order = new LimitOrder.Builder(OrderType.BID, currencyPair)
+                LimitOrder order = new LimitOrder.Builder(Order.OrderType.BID, currencyPair)
                         .limitPrice(ticker.getAsk())
                         .tradableAmount(amount)
                         .build();
@@ -673,7 +673,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
 
                 CurrencyPair currencyPair = new CurrencyPair(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency), fiatCurrencyToUse);
 
-                MarketOrder order = new MarketOrder(OrderType.ASK, cryptoAmount, currencyPair);
+                MarketOrder order = new MarketOrder(Order.OrderType.ASK, cryptoAmount, currencyPair);
                 log.debug("marketOrder = {}", order);
 
                 orderId = tradeService.placeMarketOrder(order);
