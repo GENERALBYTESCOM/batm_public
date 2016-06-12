@@ -31,6 +31,8 @@
             </ratesource>
             <ratesource prefix="bitfinex" name ="Bitfinex.com Exchange" >
                 <cryptocurrency>BTC</cryptocurrency>
+                <cryptocurrency>ETH</cryptocurrency>
+                <cryptocurrency>LTC</cryptocurrency>
             </ratesource>
             <ratesource prefix="itbit" name ="itBit.com Exchange" >
                 <param name="fiatcurrency" />
@@ -49,6 +51,8 @@
                 <param name="apikey" />
                 <param name="apisecret" />
                 <cryptocurrency>BTC</cryptocurrency>
+                <cryptocurrency>ETH</cryptocurrency>
+                <cryptocurrency>LTC</cryptocurrency>
             </exchange>
             <exchange prefix="itbit" name="itBit.com Exchange">
                 <param name="userId" />

@@ -31,8 +31,8 @@ import org.knowm.xchange.ExchangeFactory;
 import org.knowm.xchange.ExchangeSpecification;
 import org.knowm.xchange.currency.Currency;
 import org.knowm.xchange.currency.CurrencyPair;
-import org.knowm.xchange.dto.Order.OrderType;
 import org.knowm.xchange.dto.account.Balance;
+import org.knowm.xchange.dto.Order;
 import org.knowm.xchange.dto.marketdata.OrderBook;
 import org.knowm.xchange.dto.marketdata.Ticker;
 import org.knowm.xchange.dto.trade.LimitOrder;
@@ -84,6 +84,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
     }
 
     protected abstract boolean isWithdrawSuccessful(String result);
+
     protected abstract double getAllowedCallsPerSecond();
 
     private boolean isCryptoCurrencySupported(String currency) {
@@ -166,7 +167,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
                     .getWallet(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrencyCode))
                     .getBalance(cryptoCurrency);
             log.debug("{} exchange balance request: {} = {}", name, cryptoCurrency, balance);
-            return balance.getTotal();
+            return balance.getAvailable();
         } catch (IOException e) {
             e.printStackTrace();
             log.error("{} exchange balance request: {}", name, cryptoCurrencyCode, e);
@@ -187,7 +188,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
                     .getWallet(fiatCurrencyCode)
                     .getBalance(fiatCurrency);
             log.debug("{} exchange balance request: {} = {}", name, fiatCurrency, balance);
-            return balance.getTotal();
+            return balance.getAvailable();
         } catch (IOException e) {
             e.printStackTrace();
             log.error("{} exchange balance request: {}", name, fiatCurrencyCode, e);
@@ -196,7 +197,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
     }
 
     public final String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrencyCode, String description) {
-        if (!isCryptoCurrencySupported(cryptoCurrencyCode)){
+        if (!isCryptoCurrencySupported(cryptoCurrencyCode)) {
             return null;
         }
 
@@ -225,7 +226,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
         if (!isFiatCurrencySupported(fiatCurrencyToUse)) {
             return null;
         }
-        if (!isCryptoCurrencySupported(cryptoCurrency)){
+        if (!isCryptoCurrencySupported(cryptoCurrency)) {
             return null;
         }
 
@@ -240,7 +241,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
 
             Ticker ticker = marketService.getTicker(currencyPair);
 
-            LimitOrder order = new LimitOrder.Builder(OrderType.BID, currencyPair)
+            LimitOrder order = new LimitOrder.Builder(Order.OrderType.BID, currencyPair)
                     .limitPrice(ticker.getAsk())
                     .tradableAmount(amount)
                     .build();
@@ -346,7 +347,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
 
             CurrencyPair currencyPair = new CurrencyPair(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency), fiatCurrencyToUse);
 
-            MarketOrder order = new MarketOrder(OrderType.ASK, cryptoAmount, currencyPair);
+            MarketOrder order = new MarketOrder(Order.OrderType.ASK, cryptoAmount, currencyPair);
             log.debug("marketOrder = {}", order);
 
             String orderId = tradeService.placeMarketOrder(order);
@@ -379,7 +380,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                }else{
+                } else {
                     orderProcessed = true;
                 }
                 numberOfChecks++;
@@ -478,10 +479,10 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
         if (cryptoCurrency == null || fiatCurrency == null) {
             return null;
         }
-        if (!isCryptoCurrencySupported(cryptoCurrency)){
+        if (!isCryptoCurrencySupported(cryptoCurrency)) {
             return null;
         }
-        if(!isFiatCurrencySupported(fiatCurrency)) {
+        if (!isFiatCurrencySupported(fiatCurrency)) {
             return null;
         }
 
@@ -555,7 +556,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
                 CurrencyPair currencyPair = new CurrencyPair(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency), fiatCurrencyToUse);
 
                 Ticker ticker = marketService.getTicker(currencyPair);
-                LimitOrder order = new LimitOrder.Builder(OrderType.BID, currencyPair)
+                LimitOrder order = new LimitOrder.Builder(Order.OrderType.BID, currencyPair)
                         .limitPrice(ticker.getAsk())
                         .tradableAmount(amount)
                         .build();
@@ -680,7 +681,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
 
                 CurrencyPair currencyPair = new CurrencyPair(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency), fiatCurrencyToUse);
 
-                MarketOrder order = new MarketOrder(OrderType.ASK, cryptoAmount, currencyPair);
+                MarketOrder order = new MarketOrder(Order.OrderType.ASK, cryptoAmount, currencyPair);
                 log.debug("marketOrder = {}", order);
 
                 orderId = tradeService.placeMarketOrder(order);
@@ -735,7 +736,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
 
             if (orderFound) {
                 log.debug("Waiting for order to be processed.");
-            }else{
+            } else {
                 orderProcessed = true;
             }
 
