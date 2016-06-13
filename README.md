@@ -26,6 +26,8 @@ Content
 
 Build information
 =================
+
+Build with Ant:
 ```bash
 cd server_extensions_api
 ant
@@ -36,14 +38,29 @@ cd ..
 cp server_extensions_extra/dist/batm_server_extensions_extra.jar /batm/app/master/extensions/
 ```
 
+
+Build with Maven:
+```bash
+mvn clean install
+
+```
+
+Note for OSX
+============
+
+If you get an exception about an illegal key size, you need to install the Unlimited Strength Jurisdiction Policy Files:
+Java 7: http://www.oracle.com/technetwork/java/javase/downloads/jce-7-download-432124.html
+Java 8: http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html
+
+
 Note for developers
-==========
+===================
 When you implement support for new crypto-coin add it please to **server_extensions_extra** this way it will get into default BATM Server installation pack for customers.
 
 After you implement the the extension make sure you test it with Tester which you will find in **server_extensions_test**
 
 How to run Tester
-==========
+=================
 ```bash
 cd server_extensions_test
 ant
