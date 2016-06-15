@@ -239,7 +239,7 @@
             <param name="accountRS" />
             <cryptocurrency>NXT</cryptocurrency>
         </wallet>
-        <ratesource prefix="ntxfix" name ="Fix Price" >
+        <ratesource prefix="nxtfix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>NXT</cryptocurrency>
         </ratesource>
