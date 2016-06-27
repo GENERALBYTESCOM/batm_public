@@ -6,4 +6,4 @@ build/
 .gradle
 .iml
 target
-
+install-libs.sh
