@@ -55,6 +55,8 @@
         <jar jarfile="${dist}/${ant.project.name}.jar" basedir="${build}"/>
         <copy file="${res}/tester.sh" todir="${dist}"/>
         <chmod file="${dist}/tester.sh" perm="ugo+x"/>
+        <copy file="${res}/run-btc-tests.sh" todir="${dist}"/>
+        <chmod file="${dist}/run-btc-tests.sh" perm="ugo+x"/>
     </target>
 
     <target name="clean" description="clean up">
