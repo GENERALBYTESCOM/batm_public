@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>commons-io</groupId>
+  <artifactId>commons-io</artifactId>
+  <versioning>
+    <release>2.4-BATM</release>
+    <versions>
+      <version>2.4-BATM</version>
+    </versions>
+    <lastUpdated>20160627233237</lastUpdated>
+  </versioning>
+</metadata>

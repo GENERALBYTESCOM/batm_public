@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>org.knowm.xchange</groupId>
+  <artifactId>xchange-core</artifactId>
+  <versioning>
+    <release>4.0.1-SNAPSHOT-BATM</release>
+    <versions>
+      <version>4.0.1-SNAPSHOT-BATM</version>
+    </versions>
+    <lastUpdated>20160627233250</lastUpdated>
+  </versioning>
+</metadata>
