@@ -23,6 +23,12 @@ cd $directory
 ./install-lib.sh extra xchange-bittrex-4.0.1-SNAPSHOT.jar org.knowm.xchange xchange-bittrex 4.0.1-SNAPSHOT
 ./install-lib.sh extra xchange-poloniex-4.0.1-SNAPSHOT.jar org.knowm.xchange xchange-poloniex 4.0.1-SNAPSHOT
 
+./install-lib.sh extra bitcoinj-core-0.13.6.jar org.bitcoinj bitcoinj-core 0.13.6
+./install-lib.sh extra core-1.54.0.0.jar com.madgag.spongycastle core 1.54.0.0
+./install-lib.sh extra protobuf-java-2.6.1.jar com.google.protobuf protobuf-java 2.6.1
+./install-lib.sh extra wallettemplate-0.13.6.jar org.bitcoinj wallettemplate 0.13.6
+./install-lib.sh extra zip4j-1.3.2.jar net.lingala.zip4j zip4j 1.3.2
+
 # EXTRA/test dependencies
 ./install-lib.sh extra test/commons-logging-1.2.jar commons-logging commons-logging 1.2
 ./install-lib.sh extra test/fluent-hc-4.5.2.jar org.apache.httpcomponents fluent-hc 4.5.2
