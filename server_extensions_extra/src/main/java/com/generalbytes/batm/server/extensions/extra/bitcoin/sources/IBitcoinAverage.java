@@ -21,19 +21,21 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.sources;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.HashMap;
 
-@Path("/")
+@Path("/ticker")
 @Produces(MediaType.APPLICATION_JSON)
 public interface IBitcoinAverage {
 
     @GET
-    @Path("/")
+    @Path("/global")
     HashMap<String,String> getFiatCurrenciesAndURLs();
 
     @GET
-    @Path("/")
-    BitcoinAverageRate getBTCRate();
+    @Path("/global/{currency}")
+    BitcoinAverageRate getBTCRate(@PathParam("currency") String currency);
+
 }
