@@ -266,6 +266,33 @@
             <cryptocurrency>DEX</cryptocurrency>
         </exchange>
         <cryptologo cryptocurrency="DEX" file="dex.png"/>
+    <extension class="com.generalbytes.batm.server.extensions.extra.shadowcash.ShadowcashExtension">
+        <wallet prefix="shadowcoind" name="Shadowcash Core - shadowcoind" >
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <cryptocurrency>SDC</cryptocurrency>
+        </wallet>
+        <ratesource prefix="sdcfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>SDC</cryptocurrency>
+        </ratesource>
+        <ratesource prefix="sdcpoloniexrs" name ="ratesource using poloniex.com and bitcoinaverage.com" >
+            <param name="fiatcurrency" />
+            <cryptocurrency>SDC</cryptocurrency>
+        </ratesource>
+        <ratesource prefix="sdcbittrexrs" name ="ratesource using bittrex.com and bitcoinaverage.com" >
+            <param name="fiatcurrency" />
+            <cryptocurrency>SDC</cryptocurrency>
+        </ratesource>
+        <!--exchange prefix="bittrex" name="bittrex.com exchange">
+            <param name="apikey" />
+            <param name="apisecret" />
+            <cryptocurrency>BTC</cryptocurrency>
+        </exchange-->
+        <cryptologo cryptocurrency="SDC" file="sdc.png"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.watchlists.BasicWatchlistsExtension" />
 </extensions>

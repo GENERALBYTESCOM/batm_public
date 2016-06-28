@@ -30,14 +30,12 @@ import com.generalbytes.batm.server.extensions.extra.shadowcash.sources.poloniex
 import com.generalbytes.batm.server.extensions.extra.shadowcash.wallets.paperwallet.ShadowcashPaperWalletGenerator;
 import com.generalbytes.batm.server.extensions.extra.shadowcash.wallets.shadowcashd.ShadowcashdRPCWallet;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
-import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-@Slf4j
 public class ShadowcashExtension implements IExtension {
 
     @Override
@@ -72,11 +70,10 @@ public class ShadowcashExtension implements IExtension {
                 String port = st.nextToken();
 
                 if (protocol != null && username != null && password != null && hostname != null && port != null) {
-                    String rpcURL = protocol + "://" + hostname + ":" + port;
-                    return new ShadowcashdRPCWallet(rpcURL, username, password);
+                    String rpcURL = protocol + "://" + username + ":" + password + "@" + hostname + ":" + port;
+                    return new ShadowcashdRPCWallet(rpcURL);
                 }
             }
-
         }
         return null;
     }

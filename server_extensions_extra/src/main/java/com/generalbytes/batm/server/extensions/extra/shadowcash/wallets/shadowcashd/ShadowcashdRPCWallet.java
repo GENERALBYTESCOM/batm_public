@@ -16,11 +16,9 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.shadowcash.wallets.shadowcashd;
 
+import com.azazar.bitcoin.jsonrpcclient.BitcoinException;
 import com.generalbytes.batm.server.extensions.ICurrencies;
 import com.generalbytes.batm.server.extensions.IWallet;
-import com.rutherford.jsonrpc.CryptocoinClientFactory;
-import com.rutherford.jsonrpc.ShadowcashdInterface;
-import com.rutherford.jsonrpc.value.shadowcash.ShadowInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,10 +33,10 @@ public class ShadowcashdRPCWallet implements IWallet {
     private static final Logger log = LoggerFactory.getLogger(ShadowcashdRPCWallet.class);
     private static final String CRYPTO_CURRENCY = ICurrencies.SDC;
 
-    private static ShadowcashdInterface client;
+    private static ShadowcashJSONRPCClient client;
 
-    public ShadowcashdRPCWallet(final String rpcURL, final String username, final String password) {
-        client = createClient(rpcURL, username, password);
+    public ShadowcashdRPCWallet(final String rpcURL) {
+        client = createClient(rpcURL);
     }
 
     @Override
@@ -61,8 +59,14 @@ public class ShadowcashdRPCWallet implements IWallet {
         }
 
         log.info("Shadowcashd sending {} coins to: {} ", amount.doubleValue(), destinationAddress);
-        String result = client.sendtoaddress(destinationAddress, amount);
-        log.debug("result: {} ", result);
+        //String result = client.sendtoaddress(destinationAddress, amount);
+        String result = null;
+        try {
+            result = client.sendToAddress(destinationAddress, amount.doubleValue());
+            log.debug("result: {} ", result);
+        } catch (BitcoinException e) {
+            e.printStackTrace();
+        }
         return result;
     }
 
@@ -73,7 +77,14 @@ public class ShadowcashdRPCWallet implements IWallet {
             return null;
         }
 
-        String newAddress = client.getnewaddress();
+        //String newAddress = client.getnewaddress();
+        String newAddress = null;
+        try {
+            newAddress = client.getNewAddress();
+        } catch (BitcoinException e) {
+            e.printStackTrace();
+        }
+
         return newAddress;
     }
 
@@ -83,17 +94,30 @@ public class ShadowcashdRPCWallet implements IWallet {
             log.error("Shadowcashd wallet error: unknown cryptocurrency: {}", cryptoCurrency);
             return null;
         }
-        return client.getbalance();
-    }
 
-    public ShadowInfo getInfo() {
-        return client.getinfo();
-    }
-
-    private static ShadowcashdInterface createClient(final String rpcURL, final String username, final String password) {
         try {
-            final CryptocoinClientFactory clientFactory = new CryptocoinClientFactory(new URL(rpcURL), username, password);
-            return clientFactory.getClient(ShadowcashdInterface.class);
+            double balance = client.getBalance();
+            return new BigDecimal(balance);
+        } catch (BitcoinException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public ShadowcashJSONRPCClient.ShadowInfo getInfo() {
+        try {
+            return client.getInfo();
+        } catch (BitcoinException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private static ShadowcashJSONRPCClient createClient(final String rpcURL) {
+        try {
+            final ShadowcashJSONRPCClient shadowcashJSONRPCClient = new ShadowcashJSONRPCClient(rpcURL);
+            return shadowcashJSONRPCClient;
+
         } catch (IOException e) {
             e.printStackTrace();
         }
