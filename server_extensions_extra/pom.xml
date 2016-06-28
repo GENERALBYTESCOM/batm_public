@@ -95,6 +95,14 @@
             <groupId>net.lingala.zip4j</groupId>
             <artifactId>zip4j</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.madgag.spongycastle</groupId>
+            <artifactId>core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+        </dependency>
 
         <!-- testing related -->
         <dependency>
@@ -183,6 +191,19 @@
     <build>
         <outputDirectory>build</outputDirectory>
         <finalName>batm_server_extensions_extra</finalName>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <filtering>false</filtering>
+            </testResource>
+        </testResources>
 
         <plugins>
             <plugin>

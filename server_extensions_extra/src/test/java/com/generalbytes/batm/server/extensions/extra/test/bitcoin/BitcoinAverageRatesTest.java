@@ -1,7 +1,8 @@
-package com.generalbytes.batm.server.extensions.extra.test;
+package com.generalbytes.batm.server.extensions.extra.test.bitcoin;
 
 import com.generalbytes.batm.server.extensions.ICurrencies;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.BitcoinAverageRateSource;
+import com.generalbytes.batm.server.extensions.extra.test.BaseTest;
 import com.generalbytes.batm.server.extensions.extra.test.utils.HttpFetcher;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
@@ -27,7 +28,6 @@ public class BitcoinAverageRatesTest extends BaseTest {
 
     private BitcoinAverageRateSource bitcoinAverageRateSource;
 
-    private HttpFetcher httpFetcher = new HttpFetcher();
     private WireMockServer wireMockServer;
 
     private static final String MOCK_API_HOST = "localhost";
@@ -36,6 +36,7 @@ public class BitcoinAverageRatesTest extends BaseTest {
 
     @AfterClass
     public void afterClass() {
+        //printLoggedRequests();
         wireMockServer.stop();
     }
 
@@ -77,14 +78,14 @@ public class BitcoinAverageRatesTest extends BaseTest {
 
     @Test(groups = { "bitcoinaverage" })
     public void mockBitcoinAverageCurrenciesEndpointTest() throws IOException {
-        final String actual = httpFetcher.fetchAsString(MOCK_API_BASE_URL + "/ticker/global");
+        final String actual = HttpFetcher.fetchAsString(MOCK_API_BASE_URL + "/ticker/global");
         final String expected = getFileAsString("__files/api-mocks/bitcoinaverage/currencies.json");
         assertThat(actual, is(expected));
     }
 
     @Test(groups = { "bitcoinaverage" })
     public void mockBitcoinAverageUSDEndpointTest() throws IOException {
-        final String actual = httpFetcher.fetchAsString(MOCK_API_BASE_URL + "/ticker/global/USD");
+        final String actual = HttpFetcher.fetchAsString(MOCK_API_BASE_URL + "/ticker/global/USD");
         final String expected = getFileAsString("__files/api-mocks/bitcoinaverage/usd.json");
         assertThat(actual, is(expected));
         assertThat(bitcoinAverageRateSource.getExchangeRateLast(ICurrencies.BTC, ICurrencies.USD).toString(), is("447.53"));
@@ -92,7 +93,7 @@ public class BitcoinAverageRatesTest extends BaseTest {
 
     @Test(groups = { "bitcoinaverage" })
     public void mockBitcoinAverageEUREndpointTest() throws IOException {
-        final String actual = httpFetcher.fetchAsString(MOCK_API_BASE_URL + "/ticker/global/EUR");
+        final String actual = HttpFetcher.fetchAsString(MOCK_API_BASE_URL + "/ticker/global/EUR");
         final String expected = getFileAsString("__files/api-mocks/bitcoinaverage/eur.json");
         assertThat(actual, is(expected));
         assertThat(bitcoinAverageRateSource.getExchangeRateLast(ICurrencies.BTC, ICurrencies.EUR).toString(), is("398.95"));

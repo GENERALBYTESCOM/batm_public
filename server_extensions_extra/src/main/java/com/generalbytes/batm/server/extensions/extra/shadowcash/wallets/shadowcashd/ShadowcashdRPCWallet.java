@@ -24,7 +24,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -59,11 +58,9 @@ public class ShadowcashdRPCWallet implements IWallet {
         }
 
         log.info("Shadowcashd sending {} coins to: {} ", amount.doubleValue(), destinationAddress);
-        //String result = client.sendtoaddress(destinationAddress, amount);
         String result = null;
         try {
             result = client.sendToAddress(destinationAddress, amount.doubleValue());
-            log.debug("result: {} ", result);
         } catch (BitcoinException e) {
             e.printStackTrace();
         }
@@ -77,7 +74,6 @@ public class ShadowcashdRPCWallet implements IWallet {
             return null;
         }
 
-        //String newAddress = client.getnewaddress();
         String newAddress = null;
         try {
             newAddress = client.getNewAddress();
@@ -96,8 +92,7 @@ public class ShadowcashdRPCWallet implements IWallet {
         }
 
         try {
-            double balance = client.getBalance();
-            return new BigDecimal(balance);
+            return client.getBalanceAsBigDecimal();
         } catch (BitcoinException e) {
             e.printStackTrace();
             return null;

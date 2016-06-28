@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>com.madgag.spongycastle</groupId>
+  <artifactId>core</artifactId>
+  <versioning>
+    <release>1.54.0.0-BATM</release>
+    <versions>
+      <version>1.54.0.0-BATM</version>
+    </versions>
+    <lastUpdated>20160628133040</lastUpdated>
+  </versioning>
+</metadata>

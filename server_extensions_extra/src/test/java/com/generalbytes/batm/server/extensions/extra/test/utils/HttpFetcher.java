@@ -9,7 +9,7 @@ import java.io.IOException;
  */
 public class HttpFetcher {
 
-    public String fetchAsString(String url) throws IOException {
+    public static String fetchAsString(String url) throws IOException {
         return Request.Get(url).execute().returnContent().asString();
     }
 }
