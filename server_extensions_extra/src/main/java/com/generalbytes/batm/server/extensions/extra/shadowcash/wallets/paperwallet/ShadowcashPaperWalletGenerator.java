@@ -6,7 +6,6 @@ import com.generalbytes.batm.server.extensions.IPaperWalletGenerator;
 import com.generalbytes.batm.server.extensions.extra.shadowcash.ShadowcashMainNetParams;
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
-import lombok.extern.slf4j.Slf4j;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.ZipParameters;
@@ -36,7 +35,6 @@ import java.util.ResourceBundle;
 /**
  * @author ludx
  */
-@Slf4j
 public class ShadowcashPaperWalletGenerator implements IPaperWalletGenerator {
 
     private static final String CRYPTOCURRENCY = ICurrencies.SDC;

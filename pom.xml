@@ -121,6 +121,21 @@
                 <artifactId>jopt-simple</artifactId>
                 <version>4.9-BATM</version>
             </dependency>
+            <dependency>
+                <groupId>org.bitcoinj</groupId>
+                <artifactId>bitcoinj-core</artifactId>
+                <version>0.13.6-BATM</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bitcoinj</groupId>
+                <artifactId>wallettemplate</artifactId>
+                <version>0.13.6-BATM</version>
+            </dependency>
+            <dependency>
+                <groupId>net.lingala.zip4j</groupId>
+                <artifactId>zip4j</artifactId>
+                <version>1.3.2-BATM</version>
+            </dependency>
 
             <!-- testing related -->
             <dependency>

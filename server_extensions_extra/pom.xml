@@ -59,7 +59,6 @@
             <groupId>com.github.mmazi</groupId>
             <artifactId>rescu</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.knowm.xchange</groupId>
             <artifactId>xchange-core</artifactId>
@@ -80,27 +79,22 @@
             <groupId>org.knowm.xchange</groupId>
             <artifactId>xchange-poloniex</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
-
-        <!--dependency>
+        <dependency>
             <groupId>org.bitcoinj</groupId>
             <artifactId>bitcoinj-core</artifactId>
-            <version>0.13.6</version>
         </dependency>
         <dependency>
             <groupId>org.bitcoinj</groupId>
             <artifactId>wallettemplate</artifactId>
-            <version>0.13.6</version>
         </dependency>
         <dependency>
             <groupId>net.lingala.zip4j</groupId>
             <artifactId>zip4j</artifactId>
-            <version>1.3.2</version>
-        </dependency-->
+        </dependency>
 
         <!-- testing related -->
         <dependency>
@@ -189,19 +183,6 @@
     <build>
         <outputDirectory>build</outputDirectory>
         <finalName>batm_server_extensions_extra</finalName>
-
-        <!--resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>false</filtering>
-            </resource>
-        </resources>
-        <testResources>
-            <testResource>
-                <directory>src/test/resources</directory>
-                <filtering>false</filtering>
-            </testResource>
-        </testResources-->
 
         <plugins>
             <plugin>
