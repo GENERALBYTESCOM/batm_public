@@ -23,5 +23,30 @@ cd $directory
 ./install-lib.sh extra xchange-bittrex-4.0.1-SNAPSHOT.jar org.knowm.xchange xchange-bittrex 4.0.1-SNAPSHOT
 ./install-lib.sh extra xchange-poloniex-4.0.1-SNAPSHOT.jar org.knowm.xchange xchange-poloniex 4.0.1-SNAPSHOT
 
+# EXTRA/test dependencies
+./install-lib.sh extra test/commons-logging-1.2.jar commons-logging commons-logging 1.2
+./install-lib.sh extra test/fluent-hc-4.5.2.jar org.apache.httpcomponents fluent-hc 4.5.2
+./install-lib.sh extra test/hamcrest-all-1.3.jar org.hamcrest hamcrest-all 1.3
+./install-lib.sh extra test/httpclient-4.5.2.jar org.apache.httpcomponents httpclient 4.5.2
+./install-lib.sh extra test/httpcore-4.4.5.jar org.apache.httpcomponents httpcore 4.4.5
+./install-lib.sh extra test/javax.servlet-api-3.1.0.jar javax.servlet javax.servlet-api 3.1.0
+./install-lib.sh extra test/jcommander-1.48.jar com.beust jcommander 1.48
+./install-lib.sh extra test/jetty-6.1.26.jar org.mortbay.jetty jetty 6.1.26
+./install-lib.sh extra test/jetty-util-6.1.26.jar org.mortbay.jetty jetty-util 6.1.26
+./install-lib.sh extra test/json-20160212.jar org.json json 20160212
+./install-lib.sh extra test/jsonassert-1.3.0.jar org.skyscreamer jsonassert 1.3.0
+./install-lib.sh extra test/junit-4.12.jar junit junit 4.12
+./install-lib.sh extra test/rest-assured-2.9.0.jar com.jayway.restassured rest-assured 2.9.0
+./install-lib.sh extra test/testng-6.9.10.jar org.testng testng 6.9.10
+./install-lib.sh extra test/wiremock-1.58.jar com.github.tomakehurst wiremock 1.58
+./install-lib.sh extra test/xmlunit-1.6.jar xmlunit xmlunit 1.6
+
+
+
+
+
+
+
+
 # TEST dependencies
 ./install-lib.sh test jopt-simple-4.9.jar net.sf.jopt-simple jopt-simple 4.9
