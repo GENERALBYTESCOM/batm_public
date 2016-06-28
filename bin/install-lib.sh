@@ -20,10 +20,12 @@ fi
 
 if [ "$1" == "api" ] || [ "$1" == "extra" ] || [ "$1" == "test" ] ; then
 
-    localRepositoryPath="$directory/../server_extensions_$1/libs"
+    localRepositoryPath="../server_extensions_$1/.mvn-repo"
+    mkdir -p $localRepositoryPath
+    fileLocation="../server_extensions_$1/libs/$file"
 
     mvn org.apache.maven.plugins:maven-install-plugin:2.5.2:install-file \
-      -Dfile=$file \
+      -Dfile=$fileLocation \
       -DgroupId=$groupId \
       -DartifactId=$artifactId \
       -Dversion=$version-BATM \
@@ -31,7 +33,7 @@ if [ "$1" == "api" ] || [ "$1" == "extra" ] || [ "$1" == "test" ] ; then
       -DlocalRepositoryPath=$localRepositoryPath
 
     echo ''
-    echo '...installed, now add following to the pom.xml:'
+    echo '...installed, you can use it by adding following to the pom.xml:'
     echo ''
     echo '<dependency>'
     echo "  <groupId>$groupId</groupId>"
