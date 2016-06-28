@@ -206,7 +206,7 @@
     <repositories>
         <repository>
             <id>local-libs</id>
-            <url>file://${basedir}/.mvn-repos</url>
+            <url>file://${basedir}/.mvn-repo</url>
         </repository>
     </repositories>
 
