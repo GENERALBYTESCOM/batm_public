@@ -27,6 +27,8 @@
     <property name="build" location="build"/>
     <property name="dist" location="dist"/>
     <property name="libs" location="libs"/>
+    <property name="src-test" location="src/test/java"/>
+    <property name="res-test" location="src/test/resources"/>
 
     <target name="init">
         <tstamp/>
@@ -53,7 +55,7 @@
         </copy>
     </target>
 
-    <target name="dist" depends="compile" description="generate the distribution">
+    <target name="dist" depends="testng" description="generate the distribution">
         <mkdir dir="${dist}"/>
         <jar jarfile="${dist}/${ant.project.name}.jar" basedir="${build}"/>
     </target>
@@ -61,5 +63,32 @@
     <target name="clean" description="clean up">
         <delete dir="${build}"/>
         <delete dir="${dist}"/>
+    </target>
+
+    <taskdef name="testng" classname="org.testng.TestNGAntTask">
+        <classpath location="${libs}/org/testng/testng/6.9.10-BATM/testng-6.9.10-BATM.jar"/>
+    </taskdef>
+
+    <target name="compile-test" depends="compile" description="compile the test sources">
+        <javac srcdir="${src-test}" destdir="${build}" debug="true" debuglevel="lines,vars,source"
+               includeantruntime="false">
+            <classpath>
+                <path refid="classpath"/>
+            </classpath>
+        </javac>
+        <copy todir="${build}">
+            <fileset dir="${res-test}">
+                <include name="**/*"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="testng" depends="compile-test">
+        <testng classpathref="classpath"
+                outputDir="${build}/test-report"
+                haltOnFailure="true">
+            <classpath location="${build}"/>
+            <classfileset dir="${build}" includes="**/*Test*.class"/>
+        </testng>
     </target>
 </project>
