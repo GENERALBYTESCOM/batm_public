@@ -183,22 +183,6 @@
         </ratesource>
         <cryptologo cryptocurrency="GRS" file="groestl.png"/>
     </extension>
-    <extension class="com.generalbytes.batm.server.extensions.extra.incognitocoin.IncognitocoinExtension" >
-        <wallet prefix="incognitocoind" name="Incognitocoind">
-            <param name="protocol" />
-            <param name="user" />
-            <param name="password" />
-            <param name="host" />
-            <param name="port" />
-            <param name="accountname" />
-            <cryptocurrency>ICG</cryptocurrency>
-        </wallet>
-        <ratesource prefix="icgfix" name ="Fix Price" >
-            <param name="price" />
-            <cryptocurrency>ICG</cryptocurrency>
-        </ratesource>
-        <cryptologo cryptocurrency="ICG" file="icg.png"/>
-    </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.startcoin.StartcoinExtension" >
         <wallet prefix="startcoind" name="Startcoind">
             <param name="protocol" />
