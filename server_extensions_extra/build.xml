@@ -21,18 +21,18 @@
     <description>
         BATM server extra extensions
     </description>
-  <!-- set global properties for this build -->
-  <property name="src" location="src"/>
-  <property name="res" location="res"/>
-  <property name="build" location="build"/>
-  <property name="dist"  location="dist"/>
-  <property name="libs"  location="libs"/>
+    <!-- set global properties for this build -->
+    <property name="src" location="src/main/java"/>
+    <property name="res" location="src/main/resources"/>
+    <property name="build" location="build"/>
+    <property name="dist" location="dist"/>
+    <property name="libs" location="libs"/>
 
-  <target name="init">
-    <tstamp/>
-    <delete dir="${build}" />
-    <mkdir dir="${build}"/>
-  </target>
+    <target name="init">
+        <tstamp/>
+        <delete dir="${build}"/>
+        <mkdir dir="${build}"/>
+    </target>
 
     <path id="classpath">
         <fileset dir="${libs}" includes="**/*.jar"/>
@@ -40,28 +40,26 @@
         <fileset dir="../server_extensions_api/dist" includes="**/*.jar"/>
     </path>
 
-    <target name="compile" depends="init" description="compile the source " >
-    <javac srcdir="${src}" destdir="${build}" debug="true" debuglevel="lines,vars,source">
-      <classpath>
-          <path refid="classpath" />
-      </classpath>
-    </javac>
-    <copy todir="${build}">
-        <fileset dir="${res}">
-            <include name="**/*"/>
-        </fileset>
-    </copy>
-
-
+    <target name="compile" depends="init" description="compile the source ">
+        <javac srcdir="${src}" destdir="${build}" debug="true" debuglevel="lines,vars,source" includeantruntime="false">
+            <classpath>
+                <path refid="classpath"/>
+            </classpath>
+        </javac>
+        <copy todir="${build}">
+            <fileset dir="${res}">
+                <include name="**/*"/>
+            </fileset>
+        </copy>
     </target>
 
-  <target name="dist" depends="compile" description="generate the distribution" >
-    	<mkdir dir="${dist}"/>
-    	<jar jarfile="${dist}/${ant.project.name}.jar" basedir="${build}"/>    	
-  </target>
+    <target name="dist" depends="compile" description="generate the distribution">
+        <mkdir dir="${dist}"/>
+        <jar jarfile="${dist}/${ant.project.name}.jar" basedir="${build}"/>
+    </target>
 
-  <target name="clean" description="clean up" >
-    <delete dir="${build}"/>
-    <delete dir="${dist}"/>
-  </target>
+    <target name="clean" description="clean up">
+        <delete dir="${build}"/>
+        <delete dir="${dist}"/>
+    </target>
 </project>

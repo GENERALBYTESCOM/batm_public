@@ -1,6 +1,10 @@
 .git
 .DS_Store
 dist/
-bin/
 build/
 .idea
+.gradle
+.iml
+target
+install-libs.sh
+.mvn-repo
