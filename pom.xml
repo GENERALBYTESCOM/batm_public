@@ -25,7 +25,10 @@
         <java.version>1.7</java.version>
     </properties>
 
-    <!-- add -BATM to dependency version to load the locally installed dependency from the modules local repository (./libs) -->
+    <!--
+    add -BATM to dependency version to load the locally installed dependency from
+    the modules local repository (./.mvn-repo)
+    -->
     <dependencyManagement>
         <dependencies>
             <dependency>
