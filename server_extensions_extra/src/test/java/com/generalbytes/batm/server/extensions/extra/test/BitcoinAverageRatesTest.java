@@ -1,5 +1,6 @@
 package com.generalbytes.batm.server.extensions.extra.test;
 
+import com.generalbytes.batm.server.extensions.ICurrencies;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.BitcoinAverageRateSource;
 import com.generalbytes.batm.server.extensions.extra.test.utils.HttpFetcher;
 import com.github.tomakehurst.wiremock.WireMockServer;
@@ -86,7 +87,7 @@ public class BitcoinAverageRatesTest extends BaseTest {
         final String actual = httpFetcher.fetchAsString(MOCK_API_BASE_URL + "/ticker/global/USD");
         final String expected = getFileAsString("__files/api-mocks/bitcoinaverage/usd.json");
         assertThat(actual, is(expected));
-
+        assertThat(bitcoinAverageRateSource.getExchangeRateLast(ICurrencies.BTC, ICurrencies.USD).toString(), is("447.53"));
     }
 
     @Test(groups = { "bitcoinaverage" })
@@ -94,5 +95,6 @@ public class BitcoinAverageRatesTest extends BaseTest {
         final String actual = httpFetcher.fetchAsString(MOCK_API_BASE_URL + "/ticker/global/EUR");
         final String expected = getFileAsString("__files/api-mocks/bitcoinaverage/eur.json");
         assertThat(actual, is(expected));
+        assertThat(bitcoinAverageRateSource.getExchangeRateLast(ICurrencies.BTC, ICurrencies.EUR).toString(), is("398.95"));
     }
 }

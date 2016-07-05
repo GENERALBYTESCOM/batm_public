@@ -41,12 +41,5 @@ cd $directory
 ./install-lib.sh extra test/wiremock-1.58.jar com.github.tomakehurst wiremock 1.58
 ./install-lib.sh extra test/xmlunit-1.6.jar xmlunit xmlunit 1.6
 
-
-
-
-
-
-
-
 # TEST dependencies
 ./install-lib.sh test jopt-simple-4.9.jar net.sf.jopt-simple jopt-simple 4.9

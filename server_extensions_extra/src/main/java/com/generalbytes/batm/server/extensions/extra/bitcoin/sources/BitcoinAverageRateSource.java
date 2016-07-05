@@ -52,7 +52,6 @@ public class BitcoinAverageRateSource implements IRateSource {
      */
     public BitcoinAverageRateSource(String preferredFiatCurrency, String baseUrl) {
 
-        // this seems pretty pointless, but whatever
         if (ICurrencies.EUR.equalsIgnoreCase(preferredFiatCurrency)) {
             this.preferredFiatCurrency = ICurrencies.EUR;
         } else if (ICurrencies.USD.equalsIgnoreCase(preferredFiatCurrency)) {
@@ -76,7 +75,6 @@ public class BitcoinAverageRateSource implements IRateSource {
         }else{
             this.preferedFiatCurrency = preferedFiatCurrency;
         }
-
     }
 */
 

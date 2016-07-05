@@ -66,7 +66,7 @@
     </target>
 
     <taskdef name="testng" classname="org.testng.TestNGAntTask">
-        <classpath location="${libs}/org/testng/testng/6.9.10-BATM/testng-6.9.10-BATM.jar"/>
+        <classpath location="${libs}/test/testng-6.9.10.jar"/>
     </taskdef>
 
     <target name="compile-test" depends="compile" description="compile the test sources">
