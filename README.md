@@ -11,10 +11,10 @@ All source code is released under GPL2.
 Overview
 ========
 Here is the list of functionality that can be extended with extenstions API:
-* **Implement support for different cryptocurrency wallets** - for more see <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/com/generalbytes/batm/server/extensions/IWallet.java">IWallet</a> interface
-* **Implement support for different cryptocurrency exchanges** - for more see <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/com/generalbytes/batm/server/extensions/IExchange.java">IExchange</a> interface
-* **Implement support for different cryptocurrency rate tickers** - for more see <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/com/generalbytes/batm/server/extensions/IRateSource.java">IRateSource</a> interface
-* **Implement support for different cryptocurrency payment processors** - for more see <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/com/generalbytes/batm/server/extensions/IPaymentProcessor.java">IPaymentProcessor</a> interface
+* **Implement support for different cryptocurrency wallets** - for more see <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/main/java/com/generalbytes/batm/server/extensions/IWallet.java">IWallet</a> interface
+* **Implement support for different cryptocurrency exchanges** - for more see <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/main/java/com/generalbytes/batm/server/extensions/IExchange.java">IExchange</a> interface
+* **Implement support for different cryptocurrency rate tickers** - for more see <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/main/java/com/generalbytes/batm/server/extensions/IRateSource.java">IRateSource</a> interface
+* **Implement support for different cryptocurrency payment processors** - for more see <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/main/java/com/generalbytes/batm/server/extensions/IPaymentProcessor.java">IPaymentProcessor</a> interface
 
 
 
