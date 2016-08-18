@@ -52,7 +52,12 @@ public class DogecoinExtension implements IExtension{
             if ("blockio".equalsIgnoreCase(walletType)) {
                 String apikey = st.nextToken();
                 String pin = st.nextToken();
-                return new BlockIOWallet(apikey,pin);
+                String priority = null;
+                if (st.hasMoreTokens()) {
+                    priority = st.nextToken();
+                }
+                return new BlockIOWallet(apikey,pin, priority);
+
             }else if ("dogecoind".equalsIgnoreCase(walletType)) {
                 //"dogecoind:protocol:user:password:ip:port:accountname"
 

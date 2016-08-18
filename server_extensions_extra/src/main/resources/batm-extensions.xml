@@ -68,6 +68,7 @@
         <wallet prefix="blockio" name="Block.io Wallet">
             <param name="apikey" />
             <param name="pin" />
+            <param name="priority" />
             <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>

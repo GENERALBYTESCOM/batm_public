@@ -8,18 +8,36 @@ import si.mazi.rescu.RestProxyFactory;
 import java.math.BigDecimal;
 import java.util.*;
 
+import static com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.IBlockIO.PRIORITY_HIGH;
+import static com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.IBlockIO.PRIORITY_LOW;
+import static com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.IBlockIO.PRIORITY_MEDIUM;
+
 /**
  * Created by b00lean on 8/11/14.
  */
 public class BlockIOWallet implements IWallet {
     private String apiKey;
     private String pin;
+    private String priority;
 
     private IBlockIO api;
 
-    public BlockIOWallet(String apiKey, String pin) {
+    public BlockIOWallet(String apiKey, String pin, String priority) {
         this.apiKey = apiKey;
         this.pin = pin;
+        if (priority == null) {
+            this.priority = PRIORITY_LOW;
+        } else if (PRIORITY_LOW.equalsIgnoreCase(priority.trim())) {
+            this.priority = PRIORITY_LOW;
+        }
+        else if (PRIORITY_MEDIUM.equalsIgnoreCase(priority.trim())) {
+            this.priority = PRIORITY_MEDIUM;
+        }
+        else if (PRIORITY_HIGH.equalsIgnoreCase(priority.trim())) {
+            this.priority = PRIORITY_HIGH;
+        } else {
+            this.priority = PRIORITY_LOW;
+        }
         api = RestProxyFactory.createProxy(IBlockIO.class, "https://block.io");
     }
 
@@ -78,7 +96,7 @@ public class BlockIOWallet implements IWallet {
             return null;
         }
         try {
-            BlockIOResponseWithdrawal response = api.withdraw(apiKey, pin, amount.toPlainString(), destinationAddress);
+            BlockIOResponseWithdrawal response = api.withdraw(apiKey, pin, amount.toPlainString(), destinationAddress, priority);
             if (response != null && response.getStatus() != null && "success".equalsIgnoreCase(response.getStatus()) && response.getData() != null && response.getData().getTxid() !=null) {
                 return response.getData().getTxid();
             }
