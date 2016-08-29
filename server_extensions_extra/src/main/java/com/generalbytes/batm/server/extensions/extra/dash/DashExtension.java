@@ -92,7 +92,7 @@ public class DashExtension implements IExtension{
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(sourceLogin,":");
             String exchangeType = st.nextToken();
-	    if ("cd".equalsIgnoreCase(exchangeType)) {
+	    if ("cddash".equalsIgnoreCase(exchangeType)) {
                 if (st.hasMoreTokens()) {
                     return new CryptodiggersRateSource(st.nextToken());
                 }
