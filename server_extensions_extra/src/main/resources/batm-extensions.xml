@@ -72,6 +72,7 @@
             <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
+            <help>You can specify optional parameter priority to increase the network fee paid in the given transaction. Options are low, medium, high and will pay 1x, 2x, and 3x the minimum network fees possible on the network, respectively. If not specified, low will be used.</help>
         </wallet>
         <wallet prefix="dogecoind" name="Dogecoind">
             <param name="protocol" />
