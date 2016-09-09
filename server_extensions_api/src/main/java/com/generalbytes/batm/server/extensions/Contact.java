@@ -134,4 +134,20 @@ public class Contact {
     public void setZipCode(String zipCode) {
         this.zipCode = zipCode;
     }
+
+    @Override
+    public String toString() {
+        return "Contact{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", address1='" + address1 + '\'' +
+                ", address2='" + address2 + '\'' +
+                ", address3='" + address3 + '\'' +
+                ", address4='" + address4 + '\'' +
+                ", city='" + city + '\'' +
+                ", stateProvince='" + stateProvince + '\'' +
+                ", country=" + country +
+                ", zipCode='" + zipCode + '\'' +
+                '}';
+    }
 }
