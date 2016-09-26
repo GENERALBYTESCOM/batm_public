@@ -5,6 +5,10 @@ package com.generalbytes.batm.server.extensions;
  */
 public class Contact {
 
+    private boolean exists;
+
+    private String error;
+
     private String firstName;
 
     private String lastName;
@@ -21,9 +25,31 @@ public class Contact {
 
     private String stateProvince;
 
-    private Country country;
+    private String country;
 
     private String zipCode;
+
+    /**
+     * True if exists contact data, else false.
+     */
+    public boolean isExists() {
+        return exists;
+    }
+
+    public void setExists(boolean exists) {
+        this.exists = exists;
+    }
+
+    /**
+     * Error message. Contact data are not sent.
+     */
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
 
     /**
      * A string that indicates the contact's first name or given name. If the result is a business name, the full business name goes in this field. Depending on the data provider, it might or might not be possible to distinguish business names from personal names.
@@ -115,12 +141,13 @@ public class Contact {
 
     /**
      * A string that indicates the country in which the contact is located.
+     * ISO 3166-1 alpha-2 code of the country (2 digits).
      */
-    public Country getCountry() {
+    public String getCountry() {
         return country;
     }
 
-    public void setCountry(Country country) {
+    public void setCountry(String country) {
         this.country = country;
     }
 
@@ -138,7 +165,8 @@ public class Contact {
     @Override
     public String toString() {
         return "Contact{" +
-                "firstName='" + firstName + '\'' +
+                "exists=" + exists +
+                ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", address1='" + address1 + '\'' +
                 ", address2='" + address2 + '\'' +
@@ -146,7 +174,7 @@ public class Contact {
                 ", address4='" + address4 + '\'' +
                 ", city='" + city + '\'' +
                 ", stateProvince='" + stateProvince + '\'' +
-                ", country=" + country +
+                ", country='" + country + '\'' +
                 ", zipCode='" + zipCode + '\'' +
                 '}';
     }

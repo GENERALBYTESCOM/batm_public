@@ -1,7 +1,6 @@
 package com.generalbytes.batm.server.extensions.aml;
 
 import com.generalbytes.batm.server.extensions.Contact;
-import com.generalbytes.batm.server.extensions.Country;
 
 /**
  *  Anti-Money-Laundering Provider.
@@ -9,20 +8,13 @@ import com.generalbytes.batm.server.extensions.Country;
 public interface IAMLProvider {
 
     /**
-     * @return List of contries supported by provider.
+     * @return List of country codes supported by provider. Codes are in ISO 3166-1 alpha-2 format (2 digits).
      */
-    Country[] getSupportedCountries();
+    String[] getSupportedCountries();
 
     /**
-     * @param phoneNumber Complete phone number, beginning with the country dialing code (for example, “1” or "+1" for North America).
-     * @return Information about phone number holder.
+     * @param phoneNumberInternational Phone number in international format. (It begins with the country dialing code, for example "+1" for North America.)
+     * @return Contact information about phone number holder.
      */
-    Contact getContactByPhoneNumber(String phoneNumber);
-
-
-    /**
-     * @param phoneNumber Complete phone number, beginning with the country dialing code (for example, “1” or "+1" for North America).
-     * @return
-     */
-    boolean isPhoneNumberSupported(String phoneNumber);
+    Contact getContactByPhoneNumber(String phoneNumberInternational);
 }

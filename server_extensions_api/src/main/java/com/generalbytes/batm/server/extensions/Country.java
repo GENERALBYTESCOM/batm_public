@@ -2,6 +2,10 @@ package com.generalbytes.batm.server.extensions;
 
 /**
  * Country identifiers.
+ *
+ * Usage e.g.:
+ *      Country.US.getCountryName()
+ *      Country.valueOf("US").getCountryName()
  */
 public enum Country {
 
@@ -131,6 +135,7 @@ public enum Country {
     LB("LB", "LBN", "Lebanon"),
     LS("LS", "LSO", "Lesotho"),
     LR("LR", "LBR", "Liberia"),
+    LL("LL", "LLD", "Liberland"),
     LY("LY", "LBY", "Libya"),
     LI("LI", "LIE", "Liechtenstein"),
     LT("LT", "LTU", "Lithuania"),
@@ -263,17 +268,12 @@ public enum Country {
 
     /**
      * Private constructor.
-     *
-     * @param iso2
-     * @param iso3
-     * @param countryName
      */
     Country(String iso2, String iso3, String countryName) {
         this.iso2 = iso2;
         this.iso3 = iso3;
         this.countryName = countryName;
     }
-
 
     /**
      * ISO 3166-1 alpha-2 code of the country (2 digits).
@@ -283,7 +283,7 @@ public enum Country {
     }
 
     /**
-     * ISO 3166-1 alpha-3 code of the country (3 digits) .
+     * ISO 3166-1 alpha-3 code of the country (3 digits).
      */
     public String getIso3() {
         return iso3;
@@ -293,11 +293,6 @@ public enum Country {
      * English short country name officially used by the ISO 3166 Maintenance Agency (ISO 3166/MA).
      */
     public String getCountryName() {
-        return countryName;
-    }
-
-    @Override
-    public String toString() {
         return countryName;
     }
 }
