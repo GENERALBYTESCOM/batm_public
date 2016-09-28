@@ -166,6 +166,7 @@ public class Contact {
     public String toString() {
         return "Contact{" +
                 "exists=" + exists +
+                ", error='" + error + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", address1='" + address1 + '\'' +
