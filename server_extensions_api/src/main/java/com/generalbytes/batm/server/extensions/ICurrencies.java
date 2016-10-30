@@ -26,11 +26,13 @@ public interface ICurrencies {
     public static final String MAX = "MAX";
     public static final String LEO = "LEO";
     public static final String NLG = "NLG";
-	public static final String GRS = "GRS";
+    public static final String GRS = "GRS";
     public static final String ICG = "ICG";
     public static final String NBT = "NBT";
     public static final String NXT = "NXT";
     public static final String START = "START";
+    public static final String WDC = "WDC";
+    public static final String DASH = "DASH";
 
     public static final String CAD = "CAD";
     public static final String CNY = "CNY";
