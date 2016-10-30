@@ -112,6 +112,44 @@
         </ratesource>
         <cryptologo cryptocurrency="LTC" file="ltc.png"/>
     </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.worldcoin.WorldcoinExtension" >
+        <wallet prefix="worldcoind" name="Worldcoind">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>WDC</cryptocurrency>
+        </wallet>
+        <ratesource prefix="cd" name="Cryptodiggers" >
+            <cryptocurrency>WDC</cryptocurrency>
+        </ratesource>
+	<ratesource prefix="wdcfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>WDC</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="WDC" file="wdc.png"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.dash.DashExtension" >
+        <wallet prefix="dashd" name="dashd">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>DASH</cryptocurrency>
+        </wallet>
+        <ratesource prefix="cddash" name="Cryptodiggers" >
+            <cryptocurrency>DASH</cryptocurrency>
+        </ratesource>
+        <ratesource prefix="dashfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>DASH</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="DASH" file="dash.png"/>
+    </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.maxcoin.MaxcoinExtension" >
         <wallet prefix="maxcoind" name="Maxcoind">
             <param name="protocol" />
