@@ -124,7 +124,12 @@ public class BitcoinAverageRateSource implements IRateSource{
     private void loadFiatCurrencies() {
         IBitcoinAverage api = RestProxyFactory.createProxy(IBitcoinAverage.class, "https://api.bitcoinaverage.com/ticker/global/");
         HashMap<String, String> currenciesAndURLs = api.getFiatCurrenciesAndURLs();
-        if (fiatCurrenciesAndURLs != null) {
+        if (currenciesAndURLs != null) {
+            //workaround
+            for (Map.Entry<String, String> entry : currenciesAndURLs.entrySet()) {
+                entry.setValue(entry.getValue().replace("http://localhost","https://api.bitcoinaverage.com"));
+            }
+
             fiatCurrenciesAndURLs = currenciesAndURLs;
         }
     }
