@@ -33,7 +33,7 @@ public class BitcoinAverageRateSource implements IRateSource{
     private static Map<String, String> fiatCurrenciesAndURLs = new HashMap<String, String>();
     private static HashMap<String,BigDecimal> rateAmounts = new HashMap<String, BigDecimal>();
     private static HashMap<String,Long> rateTimes = new HashMap<String, Long>();
-    private static final long MAXIMUM_ALLOWED_TIME_OFFSET = 30 * 1000; //30sec
+    private static final long MAXIMUM_ALLOWED_TIME_OFFSET = 900 * 1000; //15 min
 
     private String preferedFiatCurrency = ICurrencies.USD;
 
@@ -127,7 +127,10 @@ public class BitcoinAverageRateSource implements IRateSource{
         if (currenciesAndURLs != null) {
             //workaround
             for (Map.Entry<String, String> entry : currenciesAndURLs.entrySet()) {
-                entry.setValue(entry.getValue().replace("http://localhost","https://api.bitcoinaverage.com"));
+                String value = entry.getValue();
+                value = value.replace("http://localhost", "https://api.bitcoinaverage.com");
+                value = value.replace("apiv2.bitcoinaverage.com", "api.bitcoinaverage.com");
+                entry.setValue(value);
             }
 
             fiatCurrenciesAndURLs = currenciesAndURLs;
