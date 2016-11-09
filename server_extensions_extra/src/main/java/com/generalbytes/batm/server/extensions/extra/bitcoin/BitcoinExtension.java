@@ -22,8 +22,8 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitfinex.
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.itbit.ItBitExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.bitcoinpay.BitcoinPayPP;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.coinofsale.CoinOfSalePP;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.BitcoinAverageRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.FixPriceRateSource;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.yahoo.YahooFinanceRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitcoind.BATMBitcoindRPCWallet;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitcore.BitcoreWallet;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
@@ -134,11 +134,11 @@ public class BitcoinExtension implements IExtension{
             StringTokenizer st = new StringTokenizer(sourceLogin,":");
             String exchangeType = st.nextToken();
 
-            if ("bitcoinaverage".equalsIgnoreCase(exchangeType)) {
+            if ("yahoo".equalsIgnoreCase(exchangeType)) {
                 if (st.hasMoreTokens()) {
-                    return new BitcoinAverageRateSource(st.nextToken());
+                    return new YahooFinanceRateSource(st.nextToken());
                 }
-                return new BitcoinAverageRateSource(ICurrencies.USD);
+                return new YahooFinanceRateSource(ICurrencies.USD);
             }else if ("btcfix".equalsIgnoreCase(exchangeType)) {
                 BigDecimal rate = BigDecimal.ZERO;
                 String preferredFiatCurrency = ICurrencies.USD;

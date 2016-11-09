@@ -22,7 +22,7 @@
                 <param name="proxyurl" />
                 <cryptocurrency>BTC</cryptocurrency>
             </wallet>
-            <ratesource prefix="bitcoinaverage" name ="BitcoinAverage.com" >
+            <ratesource prefix="yahoo" name ="finance.yahoo.com" >
                 <cryptocurrency>BTC</cryptocurrency>
             </ratesource>
             <ratesource prefix="btcfix" name ="Fix Price" >
