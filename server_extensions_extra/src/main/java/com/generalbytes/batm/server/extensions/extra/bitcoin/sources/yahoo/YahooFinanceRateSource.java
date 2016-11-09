@@ -36,7 +36,7 @@ public class YahooFinanceRateSource implements IRateSource{
     private static final Logger log = LoggerFactory.getLogger(YahooFinanceRateSource.class);
 
 
-    private static HashMap<String,BigDecimal> rateAmounts = new HashMap<String, BigDecimal>();
+    private static final HashMap<String,BigDecimal> rateAmounts = new HashMap<String, BigDecimal>();
     private static HashMap<String,Long> rateTimes = new HashMap<String, Long>();
     private static final long MAXIMUM_ALLOWED_TIME_OFFSET = 10 * 60 * 1000; //10 min
 
