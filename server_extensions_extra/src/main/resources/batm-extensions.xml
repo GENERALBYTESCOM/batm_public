@@ -29,6 +29,9 @@
                 <param name="price" />
                 <cryptocurrency>BTC</cryptocurrency>
             </ratesource>
+            <ratesource prefix="bity" name ="Bity.com" >
+                <cryptocurrency>BTC</cryptocurrency>
+            </ratesource>
             <ratesource prefix="bitfinex" name ="Bitfinex.com Exchange" >
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>

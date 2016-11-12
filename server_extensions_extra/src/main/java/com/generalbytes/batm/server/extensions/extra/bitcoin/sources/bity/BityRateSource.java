@@ -95,14 +95,4 @@ public class BityRateSource implements IRateSourceAdvanced{
         return null;
     }
 
-    public static void main(String[] args) {
-        BityRateSource r = new BityRateSource();
-        final BigDecimal exchangeRateLast = r.getExchangeRateLast(ICurrencies.BTC, ICurrencies.CHF);
-        System.out.println("exchangeRateLast = " + exchangeRateLast);
-        BigDecimal price = r.calculateBuyPrice(ICurrencies.BTC, ICurrencies.CHF, new BigDecimal(2));
-        System.out.println("price = " + price);
-        price = r.calculateSellPrice(ICurrencies.BTC, ICurrencies.CHF, new BigDecimal(2));
-        System.out.println("price = " + price);
-    }
-
 }

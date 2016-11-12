@@ -23,6 +23,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.itbit.ItB
 import com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.bitcoinpay.BitcoinPayPP;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.coinofsale.CoinOfSalePP;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.FixPriceRateSource;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.bity.BityRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.yahoo.YahooFinanceRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitcoind.BATMBitcoindRPCWallet;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitcore.BitcoreWallet;
@@ -132,14 +133,14 @@ public class BitcoinExtension implements IExtension{
         //NOTE: (Bitstamp is in built-in extension)
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(sourceLogin,":");
-            String exchangeType = st.nextToken();
+            String rsType = st.nextToken();
 
-            if ("yahoo".equalsIgnoreCase(exchangeType)) {
+            if ("yahoo".equalsIgnoreCase(rsType)) {
                 if (st.hasMoreTokens()) {
                     return new YahooFinanceRateSource(st.nextToken());
                 }
                 return new YahooFinanceRateSource(ICurrencies.USD);
-            }else if ("btcfix".equalsIgnoreCase(exchangeType)) {
+            }else if ("btcfix".equalsIgnoreCase(rsType)) {
                 BigDecimal rate = BigDecimal.ZERO;
                 String preferredFiatCurrency = ICurrencies.USD;
                 if (st.hasMoreTokens()) {
@@ -152,9 +153,11 @@ public class BitcoinExtension implements IExtension{
                     preferredFiatCurrency = st.nextToken();
                 }
                 return new FixPriceRateSource(rate,preferredFiatCurrency);
-            }else if ("bitfinex".equalsIgnoreCase(exchangeType)) {
+            }else if ("bitfinex".equalsIgnoreCase(rsType)) {
                return new BitfinexExchange("**","**");
-            }else if ("itbit".equalsIgnoreCase(exchangeType)) {
+            }else if ("bity".equalsIgnoreCase(rsType)) {
+               return new BityRateSource();
+            }else if ("itbit".equalsIgnoreCase(rsType)) {
                 String preferredFiatCurrency = ICurrencies.USD;
                 if (st.hasMoreTokens()) {
                     preferredFiatCurrency = st.nextToken();
