@@ -33,6 +33,7 @@ public interface ICurrencies {
     public static final String START = "START";
 
     public static final String CAD = "CAD";
+    public static final String CHF = "CHF";
     public static final String CNY = "CNY";
     public static final String CZK = "CZK";
     public static final String EUR = "EUR";
