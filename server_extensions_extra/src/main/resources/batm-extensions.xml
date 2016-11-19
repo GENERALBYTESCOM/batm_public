@@ -238,5 +238,21 @@
         </ratesource>
         <cryptologo cryptocurrency="NXT" file="nxt.png"/>
     </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.dexacoin.DexCoinSupport">
+        <ratesource prefix="dex_fix" name ="Fix Price" >
+            <param name="price" />
+            <param name="fiatcurrency" />
+            <cryptocurrency>DEX</cryptocurrency>
+        </ratesource>
+        <wallet prefix="dex_wallet" name="DEX Demo Wallet">
+            <cryptocurrency>DEX</cryptocurrency>
+        </wallet>
+        <exchange prefix="dex_exchange" name="DEX Demo Exchange">
+            <param name="price" />
+            <param name="fiatcurrency" />
+            <cryptocurrency>DEX</cryptocurrency>
+        </exchange>
+        <cryptologo cryptocurrency="DEX" file="dex.png"/>
+    </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.watchlists.BasicWatchlistsExtension" />
 </extensions>

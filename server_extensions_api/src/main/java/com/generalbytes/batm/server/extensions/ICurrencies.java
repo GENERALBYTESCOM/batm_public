@@ -22,6 +22,7 @@ public interface ICurrencies {
     public static final String BTC = "BTC";
     public static final String ETH = "ETH";
     public static final String LTC = "LTC";
+    public static final String DEX = "DEX";
     public static final String DOGE = "DOGE";
     public static final String MAX = "MAX";
     public static final String LEO = "LEO";
