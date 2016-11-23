@@ -194,12 +194,5 @@ public class YahooFinanceRateSource implements IRateSource{
         return preferedFiatCurrency;
     }
 
-//    public static void main(String[] args) {
-//        YahooFinanceRateSource yf = new YahooFinanceRateSource("CZK");
-//        BigDecimal exchangeRateLast = yf.getExchangeRateLast(ICurrencies.BTC, ICurrencies.CZK);
-//        System.out.println("exchangeRateLast = " + exchangeRateLast);
-//        exchangeRateLast = yf.getExchangeRateLast(ICurrencies.BTC, ICurrencies.USD);
-//        System.out.println("exchangeRateLast = " + exchangeRateLast);
-//    }
 }
 
