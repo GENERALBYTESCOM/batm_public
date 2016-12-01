@@ -42,7 +42,7 @@ public enum CountryUnitedStates {
     NM("NM","New Mexico"),
     NY("NY","New York"),
     NC("NC","North Carolina"),
-    ND("ND"," North Dakota"),
+    ND("ND","North Dakota"),
     OH("OH","Ohio"),
     OK("OK","Oklahoma"),
     OR("OR","Oregon"),

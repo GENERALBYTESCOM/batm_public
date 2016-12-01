@@ -4,8 +4,8 @@ package com.generalbytes.batm.server.extensions;
  * Canada province identifiers.
  *
  * Usage e.g.:
- *      CountryCanada.WA.getProvinceName()
- *      CountryCanada.valueOf("WA").getProvinceName()
+ *      CountryCanada.QC.getProvinceName()
+ *      CountryCanada.valueOf("QC").getProvinceName()
  */
 public enum CountryCanada {
 
