@@ -150,6 +150,19 @@
         </ratesource>
         <cryptologo cryptocurrency="LEO" file="leo.png"/>
     </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.tokencoin.TKNExtension" >
+        <wallet prefix="tokencoind" name="Tokencoind">
+            <param name="host" />
+            <param name="port" />
+            <param name="accountid" />
+            <cryptocurrency>TKN</cryptocurrency>
+        </wallet>
+        <ratesource prefix="tknfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>TKN</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="TKN" file="tkn.png"/>
+    </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.guldencoin.GuldencoinExtension" >
         <wallet prefix="guldencoind" name="guldencoind">
             <param name="protocol" />
