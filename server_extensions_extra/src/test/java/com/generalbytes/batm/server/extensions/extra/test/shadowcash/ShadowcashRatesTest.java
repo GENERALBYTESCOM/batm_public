@@ -1,6 +1,6 @@
 package com.generalbytes.batm.server.extensions.extra.test.shadowcash;
 
-import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.BitcoinAverageRateSource;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.yahoo.YahooFinanceRateSource;
 import com.generalbytes.batm.server.extensions.extra.shadowcash.sources.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.shadowcash.sources.bittrex.BittrexRateSource;
 import com.generalbytes.batm.server.extensions.extra.shadowcash.sources.poloniex.PoloniexRateSource;
@@ -26,6 +26,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 /**
@@ -35,7 +36,7 @@ public class ShadowcashRatesTest extends BaseTest {
 
     private BittrexRateSource bittrexRateSource;
     private PoloniexRateSource poloniexRateSource;
-    private BitcoinAverageRateSource bitcoinAverageRateSource;
+    private YahooFinanceRateSource yahooFinanceRateSource;
     private FixPriceRateSource fixPriceRateSource;
 
     private WireMockServer wireMockServer;
@@ -82,33 +83,18 @@ public class ShadowcashRatesTest extends BaseTest {
                                 .withHeader("Content-Type", "application/json; charset=utf-8")
                                 .withBodyFile("api-mocks/poloniex/getorderbook/sdcbtc-50.json")));
 
-        // btcaverage all currencies
+        // YahooFinance rates
         stubFor(
-                get(urlEqualTo("/ticker/global"))
+                get(urlEqualTo("/d/quotes.csv?e=.csv&f=sl1d1t1&s=BTCRON=X+BTCAUD=X+BTCCHF=X+BTCJPY=X+BTCEUR=X+BTCGBP=X+BTCCZK=X+BTCUSD=X+BTCCAD=X+BTCXAF=X+BTCCNY=X+"))
                         .willReturn(aResponse()
                                 .withStatus(200)
-                                .withHeader("Content-Type", "application/json")
-                                .withBodyFile("api-mocks/bitcoinaverage/currencies.json")));
+                                .withHeader("Content-Type", "application/octet-stream")
+                                .withBodyFile("api-mocks/yahoofinance/rates.csv")));
 
-        // btcaverage usd/btc rate
-        stubFor(
-                get(urlEqualTo("/ticker/global/USD"))
-                        .willReturn(aResponse()
-                                .withStatus(200)
-                                .withHeader("Content-Type", "application/json")
-                                .withBodyFile("api-mocks/bitcoinaverage/usd.json")));
 
-        // btcaverage eur/btc rate
-        stubFor(
-                get(urlEqualTo("/ticker/global/EUR"))
-                        .willReturn(aResponse()
-                                .withStatus(200)
-                                .withHeader("Content-Type", "application/json")
-                                .withBodyFile("api-mocks/bitcoinaverage/eur.json")));
-
-        bitcoinAverageRateSource = new BitcoinAverageRateSource("USD", MOCK_API_BASE_URL);
-        poloniexRateSource = new PoloniexRateSource("USD", MOCK_API_BASE_URL, bitcoinAverageRateSource);
-        bittrexRateSource = new BittrexRateSource("USD", MOCK_API_BASE_URL, bitcoinAverageRateSource);
+        yahooFinanceRateSource = new YahooFinanceRateSource("USD", MOCK_API_BASE_URL);
+        poloniexRateSource = new PoloniexRateSource("USD", MOCK_API_BASE_URL, yahooFinanceRateSource);
+        bittrexRateSource = new BittrexRateSource("USD", MOCK_API_BASE_URL, yahooFinanceRateSource);
 
         Map<String, BigDecimal> currencyRates = new HashMap<>();
         currencyRates.put("USD", new BigDecimal("0.20"));
@@ -127,43 +113,43 @@ public class ShadowcashRatesTest extends BaseTest {
         assertThat(actual, is(expected));
     }
 
-    @Test(groups = {"shadowcash.bittrex"}, dependsOnGroups = {"shadowcash.wallet", "bitcoinaverage"})
+    @Test(groups = {"shadowcash.bittrex"}, dependsOnGroups = {"shadowcash.wallet", "yahoofinance"})
     public void bittrexUSDRateTest() {
 
         final String cryptoCurrency = "SDC";
         final String fiatCurrency = "USD";
         BigDecimal exchangeRateLast = testRateSourceAndGetLastRate(bittrexRateSource, cryptoCurrency, fiatCurrency);
-        assertTrue(exchangeRateLast.toString().equals("0.1521602"), "exchange rate doesn't match for " + fiatCurrency + "/" + cryptoCurrency);
+        assertEquals(exchangeRateLast, new BigDecimal("0.307193400"));
     }
 
-    @Test(groups = {"shadowcash.bittrex"}, dependsOnGroups = {"shadowcash.wallet", "bitcoinaverage"})
+    @Test(groups = {"shadowcash.bittrex"}, dependsOnGroups = {"shadowcash.wallet", "yahoofinance"})
     public void bittrexEURRateTest() {
 
         final String cryptoCurrency = "SDC";
         final String fiatCurrency = "EUR";
         BigDecimal exchangeRateLast = testRateSourceAndGetLastRate(bittrexRateSource, cryptoCurrency, fiatCurrency);
-        assertTrue(exchangeRateLast.toString().equals("0.1356430"), "exchange rate doesn't match for " + fiatCurrency + "/" + cryptoCurrency);
+        assertEquals(exchangeRateLast, new BigDecimal("0.290698334"));
     }
 
-    @Test(groups = {"shadowcash.poloniex"}, dependsOnGroups = {"shadowcash.wallet", "bitcoinaverage"})
+    @Test(groups = {"shadowcash.poloniex"}, dependsOnGroups = {"shadowcash.wallet", "yahoofinance"})
     public void poloniexUSDRateTest() {
 
         final String cryptoCurrency = "SDC";
         final String fiatCurrency = "USD";
         BigDecimal exchangeRateLast = testRateSourceAndGetLastRate(poloniexRateSource, cryptoCurrency, fiatCurrency);
-        assertTrue(exchangeRateLast.toString().equals("0.1557359647"), "exchange rate doesn't match for " + fiatCurrency + "/" + cryptoCurrency);
+        assertEquals(exchangeRateLast, new BigDecimal("0.314412444900"));
     }
 
-    @Test(groups = {"shadowcash.poloniex"}, dependsOnGroups = {"shadowcash.wallet", "bitcoinaverage"})
+    @Test(groups = {"shadowcash.poloniex"}, dependsOnGroups = {"shadowcash.wallet", "yahoofinance"})
     public void poloniexEURRateTest() {
 
         final String cryptoCurrency = "SDC";
         final String fiatCurrency = "EUR";
         BigDecimal exchangeRateLast = testRateSourceAndGetLastRate(poloniexRateSource, cryptoCurrency, fiatCurrency);
-        assertTrue(exchangeRateLast.toString().equals("0.1388306105"), "exchange rate doesn't match for " + fiatCurrency + "/" + cryptoCurrency);
+        assertEquals(exchangeRateLast, new BigDecimal("0.297529744849"));
     }
 
-    @Test(groups = {"shadowcash.fixed"}, dependsOnGroups = {"shadowcash.wallet", "bitcoinaverage"})
+    @Test(groups = {"shadowcash.fixed"}, dependsOnGroups = {"shadowcash.wallet", "yahoofinance"})
     public void fixedPriceEURRateTest() {
 
         final String cryptoCurrency = "SDC";
@@ -172,7 +158,7 @@ public class ShadowcashRatesTest extends BaseTest {
         assertTrue(exchangeRateLast.toString().equals("0.15"), "exchange rate doesn't match for " + fiatCurrency + "/" + cryptoCurrency);
     }
 
-    @Test(groups = {"shadowcash.fixed"}, dependsOnGroups = {"shadowcash.wallet", "bitcoinaverage"})
+    @Test(groups = {"shadowcash.fixed"}, dependsOnGroups = {"shadowcash.wallet", "yahoofinance"})
     public void fixedPriceUSDRateTest() {
 
         final String cryptoCurrency = "SDC";
@@ -186,8 +172,8 @@ public class ShadowcashRatesTest extends BaseTest {
         Set<String> fiatCurrencies = bittrexRateSource.getFiatCurrencies();
         Set<String> cryptoCurrencies = bittrexRateSource.getCryptoCurrencies();
         String preferredFiatCurrency = bittrexRateSource.getPreferredFiatCurrency();
-        assertTrue(fiatCurrencies.size() == 172);
-        assertTrue(cryptoCurrencies.size() == 1);
+        assertEquals(fiatCurrencies.size(), 11);
+        assertEquals(cryptoCurrencies.size(), 1);
         assertTrue(preferredFiatCurrency.equalsIgnoreCase("USD"));
     }
 
@@ -196,8 +182,8 @@ public class ShadowcashRatesTest extends BaseTest {
         Set<String> fiatCurrencies = poloniexRateSource.getFiatCurrencies();
         Set<String> cryptoCurrencies = poloniexRateSource.getCryptoCurrencies();
         String preferredFiatCurrency = poloniexRateSource.getPreferredFiatCurrency();
-        assertTrue(fiatCurrencies.size() == 172);
-        assertTrue(cryptoCurrencies.size() == 1);
+        assertEquals(fiatCurrencies.size(), 11);
+        assertEquals(cryptoCurrencies.size(), 1);
         assertTrue(preferredFiatCurrency.equalsIgnoreCase("USD"));
     }
 
