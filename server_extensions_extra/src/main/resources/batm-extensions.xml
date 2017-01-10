@@ -279,11 +279,11 @@
             <param name="price" />
             <cryptocurrency>SDC</cryptocurrency>
         </ratesource>
-        <ratesource prefix="sdcpoloniexrs" name ="ratesource using poloniex.com and bitcoinaverage.com" >
+        <ratesource prefix="sdcpoloniexrs" name ="ratesource using poloniex.com" >
             <param name="fiatcurrency" />
             <cryptocurrency>SDC</cryptocurrency>
         </ratesource>
-        <ratesource prefix="sdcbittrexrs" name ="ratesource using bittrex.com and bitcoinaverage.com" >
+        <ratesource prefix="sdcbittrexrs" name ="ratesource using bittrex.com" >
             <param name="fiatcurrency" />
             <cryptocurrency>SDC</cryptocurrency>
         </ratesource>

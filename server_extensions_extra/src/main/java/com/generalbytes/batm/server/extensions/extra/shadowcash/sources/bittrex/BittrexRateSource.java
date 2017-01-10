@@ -18,7 +18,7 @@ package com.generalbytes.batm.server.extensions.extra.shadowcash.sources.bittrex
 
 import com.generalbytes.batm.server.extensions.ICurrencies;
 import com.generalbytes.batm.server.extensions.IRateSource;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.BitcoinAverageRateSource;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.yahoo.YahooFinanceRateSource;
 import org.knowm.xchange.bittrex.v1.dto.marketdata.BittrexDepthResponse;
 import org.knowm.xchange.bittrex.v1.dto.marketdata.BittrexLevel;
 import si.mazi.rescu.RestProxyFactory;
@@ -30,7 +30,7 @@ import java.util.Set;
 
 public class BittrexRateSource implements IRateSource {
 
-    private BitcoinAverageRateSource bitcoinAverageRateSource;
+    private YahooFinanceRateSource yahooFinanceRateSource;
     private String preferredFiatCurrency = ICurrencies.USD;
     private IBittrexAPI api;
 
@@ -44,17 +44,17 @@ public class BittrexRateSource implements IRateSource {
     public static final int ORDERBOOK_DEPTH = 50;
     private static final int SDC_AMOUNT_FOR_PRICE = 10000;
 
-    public BittrexRateSource(String preferredFiatCurrency, String baseUrl, BitcoinAverageRateSource bitcoinAverageRateSource) {
+    public BittrexRateSource(String preferredFiatCurrency, String baseUrl, YahooFinanceRateSource yahooFinanceRateSource) {
         this.baseUrl = baseUrl;
-        setup(preferredFiatCurrency, bitcoinAverageRateSource);
+        setup(preferredFiatCurrency, yahooFinanceRateSource);
     }
 
     public BittrexRateSource(String preferredFiatCurrency) {
         setup(preferredFiatCurrency);
     }
 
-    private void setup(String preferredFiatCurrency, BitcoinAverageRateSource bitcoinAverageRateSource) {
-        this.bitcoinAverageRateSource = bitcoinAverageRateSource;
+    private void setup(String preferredFiatCurrency, YahooFinanceRateSource yahooFinanceRateSource) {
+        this.yahooFinanceRateSource = yahooFinanceRateSource;
         setup(preferredFiatCurrency);
     }
 
@@ -63,20 +63,20 @@ public class BittrexRateSource implements IRateSource {
             this.preferredFiatCurrency = preferredFiatCurrency;
         }
 
-        if (this.bitcoinAverageRateSource == null) {
-            this.bitcoinAverageRateSource = new BitcoinAverageRateSource(this.preferredFiatCurrency);
+        if (this.yahooFinanceRateSource == null) {
+            this.yahooFinanceRateSource = new YahooFinanceRateSource(this.preferredFiatCurrency);
         }
         api = RestProxyFactory.createProxy(IBittrexAPI.class, baseUrl);
     }
 
     @Override
     public Set<String> getFiatCurrencies() {
-        return bitcoinAverageRateSource.getFiatCurrencies();
+        return yahooFinanceRateSource.getFiatCurrencies();
     }
 
     @Override
     public String getPreferredFiatCurrency() {
-        return bitcoinAverageRateSource.getPreferredFiatCurrency();
+        return yahooFinanceRateSource.getPreferredFiatCurrency();
     }
 
     @Override
@@ -138,7 +138,7 @@ public class BittrexRateSource implements IRateSource {
             }
 
             if (tradableLimit != null) {
-                BigDecimal btcRate = bitcoinAverageRateSource.getExchangeRateLast(ICurrencies.BTC, fiatCurrency);
+                BigDecimal btcRate = yahooFinanceRateSource.getExchangeRateLast(ICurrencies.BTC, fiatCurrency);
                 if (btcRate != null) {
                     return btcRate.multiply(tradableLimit);
                 }

@@ -18,7 +18,7 @@ package com.generalbytes.batm.server.extensions.extra.shadowcash.sources.polonie
 
 import com.generalbytes.batm.server.extensions.ICurrencies;
 import com.generalbytes.batm.server.extensions.IRateSource;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.BitcoinAverageRateSource;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.yahoo.YahooFinanceRateSource;
 import org.knowm.xchange.poloniex.dto.marketdata.PoloniexDepth;
 import si.mazi.rescu.RestProxyFactory;
 
@@ -30,7 +30,7 @@ import java.util.Set;
 
 public class PoloniexRateSource implements IRateSource {
 
-    private BitcoinAverageRateSource bitcoinAverageRateSource;
+    private YahooFinanceRateSource yahooFinanceRateSource;
     private String preferredFiatCurrency = ICurrencies.USD;
     private IPoloniexAPI api;
 
@@ -44,17 +44,17 @@ public class PoloniexRateSource implements IRateSource {
     public static final int ORDERBOOK_DEPTH = 50;
     private static final int SDC_AMOUNT_FOR_PRICE = 10000;
 
-    public PoloniexRateSource(String preferredFiatCurrency, String baseUrl, BitcoinAverageRateSource bitcoinAverageRateSource) {
+    public PoloniexRateSource(String preferredFiatCurrency, String baseUrl, YahooFinanceRateSource yahooFinanceRateSource) {
         this.baseUrl = baseUrl;
-        setup(preferredFiatCurrency, bitcoinAverageRateSource);
+        setup(preferredFiatCurrency, yahooFinanceRateSource);
     }
 
     public PoloniexRateSource(String preferredFiatCurrency) {
         setup(preferredFiatCurrency);
     }
 
-    private void setup(String preferredFiatCurrency, BitcoinAverageRateSource bitcoinAverageRateSource) {
-        this.bitcoinAverageRateSource = bitcoinAverageRateSource;
+    private void setup(String preferredFiatCurrency, YahooFinanceRateSource yahooFinanceRateSource) {
+        this.yahooFinanceRateSource = yahooFinanceRateSource;
         setup(preferredFiatCurrency);
     }
 
@@ -63,20 +63,20 @@ public class PoloniexRateSource implements IRateSource {
             this.preferredFiatCurrency = preferredFiatCurrency;
         }
 
-        if (this.bitcoinAverageRateSource == null) {
-            this.bitcoinAverageRateSource = new BitcoinAverageRateSource(this.preferredFiatCurrency);
+        if (this.yahooFinanceRateSource == null) {
+            this.yahooFinanceRateSource = new YahooFinanceRateSource(this.preferredFiatCurrency);
         }
         api = RestProxyFactory.createProxy(IPoloniexAPI.class, baseUrl);
     }
 
     @Override
     public Set<String> getFiatCurrencies() {
-        return bitcoinAverageRateSource.getFiatCurrencies();
+        return yahooFinanceRateSource.getFiatCurrencies();
     }
 
     @Override
     public String getPreferredFiatCurrency() {
-        return bitcoinAverageRateSource.getPreferredFiatCurrency();
+        return yahooFinanceRateSource.getPreferredFiatCurrency();
     }
 
     @Override
@@ -138,7 +138,7 @@ public class PoloniexRateSource implements IRateSource {
             }
 
             if (tradableLimit != null) {
-                BigDecimal btcRate = bitcoinAverageRateSource.getExchangeRateLast(ICurrencies.BTC, fiatCurrency);
+                BigDecimal btcRate = yahooFinanceRateSource.getExchangeRateLast(ICurrencies.BTC, fiatCurrency);
                 if (btcRate != null) {
                     return btcRate.multiply(tradableLimit);
                 }
