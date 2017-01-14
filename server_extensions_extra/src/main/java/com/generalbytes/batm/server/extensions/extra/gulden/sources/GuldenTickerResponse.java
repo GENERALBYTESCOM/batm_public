@@ -15,13 +15,13 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.guldencoin.sources;
+package com.generalbytes.batm.server.extensions.extra.gulden.sources;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.math.BigDecimal;
 
-public class GuldencoinTickerResponse {
+public class GuldenTickerResponse {
     @JsonProperty("EUR")
     private EUR euro;
     @JsonProperty("BTC")

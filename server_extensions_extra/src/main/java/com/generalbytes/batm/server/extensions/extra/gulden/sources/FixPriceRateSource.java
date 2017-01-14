@@ -1,4 +1,4 @@
-package com.generalbytes.batm.server.extensions.extra.guldencoin.sources;
+package com.generalbytes.batm.server.extensions.extra.gulden.sources;
 
 import com.generalbytes.batm.server.extensions.ICurrencies;
 import com.generalbytes.batm.server.extensions.IRateSource;

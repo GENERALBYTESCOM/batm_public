@@ -15,7 +15,7 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.guldencoin.wallets.guldencoind;
+package com.generalbytes.batm.server.extensions.extra.gulden.wallets.guldend;
 
 import com.azazar.bitcoin.jsonrpcclient.BitcoinException;
 import com.azazar.bitcoin.jsonrpcclient.BitcoinJSONRPCClient;
@@ -30,11 +30,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class GuldencoindRPCWallet implements IWallet{
-    private static final Logger log = LoggerFactory.getLogger(GuldencoindRPCWallet.class);
+public class GuldendRPCWallet implements IWallet{
+    private static final Logger log = LoggerFactory.getLogger(GuldendRPCWallet.class);
     private static final String CRYPTO_CURRENCY = ICurrencies.NLG;
 
-    public GuldencoindRPCWallet(String rpcURL, String accountName) {
+    public GuldendRPCWallet(String rpcURL, String accountName) {
         this.rpcURL = rpcURL;
         this.accountName = accountName;
     }
@@ -58,11 +58,11 @@ public class GuldencoindRPCWallet implements IWallet{
     @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
         if (!CRYPTO_CURRENCY.equalsIgnoreCase(cryptoCurrency)) {
-            log.error("Guldencoind wallet error: unknown cryptocurrency.");
+            log.error("Guldend wallet error: unknown cryptocurrency.");
             return null;
         }
 
-        log.info("Guldencoind sending coins from " + accountName + " to: " + destinationAddress + " " + amount);
+        log.info("Guldend sending coins from " + accountName + " to: " + destinationAddress + " " + amount);
         try {
             String result = getClient(rpcURL).sendFrom(accountName, destinationAddress,amount.doubleValue());
             log.debug("result = " + result);
@@ -76,7 +76,7 @@ public class GuldencoindRPCWallet implements IWallet{
     @Override
     public String getCryptoAddress(String cryptoCurrency) {
         if (!CRYPTO_CURRENCY.equalsIgnoreCase(cryptoCurrency)) {
-            log.error("Guldencoind wallet error: unknown cryptocurrency.");
+            log.error("Guldend wallet error: unknown cryptocurrency.");
             return null;
         }
 
@@ -96,7 +96,7 @@ public class GuldencoindRPCWallet implements IWallet{
     @Override
     public BigDecimal getCryptoBalance(String cryptoCurrency) {
         if (!CRYPTO_CURRENCY.equalsIgnoreCase(cryptoCurrency)) {
-            log.error("Guldencoind wallet error: unknown cryptocurrency: " + cryptoCurrency);
+            log.error("Guldend wallet error: unknown cryptocurrency: " + cryptoCurrency);
             return null;
         }
         try {

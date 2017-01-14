@@ -163,8 +163,8 @@
         </ratesource>
         <cryptologo cryptocurrency="TKN" file="tkn.png"/>
     </extension>
-    <extension class="com.generalbytes.batm.server.extensions.extra.guldencoin.GuldencoinExtension" >
-        <wallet prefix="guldencoind" name="guldencoind">
+    <extension class="com.generalbytes.batm.server.extensions.extra.gulden.GuldenExtension" >
+        <wallet prefix="guldend" name="guldend">
             <param name="protocol" />
             <param name="user" />
             <param name="password" />
@@ -177,7 +177,7 @@
             <param name="price" />
             <cryptocurrency>NLG</cryptocurrency>
         </ratesource>
-        <ratesource prefix="guldencoincom" name="Guldencoin.com" >
+        <ratesource prefix="guldencom" name="Gulden.com" >
             <cryptocurrency>NLG</cryptocurrency>
         </ratesource>
         <cryptologo cryptocurrency="NLG" file="nlg.png"/>
