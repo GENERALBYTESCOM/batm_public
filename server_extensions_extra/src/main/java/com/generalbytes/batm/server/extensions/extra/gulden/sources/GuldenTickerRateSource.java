@@ -15,7 +15,7 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.guldencoin.sources;
+package com.generalbytes.batm.server.extensions.extra.gulden.sources;
 
 import com.generalbytes.batm.server.extensions.ICurrencies;
 import com.generalbytes.batm.server.extensions.IRateSource;
@@ -28,17 +28,17 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-public class GuldencoinTickerRateSource implements IRateSource{
-    private static final Logger log = LoggerFactory.getLogger(GuldencoinTickerRateSource.class);
+public class GuldenTickerRateSource implements IRateSource{
+    private static final Logger log = LoggerFactory.getLogger(GuldenTickerRateSource.class);
 
     private static HashMap<String,BigDecimal> rateAmounts = new HashMap<String, BigDecimal>();
     private static HashMap<String,Long> rateTimes = new HashMap<String, Long>();
     private static final long MAXIMUM_ALLOWED_TIME_OFFSET = 30 * 1000; //30sec
 
-    private IGuldencoinTickerRateAPI api;
+    private IGuldenTickerRateAPI api;
 
-    public GuldencoinTickerRateSource() {
-        api = RestProxyFactory.createProxy(IGuldencoinTickerRateAPI.class, "https://markets.guldencoin.com");
+    public GuldenTickerRateSource() {
+        api = RestProxyFactory.createProxy(IGuldenTickerRateAPI.class, "https://api.gulden.com/api/v1/ticker");
     }
 
     @Override
@@ -56,7 +56,7 @@ public class GuldencoinTickerRateSource implements IRateSource{
             BigDecimal amount = rateAmounts.get(key);
             if (amount == null) {
                 BigDecimal result = getExchangeRateLastSync(cryptoCurrency, fiatCurrency);
-                log.debug("Called GuldencoinTicker exchange for rate: " + key + " = " + result);
+                log.debug("Called GuldenTicker exchange for rate: " + key + " = " + result);
                 rateAmounts.put(key,result);
                 rateTimes.put(key,now+MAXIMUM_ALLOWED_TIME_OFFSET);
                 return result;
@@ -67,7 +67,7 @@ public class GuldencoinTickerRateSource implements IRateSource{
                 }else{
                     //do the job;
                     BigDecimal result = getExchangeRateLastSync(cryptoCurrency, fiatCurrency);
-                    log.debug("Called GuldencoinTicker exchange for rate: " + key + " = " + result);
+                    log.debug("Called GuldenTicker exchange for rate: " + key + " = " + result);
                     rateAmounts.put(key,result);
                     rateTimes.put(key,now+MAXIMUM_ALLOWED_TIME_OFFSET);
                     return result;
@@ -84,7 +84,7 @@ public class GuldencoinTickerRateSource implements IRateSource{
         if (!(ICurrencies.EUR.equalsIgnoreCase(fiatCurrency))) {
             return null;
         }
-        GuldencoinTickerResponse ticker = api.getTicker();
+        GuldenTickerResponse ticker = api.getTicker();
         if (ticker != null && ticker.getEUR() != null) {
 			if (ICurrencies.EUR.equalsIgnoreCase(fiatCurrency)){
                 return ticker.getEUR().getSell15m();
@@ -114,7 +114,7 @@ public class GuldencoinTickerRateSource implements IRateSource{
     }
 
     public static void main(String[] args) {
-        BigDecimal exchangeRateLast = (new GuldencoinTickerRateSource()).getExchangeRateLast("NLG", "EUR");
+        BigDecimal exchangeRateLast = (new GuldenTickerRateSource()).getExchangeRateLast("NLG", "EUR");
         System.out.println("exchangeRateLast = " + exchangeRateLast);
     }
 

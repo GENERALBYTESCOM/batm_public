@@ -15,12 +15,12 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.guldencoin;
+package com.generalbytes.batm.server.extensions.extra.gulden;
 
 import com.generalbytes.batm.server.extensions.*;
-import com.generalbytes.batm.server.extensions.extra.guldencoin.sources.FixPriceRateSource;
-import com.generalbytes.batm.server.extensions.extra.guldencoin.sources.GuldencoinTickerRateSource;
-import com.generalbytes.batm.server.extensions.extra.guldencoin.wallets.guldencoind.GuldencoindRPCWallet;
+import com.generalbytes.batm.server.extensions.extra.gulden.sources.FixPriceRateSource;
+import com.generalbytes.batm.server.extensions.extra.gulden.sources.GuldenTickerRateSource;
+import com.generalbytes.batm.server.extensions.extra.gulden.wallets.guldend.GuldendRPCWallet;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.math.BigDecimal;
@@ -28,10 +28,10 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-public class GuldencoinExtension implements IExtension{
+public class GuldenExtension implements IExtension{
     @Override
     public String getName() {
-        return "BATM Guldencoin extension";
+        return "BATM Gulden extension";
     }
 
     @Override
@@ -45,8 +45,8 @@ public class GuldencoinExtension implements IExtension{
             StringTokenizer st = new StringTokenizer(walletLogin,":");
             String walletType = st.nextToken();
 
-            if ("guldencoind".equalsIgnoreCase(walletType)) {
-                //"guldencoind:protocol:user:password:ip:port:accountname"
+            if ("guldend".equalsIgnoreCase(walletType)) {
+                //"guldend:protocol:user:password:ip:port:accountname"
 
                 String protocol = st.nextToken();
                 String username = st.nextToken();
@@ -61,7 +61,7 @@ public class GuldencoinExtension implements IExtension{
 
                 if (protocol != null && username != null && password != null && hostname !=null && port != null && accountName != null) {
                     String rpcURL = protocol +"://" + username +":" + password + "@" + hostname +":" + port;
-                    return new GuldencoindRPCWallet(rpcURL,accountName);
+                    return new GuldendRPCWallet(rpcURL,accountName);
                 }
             }
         }
@@ -71,7 +71,7 @@ public class GuldencoinExtension implements IExtension{
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
         if (ICurrencies.NLG.equalsIgnoreCase(cryptoCurrency)) {
-            return new GuldencoinAddressValidator();
+            return new GuldenAddressValidator();
         }
         return null;
     }
@@ -100,8 +100,8 @@ public class GuldencoinExtension implements IExtension{
                     preferedFiatCurrency = st.nextToken();
                 }
                 return new FixPriceRateSource(rate,preferedFiatCurrency);
-            }else if ("guldencoincom".equalsIgnoreCase(prefix)) {
-                return new GuldencoinTickerRateSource();
+            }else if ("guldencom".equalsIgnoreCase(prefix)) {
+                return new GuldenTickerRateSource();
             }
 
 

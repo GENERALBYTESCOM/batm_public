@@ -15,7 +15,7 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.guldencoin.sources;
+package com.generalbytes.batm.server.extensions.extra.gulden.sources;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -24,8 +24,8 @@ import javax.ws.rs.core.MediaType;
 
 @Path("/api/v1/")
 @Produces(MediaType.APPLICATION_JSON)
-public interface IGuldencoinTickerRateAPI {
+public interface IGuldenTickerRateAPI {
     @GET
     @Path("ticker")
-    GuldencoinTickerResponse getTicker();
+    GuldenTickerResponse getTicker();
 }

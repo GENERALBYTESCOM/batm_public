@@ -15,18 +15,18 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.guldencoin;
+package com.generalbytes.batm.server.extensions.extra.gulden;
 
 import com.generalbytes.batm.server.coinutil.AddressFormatException;
 import com.generalbytes.batm.server.coinutil.Base58;
 import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 
-public class GuldencoinAddressValidator implements ICryptoAddressValidator {
+public class GuldenAddressValidator implements ICryptoAddressValidator {
 
     @Override
     public boolean isAddressValid(String address) {
-        if (address.startsWith("G")) {
+        if (address.startsWith("G") || address.startsWith("g")) {
             try {
                 Base58.decodeToBigInteger(address);
                 Base58.decodeChecked(address);
