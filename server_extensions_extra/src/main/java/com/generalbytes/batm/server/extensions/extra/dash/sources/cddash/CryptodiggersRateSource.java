@@ -22,7 +22,12 @@ import com.generalbytes.batm.server.extensions.ICurrencies;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.KeyManagementException;
 import si.mazi.rescu.RestProxyFactory;
+import si.mazi.rescu.ClientConfig;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -48,7 +53,19 @@ public class CryptodiggersRateSource implements IRateSource{
     }
 
     public CryptodiggersRateSource() {
-        api = RestProxyFactory.createProxy(ICryptodiggersRateAPI.class, "https://www.cryptodiggers.eu");
+	final ClientConfig config = new ClientConfig();
+        try {
+            SSLContext sslcontext=SSLContext.getInstance("TLS");
+            sslcontext.init(null,null,null);
+            final CompatSSLSocketFactory socketFactory = new CompatSSLSocketFactory(sslcontext.getSocketFactory());
+            config.setSslSocketFactory(socketFactory);
+            config.setIgnoreHttpErrorCodes(true);
+            api = RestProxyFactory.createProxy(ICryptodiggersRateAPI.class, "https://www.cryptodiggers.eu", config);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
