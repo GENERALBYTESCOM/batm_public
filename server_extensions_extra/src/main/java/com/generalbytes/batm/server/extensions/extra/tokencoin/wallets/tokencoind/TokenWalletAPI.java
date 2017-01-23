@@ -16,12 +16,12 @@
  *
  ************************************************************************************/
 
-package com.generalbytes.batm.server.extensions.extra.tokencoin.wallets.tokencoid;
+package com.generalbytes.batm.server.extensions.extra.tokencoin.wallets.tokencoind;
 
-import com.generalbytes.batm.server.extensions.extra.tokencoin.wallets.tokencoid.dto.AccountResponse;
-import com.generalbytes.batm.server.extensions.extra.tokencoin.wallets.tokencoid.dto.TokenAccountsResponse;
-import com.generalbytes.batm.server.extensions.extra.tokencoin.wallets.tokencoid.dto.TokenSendResponse;
-import com.generalbytes.batm.server.extensions.extra.tokencoin.wallets.tokencoid.dto.SendResponse;
+import com.generalbytes.batm.server.extensions.extra.tokencoin.wallets.tokencoind.dto.AccountResponse;
+import com.generalbytes.batm.server.extensions.extra.tokencoin.wallets.tokencoind.dto.TokenAccountsResponse;
+import com.generalbytes.batm.server.extensions.extra.tokencoin.wallets.tokencoind.dto.TokenSendResponse;
+import com.generalbytes.batm.server.extensions.extra.tokencoin.wallets.tokencoind.dto.SendResponse;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -43,6 +43,6 @@ public interface TokenWalletAPI {
     public TokenSendResponse send(@FormParam("email") String email, @FormParam("password") String password, @FormParam("masterPassword") String masterPassword, @FormParam("accountId") String accountId, @FormParam("recipient") String recipient, @QueryParam("amount") BigDecimal amountNQT, @FormParam("message") String message);
 
     @POST
-    @Path("/{id}/{recipient}/{amount}/{message}/send")
-    public SendResponse send2( @PathParam("accountId") String accountId, @PathParam("recipient") String recipient, @PathParam("amount") BigDecimal amountNQT, @PathParam("message") String requestType);
+    @Path("/Accounts/{id}/{recipient}/{amount}/{message}/send")
+    public SendResponse send2( @PathParam("id") String accountId, @PathParam("recipient") String recipient, @PathParam("amount") BigDecimal amountNQT, @PathParam("message") String requestType);
 }

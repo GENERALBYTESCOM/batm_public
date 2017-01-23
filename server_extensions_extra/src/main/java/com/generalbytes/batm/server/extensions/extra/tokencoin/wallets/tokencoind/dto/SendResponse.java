@@ -16,30 +16,16 @@
  *
  ************************************************************************************/
 
-package com.generalbytes.batm.server.extensions.extra.tokencoin.wallets.tokencoid.dto;
+package com.generalbytes.batm.server.extensions.extra.tokencoin.wallets.tokencoind.dto;
 
-public class TokenAccountsResponse extends TokenResponse {
-    private Data data;
+public class SendResponse {
+    private String transaction;
 
-    public Data getData() {
-        return data;
+    public String getTransaction() {
+        return transaction;
     }
 
-    public void setData(Data data) {
-        this.data = data;
+    public void setTransaction(String transaction) {
+        this.transaction = transaction;
     }
-
-    public class Data {
-        private Account[] accounts;
-
-        public Account[] getAccounts() {
-            return accounts;
-        }
-
-        public void setAccounts(Account[] accounts) {
-            this.accounts = accounts;
-        }
-    }
-
-
 }

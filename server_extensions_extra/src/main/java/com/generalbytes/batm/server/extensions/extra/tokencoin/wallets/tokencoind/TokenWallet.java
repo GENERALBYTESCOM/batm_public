@@ -16,18 +16,16 @@
  *
  ************************************************************************************/
 
-package com.generalbytes.batm.server.extensions.extra.tokencoin.wallets.tokencoid;
+package com.generalbytes.batm.server.extensions.extra.tokencoin.wallets.tokencoind;
 
 import com.generalbytes.batm.server.extensions.ICurrencies;
 import com.generalbytes.batm.server.extensions.IWallet;
-import com.generalbytes.batm.server.extensions.extra.tokencoin.TKNAddressValidator;
-import com.generalbytes.batm.server.extensions.extra.tokencoin.wallets.tokencoid.dto.*;
+import com.generalbytes.batm.server.extensions.extra.tokencoin.wallets.tokencoind.dto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import si.mazi.rescu.RestProxyFactory;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Set;
 
