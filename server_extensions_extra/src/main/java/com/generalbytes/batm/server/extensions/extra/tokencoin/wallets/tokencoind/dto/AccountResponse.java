@@ -15,7 +15,7 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.tokencoin.wallets.tokencoid.dto;
+package com.generalbytes.batm.server.extensions.extra.tokencoin.wallets.tokencoind.dto;
 
 import java.math.BigDecimal;
 

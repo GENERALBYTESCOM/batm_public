@@ -27,7 +27,7 @@ import com.generalbytes.batm.server.extensions.IPaymentProcessor;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.tokencoin.sources.FixPriceRateSource;
-import com.generalbytes.batm.server.extensions.extra.tokencoin.wallets.tokencoid.TokenWallet;
+import com.generalbytes.batm.server.extensions.extra.tokencoin.wallets.tokencoind.TokenWallet;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.math.BigDecimal;
@@ -48,7 +48,7 @@ public class TKNExtension implements IExtension{
             StringTokenizer st = new StringTokenizer(walletLogin,":");
             String walletType = st.nextToken();
 
-            if ("tokencoid".equalsIgnoreCase(walletType)) {
+            if ("tokencoind".equalsIgnoreCase(walletType)) {
                 //"nud:protocol:user:password:ip:port:accountname"
 
                 String host = st.nextToken();
@@ -84,7 +84,7 @@ public class TKNExtension implements IExtension{
             StringTokenizer st = new StringTokenizer(sourceLogin,":");
             String rsType = st.nextToken();
 
-            if ("tknfix".equalsIgnoreCase(rsType)) {
+            if ("tknfix".equalsIgnoreCase(rsType)) { // fixed price
                 BigDecimal rate = BigDecimal.ZERO;
                 if (st.hasMoreTokens()) {
                     try {
@@ -92,7 +92,7 @@ public class TKNExtension implements IExtension{
                     } catch (Throwable e) {
                     }
                 }
-                String preferedFiatCurrency = ICurrencies.USD;
+                String preferedFiatCurrency = ICurrencies.EUR;
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken();
                 }

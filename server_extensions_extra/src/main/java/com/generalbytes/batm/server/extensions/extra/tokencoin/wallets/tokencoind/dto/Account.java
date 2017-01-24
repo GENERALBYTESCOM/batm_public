@@ -16,7 +16,7 @@
  *
  ************************************************************************************/
 
-package com.generalbytes.batm.server.extensions.extra.tokencoin.wallets.tokencoid.dto;
+package com.generalbytes.batm.server.extensions.extra.tokencoin.wallets.tokencoind.dto;
 
 public class Account {
     private String id_account;

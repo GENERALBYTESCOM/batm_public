@@ -28,7 +28,7 @@ import java.util.Set;
 public class FixPriceRateSource implements IRateSource {
     private BigDecimal rate = BigDecimal.ZERO;
 
-    private String preferedFiatCurrency = ICurrencies.USD;
+    private String preferedFiatCurrency = ICurrencies.EUR;
 
     public FixPriceRateSource(BigDecimal rate, String preferedFiatCurrency) {
         this.rate = rate;
