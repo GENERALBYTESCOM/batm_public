@@ -33,7 +33,7 @@ public interface ICurrencies {
     public static final String NXT = "NXT";
     public static final String START = "START";
     public static final String TKN = "TKN";
-
+    public static final String SDC = "SDC";
     public static final String CAD = "CAD";
     public static final String CHF = "CHF";
     public static final String CNY = "CNY";

@@ -1,0 +1,34 @@
+{
+  "result": {
+    "version": "v1.4.0.3",
+    "mode": "full",
+    "state": "Full Node",
+    "protocolversion": 60018,
+    "walletversion": 10500,
+    "balance": 8938.07207691,
+    "shadowbalance": 0,
+    "newmint": 0,
+    "stake": 0,
+    "reserve": 0,
+    "blocks": 829523,
+    "timeoffset": -2,
+    "moneysupply": 6528232.72775194,
+    "shadowsupply": 713983.51438446,
+    "connections": 5,
+    "datareceived": "4.83 MB",
+    "datasent": "2.15 MB",
+    "proxy": "",
+    "ip": "127.0.0.1",
+    "difficulty": {
+      "proof-of-work": 1041.8715206,
+      "proof-of-stake": 115965.59455665
+    },
+    "testnet": false,
+    "keypoolsize": 0,
+    "paytxfee": 0,
+    "mininput": 0,
+    "errors": ""
+  },
+  "error": null,
+  "id": null
+}

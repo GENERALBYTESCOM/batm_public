@@ -35,7 +35,7 @@ public class YahooFinanceRateSource implements IRateSource{
     private static final String[] FIAT_CURRENCIES={"USD","EUR","CNY","CAD","RON","XAF","AUD","GBP","CZK","CHF","JPY"};
     private static final Logger log = LoggerFactory.getLogger(YahooFinanceRateSource.class);
 
-
+    private static String baseUrl = "https://download.finance.yahoo.com";
     private static final HashMap<String,BigDecimal> rateAmounts = new HashMap<String, BigDecimal>();
     private static HashMap<String,Long> rateTimes = new HashMap<String, Long>();
     private static final long MAXIMUM_ALLOWED_TIME_OFFSET = 10 * 60 * 1000; //10 min
@@ -52,6 +52,17 @@ public class YahooFinanceRateSource implements IRateSource{
             this.preferedFiatCurrency = preferedFiatCurrency;
         }
 
+    }
+
+    public YahooFinanceRateSource(String preferedFiatCurrency, String mockApiBaseUrl) {
+        if (ICurrencies.EUR.equalsIgnoreCase(preferedFiatCurrency)) {
+            this.preferedFiatCurrency = ICurrencies.EUR;
+        }else if (ICurrencies.USD.equalsIgnoreCase(preferedFiatCurrency)) {
+            this.preferedFiatCurrency = ICurrencies.USD;
+        }else{
+            this.preferedFiatCurrency = preferedFiatCurrency;
+        }
+        this.baseUrl = mockApiBaseUrl;
     }
 
     @Override
@@ -126,7 +137,7 @@ public class YahooFinanceRateSource implements IRateSource{
 
             Map<String,BigDecimal> results = new HashMap<String, BigDecimal>();
             final String symbols = sb.toString();
-            String url = "https://download.finance.yahoo.com/d/quotes.csv?e=.csv&f=sl1d1t1&s=" + symbols;
+            String url = baseUrl + "/d/quotes.csv?e=.csv&f=sl1d1t1&s=" + symbols;
             String result = getHTML(url);
             if (result != null) {
                 result = result.replace("\"","");
