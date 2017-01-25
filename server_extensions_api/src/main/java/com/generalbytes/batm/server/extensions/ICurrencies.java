@@ -23,6 +23,7 @@ public interface ICurrencies {
     public static final String ETH = "ETH";
     public static final String LTC = "LTC";
     public static final String DEX = "DEX";
+    public static final String DASH = "DASH";
     public static final String DOGE = "DOGE";
     public static final String MAX = "MAX";
     public static final String LEO = "LEO";
@@ -33,6 +34,7 @@ public interface ICurrencies {
     public static final String NXT = "NXT";
     public static final String START = "START";
     public static final String TKN = "TKN";
+    public static final String WDC = "WDC";
 
     public static final String CAD = "CAD";
     public static final String CHF = "CHF";
