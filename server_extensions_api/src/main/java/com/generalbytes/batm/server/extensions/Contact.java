@@ -3,7 +3,7 @@ package com.generalbytes.batm.server.extensions;
 /**
  * An object that describes data associated with the contact specified in the request.
  */
-public class Contact {
+public class Contact implements java.io.Serializable{
 
     private boolean exists;
 
