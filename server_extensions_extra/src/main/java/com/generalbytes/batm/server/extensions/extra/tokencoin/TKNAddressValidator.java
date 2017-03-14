@@ -59,7 +59,7 @@ public class TKNAddressValidator implements ICryptoAddressValidator {
 
     @Override
     public boolean isPaperWalletSupported() {
-        return false;
+        return true;
     }
 
     @Override
