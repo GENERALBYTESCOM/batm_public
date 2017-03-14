@@ -18,31 +18,22 @@
 
 package com.generalbytes.batm.server.extensions.extra.tokencoin.wallets.tokencoind;
 
-import com.generalbytes.batm.server.extensions.extra.tokencoin.wallets.tokencoind.dto.AccountResponse;
-import com.generalbytes.batm.server.extensions.extra.tokencoin.wallets.tokencoind.dto.TokenAccountsResponse;
-import com.generalbytes.batm.server.extensions.extra.tokencoin.wallets.tokencoind.dto.TokenSendResponse;
-import com.generalbytes.batm.server.extensions.extra.tokencoin.wallets.tokencoind.dto.SendResponse;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.io.IOException;
 import java.math.BigDecimal;
 
 @Path("/api")
 @Produces(MediaType.APPLICATION_JSON)
 public interface TokenWalletAPI {
     @GET
-    @Path("/Accounts")
-    public TokenAccountsResponse getAllAccounts();
-
-    @GET
     @Path("/Accounts/{id}")
-    public AccountResponse getBalance( @PathParam("id") String accountId);
-
-    @POST
-    @Path("/send")
-    public TokenSendResponse send(@FormParam("email") String email, @FormParam("password") String password, @FormParam("masterPassword") String masterPassword, @FormParam("accountId") String accountId, @FormParam("recipient") String recipient, @QueryParam("amount") BigDecimal amountNQT, @FormParam("message") String message);
-
+    public String getAddress(@PathParam("id") String accountId) throws IOException;
+    @GET
+    @Path("/Accounts/{id}/balance")
+    public Double getCryptoBalance(@PathParam("id") String accountId) throws IOException;
     @POST
     @Path("/Accounts/{id}/{recipient}/{amount}/{message}/send")
-    public SendResponse send2( @PathParam("id") String accountId, @PathParam("recipient") String recipient, @PathParam("amount") BigDecimal amountNQT, @PathParam("message") String requestType);
+    public String send2( @PathParam("id") String accountId, @PathParam("recipient") String recipient, @PathParam("amount") BigDecimal amountNQT, @PathParam("message") String requestType)throws IOException;
 }

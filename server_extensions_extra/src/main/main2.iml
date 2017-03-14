@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="false">
+    <content url="file://$MODULE_DIR$/../../../server_extensions_test">
+      <sourceFolder url="file://$MODULE_DIR$/../../../server_extensions_test/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../server_extensions_test" isTestSource="false" />
+    </content>
+    <orderEntry type="jdk" jdkName="1.8 (1)" jdkType="JavaSDK" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" exported="" name="jopt-simple-4.9" level="project" />
+  </component>
+</module>

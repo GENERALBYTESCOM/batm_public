@@ -20,19 +20,19 @@ package com.generalbytes.batm.server.extensions.extra.tokencoin.wallets.tokencoi
 
 import com.generalbytes.batm.server.extensions.ICurrencies;
 import com.generalbytes.batm.server.extensions.IWallet;
-import com.generalbytes.batm.server.extensions.extra.tokencoin.wallets.tokencoind.dto.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import si.mazi.rescu.HttpStatusIOException;
 import si.mazi.rescu.RestProxyFactory;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
 public class TokenWallet implements IWallet{
     private static final Logger log = LoggerFactory.getLogger("batm.master.Tokenwallet");
-    private static final BigDecimal NQT = new BigDecimal("100000000");
-    private static final BigDecimal DEFAULT_FEE_IN_TKN = new BigDecimal(1);
 
     private String host;
     private int port;
@@ -61,57 +61,41 @@ public class TokenWallet implements IWallet{
 
     @Override
     public String getCryptoAddress(String cryptoCurrency) {
-        if (!getCryptoCurrencies().contains(cryptoCurrency)) {
-            log.error("Cryptocurrency " + cryptoCurrency + " not supported.");
-            return null;
-        }
         if (accountId != null) {
             return accountId;
         }
-        TokenAccountsResponse res = api.getAllAccounts();
-        if (res != null) {
-                Account[] accounts = res.getData().getAccounts();
-                Account selectedAccount = accounts[0];
-                accountId = selectedAccount.getId();
-                return accountId;
-        }else{
-            log.debug("No response received.");
+        try {
+            return api.getAddress(cryptoCurrency);
+        } catch (HttpStatusIOException e) {
+            log.error(e.getHttpBody());
+        } catch (IOException e) {
+            log.error("", e);
         }
         return null;
     }
 
     @Override
     public BigDecimal getCryptoBalance(String cryptoCurrency) {
-        if (!getCryptoCurrencies().contains(cryptoCurrency)) {
-            log.error("Cryptocurrency " + cryptoCurrency + " not supported.");
-            return null;
-        }
         if (accountId == null) {
             getCryptoAddress(cryptoCurrency); //to load account_id
         }
-        if (accountId != null) {
-            AccountResponse account = api.getBalance(accountId);
-            if (account != null) {
-                double balanceNQT = account.getFunds();
-                System.out.println("THIS IS THE WALLET " +account.toString() + " " + account.getFunds());
-                if (balanceNQT <= 0) {
-                    return BigDecimal.ZERO;
-                }else{
-                    return new BigDecimal(balanceNQT);
-                }
+        try {
+            Double amount = api.getCryptoBalance(accountId);
+            if (amount == null) {
+                return BigDecimal.ZERO;
             }else{
-                log.debug("No response received.");
+                return new BigDecimal(amount);
             }
+        } catch (HttpStatusIOException e) {
+            log.error(e.getHttpBody());
+        } catch (IOException e) {
+            log.error("", e);
         }
         return null;
     }
 
     @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
-        if (!getCryptoCurrencies().contains(cryptoCurrency)) {
-            log.error("Cryptocurrency " + cryptoCurrency + " not supported.");
-            return null;
-        }
         if (accountId == null) {
             getCryptoAddress(cryptoCurrency); //to load account_id
         }
@@ -123,13 +107,12 @@ public class TokenWallet implements IWallet{
         if (recipientInt != null) {
             recipient = recipientInt.toString();
         }*/
-
-        SendResponse res = api.send2( accId, recipient, amount.stripTrailingZeros(), "sendMoney");
-        if (res != null) {
-            log.debug("Transaction " + res.getTransaction() + " sent.");
-            return res.getTransaction();
-        }else{
-            log.debug("No response received.");
+        try{
+            return api.send2( accountId, destinationAddress, amount.stripTrailingZeros(), "sendMoney");
+        } catch (HttpStatusIOException e) {
+            log.error(e.getHttpBody());
+        } catch (IOException e) {
+            log.error("", e);
         }
         return null;
     }
