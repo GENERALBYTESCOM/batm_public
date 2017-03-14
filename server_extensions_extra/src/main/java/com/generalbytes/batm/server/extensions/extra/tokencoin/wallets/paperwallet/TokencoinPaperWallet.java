@@ -16,7 +16,7 @@ public class TokencoinPaperWallet implements IPaperWallet {
     private String contentType = "image/png";
 
     private byte[] content;
-    //@Override
+    @Override
     public String getAddress() {
         return address;
     }
@@ -25,7 +25,7 @@ public class TokencoinPaperWallet implements IPaperWallet {
         this.address = address;
     }
 
-    //@Override
+    @Override
     public String getPrivateKey() {
         return privateKey;
     }
@@ -34,7 +34,7 @@ public class TokencoinPaperWallet implements IPaperWallet {
         this.privateKey = privateKey;
     }
 
-    //@Override
+    @Override
     public String getMessage() {
         return message;
     }
@@ -43,7 +43,7 @@ public class TokencoinPaperWallet implements IPaperWallet {
         this.message = message;
     }
 
-    //@Override
+    @Override
     public String getFileExtension() {
         return fileExtension;
     }
@@ -52,7 +52,7 @@ public class TokencoinPaperWallet implements IPaperWallet {
         this.fileExtension = fileExtension;
     }
 
-    //@Override
+    @Override
     public String getContentType() {
         return contentType;
     }
@@ -61,7 +61,7 @@ public class TokencoinPaperWallet implements IPaperWallet {
         this.contentType = contentType;
     }
 
-    //@Override
+    @Override
     public byte[] getContent() {
         return content;
     }
