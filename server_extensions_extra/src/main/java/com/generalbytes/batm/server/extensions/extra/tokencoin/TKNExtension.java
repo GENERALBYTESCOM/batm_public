@@ -27,6 +27,7 @@ import com.generalbytes.batm.server.extensions.IPaymentProcessor;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.tokencoin.sources.FixPriceRateSource;
+import com.generalbytes.batm.server.extensions.extra.tokencoin.wallets.paperwallet.TokencoinPaperWalletGenerator;
 import com.generalbytes.batm.server.extensions.extra.tokencoin.wallets.tokencoind.TokenWallet;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
@@ -75,6 +76,9 @@ public class TKNExtension implements IExtension{
 
     @Override
     public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency) {
+        if (ICurrencies.TKN.equalsIgnoreCase(cryptoCurrency)) {
+            return new TokencoinPaperWalletGenerator();
+        }
         return null;
     }
 
