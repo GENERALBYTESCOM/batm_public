@@ -1,0 +1,29 @@
+apply plugin: "java"
+apply plugin: "distribution"
+
+jar {
+    baseName 'batm_server_extensions_api'
+}
+
+dependencies {
+    targetCompatibility = '1.7'
+    sourceCompatibility = '1.7'
+}
+
+
+distributions {
+  main {
+    contents {
+      into ('lib') {
+        from jar
+      }
+      into ('lib') {
+        from 'libs'
+      }
+    }
+  }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+}
