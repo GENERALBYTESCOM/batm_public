@@ -57,7 +57,7 @@ public class BitcoinExtension implements IExtension{
                 String clientKey = paramTokenizer.nextToken();
                 String clientSecret = paramTokenizer.nextToken();
                 if (paramTokenizer.hasMoreTokens()) {
-                    preferredFiatCurrency = paramTokenizer.nextToken();
+                    preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase();
                 }
                 return new ItBitExchange(userId, walletId, clientKey, clientSecret, preferredFiatCurrency);
             }
@@ -137,7 +137,7 @@ public class BitcoinExtension implements IExtension{
 
             if ("yahoo".equalsIgnoreCase(rsType)) {
                 if (st.hasMoreTokens()) {
-                    return new YahooFinanceRateSource(st.nextToken());
+                    return new YahooFinanceRateSource(st.nextToken().toUpperCase());
                 }
                 return new YahooFinanceRateSource(ICurrencies.USD);
             }else if ("btcfix".equalsIgnoreCase(rsType)) {
@@ -150,7 +150,7 @@ public class BitcoinExtension implements IExtension{
                     }
                 }
                 if (st.hasMoreTokens()) {
-                    preferredFiatCurrency = st.nextToken();
+                    preferredFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new FixPriceRateSource(rate,preferredFiatCurrency);
             }else if ("bitfinex".equalsIgnoreCase(rsType)) {
@@ -160,7 +160,7 @@ public class BitcoinExtension implements IExtension{
             }else if ("itbit".equalsIgnoreCase(rsType)) {
                 String preferredFiatCurrency = ICurrencies.USD;
                 if (st.hasMoreTokens()) {
-                    preferredFiatCurrency = st.nextToken();
+                    preferredFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new ItBitExchange(preferredFiatCurrency);
             }

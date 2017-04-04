@@ -137,7 +137,7 @@ public class DexCoinSupport implements IExchange, IWallet, IRateSource, IExtensi
                 }
                 String preferredFiatCurrency = ICurrencies.USD;
                 if (st.hasMoreTokens()) {
-                    preferredFiatCurrency = st.nextToken();
+                    preferredFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new DexCoinSupport(preferredFiatCurrency,rate);
             }
@@ -174,7 +174,7 @@ public class DexCoinSupport implements IExchange, IWallet, IRateSource, IExtensi
                 }
                 String preferedFiatCurrency = ICurrencies.USD;
                 if (st.hasMoreTokens()) {
-                    preferedFiatCurrency = st.nextToken();
+                    preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new DexCoinSupport(preferedFiatCurrency,rate);
             }

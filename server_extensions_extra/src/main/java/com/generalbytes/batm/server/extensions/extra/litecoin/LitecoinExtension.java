@@ -105,7 +105,7 @@ public class LitecoinExtension implements IExtension{
                 }
                 String preferedFiatCurrency = ICurrencies.USD;
                 if (st.hasMoreTokens()) {
-                    preferedFiatCurrency = st.nextToken();
+                    preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new FixPriceRateSource(rate,preferedFiatCurrency);
             }

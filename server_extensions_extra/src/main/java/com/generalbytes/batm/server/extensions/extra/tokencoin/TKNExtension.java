@@ -98,7 +98,7 @@ public class TKNExtension implements IExtension{
                 }
                 String preferedFiatCurrency = ICurrencies.EUR;
                 if (st.hasMoreTokens()) {
-                    preferedFiatCurrency = st.nextToken();
+                    preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new FixPriceRateSource(rate,preferedFiatCurrency);
             }

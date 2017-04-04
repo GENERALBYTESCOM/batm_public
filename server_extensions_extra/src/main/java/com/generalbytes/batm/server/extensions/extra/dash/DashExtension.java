@@ -94,7 +94,7 @@ public class DashExtension implements IExtension{
             String exchangeType = st.nextToken();
 	    if ("cddash".equalsIgnoreCase(exchangeType)) {
                 if (st.hasMoreTokens()) {
-                    return new CryptodiggersRateSource(st.nextToken());
+                    return new CryptodiggersRateSource(st.nextToken().toUpperCase());
                 }
                 return new CryptodiggersRateSource(ICurrencies.USD);
 	    }
@@ -108,7 +108,7 @@ public class DashExtension implements IExtension{
                 }
                 String preferedFiatCurrency = ICurrencies.USD;
                 if (st.hasMoreTokens()) {
-                    preferedFiatCurrency = st.nextToken();
+                    preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new FixPriceRateSource(rate,preferedFiatCurrency);
             }
