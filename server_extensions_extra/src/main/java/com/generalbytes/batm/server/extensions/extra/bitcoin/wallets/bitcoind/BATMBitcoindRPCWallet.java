@@ -107,7 +107,7 @@ public class BATMBitcoindRPCWallet implements IWallet{
         }
         try {
             double balance = client.getBalance(accountName);
-            return new BigDecimal(balance);
+            return BigDecimal.valueOf(balance);
         } catch (BitcoinException e) {
             e.printStackTrace();
             return null;

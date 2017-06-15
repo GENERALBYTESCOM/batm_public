@@ -87,7 +87,7 @@ public class NubitsRPCWallet implements IWallet{
         }
         try {
             double balance = getClient(rpcURL).getBalance(accountName);
-            return new BigDecimal(balance);
+            return BigDecimal.valueOf(balance);
         } catch (BitcoinException e) {
             e.printStackTrace();
             return null;
