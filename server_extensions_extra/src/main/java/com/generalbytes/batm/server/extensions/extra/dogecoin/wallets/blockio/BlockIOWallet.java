@@ -57,7 +57,7 @@ public class BlockIOWallet implements IWallet {
 
     @Override
     public String getCryptoAddress(String cryptoCurrency) {
-        if (!(cryptoCurrency.equalsIgnoreCase(ICurrencies.DOGE) || cryptoCurrency.equalsIgnoreCase(ICurrencies.BTC) || cryptoCurrency.equalsIgnoreCase(ICurrencies.LTC))) {
+        if (!getCryptoCurrencies().contains(cryptoCurrency)) {
             return null;
         }
         try {
@@ -75,7 +75,7 @@ public class BlockIOWallet implements IWallet {
 
     @Override
     public BigDecimal getCryptoBalance(String cryptoCurrency) {
-        if (!(cryptoCurrency.equalsIgnoreCase(ICurrencies.DOGE) || cryptoCurrency.equalsIgnoreCase(ICurrencies.BTC) || cryptoCurrency.equalsIgnoreCase(ICurrencies.LTC))) {
+        if (!getCryptoCurrencies().contains(cryptoCurrency)) {
             return null;
         }
         try {
@@ -92,7 +92,7 @@ public class BlockIOWallet implements IWallet {
 
     @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
-        if (!(cryptoCurrency.equalsIgnoreCase(ICurrencies.DOGE) || cryptoCurrency.equalsIgnoreCase(ICurrencies.BTC) || cryptoCurrency.equalsIgnoreCase(ICurrencies.LTC))) {
+        if (!getCryptoCurrencies().contains(cryptoCurrency)) {
             return null;
         }
         try {
