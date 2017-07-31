@@ -40,9 +40,10 @@ import org.knowm.xchange.dto.trade.OpenOrders;
 import org.knowm.xchange.exceptions.ExchangeException;
 import org.knowm.xchange.exceptions.NotAvailableFromExchangeException;
 import org.knowm.xchange.exceptions.NotYetImplementedForExchangeException;
-import org.knowm.xchange.service.polling.account.PollingAccountService;
-import org.knowm.xchange.service.polling.marketdata.PollingMarketDataService;
-import org.knowm.xchange.service.polling.trade.PollingTradeService;
+
+import org.knowm.xchange.service.account.AccountService;
+import org.knowm.xchange.service.marketdata.MarketDataService;
+import org.knowm.xchange.service.trade.TradeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -115,7 +116,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
             String fiatCurrency = keyParts[1];
 
             try {
-                return exchange.getPollingMarketDataService()
+                return exchange.getMarketDataService()
                         .getTicker(new CurrencyPair(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency), fiatCurrency))
                         .getLast();
             } catch (ExchangeException e) {
@@ -158,7 +159,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
             return BigDecimal.ZERO;
         }
         try {
-            BigDecimal balance = exchange.getPollingAccountService()
+            BigDecimal balance = exchange.getAccountService()
                     .getAccountInfo()
                     .getWallet(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency))
                     .getBalance(Currency.getInstance(cryptoCurrency)).getAvailable();
@@ -177,7 +178,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
             return BigDecimal.ZERO;
         }
         try {
-            BigDecimal balance = exchange.getPollingAccountService()
+            BigDecimal balance = exchange.getAccountService()
                     .getAccountInfo()
                     .getWallet(fiatCurrency)
                     .getBalance(Currency.getInstance(fiatCurrency)).getAvailable();
@@ -197,7 +198,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
 
         log.info("{} exchange withdrawing {} {} to {}", name, amount, cryptoCurrency, destinationAddress);
 
-        PollingAccountService accountService = exchange.getPollingAccountService();
+        AccountService accountService = exchange.getAccountService();
         try {
             String result = accountService.withdrawFunds(Currency.getInstance(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency)), amount, destinationAddress);
             if (isWithdrawSuccessful(result)) {
@@ -223,9 +224,9 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
             return null;
         }
 
-        PollingAccountService accountService = exchange.getPollingAccountService();
-        PollingMarketDataService marketService = exchange.getPollingMarketDataService();
-        PollingTradeService tradeService = exchange.getPollingTradeService();
+        AccountService accountService = exchange.getAccountService();
+        MarketDataService marketService = exchange.getMarketDataService();
+        TradeService tradeService = exchange.getTradeService();
 
         try {
             log.debug("AccountInfo as String: {}", accountService.getAccountInfo());
@@ -307,7 +308,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
             return null;
         }
 
-        PollingAccountService accountService = exchange.getPollingAccountService();
+        AccountService accountService = exchange.getAccountService();
         try {
             return accountService.requestDepositAddress(Currency.getInstance(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency)));
         } catch (IOException e) {
@@ -331,8 +332,8 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
         }
 
         log.info("Calling {} exchange (sell {} {})", name, cryptoAmount, cryptoCurrency);
-        PollingAccountService accountService = exchange.getPollingAccountService();
-        PollingTradeService tradeService = exchange.getPollingTradeService();
+        AccountService accountService = exchange.getAccountService();
+        TradeService tradeService = exchange.getTradeService();
 
         try {
             log.debug("AccountInfo as String: {}", accountService.getAccountInfo());
@@ -431,7 +432,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
         }
 
         rateLimiter.acquire();
-        PollingMarketDataService marketDataService = exchange.getPollingMarketDataService();
+        MarketDataService marketDataService = exchange.getMarketDataService();
         try {
             CurrencyPair currencyPair = new CurrencyPair(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency), fiatCurrency);
             OrderBook orderBook = marketDataService.getOrderBook(currencyPair);
@@ -479,7 +480,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
         }
 
         rateLimiter.acquire();
-        PollingMarketDataService marketDataService = exchange.getPollingMarketDataService();
+        MarketDataService marketDataService = exchange.getMarketDataService();
         try {
             CurrencyPair currencyPair = new CurrencyPair(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency), fiatCurrency);
 
@@ -538,9 +539,9 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
         @Override
         public boolean onCreate() {
             log.debug("{} exchange purchase {} {}", name, amount, cryptoCurrency);
-            PollingAccountService accountService = exchange.getPollingAccountService();
-            PollingMarketDataService marketService = exchange.getPollingMarketDataService();
-            PollingTradeService tradeService = exchange.getPollingTradeService();
+            AccountService accountService = exchange.getAccountService();
+            MarketDataService marketService = exchange.getMarketDataService();
+            TradeService tradeService = exchange.getTradeService();
 
             try {
                 log.debug("AccountInfo as String: {}", accountService.getAccountInfo());
@@ -578,7 +579,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
                 result = "Skipped";
                 return false;
             }
-            PollingTradeService tradeService = exchange.getPollingTradeService();
+            TradeService tradeService = exchange.getTradeService();
             // get open orders
             boolean orderProcessed = false;
             long checkTillTime = System.currentTimeMillis() + MAXIMUM_TIME_TO_WAIT_FOR_ORDER_TO_FINISH;
@@ -665,8 +666,8 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
         @Override
         public boolean onCreate() {
             log.info("Calling {} exchange (sell {} {})", name, cryptoAmount, cryptoCurrency);
-            PollingAccountService accountService = exchange.getPollingAccountService();
-            PollingTradeService tradeService = exchange.getPollingTradeService();
+            AccountService accountService = exchange.getAccountService();
+            TradeService tradeService = exchange.getTradeService();
 
             try {
                 log.debug("AccountInfo as String: {}", accountService.getAccountInfo());
@@ -701,7 +702,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
                 result = "Skipped";
                 return false;
             }
-            PollingTradeService tradeService = exchange.getPollingTradeService();
+            TradeService tradeService = exchange.getTradeService();
             // get open orders
             boolean orderProcessed = false;
             long checkTillTime = System.currentTimeMillis() + MAXIMUM_TIME_TO_WAIT_FOR_ORDER_TO_FINISH;
