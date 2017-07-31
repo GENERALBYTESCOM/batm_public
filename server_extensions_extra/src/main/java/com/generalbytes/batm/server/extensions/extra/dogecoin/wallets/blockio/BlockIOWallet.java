@@ -52,7 +52,7 @@ public class BlockIOWallet implements IWallet {
 
     @Override
     public String getPreferredCryptoCurrency() {
-        return ICurrencies.DOGE;
+        return ICurrencies.BTC;
     }
 
     @Override
