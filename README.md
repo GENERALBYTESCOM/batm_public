@@ -24,6 +24,18 @@ Content
 * **server_extensions_extra** - reference extension implementation that implements BTC, LTC, DASH, DOGE, NLG, ICG, NBT, GRS and MAX coin support functionality.
 * **server_extensions_test** - contains tester for testing the extensions without requirement of having a BATM server
 
+Note for developers
+==========
+
+Requirements:
+* Linux is required in order to run compilers and tests.
+* Java
+* Ant
+
+When you implement support for new crypto-coin add it please to **server_extensions_extra** this way it will get into default BATM Server installation pack for customers.
+
+After you implement the the extension make sure you test it with Tester which you will find in **server_extensions_test**
+
 Build information
 =================
 ```bash
@@ -35,12 +47,6 @@ ant
 cd ..
 cp server_extensions_extra/dist/batm_server_extensions_extra.jar /batm/app/master/extensions/
 ```
-
-Note for developers
-==========
-When you implement support for new crypto-coin add it please to **server_extensions_extra** this way it will get into default BATM Server installation pack for customers.
-
-After you implement the the extension make sure you test it with Tester which you will find in **server_extensions_test**
 
 How to run Tester
 ==========
