@@ -32,7 +32,7 @@ import java.util.*;
 
 
 public class YahooFinanceRateSource implements IRateSource{
-    private static final String[] FIAT_CURRENCIES={"USD","EUR","CNY","CAD","RON","XAF","AUD","GBP","CZK","CHF","JPY"};
+    private static final String[] FIAT_CURRENCIES={"USD","EUR","CNY","CAD","RON","XAF","AUD","GBP","CZK","CHF","JPY", "PEN"};
     private static final Logger log = LoggerFactory.getLogger(YahooFinanceRateSource.class);
 
 
