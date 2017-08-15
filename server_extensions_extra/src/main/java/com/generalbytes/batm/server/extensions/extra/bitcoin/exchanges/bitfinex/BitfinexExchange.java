@@ -613,7 +613,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
     }
 
     private BigDecimal getMeasureCryptoAmount() {
-        return new BigDecimal(10);
+        return new BigDecimal(5);
     }
 
 
