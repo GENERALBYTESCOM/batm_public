@@ -32,6 +32,7 @@ public interface ICurrencies {
     public static final String ICG = "ICG";
     public static final String NBT = "NBT";
     public static final String NXT = "NXT";
+    public static final String POT = "POT";
     public static final String START = "START";
     public static final String TKN = "TKN";
     public static final String WDC = "WDC";
