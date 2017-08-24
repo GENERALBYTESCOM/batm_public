@@ -17,5 +17,5 @@ public interface PotwalletAPI {
     @POST
     @Path("/send")
     @Consumes(MediaType.APPLICATION_JSON)
-    PotwalletResponse sendPots(@HeaderParam("Access-Public") String publicKey, @HeaderParam("Access-Hash") String accessHash, @HeaderParam("Access-Nonce") String nonce, @PathParam("address") String address, @PathParam("amount") BigDecimal amount) throws IOException;
+    PotwalletResponse sendPots(@HeaderParam("Access-Public") String publicKey, @HeaderParam("Access-Hash") String accessHash, @HeaderParam("Access-Nonce") String nonce, PotwalletSendRequest request) throws IOException;
 }

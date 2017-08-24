@@ -39,6 +39,7 @@ public class Potwallet implements IWallet {
         this.publicKey = publicKey;
         this.privateKey = privateKey;
         this.walletId = walletId;
+
         api = RestProxyFactory.createProxy(PotwalletAPI.class, "https://api.potwallet.com");
     }
 
@@ -106,7 +107,7 @@ public class Potwallet implements IWallet {
         }
         try{
             accessHash = generateHash(privateKey, "https://api.potwallet.com/v1/send", nonce);
-            PotwalletResponse response = api.sendPots(publicKey, accessHash, nonce, destinationAddress, amount.stripTrailingZeros());
+            PotwalletResponse response = api.sendPots(publicKey, accessHash, nonce, new PotwalletSendRequest(destinationAddress, amount.stripTrailingZeros()));
             if (response != null && response.getMessage() != null && response.getSuccess()) {
                 return new String(response.getMessage());
             }
