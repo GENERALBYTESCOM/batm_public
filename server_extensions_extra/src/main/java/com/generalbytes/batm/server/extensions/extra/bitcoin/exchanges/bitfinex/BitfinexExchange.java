@@ -123,6 +123,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
     private BigDecimal getExchangeRateLastSync(String cryptoCurrency, String cashCurrency) {
         MarketDataService marketDataService = getExchange().getMarketDataService();
         try {
+            waitForPossibleCall();
             Ticker ticker = marketDataService.getTicker(new CurrencyPair(cryptoCurrency,cashCurrency));
             return ticker.getLast();
         } catch (IOException e) {
@@ -139,6 +140,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
         log.debug("Calling Bitfinex exchange (getBalance)");
 
         try {
+            waitForPossibleCall();
             return getExchange().getAccountService().getAccountInfo().getWallet().getBalance(Currency.getInstance(cryptoCurrency)).getAvailable();
         } catch (IOException e) {
             e.printStackTrace();
@@ -154,6 +156,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
         log.debug("Calling Bitfinex exchange (getBalance)");
 
         try {
+            waitForPossibleCall();
             return getExchange().getAccountService().getAccountInfo().getWallet().getBalance(Currency.getInstance(fiatCurrency)).getAvailable();
         } catch (IOException e) {
             e.printStackTrace();
@@ -172,6 +175,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
         AccountService accountService = getExchange().getAccountService();
         try {
+            waitForPossibleCall();
             String result = accountService.withdrawFunds(Currency.getInstance(cryptoCurrency), amount, destinationAddress);
             if (result == null) {
                 log.warn("Bitfinex exchange (withdrawFunds) failed with null");
@@ -211,7 +215,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
             MarketOrder order = new MarketOrder(Order.OrderType.BID, amount, currencyPair);
             log.debug("marketOrder = " + order);
-
+            waitForPossibleCall();
             String orderId = tradeService.placeMarketOrder(order);
             log.debug("orderId = " + orderId + " " + order);
 
@@ -228,6 +232,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
             while (!orderProcessed && numberOfChecks < 10) {
                 boolean orderFound = false;
                 OpenOrders openOrders = tradeService.getOpenOrders();
+                waitForPossibleCall();
                 for (LimitOrder openOrder : openOrders.getOpenOrders()) {
                     log.debug("openOrder = " + openOrder);
                     if (orderId.equals(openOrder.getId())) {
@@ -278,6 +283,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
         }
         AccountService accountService = getExchange().getAccountService();
         try {
+            waitForPossibleCall();
             return accountService.requestDepositAddress(Currency.getInstance(cryptoCurrency));
         } catch (IOException e) {
             e.printStackTrace();
@@ -307,7 +313,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
             MarketOrder order = new MarketOrder(Order.OrderType.ASK, cryptoAmount, currencyPair);
             log.debug("marketOrder = " + order);
-
+            waitForPossibleCall();
             String orderId = tradeService.placeMarketOrder(order);
             log.debug("orderId = " + orderId + " " + order);
 
@@ -323,6 +329,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
             int numberOfChecks = 0;
             while (!orderProcessed && numberOfChecks < 10) {
                 boolean orderFound = false;
+                waitForPossibleCall();
                 OpenOrders openOrders = tradeService.getOpenOrders();
                 for (LimitOrder openOrder : openOrders.getOpenOrders()) {
                     log.debug("openOrder = " + openOrder);
@@ -398,7 +405,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
                 MarketOrder order = new MarketOrder(Order.OrderType.BID, amount, currencyPair);
                 log.debug("marketOrder = " + order);
-
+                waitForPossibleCall();
                 orderId = tradeService.placeMarketOrder(order);
                 log.debug("orderId = " + orderId + " " + order);
 
@@ -437,6 +444,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
             log.debug("Open orders:");
             boolean orderFound = false;
             try {
+                waitForPossibleCall();
                 OpenOrders openOrders = tradeService.getOpenOrders();
                 for (LimitOrder openOrder : openOrders.getOpenOrders()) {
                     log.debug("openOrder = " + openOrder);
@@ -521,7 +529,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
                 MarketOrder order = new MarketOrder(Order.OrderType.ASK, cryptoAmount, currencyPair);
                 log.debug("marketOrder = " + order);
-
+                waitForPossibleCall();
                 orderId = tradeService.placeMarketOrder(order);
                 log.debug("orderId = " + orderId + " " + order);
 
@@ -560,6 +568,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
             log.debug("Open orders:");
             boolean orderFound = false;
             try {
+                waitForPossibleCall();
                 OpenOrders openOrders = tradeService.getOpenOrders();
                 for (LimitOrder openOrder : openOrders.getOpenOrders()) {
                     log.debug("openOrder = " + openOrder);
@@ -641,6 +650,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
         MarketDataService marketDataService = getExchange().getMarketDataService();
         try {
             CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrency);
+            waitForPossibleCall();
             OrderBook orderBook = marketDataService.getOrderBook(currencyPair);
             List<LimitOrder> asks = orderBook.getAsks();
             BigDecimal targetAmount = cryptoAmount;
@@ -700,7 +710,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
         MarketDataService marketDataService = getExchange().getMarketDataService();
         try {
             CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrency);
-
+            waitForPossibleCall();
             OrderBook orderBook = marketDataService.getOrderBook(currencyPair);
             List<LimitOrder> bids = orderBook.getBids();
 
