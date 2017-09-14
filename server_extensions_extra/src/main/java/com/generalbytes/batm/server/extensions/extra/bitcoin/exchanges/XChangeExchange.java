@@ -32,6 +32,8 @@ import org.knowm.xchange.ExchangeSpecification;
 import org.knowm.xchange.currency.Currency;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.Order;
+import org.knowm.xchange.dto.account.AccountInfo;
+import org.knowm.xchange.dto.account.Wallet;
 import org.knowm.xchange.dto.marketdata.OrderBook;
 import org.knowm.xchange.dto.marketdata.Ticker;
 import org.knowm.xchange.dto.trade.LimitOrder;
@@ -73,7 +75,6 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
     private final String name;
     private final Logger log;
     private final RateLimiter rateLimiter;
-
 
     public XChangeExchange(ExchangeSpecification specification, String preferredFiatCurrency) {
         exchange = ExchangeFactory.INSTANCE.createExchange(specification);
@@ -159,10 +160,9 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
             return BigDecimal.ZERO;
         }
         try {
-            BigDecimal balance = exchange.getAccountService()
-                    .getAccountInfo()
-                    .getWallet(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency))
-                    .getBalance(Currency.getInstance(cryptoCurrency)).getAvailable();
+            AccountInfo accountInfo = exchange.getAccountService().getAccountInfo();
+            Wallet wallet = getWallet(accountInfo, cryptoCurrency);
+            BigDecimal balance = wallet.getBalance(Currency.getInstance(cryptoCurrency)).getAvailable();
             log.debug("{} exchange balance request: {} = {}", name, cryptoCurrency, balance);
             return balance;
         } catch (IOException e) {
@@ -178,10 +178,9 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
             return BigDecimal.ZERO;
         }
         try {
-            BigDecimal balance = exchange.getAccountService()
-                    .getAccountInfo()
-                    .getWallet(fiatCurrency)
-                    .getBalance(Currency.getInstance(fiatCurrency)).getAvailable();
+            AccountInfo accountInfo = exchange.getAccountService().getAccountInfo();
+            Wallet wallet = getWallet(accountInfo, fiatCurrency);
+            BigDecimal balance = wallet.getBalance(Currency.getInstance(fiatCurrency)).getAvailable();
             log.debug("{} exchange balance request: {} = {}", name, fiatCurrency, balance);
             return balance;
         } catch (IOException e) {
@@ -189,6 +188,10 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
             log.error("{} exchange balance request: {}", name, fiatCurrency, e);
         }
         return null;
+    }
+
+    public Wallet getWallet(AccountInfo accountInfo, String currency) {
+        return accountInfo.getWallet(translateCryptoCurrencySymbolToExchangeSpecificSymbol(currency));
     }
 
     public final String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
@@ -280,7 +283,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
                 return orderId;
             }
         } catch (IOException e) {
-            log.error(String.format("{} exchange purchase coins failed", name), e);
+            log.error(String.format("%s exchange purchase coins failed", name), e);
         }
         return null;
     }

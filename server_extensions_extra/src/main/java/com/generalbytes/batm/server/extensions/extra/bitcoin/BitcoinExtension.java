@@ -53,13 +53,13 @@ public class BitcoinExtension implements IExtension{
             } else if ("itbit".equalsIgnoreCase(prefix)) {
                 String preferredFiatCurrency = ICurrencies.USD;
                 String userId = paramTokenizer.nextToken();
-                String walletId = paramTokenizer.nextToken();
+                String accountId = paramTokenizer.nextToken();
                 String clientKey = paramTokenizer.nextToken();
                 String clientSecret = paramTokenizer.nextToken();
                 if (paramTokenizer.hasMoreTokens()) {
                     preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase();
                 }
-                return new ItBitExchange(userId, walletId, clientKey, clientSecret, preferredFiatCurrency);
+                return new ItBitExchange(userId, accountId, clientKey, clientSecret, preferredFiatCurrency);
             }
         }
         return null;
