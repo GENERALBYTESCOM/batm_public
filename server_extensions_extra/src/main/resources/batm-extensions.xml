@@ -289,6 +289,23 @@
         </ratesource>
         <cryptologo cryptocurrency="NXT" file="nxt.png"/>
     </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.potcoin.PotcoinExtension" >
+        <wallet prefix="potwallet" name="PotCoin">
+            <param name="publicKey" />
+            <param name="privateKey" />
+            <param name="walletId" />
+            <cryptocurrency>POT</cryptocurrency>
+        </wallet>
+        <ratesource prefix="potfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>POT</cryptocurrency>
+        </ratesource>
+        <ratesource prefix="coinmarketcap" name ="coinmarketcap.com" >
+            <param name="fiatcurrency" />
+            <cryptocurrency>POT</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="POT" file="pot.png"/>
+    </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.dexacoin.DexCoinSupport">
         <ratesource prefix="dex_fix" name ="Fix Price" >
             <param name="price" />
