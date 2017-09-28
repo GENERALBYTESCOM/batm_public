@@ -306,6 +306,26 @@
         </ratesource>
         <cryptologo cryptocurrency="POT" file="pot.png"/>
     </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.decent.DecentExtension" >
+        <wallet prefix="decentd" name="Decentd">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>DCT</cryptocurrency>
+        </wallet>
+        <ratesource prefix="dctfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>DCT</cryptocurrency>
+        </ratesource>
+        <ratesource prefix="dctcoinmarketcap" name ="coinmarketcap.com" >
+            <param name="fiatcurrency" />
+            <cryptocurrency>DCT</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="DCT" file="dct.png"/>
+    </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.dexacoin.DexCoinSupport">
         <ratesource prefix="dex_fix" name ="Fix Price" >
             <param name="price" />
