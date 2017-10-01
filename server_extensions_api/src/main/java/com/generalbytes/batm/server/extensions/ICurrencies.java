@@ -44,6 +44,7 @@ public interface ICurrencies {
     public static final String CZK = "CZK";
     public static final String EUR = "EUR";
     public static final String GBP = "GBP";
+    public static final String HUF = "HUF";
     public static final String JPY = "JPY";
     public static final String SGD = "SGD";
     public static final String USD = "USD";
