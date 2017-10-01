@@ -64,18 +64,18 @@ public class MrcoinRateSource implements IRateSourceAdvanced{
 
     @Override
     public BigDecimal getExchangeRateForBuy(String cryptoCurrency, String fiatCurrency) {
-        final RateInfo rate = api.getAtmTickers();
-        if (rate != null) {
-            return rate.getRateBuy(cryptoCurrency, fiatCurrency);
+        final RateInfo rates = api.getAtmTickers();
+        if (rates != null) {
+            return rates.getRateBuy(cryptoCurrency, fiatCurrency);
         }
         return null;
     }
 
     @Override
     public BigDecimal getExchangeRateForSell(String cryptoCurrency, String fiatCurrency) {
-        final RateInfo rate = api.getAtmTickers();
-        if (rate != null) {
-            return rate.getRateSell(cryptoCurrency, fiatCurrency);
+        final RateInfo rates = api.getAtmTickers();
+        if (rates != null) {
+            return rates.getRateSell(cryptoCurrency, fiatCurrency);
         }
         return null;
     }

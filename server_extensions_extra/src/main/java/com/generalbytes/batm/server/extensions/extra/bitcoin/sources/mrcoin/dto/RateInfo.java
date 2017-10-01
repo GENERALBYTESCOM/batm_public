@@ -44,11 +44,19 @@ public class RateInfo {
     }
 
     public BigDecimal getRateBuy(String fromCurrency, String toCurrency) {
-        return this.getTicker(fromCurrency, toCurrency).getAsk();
+        Ticker t = getTicker(fromCurrency, toCurrency);
+        if ( ! t.isValid() ) {
+            return null;
+        }
+        return t.getAsk();
     }
 
     public BigDecimal getRateSell(String fromCurrency, String toCurrency) {
-        return this.getTicker(fromCurrency, toCurrency).getBid();
+        Ticker t = getTicker(fromCurrency, toCurrency);
+        if ( ! t.isValid() ) {
+            return null;
+        }
+        return t.getBid();
     }
 
     public static final class Ticker {
