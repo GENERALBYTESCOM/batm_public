@@ -32,6 +32,10 @@
             <ratesource prefix="bity" name ="Bity.com" >
                 <cryptocurrency>BTC</cryptocurrency>
             </ratesource>
+            <ratesource prefix="mrcoin" name ="MrCoin.eu" >
+                <cryptocurrency>BTC</cryptocurrency>
+                <cryptocurrency>ETH</cryptocurrency>
+            </ratesource>
             <ratesource prefix="bitfinex" name ="Bitfinex.com Exchange" >
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>

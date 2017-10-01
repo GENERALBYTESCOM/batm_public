@@ -24,6 +24,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.b
 import com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.coinofsale.CoinOfSalePP;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.bity.BityRateSource;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.mrcoin.MrcoinRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.yahoo.YahooFinanceRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitcoind.BATMBitcoindRPCWallet;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitcore.BitcoreWallet;
@@ -157,6 +158,8 @@ public class BitcoinExtension implements IExtension{
                return new BitfinexExchange("**","**");
             }else if ("bity".equalsIgnoreCase(rsType)) {
                return new BityRateSource();
+            }else if ("mrcoin".equalsIgnoreCase(rsType)) {
+                return new MrcoinRateSource();
             }else if ("itbit".equalsIgnoreCase(rsType)) {
                 String preferredFiatCurrency = ICurrencies.USD;
                 if (st.hasMoreTokens()) {

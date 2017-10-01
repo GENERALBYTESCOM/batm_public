@@ -420,7 +420,7 @@ public class Tester {
 
                 if (rs instanceof IRateSourceAdvanced) {
                     IRateSourceAdvanced rsa = (IRateSourceAdvanced)rs;
-                    final BigDecimal buyPrice = rsa.getExchangeRateForSell(selectedCryptoCurrency, preferredFiatCurrency);
+                    final BigDecimal buyPrice = rsa.getExchangeRateForBuy(selectedCryptoCurrency, preferredFiatCurrency);
                     if (buyPrice != null) {
                         System.out.println("Buy Price: 1 " + selectedCryptoCurrency + " = " + buyPrice.stripTrailingZeros().toPlainString() + " " + preferredFiatCurrency);
                     }else{
