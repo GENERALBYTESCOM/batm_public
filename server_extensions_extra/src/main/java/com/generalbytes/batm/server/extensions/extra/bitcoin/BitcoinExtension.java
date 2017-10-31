@@ -97,6 +97,24 @@ public class BitcoinExtension implements IExtension{
                 String password = st.nextToken();
                 String hostname = st.nextToken();
                 String port = st.nextToken();
+                String accountName = "";
+                if (st.hasMoreTokens()) {
+                    accountName = st.nextToken();
+                }
+
+
+                if (protocol != null && username != null && password != null && hostname != null && port != null && accountName != null) {
+                    String rpcURL = protocol + "://" + username + ":" + password + "@" + hostname + ":" + port;
+                    return new BATMBitcoindRPCWallet(rpcURL, accountName, ICurrencies.BTC);
+                }
+            }else if ("bitcoincashd".equalsIgnoreCase(walletType)) {
+                //"bitcoind:protocol:user:password:ip:port:accountname"
+
+                String protocol = st.nextToken();
+                String username = st.nextToken();
+                String password = st.nextToken();
+                String hostname = st.nextToken();
+                String port = st.nextToken();
                 String accountName ="";
                 if (st.hasMoreTokens()) {
                     accountName = st.nextToken();
@@ -105,7 +123,7 @@ public class BitcoinExtension implements IExtension{
 
                 if (protocol != null && username != null && password != null && hostname !=null && port != null && accountName != null) {
                     String rpcURL = protocol +"://" + username +":" + password + "@" + hostname +":" + port;
-                    return new BATMBitcoindRPCWallet(rpcURL,accountName);
+                    return new BATMBitcoindRPCWallet(rpcURL,accountName, ICurrencies.BCH);
                 }
             }else if ("bitcore".equalsIgnoreCase(walletType)) { //bitcore:apiKey:proxyUrl
                 String apiKey = st.nextToken();
@@ -174,6 +192,7 @@ public class BitcoinExtension implements IExtension{
         result.add(ICurrencies.BTC);
         result.add(ICurrencies.ETH);
         result.add(ICurrencies.LTC);
+        result.add(ICurrencies.BCH);
         return result;
     }
 

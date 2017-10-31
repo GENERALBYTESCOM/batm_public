@@ -10,6 +10,15 @@
                 <param name="accountname" />
                 <cryptocurrency>BTC</cryptocurrency>
             </wallet>
+            <wallet prefix="bitcoincashd" name="BitcoinABC/BitcoinClassic Cash Core - bitcoind" >
+                <param name="protocol" />
+                <param name="user" />
+                <param name="password" />
+                <param name="host" />
+                <param name="port" />
+                <param name="accountname" />
+                <cryptocurrency>BCH</cryptocurrency>
+            </wallet>
             <wallet prefix="coinkite" name="Coinkite.com Wallet" >
                 <param name="apikey" />
                 <param name="apisecret" />
@@ -321,6 +330,7 @@
             <cryptocurrency>DEX</cryptocurrency>
         </exchange>
         <cryptologo cryptocurrency="DEX" file="dex.png"/>
+        <cryptologo cryptocurrency="BCH" file="bch.png"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.watchlists.BasicWatchlistsExtension" />
 </extensions>
