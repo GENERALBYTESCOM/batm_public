@@ -23,6 +23,7 @@ public interface ICurrencies {
     public static final String BCH = "BCH"; //Bitcoin Cash
     public static final String ETH = "ETH";
     public static final String LTC = "LTC";
+    public static final String VIA = "VIA";
     public static final String DEX = "DEX";
     public static final String DASH = "DASH";
     public static final String DOGE = "DOGE";
