@@ -19,7 +19,7 @@ package com.generalbytes.batm.server.extensions.extra.nxt.sources.poloniex;
 
 import com.generalbytes.batm.server.extensions.ICurrencies;
 import com.generalbytes.batm.server.extensions.IRateSource;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.yahoo.YahooFinanceRateSource;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitfinex.BitfinexExchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import si.mazi.rescu.RestProxyFactory;
@@ -32,7 +32,7 @@ import java.util.Set;
 public class PoloniexRateSource implements IRateSource{
     private static final Logger log = LoggerFactory.getLogger(PoloniexRateSource.class);
 
-    private YahooFinanceRateSource btcRs;
+    private BitfinexExchange btcRs;
     private String preferedFiatCurrency;
     private IPoloniexAPI api;
 
@@ -45,7 +45,7 @@ public class PoloniexRateSource implements IRateSource{
             preferedFiatCurrency = ICurrencies.USD;
         }
         this.preferedFiatCurrency = preferedFiatCurrency;
-        btcRs = new YahooFinanceRateSource(preferedFiatCurrency);
+        btcRs = new BitfinexExchange("***","***");
         api = RestProxyFactory.createProxy(IPoloniexAPI.class, "https://poloniex.com");
     }
 
@@ -131,5 +131,10 @@ public class PoloniexRateSource implements IRateSource{
         }
 
         return null;
+    }
+
+    public static void main(String[] args) {
+        PoloniexRateSource rs = new PoloniexRateSource(ICurrencies.USD);
+        System.out.println("rs = " + rs.getExchangeRateLast(ICurrencies.NXT,ICurrencies.USD));
     }
 }

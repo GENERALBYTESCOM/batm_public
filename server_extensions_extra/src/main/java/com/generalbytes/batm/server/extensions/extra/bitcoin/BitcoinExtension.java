@@ -25,7 +25,6 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.c
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.bity.BityRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.mrcoin.MrCoinRateSource;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.yahoo.YahooFinanceRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitcoind.BATMBitcoindRPCWallet;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitcore.BitcoreWallet;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
@@ -154,12 +153,7 @@ public class BitcoinExtension implements IExtension{
             StringTokenizer st = new StringTokenizer(sourceLogin,":");
             String rsType = st.nextToken();
 
-            if ("yahoo".equalsIgnoreCase(rsType)) {
-                if (st.hasMoreTokens()) {
-                    return new YahooFinanceRateSource(st.nextToken().toUpperCase());
-                }
-                return new YahooFinanceRateSource(ICurrencies.USD);
-            }else if ("btcfix".equalsIgnoreCase(rsType)) {
+            if ("btcfix".equalsIgnoreCase(rsType)) {
                 BigDecimal rate = BigDecimal.ZERO;
                 String preferredFiatCurrency = ICurrencies.USD;
                 if (st.hasMoreTokens()) {
