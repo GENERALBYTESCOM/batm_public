@@ -36,9 +36,8 @@ public class ViacoinAddressValidator implements ICryptoAddressValidator {
                 return false;
             }
             return true;
-        }else{
-            return false;
         }
+        return false;
     }
 
     @Override
