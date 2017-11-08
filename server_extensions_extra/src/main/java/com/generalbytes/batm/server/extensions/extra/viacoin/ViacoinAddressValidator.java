@@ -27,7 +27,7 @@ public class ViacoinAddressValidator implements ICryptoAddressValidator {
 
     @Override
     public boolean isAddressValid(String address) {
-        if (address.startsWith("V")) {
+        if (address.startsWith("V") || address.startsWith("E")) {
             try {
                 Base58.decodeToBigInteger(address);
                 Base58.decodeChecked(address);
