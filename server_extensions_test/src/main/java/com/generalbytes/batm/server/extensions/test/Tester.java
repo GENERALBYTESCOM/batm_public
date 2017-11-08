@@ -420,19 +420,26 @@ public class Tester {
 
                 if (rs instanceof IRateSourceAdvanced) {
                     IRateSourceAdvanced rsa = (IRateSourceAdvanced)rs;
-                    final BigDecimal buyPrice = rsa.getExchangeRateForSell(selectedCryptoCurrency, preferredFiatCurrency);
-                    if (buyPrice != null) {
-                        System.out.println("Buy Price: 1 " + selectedCryptoCurrency + " = " + buyPrice.stripTrailingZeros().toPlainString() + " " + preferredFiatCurrency);
-                    }else{
-                        System.err.println("Rate source returned NULL on Buy Price.");
+
+                    for (String fiatCurrency : fiatCurrencies) {
+                        System.out.println("Checking price for " + fiatCurrency);
+
+                        final BigDecimal buyPrice = rsa.getExchangeRateForBuy(selectedCryptoCurrency, fiatCurrency);
+                        if (buyPrice != null) {
+                            System.out.println("Buy Price: 1 " + selectedCryptoCurrency + " = " + buyPrice.stripTrailingZeros().toPlainString() + " " + fiatCurrency);
+                        }else{
+                            System.err.println("Rate source returned NULL on Buy Price.");
+                        }
+
+                        final BigDecimal sellPrice = rsa.getExchangeRateForSell(selectedCryptoCurrency, fiatCurrency);
+                        if (sellPrice != null) {
+                            System.out.println("Sell Price: 1 " + selectedCryptoCurrency + " = " + sellPrice.stripTrailingZeros().toPlainString() + " " + fiatCurrency);
+                        }else{
+                            System.err.println("Rate source returned NULL on Sell Price.");
+                        }
+
                     }
 
-                    final BigDecimal sellPrice = rsa.getExchangeRateForSell(selectedCryptoCurrency, preferredFiatCurrency);
-                    if (sellPrice != null) {
-                        System.out.println("Sell Price: 1 " + selectedCryptoCurrency + " = " + sellPrice.stripTrailingZeros().toPlainString() + " " + preferredFiatCurrency);
-                    }else{
-                        System.err.println("Rate source returned NULL on Sell Price.");
-                    }
                 }
                 return;
             }
