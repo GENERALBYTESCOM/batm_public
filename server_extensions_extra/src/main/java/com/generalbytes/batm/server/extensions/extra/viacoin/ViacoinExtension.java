@@ -19,7 +19,7 @@ package com.generalbytes.batm.server.extensions.extra.viacoin;
 
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.extra.viacoin.sources.FixPriceRateSource;
-import com.generalbytes.batm.server.extensions.extra.viacoin.sources.btce.BTCeRateSource;
+import com.generalbytes.batm.server.extensions.extra.viacoin.sources.poloniex.PoloniexRateSource;
 import com.generalbytes.batm.server.extensions.extra.viacoin.wallets.viacoind.ViacoindRPCWallet;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
@@ -83,9 +83,36 @@ public class ViacoinExtentsion implements IExtension{
     public IPaymentProcessors createPaymentProcessor(String paymentProcessorLogin){
         return null;
     }
+    
     @Override
     public IRateSource createRateSource(String sourceLogin) {
-        // to do
+        if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
+            StringTokenizer st = new StringTokenizer(sourceLogin,":");
+            String rsType = st.nextToken();
+
+            if ("viafix".equalsIgnoreCase(rsType)) {
+                BigDecimal rate = BigDecimal.ZERO;
+                if (st.hasMoreTokens()) {
+                    try {
+                        rate = new BigDecimal(st.nextToken());
+                    } catch (Throwable e) {
+                    }
+                }
+                String preferedFiatCurrency = ICurrencies.USD;
+                if (st.hasMoreTokens()) {
+                    preferedFiatCurrency = st.nextToken().toUpperCase();
+                }
+                return new FixPriceRateSource(rate,preferedFiatCurrency);
+            }else if ("poloniexrs".equalsIgnoreCase(rsType)) {
+                String preferredFiatCurrency = ICurrencies.USD;
+                if (st.hasMoreTokens()) {
+                    preferredFiatCurrency = st.nextToken();
+                }
+                return new PoloniexRateSource(preferredFiatCurrency);
+            }
+
+        }
+        return null;
     }
 
     @Override
