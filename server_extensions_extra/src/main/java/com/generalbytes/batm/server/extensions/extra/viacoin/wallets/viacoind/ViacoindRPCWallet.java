@@ -74,17 +74,22 @@ public class ViacoindRPCWallet implements IWallet{
     }
 
     @Override
-    public String getCryptoAddress(String cryptoCurrency){
-        if(!CRYPTO_CURRENCY.equalsIgnoreCase(cryptoCurrency)){
+    public String getCryptoAddress(String cryptoCurrency) {
+        if (!CRYPTO_CURRENCY.equalsIgnoreCase(cryptoCurrency)) {
             log.error("Viacoind wallet error: unknown cryptocurrency.");
             return null;
         }
-        try{
-            double balance = getClient(rpcURL).getBalance(accountName);
-            return new BigDecimal(balance);
-        }catch(BitcoinException e){
+
+        try {
+            List<String> addressesByAccount = getClient(rpcURL).getAddressesByAccount(accountName);
+            if (addressesByAccount == null || addressesByAccount.size() == 0) {
+                return null;
+            }else{
+                return addressesByAccount.get(0);
+            }
+        } catch (BitcoinException e) {
             e.printStackTrace();
-            return null
+            return null;
         }
     }
 
