@@ -26,14 +26,14 @@ import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 import java.math.BigDecimal;
 import java.util.*;
 
-public class ViacoinExtentsion implements IExtension{
+public class ViacoinExtension implements IExtension{
     @Override
     public String getName(){
         return "BATM Viacoin extension";
     }
 
     @Override
-    public IExchange createExchange(string exchangeLogin){
+    public IExchange createExchange(String exchangeLogin){
         return null;
     }
 
@@ -46,7 +46,7 @@ public class ViacoinExtentsion implements IExtension{
             if("viacoind".equalsIgnoreCase(walletType)){
                 //"viacoind::protocol:user:password:ip:port:accountname"
 
-                String protcol = st.nextToken();
+                String protocol = st.nextToken();
                 String username = st.nextToken();
                 String password = st.nextToken();
                 String hostname = st.nextToken();
@@ -57,9 +57,9 @@ public class ViacoinExtentsion implements IExtension{
                 }
 
 
-                if (protocol != null && username != null && password != null && hostname !=null && port != null && accountName != null) {
+                if (protocol != null && username != null && password != null && hostname !=null && port != null && accountname != null) {
                     String rpcURL = protocol +"://" + username +":" + password + "@" + hostname +":" + port;
-                    return new ViacoindRPCWallet(rpcURL,accountName);
+                    return new ViacoindRPCWallet(rpcURL,accountname);
                 }
             }
         }
@@ -80,7 +80,7 @@ public class ViacoinExtentsion implements IExtension{
     }
 
     @Override
-    public IPaymentProcessors createPaymentProcessor(String paymentProcessorLogin){
+    public IPaymentProcessor createPaymentProcessor(String paymentProcessorLogin){
         return null;
     }
     

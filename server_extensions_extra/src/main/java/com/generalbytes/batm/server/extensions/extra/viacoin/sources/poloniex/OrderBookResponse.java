@@ -1,4 +1,4 @@
-package com.generalbytes.batm.server.extensions.extra.via.sources.poloniex;
+package com.generalbytes.batm.server.extensions.extra.viacoin.sources.poloniex;
 
 import java.math.BigDecimal;
 
