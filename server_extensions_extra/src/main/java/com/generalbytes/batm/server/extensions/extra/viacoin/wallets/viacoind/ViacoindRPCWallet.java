@@ -32,7 +32,7 @@ import java.util.Set;
 
 public class ViacoindRPCWallet implements IWallet{
     private static final Logger log = LoggerFactory.getLogger(ViacoindRPCWallet.class);
-    private static final CRYPTO_CURRENCY = ICurrencies.VIA;
+    private static final String CRYPTO_CURRENCY = ICurrencies.VIA;
 
     public ViacoindRPCWallet(String rpcURL, String accountName){
         this.rpcURL = rpcURL;
@@ -43,7 +43,7 @@ public class ViacoindRPCWallet implements IWallet{
     private String accountName;
 
     @Override
-    public set<String> getCryptoCurrencies(){
+    public Set<String> getCryptoCurrencies(){
         Set<String> result = new HashSet<String>();
         result.add(CRYPTO_CURRENCY);
         return result;
@@ -94,14 +94,15 @@ public class ViacoindRPCWallet implements IWallet{
     }
 
     @Override
-    public BigDecimal getCryptoBalance(string cryptocurrency){
-        if(!CRYPTO_CURRENCY.equalsIgnoreCase(cryptocurrency)){
+    public BigDecimal getCryptoBalance(String cryptoCurrency){
+
+        if(!CRYPTO_CURRENCY.equalsIgnoreCase(cryptoCurrency)){
             log.error("Viacoind wallet error: unknown cryptocurrency" + cryptoCurrency);
             return null;
         }
         try{
-            double balance = getClient(rpcUrl).getBalance(accountName);
-            return BigDecimal.ValueOf(balance);
+            double balance = getClient(rpcURL).getBalance(accountName);
+            return BigDecimal.valueOf(balance);
         }catch(BitcoinException e){
             e.printStackTrace();
             return null;
