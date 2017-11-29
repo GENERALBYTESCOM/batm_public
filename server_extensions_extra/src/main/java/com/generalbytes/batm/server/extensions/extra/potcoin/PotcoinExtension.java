@@ -76,12 +76,6 @@ public class PotcoinExtension implements IExtension{
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new FixPriceRateSource(rate,preferedFiatCurrency);
-            } else if ("coinmarketcap".equalsIgnoreCase(rsType)) {
-                String preferredFiatCurrency = ICurrencies.CAD;
-                if (st.hasMoreTokens()) {
-                    preferredFiatCurrency = st.nextToken();
-                }
-                return new CoinmarketcapRateSource(preferredFiatCurrency);
             }
 
         }

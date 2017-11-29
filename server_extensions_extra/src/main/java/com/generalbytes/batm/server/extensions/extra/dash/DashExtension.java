@@ -22,6 +22,7 @@ import com.generalbytes.batm.server.extensions.extra.dash.sources.FixPriceRateSo
 //import com.generalbytes.batm.server.extensions.extra.dogecoin.sources.chainso.ChainSoRateSource;
 //import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.BlockIOWallet;
 import com.generalbytes.batm.server.extensions.extra.dash.sources.cddash.CryptodiggersRateSource;
+import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.CoinmarketcapRateSource;
 import com.generalbytes.batm.server.extensions.extra.dash.wallets.dashd.DashRPCWallet;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
@@ -90,15 +91,14 @@ public class DashExtension implements IExtension{
     @Override
     public IRateSource createRateSource(String sourceLogin) {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
-            StringTokenizer st = new StringTokenizer(sourceLogin,":");
+            StringTokenizer st = new StringTokenizer(sourceLogin, ":");
             String exchangeType = st.nextToken();
-	    if ("cddash".equalsIgnoreCase(exchangeType)) {
+            if ("cddash".equalsIgnoreCase(exchangeType)) {
                 if (st.hasMoreTokens()) {
                     return new CryptodiggersRateSource(st.nextToken().toUpperCase());
                 }
                 return new CryptodiggersRateSource(ICurrencies.USD);
-	    }
-            else if ("dashfix".equalsIgnoreCase(exchangeType)) {
+            } else if ("dashfix".equalsIgnoreCase(exchangeType)) {
                 BigDecimal rate = BigDecimal.ZERO;
                 if (st.hasMoreTokens()) {
                     try {
@@ -110,7 +110,9 @@ public class DashExtension implements IExtension{
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
-                return new FixPriceRateSource(rate,preferedFiatCurrency);
+                return new FixPriceRateSource(rate, preferedFiatCurrency);
+            } else if ("coinmarketcap".equalsIgnoreCase(exchangeType)) {
+                return new CoinmarketcapRateSource();
             }
         }
         return null;
@@ -119,7 +121,12 @@ public class DashExtension implements IExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
+        result.add(ICurrencies.BTC);
+        result.add(ICurrencies.BCH);
+        result.add(ICurrencies.LTC);
+        result.add(ICurrencies.XMR);
         result.add(ICurrencies.DASH);
+        result.add(ICurrencies.POT);
         return result;
     }
 
