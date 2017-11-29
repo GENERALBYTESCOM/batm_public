@@ -2,7 +2,6 @@ package com.generalbytes.batm.server.extensions.extra.potcoin;
 
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.extra.potcoin.sources.FixPriceRateSource;
-import com.generalbytes.batm.server.extensions.extra.potcoin.sources.coinmarketcap.CoinmarketcapRateSource;
 import com.generalbytes.batm.server.extensions.extra.potcoin.wallets.potwallet.Potwallet;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
