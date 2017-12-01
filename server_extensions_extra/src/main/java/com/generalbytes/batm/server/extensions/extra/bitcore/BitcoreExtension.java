@@ -69,8 +69,8 @@ public class BitcoreExtension implements IExtension{
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (ICurrencies.START.equalsIgnoreCase(cryptoCurrency)) {
-            return new StartcoinAddressValidator();
+        if (ICurrencies.BTX.equalsIgnoreCase(cryptoCurrency)) {
+            return new BitcoreAddressValidator();
         }
         return null;
     }
