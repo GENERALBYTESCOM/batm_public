@@ -18,7 +18,7 @@
 package com.generalbytes.batm.server.extensions.extra.bitcore;
 
 import com.generalbytes.batm.server.extensions.*;
-import com.generalbytes.batm.server.extensions.extra.bitcre.sources.FixPriceRateSource;
+import com.generalbytes.batm.server.extensions.extra.bitcore.sources.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcore.wallets.bitcored.BitcoredRPCWallet;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
