@@ -14,7 +14,7 @@ public class FixPriceRateSource implements IRateSource {
 
     public FixPriceRateSource(BigDecimal rate,String preferedFiatCurrency) {
         this.rate = rate;
-        if (ICurrencies.CAD.equalsIgnoreCase(preferedFiatCurrency)) {
+        if (ICurrencies.EUR.equalsIgnoreCase(preferedFiatCurrency)) {
             this.preferedFiatCurrency = ICurrencies.EUR;
         }
         if (ICurrencies.USD.equalsIgnoreCase(preferedFiatCurrency)) {
