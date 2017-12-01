@@ -113,7 +113,7 @@ public class BitcoreExtension implements IExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.START);
+        result.add(ICurrencies.BTX);
         return result;
     }
 
