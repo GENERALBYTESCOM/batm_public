@@ -2,7 +2,6 @@ package com.generalbytes.batm.server.extensions.extra.potcoin;
 
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.extra.potcoin.sources.FixPriceRateSource;
-import com.generalbytes.batm.server.extensions.extra.potcoin.sources.coinmarketcap.CoinmarketcapRateSource;
 import com.generalbytes.batm.server.extensions.extra.potcoin.wallets.potwallet.Potwallet;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
@@ -76,12 +75,6 @@ public class PotcoinExtension implements IExtension{
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new FixPriceRateSource(rate,preferedFiatCurrency);
-            } else if ("coinmarketcap".equalsIgnoreCase(rsType)) {
-                String preferredFiatCurrency = ICurrencies.CAD;
-                if (st.hasMoreTokens()) {
-                    preferredFiatCurrency = st.nextToken();
-                }
-                return new CoinmarketcapRateSource(preferredFiatCurrency);
             }
 
         }
