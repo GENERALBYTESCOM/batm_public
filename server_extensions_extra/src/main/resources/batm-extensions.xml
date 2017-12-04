@@ -261,6 +261,22 @@
         </ratesource>
         <cryptologo cryptocurrency="GRS" file="groestl.png"/>
     </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.smartcash.SmartcashExtension" >
+        <wallet prefix="smartcashd" name="Smartcashd">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>SMART</cryptocurrency>
+        </wallet>
+        <ratesource prefix="smartfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>SMART</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="SMART" file="smart.png"/>
+    </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.startcoin.StartcoinExtension" >
         <wallet prefix="startcoind" name="Startcoind">
             <param name="protocol" />
