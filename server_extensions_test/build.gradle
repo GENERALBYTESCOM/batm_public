@@ -1,5 +1,8 @@
 apply plugin: "java"
-apply plugin: "distribution"
+apply plugin: "application"
+apply plugin: "gb-gradle"
+
+mainClassName = 'com.generalbytes.batm.server.extensions.test.Tester'
 
 jar {
     baseName 'batm_server_extensions_test'
@@ -10,22 +13,12 @@ dependencies {
     sourceCompatibility = '1.7'
 }
 
-
-distributions {
-  main {
-    contents {
-      into ('lib') {
-        from jar
-      }
-      into ('lib') {
-	from configurations.runtime
-      }
-    }
-  }
-}
-
 dependencies {
     compile project(':server_extensions_api');
     compile project(':server_extensions_extra');
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile group: 'net.sf.jopt-simple', name: 'jopt-simple', version: '4.9'
+}
+
+dependencySubstitutions {
+    substitute file(BatmDependencySubstitutionConfig)
 }

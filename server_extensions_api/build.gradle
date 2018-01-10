@@ -1,5 +1,6 @@
 apply plugin: "java"
 apply plugin: "distribution"
+apply plugin: "gb-gradle"
 
 jar {
     baseName 'batm_server_extensions_api'
@@ -10,20 +11,17 @@ dependencies {
     sourceCompatibility = '1.7'
 }
 
-
 distributions {
-  main {
-    contents {
-      into ('lib') {
-        from jar
-      }
-      into ('lib') {
-        from 'libs'
-      }
+    main {
+        contents {
+            from jar
+            from configurations.runtime
+        }
     }
-  }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile(group: 'org.slf4j', name: 'slf4j-api', version: '1.7.20')
+    compile(group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.20')
+    compile(group: 'com.sun.mail', name: 'javax.mail', version: '1.4.7')
 }
