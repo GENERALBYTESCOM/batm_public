@@ -22,3 +22,7 @@ allprojects {
         }
     }
 }
+
+ext.with {
+    BatmDependencySubstitutionConfig = file('dependencySubstitutions.txt')
+}
