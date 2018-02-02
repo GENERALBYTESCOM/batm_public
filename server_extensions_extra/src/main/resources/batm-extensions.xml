@@ -137,6 +137,26 @@
         </ratesource>
         <cryptologo cryptocurrency="LTC" file="ltc.png"/>
     </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.viacoin.ViacoinExtension" >
+        <wallet prefix="viacoind" name="Viacoind">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>VIA</cryptocurrency>
+        </wallet>
+        <ratesource prefix="viafix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>VIA</cryptocurrency>
+        </ratesource>
+        <ratesource prefix="poloniexrs" name ="Poloniex.com vs bitcoinaverage.com" >
+            <param name="fiatcurrency" />
+            <cryptocurrency>VIA</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="VIA" file="via.png"/>
+    </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.worldcoin.WorldcoinExtension" >
         <wallet prefix="worldcoind" name="Worldcoind">
             <param name="protocol" />
