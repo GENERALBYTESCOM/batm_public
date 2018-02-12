@@ -1,30 +1,56 @@
 apply plugin: "java"
 apply plugin: "distribution"
+apply plugin: "gb-gradle"
 
 jar {
     baseName 'batm_server_extensions_extra'
 }
 
+configurations {
+    artifactOnly
+    runtimeNoArtifact {
+        extendsFrom compile
+    }
+}
+
+artifacts {
+    artifactOnly jar
+}
+
 dependencies {
     targetCompatibility = '1.7'
     sourceCompatibility = '1.7'
+
+    compile project(':server_extensions_api');
+    compile(group: 'com.azazar', name: 'bitcoin-json-rpc-client', version: '1.0')
+    compile(group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25')
+    compile(group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25')
+    compile(group: 'com.github.mmazi', name: 'rescu', version: '1.9.0')
+    compile(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0.1')
+    compile(group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.8.0')
+    compile(group: 'org.knowm.xchange', name: 'xchange-core', version: '4.2.1')
+    compile(group: 'com.google.guava', name: 'guava', version: '18.0')
+    compile(group: 'com.google.zxing', name: 'core', version: '2.3.0')
+    compile(group: 'org.knowm.xchange', name: 'xchange-bitfinex', version: '4.2.1')
+    compile(group: 'org.knowm.xchange', name: 'xchange-itbit', version: '4.2.1')
+//    compile(group: 'net.iharder', name: 'base64', version: '2.3.9')
+//    compile(group: 'commons-io', name: 'commons-io', version: '2.4')
+//    compile(group: 'org.knowm.xchange', name: 'xchange-bitrex', version: '4.2.1')
+//    compile(group: 'org.knowm.xchange', name: 'xchange-poloniex', version: '4.2.1')
+//    compile(group: 'oauth.signpost', name: 'signpost-core', version: '1.2.1.2')
+//    compile(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.4.0')
+//    compile(group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.4.0')
 }
 
+dependencySubstitutions {
+    substitute file(BatmDependencySubstitutionConfig)
+}
 
 distributions {
-  main {
-    contents {
-      into ('lib') {
-        from jar
-      }
-      into ('lib') {
-	from configurations.runtime
-      }
+    main {
+        contents {
+            from jar
+            from configurations.runtime
+        }
     }
-  }
-}
-
-dependencies {
-    compile project(':server_extensions_api');
-    compile fileTree(dir: 'libs', include: ['*.jar'])
 }

@@ -8,8 +8,21 @@ buildscript {
     }
 }
 
+final File repoDir = project.file('libs')
 allprojects {
     repositories {
         jcenter()
     }
+    repositories {
+        //bitcoin-json-rpc-client-1.0.jar isn't part of any well known maven repo
+        //so we search the libs dir; gradle generates (guesses) metadata except dependencies.
+        //Artifacts from repos with real metadata take precedence.
+        flatDir {
+            dirs repoDir
+        }
+    }
+}
+
+ext.with {
+    BatmDependencySubstitutionConfig = file('dependencySubstitutions.txt')
 }
