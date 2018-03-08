@@ -6,11 +6,6 @@ jar {
     baseName 'batm_server_extensions_api'
 }
 
-dependencies {
-    targetCompatibility = '1.7'
-    sourceCompatibility = '1.7'
-}
-
 distributions {
     main {
         contents {

@@ -9,11 +9,6 @@ jar {
 }
 
 dependencies {
-    targetCompatibility = '1.7'
-    sourceCompatibility = '1.7'
-}
-
-dependencies {
     compile project(':server_extensions_api');
     compile project(':server_extensions_extra');
     compile group: 'net.sf.jopt-simple', name: 'jopt-simple', version: '4.9'
