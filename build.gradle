@@ -31,7 +31,7 @@ allprojects {
         executable
     }
     tasks.withType(JavaCompile) {
-        sourceCompatibility = '1.7'
+        project.sourceCompatibility = '1.7'
         options.with {
             fork = true
             forkOptions.javaHome = file(targetJavaHome)
