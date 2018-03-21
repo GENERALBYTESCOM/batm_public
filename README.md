@@ -39,13 +39,8 @@ After you implement the the extension make sure you test it with Tester which yo
 Build information
 =================
 ```bash
-cd server_extensions_api
-ant
-cd ..
-cd server_extensions_extra
-ant
-cd ..
-cp server_extensions_extra/dist/batm_server_extensions_extra.jar /batm/app/master/extensions/
+./gradlew build
+cp server_extensions_extra/build/libs/batm_server_extensions_extra.jar /batm/app/master/extensions/
 ```
 
 How to run Tester
