@@ -1,1 +1,2 @@
 substitute from: 'org.slf4j:slf4j-api:1.7.21', toVersion: '1.7.25'
+substitute from: 'com.github.mmazi:rescu:1.9.0', toVersion: '1.9.1'
