@@ -30,6 +30,7 @@ public class CoinmarketcapRateSource implements IRateSource {
         result.add(ICurrencies.DASH);
         result.add(ICurrencies.XMR);
         result.add(ICurrencies.POT);
+		result.add(ICurrencies.BTX);
         return result;
     }
 
