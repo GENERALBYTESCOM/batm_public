@@ -62,6 +62,7 @@
                 <cryptocurrency>DASH</cryptocurrency>
                 <cryptocurrency>XMR</cryptocurrency>
                 <cryptocurrency>POT</cryptocurrency>
+                <cryptocurrency>BTX</cryptocurrency>
             </ratesource>
             <paymentprocessor prefix="bitcoinpay" name="BitcoinPay.com" >
                 <param name="apikey" />
@@ -365,5 +366,25 @@
         <cryptologo cryptocurrency="DEX" file="dex.png"/>
         <cryptologo cryptocurrency="BCH" file="bch.png"/>
     </extension>
+	    <extension class="com.generalbytes.batm.server.extensions.extra.bitcore.BitcoreExtension" >
+        <wallet prefix="bitcored" name="Bitcored">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>BTX</cryptocurrency>
+        </wallet>
+        <ratesource prefix="coinmarketcap" name ="coinmarketcap.com" >
+            <param name="fiatcurrency" />
+            <cryptocurrency>BTX</cryptocurrency>
+        </ratesource>
+        <ratesource prefix="btxfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>BTX</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="BTX" file="btx.png"/>
+    </extension>	
     <extension class="com.generalbytes.batm.server.extensions.extra.watchlists.BasicWatchlistsExtension" />
 </extensions>

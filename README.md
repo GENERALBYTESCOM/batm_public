@@ -30,7 +30,7 @@ Note for developers
 Requirements:
 * Linux is required in order to run compilers and tests.
 * Java
-* Ant
+* Gradle
 
 When you implement support for new crypto-coin add it please to **server_extensions_extra** this way it will get into default BATM Server installation pack for customers.
 
@@ -39,21 +39,14 @@ After you implement the the extension make sure you test it with Tester which yo
 Build information
 =================
 ```bash
-cd server_extensions_api
-ant
-cd ..
-cd server_extensions_extra
-ant
-cd ..
-cp server_extensions_extra/dist/batm_server_extensions_extra.jar /batm/app/master/extensions/
+./gradlew build
+cp server_extensions_extra/build/libs/batm_server_extensions_extra.jar /batm/app/master/extensions/
 ```
 
 How to run Tester
 ==========
 ```bash
-cd server_extensions_test
-ant
-cd dist
-./tester.sh -j ../../server_extensions_extra/dist/batm_server_extensions_extra.jar 
+./gradlew :server_extensions_test:install
+./server_extensions_test/build/install/server_extensions_test/bin/server_extensions_test 
 ```
 
