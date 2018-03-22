@@ -19,10 +19,9 @@ package com.generalbytes.batm.server.extensions.extra.bitcore;
 
 import com.generalbytes.batm.server.coinutil.AddressFormatException;
 import com.generalbytes.batm.server.coinutil.Base58;
-import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 
-public class BitCoreAddressValidator implements ICryptoAddressValidator {
+public class BitcoreAddressValidator implements ICryptoAddressValidator {
 
     @Override
     public boolean isAddressValid(String address) {
