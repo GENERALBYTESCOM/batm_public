@@ -1,4 +1,4 @@
-package com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap;
+package com.generalbytes.batm.server.extensions.extra.bitcore.sources.coinmarketcap;
 
 import com.generalbytes.batm.server.extensions.ICurrencies;
 import com.generalbytes.batm.server.extensions.IRateSource;
@@ -23,13 +23,6 @@ public class CoinmarketcapRateSource implements IRateSource {
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.BTC);
-        result.add(ICurrencies.BCH);
-        result.add(ICurrencies.LTC);
-        result.add(ICurrencies.ETH);
-        result.add(ICurrencies.DASH);
-        result.add(ICurrencies.XMR);
-        result.add(ICurrencies.POT);
 		result.add(ICurrencies.BTX);
         return result;
     }
