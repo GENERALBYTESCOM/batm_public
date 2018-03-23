@@ -118,6 +118,36 @@
         </ratesource>
         <cryptologo cryptocurrency="DOGE" file="doge.png"/>
     </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.flashcoin.FlashcoinExtension" >
+        <wallet prefix="flashcoind" name="Flashcoind">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>FLASH</cryptocurrency>
+        </wallet>
+        <ratesource prefix="cryptopia" name="cryptopia.co.nz" >
+            <param name="fiatcurrency" />
+            <cryptocurrency>FLASH</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+        </ratesource>
+        <ratesource prefix="coinexchange" name="coinexchange.io" >
+            <cryptocurrency>FLASH</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+        </ratesource>
+        <!--ratesource prefix="coinmarketcap" name ="coinmarketcap.com" >
+            <param name="fiatcurrency" />
+            <cryptocurrency>FLASH</cryptocurrency>
+        </ratesource-->
+        <ratesource prefix="flashfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>FLASH</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="FLASH" file="flash.png"/>
+    </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.litecoin.LitecoinExtension" >
         <wallet prefix="litecoind" name="Litecoind">
             <param name="protocol" />
