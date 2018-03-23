@@ -112,7 +112,11 @@ public class DashExtension implements IExtension{
                 }
                 return new FixPriceRateSource(rate, preferedFiatCurrency);
             } else if ("coinmarketcap".equalsIgnoreCase(exchangeType)) {
-                return new CoinmarketcapRateSource();
+                String preferedFiatCurrency = ICurrencies.USD;
+                if (st.hasMoreTokens()) {
+                    preferedFiatCurrency = st.nextToken().toUpperCase();
+                }
+                return new CoinmarketcapRateSource(preferedFiatCurrency);
             }
         }
         return null;
@@ -122,6 +126,7 @@ public class DashExtension implements IExtension{
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
         result.add(ICurrencies.BTC);
+        result.add(ICurrencies.BTX);
         result.add(ICurrencies.BCH);
         result.add(ICurrencies.LTC);
         result.add(ICurrencies.XMR);
