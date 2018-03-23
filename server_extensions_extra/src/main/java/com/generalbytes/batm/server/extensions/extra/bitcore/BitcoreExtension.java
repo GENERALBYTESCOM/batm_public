@@ -86,7 +86,7 @@ public class BitcoreExtension implements IExtension{
             StringTokenizer st = new StringTokenizer(sourceLogin,":");
             String exchangeType = st.nextToken();
 
-            if ("startfix".equalsIgnoreCase(exchangeType)) {
+            if ("btxfix".equalsIgnoreCase(exchangeType)) {
                 BigDecimal rate = BigDecimal.ZERO;
                 if (st.hasMoreTokens()) {
                     try {
@@ -99,8 +99,9 @@ public class BitcoreExtension implements IExtension{
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new FixPriceRateSource(rate,preferedFiatCurrency);
+          } else if ("coinmarketcap".equalsIgnoreCase(exchangeType)) {
+                return new CoinmarketcapRateSource();
             }
-
         }
         return null;
     }
