@@ -18,7 +18,6 @@
 package com.generalbytes.batm.server.extensions.extra.bitcore;
 
 import com.generalbytes.batm.server.extensions.*;
-import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.CoinmarketcapRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcore.sources.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcore.wallets.bitcored.BitcoredRPCWallet;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
@@ -100,10 +99,7 @@ public class BitcoreExtension implements IExtension{
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new FixPriceRateSource(rate,preferedFiatCurrency);
-          } else if ("coinmarketcap".equalsIgnoreCase(exchangeType)) {
-                return new CoinmarketcapRateSource();
-            }
-        }
+                 }
         return null;
     }
 
