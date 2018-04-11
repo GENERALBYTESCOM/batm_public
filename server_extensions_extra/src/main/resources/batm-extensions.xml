@@ -344,10 +344,7 @@
             <param name="price" />
             <cryptocurrency>POT</cryptocurrency>
         </ratesource>
-        <ratesource prefix="coinmarketcap" name ="coinmarketcap.com" >
-            <param name="fiatcurrency" />
-            <cryptocurrency>POT</cryptocurrency>
-        </ratesource>
+
         <cryptologo cryptocurrency="POT" file="pot.png"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.dexacoin.DexCoinSupport">
@@ -377,7 +374,7 @@
             <param name="accountname" />
             <cryptocurrency>BTX</cryptocurrency>
         </wallet>
-        <ratesource prefix="coinmarketcap" name ="coinmarketcap.com" >
+        <ratesource prefix="coinmarketcapbtx" name ="coinmarketcap.com" >
             <param name="fiatcurrency" />
             <cryptocurrency>BTX</cryptocurrency>
         </ratesource>
