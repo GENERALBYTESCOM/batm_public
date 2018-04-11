@@ -374,10 +374,7 @@
             <param name="accountname" />
             <cryptocurrency>BTX</cryptocurrency>
         </wallet>
-        <ratesource prefix="coinmarketcapbtx" name ="coinmarketcap.com" >
-            <param name="fiatcurrency" />
-            <cryptocurrency>BTX</cryptocurrency>
-        </ratesource>
+
         <ratesource prefix="btxfix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>BTX</cryptocurrency>
