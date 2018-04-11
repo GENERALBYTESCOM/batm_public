@@ -1,4 +1,4 @@
-package com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap;
+package com.generalbytes.batm.server.extensions.extra.bitcore.sources.coinmarketcap;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
