@@ -29,7 +29,7 @@ public class CoinmarketcapRateSource implements IRateSource {
     }
 
     public CoinmarketcapRateSource() {
-        api = RestProxyFactory.createProxy(ICoinmarketcapAPI.class, "https://api.coinmarketcap.com");
+        api = RestProxyFactory.createProxy(ICoinmarketcapAPI.class, "https://api.coinmarketcap.com/v1/ticker/?limit=50");
     }
 
     @Override
