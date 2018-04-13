@@ -23,7 +23,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-@Path("/v1/ticker")
+@Path("/v1/ticker/?limit=0")
 @Produces(MediaType.APPLICATION_JSON)
 public interface ICoinmarketcapAPI {
     @GET
