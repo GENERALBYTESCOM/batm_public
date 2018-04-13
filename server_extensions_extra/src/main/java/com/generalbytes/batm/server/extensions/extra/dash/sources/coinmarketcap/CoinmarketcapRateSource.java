@@ -66,7 +66,6 @@ public class CoinmarketcapRateSource implements IRateSource {
             return null;
         }
         CMCTicker[] tickers = api.getTickers(fiatCurrency, 0);
-        System.out.println("API = " + api);
         System.out.println("cryptoCurrency = " + cryptoCurrency);
         System.out.println("fiatCurrency = " + fiatCurrency);
         System.out.println("tickers.length = " + tickers.length);
