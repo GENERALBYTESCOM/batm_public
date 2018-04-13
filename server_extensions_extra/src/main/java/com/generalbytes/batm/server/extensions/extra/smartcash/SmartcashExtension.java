@@ -19,8 +19,7 @@ package com.generalbytes.batm.server.extensions.extra.smartcash;
 
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.extra.smartcash.sources.FixPriceRateSource;
-import com.generalbytes.batm.server.extensions.extra.smartcash.sources.SmartcashTickerRateSource;
-import com.generalbytes.batm.server.extensions.extra.smartcash.wallets.smartcashd.SmartcashdRPCWallet;
+import com.generalbytes.batm.server.extensions.extra.smartcash.wallets.smartcashd.SmartcashRPCWallet;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.math.BigDecimal;
@@ -61,7 +60,7 @@ public class SmartcashExtension implements IExtension{
 
                 if (protocol != null && username != null && password != null && hostname !=null && port != null && accountName != null) {
                     String rpcURL = protocol +"://" + username +":" + password + "@" + hostname +":" + port;
-                    return new SmartcashdRPCWallet(rpcURL,accountName);
+                    return new SmartcashRPCWallet(rpcURL,accountName);
                 }
             }
         }
@@ -87,9 +86,7 @@ public class SmartcashExtension implements IExtension{
             StringTokenizer st = new StringTokenizer(sourceLogin,":");
             String exchangeType = st.nextToken();
 
-            if ("smartcashticker".equalsIgnoreCase(exchangeType)) {
-                return new SmartcashTickerRateSource();
-            }else if ("maxfix".equalsIgnoreCase(exchangeType)) {
+            if ("smartfix".equalsIgnoreCase(exchangeType)) {
                 BigDecimal rate = BigDecimal.ZERO;
                 if (st.hasMoreTokens()) {
                     try {

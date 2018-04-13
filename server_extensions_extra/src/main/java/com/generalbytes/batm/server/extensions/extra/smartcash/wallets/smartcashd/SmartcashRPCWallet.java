@@ -30,11 +30,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class SmartcashdRPCWallet implements IWallet{
-    private static final Logger log = LoggerFactory.getLogger(SmartcashdRPCWallet.class);
+public class SmartcashRPCWallet implements IWallet{
+    private static final Logger log = LoggerFactory.getLogger(SmartcashRPCWallet.class);
     private static final String CRYPTO_CURRENCY = ICurrencies.SMART;
 
-    public SmartcashdRPCWallet(String rpcURL, String accountName) {
+    public SmartcashRPCWallet(String rpcURL, String accountName) {
         this.rpcURL = rpcURL;
         this.accountName = accountName;
     }
