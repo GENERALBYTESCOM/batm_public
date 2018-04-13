@@ -28,6 +28,7 @@ public interface ICurrencies {
     public static final String DEX = "DEX";
     public static final String DASH = "DASH";
     public static final String DOGE = "DOGE";
+    public static final String FLASH = "FLASH";// FLASH Coin
     public static final String MAX = "MAX";
     public static final String LEO = "LEO";
     public static final String NLG = "NLG";
@@ -36,6 +37,7 @@ public interface ICurrencies {
     public static final String NBT = "NBT";
     public static final String NXT = "NXT";
     public static final String POT = "POT";
+    public static final String SMART = "SMART";
     public static final String START = "START";
     public static final String TKN = "TKN";
     public static final String WDC = "WDC";
