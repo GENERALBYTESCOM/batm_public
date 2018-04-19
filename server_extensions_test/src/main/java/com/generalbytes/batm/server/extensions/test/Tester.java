@@ -397,24 +397,23 @@ public class Tester {
                 final Set<String> fiatCurrencies = rs.getFiatCurrencies();
                 final Set<String> cryptoCurrencies = rs.getCryptoCurrencies();
 				StringTokenizer st = new StringTokenizer(params, ":");
-				String preferredFiatCurrency = rs.getPreferredFiatCurrency();
-
-                System.out.println("Preferred Fiat Currency = " + preferredFiatCurrency);
+				String preferredFiatCurrency = rs.getPreferredFiatCurrency();               
+                String selectedCryptoCurrency = null;
+				if (st.hasMoreTokens()) {
+					// fiat
+					preferredFiatCurrency = st.nextToken();
+					// crypto
+					if (st.hasMoreTokens()) {
+						selectedCryptoCurrency = st.nextToken().toLowerCase();
+						System.out.println("Selected crypto: " + selectedCryptoCurrency);
+					}
+				}
+				System.out.println("Preferred Fiat Currency = " + preferredFiatCurrency);
                 System.out.println("Fiat Currencies:");
                 for (String fiatCurrency : fiatCurrencies) {
                     System.out.println("  " + fiatCurrency);
                 }
-                System.out.println("Crypto Currencies:");
-                String selectedCryptoCurrency = null;
-				if (st.hasMoreTokens()) {
-					// fiat
-					st.nextToken();
-					// crypto
-					if (st.hasMoreTokens()) {
-						selectedCryptoCurrency = st.nextToken().toLowerCase();
-						System.out.println("Selected crypto:  " + selectedCryptoCurrency);
-					}
-				}
+				System.out.println("Crypto Currencies:");
                 for (String cryptoCurrency : cryptoCurrencies) {
                     if (selectedCryptoCurrency == null) {
                         selectedCryptoCurrency = cryptoCurrency;
