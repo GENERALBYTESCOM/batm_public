@@ -15,6 +15,7 @@ public class CMCTicker {
     private BigDecimal rank;
     private BigDecimal price_usd;
     private BigDecimal price_eur;
+	private BigDecimal price_cad;
     private BigDecimal price_btc;
 
     @JsonProperty("24h_volume_usd")
@@ -66,6 +67,14 @@ public class CMCTicker {
 
     public void setPrice_usd(BigDecimal price_usd) {
         this.price_usd = price_usd;
+    }
+
+    public BigDecimal getPrice_cad() {
+        return price_cad;
+    }
+
+    public void setPrice_cad(BigDecimal price_cad) {
+        this.price_cad = price_cad;
     }
 
     public BigDecimal getPrice_eur() {

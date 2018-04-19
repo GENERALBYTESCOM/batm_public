@@ -26,6 +26,9 @@ public class CoinmarketcapRateSource implements IRateSource {
         if (ICurrencies.USD.equalsIgnoreCase(preferedFiatCurrency)) {
             this.preferredFiatCurrency = ICurrencies.USD;
         }
+        if (ICurrencies.CAD.equalsIgnoreCase(preferedFiatCurrency)) {
+            this.preferredFiatCurrency = ICurrencies.CAD;
+        }
     }
 
     public CoinmarketcapRateSource() {
@@ -35,6 +38,7 @@ public class CoinmarketcapRateSource implements IRateSource {
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
+		result.add(ICurrencies.SYS);
         result.add(ICurrencies.BTC);
         result.add(ICurrencies.BCH);
         result.add(ICurrencies.BTX);
@@ -51,6 +55,7 @@ public class CoinmarketcapRateSource implements IRateSource {
         Set<String> result = new HashSet<String>();
         result.add(ICurrencies.USD);
         result.add(ICurrencies.EUR);
+		result.add(ICurrencies.CAD);
         return result;
     }
 
@@ -66,14 +71,22 @@ public class CoinmarketcapRateSource implements IRateSource {
         if (!getFiatCurrencies().contains(fiatCurrency)) {
             return null;
         }
-        CMCTicker[] tickers = api.getTickers(fiatCurrency);
++        CMCTicker[] tickers;
++        if(!ICurrencies.BTC.equalsIgnoreCase(cryptoCurrency)){
++            tickers = api.getTickers(cryptoCurrency,fiatCurrency);
++        }else
++            tickers = api.getTickers(fiatCurrency);
+
         for (int i = 0; i < tickers.length; i++) {
             CMCTicker ticker = tickers[i];
             if (cryptoCurrency.equalsIgnoreCase(ticker.getSymbol())) {
                 if (ICurrencies.EUR.equalsIgnoreCase(fiatCurrency)) {
                     return ticker.getPrice_eur();
-                }else{
+                }else  if (ICurrencies.USD.equalsIgnoreCase(fiatCurrency)) {
                     return ticker.getPrice_usd();
+                }
+				else  if (ICurrencies.CAD.equalsIgnoreCase(fiatCurrency)) {
+                    return ticker.getPrice_cad();
                 }
             }
         }

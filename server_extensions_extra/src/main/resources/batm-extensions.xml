@@ -56,6 +56,7 @@
             </ratesource>
             <ratesource prefix="coinmarketcap" name ="CoinMarketCap.com" >
                 <param name="fiatcurrency" />
+                <cryptocurrency>SYS</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>BCH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
@@ -238,9 +239,6 @@
         <param name="accountname" />
         <cryptocurrency>SYS</cryptocurrency>
       </wallet>
-      <ratesource prefix="coinmarketcap" name="CoinMarketCap.com" >
-        <cryptocurrency>SYS</cryptocurrency>
-      </ratesource>
       <ratesource prefix="syscoinfix" name ="Fix Price" >
         <param name="price" />
         <cryptocurrency>SYS</cryptocurrency>

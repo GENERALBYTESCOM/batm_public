@@ -19,7 +19,7 @@ package com.generalbytes.batm.server.extensions.extra.syscoin;
 
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.extra.syscoin.sources.FixPriceRateSource;
-import com.generalbytes.batm.server.extensions.extra.syscoin.sources.coinmarketcap.CoinmarketcapRateSource;
+import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.CoinmarketcapRateSource;
 import com.generalbytes.batm.server.extensions.extra.syscoin.wallets.syscoind.SyscoinRPCWallet;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
