@@ -406,7 +406,7 @@ public class Tester {
                 System.out.println("Crypto Currencies:");
                 String selectedCryptoCurrency = null;
 				if(cryptoCurrencies.size() > 0){
-					selectedCryptoCurrency = cryptoCurrencies[0];
+					selectedCryptoCurrency = cryptoCurrencies.iterator().next();
 				}
 
                 for (String cryptoCurrency : cryptoCurrencies) {
