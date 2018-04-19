@@ -18,7 +18,6 @@ public class CoinmarketcapRateSource implements IRateSource {
   private String preferredFiatCurrency = ICurrencies.USD;
 
   public CoinmarketcapRateSource(String preferedFiatCurrency) {
-    this();
     if (ICurrencies.EUR.equalsIgnoreCase(preferedFiatCurrency)) {
       this.preferredFiatCurrency = ICurrencies.EUR;
     }
@@ -70,8 +69,10 @@ public class CoinmarketcapRateSource implements IRateSource {
     if (!getFiatCurrencies().contains(fiatCurrency)) {
       return null;
     }
+
     CMCTicker[] tickers;
-    if (!ICurrencies.BTC.equalsIgnoreCase(cryptoCurrency)) {
+    if (!ICurrencies.BTC.equalsIgnoreCase(cryptoCurrency) && !cryptoCurrency
+        .equalsIgnoreCase("bitcoin")) {
       tickers = api.getTickers(cryptoCurrency, fiatCurrency);
     } else {
       tickers = api.getTickers(fiatCurrency);
@@ -91,4 +92,10 @@ public class CoinmarketcapRateSource implements IRateSource {
     }
     return null;
   }
+
+//    public static void main(String[] args) {
+//        CoinmarketcapRateSource rs = new CoinmarketcapRateSource(ICurrencies.EUR);
+//        BigDecimal exchangeRateLast = rs.getExchangeRateLast(ICurrencies.BTC, ICurrencies.EUR);
+//        System.out.println("exchangeRateLast = " + exchangeRateLast);
+//    }
 }

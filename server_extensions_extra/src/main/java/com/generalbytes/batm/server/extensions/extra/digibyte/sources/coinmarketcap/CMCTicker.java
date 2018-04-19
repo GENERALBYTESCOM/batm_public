@@ -19,7 +19,16 @@ public class CMCTicker {
 
   @JsonProperty("24h_volume_usd")
   private BigDecimal _24h_volume_usd;
+  @JsonProperty("market_cap_usd")
   private BigDecimal market_cap_usd;
+  @JsonProperty("24h_volume_cad")
+  private BigDecimal _24h_volume_cad;
+  @JsonProperty("market_cap_cad")
+  private BigDecimal market_cap_cad;
+  @JsonProperty("24h_volume_eur")
+  private BigDecimal _24h_volume_eur;
+  @JsonProperty("market_cap_eur")
+  private BigDecimal market_cap_eur;
   private BigDecimal available_supply;
   private BigDecimal total_supply;
   private BigDecimal max_supply;
@@ -102,6 +111,38 @@ public class CMCTicker {
 
   public BigDecimal getMarket_cap_usd() {
     return market_cap_usd;
+  }
+
+  public void setMarket_cap_eur(BigDecimal market_cap_eur) {
+    this.market_cap_eur = market_cap_eur;
+  }
+
+  public BigDecimal get_24h_volume_eur() {
+    return _24h_volume_eur;
+  }
+
+  public void set_24h_volume_eur(BigDecimal _24h_volume_eur) {
+    this._24h_volume_eur = _24h_volume_eur;
+  }
+
+  public BigDecimal getMarket_cap_eur() {
+    return market_cap_eur;
+  }
+
+  public BigDecimal get_24h_volume_cad() {
+    return _24h_volume_cad;
+  }
+
+  public void set_24h_volume_cad(BigDecimal _24h_volume_cad) {
+    this._24h_volume_cad = _24h_volume_cad;
+  }
+
+  public BigDecimal getMarket_cap_cad() {
+    return market_cap_cad;
+  }
+
+  public void setMarket_cap_cad(BigDecimal market_cap_cad) {
+    this.market_cap_cad = market_cap_cad;
   }
 
   public void setMarket_cap_usd(BigDecimal market_cap_usd) {
