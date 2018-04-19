@@ -71,11 +71,11 @@ public class CoinmarketcapRateSource implements IRateSource {
         if (!getFiatCurrencies().contains(fiatCurrency)) {
             return null;
         }
-+        CMCTicker[] tickers;
-+        if(!ICurrencies.BTC.equalsIgnoreCase(cryptoCurrency)){
-+            tickers = api.getTickers(cryptoCurrency,fiatCurrency);
-+        }else
-+            tickers = api.getTickers(fiatCurrency);
+        CMCTicker[] tickers;
+        if(!ICurrencies.BTC.equalsIgnoreCase(cryptoCurrency)){
+            tickers = api.getTickers(cryptoCurrency,fiatCurrency);
+        }else
+           tickers = api.getTickers(fiatCurrency);
 
         for (int i = 0; i < tickers.length; i++) {
             CMCTicker ticker = tickers[i];
@@ -85,7 +85,7 @@ public class CoinmarketcapRateSource implements IRateSource {
                 }else  if (ICurrencies.USD.equalsIgnoreCase(fiatCurrency)) {
                     return ticker.getPrice_usd();
                 }
-				else  if (ICurrencies.CAD.equalsIgnoreCase(fiatCurrency)) {
+				else if (ICurrencies.CAD.equalsIgnoreCase(fiatCurrency)) {
                     return ticker.getPrice_cad();
                 }
             }
