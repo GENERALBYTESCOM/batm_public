@@ -17,8 +17,16 @@ public class CoinmarketcapRateSource implements IRateSource {
     private ICoinmarketcapAPI api;
 
     private String preferredFiatCurrency = ICurrencies.USD;
-    public CoinmarketcapRateSource(String preferedCryptoCurrency, String preferedFiatCurrency) {
-         this.preferredFiatCurrency = getFiatCurrencies().get(preferedFiatCurrency);
+    public CoinmarketcapRateSource(String preferedFiatCurrency) {
+        if (ICurrencies.EUR.equalsIgnoreCase(preferedFiatCurrency)) {
+            this.preferredFiatCurrency = ICurrencies.EUR;
+        }
+        if (ICurrencies.USD.equalsIgnoreCase(preferedFiatCurrency)) {
+            this.preferredFiatCurrency = ICurrencies.USD;
+        }
+        if (ICurrencies.CAD.equalsIgnoreCase(preferedFiatCurrency)) {
+            this.preferredFiatCurrency = ICurrencies.CAD;
+        }
     }
 
     public CoinmarketcapRateSource() {
