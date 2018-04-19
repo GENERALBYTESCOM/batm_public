@@ -404,7 +404,11 @@ public class Tester {
                     System.out.println("  " + fiatCurrency);
                 }
                 System.out.println("Crypto Currencies:");
-                String selectedCryptoCurrency = params;
+                String selectedCryptoCurrency = null;
+				if(cryptoCurrencies.length > 0){
+					selectedCryptoCurrency = cryptoCurrencies[0];
+				}
+
                 for (String cryptoCurrency : cryptoCurrencies) {
                     if (selectedCryptoCurrency == null) {
                         selectedCryptoCurrency = cryptoCurrency;
