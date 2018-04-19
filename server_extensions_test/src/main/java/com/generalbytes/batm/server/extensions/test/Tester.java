@@ -62,7 +62,7 @@ public class Tester {
         System.out.println("   Specifies path to a jar file which contains extensions.");
         System.out.println(" -n name");
         System.out.println("   Specifies name of wallet/ratesource/exchnage/pprocessor to be used");
-        System.out.println(" -p=param1:param2:param3");
+        System.out.println(" -p=param1:param2:param3, param1 is fiat symbol and param2 is the crypto symbol");
         System.out.println("   Set parameters to wallet/ratesource/exchnage/pprocessor.");
 
         System.out.println(" ACTIONS:");
