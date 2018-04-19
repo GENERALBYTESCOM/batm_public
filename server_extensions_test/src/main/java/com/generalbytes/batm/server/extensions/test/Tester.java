@@ -404,7 +404,7 @@ public class Tester {
 					preferredFiatCurrency = st.nextToken().toUpperCase();
 					// crypto
 					if (st.hasMoreTokens()) {
-						selectedCryptoCurrency = st.nextToken().toLowerCase();
+						selectedCryptoCurrency = st.nextToken().toUpperCase();
 						System.out.println("Selected crypto: " + selectedCryptoCurrency);
 					}
 				}
