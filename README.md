@@ -21,7 +21,7 @@ Here is the list of functionality that can be extended with extenstions API:
 Content
 =======
 * **server_extensions_api** - contains extension api that all extensions use to extend BATM Server's functionality.
-* **server_extensions_extra** - reference extension implementation that implements BTC, LTC, DASH,FLASH, DOGE, NLG, ICG, NBT, GRS and MAX coin support functionality.
+* **server_extensions_extra** - reference extension implementation that implements BTC, LTC, DGB, DASH, FLASH, DOGE, NLG, ICG, NBT, GRS and MAX coin support functionality.
 * **server_extensions_test** - contains tester for testing the extensions without requirement of having a BATM server
 
 Note for developers

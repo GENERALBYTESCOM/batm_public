@@ -227,6 +227,26 @@
         </ratesource>
         <cryptologo cryptocurrency="DASH" file="dash.png"/>
     </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.digibyte.DigiByteExtension" >
+        <wallet prefix="digibyted" name="Digibyted">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>DGB</cryptocurrency>
+        </wallet>
+        <ratesource prefix="digibytefix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>DGB</cryptocurrency>
+        </ratesource>
+        <ratesource prefix="coinmarketcap" name ="coinmarketcap.com" >
+            <param name="fiatcurrency" />
+            <cryptocurrency>DGB</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="DGB" file="digibyte.png"/>
+    </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.maxcoin.MaxcoinExtension" >
         <wallet prefix="maxcoind" name="Maxcoind">
             <param name="protocol" />
