@@ -103,12 +103,6 @@ public class SyscoinExtension implements IExtension{
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new FixPriceRateSource(rate, preferedFiatCurrency);
-            } else if ("coinmarketcap".equalsIgnoreCase(exchangeType)) {
-                String preferedFiatCurrency = ICurrencies.USD;
-                if (st.hasMoreTokens()) {
-                    preferedFiatCurrency = st.nextToken().toUpperCase();
-                }
-                return new CoinmarketcapRateSource(preferedFiatCurrency);
             }
         }
         return null;

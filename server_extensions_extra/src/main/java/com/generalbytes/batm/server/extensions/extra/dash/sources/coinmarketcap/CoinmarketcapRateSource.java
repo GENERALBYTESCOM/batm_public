@@ -17,18 +17,8 @@ public class CoinmarketcapRateSource implements IRateSource {
     private ICoinmarketcapAPI api;
 
     private String preferredFiatCurrency = ICurrencies.USD;
-
-    public CoinmarketcapRateSource(String preferedFiatCurrency) {
-        this();
-        if (ICurrencies.EUR.equalsIgnoreCase(preferedFiatCurrency)) {
-            this.preferredFiatCurrency = ICurrencies.EUR;
-        }
-        if (ICurrencies.USD.equalsIgnoreCase(preferedFiatCurrency)) {
-            this.preferredFiatCurrency = ICurrencies.USD;
-        }
-        if (ICurrencies.CAD.equalsIgnoreCase(preferedFiatCurrency)) {
-            this.preferredFiatCurrency = ICurrencies.CAD;
-        }
+    public CoinmarketcapRateSource(String preferedCryptoCurrency, String preferedFiatCurrency) {
+         this.preferredFiatCurrency = getFiatCurrencies().get(preferedFiatCurrency);
     }
 
     public CoinmarketcapRateSource() {
@@ -69,6 +59,9 @@ public class CoinmarketcapRateSource implements IRateSource {
     @Override
     public BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency) {
         if (!getFiatCurrencies().contains(fiatCurrency)) {
+            return null;
+        }
+        if (!getCryptoCurrencies().contains(cryptoCurrency)) {
             return null;
         }
         CMCTicker[] tickers;
