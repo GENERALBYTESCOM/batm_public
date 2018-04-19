@@ -397,7 +397,7 @@ public class Tester {
                 final Set<String> fiatCurrencies = rs.getFiatCurrencies();
                 final Set<String> cryptoCurrencies = rs.getCryptoCurrencies();
 				StringTokenizer st = null;
-				if(!params.equals(""))
+				if(params != null && !params.equals(""))
 					st = new StringTokenizer(params, ":");
 				String preferredFiatCurrency = rs.getPreferredFiatCurrency();               
                 String selectedCryptoCurrency = null;
