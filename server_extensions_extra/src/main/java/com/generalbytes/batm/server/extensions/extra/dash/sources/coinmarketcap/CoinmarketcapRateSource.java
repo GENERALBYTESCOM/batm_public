@@ -71,10 +71,7 @@ public class CoinmarketcapRateSource implements IRateSource {
         }
 
         CMCTicker[] tickers;
-        if(!ICurrencies.BTC.equalsIgnoreCase(cryptoCurrency) && cryptoCurrency != null && !cryptoCurrency.equalsIgnoreCase("bitcoin")){
-            tickers = api.getTickers(cryptoCurrency,fiatCurrency);
-        }else
-           tickers = api.getTickers(fiatCurrency);
+        tickers = api.getTickers(cryptoCurrency,fiatCurrency);
 
         for (int i = 0; i < tickers.length; i++) {
             CMCTicker ticker = tickers[i];

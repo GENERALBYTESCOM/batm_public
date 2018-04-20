@@ -395,18 +395,17 @@ public class Tester {
             final IRateSource rs = extension.createRateSource(name + ":" + params);
             if (rs != null) {
                 final Set<String> fiatCurrencies = rs.getFiatCurrencies();
-                final Set<String> cryptoCurrencies = rs.getCryptoCurrencies();
 				StringTokenizer st = null;
 				if(params != null && !params.equals(""))
 					st = new StringTokenizer(params, ":");
 				String preferredFiatCurrency = rs.getPreferredFiatCurrency();               
-                String selectedCryptoCurrency = null;
+                String selectedCryptoCurrency = "bitcoin";
 				if (st != null && st.hasMoreTokens()) {
 					// fiat
 					preferredFiatCurrency = st.nextToken().toUpperCase();
 					// crypto
 					if (st.hasMoreTokens()) {
-						selectedCryptoCurrency = st.nextToken().toUpperCase();
+						selectedCryptoCurrency = st.nextToken().toLowerCase();
 						System.out.println("Selected crypto: " + selectedCryptoCurrency);
 					}
 				}
@@ -415,13 +414,7 @@ public class Tester {
                 for (String fiatCurrency : fiatCurrencies) {
                     System.out.println("  " + fiatCurrency);
                 }
-				System.out.println("Crypto Currencies:");
-                for (String cryptoCurrency : cryptoCurrencies) {
-                    if (selectedCryptoCurrency == null) {
-                        selectedCryptoCurrency = cryptoCurrency;
-                    }
-                    System.out.println("  " + cryptoCurrency);
-                }
+
                 final BigDecimal exchangeRateLast = rs.getExchangeRateLast(selectedCryptoCurrency, preferredFiatCurrency);
                 if (exchangeRateLast != null) {
                     System.out.println("Exchange Rate Last: 1 " + selectedCryptoCurrency + " = " + exchangeRateLast.stripTrailingZeros().toPlainString() + " " + preferredFiatCurrency);
