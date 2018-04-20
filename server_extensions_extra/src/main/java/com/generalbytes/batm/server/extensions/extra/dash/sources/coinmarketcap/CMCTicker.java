@@ -54,7 +54,7 @@ public class CMCTicker {
         return rank;
     }
 
-    public void setRank(BigDecimal rank) {
+    public void setRank(int rank) {
         this.rank = rank;
     }
 
