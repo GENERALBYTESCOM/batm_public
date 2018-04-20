@@ -81,7 +81,7 @@ public class CMCTicker {
         return price_cad;
     }
 
-    public void setPrice_eur(BigDecimal price_cad) {
+    public void setPrice_cad(BigDecimal price_cad) {
         this.price_cad = price_cad;
     }
 
