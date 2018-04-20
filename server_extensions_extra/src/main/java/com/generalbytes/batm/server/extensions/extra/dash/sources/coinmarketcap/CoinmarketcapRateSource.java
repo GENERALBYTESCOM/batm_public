@@ -17,14 +17,15 @@ public class CoinmarketcapRateSource implements IRateSource {
     private ICoinmarketcapAPI api;
 
     private String preferredFiatCurrency = ICurrencies.USD;
-
     public CoinmarketcapRateSource(String preferedFiatCurrency) {
-        this();
         if (ICurrencies.EUR.equalsIgnoreCase(preferedFiatCurrency)) {
             this.preferredFiatCurrency = ICurrencies.EUR;
         }
         if (ICurrencies.USD.equalsIgnoreCase(preferedFiatCurrency)) {
             this.preferredFiatCurrency = ICurrencies.USD;
+        }
+        if (ICurrencies.CAD.equalsIgnoreCase(preferedFiatCurrency)) {
+            this.preferredFiatCurrency = ICurrencies.CAD;
         }
     }
 
@@ -35,6 +36,7 @@ public class CoinmarketcapRateSource implements IRateSource {
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
+		result.add(ICurrencies.SYS);
         result.add(ICurrencies.BTC);
         result.add(ICurrencies.BCH);
         result.add(ICurrencies.BTX);
@@ -51,6 +53,7 @@ public class CoinmarketcapRateSource implements IRateSource {
         Set<String> result = new HashSet<String>();
         result.add(ICurrencies.USD);
         result.add(ICurrencies.EUR);
+		result.add(ICurrencies.CAD);
         return result;
     }
 
@@ -62,18 +65,24 @@ public class CoinmarketcapRateSource implements IRateSource {
 
 
     @Override
-    public BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency) {
+    public BigDecimal getExchangeRateLast(String cryptoToGet, String fiatCurrency) {
         if (!getFiatCurrencies().contains(fiatCurrency)) {
             return null;
         }
-        CMCTicker[] tickers = api.getTickers(fiatCurrency);
+
+        CMCTicker[] tickers;
+        tickers = api.getTickers(cryptoToGet,fiatCurrency);
+
         for (int i = 0; i < tickers.length; i++) {
             CMCTicker ticker = tickers[i];
-            if (cryptoCurrency.equalsIgnoreCase(ticker.getSymbol())) {
+            if (cryptoToGet.equalsIgnoreCase(ticker.getName())) {
                 if (ICurrencies.EUR.equalsIgnoreCase(fiatCurrency)) {
                     return ticker.getPrice_eur();
-                }else{
+                }else  if (ICurrencies.USD.equalsIgnoreCase(fiatCurrency)) {
                     return ticker.getPrice_usd();
+                }
+				else if (ICurrencies.CAD.equalsIgnoreCase(fiatCurrency)) {
+                    return ticker.getPrice_cad();
                 }
             }
         }
