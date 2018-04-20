@@ -32,6 +32,6 @@ public interface ICoinmarketcapAPI {
     CMCTicker[]  getTickers(@QueryParam("convert") String fiatCurrency);
 
 	@GET
-    @Path("/{cryptoToGet}/?{convert}")
-    CMCTicker[]  getTickers(@PathParam("cryptoToGet") String cryptoToGet, @QueryParam("convert") String fiatCurrency);
+    @Path("/{cryptoToGet}/?convert={fiatCurrency}")
+    CMCTicker[]  getTickers(@PathParam("cryptoToGet") String cryptoToGet, @QueryParam("fiatCurrency") String fiatCurrency);
 }
