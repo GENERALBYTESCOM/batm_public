@@ -65,17 +65,17 @@ public class CoinmarketcapRateSource implements IRateSource {
 
 
     @Override
-    public BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency) {
+    public BigDecimal getExchangeRateLast(String cryptoToGet, String fiatCurrency) {
         if (!getFiatCurrencies().contains(fiatCurrency)) {
             return null;
         }
 
         CMCTicker[] tickers;
-        tickers = api.getTickers(cryptoCurrency,fiatCurrency);
+        tickers = api.getTickers(cryptoToGet,fiatCurrency);
 
         for (int i = 0; i < tickers.length; i++) {
             CMCTicker ticker = tickers[i];
-            if (cryptoCurrency.equalsIgnoreCase(ticker.getSymbol())) {
+            if (cryptoToGet.equalsIgnoreCase(ticker.getName())) {
                 if (ICurrencies.EUR.equalsIgnoreCase(fiatCurrency)) {
                     return ticker.getPrice_eur();
                 }else  if (ICurrencies.USD.equalsIgnoreCase(fiatCurrency)) {
