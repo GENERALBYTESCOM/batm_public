@@ -25,23 +25,27 @@ public class DigiByteAddressValidator implements ICryptoAddressValidator {
 
   @Override
   public boolean isAddressValid(String address) {
-    char[] addressChars = address.toCharArray();
-    //Check for invalid characters; ensure alphanumeric and no fobidden characters exist
-    for (char addressCharacter : addressChars) {
-      if (!(((addressCharacter >= '0' && addressCharacter <= '9') ||
-          (addressCharacter >= 'a' && addressCharacter <= 'z') ||
-          (addressCharacter >= 'A' && addressCharacter <= 'Z')) &&
-          addressCharacter != 'l' && addressCharacter != 'I' &&
-          addressCharacter != '0' && addressCharacter != 'O')) {
+    if (address.startsWith("D") ||address.startsWith("3") || address.startsWith("S")) {
+      char[] addressChars = address.toCharArray();
+      //Check for invalid characters; ensure alphanumeric and no fobidden characters exist
+      for (char addressCharacter : addressChars) {
+        if (!(((addressCharacter >= '0' && addressCharacter <= '9') ||
+                (addressCharacter >= 'a' && addressCharacter <= 'z') ||
+                (addressCharacter >= 'A' && addressCharacter <= 'Z')) &&
+                addressCharacter != 'l' && addressCharacter != 'I' &&
+                addressCharacter != '0' && addressCharacter != 'O')) {
+          return false;
+        }
+      }
+      try {
+        Base58.decodeToBigInteger(address);
+        Base58.decodeChecked(address);
+        return true;
+      } catch (AddressFormatException e) {
+        e.printStackTrace();
         return false;
       }
-    }
-    try {
-      Base58.decodeToBigInteger(address);
-      Base58.decodeChecked(address);
-      return true;
-    } catch (AddressFormatException e) {
-      e.printStackTrace();
+    } else {
       return false;
     }
   }
