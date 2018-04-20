@@ -76,10 +76,14 @@ public class CoinmarketcapRateSource implements IRateSource {
         for (int i = 0; i < tickers.length; i++) {
             CMCTicker ticker = tickers[i];
             if (cryptoCurrency.equalsIgnoreCase(ticker.getSymbol())) {
-                  if (ICurrencies.USD.equalsIgnoreCase(fiatCurrency)) {
+                if (ICurrencies.EUR.equalsIgnoreCase(fiatCurrency)) {
+                    return ticker.getPrice_eur();
+                }else  if (ICurrencies.USD.equalsIgnoreCase(fiatCurrency)) {
                     return ticker.getPrice_usd();
                 }
-				
+				else if (ICurrencies.CAD.equalsIgnoreCase(fiatCurrency)) {
+                    return ticker.getPrice_cad();
+                }
             }
         }
         return null;
