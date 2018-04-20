@@ -12,10 +12,11 @@ public class CMCTicker {
     private String id;
     private String name;
     private String symbol;
-    private BigDecimal rank;
+    private int rank;
     private BigDecimal price_usd;
     private BigDecimal price_eur;
     private BigDecimal price_btc;
+	private BigDecimal price_cad;
 
     @JsonProperty("24h_volume_usd")
     private BigDecimal _24h_volume_usd;
@@ -52,11 +53,11 @@ public class CMCTicker {
         this.symbol = symbol;
     }
 
-    public BigDecimal getRank() {
+    public int getRank() {
         return rank;
     }
 
-    public void setRank(BigDecimal rank) {
+    public void setRank(int rank) {
         this.rank = rank;
     }
 
@@ -74,6 +75,14 @@ public class CMCTicker {
 
     public void setPrice_eur(BigDecimal price_eur) {
         this.price_eur = price_eur;
+    }
+
+    public BigDecimal getPrice_cad() {
+        return price_cad;
+    }
+
+    public void setPrice_cad(BigDecimal price_cad) {
+        this.price_cad = price_cad;
     }
 
     public BigDecimal getPrice_btc() {

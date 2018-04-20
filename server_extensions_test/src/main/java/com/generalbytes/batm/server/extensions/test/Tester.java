@@ -39,7 +39,7 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
+import java.util.StringTokenizer;
 public class Tester {
     private List<IExtension> extensions;
     private Document descriptors;
@@ -62,7 +62,7 @@ public class Tester {
         System.out.println("   Specifies path to a jar file which contains extensions.");
         System.out.println(" -n name");
         System.out.println("   Specifies name of wallet/ratesource/exchnage/pprocessor to be used");
-        System.out.println(" -p=param1:param2:param3");
+        System.out.println(" -p=param1:param2:param3, param1 is fiat symbol and param2 is the full cryptocurrency name ie: syscoin");
         System.out.println("   Set parameters to wallet/ratesource/exchnage/pprocessor.");
 
         System.out.println(" ACTIONS:");
@@ -394,23 +394,27 @@ public class Tester {
             IExtension extension = extensions.get(i);
             final IRateSource rs = extension.createRateSource(name + ":" + params);
             if (rs != null) {
-                final String preferredFiatCurrency = rs.getPreferredFiatCurrency();
                 final Set<String> fiatCurrencies = rs.getFiatCurrencies();
-                final Set<String> cryptoCurrencies = rs.getCryptoCurrencies();
-
-                System.out.println("Preferred Fiat Currency = " + preferredFiatCurrency);
+				StringTokenizer st = null;
+				if(params != null && !params.equals(""))
+					st = new StringTokenizer(params, ":");
+				String preferredFiatCurrency = rs.getPreferredFiatCurrency();               
+                String selectedCryptoCurrency = "bitcoin";
+				if (st != null && st.hasMoreTokens()) {
+					// fiat
+					preferredFiatCurrency = st.nextToken().toUpperCase();
+					// crypto
+					if (st.hasMoreTokens()) {
+						selectedCryptoCurrency = st.nextToken().toLowerCase();
+						System.out.println("Selected crypto: " + selectedCryptoCurrency);
+					}
+				}
+				System.out.println("Preferred Fiat Currency = " + preferredFiatCurrency);
                 System.out.println("Fiat Currencies:");
                 for (String fiatCurrency : fiatCurrencies) {
                     System.out.println("  " + fiatCurrency);
                 }
-                System.out.println("Crypto Currencies:");
-                String selectedCryptoCurrency = null;
-                for (String cryptoCurrency : cryptoCurrencies) {
-                    if (selectedCryptoCurrency == null) {
-                        selectedCryptoCurrency = cryptoCurrency;
-                    }
-                    System.out.println("  " + cryptoCurrency);
-                }
+
                 final BigDecimal exchangeRateLast = rs.getExchangeRateLast(selectedCryptoCurrency, preferredFiatCurrency);
                 if (exchangeRateLast != null) {
                     System.out.println("Exchange Rate Last: 1 " + selectedCryptoCurrency + " = " + exchangeRateLast.stripTrailingZeros().toPlainString() + " " + preferredFiatCurrency);

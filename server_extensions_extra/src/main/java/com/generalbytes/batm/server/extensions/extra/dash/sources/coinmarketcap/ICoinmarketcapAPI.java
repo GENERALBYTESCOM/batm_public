@@ -21,12 +21,13 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 
 @Path("/v1/ticker")
 @Produces(MediaType.APPLICATION_JSON)
 public interface ICoinmarketcapAPI {
     @GET
-    @Path("/")
-    CMCTicker[]  getTickers(@QueryParam("convert") String fiatCurrency);
+    @Path("/{cryptoCurrency}/")
+    CMCTicker[]  getTickers(@PathParam("cryptoCurrency") String cryptoCurrency, @QueryParam("convert") String fiatCurrency);
 }
