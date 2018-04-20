@@ -50,7 +50,7 @@ public class CMCTicker {
         this.symbol = symbol;
     }
 
-    public int getRank() {
+    public BigDecimal getRank() {
         return rank;
     }
 
