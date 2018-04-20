@@ -55,6 +55,7 @@
                 <cryptocurrency>BTC</cryptocurrency>
             </ratesource>
             <ratesource prefix="coinmarketcap" name ="CoinMarketCap.com" >
+                <param name="cryptotoget" />
                 <param name="fiatcurrency" />
                 <cryptocurrency>SYS</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>

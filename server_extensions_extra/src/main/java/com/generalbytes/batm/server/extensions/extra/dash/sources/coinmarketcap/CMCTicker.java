@@ -12,7 +12,7 @@ public class CMCTicker {
     private String id;
     private String name;
     private String symbol;
-    private BigDecimal rank;
+    private int rank;
     private BigDecimal price_usd;
     private BigDecimal price_eur;
 	private BigDecimal price_cad;
@@ -20,15 +20,12 @@ public class CMCTicker {
 
     @JsonProperty("24h_volume_usd")
     private BigDecimal _24h_volume_usd;
-	@JsonProperty("market_cap_usd")
     private BigDecimal market_cap_usd;
 	@JsonProperty("24h_volume_cad")
     private BigDecimal _24h_volume_cad;
-	@JsonProperty("market_cap_cad")
     private BigDecimal market_cap_cad;
 	@JsonProperty("24h_volume_eur")
     private BigDecimal _24h_volume_eur;
-	@JsonProperty("market_cap_eur")
     private BigDecimal market_cap_eur;
     private BigDecimal available_supply;
     private BigDecimal total_supply;
@@ -62,11 +59,11 @@ public class CMCTicker {
         this.symbol = symbol;
     }
 
-    public BigDecimal getRank() {
+    public int getRank() {
         return rank;
     }
 
-    public void setRank(BigDecimal rank) {
+    public void setRank(int rank) {
         this.rank = rank;
     }
 
