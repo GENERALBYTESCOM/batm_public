@@ -36,6 +36,7 @@ public class CoinmarketcapRateSource implements IRateSource {
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
         result.add(ICurrencies.BTC);
+		result.add(ICurrencies.SYS);
         result.add(ICurrencies.BCH);
         result.add(ICurrencies.BTX);
         result.add(ICurrencies.LTC);
@@ -66,7 +67,7 @@ public class CoinmarketcapRateSource implements IRateSource {
         if (!getFiatCurrencies().contains(fiatCurrency)) {
             return null;
         }
-        CMCTicker[] tickers = api.getTickers(fiatCurrency);
+        CMCTicker[] tickers = api.getTickers(cryptoCurrency, fiatCurrency);
         for (int i = 0; i < tickers.length; i++) {
             CMCTicker ticker = tickers[i];
             if (cryptoCurrency.equalsIgnoreCase(ticker.getName())) {
@@ -80,9 +81,4 @@ public class CoinmarketcapRateSource implements IRateSource {
         return null;
     }
 
-//    public static void main(String[] args) {
-//        CoinmarketcapRateSource rs = new CoinmarketcapRateSource(ICurrencies.EUR);
-//        BigDecimal exchangeRateLast = rs.getExchangeRateLast(ICurrencies.BTC, ICurrencies.EUR);
-//        System.out.println("exchangeRateLast = " + exchangeRateLast);
-//    }
 }
