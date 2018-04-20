@@ -12,11 +12,11 @@ public class CMCTicker {
     private String id;
     private String name;
     private String symbol;
-    private int rank;
+    private BigDecimal rank;
     private BigDecimal price_usd;
     private BigDecimal price_btc;
 
-    private BigDecimal _24h_volume_usd;
+    private BigDecimal 24h_volume_usd;
     private BigDecimal market_cap_usd;
     private BigDecimal available_supply;
     private BigDecimal total_supply;
@@ -75,11 +75,11 @@ public class CMCTicker {
     }
 
     public BigDecimal get_24h_volume_usd() {
-        return _24h_volume_usd;
+        return 24h_volume_usd;
     }
 
     public void set_24h_volume_usd(BigDecimal _24h_volume_usd) {
-        this._24h_volume_usd = _24h_volume_usd;
+        this.24h_volume_usd = _24h_volume_usd;
     }
 
     public BigDecimal getMarket_cap_usd() {
