@@ -14,17 +14,10 @@ public class CMCTicker {
     private String symbol;
     private BigDecimal rank;
     private BigDecimal price_usd;
-    private BigDecimal price_eur;
-	private BigDecimal price_cad;
     private BigDecimal price_btc;
 
-    @JsonProperty("24h_volume_usd")
-    private BigDecimal _24h_volume_usd;
+    private BigDecimal 24h_volume_usd;
     private BigDecimal market_cap_usd;
-    private BigDecimal _24h_volume_cad;
-    private BigDecimal market_cap_cad;
-    private BigDecimal _24h_volume_eur;
-    private BigDecimal market_cap_eur;
     private BigDecimal available_supply;
     private BigDecimal total_supply;
     private BigDecimal max_supply;
@@ -73,22 +66,6 @@ public class CMCTicker {
         this.price_usd = price_usd;
     }
 
-    public BigDecimal getPrice_cad() {
-        return price_cad;
-    }
-
-    public void setPrice_cad(BigDecimal price_cad) {
-        this.price_cad = price_cad;
-    }
-
-    public BigDecimal getPrice_eur() {
-        return price_eur;
-    }
-
-    public void setPrice_eur(BigDecimal price_eur) {
-        this.price_eur = price_eur;
-    }
-
     public BigDecimal getPrice_btc() {
         return price_btc;
     }
@@ -98,48 +75,18 @@ public class CMCTicker {
     }
 
     public BigDecimal get_24h_volume_usd() {
-        return _24h_volume_usd;
+        return 24h_volume_usd;
     }
 
     public void set_24h_volume_usd(BigDecimal _24h_volume_usd) {
-        this._24h_volume_usd = _24h_volume_usd;
+        this.24h_volume_usd = _24h_volume_usd;
     }
 
     public BigDecimal getMarket_cap_usd() {
         return market_cap_usd;
     }
 
-    public void setMarket_cap_eur(BigDecimal market_cap_eur) {
-        this.market_cap_eur = market_cap_eur;
-    }
-
-    public BigDecimal get_24h_volume_eur() {
-        return _24h_volume_eur;
-    }
-
-    public void set_24h_volume_eur(BigDecimal _24h_volume_eur) {
-        this._24h_volume_eur = _24h_volume_eur;
-    }
-
-    public BigDecimal getMarket_cap_eur() {
-        return market_cap_eur;
-    }
-
-	public BigDecimal get_24h_volume_cad() {
-        return _24h_volume_cad;
-    }
-
-    public void set_24h_volume_cad(BigDecimal _24h_volume_cad) {
-        this._24h_volume_cad = _24h_volume_cad;
-    }
-
-    public BigDecimal getMarket_cap_cad() {
-        return market_cap_cad;
-    }
-
-    public void setMarket_cap_cad(BigDecimal market_cap_cad) {
-        this.market_cap_cad = market_cap_cad;
-    }
+ 
 
     public void setMarket_cap_usd(BigDecimal market_cap_usd) {
         this.market_cap_usd = market_cap_usd;
