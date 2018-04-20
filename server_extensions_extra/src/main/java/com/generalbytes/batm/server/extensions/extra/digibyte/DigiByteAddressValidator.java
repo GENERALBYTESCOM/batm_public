@@ -27,13 +27,13 @@ public class DigiByteAddressValidator implements ICryptoAddressValidator {
   public boolean isAddressValid(String address) {
     //For whatever reason this may occur, cover the case
     String lowercase = address.toLowerCase();
-    if (lowercase.startsWith("d") ||lowercase.startsWith("3") || lowercase.startsWith("s")) {
+    if (lowercase.startsWith("d") || lowercase.startsWith("3") || lowercase.startsWith("s")) {
       char[] addressChars = address.toCharArray();
       //Check for invalid characters; ensure alphanumeric and no forbidden characters exist
       for (char addressCharacter : addressChars) {
         if (!(((addressCharacter >= '0' && addressCharacter <= '9') ||
-                (addressCharacter >= 'a' && addressCharacter <= 'z') ||
-                (addressCharacter >= 'A' && addressCharacter <= 'Z')) &&
+               (addressCharacter >= 'a' && addressCharacter <= 'z') ||
+               (addressCharacter >= 'A' && addressCharacter <= 'Z')) &&
                 addressCharacter != 'l' && addressCharacter != 'I' &&
                 addressCharacter != '0' && addressCharacter != 'O')) {
           return false;
