@@ -241,7 +241,7 @@
             <param name="price" />
             <cryptocurrency>DGB</cryptocurrency>
         </ratesource>
-        <ratesource prefix="coinmarketcap" name ="coinmarketcap.com" >
+        <ratesource prefix="livecoin" name ="livecoin.net" >
             <param name="fiatcurrency" />
             <cryptocurrency>DGB</cryptocurrency>
         </ratesource>

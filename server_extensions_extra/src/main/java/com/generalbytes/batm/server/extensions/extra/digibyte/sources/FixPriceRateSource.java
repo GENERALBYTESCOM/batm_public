@@ -2,7 +2,6 @@ package com.generalbytes.batm.server.extensions.extra.digibyte.sources;
 
 import com.generalbytes.batm.server.extensions.ICurrencies;
 import com.generalbytes.batm.server.extensions.IRateSource;
-
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
@@ -11,11 +10,12 @@ import java.util.Set;
  * Created by b00lean on 7/31/14.
  */
 public class FixPriceRateSource implements IRateSource {
+
   private BigDecimal rate = BigDecimal.ZERO;
 
   private String preferedFiatCurrency = ICurrencies.USD;
 
-  public FixPriceRateSource(BigDecimal rate,String preferedFiatCurrency) {
+  public FixPriceRateSource(BigDecimal rate, String preferedFiatCurrency) {
     this.rate = rate;
     if (ICurrencies.EUR.equalsIgnoreCase(preferedFiatCurrency)) {
       this.preferedFiatCurrency = ICurrencies.EUR;
@@ -51,6 +51,7 @@ public class FixPriceRateSource implements IRateSource {
     result.add(ICurrencies.EUR);
     return result;
   }
+
   @Override
   public String getPreferredFiatCurrency() {
     return preferedFiatCurrency;

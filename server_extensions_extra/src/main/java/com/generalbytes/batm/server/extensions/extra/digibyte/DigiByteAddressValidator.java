@@ -32,10 +32,10 @@ public class DigiByteAddressValidator implements ICryptoAddressValidator {
       //Check for invalid characters; ensure alphanumeric and no forbidden characters exist
       for (char addressCharacter : addressChars) {
         if (!(((addressCharacter >= '0' && addressCharacter <= '9') ||
-               (addressCharacter >= 'a' && addressCharacter <= 'z') ||
-               (addressCharacter >= 'A' && addressCharacter <= 'Z')) &&
-                addressCharacter != 'l' && addressCharacter != 'I' &&
-                addressCharacter != '0' && addressCharacter != 'O')) {
+            (addressCharacter >= 'a' && addressCharacter <= 'z') ||
+            (addressCharacter >= 'A' && addressCharacter <= 'Z')) &&
+            addressCharacter != 'l' && addressCharacter != 'I' &&
+            addressCharacter != '0' && addressCharacter != 'O')) {
           return false;
         }
       }
