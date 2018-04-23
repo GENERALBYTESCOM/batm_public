@@ -20,9 +20,6 @@ public class LiveCoinRateSource implements IRateSource {
     if (ICurrencies.USD.equalsIgnoreCase(preferedFiatCurrency)) {
       this.preferredFiatCurrency = ICurrencies.USD;
     }
-    if (ICurrencies.CAD.equalsIgnoreCase(preferedFiatCurrency)) {
-      this.preferredFiatCurrency = ICurrencies.CAD;
-    }
     api = RestProxyFactory.createProxy(ILiveCoinAPI.class, "https://api.livecoin.net");
   }
 
