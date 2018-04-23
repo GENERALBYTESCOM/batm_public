@@ -32,6 +32,7 @@ public interface ICurrencies {
     public static final String MAX = "MAX";
     public static final String LEO = "LEO";
     public static final String NLG = "NLG";
+    public static final String DCT = "DCT";
     public static final String GRS = "GRS";
     public static final String ICG = "ICG";
     public static final String NBT = "NBT";
