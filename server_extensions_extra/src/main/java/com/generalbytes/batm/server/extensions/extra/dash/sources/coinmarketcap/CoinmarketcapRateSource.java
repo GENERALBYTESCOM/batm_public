@@ -43,6 +43,8 @@ public class CoinmarketcapRateSource implements IRateSource {
         result.add(ICurrencies.DASH);
         result.add(ICurrencies.XMR);
         result.add(ICurrencies.POT);
+        result.add(ICurrencies.FLASH);
+
         return result;
     }
 
@@ -66,7 +68,12 @@ public class CoinmarketcapRateSource implements IRateSource {
         if (!getFiatCurrencies().contains(fiatCurrency)) {
             return null;
         }
-        CMCTicker[] tickers = api.getTickers(fiatCurrency);
+        CMCTicker[] tickers;
+        if(ICurrencies.FLASH.equalsIgnoreCase(cryptoCurrency)){
+            tickers = api.getTickers(cryptoCurrency,fiatCurrency);
+        }else
+            tickers = api.getTickers(fiatCurrency);
+
         for (int i = 0; i < tickers.length; i++) {
             CMCTicker ticker = tickers[i];
             if (cryptoCurrency.equalsIgnoreCase(ticker.getSymbol())) {
