@@ -68,7 +68,7 @@ public class LitecoinExtension implements IExtension{
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (ICurrencies.LTC.equalsIgnoreCase(cryptoCurrency)) {
+        if (Currencies.LTC.equalsIgnoreCase(cryptoCurrency)) {
             return new LitecoinAddressValidator();
         }
         return null;
@@ -103,7 +103,7 @@ public class LitecoinExtension implements IExtension{
                     } catch (Throwable e) {
                     }
                 }
-                String preferedFiatCurrency = ICurrencies.USD;
+                String preferedFiatCurrency = Currencies.USD;
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
@@ -116,7 +116,7 @@ public class LitecoinExtension implements IExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.LTC);
+        result.add(Currencies.LTC);
         return result;
     }
 

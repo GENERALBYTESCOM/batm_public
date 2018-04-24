@@ -1,6 +1,7 @@
 package com.generalbytes.batm.server.extensions.extra.litecoin.sources;
 
-import com.generalbytes.batm.server.extensions.ICurrencies;
+import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IRateSource;
 
 import java.math.BigDecimal;
@@ -13,28 +14,28 @@ import java.util.Set;
 public class FixPriceRateSource implements IRateSource {
     private BigDecimal rate = BigDecimal.ZERO;
 
-    private String preferedFiatCurrency = ICurrencies.USD;
+    private String preferedFiatCurrency = Currencies.USD;
 
     public FixPriceRateSource(BigDecimal rate,String preferedFiatCurrency) {
         this.rate = rate;
-        if (ICurrencies.EUR.equalsIgnoreCase(preferedFiatCurrency)) {
-            this.preferedFiatCurrency = ICurrencies.EUR;
-        }
-        if (ICurrencies.USD.equalsIgnoreCase(preferedFiatCurrency)) {
-            this.preferedFiatCurrency = ICurrencies.USD;
+        for (String fiatCurrency : Currencies.FIAT_CURRENCIES) {
+            if (fiatCurrency.equalsIgnoreCase(preferedFiatCurrency)) {
+                this.preferedFiatCurrency = fiatCurrency;
+                break;
+            }
         }
     }
 
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.LTC);
+        result.add(Currencies.LTC);
         return result;
     }
 
     @Override
     public BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency) {
-        if (ICurrencies.LTC.equalsIgnoreCase(cryptoCurrency)) {
+        if (Currencies.LTC.equalsIgnoreCase(cryptoCurrency)) {
             return rate;
         }
         return null;
@@ -43,8 +44,8 @@ public class FixPriceRateSource implements IRateSource {
     @Override
     public Set<String> getFiatCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.USD);
-        result.add(ICurrencies.EUR);
+        result.add(Currencies.USD);
+        result.add(Currencies.EUR);
         return result;
     }
 

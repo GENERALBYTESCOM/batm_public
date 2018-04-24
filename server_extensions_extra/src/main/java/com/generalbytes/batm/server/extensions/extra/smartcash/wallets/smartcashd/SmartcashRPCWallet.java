@@ -19,7 +19,7 @@ package com.generalbytes.batm.server.extensions.extra.smartcash.wallets.smartcas
 
 import com.azazar.bitcoin.jsonrpcclient.BitcoinException;
 import com.azazar.bitcoin.jsonrpcclient.BitcoinJSONRPCClient;
-import com.generalbytes.batm.server.extensions.ICurrencies;
+import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IWallet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +32,7 @@ import java.util.Set;
 
 public class SmartcashRPCWallet implements IWallet{
     private static final Logger log = LoggerFactory.getLogger(SmartcashRPCWallet.class);
-    private static final String CRYPTO_CURRENCY = ICurrencies.SMART;
+    private static final String CRYPTO_CURRENCY = Currencies.SMART;
 
     public SmartcashRPCWallet(String rpcURL, String accountName) {
         this.rpcURL = rpcURL;

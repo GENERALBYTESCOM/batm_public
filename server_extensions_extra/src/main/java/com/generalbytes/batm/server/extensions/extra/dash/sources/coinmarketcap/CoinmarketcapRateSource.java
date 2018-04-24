@@ -1,6 +1,7 @@
 package com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap;
 
-import com.generalbytes.batm.server.extensions.ICurrencies;
+import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IRateSource;
 
 import java.math.BigDecimal;
@@ -16,15 +17,15 @@ import si.mazi.rescu.RestProxyFactory;
 public class CoinmarketcapRateSource implements IRateSource {
     private ICoinmarketcapAPI api;
 
-    private String preferredFiatCurrency = ICurrencies.USD;
+    private String preferredFiatCurrency = Currencies.USD;
 
     public CoinmarketcapRateSource(String preferedFiatCurrency) {
         this();
-        if (ICurrencies.EUR.equalsIgnoreCase(preferedFiatCurrency)) {
-            this.preferredFiatCurrency = ICurrencies.EUR;
+        if (Currencies.EUR.equalsIgnoreCase(preferedFiatCurrency)) {
+            this.preferredFiatCurrency = Currencies.EUR;
         }
-        if (ICurrencies.USD.equalsIgnoreCase(preferedFiatCurrency)) {
-            this.preferredFiatCurrency = ICurrencies.USD;
+        if (Currencies.USD.equalsIgnoreCase(preferedFiatCurrency)) {
+            this.preferredFiatCurrency = Currencies.USD;
         }
     }
 
@@ -35,15 +36,15 @@ public class CoinmarketcapRateSource implements IRateSource {
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.BTC);
-        result.add(ICurrencies.BCH);
-        result.add(ICurrencies.BTX);
-        result.add(ICurrencies.LTC);
-        result.add(ICurrencies.ETH);
-        result.add(ICurrencies.DASH);
-        result.add(ICurrencies.XMR);
-        result.add(ICurrencies.POT);
-        result.add(ICurrencies.FLASH);
+        result.add(Currencies.BTC);
+        result.add(Currencies.BCH);
+        result.add(Currencies.BTX);
+        result.add(Currencies.LTC);
+        result.add(Currencies.ETH);
+        result.add(Currencies.DASH);
+        result.add(Currencies.XMR);
+        result.add(Currencies.POT);
+        result.add(Currencies.FLASH);
 
         return result;
     }
@@ -51,15 +52,15 @@ public class CoinmarketcapRateSource implements IRateSource {
     @Override
     public Set<String> getFiatCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.USD);
-        result.add(ICurrencies.EUR);
+        result.add(Currencies.USD);
+        result.add(Currencies.EUR);
         return result;
     }
 
 
     @Override
     public String getPreferredFiatCurrency() {
-        return ICurrencies.USD;
+        return Currencies.USD;
     }
 
 
@@ -69,7 +70,7 @@ public class CoinmarketcapRateSource implements IRateSource {
             return null;
         }
         CMCTicker[] tickers;
-        if(ICurrencies.FLASH.equalsIgnoreCase(cryptoCurrency)){
+        if(Currencies.FLASH.equalsIgnoreCase(cryptoCurrency)){
             tickers = api.getTickers(cryptoCurrency,fiatCurrency);
         }else
             tickers = api.getTickers(fiatCurrency);
@@ -77,7 +78,7 @@ public class CoinmarketcapRateSource implements IRateSource {
         for (int i = 0; i < tickers.length; i++) {
             CMCTicker ticker = tickers[i];
             if (cryptoCurrency.equalsIgnoreCase(ticker.getSymbol())) {
-                if (ICurrencies.EUR.equalsIgnoreCase(fiatCurrency)) {
+                if (Currencies.EUR.equalsIgnoreCase(fiatCurrency)) {
                     return ticker.getPrice_eur();
                 }else{
                     return ticker.getPrice_usd();
@@ -88,8 +89,8 @@ public class CoinmarketcapRateSource implements IRateSource {
     }
 
 //    public static void main(String[] args) {
-//        CoinmarketcapRateSource rs = new CoinmarketcapRateSource(ICurrencies.EUR);
-//        BigDecimal exchangeRateLast = rs.getExchangeRateLast(ICurrencies.BTC, ICurrencies.EUR);
+//        CoinmarketcapRateSource rs = new CoinmarketcapRateSource(Currencies.EUR);
+//        BigDecimal exchangeRateLast = rs.getExchangeRateLast(Currencies.BTC, Currencies.EUR);
 //        System.out.println("exchangeRateLast = " + exchangeRateLast);
 //    }
 }

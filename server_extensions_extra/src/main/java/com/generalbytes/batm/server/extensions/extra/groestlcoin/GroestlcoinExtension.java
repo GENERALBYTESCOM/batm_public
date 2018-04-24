@@ -70,7 +70,7 @@ public class GroestlcoinExtension implements IExtension{
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (ICurrencies.GRS.equalsIgnoreCase(cryptoCurrency)) {
+        if (Currencies.GRS.equalsIgnoreCase(cryptoCurrency)) {
             return new GroestlcoinAddressValidator();
         }
         return null;
@@ -95,7 +95,7 @@ public class GroestlcoinExtension implements IExtension{
                     } catch (Throwable e) {
                     }
                 }
-                String preferedFiatCurrency = ICurrencies.USD;
+                String preferedFiatCurrency = Currencies.USD;
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
@@ -119,7 +119,7 @@ public class GroestlcoinExtension implements IExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.GRS);
+        result.add(Currencies.GRS);
         return result;
     }
 

@@ -68,7 +68,7 @@ public class ViacoinExtension implements IExtension{
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency){
-        if(ICurrencies.VIA.equalsIgnoreCase(cryptoCurrency)){
+        if(Currencies.VIA.equalsIgnoreCase(cryptoCurrency)){
             return new ViacoinAddressValidator();
         }
         return null;
@@ -83,7 +83,7 @@ public class ViacoinExtension implements IExtension{
     public IPaymentProcessor createPaymentProcessor(String paymentProcessorLogin){
         return null;
     }
-    
+
     @Override
     public IRateSource createRateSource(String sourceLogin) {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
@@ -98,13 +98,13 @@ public class ViacoinExtension implements IExtension{
                     } catch (Throwable e) {
                     }
                 }
-                String preferedFiatCurrency = ICurrencies.USD;
+                String preferedFiatCurrency = Currencies.USD;
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new FixPriceRateSource(rate,preferedFiatCurrency);
             }else if ("poloniexrs".equalsIgnoreCase(rsType)) {
-                String preferredFiatCurrency = ICurrencies.USD;
+                String preferredFiatCurrency = Currencies.USD;
                 if (st.hasMoreTokens()) {
                     preferredFiatCurrency = st.nextToken();
                 }
@@ -118,7 +118,7 @@ public class ViacoinExtension implements IExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies(){
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.VIA);
+        result.add(Currencies.VIA);
         return result;
     }
 

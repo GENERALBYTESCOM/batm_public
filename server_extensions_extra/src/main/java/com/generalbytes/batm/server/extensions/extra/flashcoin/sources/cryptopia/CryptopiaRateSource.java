@@ -1,6 +1,7 @@
 package com.generalbytes.batm.server.extensions.extra.flashcoin.sources.cryptopia;
 
-import com.generalbytes.batm.server.extensions.ICurrencies;
+import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +28,7 @@ public class CryptopiaRateSource implements IRateSource {
 
     public CryptopiaRateSource(String preferedFiatCurrency) {
         if (!getFiatCurrencies().contains(preferedFiatCurrency)) {
-            preferedFiatCurrency = ICurrencies.BTC;
+            preferedFiatCurrency = Currencies.BTC;
         }
         this.preferedFiatCurrency = preferedFiatCurrency;
 
@@ -38,15 +39,15 @@ public class CryptopiaRateSource implements IRateSource {
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.FLASH);
+        result.add(Currencies.FLASH);
         return result;
     }
 
     @Override
     public Set<String> getFiatCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.BTC);
-       // result.add(ICurrencies.LTC);
+        result.add(Currencies.BTC);
+       // result.add(Currencies.LTC);
 
         return result;
     }
@@ -92,7 +93,7 @@ public class CryptopiaRateSource implements IRateSource {
     }
 
     private BigDecimal getExchangeRateLastSync(String cryptoCurrency, String fiatCurrency) {
-        if (!ICurrencies.FLASH.equalsIgnoreCase(cryptoCurrency)) {
+        if (!Currencies.FLASH.equalsIgnoreCase(cryptoCurrency)) {
             return null; //unsupported currency
         }
         String key = cryptoCurrency +"_" + fiatCurrency;
@@ -104,10 +105,10 @@ public class CryptopiaRateSource implements IRateSource {
         return null;
     }
    public static void main(String[] args) {
-       CryptopiaRateSource rs = new CryptopiaRateSource(ICurrencies.BTC);
-        BigDecimal exchangeRateLast = rs.getExchangeRateLast(ICurrencies.FLASH, ICurrencies.BTC);
+       CryptopiaRateSource rs = new CryptopiaRateSource(Currencies.BTC);
+        BigDecimal exchangeRateLast = rs.getExchangeRateLast(Currencies.FLASH, Currencies.BTC);
         System.out.println("BTC exchangeRateLast = " + exchangeRateLast);
-       exchangeRateLast = rs.getExchangeRateLast(ICurrencies.FLASH, ICurrencies.LTC);
+       exchangeRateLast = rs.getExchangeRateLast(Currencies.FLASH, Currencies.LTC);
        System.out.println("LTC exchangeRateLast = " + exchangeRateLast);
     }
 }

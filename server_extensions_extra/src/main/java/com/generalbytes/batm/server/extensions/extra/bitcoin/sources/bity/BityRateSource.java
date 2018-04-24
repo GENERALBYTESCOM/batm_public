@@ -19,7 +19,8 @@
 
 package com.generalbytes.batm.server.extensions.extra.bitcoin.sources.bity;
 
-import com.generalbytes.batm.server.extensions.ICurrencies;
+import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.bity.dto.RateInfo;
 import si.mazi.rescu.RestProxyFactory;
@@ -37,14 +38,14 @@ public class BityRateSource implements IRateSourceAdvanced{
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.BTC);
+        result.add(Currencies.BTC);
         return result;
     }
 
     @Override
     public Set<String> getFiatCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.CHF);
+        result.add(Currencies.CHF);
         return result;
     }
 
@@ -55,7 +56,7 @@ public class BityRateSource implements IRateSourceAdvanced{
 
     @Override
     public String getPreferredFiatCurrency() {
-        return ICurrencies.CHF;
+        return Currencies.CHF;
     }
 
 
