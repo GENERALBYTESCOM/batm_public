@@ -17,7 +17,8 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.litecoin.sources.btce;
 
-import com.generalbytes.batm.server.extensions.ICurrencies;
+import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,16 +34,16 @@ public class BTCeRateSource implements IRateSource{
     private static HashMap<String,Long> rateTimes = new HashMap<String, Long>();
     private static final long MAXIMUM_ALLOWED_TIME_OFFSET = 30 * 1000; //30sec
 
-    private String preferedFiatCurrency = ICurrencies.USD;
+    private String preferedFiatCurrency = Currencies.USD;
     private IBTCeRateAPI api;
 
     public BTCeRateSource(String preferedFiatCurrency) {
         this();
-        if (ICurrencies.EUR.equalsIgnoreCase(preferedFiatCurrency)) {
-            this.preferedFiatCurrency = ICurrencies.EUR;
+        if (Currencies.EUR.equalsIgnoreCase(preferedFiatCurrency)) {
+            this.preferedFiatCurrency = Currencies.EUR;
         }
-        if (ICurrencies.USD.equalsIgnoreCase(preferedFiatCurrency)) {
-            this.preferedFiatCurrency = ICurrencies.USD;
+        if (Currencies.USD.equalsIgnoreCase(preferedFiatCurrency)) {
+            this.preferedFiatCurrency = Currencies.USD;
         }
     }
 
@@ -52,10 +53,10 @@ public class BTCeRateSource implements IRateSource{
 
     @Override
     public BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency) {
-        if (!(ICurrencies.BTC.equalsIgnoreCase(cryptoCurrency) || ICurrencies.LTC.equalsIgnoreCase(cryptoCurrency))) {
+        if (!(Currencies.BTC.equalsIgnoreCase(cryptoCurrency) || Currencies.LTC.equalsIgnoreCase(cryptoCurrency))) {
             return null;
         }
-        if (!(ICurrencies.USD.equalsIgnoreCase(fiatCurrency) || ICurrencies.EUR.equalsIgnoreCase(fiatCurrency))) {
+        if (!(Currencies.USD.equalsIgnoreCase(fiatCurrency) || Currencies.EUR.equalsIgnoreCase(fiatCurrency))) {
             return null;
         }
 
@@ -87,10 +88,10 @@ public class BTCeRateSource implements IRateSource{
     }
 
     private BigDecimal getExchangeRateLastSync(String cryptoCurrency, String fiatCurrency) {
-        if (!(ICurrencies.BTC.equalsIgnoreCase(cryptoCurrency) || ICurrencies.LTC.equalsIgnoreCase(cryptoCurrency))) {
+        if (!(Currencies.BTC.equalsIgnoreCase(cryptoCurrency) || Currencies.LTC.equalsIgnoreCase(cryptoCurrency))) {
             return null;
         }
-        if (!(ICurrencies.USD.equalsIgnoreCase(fiatCurrency) || ICurrencies.EUR.equalsIgnoreCase(fiatCurrency))) {
+        if (!(Currencies.USD.equalsIgnoreCase(fiatCurrency) || Currencies.EUR.equalsIgnoreCase(fiatCurrency))) {
             return null;
         }
         BTCeResponse ticker = api.getTicker(cryptoCurrency.toLowerCase(), fiatCurrency.toLowerCase());
@@ -103,16 +104,16 @@ public class BTCeRateSource implements IRateSource{
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.BTC);
-        result.add(ICurrencies.LTC);
+        result.add(Currencies.BTC);
+        result.add(Currencies.LTC);
         return result;
     }
 
     @Override
     public Set<String> getFiatCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.USD);
-        result.add(ICurrencies.EUR);
+        result.add(Currencies.USD);
+        result.add(Currencies.EUR);
         return result;
     }
 

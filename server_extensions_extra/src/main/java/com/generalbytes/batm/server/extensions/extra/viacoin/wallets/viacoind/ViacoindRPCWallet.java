@@ -19,7 +19,8 @@ package com.generalbytes.batm.server.extensions.extra.viacoin.wallets.viacoind;
 
 import com.azazar.bitcoin.jsonrpcclient.BitcoinException;
 import com.azazar.bitcoin.jsonrpcclient.BitcoinJSONRPCClient;
-import com.generalbytes.batm.server.extensions.ICurrencies;
+import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IWallet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +33,7 @@ import java.util.Set;
 
 public class ViacoindRPCWallet implements IWallet{
     private static final Logger log = LoggerFactory.getLogger(ViacoindRPCWallet.class);
-    private static final String CRYPTO_CURRENCY = ICurrencies.VIA;
+    private static final String CRYPTO_CURRENCY = Currencies.VIA;
 
     public ViacoindRPCWallet(String rpcURL, String accountName){
         this.rpcURL = rpcURL;
@@ -61,8 +62,8 @@ public class ViacoindRPCWallet implements IWallet{
             return null;
         }
 
-        log.info("Viacoind sending coins from " + accountName + " to: " + destinationAddress + " " + amount);        
-        
+        log.info("Viacoind sending coins from " + accountName + " to: " + destinationAddress + " " + amount);
+
         try {
             String result = getClient(rpcURL).sendFrom(accountName, destinationAddress, amount.doubleValue());
             log.debug("result=" + result);

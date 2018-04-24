@@ -18,7 +18,8 @@
 
 package com.generalbytes.batm.server.extensions.extra.tokencoin.wallets.tokencoind;
 
-import com.generalbytes.batm.server.extensions.ICurrencies;
+import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IWallet;
 
 import org.slf4j.Logger;
@@ -49,13 +50,13 @@ public class TokenWallet implements IWallet{
 
     @Override
     public String getPreferredCryptoCurrency() {
-        return ICurrencies.TKN;
+        return Currencies.TKN;
     }
 
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.TKN);
+        result.add(Currencies.TKN);
         return result;
     }
 

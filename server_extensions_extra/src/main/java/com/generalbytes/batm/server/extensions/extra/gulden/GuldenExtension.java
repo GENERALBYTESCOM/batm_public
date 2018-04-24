@@ -70,7 +70,7 @@ public class GuldenExtension implements IExtension{
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (ICurrencies.NLG.equalsIgnoreCase(cryptoCurrency)) {
+        if (Currencies.NLG.equalsIgnoreCase(cryptoCurrency)) {
             return new GuldenAddressValidator();
         }
         return null;
@@ -95,7 +95,7 @@ public class GuldenExtension implements IExtension{
                     } catch (Throwable e) {
                     }
                 }
-                String preferedFiatCurrency = ICurrencies.USD;
+                String preferedFiatCurrency = Currencies.USD;
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
@@ -119,7 +119,7 @@ public class GuldenExtension implements IExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.NLG);
+        result.add(Currencies.NLG);
         return result;
     }
 

@@ -64,7 +64,7 @@ public class NXTExtension implements IExtension{
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (ICurrencies.NXT.equalsIgnoreCase(cryptoCurrency)) {
+        if (Currencies.NXT.equalsIgnoreCase(cryptoCurrency)) {
             return new NXTAddressValidator();
         }
         return null;
@@ -89,13 +89,13 @@ public class NXTExtension implements IExtension{
                     } catch (Throwable e) {
                     }
                 }
-                String preferedFiatCurrency = ICurrencies.USD;
+                String preferedFiatCurrency = Currencies.USD;
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new FixPriceRateSource(rate,preferedFiatCurrency);
             }else if ("poloniexrs".equalsIgnoreCase(rsType)) {
-                String preferredFiatCurrency = ICurrencies.USD;
+                String preferredFiatCurrency = Currencies.USD;
                 if (st.hasMoreTokens()) {
                     preferredFiatCurrency = st.nextToken();
                 }
@@ -114,7 +114,7 @@ public class NXTExtension implements IExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.NXT);
+        result.add(Currencies.NXT);
         return result;
     }
 

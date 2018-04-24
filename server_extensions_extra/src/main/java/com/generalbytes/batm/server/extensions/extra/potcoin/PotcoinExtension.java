@@ -40,7 +40,7 @@ public class PotcoinExtension implements IExtension{
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (ICurrencies.POT.equalsIgnoreCase(cryptoCurrency)) {
+        if (Currencies.POT.equalsIgnoreCase(cryptoCurrency)) {
             return new PotcoinAddressValidator();
         }
         return null;
@@ -70,7 +70,7 @@ public class PotcoinExtension implements IExtension{
                     } catch (Throwable e) {
                     }
                 }
-                String preferedFiatCurrency = ICurrencies.CAD;
+                String preferedFiatCurrency = Currencies.CAD;
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
@@ -84,7 +84,7 @@ public class PotcoinExtension implements IExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.POT);
+        result.add(Currencies.POT);
         return result;
     }
 

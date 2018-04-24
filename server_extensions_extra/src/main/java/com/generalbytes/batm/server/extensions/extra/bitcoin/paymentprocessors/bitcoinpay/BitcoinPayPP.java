@@ -18,7 +18,8 @@
 
 package com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.bitcoinpay;
 
-import com.generalbytes.batm.server.extensions.ICurrencies;
+import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IPaymentProcessor;
 import com.generalbytes.batm.server.extensions.IPaymentProcessorPaymentResponse;
 import com.generalbytes.batm.server.extensions.IPaymentProcessorPaymentStatus;
@@ -169,7 +170,7 @@ public class BitcoinPayPP implements IPaymentProcessor{
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.BTC);
+        result.add(Currencies.BTC);
         return result;
 
     }
@@ -177,9 +178,9 @@ public class BitcoinPayPP implements IPaymentProcessor{
     @Override
     public Set<String> getFiatCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.USD);
-        result.add(ICurrencies.EUR);
-        result.add(ICurrencies.CZK);
+        result.add(Currencies.USD);
+        result.add(Currencies.EUR);
+        result.add(Currencies.CZK);
         return result;
     }
 }

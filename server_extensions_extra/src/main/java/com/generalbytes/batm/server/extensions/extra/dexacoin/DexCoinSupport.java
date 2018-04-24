@@ -10,7 +10,7 @@ import java.util.StringTokenizer;
 
 public class DexCoinSupport implements IExchange, IWallet, IRateSource, IExtension, ICryptoAddressValidator {
 
-    private static final String CRYPTO_CURRENCY = ICurrencies.DEX;
+    private static final String CRYPTO_CURRENCY = Currencies.DEX;
     private static final BigDecimal WALLET_BALANCE = new BigDecimal("1000000");
     private static final BigDecimal EXCHANGE_BALANCE = new BigDecimal("2000000");
     private static final String WALLET_ADDRESS = CRYPTO_CURRENCY.substring(1) + "GnubsaWBQf6J2TTvNLF5xLkMydhTjWsQi";
@@ -24,11 +24,11 @@ public class DexCoinSupport implements IExchange, IWallet, IRateSource, IExtensi
     public DexCoinSupport(String preferredFiatCurrency, BigDecimal rate) {
         this.rate = rate;
         this.preferredFiatCurrency = preferredFiatCurrency;
-        if (ICurrencies.EUR.equalsIgnoreCase(preferredFiatCurrency)) {
-            this.preferredFiatCurrency = ICurrencies.EUR;
+        if (Currencies.EUR.equalsIgnoreCase(preferredFiatCurrency)) {
+            this.preferredFiatCurrency = Currencies.EUR;
         }
-        if (ICurrencies.USD.equalsIgnoreCase(preferredFiatCurrency)) {
-            this.preferredFiatCurrency = ICurrencies.USD;
+        if (Currencies.USD.equalsIgnoreCase(preferredFiatCurrency)) {
+            this.preferredFiatCurrency = Currencies.USD;
         }
     }
 
@@ -135,7 +135,7 @@ public class DexCoinSupport implements IExchange, IWallet, IRateSource, IExtensi
                     } catch (Throwable e) {
                     }
                 }
-                String preferredFiatCurrency = ICurrencies.USD;
+                String preferredFiatCurrency = Currencies.USD;
                 if (st.hasMoreTokens()) {
                     preferredFiatCurrency = st.nextToken().toUpperCase();
                 }
@@ -172,7 +172,7 @@ public class DexCoinSupport implements IExchange, IWallet, IRateSource, IExtensi
                     } catch (Throwable e) {
                     }
                 }
-                String preferedFiatCurrency = ICurrencies.USD;
+                String preferedFiatCurrency = Currencies.USD;
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }

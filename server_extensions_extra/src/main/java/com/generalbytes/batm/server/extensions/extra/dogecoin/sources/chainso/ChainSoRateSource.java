@@ -1,6 +1,7 @@
 package com.generalbytes.batm.server.extensions.extra.dogecoin.sources.chainso;
 
-import com.generalbytes.batm.server.extensions.ICurrencies;
+import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,10 +31,10 @@ public class ChainSoRateSource implements IRateSource{
 
     @Override
     public BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency) {
-        if (!ICurrencies.DOGE.equalsIgnoreCase(cryptoCurrency)) {
+        if (!Currencies.DOGE.equalsIgnoreCase(cryptoCurrency)) {
             return null;
         }
-        if (!ICurrencies.USD.equalsIgnoreCase(fiatCurrency)) {
+        if (!Currencies.USD.equalsIgnoreCase(fiatCurrency)) {
             return null;
         }
 
@@ -65,10 +66,10 @@ public class ChainSoRateSource implements IRateSource{
     }
 
     private BigDecimal getExchangeRateLastSync(String cryptoCurrency, String fiatCurrency) {
-        if (!ICurrencies.DOGE.equalsIgnoreCase(cryptoCurrency)) {
+        if (!Currencies.DOGE.equalsIgnoreCase(cryptoCurrency)) {
             return null;
         }
-        if (!ICurrencies.USD.equalsIgnoreCase(fiatCurrency)) {
+        if (!Currencies.USD.equalsIgnoreCase(fiatCurrency)) {
             return null;
         }
 
@@ -88,19 +89,19 @@ public class ChainSoRateSource implements IRateSource{
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.DOGE);
+        result.add(Currencies.DOGE);
         return result;
     }
 
     @Override
     public Set<String> getFiatCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.USD);
+        result.add(Currencies.USD);
         return result;
     }
 
     @Override
     public String getPreferredFiatCurrency() {
-        return ICurrencies.USD;
+        return Currencies.USD;
     }
 }

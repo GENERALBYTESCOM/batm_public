@@ -19,7 +19,7 @@ package com.generalbytes.batm.server.extensions.extra.bitcore.wallets.bitcored;
 
 import com.azazar.bitcoin.jsonrpcclient.BitcoinException;
 import com.azazar.bitcoin.jsonrpcclient.BitcoinJSONRPCClient;
-import com.generalbytes.batm.server.extensions.ICurrencies;
+import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IWallet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +32,7 @@ import java.util.Set;
 
 public class BitcoredRPCWallet implements IWallet{
     private static final Logger log = LoggerFactory.getLogger(BitcoredRPCWallet.class);
-    private static final String CRYPTO_CURRENCY = ICurrencies.BTX;
+    private static final String CRYPTO_CURRENCY = Currencies.BTX;
 
     public BitcoredRPCWallet(String rpcURL, String accountName) {
         this.rpcURL = rpcURL;
