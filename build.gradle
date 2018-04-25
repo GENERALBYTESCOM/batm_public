@@ -22,7 +22,7 @@ allprojects {
         }
     }
     //cross-compilation stuff for Java 7
-    assert (System.env.JDK_7_HOME != null): "Set environment property JDK_7_HOME"
+    assert (System.env.JDK_7_HOME != null): "Set environment variable JDK_7_HOME"
     project.ext.targetJavaHome = System.env.JDK_7_HOME
     def javaExecutablesPath = new File(targetJavaHome, 'bin')
     def javaExecutables = [:].withDefault { execName ->

@@ -1,6 +1,10 @@
 apply plugin: "java"
 apply plugin: "distribution"
 apply plugin: "gb-gradle"
+apply plugin: 'maven-publish'
+
+group = projectGroup
+version = projectVersion
 
 jar {
     baseName 'batm_server_extensions_api'
@@ -19,4 +23,22 @@ dependencies {
     compile(group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25')
     compile(group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25')
     compile(group: 'com.sun.mail', name: 'javax.mail', version: '1.4.7')
+}
+
+publishing {
+    repositories {
+        maven {
+            credentials {
+                username gbArtifactoryUser
+                password gbArtifactoryPassword
+            }
+            url gbArtifactoryUploadUrl
+        }
+    }
+
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
 }
