@@ -19,6 +19,7 @@ package com.generalbytes.batm.server.extensions.extra.smartcash;
 
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.extra.smartcash.sources.FixPriceRateSource;
+import com.generalbytes.batm.server.extensions.extra.smartcash.sources.smartcash.SmartCashRateSource;
 import com.generalbytes.batm.server.extensions.extra.smartcash.wallets.smartcashd.SmartcashRPCWallet;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
@@ -99,6 +100,12 @@ public class SmartcashExtension implements IExtension{
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new FixPriceRateSource(rate,preferedFiatCurrency);
+            }else if ("smartapi".equalsIgnoreCase(exchangeType)) {
+                String preferredFiatCurrency = Currencies.USD;
+                if (st.hasMoreTokens()) {
+                    preferredFiatCurrency = st.nextToken();
+                }
+                return new SmartCashRateSource(preferredFiatCurrency);
             }
 
         }
