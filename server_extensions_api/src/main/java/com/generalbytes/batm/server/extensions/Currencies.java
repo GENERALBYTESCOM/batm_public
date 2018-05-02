@@ -18,7 +18,11 @@
 
 package com.generalbytes.batm.server.extensions;
 
-public interface ICurrencies {
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class Currencies {
     public static final String BTC = "BTC";
     public static final String BCH = "BCH"; //Bitcoin Cash
     public static final String BTX = "BTX"; //BitCore
@@ -57,4 +61,50 @@ public interface ICurrencies {
     public static final String XAF = "XAF";
     public static final String XAU = "XAU"; //gold
     public static final String NONE = "";
+
+    public static final List<String> FIAT_CURRENCIES;
+    public static final List<String> CRYPTO_CURRENCIES;
+
+    static {
+        List<String> crypto = new ArrayList<>();
+        crypto.add(BTC);
+        crypto.add(BCH);
+        crypto.add(BTX);
+        crypto.add(ETH);
+        crypto.add(LTC);
+        crypto.add(VIA);
+        crypto.add(DEX);
+        crypto.add(DASH);
+        crypto.add(DOGE);
+        crypto.add(FLASH);
+        crypto.add(MAX);
+        crypto.add(LEO);
+        crypto.add(NLG);
+        crypto.add(GRS);
+        crypto.add(ICG);
+        crypto.add(NBT);
+        crypto.add(NXT);
+        crypto.add(POT);
+        crypto.add(SMART);
+        crypto.add(START);
+        crypto.add(TKN);
+        crypto.add(WDC);
+        crypto.add(XMR);
+        CRYPTO_CURRENCIES = Collections.unmodifiableList(crypto);
+
+        List<String> fiat = new ArrayList<>();
+        fiat.add(CAD);
+        fiat.add(CHF);
+        fiat.add(CNY);
+        fiat.add(CZK);
+        fiat.add(EUR);
+        fiat.add(GBP);
+        fiat.add(HUF);
+        fiat.add(JPY);
+        fiat.add(SGD);
+        fiat.add(USD);
+        fiat.add(XAF);
+        fiat.add(XAU);
+        FIAT_CURRENCIES = Collections.unmodifiableList(fiat);
+    }
 }

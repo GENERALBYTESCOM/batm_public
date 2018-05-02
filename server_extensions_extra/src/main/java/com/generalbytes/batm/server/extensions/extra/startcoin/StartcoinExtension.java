@@ -69,7 +69,7 @@ public class StartcoinExtension implements IExtension{
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (ICurrencies.START.equalsIgnoreCase(cryptoCurrency)) {
+        if (Currencies.START.equalsIgnoreCase(cryptoCurrency)) {
             return new StartcoinAddressValidator();
         }
         return null;
@@ -94,7 +94,7 @@ public class StartcoinExtension implements IExtension{
                     } catch (Throwable e) {
                     }
                 }
-                String preferedFiatCurrency = ICurrencies.USD;
+                String preferedFiatCurrency = Currencies.USD;
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
@@ -113,7 +113,7 @@ public class StartcoinExtension implements IExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.START);
+        result.add(Currencies.START);
         return result;
     }
 

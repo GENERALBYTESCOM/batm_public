@@ -17,7 +17,8 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.groestlcoin.sources;
 
-import com.generalbytes.batm.server.extensions.ICurrencies;
+import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,10 +44,10 @@ public class GroestlcoinTickerRateSource implements IRateSource{
 
     @Override
     public BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency) {
-        if (!(ICurrencies.GRS.equalsIgnoreCase(cryptoCurrency))) {
+        if (!(Currencies.GRS.equalsIgnoreCase(cryptoCurrency))) {
             return null;
         }
-        if (!(ICurrencies.EUR.equalsIgnoreCase(fiatCurrency))) {
+        if (!(Currencies.EUR.equalsIgnoreCase(fiatCurrency))) {
             return null;
         }
 
@@ -78,15 +79,15 @@ public class GroestlcoinTickerRateSource implements IRateSource{
     }
 
     private BigDecimal getExchangeRateLastSync(String cryptoCurrency, String fiatCurrency) {
-        if (!(ICurrencies.GRS.equalsIgnoreCase(cryptoCurrency))) {
+        if (!(Currencies.GRS.equalsIgnoreCase(cryptoCurrency))) {
             return null;
         }
-        if (!(ICurrencies.EUR.equalsIgnoreCase(fiatCurrency))) {
+        if (!(Currencies.EUR.equalsIgnoreCase(fiatCurrency))) {
             return null;
         }
         GroestlcoinTickerResponse ticker = api.getTicker();
         if (ticker != null && ticker.getEUR() != null) {
-			if (ICurrencies.EUR.equalsIgnoreCase(fiatCurrency)){
+			if (Currencies.EUR.equalsIgnoreCase(fiatCurrency)){
                 return ticker.getEUR().getSell15m();
             }
             return null;
@@ -97,20 +98,20 @@ public class GroestlcoinTickerRateSource implements IRateSource{
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.GRS);
+        result.add(Currencies.GRS);
         return result;
     }
 
     @Override
     public Set<String> getFiatCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.EUR);
+        result.add(Currencies.EUR);
         return result;
     }
 
     @Override
     public String getPreferredFiatCurrency() {
-        return ICurrencies.EUR;
+        return Currencies.EUR;
     }
 
     public static void main(String[] args) {

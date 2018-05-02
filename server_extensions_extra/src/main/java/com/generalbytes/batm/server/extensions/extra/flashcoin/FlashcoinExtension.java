@@ -71,7 +71,7 @@ public class FlashcoinExtension implements IExtension{
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (ICurrencies.FLASH.equalsIgnoreCase(cryptoCurrency)) {
+        if (Currencies.FLASH.equalsIgnoreCase(cryptoCurrency)) {
             return new FlashcoinAddressValidator();
         }
         return null;
@@ -94,13 +94,13 @@ public class FlashcoinExtension implements IExtension{
             String exchangeType = st.nextToken();
 
             if ("cryptopia".equalsIgnoreCase(exchangeType)) {
-                String preferredFiatCurrency = ICurrencies.BTC;
+                String preferredFiatCurrency = Currencies.BTC;
                 if (st.hasMoreTokens()) {
                     preferredFiatCurrency = st.nextToken();
                 }
                 return new CryptopiaRateSource(preferredFiatCurrency);
             }else  if ("coinexchange".equalsIgnoreCase(exchangeType)) {
-                String preferredFiatCurrency = ICurrencies.BTC;
+                String preferredFiatCurrency = Currencies.BTC;
                 if (st.hasMoreTokens()) {
                     preferredFiatCurrency = st.nextToken();
                 }
@@ -115,7 +115,7 @@ public class FlashcoinExtension implements IExtension{
                     } catch (Throwable e) {
                     }
                 }
-                String preferedFiatCurrency = ICurrencies.USD;
+                String preferedFiatCurrency = Currencies.USD;
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
@@ -128,7 +128,7 @@ public class FlashcoinExtension implements IExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.FLASH);
+        result.add(Currencies.FLASH);
         return result;
     }
 

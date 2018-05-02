@@ -17,7 +17,8 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitcore;
 
-import com.generalbytes.batm.server.extensions.ICurrencies;
+import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IWallet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,12 +93,12 @@ public class BitcoreWallet implements IWallet {
     @Override
     public Set<String> getCryptoCurrencies() {
         HashSet<String> s = new HashSet<String>();
-        s.add(ICurrencies.BTC);
+        s.add(Currencies.BTC);
         return s;
     }
 
     @Override
     public String getPreferredCryptoCurrency() {
-        return ICurrencies.BTC;
+        return Currencies.BTC;
     }
 }

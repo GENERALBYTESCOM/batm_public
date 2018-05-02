@@ -73,20 +73,20 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
     public Set<String> getCryptoCurrencies() {
         Set<String> cryptoCurrencies = new HashSet<String>();
-        cryptoCurrencies.add(ICurrencies.BTC);
-        cryptoCurrencies.add(ICurrencies.ETH);
-        cryptoCurrencies.add(ICurrencies.LTC);
+        cryptoCurrencies.add(Currencies.BTC);
+        cryptoCurrencies.add(Currencies.ETH);
+        cryptoCurrencies.add(Currencies.LTC);
         return cryptoCurrencies;
     }
 
     public Set<String> getFiatCurrencies() {
         Set<String> fiatCurrencies = new HashSet<String>();
-        fiatCurrencies.add(ICurrencies.USD);
+        fiatCurrencies.add(Currencies.USD);
         return fiatCurrencies;
     }
 
     public String getPreferredFiatCurrency() {
-        return ICurrencies.USD;
+        return Currencies.USD;
     }
 
 
@@ -148,7 +148,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
     }
 
     public BigDecimal getFiatBalance(String fiatCurrency) {
-        if (!ICurrencies.USD.equalsIgnoreCase(fiatCurrency)) {
+        if (!Currencies.USD.equalsIgnoreCase(fiatCurrency)) {
             return BigDecimal.ZERO;
         }
         log.debug("Calling Bitfinex exchange (getBalance)");
@@ -197,8 +197,8 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
             log.error("Bitfinex implementation supports only " + Arrays.toString(getCryptoCurrencies().toArray()));
             return null;
         }
-        if (!ICurrencies.USD.equalsIgnoreCase(fiatCurrencyToUse)) {
-            log.error("Bitfinex supports only " + ICurrencies.USD );
+        if (!Currencies.USD.equalsIgnoreCase(fiatCurrencyToUse)) {
+            log.error("Bitfinex supports only " + Currencies.USD );
             return null;
         }
 
@@ -266,8 +266,8 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
             log.error("Bitfinex implementation supports only " + Arrays.toString(getCryptoCurrencies().toArray()));
             return null;
         }
-        if (!ICurrencies.USD.equalsIgnoreCase(fiatCurrencyToUse)) {
-            log.error("Bitfinex supports only " + ICurrencies.USD );
+        if (!Currencies.USD.equalsIgnoreCase(fiatCurrencyToUse)) {
+            log.error("Bitfinex supports only " + Currencies.USD );
             return null;
         }
         return new PurchaseCoinsTask(amount,cryptoCurrency,fiatCurrencyToUse,description);
@@ -295,8 +295,8 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
             log.error("Bitfinex implementation supports only " + Arrays.toString(getCryptoCurrencies().toArray()));
             return null;
         }
-        if (!ICurrencies.USD.equalsIgnoreCase(fiatCurrencyToUse)) {
-            log.error("Bitfinex supports only " + ICurrencies.USD );
+        if (!Currencies.USD.equalsIgnoreCase(fiatCurrencyToUse)) {
+            log.error("Bitfinex supports only " + Currencies.USD );
             return null;
         }
 
@@ -364,8 +364,8 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
             log.error("Bitfinex implementation supports only " + Arrays.toString(getCryptoCurrencies().toArray()));
             return null;
         }
-        if (!ICurrencies.USD.equalsIgnoreCase(fiatCurrencyToUse)) {
-            log.error("Bitfinex supports only " + ICurrencies.USD );
+        if (!Currencies.USD.equalsIgnoreCase(fiatCurrencyToUse)) {
+            log.error("Bitfinex supports only " + Currencies.USD );
             return null;
         }
         return new SellCoinsTask(amount,cryptoCurrency,fiatCurrencyToUse,description);

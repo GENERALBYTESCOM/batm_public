@@ -77,7 +77,7 @@ public class DashExtension implements IExtension{
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (ICurrencies.DASH.equalsIgnoreCase(cryptoCurrency)) {
+        if (Currencies.DASH.equalsIgnoreCase(cryptoCurrency)) {
             return new DashAddressValidator();
         }
         return null;
@@ -97,7 +97,7 @@ public class DashExtension implements IExtension{
                 if (st.hasMoreTokens()) {
                     return new CryptodiggersRateSource(st.nextToken().toUpperCase());
                 }
-                return new CryptodiggersRateSource(ICurrencies.USD);
+                return new CryptodiggersRateSource(Currencies.USD);
             } else if ("dashfix".equalsIgnoreCase(exchangeType)) {
                 BigDecimal rate = BigDecimal.ZERO;
                 if (st.hasMoreTokens()) {
@@ -106,13 +106,13 @@ public class DashExtension implements IExtension{
                     } catch (Throwable e) {
                     }
                 }
-                String preferedFiatCurrency = ICurrencies.USD;
+                String preferedFiatCurrency = Currencies.USD;
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new FixPriceRateSource(rate, preferedFiatCurrency);
             } else if ("coinmarketcap".equalsIgnoreCase(exchangeType)) {
-                String preferedFiatCurrency = ICurrencies.USD;
+                String preferedFiatCurrency = Currencies.USD;
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
@@ -125,13 +125,13 @@ public class DashExtension implements IExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.BTC);
-        result.add(ICurrencies.BTX);
-        result.add(ICurrencies.BCH);
-        result.add(ICurrencies.LTC);
-        result.add(ICurrencies.XMR);
-        result.add(ICurrencies.DASH);
-        result.add(ICurrencies.POT);
+        result.add(Currencies.BTC);
+        result.add(Currencies.BTX);
+        result.add(Currencies.BCH);
+        result.add(Currencies.LTC);
+        result.add(Currencies.XMR);
+        result.add(Currencies.DASH);
+        result.add(Currencies.POT);
         return result;
     }
 
