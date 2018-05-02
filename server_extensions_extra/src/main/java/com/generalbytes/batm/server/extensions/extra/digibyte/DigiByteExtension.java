@@ -17,16 +17,25 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.digibyte;
 
-import com.generalbytes.batm.server.extensions.*;
+import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
+import com.generalbytes.batm.server.extensions.ICurrencies;
+import com.generalbytes.batm.server.extensions.IExchange;
+import com.generalbytes.batm.server.extensions.IExtension;
+import com.generalbytes.batm.server.extensions.IPaperWalletGenerator;
+import com.generalbytes.batm.server.extensions.IPaymentProcessor;
+import com.generalbytes.batm.server.extensions.IRateSource;
+import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.digibyte.sources.FixPriceRateSource;
-import com.generalbytes.batm.server.extensions.extra.digibyte.sources.coinmarketcap.CoinmarketcapRateSource;
+import com.generalbytes.batm.server.extensions.extra.digibyte.sources.livecoin.LiveCoinRateSource;
 import com.generalbytes.batm.server.extensions.extra.digibyte.wallets.digibyted.DigiByteRPCWallet;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
-
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.StringTokenizer;
 
-public class DigiByteExtension implements IExtension{
+public class DigiByteExtension implements IExtension {
+
   @Override
   public String getName() {
     return "BATM DigiByte extra extension";
@@ -44,8 +53,8 @@ public class DigiByteExtension implements IExtension{
 
   @Override
   public IWallet createWallet(String walletLogin) {
-    if (walletLogin !=null && !walletLogin.trim().isEmpty()) {
-      StringTokenizer st = new StringTokenizer(walletLogin,":");
+    if (walletLogin != null && !walletLogin.trim().isEmpty()) {
+      StringTokenizer st = new StringTokenizer(walletLogin, ":");
       String walletType = st.nextToken();
 
       if ("digibyted".equalsIgnoreCase(walletType)) {
@@ -56,15 +65,16 @@ public class DigiByteExtension implements IExtension{
         String password = st.nextToken();
         String hostname = st.nextToken();
         String port = st.nextToken();
-        String accountName ="";
+        String accountName = "";
         if (st.hasMoreTokens()) {
           accountName = st.nextToken();
         }
 
-
-        if (protocol != null && username != null && password != null && hostname !=null && port != null && accountName != null) {
-          String rpcURL = protocol +"://" + username +":" + password + "@" + hostname +":" + port;
-          return new DigiByteRPCWallet(rpcURL,accountName);
+        if (protocol != null && username != null && password != null && hostname != null
+            && port != null && accountName != null) {
+          String rpcURL =
+              protocol + "://" + username + ":" + password + "@" + hostname + ":" + port;
+          return new DigiByteRPCWallet(rpcURL, accountName);
         }
       }
 
@@ -103,12 +113,12 @@ public class DigiByteExtension implements IExtension{
           preferedFiatCurrency = st.nextToken().toUpperCase();
         }
         return new FixPriceRateSource(rate, preferedFiatCurrency);
-      } else if ("coinmarketcap".equalsIgnoreCase(exchangeType)) {
+      } else if ("livecoin".equalsIgnoreCase(exchangeType)) {
         String preferedFiatCurrency = ICurrencies.USD;
         if (st.hasMoreTokens()) {
           preferedFiatCurrency = st.nextToken().toUpperCase();
         }
-        return new CoinmarketcapRateSource(preferedFiatCurrency);
+        return new LiveCoinRateSource(preferedFiatCurrency);
       }
     }
     return null;

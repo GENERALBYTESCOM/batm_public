@@ -21,16 +21,16 @@ import com.azazar.bitcoin.jsonrpcclient.BitcoinException;
 import com.azazar.bitcoin.jsonrpcclient.BitcoinJSONRPCClient;
 import com.generalbytes.batm.server.extensions.ICurrencies;
 import com.generalbytes.batm.server.extensions.IWallet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class DigiByteRPCWallet implements IWallet{
+public class DigiByteRPCWallet implements IWallet {
+
   private static final Logger log = LoggerFactory.getLogger(DigiByteRPCWallet.class);
   private static final String CRYPTO_CURRENCY = ICurrencies.DGB;
 
@@ -56,15 +56,18 @@ public class DigiByteRPCWallet implements IWallet{
   }
 
   @Override
-  public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
+  public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency,
+      String description) {
     if (!CRYPTO_CURRENCY.equalsIgnoreCase(cryptoCurrency)) {
       log.error("Digibyted wallet error: unknown cryptocurrency.");
       return null;
     }
 
-    log.info("Digibyted sending coins from " + accountName + " to: " + destinationAddress + " " + amount);
+    log.info("Digibyted sending coins from " + accountName + " to: " + destinationAddress + " "
+        + amount);
     try {
-      String result = getClient(rpcURL).sendFrom(accountName, destinationAddress,amount.doubleValue());
+      String result = getClient(rpcURL)
+          .sendFrom(accountName, destinationAddress, amount.doubleValue());
       log.debug("result = " + result);
       return result;
     } catch (BitcoinException e) {
@@ -84,7 +87,7 @@ public class DigiByteRPCWallet implements IWallet{
       List<String> addressesByAccount = getClient(rpcURL).getAddressesByAccount(accountName);
       if (addressesByAccount == null || addressesByAccount.size() == 0) {
         return null;
-      }else{
+      } else {
         return addressesByAccount.get(0);
       }
     } catch (BitcoinException e) {
