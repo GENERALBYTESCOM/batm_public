@@ -16,6 +16,7 @@
 package com.generalbytes.batm.server.extensions.extra.smartcash.sources.smartcash;
 
 import java.math.BigDecimal;
+import java.lang.reflect.Field;
 
 public class APIResponse {
 
@@ -28,13 +29,21 @@ public class APIResponse {
 
     public static class Item {
         public String updated;
-        public Currencies currencies;
+        public Currency currencies;
     }
 
-    public static class Currencies {
+    public static class Currency {
         public BigDecimal USD;
         public BigDecimal EUR;
         public BigDecimal CHF;
+        public BigDecimal CAD;
+        public BigDecimal AUD;
+        public BigDecimal GBP;
+        public BigDecimal BRL;
+        public BigDecimal VEF;
+        public BigDecimal SGD;
+        public BigDecimal KRW;
+        public BigDecimal JPY;
     }
 
     public class Last {
@@ -44,14 +53,16 @@ public class APIResponse {
 
     public BigDecimal getPrice(String fiatCurrency) {
 
-        if (fiatCurrency.equalsIgnoreCase("USD")) {
-            return this.items[0].currencies.USD;
-        }else if (fiatCurrency.equalsIgnoreCase("EUR")) {
-            return this.items[0].currencies.EUR;
-        }else if (fiatCurrency.equalsIgnoreCase("CHF")) {
-            return this.items[0].currencies.CHF;
+        BigDecimal price = null;
+
+        try {
+            Field field = this.items[0].currencies.getClass().getDeclaredField(fiatCurrency);
+            field.setAccessible(true);
+            price = (BigDecimal)field.get(this.items[0].currencies);
+        } catch (Exception e){
+
         }
 
-        return null;
+        return price;
     }
 }

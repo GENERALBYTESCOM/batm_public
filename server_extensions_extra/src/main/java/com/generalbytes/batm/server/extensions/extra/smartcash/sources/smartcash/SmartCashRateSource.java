@@ -33,6 +33,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.lang.reflect.Field;
 
 public class SmartCashRateSource implements IRateSource{
     private static final Logger log = LoggerFactory.getLogger(SmartCashRateSource.class);
@@ -45,9 +46,11 @@ public class SmartCashRateSource implements IRateSource{
     private static final long MAXIMUM_ALLOWED_TIME_OFFSET = 30 * 1000; //30sec
 
     public SmartCashRateSource(String preferedFiatCurrency) {
-        if (preferedFiatCurrency == null) {
+
+        if (!getFiatCurrencies().contains(preferedFiatCurrency)) {
             preferedFiatCurrency = Currencies.USD;
         }
+
         this.preferedFiatCurrency = preferedFiatCurrency;
 
         api = RestProxyFactory.createProxy(ISmartCashAPI.class, "https://api.smartcash.cc");
@@ -56,9 +59,13 @@ public class SmartCashRateSource implements IRateSource{
     @Override
     public Set<String> getFiatCurrencies() {
         Set<String> fiatCurrencies = new HashSet<String>();
-        fiatCurrencies.add(Currencies.USD);
-        fiatCurrencies.add(Currencies.EUR);
-        fiatCurrencies.add(Currencies.CHF);
+
+        Field[] fields = APIResponse.Currency.class.getFields();
+
+        for (Field f : fields) {
+            fiatCurrencies.add(f.getName());
+        }
+
         return fiatCurrencies;
     }
 
@@ -73,7 +80,6 @@ public class SmartCashRateSource implements IRateSource{
         result.add(Currencies.SMART);
         return result;
     }
-
 
     @Override
     public BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency) {
