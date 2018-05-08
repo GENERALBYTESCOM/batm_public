@@ -17,10 +17,7 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 @Path("/v1/ticker")
@@ -28,5 +25,9 @@ import javax.ws.rs.core.MediaType;
 public interface ICoinmarketcapAPI {
     @GET
     @Path("/")
-    CMCTicker[]  getTickers(@QueryParam("convert") String fiatCurrency, @QueryParam ("limit") int limit);
+    CMCTicker[]  getTickers(@QueryParam("convert") String fiatCurrency);
+
+    @GET
+    @Path("/{cryptoToGet}/?convert={convert}")
+    CMCTicker[]  getTickers(@PathParam("cryptoToGet") String cryptoToGet,@QueryParam("convert") String fiatCurrency);
 }
