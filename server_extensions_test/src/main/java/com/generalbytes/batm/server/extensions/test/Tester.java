@@ -396,7 +396,23 @@ public class Tester {
             final IRateSource rs = extension.createRateSource(name + ":" + params);
             if (rs != null) {
                 final Set<String> fiatCurrencies = rs.getFiatCurrencies();
+                StringTokenizer st = null;
 
+                if(params != null && !params.equals(""))
+                        System.out.println("Preferred Fiat Currency = " + preferredFiatCurrency);	
+                        st = new StringTokenizer(params, ":");
+                        String preferredFiatCurrency = rs.getPreferredFiatCurrency();               
+                        String selectedCryptoCurrency = "bitcoin";
+                if (st != null && st.hasMoreTokens()) {
+                        // fiat
+                        preferredFiatCurrency = st.nextToken().toUpperCase();
+                        // crypto
+                        if (st.hasMoreTokens()) {
+                                selectedCryptoCurrency = st.nextToken().toLowerCase();
+                                System.out.println("Selected crypto: " + selectedCryptoCurrency);
+                        }
+                }
+                System.out.println("Preferred Fiat Currency = " + preferredFiatCurrency);	
 								
                 System.out.println("Fiat Currencies:");
                 for (String fiatCurrency : fiatCurrencies) {
