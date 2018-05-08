@@ -25,7 +25,7 @@ import javax.ws.rs.core.MediaType;
 public interface ICoinmarketcapAPI {
     @GET
     @Path("/")
-    CMCTicker[]  getTickers(@QueryParam("convert") String fiatCurrency, @QueryParam ("limit") int limit));
+    CMCTicker[]  getTickers(@QueryParam("convert") String fiatCurrency, @QueryParam ("limit") int limit);
 
     @GET
     @Path("/{cryptoToGet}/?convert={convert}")
