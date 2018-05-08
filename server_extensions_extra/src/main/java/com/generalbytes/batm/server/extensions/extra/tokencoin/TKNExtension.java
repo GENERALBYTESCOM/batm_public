@@ -18,14 +18,8 @@
 
 package com.generalbytes.batm.server.extensions.extra.tokencoin;
 
-import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
-import com.generalbytes.batm.server.extensions.ICurrencies;
-import com.generalbytes.batm.server.extensions.IExchange;
-import com.generalbytes.batm.server.extensions.IExtension;
-import com.generalbytes.batm.server.extensions.IPaperWalletGenerator;
-import com.generalbytes.batm.server.extensions.IPaymentProcessor;
-import com.generalbytes.batm.server.extensions.IRateSource;
-import com.generalbytes.batm.server.extensions.IWallet;
+import com.generalbytes.batm.server.extensions.*;
+import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.extra.tokencoin.sources.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.tokencoin.wallets.paperwallet.TokencoinPaperWalletGenerator;
 import com.generalbytes.batm.server.extensions.extra.tokencoin.wallets.tokencoind.TokenWallet;
@@ -68,7 +62,7 @@ public class TKNExtension implements IExtension{
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (ICurrencies.TKN.equalsIgnoreCase(cryptoCurrency)) {
+        if (Currencies.TKN.equalsIgnoreCase(cryptoCurrency)) {
             return new TKNAddressValidator();
         }
         return null;
@@ -76,7 +70,7 @@ public class TKNExtension implements IExtension{
 
     @Override
     public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency) {
-        if (ICurrencies.TKN.equalsIgnoreCase(cryptoCurrency)) {
+        if (Currencies.TKN.equalsIgnoreCase(cryptoCurrency)) {
             return new TokencoinPaperWalletGenerator();
         }
         return null;
@@ -96,7 +90,7 @@ public class TKNExtension implements IExtension{
                     } catch (Throwable e) {
                     }
                 }
-                String preferedFiatCurrency = ICurrencies.EUR;
+                String preferedFiatCurrency = Currencies.EUR;
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
@@ -115,7 +109,7 @@ public class TKNExtension implements IExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.TKN);
+        result.add(Currencies.TKN);
         return result;
     }
 

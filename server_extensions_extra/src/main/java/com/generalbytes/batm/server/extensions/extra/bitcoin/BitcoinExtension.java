@@ -51,7 +51,7 @@ public class BitcoinExtension implements IExtension{
                 String apiSecret = paramTokenizer.nextToken();
                 return new BitfinexExchange(apiKey, apiSecret);
             } else if ("itbit".equalsIgnoreCase(prefix)) {
-                String preferredFiatCurrency = ICurrencies.USD;
+                String preferredFiatCurrency = Currencies.USD;
                 String userId = paramTokenizer.nextToken();
                 String accountId = paramTokenizer.nextToken();
                 String clientKey = paramTokenizer.nextToken();
@@ -105,7 +105,7 @@ public class BitcoinExtension implements IExtension{
 
                 if (protocol != null && username != null && password != null && hostname != null && port != null && accountName != null) {
                     String rpcURL = protocol + "://" + username + ":" + password + "@" + hostname + ":" + port;
-                    return new BATMBitcoindRPCWallet(rpcURL, accountName, ICurrencies.BTC);
+                    return new BATMBitcoindRPCWallet(rpcURL, accountName, Currencies.BTC);
                 }
             }else if ("bitcoincashd".equalsIgnoreCase(walletType)) {
                 //"bitcoind:protocol:user:password:ip:port:accountname"
@@ -123,7 +123,7 @@ public class BitcoinExtension implements IExtension{
 
                 if (protocol != null && username != null && password != null && hostname !=null && port != null && accountName != null) {
                     String rpcURL = protocol +"://" + username +":" + password + "@" + hostname +":" + port;
-                    return new BATMBitcoindRPCWallet(rpcURL,accountName, ICurrencies.BCH);
+                    return new BATMBitcoindRPCWallet(rpcURL,accountName, Currencies.BCH);
                 }
             }else if ("bitcore".equalsIgnoreCase(walletType)) { //bitcore:apiKey:proxyUrl
                 String apiKey = st.nextToken();
@@ -155,7 +155,7 @@ public class BitcoinExtension implements IExtension{
 
             if ("btcfix".equalsIgnoreCase(rsType)) {
                 BigDecimal rate = BigDecimal.ZERO;
-                String preferredFiatCurrency = ICurrencies.USD;
+                String preferredFiatCurrency = Currencies.USD;
                 if (st.hasMoreTokens()) {
                     try {
                         rate = new BigDecimal(st.nextToken());
@@ -173,7 +173,7 @@ public class BitcoinExtension implements IExtension{
             }else if ("mrcoin".equalsIgnoreCase(rsType)) {
                 return new MrCoinRateSource();
             }else if ("itbit".equalsIgnoreCase(rsType)) {
-                String preferredFiatCurrency = ICurrencies.USD;
+                String preferredFiatCurrency = Currencies.USD;
                 if (st.hasMoreTokens()) {
                     preferredFiatCurrency = st.nextToken().toUpperCase();
                 }
@@ -186,10 +186,10 @@ public class BitcoinExtension implements IExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.BTC);
-        result.add(ICurrencies.ETH);
-        result.add(ICurrencies.LTC);
-        result.add(ICurrencies.BCH);
+        result.add(Currencies.BTC);
+        result.add(Currencies.ETH);
+        result.add(Currencies.LTC);
+        result.add(Currencies.BCH);
         return result;
     }
 

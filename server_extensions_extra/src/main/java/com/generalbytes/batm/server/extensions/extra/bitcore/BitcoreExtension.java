@@ -69,7 +69,7 @@ public class BitcoreExtension implements IExtension{
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (ICurrencies.BTX.equalsIgnoreCase(cryptoCurrency)) {
+        if (Currencies.BTX.equalsIgnoreCase(cryptoCurrency)) {
             return new BitcoreAddressValidator();
         }
         return null;
@@ -94,7 +94,7 @@ public class BitcoreExtension implements IExtension{
                     } catch (Throwable e) {
                     }
                 }
-                String preferedFiatCurrency = ICurrencies.USD;
+                String preferedFiatCurrency = Currencies.USD;
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
@@ -112,7 +112,7 @@ public class BitcoreExtension implements IExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.BTX);
+        result.add(Currencies.BTX);
         return result;
     }
 

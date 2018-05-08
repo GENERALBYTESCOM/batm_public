@@ -1,7 +1,6 @@
 package com.generalbytes.batm.server.extensions.extra.nubits;
 
 import com.generalbytes.batm.server.extensions.*;
-import com.generalbytes.batm.server.extensions.extra.nubits.NubitsAddressValidator;
 import com.generalbytes.batm.server.extensions.extra.nubits.sources.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.nubits.wallets.nud.NubitsRPCWallet;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
@@ -52,7 +51,7 @@ public class NubitsExtension implements IExtension{
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (ICurrencies.NBT.equalsIgnoreCase(cryptoCurrency)) {
+        if (Currencies.NBT.equalsIgnoreCase(cryptoCurrency)) {
             return new NubitsAddressValidator();
         }
         return null;
@@ -77,7 +76,7 @@ public class NubitsExtension implements IExtension{
                     } catch (Throwable e) {
                     }
                 }
-                String preferedFiatCurrency = ICurrencies.USD;
+                String preferedFiatCurrency = Currencies.USD;
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
@@ -96,7 +95,7 @@ public class NubitsExtension implements IExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.NBT);
+        result.add(Currencies.NBT);
         return result;
     }
 

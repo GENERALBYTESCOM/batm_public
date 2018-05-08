@@ -1,6 +1,7 @@
 package com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio;
 
-import com.generalbytes.batm.server.extensions.ICurrencies;
+import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IWallet;
 
 import si.mazi.rescu.RestProxyFactory;
@@ -44,15 +45,15 @@ public class BlockIOWallet implements IWallet {
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.BTC);
-        result.add(ICurrencies.LTC);
-        result.add(ICurrencies.DOGE);
+        result.add(Currencies.BTC);
+        result.add(Currencies.LTC);
+        result.add(Currencies.DOGE);
         return result;
     }
 
     @Override
     public String getPreferredCryptoCurrency() {
-        return ICurrencies.BTC;
+        return Currencies.BTC;
     }
 
     @Override

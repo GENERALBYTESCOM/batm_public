@@ -69,7 +69,7 @@ public class SmartcashExtension implements IExtension{
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (ICurrencies.SMART.equalsIgnoreCase(cryptoCurrency)) {
+        if (Currencies.SMART.equalsIgnoreCase(cryptoCurrency)) {
             return new SmartcashAddressValidator();
         }
         return null;
@@ -94,7 +94,7 @@ public class SmartcashExtension implements IExtension{
                     } catch (Throwable e) {
                     }
                 }
-                String preferedFiatCurrency = ICurrencies.USD;
+                String preferedFiatCurrency = Currencies.USD;
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
@@ -113,7 +113,7 @@ public class SmartcashExtension implements IExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.SMART);
+        result.add(Currencies.SMART);
         return result;
     }
 

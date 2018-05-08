@@ -70,7 +70,7 @@ public class MaxcoinExtension implements IExtension{
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (ICurrencies.MAX.equalsIgnoreCase(cryptoCurrency)) {
+        if (Currencies.MAX.equalsIgnoreCase(cryptoCurrency)) {
             return new MaxcoinAddressValidator();
         }
         return null;
@@ -97,7 +97,7 @@ public class MaxcoinExtension implements IExtension{
                     } catch (Throwable e) {
                     }
                 }
-                String preferedFiatCurrency = ICurrencies.USD;
+                String preferedFiatCurrency = Currencies.USD;
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
@@ -116,7 +116,7 @@ public class MaxcoinExtension implements IExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.MAX);
+        result.add(Currencies.MAX);
         return result;
     }
 

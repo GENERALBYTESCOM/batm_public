@@ -76,7 +76,7 @@ public class WorldcoinExtension implements IExtension{
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (ICurrencies.WDC.equalsIgnoreCase(cryptoCurrency)) {
+        if (Currencies.WDC.equalsIgnoreCase(cryptoCurrency)) {
             return new WorldcoinAddressValidator();
         }
         return null;
@@ -96,7 +96,7 @@ public class WorldcoinExtension implements IExtension{
                 if (st.hasMoreTokens()) {
                     return new CryptodiggersRateSource(st.nextToken());
                 }
-                return new CryptodiggersRateSource(ICurrencies.USD);
+                return new CryptodiggersRateSource(Currencies.USD);
 	    }
             else if ("wdcfix".equalsIgnoreCase(exchangeType)) {
                 BigDecimal rate = BigDecimal.ZERO;
@@ -106,7 +106,7 @@ public class WorldcoinExtension implements IExtension{
                     } catch (Throwable e) {
                     }
                 }
-                String preferedFiatCurrency = ICurrencies.USD;
+                String preferedFiatCurrency = Currencies.USD;
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
@@ -119,7 +119,7 @@ public class WorldcoinExtension implements IExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.WDC);
+        result.add(Currencies.WDC);
         return result;
     }
 
