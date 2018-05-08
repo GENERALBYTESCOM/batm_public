@@ -39,6 +39,7 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.StringTokenizer;
 
 public class Tester {
     private List<IExtension> extensions;
@@ -62,7 +63,7 @@ public class Tester {
         System.out.println("   Specifies path to a jar file which contains extensions.");
         System.out.println(" -n name");
         System.out.println("   Specifies name of wallet/ratesource/exchnage/pprocessor to be used");
-        System.out.println(" -p=param1:param2:param3");
+        System.out.println(" -p=param1:param2:param3, param1 is fiat symbol and param2 is the full cryptocurrency name ie: bitcoin");
         System.out.println("   Set parameters to wallet/ratesource/exchnage/pprocessor.");
 
         System.out.println(" ACTIONS:");
@@ -394,11 +395,9 @@ public class Tester {
             IExtension extension = extensions.get(i);
             final IRateSource rs = extension.createRateSource(name + ":" + params);
             if (rs != null) {
-                final String preferredFiatCurrency = rs.getPreferredFiatCurrency();
                 final Set<String> fiatCurrencies = rs.getFiatCurrencies();
-                final Set<String> cryptoCurrencies = rs.getCryptoCurrencies();
 
-                System.out.println("Preferred Fiat Currency = " + preferredFiatCurrency);
+								
                 System.out.println("Fiat Currencies:");
                 for (String fiatCurrency : fiatCurrencies) {
                     System.out.println("  " + fiatCurrency);
