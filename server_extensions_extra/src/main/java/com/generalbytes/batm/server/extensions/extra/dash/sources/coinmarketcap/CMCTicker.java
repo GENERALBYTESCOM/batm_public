@@ -12,7 +12,7 @@ public class CMCTicker {
     private String id;
     private String name;
     private String symbol;
-    private int rank;
+    private BigDecimal rank;
     private BigDecimal price_usd;
     private BigDecimal price_eur;
     private BigDecimal price_btc;
@@ -52,11 +52,11 @@ public class CMCTicker {
         this.symbol = symbol;
     }
 
-    public int getRank() {
+    public BigDecimal getRank() {
         return rank;
     }
 
-    public void setRank(int rank) {
+    public void setRank(BigDecimal rank) {
         this.rank = rank;
     }
 
