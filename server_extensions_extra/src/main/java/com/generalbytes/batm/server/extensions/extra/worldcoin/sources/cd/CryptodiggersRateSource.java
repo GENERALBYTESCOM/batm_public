@@ -17,13 +17,11 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.worldcoin.sources.cd;
 
-import com.generalbytes.batm.server.extensions.extra.worldcoin.sources.cd.*;
-import com.generalbytes.batm.server.extensions.ICurrencies;
+import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.KeyManagementException;
 import si.mazi.rescu.RestProxyFactory;
@@ -39,16 +37,16 @@ public class CryptodiggersRateSource implements IRateSource{
     private static HashMap<String,Long> rateTimes = new HashMap<String, Long>();
     private static final long MAXIMUM_ALLOWED_TIME_OFFSET = 30 * 1000; //30sec
 
-    private String preferedFiatCurrency = ICurrencies.USD;
+    private String preferedFiatCurrency = Currencies.USD;
     private ICryptodiggersRateAPI api;
 
     public CryptodiggersRateSource(String preferedFiatCurrency) {
         this();
-        if (ICurrencies.EUR.equalsIgnoreCase(preferedFiatCurrency)) {
-            this.preferedFiatCurrency = ICurrencies.EUR;
+        if (Currencies.EUR.equalsIgnoreCase(preferedFiatCurrency)) {
+            this.preferedFiatCurrency = Currencies.EUR;
         }
-        if (ICurrencies.USD.equalsIgnoreCase(preferedFiatCurrency)) {
-            this.preferedFiatCurrency = ICurrencies.USD;
+        if (Currencies.USD.equalsIgnoreCase(preferedFiatCurrency)) {
+            this.preferedFiatCurrency = Currencies.USD;
         }
     }
 
@@ -72,16 +70,16 @@ public class CryptodiggersRateSource implements IRateSource{
 
     @Override
     public BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency) {
-        if (!(ICurrencies.BTC.equalsIgnoreCase(cryptoCurrency) || ICurrencies.WDC.equalsIgnoreCase(cryptoCurrency))) {
+        if (!(Currencies.BTC.equalsIgnoreCase(cryptoCurrency) || Currencies.WDC.equalsIgnoreCase(cryptoCurrency))) {
             return null;
         }
-        if (!(ICurrencies.USD.equalsIgnoreCase(fiatCurrency) || ICurrencies.EUR.equalsIgnoreCase(fiatCurrency))) {
+        if (!(Currencies.USD.equalsIgnoreCase(fiatCurrency) || Currencies.EUR.equalsIgnoreCase(fiatCurrency))) {
             return null;
         }
 
         String key = cryptoCurrency +"_" + fiatCurrency;
         synchronized (rateAmounts) {
-	    
+
             long now  = System.currentTimeMillis();
             BigDecimal amount = rateAmounts.get(key);
             if (amount == null) {
@@ -110,16 +108,16 @@ public class CryptodiggersRateSource implements IRateSource{
     private BigDecimal getExchangeRateLastSync(String cryptoCurrency, String fiatCurrency) {
 	String cd_fiatCurrency;
         cd_fiatCurrency="2";
-        if(ICurrencies.USD.equalsIgnoreCase(fiatCurrency)){
+        if(Currencies.USD.equalsIgnoreCase(fiatCurrency)){
             cd_fiatCurrency="2";
         }
-        if(ICurrencies.EUR.equalsIgnoreCase(fiatCurrency)){
+        if(Currencies.EUR.equalsIgnoreCase(fiatCurrency)){
             cd_fiatCurrency="1";
         }
-        if (!(ICurrencies.BTC.equalsIgnoreCase(cryptoCurrency) || ICurrencies.WDC.equalsIgnoreCase(cryptoCurrency))) {
+        if (!(Currencies.BTC.equalsIgnoreCase(cryptoCurrency) || Currencies.WDC.equalsIgnoreCase(cryptoCurrency))) {
             return null;
         }
-        if (!(ICurrencies.USD.equalsIgnoreCase(fiatCurrency) || ICurrencies.EUR.equalsIgnoreCase(fiatCurrency))) {
+        if (!(Currencies.USD.equalsIgnoreCase(fiatCurrency) || Currencies.EUR.equalsIgnoreCase(fiatCurrency))) {
             return null;
         }
         CryptodiggersResponse ticker = api.getTicker("7",cd_fiatCurrency);
@@ -132,16 +130,16 @@ public class CryptodiggersRateSource implements IRateSource{
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        //result.add(ICurrencies.BTC);
-	result.add(ICurrencies.WDC);
+        //result.add(Currencies.BTC);
+	result.add(Currencies.WDC);
         return result;
     }
 
     @Override
     public Set<String> getFiatCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.USD);
-        result.add(ICurrencies.EUR);
+        result.add(Currencies.USD);
+        result.add(Currencies.EUR);
         return result;
     }
 

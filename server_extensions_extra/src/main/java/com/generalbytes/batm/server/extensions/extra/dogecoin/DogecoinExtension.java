@@ -84,7 +84,7 @@ public class DogecoinExtension implements IExtension{
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (ICurrencies.DOGE.equalsIgnoreCase(cryptoCurrency)) {
+        if (Currencies.DOGE.equalsIgnoreCase(cryptoCurrency)) {
             return new DogecoinAddressValidator();
         }
         return null;
@@ -111,7 +111,7 @@ public class DogecoinExtension implements IExtension{
                     } catch (Throwable e) {
                     }
                 }
-                String preferedFiatCurrency = ICurrencies.USD;
+                String preferedFiatCurrency = Currencies.USD;
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
@@ -124,7 +124,7 @@ public class DogecoinExtension implements IExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.DOGE);
+        result.add(Currencies.DOGE);
         return result;
     }
 

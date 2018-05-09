@@ -20,7 +20,8 @@
 
 package com.generalbytes.batm.server.extensions.extra.bitcoin.sources.mrcoin;
 
-import com.generalbytes.batm.server.extensions.ICurrencies;
+import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.mrcoin.dto.RateInfo;
 import si.mazi.rescu.RestProxyFactory;
@@ -38,16 +39,16 @@ public class MrCoinRateSource implements IRateSourceAdvanced{
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.BTC);
-        result.add(ICurrencies.ETH);
+        result.add(Currencies.BTC);
+        result.add(Currencies.ETH);
         return result;
     }
 
     @Override
     public Set<String> getFiatCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.EUR);
-        result.add(ICurrencies.HUF);
+        result.add(Currencies.EUR);
+        result.add(Currencies.HUF);
         return result;
     }
 
@@ -58,7 +59,7 @@ public class MrCoinRateSource implements IRateSourceAdvanced{
 
     @Override
     public String getPreferredFiatCurrency() {
-        return ICurrencies.HUF;
+        return Currencies.HUF;
     }
 
 

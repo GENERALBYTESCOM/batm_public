@@ -1,6 +1,7 @@
 package com.generalbytes.batm.server.extensions.extra.flashcoin.sources.coinexchange;
 
-import com.generalbytes.batm.server.extensions.ICurrencies;
+import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +28,7 @@ public class CoinexchangeRateSource implements IRateSource {
 
     public CoinexchangeRateSource(String preferedFiatCurrency) {
         if (!getFiatCurrencies().contains(preferedFiatCurrency)) {
-            preferedFiatCurrency = ICurrencies.BTC;
+            preferedFiatCurrency = Currencies.BTC;
         }
         this.preferedFiatCurrency = preferedFiatCurrency;
 
@@ -38,15 +39,15 @@ public class CoinexchangeRateSource implements IRateSource {
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.FLASH);
+        result.add(Currencies.FLASH);
         return result;
     }
 
     @Override
     public Set<String> getFiatCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.BTC);
-       // result.add(ICurrencies.LTC);
+        result.add(Currencies.BTC);
+       // result.add(Currencies.LTC);
 
         return result;
     }
@@ -92,13 +93,13 @@ public class CoinexchangeRateSource implements IRateSource {
     }
 
     private BigDecimal getExchangeRateLastSync(String cryptoCurrency, String fiatCurrency) {
-        if (!ICurrencies.FLASH.equalsIgnoreCase(cryptoCurrency)) {
+        if (!Currencies.FLASH.equalsIgnoreCase(cryptoCurrency)) {
             return null; //unsupported currency
         }
         String key = null;
 
         switch(fiatCurrency){
-            case ICurrencies.BTC:
+            case Currencies.BTC:
                 key = "684";
                 break;
             default:
@@ -113,7 +114,7 @@ public class CoinexchangeRateSource implements IRateSource {
         return null;
     }
    public static void main(String[] args) {
-       CoinexchangeRateSource rs = new CoinexchangeRateSource(ICurrencies.BTC);
-        BigDecimal exchangeRateLast = rs.getExchangeRateLast(ICurrencies.FLASH, ICurrencies.BTC);
+       CoinexchangeRateSource rs = new CoinexchangeRateSource(Currencies.BTC);
+        BigDecimal exchangeRateLast = rs.getExchangeRateLast(Currencies.FLASH, Currencies.BTC);
     }
 }

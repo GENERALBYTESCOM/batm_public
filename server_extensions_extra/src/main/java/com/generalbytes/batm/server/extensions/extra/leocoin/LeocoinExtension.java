@@ -69,7 +69,7 @@ public class LeocoinExtension implements IExtension{
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (ICurrencies.LEO.equalsIgnoreCase(cryptoCurrency)) {
+        if (Currencies.LEO.equalsIgnoreCase(cryptoCurrency)) {
             return new LeocoinAddressValidator();
         }
         return null;
@@ -94,7 +94,7 @@ public class LeocoinExtension implements IExtension{
                     } catch (Throwable e) {
                     }
                 }
-                String preferedFiatCurrency = ICurrencies.USD;
+                String preferedFiatCurrency = Currencies.USD;
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
@@ -114,7 +114,7 @@ public class LeocoinExtension implements IExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.LEO);
+        result.add(Currencies.LEO);
         return result;
     }
 
