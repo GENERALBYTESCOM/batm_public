@@ -99,8 +99,7 @@ public class BitcoreExtension implements IExtension{
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new FixPriceRateSource(rate,preferedFiatCurrency);
-            }
-
+            } 
         }
         return null;
     }

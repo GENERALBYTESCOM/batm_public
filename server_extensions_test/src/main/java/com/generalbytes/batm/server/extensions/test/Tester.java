@@ -399,6 +399,7 @@ public class Tester {
                 final Set<String> cryptoCurrencies = rs.getCryptoCurrencies();
 
                 System.out.println("Preferred Fiat Currency = " + preferredFiatCurrency);
+								
                 System.out.println("Fiat Currencies:");
                 for (String fiatCurrency : fiatCurrencies) {
                     System.out.println("  " + fiatCurrency);
