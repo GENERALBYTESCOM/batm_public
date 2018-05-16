@@ -28,9 +28,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-//import com.generalbytes.batm.server.extensions.extra.dogecoin.sources.chainso.ChainSoRateSource;
-//import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.BlockIOWallet;
-
 public class FuturocoinExtension implements IExtension{
     @Override
     public String getName() {
@@ -77,7 +74,7 @@ public class FuturocoinExtension implements IExtension{
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (ICurrencies.FTO.equalsIgnoreCase(cryptoCurrency)) {
+        if (Currencies.FTO.equalsIgnoreCase(cryptoCurrency)) {
             return new FuturocoinAddressValidator();
         }
         return null;
@@ -102,7 +99,7 @@ public class FuturocoinExtension implements IExtension{
                     } catch (Throwable e) {
                     }
                 }
-                String preferedFiatCurrency = ICurrencies.USD;
+                String preferedFiatCurrency = Currencies.USD;
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
@@ -117,7 +114,7 @@ public class FuturocoinExtension implements IExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.FTO);
+        result.add(Currencies.FTO);
         return result;
     }
 

@@ -1,6 +1,6 @@
 package com.generalbytes.batm.server.extensions.extra.futurocoin.sources;
 
-import com.generalbytes.batm.server.extensions.ICurrencies;
+import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IRateSource;
 
 import java.math.BigDecimal;
@@ -13,25 +13,25 @@ import java.util.Set;
 public class FixPriceRateSource implements IRateSource {
     private BigDecimal rate = BigDecimal.ZERO;
 
-    private String preferedFiatCurrency = ICurrencies.USD;
+    private String preferedFiatCurrency = Currencies.USD;
 
     public FixPriceRateSource(BigDecimal rate, String preferedFiatCurrency) {
         this.rate = rate;
-        if (ICurrencies.USD.equalsIgnoreCase(preferedFiatCurrency)) {
-            this.preferedFiatCurrency = ICurrencies.USD;
+        if (Currencies.USD.equalsIgnoreCase(preferedFiatCurrency)) {
+            this.preferedFiatCurrency = Currencies.USD;
         }
     }
 
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.FTO);
+        result.add(Currencies.FTO);
         return result;
     }
 
     @Override
     public BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency) {
-        if (ICurrencies.FTO.equalsIgnoreCase(cryptoCurrency)) {
+        if (Currencies.FTO.equalsIgnoreCase(cryptoCurrency)) {
             return rate;
         }
         return null;
@@ -40,7 +40,7 @@ public class FixPriceRateSource implements IRateSource {
     @Override
     public Set<String> getFiatCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(ICurrencies.USD);
+        result.add(Currencies.USD);
         return result;
     }
     @Override

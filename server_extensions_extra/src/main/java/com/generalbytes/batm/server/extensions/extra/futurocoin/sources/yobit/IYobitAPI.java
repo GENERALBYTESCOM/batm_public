@@ -1,6 +1,5 @@
 package com.generalbytes.batm.server.extensions.extra.futurocoin.sources.yobit;
 
-import com.generalbytes.batm.server.extensions.extra.futurocoin.sources.yobit.dto.Ticker;
 import com.generalbytes.batm.server.extensions.extra.futurocoin.sources.yobit.dto.YobitResponse;
 
 import javax.ws.rs.GET;

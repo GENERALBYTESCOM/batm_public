@@ -3,7 +3,7 @@ package com.generalbytes.batm.server.extensions.extra.futurocoin.sources.yobit.d
 public class YobitResponse {
     private Ticker fot_usd;
 
-    public Ticker getFot_usd() {
+    public Ticker getFto_usd() {
         return fot_usd;
     }
 
