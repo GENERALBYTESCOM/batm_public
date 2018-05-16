@@ -19,20 +19,22 @@ package com.generalbytes.batm.server.extensions.extra.digibyte.wallets.digibyted
 
 import com.azazar.bitcoin.jsonrpcclient.BitcoinException;
 import com.azazar.bitcoin.jsonrpcclient.BitcoinJSONRPCClient;
-import com.generalbytes.batm.server.extensions.ICurrencies;
+import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IWallet;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class DigiByteRPCWallet implements IWallet {
 
   private static final Logger log = LoggerFactory.getLogger(DigiByteRPCWallet.class);
-  private static final String CRYPTO_CURRENCY = ICurrencies.DGB;
+  private static final String CRYPTO_CURRENCY = Currencies.DGB;
 
   public DigiByteRPCWallet(String rpcURL, String accountName) {
     this.rpcURL = rpcURL;

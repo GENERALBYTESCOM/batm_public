@@ -75,6 +75,7 @@ public class Currencies {
         crypto.add(VIA);
         crypto.add(DEX);
         crypto.add(DASH);
+        crypto.add(DGB);
         crypto.add(DOGE);
         crypto.add(FLASH);
         crypto.add(MAX);

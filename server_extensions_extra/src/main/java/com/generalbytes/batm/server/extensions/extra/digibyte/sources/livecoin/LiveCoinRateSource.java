@@ -1,24 +1,26 @@
 package com.generalbytes.batm.server.extensions.extra.digibyte.sources.livecoin;
 
-import com.generalbytes.batm.server.extensions.ICurrencies;
+import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IRateSource;
+
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
+
 import si.mazi.rescu.RestProxyFactory;
 
 public class LiveCoinRateSource implements IRateSource {
 
   private ILiveCoinAPI api;
 
-  private String preferredFiatCurrency = ICurrencies.USD;
+  private String preferredFiatCurrency = Currencies.USD;
 
   public LiveCoinRateSource(String preferedFiatCurrency) {
-    if (ICurrencies.EUR.equalsIgnoreCase(preferedFiatCurrency)) {
-      this.preferredFiatCurrency = ICurrencies.EUR;
+    if (Currencies.EUR.equalsIgnoreCase(preferedFiatCurrency)) {
+      this.preferredFiatCurrency = Currencies.EUR;
     }
-    if (ICurrencies.USD.equalsIgnoreCase(preferedFiatCurrency)) {
-      this.preferredFiatCurrency = ICurrencies.USD;
+    if (Currencies.USD.equalsIgnoreCase(preferedFiatCurrency)) {
+      this.preferredFiatCurrency = Currencies.USD;
     }
     api = RestProxyFactory.createProxy(ILiveCoinAPI.class, "https://api.livecoin.net");
   }
@@ -27,15 +29,15 @@ public class LiveCoinRateSource implements IRateSource {
   @Override
   public Set<String> getCryptoCurrencies() {
     Set<String> result = new HashSet<String>();
-    result.add(ICurrencies.DGB);
+    result.add(Currencies.DGB);
     return result;
   }
 
   @Override
   public Set<String> getFiatCurrencies() {
     Set<String> result = new HashSet<String>();
-    result.add(ICurrencies.USD);
-    result.add(ICurrencies.EUR);
+    result.add(Currencies.USD);
+    result.add(Currencies.EUR);
     return result;
   }
 
@@ -45,10 +47,10 @@ public class LiveCoinRateSource implements IRateSource {
       return null;
     }
     //Grab the last dgb rate in btc
-    LiveCoinTicker dgbBtc = api.getTicker(ICurrencies.DGB + "/" + ICurrencies.BTC);
+    LiveCoinTicker dgbBtc = api.getTicker(Currencies.DGB + "/" + Currencies.BTC);
 
     //Grab the last btc rate in the selected fiat currency
-    LiveCoinTicker btcFiat = api.getTicker(ICurrencies.BTC + "/" + fiatCurrency);
+    LiveCoinTicker btcFiat = api.getTicker(Currencies.BTC + "/" + fiatCurrency);
 
     BigDecimal lastDgbPriceInBtc = dgbBtc.getLast();
     BigDecimal lastBtcPriceInFiat = btcFiat.getLast();

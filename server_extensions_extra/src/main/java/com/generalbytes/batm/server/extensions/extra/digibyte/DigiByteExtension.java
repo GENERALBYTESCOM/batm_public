@@ -17,8 +17,8 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.digibyte;
 
+import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
-import com.generalbytes.batm.server.extensions.ICurrencies;
 import com.generalbytes.batm.server.extensions.IExchange;
 import com.generalbytes.batm.server.extensions.IExtension;
 import com.generalbytes.batm.server.extensions.IPaperWalletGenerator;
@@ -29,6 +29,7 @@ import com.generalbytes.batm.server.extensions.extra.digibyte.sources.FixPriceRa
 import com.generalbytes.batm.server.extensions.extra.digibyte.sources.livecoin.LiveCoinRateSource;
 import com.generalbytes.batm.server.extensions.extra.digibyte.wallets.digibyted.DigiByteRPCWallet;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
+
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
@@ -77,14 +78,13 @@ public class DigiByteExtension implements IExtension {
           return new DigiByteRPCWallet(rpcURL, accountName);
         }
       }
-
     }
     return null;
   }
 
   @Override
   public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-    if (ICurrencies.DGB.equalsIgnoreCase(cryptoCurrency)) {
+    if (Currencies.DGB.equalsIgnoreCase(cryptoCurrency)) {
       return new DigiByteAddressValidator();
     }
     return null;
@@ -108,13 +108,13 @@ public class DigiByteExtension implements IExtension {
           } catch (Throwable e) {
           }
         }
-        String preferedFiatCurrency = ICurrencies.USD;
+        String preferedFiatCurrency = Currencies.USD;
         if (st.hasMoreTokens()) {
           preferedFiatCurrency = st.nextToken().toUpperCase();
         }
         return new FixPriceRateSource(rate, preferedFiatCurrency);
       } else if ("livecoin".equalsIgnoreCase(exchangeType)) {
-        String preferedFiatCurrency = ICurrencies.USD;
+        String preferedFiatCurrency = Currencies.USD;
         if (st.hasMoreTokens()) {
           preferedFiatCurrency = st.nextToken().toUpperCase();
         }
@@ -127,7 +127,7 @@ public class DigiByteExtension implements IExtension {
   @Override
   public Set<String> getSupportedCryptoCurrencies() {
     Set<String> result = new HashSet<String>();
-    result.add(ICurrencies.DGB);
+    result.add(Currencies.DGB);
     return result;
   }
 
