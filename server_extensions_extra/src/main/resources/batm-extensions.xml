@@ -347,6 +347,10 @@
             <param name="price" />
             <cryptocurrency>SMART</cryptocurrency>
         </ratesource>
+        <ratesource prefix="smartapi" name ="SmartCash API" >
+            <param name="price" />
+            <cryptocurrency>SMART</cryptocurrency>
+        </ratesource>
         <cryptologo cryptocurrency="SMART" file="smart.png"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.startcoin.StartcoinExtension" >
@@ -452,6 +456,6 @@
             <cryptocurrency>BTX</cryptocurrency>
         </ratesource>
         <cryptologo cryptocurrency="BTX" file="btx.png"/>
-    </extension>	
+    </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.watchlists.BasicWatchlistsExtension" />
 </extensions>
