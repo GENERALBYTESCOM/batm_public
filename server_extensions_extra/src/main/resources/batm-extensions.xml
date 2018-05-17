@@ -458,4 +458,23 @@
         <cryptologo cryptocurrency="BTX" file="btx.png"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.watchlists.BasicWatchlistsExtension" />
+    <extension class="com.generalbytes.batm.server.extensions.extra.futurocoin.FuturocoinExtension" >
+        <wallet prefix="futurocoind" name="Futurocoind">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>FTO</cryptocurrency>
+        </wallet>
+        <ratesource prefix="yobit" name="Yobit" >
+            <cryptocurrency>FTO</cryptocurrency>
+        </ratesource>
+        <ratesource prefix="ftofix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>FTO</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="FTO" file="fto.png"/>
+    </extension>
 </extensions>

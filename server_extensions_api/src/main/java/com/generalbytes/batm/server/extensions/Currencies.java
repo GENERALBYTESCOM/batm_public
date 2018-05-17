@@ -34,6 +34,7 @@ public class Currencies {
     public static final String DGB = "DGB";
     public static final String DOGE = "DOGE";
     public static final String FLASH = "FLASH";// FLASH Coin
+    public static final String FTO = "FTO";
     public static final String MAX = "MAX";
     public static final String LEO = "LEO";
     public static final String NLG = "NLG";

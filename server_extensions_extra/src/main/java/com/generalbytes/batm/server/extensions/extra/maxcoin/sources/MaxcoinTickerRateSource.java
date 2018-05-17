@@ -18,7 +18,6 @@
 package com.generalbytes.batm.server.extensions.extra.maxcoin.sources;
 
 import com.generalbytes.batm.server.extensions.Currencies;
-import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
