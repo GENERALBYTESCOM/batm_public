@@ -2,7 +2,6 @@ package com.generalbytes.batm.server.extensions.extra.futurocoin.sources.yobit;
 
 import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IRateSource;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.bity.IBity;
 import com.generalbytes.batm.server.extensions.extra.futurocoin.sources.yobit.dto.YobitResponse;
 
 import java.math.BigDecimal;
@@ -16,7 +15,7 @@ public class YobitRateSource implements IRateSource {
     private IYobitAPI api;
 
     public YobitRateSource() {
-        api = RestProxyFactory.createProxy(IBity.class, "https://yobit.net");
+        api = RestProxyFactory.createProxy(IYobitAPI.class, "https://yobit.net");
     }
 
     @Override
