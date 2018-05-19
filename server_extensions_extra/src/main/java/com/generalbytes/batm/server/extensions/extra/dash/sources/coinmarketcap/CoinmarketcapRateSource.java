@@ -29,16 +29,16 @@ public class CoinmarketcapRateSource implements IRateSource {
         if (Currencies.CAD.equalsIgnoreCase(preferedFiatCurrency)) {
             this.preferredFiatCurrency = Currencies.CAD;
         }
-		coinIDs.put(Currencies.BTC, 1);
-		coinIDs.put(Currencies.SYS, 541);
-		coinIDs.put(Currencies.BCH, 1831);
-		coinIDs.put(Currencies.BTX, 1654);
-		coinIDs.put(Currencies.LTC, 2);
-		coinIDs.put(Currencies.ETH, 1027);
-		coinIDs.put(Currencies.DASH, 131);
-		coinIDs.put(Currencies.XMR, 328);
-		coinIDs.put(Currencies.POT, 122);
-		coinIDs.put(Currencies.FLASH, 1755);
+        coinIDs.put(Currencies.BTC, 1);
+        coinIDs.put(Currencies.SYS, 541);
+        coinIDs.put(Currencies.BCH, 1831);
+        coinIDs.put(Currencies.BTX, 1654);
+        coinIDs.put(Currencies.LTC, 2);
+        coinIDs.put(Currencies.ETH, 1027);
+        coinIDs.put(Currencies.DASH, 131);
+        coinIDs.put(Currencies.XMR, 328);
+        coinIDs.put(Currencies.POT, 122);
+        coinIDs.put(Currencies.FLASH, 1755);
     }
 
     public CoinmarketcapRateSource() {
@@ -83,10 +83,10 @@ public class CoinmarketcapRateSource implements IRateSource {
         if (!getFiatCurrencies().contains(fiatCurrency)) {
             return null;
         }
-		Integer cryptoId = coinIDs.get(cryptoCurrency);
-		if(cryptoId == null){
+        Integer cryptoId = coinIDs.get(cryptoCurrency);
+        if(cryptoId == null){
 			return null;
-		}
+        }
 
         CMCTicker[] tickers = api.getTickers(cryptoId, fiatCurrency);
         for (int i = 0; i < tickers.length; i++) {
@@ -96,9 +96,9 @@ public class CoinmarketcapRateSource implements IRateSource {
                     return ticker.getPrice_eur();
                 }else if (Currencies.CAD.equalsIgnoreCase(fiatCurrency)) {
                     return ticker.getPrice_cad();
-                 }
-				 else{
-                    return ticker.getPrice_usd();
+                }
+                else{
+					return ticker.getPrice_usd();
                 }
             }
         }
