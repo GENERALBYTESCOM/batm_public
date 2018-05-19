@@ -64,6 +64,7 @@
                 <cryptocurrency>XMR</cryptocurrency>
                 <cryptocurrency>POT</cryptocurrency>
                 <cryptocurrency>BTX</cryptocurrency>
+                <cryptocurrency>EFL</cryptocurrency>
             </ratesource>
             <paymentprocessor prefix="bitcoinpay" name="BitcoinPay.com" >
                 <param name="apikey" />
@@ -476,5 +477,17 @@
             <cryptocurrency>FTO</cryptocurrency>
         </ratesource>
         <cryptologo cryptocurrency="FTO" file="fto.png"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.egulden.EguldenExtension" >
+        <wallet prefix="eguldend" name="Eguldend">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>EFL</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="EFL" file="efl.png"/>
     </extension>
 </extensions>

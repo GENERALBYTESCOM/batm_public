@@ -45,6 +45,7 @@ public class CoinmarketcapRateSource implements IRateSource {
         result.add(Currencies.XMR);
         result.add(Currencies.POT);
         result.add(Currencies.FLASH);
+        result.add(Currencies.EFL);
 
         return result;
     }
@@ -69,14 +70,27 @@ public class CoinmarketcapRateSource implements IRateSource {
         if (!getFiatCurrencies().contains(fiatCurrency)) {
             return null;
         }
+
+        /**
+         * Cannot get specific ticker by coin code, only by name or 'id value'
+         * Get specific ID values for your coin from https://api.coinmarketcap.com/v2/listings/
+         * for instance data[105] -> id 234 for e-Gulden
+         */
+
         CMCTicker[] tickers;
-        if(Currencies.FLASH.equalsIgnoreCase(cryptoCurrency)){
-            tickers = api.getTickers(cryptoCurrency,fiatCurrency);
-        }else
+        if(Currencies.FLASH.equalsIgnoreCase(cryptoCurrency)) {
+            tickers = api.getTickers(cryptoCurrency, fiatCurrency);
+        } else if (Currencies.EFL.equalsIgnoreCase(cryptoCurrency)) {
+            tickers = api.getTickers("234", fiatCurrency);
+        } else {
             tickers = api.getTickers(fiatCurrency);
+        }
 
         for (int i = 0; i < tickers.length; i++) {
             CMCTicker ticker = tickers[i];
+
+            System.out.println("Ticker symbol: " + ticker.getSymbol());
+
             if (cryptoCurrency.equalsIgnoreCase(ticker.getSymbol())) {
                 if (Currencies.EUR.equalsIgnoreCase(fiatCurrency)) {
                     return ticker.getPrice_eur();
