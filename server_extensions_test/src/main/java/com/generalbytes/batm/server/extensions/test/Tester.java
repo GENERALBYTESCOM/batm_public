@@ -473,38 +473,38 @@ public class Tester {
     }
 
     private void getExchangeBalance(String name, String params) {
-        for (int i = 0; i < extensions.size(); i++) {
-            IExtension extension = extensions.get(i);
-            final IExchange e = extension.createExchange(name + ":" + params);
-            if (e != null) {
-                final String preferredFiatCurrency = e.getPreferredFiatCurrency();
-                final Set<String> cryptoCurrencies = e.getCryptoCurrencies();
-                final Set<String> fiatCurrencies = e.getFiatCurrencies();
+		for (int i = 0; i < extensions.size(); i++) {
+			IExtension extension = extensions.get(i);
+			final IExchange e = extension.createExchange(name + ":" + params);
+			if (e != null) {
+				final String preferredFiatCurrency = e.getPreferredFiatCurrency();
+				final Set<String> cryptoCurrencies = e.getCryptoCurrencies();
+				final Set<String> fiatCurrencies = e.getFiatCurrencies();
 
-                System.out.println("Preferred Fiat Currency = " + preferredFiatCurrency);
-                System.out.println("Crypto Currencies:");
-                String selectedCryptoCurrency = null;
-                for (String cryptoCurrency : cryptoCurrencies) {
-                    if (selectedCryptoCurrency == null) {
-                        selectedCryptoCurrency = cryptoCurrency;
-                    }
-                    System.out.println("  " + cryptoCurrency);
-                }
-                System.out.println("Fiat Currencies:");
-                for (String fiatCurrency : fiatCurrencies) {
-                    System.out.println("  " + fiatCurrency);
-                }
-                final BigDecimal balance = e.getCryptoBalance(selectedCryptoCurrency);
-                if (balance != null) {
-                    System.out.println("Crypto Balance: " + balance.stripTrailingZeros().toPlainString() + " " + selectedCryptoCurrency);
-                }else{
-                    System.err.println("Exchange returned NULL.");
-                }
-                final String depositAddress = e.getDepositAddress(selectedCryptoCurrency);
-                System.out.println("Deposit Address: " + depositAddress);
-                return;
-            }
-        }
+				System.out.println("Preferred Fiat Currency = " + preferredFiatCurrency);
+				System.out.println("Crypto Currencies:");
+				String selectedCryptoCurrency = null;
+				for (String cryptoCurrency : cryptoCurrencies) {
+					if (selectedCryptoCurrency == null) {
+						selectedCryptoCurrency = cryptoCurrency;
+					}
+					System.out.println("  " + cryptoCurrency);
+				}
+				System.out.println("Fiat Currencies:");
+				for (String fiatCurrency : fiatCurrencies) {
+					System.out.println("  " + fiatCurrency);
+				}
+				final BigDecimal balance = e.getCryptoBalance(selectedCryptoCurrency);
+				if (balance != null) {
+					System.out.println("Crypto Balance: " + balance.stripTrailingZeros().toPlainString() + " " + selectedCryptoCurrency);
+				}else{
+					System.err.println("Exchange returned NULL.");
+				}
+				final String depositAddress = e.getDepositAddress(selectedCryptoCurrency);
+				System.out.println("Deposit Address: " + depositAddress);
+				return;
+			}
+		}
         System.err.println("Error: Exchange not found.");
     }
 
