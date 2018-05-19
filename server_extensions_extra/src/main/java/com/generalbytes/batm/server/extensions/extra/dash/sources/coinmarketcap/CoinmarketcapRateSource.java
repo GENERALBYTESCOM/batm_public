@@ -15,7 +15,7 @@ import si.mazi.rescu.RestProxyFactory;
 
 public class CoinmarketcapRateSource implements IRateSource {
     private ICoinmarketcapAPI api;
-	private static HashMap<String,Integer> coinIDs = new HashMap<String, Integer>();
+    private static HashMap<String,Integer> coinIDs = new HashMap<String, Integer>();
     private String preferredFiatCurrency = Currencies.USD;
 
     public CoinmarketcapRateSource(String preferedFiatCurrency) {
