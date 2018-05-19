@@ -402,9 +402,10 @@ public class Tester {
 				for (String fiatCurrency : fiatCurrencies) {
 					System.out.println("  " + fiatCurrency);
 				}
-                for (int j = 0; j < cryptoCurrencies.size(); j++) {
-					System.out.println("Crypto Currencies:");
+				for (int j = 0; j < cryptoCurrencies.size(); j++) {
+					System.out.println("Crypto Currency:");
 					String selectedCryptoCurrency = cryptoCurrencies[i];
+					System.out.println("  " + selectedCryptoCurrency);
                 
 					final BigDecimal exchangeRateLast = rs.getExchangeRateLast(selectedCryptoCurrency, preferredFiatCurrency);
 					if (exchangeRateLast != null) {
