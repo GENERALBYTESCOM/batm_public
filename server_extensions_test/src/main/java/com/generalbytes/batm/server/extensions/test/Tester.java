@@ -397,50 +397,46 @@ public class Tester {
                 final String preferredFiatCurrency = rs.getPreferredFiatCurrency();
                 final Set<String> fiatCurrencies = rs.getFiatCurrencies();
                 final Set<String> cryptoCurrencies = rs.getCryptoCurrencies();
+				System.out.println("Preferred Fiat Currency = " + preferredFiatCurrency);
+				System.out.println("Fiat Currencies:");
+				for (String fiatCurrency : fiatCurrencies) {
+					System.out.println("  " + fiatCurrency);
+				}
+                for (int j = 0; j < cryptoCurrencies.size(); j++) {
+					System.out.println("Crypto Currencies:");
+					String selectedCryptoCurrency = cryptoCurrencies[i];
+                
+					final BigDecimal exchangeRateLast = rs.getExchangeRateLast(selectedCryptoCurrency, preferredFiatCurrency);
+					if (exchangeRateLast != null) {
+						System.out.println("Exchange Rate Last: 1 " + selectedCryptoCurrency + " = " + exchangeRateLast.stripTrailingZeros().toPlainString() + " " + preferredFiatCurrency);
+					}else{
+						System.err.println("Rate source returned NULL.");
+					}
 
-                System.out.println("Preferred Fiat Currency = " + preferredFiatCurrency);
-                System.out.println("Fiat Currencies:");
-                for (String fiatCurrency : fiatCurrencies) {
-                    System.out.println("  " + fiatCurrency);
-                }
-                System.out.println("Crypto Currencies:");
-                String selectedCryptoCurrency = params;
-                for (String cryptoCurrency : cryptoCurrencies) {
-                    if (selectedCryptoCurrency == null) {
-                        selectedCryptoCurrency = cryptoCurrency;
-                    }
-                    System.out.println("  " + cryptoCurrency);
-                }
-                final BigDecimal exchangeRateLast = rs.getExchangeRateLast(selectedCryptoCurrency, preferredFiatCurrency);
-                if (exchangeRateLast != null) {
-                    System.out.println("Exchange Rate Last: 1 " + selectedCryptoCurrency + " = " + exchangeRateLast.stripTrailingZeros().toPlainString() + " " + preferredFiatCurrency);
-                }else{
-                    System.err.println("Rate source returned NULL.");
-                }
+					if (rs instanceof IRateSourceAdvanced) {
+						IRateSourceAdvanced rsa = (IRateSourceAdvanced)rs;
 
-                if (rs instanceof IRateSourceAdvanced) {
-                    IRateSourceAdvanced rsa = (IRateSourceAdvanced)rs;
+						for (String fiatCurrency : fiatCurrencies) {
+							System.out.println("Checking price for " + fiatCurrency);
 
-                    for (String fiatCurrency : fiatCurrencies) {
-                        System.out.println("Checking price for " + fiatCurrency);
+							final BigDecimal buyPrice = rsa.getExchangeRateForBuy(selectedCryptoCurrency, fiatCurrency);
+							if (buyPrice != null) {
+								System.out.println("Buy Price: 1 " + selectedCryptoCurrency + " = " + buyPrice.stripTrailingZeros().toPlainString() + " " + fiatCurrency);
+							}else{
+								System.err.println("Rate source returned NULL on Buy Price.");
+							}
 
-                        final BigDecimal buyPrice = rsa.getExchangeRateForBuy(selectedCryptoCurrency, fiatCurrency);
-                        if (buyPrice != null) {
-                            System.out.println("Buy Price: 1 " + selectedCryptoCurrency + " = " + buyPrice.stripTrailingZeros().toPlainString() + " " + fiatCurrency);
-                        }else{
-                            System.err.println("Rate source returned NULL on Buy Price.");
-                        }
+							final BigDecimal sellPrice = rsa.getExchangeRateForSell(selectedCryptoCurrency, fiatCurrency);
+							if (sellPrice != null) {
+								System.out.println("Sell Price: 1 " + selectedCryptoCurrency + " = " + sellPrice.stripTrailingZeros().toPlainString() + " " + fiatCurrency);
+							}else{
+								System.err.println("Rate source returned NULL on Sell Price.");
+							}
 
-                        final BigDecimal sellPrice = rsa.getExchangeRateForSell(selectedCryptoCurrency, fiatCurrency);
-                        if (sellPrice != null) {
-                            System.out.println("Sell Price: 1 " + selectedCryptoCurrency + " = " + sellPrice.stripTrailingZeros().toPlainString() + " " + fiatCurrency);
-                        }else{
-                            System.err.println("Rate source returned NULL on Sell Price.");
-                        }
+						}
 
-                    }
-
-                }
+					}
+				}
                 return;
             }
         }
