@@ -45,6 +45,7 @@ public class Currencies {
     public static final String POT = "POT";
     public static final String SMART = "SMART";
     public static final String START = "START";
+    public static final String SYS = "SYS"; //  Syscoin 3
     public static final String TKN = "TKN";
     public static final String WDC = "WDC";
     public static final String XMR = "XMR";

@@ -14,6 +14,7 @@ public class CMCTicker {
     private String symbol;
     private BigDecimal rank;
     private BigDecimal price_usd;
+    private BigDecimal price_cad;
     private BigDecimal price_eur;
     private BigDecimal price_btc;
 
@@ -74,6 +75,14 @@ public class CMCTicker {
 
     public void setPrice_eur(BigDecimal price_eur) {
         this.price_eur = price_eur;
+    }
+
+    public BigDecimal getPrice_cad() {
+        return price_cad;
+    }
+
+    public void setPrice_cad(BigDecimal price_cad) {
+        this.price_cad = price_cad;
     }
 
     public BigDecimal getPrice_btc() {
