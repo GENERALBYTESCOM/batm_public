@@ -4,7 +4,6 @@ apply plugin: "gb-gradle"
 apply plugin: 'maven-publish'
 
 group = projectGroup
-version = projectVersion
 
 jar {
     baseName 'batm_server_extensions_extra'
@@ -22,7 +21,7 @@ artifacts {
 }
 
 dependencies {
-    compile project(':server_extensions_api');
+    compile project(':server_extensions_api')
     compile(group: 'com.azazar', name: 'bitcoin-json-rpc-client', version: '1.0')
     compile(group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25')
     compile(group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25')
