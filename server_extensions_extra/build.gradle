@@ -52,20 +52,22 @@ distributions {
     }
 }
 
-publishing {
-    repositories {
-        maven {
-            credentials {
-                username gbArtifactoryUser
-                password gbArtifactoryPassword
+if (hasProperty('gbArtifactoryUser') && hasProperty('gbArtifactoryPassword') && hasProperty('gbArtifactoryUploadUrl')) {
+    publishing {
+        repositories {
+            maven {
+                credentials {
+                    username gbArtifactoryUser
+                    password gbArtifactoryPassword
+                }
+                url gbArtifactoryUploadUrl
             }
-            url gbArtifactoryUploadUrl
         }
-    }
 
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+            }
         }
     }
 }
