@@ -4,9 +4,11 @@ apply plugin: "gb-gradle"
 apply plugin: 'maven-publish'
 
 group = projectGroup
+version = projectVersion
 
 jar {
     baseName 'batm_server_extensions_extra'
+    archiveName "${baseName}-${classifier}.${extension}"
 }
 
 configurations {
