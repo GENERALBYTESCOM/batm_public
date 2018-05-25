@@ -31,8 +31,10 @@ public class Currencies {
     public static final String VIA = "VIA";
     public static final String DEX = "DEX";
     public static final String DASH = "DASH";
+    public static final String DGB = "DGB";
     public static final String DOGE = "DOGE";
     public static final String FLASH = "FLASH";// FLASH Coin
+    public static final String FTO = "FTO";
     public static final String MAX = "MAX";
     public static final String LEO = "LEO";
     public static final String NLG = "NLG";
@@ -75,6 +77,7 @@ public class Currencies {
         crypto.add(VIA);
         crypto.add(DEX);
         crypto.add(DASH);
+        crypto.add(DGB);
         crypto.add(DOGE);
         crypto.add(FLASH);
         crypto.add(MAX);
