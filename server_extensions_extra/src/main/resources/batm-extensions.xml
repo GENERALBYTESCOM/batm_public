@@ -227,6 +227,26 @@
         </ratesource>
         <cryptologo cryptocurrency="DASH" file="dash.png"/>
     </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.digibyte.DigiByteExtension" >
+        <wallet prefix="digibyted" name="Digibyted">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>DGB</cryptocurrency>
+        </wallet>
+        <ratesource prefix="digibytefix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>DGB</cryptocurrency>
+        </ratesource>
+        <ratesource prefix="livecoin" name ="livecoin.net" >
+            <param name="fiatcurrency" />
+            <cryptocurrency>DGB</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="DGB" file="digibyte.png"/>
+    </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.maxcoin.MaxcoinExtension" >
         <wallet prefix="maxcoind" name="Maxcoind">
             <param name="protocol" />
@@ -324,6 +344,10 @@
             <cryptocurrency>SMART</cryptocurrency>
         </wallet>
         <ratesource prefix="smartfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>SMART</cryptocurrency>
+        </ratesource>
+        <ratesource prefix="smartapi" name ="SmartCash API" >
             <param name="price" />
             <cryptocurrency>SMART</cryptocurrency>
         </ratesource>
@@ -432,6 +456,25 @@
             <cryptocurrency>BTX</cryptocurrency>
         </ratesource>
         <cryptologo cryptocurrency="BTX" file="btx.png"/>
-    </extension>	
+    </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.watchlists.BasicWatchlistsExtension" />
+    <extension class="com.generalbytes.batm.server.extensions.extra.futurocoin.FuturocoinExtension" >
+        <wallet prefix="futurocoind" name="Futurocoind">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>FTO</cryptocurrency>
+        </wallet>
+        <ratesource prefix="yobit" name="Yobit" >
+            <cryptocurrency>FTO</cryptocurrency>
+        </ratesource>
+        <ratesource prefix="ftofix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>FTO</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="FTO" file="fto.png"/>
+    </extension>
 </extensions>
