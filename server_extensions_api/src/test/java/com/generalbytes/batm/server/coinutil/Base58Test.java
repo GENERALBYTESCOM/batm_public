@@ -17,7 +17,6 @@ public class Base58Test {
         try {
             Base58.decodeToBigInteger(address);
             Base58.decodeChecked(address);
-            System.out.println("Address = " + address);
             Assert.assertNotNull(address);
         } catch (AddressFormatException e) {
             log.debug("isAddressValid - address = " + address);
@@ -31,7 +30,6 @@ public class Base58Test {
         try {
             Base58.decodeToBigInteger(address);
             Base58.decodeChecked(address);
-            System.out.println("Address = " + address);
             Assert.assertNotNull(address);
         } catch (AddressFormatException e) {
             log.info("isAddressValid - address = " + address);
