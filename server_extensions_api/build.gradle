@@ -8,6 +8,7 @@ version = projectVersion
 
 jar {
     baseName 'batm_server_extensions_api'
+    archiveName "${baseName}.${extension}"
 }
 
 distributions {
@@ -28,20 +29,22 @@ dependencies {
     testCompile (group: 'junit', name: 'junit', version: '4.10')
 }
 
-publishing {
-    repositories {
-        maven {
-            credentials {
-                username gbArtifactoryUser
-                password gbArtifactoryPassword
+if (hasProperty('gbArtifactoryUser') && hasProperty('gbArtifactoryPassword') && hasProperty('gbArtifactoryUploadUrl')) {
+    publishing {
+        repositories {
+            maven {
+                credentials {
+                    username gbArtifactoryUser
+                    password gbArtifactoryPassword
+                }
+                url gbArtifactoryUploadUrl
             }
-            url gbArtifactoryUploadUrl
         }
-    }
 
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+            }
         }
     }
 }
