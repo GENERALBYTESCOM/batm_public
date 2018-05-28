@@ -57,6 +57,7 @@ public class Currencies {
     public static final String GBP = "GBP";
     public static final String HUF = "HUF";
     public static final String JPY = "JPY";
+    public static final String MKD = "MKD";
     public static final String SGD = "SGD";
     public static final String USD = "USD";
     public static final String XAF = "XAF";
@@ -103,6 +104,7 @@ public class Currencies {
         fiat.add(GBP);
         fiat.add(HUF);
         fiat.add(JPY);
+        fiat.add(MKD);
         fiat.add(SGD);
         fiat.add(USD);
         fiat.add(XAF);
