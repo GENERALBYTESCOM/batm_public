@@ -13,7 +13,3 @@ install-libs.sh
 .project
 .classpath
 .settings/
-.settings/*
-/bin/
-bin/
-*/bin/
