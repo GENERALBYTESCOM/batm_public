@@ -9,3 +9,7 @@ out/
 target
 install-libs.sh
 .mvn-repo
+.project
+.classpath
+.settings/
+bin/
