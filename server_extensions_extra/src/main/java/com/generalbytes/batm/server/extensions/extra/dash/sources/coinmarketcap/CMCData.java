@@ -1,3 +1,4 @@
+package com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap;
 import java.math.BigDecimal;
 import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.CMCQuotes;
 public class CMCData {
