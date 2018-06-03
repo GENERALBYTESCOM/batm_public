@@ -4,19 +4,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.math.BigDecimal;
 public class CMCMetaData {
-    private long timestamp;
-    private String error;
+    public long timestamp;
+    public String error;
 }
 public class CMCQuote {
-    private BigDecimal price;
-    private BigDecimal volume_24h;
-    private BigDecimal market_cap;
-    private BigDecimal percent_change_1h;
-    private BigDecimal percent_change_24h;
-    private BigDecimal percent_change_7d;
+    public BigDecimal price;
+    public BigDecimal volume_24h;
+    public BigDecimal market_cap;
+    public BigDecimal percent_change_1h;
+    public BigDecimal percent_change_24h;
+    public BigDecimal percent_change_7d;
 }
 public class CMCQuotes {
-    private CMCQuote USD;
+    public CMCQuote USD;
 }
 public class CMCData {
     private String id;
