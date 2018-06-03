@@ -30,11 +30,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class SyscoinPCWallet implements IWallet{
-    private static final Logger log = LoggerFactory.getLogger(SyscoinPCWallet.class);
+public class SyscoinRPCWallet implements IWallet{
+    private static final Logger log = LoggerFactory.getLogger(SyscoinRPCWallet.class);
     private static final String CRYPTO_CURRENCY = Currencies.SYS;
 
-    public SyscoinPCWallet(String rpcURL, String accountName) {
+    public SyscoinRPCWallet(String rpcURL, String accountName) {
         this.rpcURL = rpcURL;
         this.accountName = accountName;
     }
