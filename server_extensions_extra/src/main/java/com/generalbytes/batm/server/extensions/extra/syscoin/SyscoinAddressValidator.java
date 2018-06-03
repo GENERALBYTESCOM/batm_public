@@ -15,7 +15,7 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.dash;
+package com.generalbytes.batm.server.extensions.extra.syscoin;
 
 import com.generalbytes.batm.server.coinutil.AddressFormatException;
 import com.generalbytes.batm.server.coinutil.Base58;
