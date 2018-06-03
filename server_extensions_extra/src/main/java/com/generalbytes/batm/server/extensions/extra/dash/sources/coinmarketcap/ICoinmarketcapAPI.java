@@ -19,7 +19,7 @@ package com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-
+import java.util.Map;
 @Path("/v2/ticker")
 @Produces(MediaType.APPLICATION_JSON)
 public interface ICoinmarketcapAPI {
