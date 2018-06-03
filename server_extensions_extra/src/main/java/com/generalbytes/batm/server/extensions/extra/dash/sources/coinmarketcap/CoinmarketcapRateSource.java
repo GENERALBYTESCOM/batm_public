@@ -88,20 +88,17 @@ public class CoinmarketcapRateSource implements IRateSource {
 			return null;
         }
 
-        CMCTicker[] tickers = api.getTickers(cryptoId, fiatCurrency);
-        for (int i = 0; i < tickers.length; i++) {
-            CMCTicker ticker = tickers[i];
-            if (cryptoCurrency.equalsIgnoreCase(ticker.getSymbol())) {
-                if (Currencies.EUR.equalsIgnoreCase(fiatCurrency)) {
-                    return ticker.getPrice_eur();
-                }else if (Currencies.CAD.equalsIgnoreCase(fiatCurrency)) {
-                    return ticker.getPrice_cad();
-                }
-                else{
-					return ticker.getPrice_usd();
-                }
+        CMCTicker ticker = api.getTickers(cryptoId, fiatCurrency);
+        /*if (cryptoCurrency.equalsIgnoreCase(ticker.getSymbol())) {
+            if (Currencies.EUR.equalsIgnoreCase(fiatCurrency)) {
+                return ticker.getPrice_eur();
+            }else if (Currencies.CAD.equalsIgnoreCase(fiatCurrency)) {
+                return ticker.getPrice_cad();
             }
-        }
-        return null;
+            else{
+				return ticker.getPrice_usd();
+            }
+        }*/
+        return ticker.getPrice();
     }
 }
