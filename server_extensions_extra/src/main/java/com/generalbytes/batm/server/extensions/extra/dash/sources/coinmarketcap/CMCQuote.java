@@ -1,3 +1,4 @@
+package com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap;
 import java.math.BigDecimal;
 public class CMCQuote {
     public BigDecimal price;
