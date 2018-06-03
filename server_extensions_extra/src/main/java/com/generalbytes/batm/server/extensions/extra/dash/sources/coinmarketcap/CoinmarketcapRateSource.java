@@ -88,7 +88,9 @@ public class CoinmarketcapRateSource implements IRateSource {
 			return null;
         }
 
-        CMCTicker ticker = api.getTickers(cryptoId, fiatCurrency);
+        Map<String, String> ticker = api.getTickers(cryptoId, fiatCurrency);
+        JSONObject json = new JSONObject(ticker);
+        System.out.printf( "JSON: %s", json.toString() );
         /*if (cryptoCurrency.equalsIgnoreCase(ticker.getSymbol())) {
             if (Currencies.EUR.equalsIgnoreCase(fiatCurrency)) {
                 return ticker.getPrice_eur();
@@ -99,6 +101,6 @@ public class CoinmarketcapRateSource implements IRateSource {
 				return ticker.getPrice_usd();
             }
         }*/
-        return ticker.getPrice();
+        return 0;
     }
 }
