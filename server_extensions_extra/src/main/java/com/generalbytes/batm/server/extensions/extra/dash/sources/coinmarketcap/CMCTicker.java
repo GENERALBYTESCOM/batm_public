@@ -3,8 +3,8 @@ import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.
 import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.CMCMetaData;
 import java.math.BigDecimal;
 public class CMCTicker {
-    public CMCData jsondData;
-    public CMCMetaData metaData;
+    private CMCData jsondData;
+    private CMCMetaData metaData;
 
     public String getId() {
         return jsondData.id;
