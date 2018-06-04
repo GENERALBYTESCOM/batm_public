@@ -95,7 +95,7 @@ public class CoinmarketcapRateSource implements IRateSource {
         if(data == null){
             return null;
         }
-        Map<String, Object> quotes = (Map<String, Object>) ticker.get("quotes");
+        Map<String, Object> quotes = (Map<String, Object>) data.get("quotes");
         if(quotes == null){
             return null;
         }
