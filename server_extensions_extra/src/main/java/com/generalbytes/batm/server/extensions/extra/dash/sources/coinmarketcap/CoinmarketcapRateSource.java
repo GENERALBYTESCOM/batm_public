@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import si.mazi.rescu.RestProxyFactory;
 
-import com.fasterxml.jackson.databind;
+import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * Created by sidhujag on 6/3/2018
  */
