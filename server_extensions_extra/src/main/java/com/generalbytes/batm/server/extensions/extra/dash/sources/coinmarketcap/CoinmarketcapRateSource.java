@@ -9,6 +9,8 @@ import java.util.Set;
 import java.util.HashMap;
 import java.util.Map;
 import si.mazi.rescu.RestProxyFactory;
+
+import com.fasterxml.jackson.databind;
 /**
  * Created by sidhujag on 6/3/2018
  */
@@ -88,8 +90,9 @@ public class CoinmarketcapRateSource implements IRateSource {
 			return null;
         }
 
-        Map<String, String> ticker = api.getTickers(cryptoId, fiatCurrency);
-        System.out.printf( "JSON: %s", ticker["data"]["name"] );
+        Map<String, Object> ticker = api.getTickers(cryptoId, fiatCurrency);
+        String json = new ObjectMapper().writeValueAsString(ticker);
+        System.out.printf( "JSON: %s", json );
         /*if (cryptoCurrency.equalsIgnoreCase(ticker.getSymbol())) {
             if (Currencies.EUR.equalsIgnoreCase(fiatCurrency)) {
                 return ticker.getPrice_eur();
