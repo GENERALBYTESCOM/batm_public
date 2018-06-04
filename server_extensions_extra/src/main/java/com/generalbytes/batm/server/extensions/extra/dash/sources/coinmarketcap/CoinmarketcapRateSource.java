@@ -89,7 +89,7 @@ public class CoinmarketcapRateSource implements IRateSource {
         }
 
         Map<String, Object> ticker = api.getTickers(cryptoId, fiatCurrency);
-        Map<String, Object> quotes = (Map<String, Object>) ticker.get('quotes');
+        Map<String, Object> quotes = (Map<String, Object>) ticker.get("quotes");
         Map<String, Object> quote = (Map<String, Object>) quotes.get(fiatCurrency);
         BigDecimal price = (BigDecimal) quote.get("price");
         /*if (cryptoCurrency.equalsIgnoreCase(ticker.getSymbol())) {
