@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.HashMap;
 import java.util.Map;
 import si.mazi.rescu.RestProxyFactory;
-import javax.json.JsonValue;
+import com.google.gson.Gson;
 /**
  * Created by sidhujag on 6/3/2018
  */
@@ -90,10 +90,9 @@ public class CoinmarketcapRateSource implements IRateSource {
         }
 
         Map<String, String> ticker = api.getTickers(cryptoId, fiatCurrency);
-       StringWriter out = new StringWriter();
-       JSONValue.writeJSONString(ticker, out);
-       String jsonText = out.toString();
-        System.out.printf( "JSON: %s", jsonText );
+        Gson gson = new Gson();
+        String json = gson.toJson(ticker);
+        System.out.printf( "JSON: %s", json );
         /*if (cryptoCurrency.equalsIgnoreCase(ticker.getSymbol())) {
             if (Currencies.EUR.equalsIgnoreCase(fiatCurrency)) {
                 return ticker.getPrice_eur();
@@ -104,6 +103,6 @@ public class CoinmarketcapRateSource implements IRateSource {
 				return ticker.getPrice_usd();
             }
         }*/
-        return 0.0;
+        return new BigDecimal(0);
     }
 }
