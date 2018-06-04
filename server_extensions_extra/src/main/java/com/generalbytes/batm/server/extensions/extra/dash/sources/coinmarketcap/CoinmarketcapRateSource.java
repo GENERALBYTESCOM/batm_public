@@ -104,6 +104,6 @@ public class CoinmarketcapRateSource implements IRateSource {
             return null;
         }
         double price = (double) quote.get("price");
-        return new BigDecimal(price);
+        return new BigDecimal(price).setScale(2);
     }
 }
