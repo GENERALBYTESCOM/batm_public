@@ -103,7 +103,7 @@ public class CoinmarketcapRateSource implements IRateSource {
         if(quote == null){
             return null;
         }
-        BigDecimal price = (BigDecimal) quote.get("price");
-        return price;
+        double price = (double) quote.get("price");
+        return new BigDecimal(price);
     }
 }
