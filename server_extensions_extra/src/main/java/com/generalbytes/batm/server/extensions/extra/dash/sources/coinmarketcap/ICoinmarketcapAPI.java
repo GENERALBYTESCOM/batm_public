@@ -25,5 +25,5 @@ import java.util.Map;
 public interface ICoinmarketcapAPI {
     @GET
     @Path("/{id}/")
-    Map<String, String>  getTickers(@PathParam("id") Integer id, @QueryParam("convert") String fiatCurrency);
+    Map<String, Object>  getTickers(@PathParam("id") Integer id, @QueryParam("convert") String fiatCurrency);
 }
