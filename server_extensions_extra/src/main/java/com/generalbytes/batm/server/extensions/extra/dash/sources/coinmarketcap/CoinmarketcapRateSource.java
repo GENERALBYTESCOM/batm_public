@@ -9,9 +9,9 @@ import java.util.Set;
 import java.util.HashMap;
 import java.util.Map;
 import si.mazi.rescu.RestProxyFactory;
-
+import org.json.simple.JSONObject;
 /**
- * Created by kkyovsky on 11/29/17.
+ * Created by sidhujag on 6/3/2018
  */
 
 public class CoinmarketcapRateSource implements IRateSource {
