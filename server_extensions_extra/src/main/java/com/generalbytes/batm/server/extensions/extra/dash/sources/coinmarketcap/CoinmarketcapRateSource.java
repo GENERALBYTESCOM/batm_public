@@ -91,8 +91,13 @@ public class CoinmarketcapRateSource implements IRateSource {
         }
 
         Map<String, Object> ticker = api.getTickers(cryptoId, fiatCurrency);
-        String json = new ObjectMapper().writeValueAsString(ticker);
-        System.out.printf( "JSON: %s", json );
+        try {
+            String json = new ObjectMapper().writeValueAsString(ticker);
+            System.out.printf( "JSON: %s", json );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+       
         /*if (cryptoCurrency.equalsIgnoreCase(ticker.getSymbol())) {
             if (Currencies.EUR.equalsIgnoreCase(fiatCurrency)) {
                 return ticker.getPrice_eur();
