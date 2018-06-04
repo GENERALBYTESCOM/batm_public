@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.HashMap;
 import java.util.Map;
 import si.mazi.rescu.RestProxyFactory;
-
+import java.io.IOException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * Created by sidhujag on 6/3/2018
