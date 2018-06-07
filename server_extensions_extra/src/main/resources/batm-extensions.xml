@@ -57,7 +57,7 @@
             <ratesource prefix="coinmarketcap" name ="CoinMarketCap.com" >
                 <param name="fiatcurrency" />
                 <cryptocurrency>BTC</cryptocurrency>
-                <cryptocurrency>SYS</cryptocurrency>              
+                <cryptocurrency>SYS</cryptocurrency>
                 <cryptocurrency>BCH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
@@ -140,10 +140,6 @@
             <cryptocurrency>FLASH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
         </ratesource>
-        <!--ratesource prefix="coinmarketcap" name ="coinmarketcap.com" >
-            <param name="fiatcurrency" />
-            <cryptocurrency>FLASH</cryptocurrency>
-        </ratesource-->
         <ratesource prefix="flashfix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>FLASH</cryptocurrency>
@@ -241,9 +237,9 @@
     <ratesource prefix="syscoinfix" name ="Fix Price" >
       <param name="price" />
       <cryptocurrency>SYS</cryptocurrency>
-    </ratesource>   
+    </ratesource>
     <cryptologo cryptocurrency="SYS" file="sys.png"/>
-    </extension>  
+    </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.digibyte.DigiByteExtension" >
         <wallet prefix="digibyted" name="Digibyted">
             <param name="protocol" />
@@ -431,10 +427,6 @@
             <param name="price" />
             <cryptocurrency>POT</cryptocurrency>
         </ratesource>
-        <ratesource prefix="coinmarketcap" name ="coinmarketcap.com" >
-            <param name="fiatcurrency" />
-            <cryptocurrency>POT</cryptocurrency>
-        </ratesource>
         <cryptologo cryptocurrency="POT" file="pot.png"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.dexacoin.DexCoinSupport">
@@ -464,10 +456,6 @@
             <param name="accountname" />
             <cryptocurrency>BTX</cryptocurrency>
         </wallet>
-        <ratesource prefix="coinmarketcap" name ="coinmarketcap.com" >
-            <param name="fiatcurrency" />
-            <cryptocurrency>BTX</cryptocurrency>
-        </ratesource>
         <ratesource prefix="btxfix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>BTX</cryptocurrency>
