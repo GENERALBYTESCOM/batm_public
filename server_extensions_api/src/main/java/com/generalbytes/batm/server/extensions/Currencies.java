@@ -50,6 +50,7 @@ public class Currencies {
     public static final String WDC = "WDC";
     public static final String XMR = "XMR";
 
+    public static final String AMD = "AMD";
     public static final String CAD = "CAD";
     public static final String CHF = "CHF";
     public static final String CNY = "CNY";
@@ -98,6 +99,7 @@ public class Currencies {
         CRYPTO_CURRENCIES = Collections.unmodifiableList(crypto);
 
         List<String> fiat = new ArrayList<>();
+        fiat.add(AMD);
         fiat.add(CAD);
         fiat.add(CHF);
         fiat.add(CNY);
