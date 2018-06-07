@@ -46,10 +46,12 @@ public class Currencies {
     public static final String POT = "POT";
     public static final String SMART = "SMART";
     public static final String START = "START";
+    public static final String SYS = "SYS"; //  Syscoin 3
     public static final String TKN = "TKN";
     public static final String WDC = "WDC";
     public static final String XMR = "XMR";
 
+    public static final String AMD = "AMD";
     public static final String CAD = "CAD";
     public static final String CHF = "CHF";
     public static final String CNY = "CNY";
@@ -58,6 +60,8 @@ public class Currencies {
     public static final String GBP = "GBP";
     public static final String HUF = "HUF";
     public static final String JPY = "JPY";
+    public static final String MKD = "MKD";
+    public static final String MYR = "MYR";
     public static final String SGD = "SGD";
     public static final String USD = "USD";
     public static final String XAF = "XAF";
@@ -91,12 +95,14 @@ public class Currencies {
         crypto.add(POT);
         crypto.add(SMART);
         crypto.add(START);
+        crypto.add(SYS);
         crypto.add(TKN);
         crypto.add(WDC);
         crypto.add(XMR);
         CRYPTO_CURRENCIES = Collections.unmodifiableList(crypto);
 
         List<String> fiat = new ArrayList<>();
+        fiat.add(AMD);
         fiat.add(CAD);
         fiat.add(CHF);
         fiat.add(CNY);
@@ -105,6 +111,8 @@ public class Currencies {
         fiat.add(GBP);
         fiat.add(HUF);
         fiat.add(JPY);
+        fiat.add(MKD);
+        fiat.add(MYR);
         fiat.add(SGD);
         fiat.add(USD);
         fiat.add(XAF);

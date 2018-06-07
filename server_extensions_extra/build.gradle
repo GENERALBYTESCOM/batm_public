@@ -8,6 +8,7 @@ version = projectVersion
 
 jar {
     baseName 'batm_server_extensions_extra'
+    archiveName "${baseName}.${extension}"
 }
 
 configurations {
@@ -22,7 +23,7 @@ artifacts {
 }
 
 dependencies {
-    compile project(':server_extensions_api');
+    compile project(':server_extensions_api')
     compile(group: 'com.azazar', name: 'bitcoin-json-rpc-client', version: '1.0')
     compile(group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25')
     compile(group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25')
@@ -31,11 +32,11 @@ dependencies {
     compile(group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.8.0')
     compile(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.8.2')
     compile(group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.8.2')
-    compile(group: 'org.knowm.xchange', name: 'xchange-core', version: '4.2.1')
+    compile(group: 'org.knowm.xchange', name: 'xchange-core', version: '4.2.3')
     compile(group: 'com.google.guava', name: 'guava', version: '18.0')
     compile(group: 'com.google.zxing', name: 'core', version: '2.3.0')
-    compile(group: 'org.knowm.xchange', name: 'xchange-bitfinex', version: '4.2.1')
-    compile(group: 'org.knowm.xchange', name: 'xchange-itbit', version: '4.2.1')
+    compile(group: 'org.knowm.xchange', name: 'xchange-bitfinex', version: '4.2.3')
+    compile(group: 'org.knowm.xchange', name: 'xchange-itbit', version: '4.2.3')
 }
 
 dependencySubstitutions {
@@ -51,20 +52,22 @@ distributions {
     }
 }
 
-publishing {
-    repositories {
-        maven {
-            credentials {
-                username gbArtifactoryUser
-                password gbArtifactoryPassword
+if (hasProperty('gbArtifactoryUser') && hasProperty('gbArtifactoryPassword') && hasProperty('gbArtifactoryUploadUrl')) {
+    publishing {
+        repositories {
+            maven {
+                credentials {
+                    username gbArtifactoryUser
+                    password gbArtifactoryPassword
+                }
+                url gbArtifactoryUploadUrl
             }
-            url gbArtifactoryUploadUrl
         }
-    }
 
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+            }
         }
     }
 }
