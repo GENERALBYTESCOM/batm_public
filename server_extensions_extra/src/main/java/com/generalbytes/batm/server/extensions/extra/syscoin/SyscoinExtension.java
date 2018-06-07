@@ -15,23 +15,21 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.smartcash;
+package com.generalbytes.batm.server.extensions.extra.syscoin;
 
 import com.generalbytes.batm.server.extensions.*;
-import com.generalbytes.batm.server.extensions.extra.smartcash.sources.FixPriceRateSource;
-import com.generalbytes.batm.server.extensions.extra.smartcash.sources.smartcash.SmartCashRateSource;
-import com.generalbytes.batm.server.extensions.extra.smartcash.wallets.smartcashd.SmartcashRPCWallet;
+import com.generalbytes.batm.server.extensions.extra.syscoin.sources.FixPriceRateSource;
+import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.CoinmarketcapRateSource;
+import com.generalbytes.batm.server.extensions.extra.syscoin.wallets.syscoind.SyscoinRPCWallet;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.StringTokenizer;
+import java.util.*;
 
-public class SmartcashExtension implements IExtension{
+public class SyscoinExtension implements IExtension{
     @Override
     public String getName() {
-        return "BATM Smartcash extension";
+        return "BATM Syscoin extra extension";
     }
 
     @Override
@@ -40,13 +38,18 @@ public class SmartcashExtension implements IExtension{
     }
 
     @Override
+    public IPaymentProcessor createPaymentProcessor(String paymentProcessorLogin) {
+        return null; //no payment processors available
+    }
+
+    @Override
     public IWallet createWallet(String walletLogin) {
         if (walletLogin !=null && !walletLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(walletLogin,":");
             String walletType = st.nextToken();
 
-            if ("smartcashd".equalsIgnoreCase(walletType)) {
-                //"smartcashd:protocol:user:password:ip:port:accountname"
+            if ("syscoind".equalsIgnoreCase(walletType)) {
+                //"syscoind:protocol:user:password:ip:port:accountname"
 
                 String protocol = st.nextToken();
                 String username = st.nextToken();
@@ -61,17 +64,18 @@ public class SmartcashExtension implements IExtension{
 
                 if (protocol != null && username != null && password != null && hostname !=null && port != null && accountName != null) {
                     String rpcURL = protocol +"://" + username +":" + password + "@" + hostname +":" + port;
-                    return new SmartcashRPCWallet(rpcURL,accountName);
+                    return new SyscoinRPCWallet(rpcURL,accountName);
                 }
             }
+
         }
         return null;
     }
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (Currencies.SMART.equalsIgnoreCase(cryptoCurrency)) {
-            return new SmartcashAddressValidator();
+        if (Currencies.SYS.equalsIgnoreCase(cryptoCurrency)) {
+            return new SyscoinAddressValidator();
         }
         return null;
     }
@@ -84,10 +88,9 @@ public class SmartcashExtension implements IExtension{
     @Override
     public IRateSource createRateSource(String sourceLogin) {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
-            StringTokenizer st = new StringTokenizer(sourceLogin,":");
+            StringTokenizer st = new StringTokenizer(sourceLogin, ":");
             String exchangeType = st.nextToken();
-
-            if ("smartfix".equalsIgnoreCase(exchangeType)) {
+            if ("syscoinfix".equalsIgnoreCase(exchangeType)) {
                 BigDecimal rate = BigDecimal.ZERO;
                 if (st.hasMoreTokens()) {
                     try {
@@ -99,28 +102,22 @@ public class SmartcashExtension implements IExtension{
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
-                return new FixPriceRateSource(rate,preferedFiatCurrency);
-            }else if ("smartapi".equalsIgnoreCase(exchangeType)) {
-                String preferredFiatCurrency = Currencies.USD;
+                return new FixPriceRateSource(rate, preferedFiatCurrency);
+            } else if ("coinmarketcap".equalsIgnoreCase(exchangeType)) {
+                String preferedFiatCurrency = Currencies.USD;
                 if (st.hasMoreTokens()) {
-                    preferredFiatCurrency = st.nextToken();
+                    preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
-                return new SmartCashRateSource(preferredFiatCurrency);
+                return new CoinmarketcapRateSource(preferedFiatCurrency);
             }
-
         }
         return null;
     }
 
     @Override
-    public IPaymentProcessor createPaymentProcessor(String paymentProcessorLogin) {
-        return null; //no payment processors available
-    }
-
-    @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(Currencies.SMART);
+        result.add(Currencies.SYS);
         return result;
     }
 

@@ -31,8 +31,10 @@ public class Currencies {
     public static final String VIA = "VIA";
     public static final String DEX = "DEX";
     public static final String DASH = "DASH";
+    public static final String DGB = "DGB";
     public static final String DOGE = "DOGE";
     public static final String FLASH = "FLASH";// FLASH Coin
+    public static final String FTO = "FTO";
     public static final String MAX = "MAX";
     public static final String LEO = "LEO";
     public static final String NLG = "NLG";
@@ -43,10 +45,12 @@ public class Currencies {
     public static final String POT = "POT";
     public static final String SMART = "SMART";
     public static final String START = "START";
+    public static final String SYS = "SYS"; //  Syscoin 3
     public static final String TKN = "TKN";
     public static final String WDC = "WDC";
     public static final String XMR = "XMR";
 
+    public static final String AMD = "AMD";
     public static final String CAD = "CAD";
     public static final String CHF = "CHF";
     public static final String CNY = "CNY";
@@ -55,7 +59,8 @@ public class Currencies {
     public static final String GBP = "GBP";
     public static final String HUF = "HUF";
     public static final String JPY = "JPY";
-    public static final String AMD = "AMD";
+    public static final String MKD = "MKD";
+    public static final String MYR = "MYR";
     public static final String SGD = "SGD";
     public static final String USD = "USD";
     public static final String XAF = "XAF";
@@ -75,6 +80,7 @@ public class Currencies {
         crypto.add(VIA);
         crypto.add(DEX);
         crypto.add(DASH);
+        crypto.add(DGB);
         crypto.add(DOGE);
         crypto.add(FLASH);
         crypto.add(MAX);
@@ -93,6 +99,7 @@ public class Currencies {
         CRYPTO_CURRENCIES = Collections.unmodifiableList(crypto);
 
         List<String> fiat = new ArrayList<>();
+        fiat.add(AMD);
         fiat.add(CAD);
         fiat.add(CHF);
         fiat.add(CNY);
@@ -101,6 +108,8 @@ public class Currencies {
         fiat.add(GBP);
         fiat.add(HUF);
         fiat.add(JPY);
+        fiat.add(MKD);
+        fiat.add(MYR);
         fiat.add(SGD);
         fiat.add(USD);
         fiat.add(XAF);
