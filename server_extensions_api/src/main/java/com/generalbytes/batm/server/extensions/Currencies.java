@@ -92,6 +92,7 @@ public class Currencies {
         crypto.add(POT);
         crypto.add(SMART);
         crypto.add(START);
+        crypto.add(SYS);
         crypto.add(TKN);
         crypto.add(WDC);
         crypto.add(XMR);
