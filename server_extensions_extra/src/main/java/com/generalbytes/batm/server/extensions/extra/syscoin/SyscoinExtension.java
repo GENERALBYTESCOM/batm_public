@@ -117,14 +117,7 @@ public class SyscoinExtension implements IExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(Currencies.BTC);
         result.add(Currencies.SYS);
-        result.add(Currencies.BTX);
-        result.add(Currencies.BCH);
-        result.add(Currencies.LTC);
-        result.add(Currencies.XMR);
-        result.add(Currencies.DASH);
-        result.add(Currencies.POT);
         return result;
     }
 
