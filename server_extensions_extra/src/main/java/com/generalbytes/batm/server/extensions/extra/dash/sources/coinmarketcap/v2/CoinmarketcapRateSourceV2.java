@@ -12,12 +12,6 @@ import java.util.concurrent.TimeUnit;
  *
  */
 public class CoinmarketcapRateSourceV2 implements IRateSource {
-    private ICoinmarketcapV2API api;
-
-    private String preferredFiatCurrency = Currencies.USD;
-
-    private static Map<String,Integer> coinIDs;
-
     /**
      * Expiry of cache in seconds
      */
@@ -25,15 +19,12 @@ public class CoinmarketcapRateSourceV2 implements IRateSource {
 
     private static long recentUnix = System.currentTimeMillis();
 
-    public CoinmarketcapRateSourceV2(String preferedFiatCurrency) {
-        this();
-        if (Currencies.EUR.equalsIgnoreCase(preferedFiatCurrency)) {
-            this.preferredFiatCurrency = Currencies.EUR;
-        }
-        if (Currencies.USD.equalsIgnoreCase(preferedFiatCurrency)) {
-            this.preferredFiatCurrency = Currencies.USD;
-        }
+    private static Map<String,Integer> coinIDs;
 
+    private ICoinmarketcapV2API api;
+
+    public CoinmarketcapRateSourceV2() {
+        api = RestProxyFactory.createProxy(ICoinmarketcapV2API.class, "https://api.coinmarketcap.com");
         final long currentUnix = System.currentTimeMillis();
         final long difference = currentUnix - recentUnix;
         final long differenceInSeconds = TimeUnit.SECONDS.convert(difference, TimeUnit.MILLISECONDS);
@@ -54,10 +45,6 @@ public class CoinmarketcapRateSourceV2 implements IRateSource {
                 }
             }
         }
-    }
-
-    public CoinmarketcapRateSourceV2() {
-        api = RestProxyFactory.createProxy(ICoinmarketcapV2API.class, "https://api.coinmarketcap.com");
     }
 
     @Override

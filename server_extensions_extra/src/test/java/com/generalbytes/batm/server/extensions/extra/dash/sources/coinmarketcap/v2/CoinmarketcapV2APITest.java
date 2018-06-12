@@ -266,6 +266,29 @@ public class CoinmarketcapV2APITest {
     }
 
     /**
+     * Method getTickerOneIntegerOneStringParametersTest() checks if method getTicker() of the api, with one parameter - id
+     * of type string is correctly called and that data is received.
+     */
+    @Test
+    public void getTickerOneIntegerOneNullParametersTest() {
+        final Map<String, Map<String, Object>> result = api.getTicker(1, null);
+        Assert.assertNotNull(result);
+
+        final Map<String, Object> data = result.get("data");
+        Assert.assertNotNull(data);
+
+        final Integer id = (Integer) data.get("id");
+        Assert.assertNotNull(id);
+        Assert.assertEquals(1, id.intValue());
+
+        final Map<String, Object> metadata = result.get("metadata");
+        Assert.assertNotNull(metadata);
+
+        final Integer timestamp = (Integer) metadata.get("timestamp");
+        Assert.assertNotNull(timestamp);
+    }
+
+    /**
      * Method getTickerTest() checks if method getTicker() of the api, with two parameters - id of type string,
      * and fiat of type String is correctly called and that data and quotes has been received.
      */
