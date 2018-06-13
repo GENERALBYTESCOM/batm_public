@@ -1,13 +1,13 @@
 package com.generalbytes.batm.server.extensions.extra.futurocoin.sources.yobit.dto;
 
 public class YobitResponse {
-    private Ticker fot_usd;
+    private Ticker fto_usd;
 
     public Ticker getFto_usd() {
-        return fot_usd;
+        return fto_usd;
     }
 
-    public void setFot_usd(Ticker fot_usd) {
-        this.fot_usd = fot_usd;
+    public void setFto_usd(Ticker fto_usd) {
+        this.fto_usd = fto_usd;
     }
 }
