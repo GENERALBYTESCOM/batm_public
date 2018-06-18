@@ -61,6 +61,10 @@ public class SmartcashRPCWallet implements IWallet{
             log.error("Smartcashd wallet error: unknown cryptocurrency.");
             return null;
         }
+        String optionalPrefix = "smartcash:";
+        if (destinationAddress.startsWith(optionalPrefix)) {
+            destinationAddress = destinationAddress.substring(optionalPrefix.length(), destinationAddress.length());
+        }
 
         log.info("Smartcashd sending coins from " + accountName + " to: " + destinationAddress + " " + amount);
         try {
