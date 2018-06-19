@@ -59,13 +59,19 @@ public class Currencies {
     public static final String USD = "USD";
     public static final String XAF = "XAF";
     public static final String XAU = "XAU"; //gold
+    public static final String TBTC = "TBTC"; //test btc
+    public static final String TXRP = "TXRP"; //test xrp
+    public static final String TBCH = "TBCH"; //test bch
+    public static final String TRMG = "TRMG"; //test rmg
+    public static final String TLTC = "TLTC"; //test ltc
+    public static final String TETH = "TETH"; //test eth
     public static final String NONE = "";
 
     public static final List<String> FIAT_CURRENCIES;
     public static final List<String> CRYPTO_CURRENCIES;
 
     static {
-        List<String> crypto = new ArrayList<>();
+        List<String> crypto = new ArrayList<String>();
         crypto.add(BTC);
         crypto.add(BCH);
         crypto.add(BTX);
@@ -91,7 +97,7 @@ public class Currencies {
         crypto.add(XMR);
         CRYPTO_CURRENCIES = Collections.unmodifiableList(crypto);
 
-        List<String> fiat = new ArrayList<>();
+        List<String> fiat = new ArrayList<String>();
         fiat.add(CAD);
         fiat.add(CHF);
         fiat.add(CNY);
