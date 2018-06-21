@@ -41,6 +41,7 @@ public class CoinmarketcapRateSource implements IRateSource {
         coinIDs.put(Currencies.XMR, 328);
         coinIDs.put(Currencies.POT, 122);
         coinIDs.put(Currencies.FLASH, 1755);
+        coinIDs.put(Currencies.EFL, 234);
     }
 
     public CoinmarketcapRateSource() {
@@ -60,6 +61,7 @@ public class CoinmarketcapRateSource implements IRateSource {
         result.add(Currencies.XMR);
         result.add(Currencies.POT);
         result.add(Currencies.FLASH);
+        result.add(Currencies.EFL);
 
         return result;
     }
@@ -85,9 +87,10 @@ public class CoinmarketcapRateSource implements IRateSource {
         if (!getFiatCurrencies().contains(fiatCurrency)) {
             return null;
         }
+
         Integer cryptoId = coinIDs.get(cryptoCurrency);
         if(cryptoId == null){
-			return null;
+			      return null;
         }
         Map<String, Object> ticker = api.getTickers(cryptoId, fiatCurrency);
         if(ticker == null){
