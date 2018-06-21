@@ -9,8 +9,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 /**
- * <p>Base58 is a way to encode Bitcoin addresses as numbers and letters. Note that this is not the same base58 as used by
- * Flickr, which you may see reference to around the internet.</p>
+ * <p>Base58 is a way to encode SmartCash addresses as numbers and letters. Note that this is not the same base58 as used by
+ * BitCoin, which you may see reference to around the internet.</p>
  *
  * <p>Satoshi says: why base-58 instead of standard base-64 encoding?<p>
  *
@@ -155,7 +155,7 @@ public class Base58 {
         byte[] bytes = copyOfRange(tmp, 0, tmp.length - 4);
         byte[] checksum = copyOfRange(tmp, tmp.length - 4, tmp.length);
 
-        tmp = doubleDigest(bytes);
+        tmp = digest(bytes);
 
         byte[] hash = copyOfRange(tmp, 0, 4);
 
@@ -166,15 +166,15 @@ public class Base58 {
         return bytes;
     }
 
-    public static byte[] doubleDigest(byte[] input) {
-        return doubleDigest(input, 0, input.length);
+    public static byte[] digest(byte[] input) {
+        return digest(input, 0, input.length);
     }
 
     /**
-     * Calculates the SHA-256 hash of the given byte range, and then hashes the resulting hash again. This is
-     * standard procedure in Bitcoin. The resulting hash is in big endian form.
+     * Calculates the Keccak-256 hash of the given byte range. This is
+     * standard procedure in SmartCash. The resulting hash is in big endian form.
      */
-    public static byte[] doubleDigest(byte[] input, int offset, int length) {
+    public static byte[] digest(byte[] input, int offset, int length) {
             Keccak256 digest = new Keccak256();
             digest.update(input, offset, length);
 
