@@ -28,6 +28,7 @@ public class Currencies {
     public static final String BTCP = "BTCP"; //Bitcoin Private
     public static final String BTX = "BTX"; //BitCore
     public static final String ETH = "ETH";
+    public static final String EFL = "EFL";
     public static final String LTC = "LTC";
     public static final String VIA = "VIA";
     public static final String DEX = "DEX";
@@ -77,6 +78,7 @@ public class Currencies {
         crypto.add(BCH);
         crypto.add(BTCP);
         crypto.add(BTX);
+        crypto.add(EFL);
         crypto.add(ETH);
         crypto.add(LTC);
         crypto.add(VIA);

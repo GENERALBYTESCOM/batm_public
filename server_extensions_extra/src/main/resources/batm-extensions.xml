@@ -66,6 +66,7 @@
                 <cryptocurrency>POT</cryptocurrency>
                 <cryptocurrency>BTX</cryptocurrency>
                 <cryptocurrency>BTCP</cryptocurrency>
+                <cryptocurrency>EFL</cryptocurrency>
             </ratesource>
             <paymentprocessor prefix="bitcoinpay" name="BitcoinPay.com" >
                 <param name="apikey" />
@@ -447,7 +448,7 @@
         <cryptologo cryptocurrency="DEX" file="dex.png"/>
         <cryptologo cryptocurrency="BCH" file="bch.png"/>
     </extension>
-	    <extension class="com.generalbytes.batm.server.extensions.extra.bitcore.BitcoreExtension" >
+    <extension class="com.generalbytes.batm.server.extensions.extra.bitcore.BitcoreExtension" >
         <wallet prefix="bitcored" name="Bitcored">
             <param name="protocol" />
             <param name="user" />
@@ -482,6 +483,18 @@
             <cryptocurrency>FTO</cryptocurrency>
         </ratesource>
         <cryptologo cryptocurrency="FTO" file="fto.png"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.egulden.EguldenExtension" >
+        <wallet prefix="eguldend" name="Eguldend">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>EFL</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="EFL" file="efl.png"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.bitcoinprivate.BitcoinPrivateExtension" >
         <wallet prefix="btcpd" name="Bitcoinprivated">
