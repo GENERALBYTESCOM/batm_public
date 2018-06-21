@@ -447,7 +447,7 @@
         <cryptologo cryptocurrency="DEX" file="dex.png"/>
         <cryptologo cryptocurrency="BCH" file="bch.png"/>
     </extension>
-	    <extension class="com.generalbytes.batm.server.extensions.extra.bitcore.BitcoreExtension" >
+    <extension class="com.generalbytes.batm.server.extensions.extra.bitcore.BitcoreExtension" >
         <wallet prefix="bitcored" name="Bitcored">
             <param name="protocol" />
             <param name="user" />
