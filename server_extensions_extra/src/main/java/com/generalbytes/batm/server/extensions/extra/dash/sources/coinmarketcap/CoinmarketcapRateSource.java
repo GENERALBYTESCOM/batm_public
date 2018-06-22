@@ -1,3 +1,20 @@
+/*************************************************************************************
+ * Copyright (C) 2014-2018 GENERAL BYTES s.r.o. All rights reserved.
+ *
+ * This software may be distributed and modified under the terms of the GNU
+ * General Public License version 2 (GPL2) as published by the Free Software
+ * Foundation and appearing in the file GPL2.TXT included in the packaging of
+ * this file. Please note that GPL2 Section 2[b] requires that all works based
+ * on this software must also be made publicly available under the terms of
+ * the GPL2 ("Copyleft").
+ *
+ * Contact information
+ * -------------------
+ *
+ * GENERAL BYTES s.r.o.
+ * Web      :  http://www.generalbytes.com
+ *
+ ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap;
 
 import com.generalbytes.batm.server.extensions.Currencies;
@@ -81,7 +98,6 @@ public class CoinmarketcapRateSource implements IRateSource {
         return Currencies.USD;
     }
 
-
     @Override
     public BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency) {
         if (!getFiatCurrencies().contains(fiatCurrency)) {
@@ -89,26 +105,25 @@ public class CoinmarketcapRateSource implements IRateSource {
         }
 
         Integer cryptoId = coinIDs.get(cryptoCurrency);
-        if(cryptoId == null){
-			      return null;
-        }
-        Map<String, Object> ticker = api.getTickers(cryptoId, fiatCurrency);
-        if(ticker == null){
+        if (cryptoId == null) {
             return null;
         }
-        Map<String, Object> data = (Map<String, Object>) ticker.get("data");
-        if(data == null){
+        CmcTickerResponse ticker = api.getTickers(cryptoId, fiatCurrency);
+        if (ticker == null) {
             return null;
         }
-        Map<String, Object> quotes = (Map<String, Object>) data.get("quotes");
-        if(quotes == null){
+        CmcTickerData data = ticker.getData();
+        if (data == null) {
             return null;
         }
-        Map<String, Object> quote = (Map<String, Object>) quotes.get(fiatCurrency);
-        if(quote == null){
+        Map<String, CmcTickerQuote> quotesByFiatCurrency = data.getQuotes();
+        if (quotesByFiatCurrency == null) {
             return null;
         }
-        double price = (double) quote.get("price");
-        return new BigDecimal(price).setScale(2, BigDecimal.ROUND_HALF_EVEN);
+        CmcTickerQuote quote = quotesByFiatCurrency.get(fiatCurrency);
+        if (quote == null) {
+            return null;
+        }
+        return quote.getPrice();
     }
 }

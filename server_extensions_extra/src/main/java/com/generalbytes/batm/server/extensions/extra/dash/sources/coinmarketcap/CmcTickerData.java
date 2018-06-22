@@ -17,13 +17,16 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 import java.util.Map;
-@Path("/v2/ticker")
-@Produces(MediaType.APPLICATION_JSON)
-public interface ICoinmarketcapAPI {
-    @GET
-    @Path("/{id}/")
-    CmcTickerResponse  getTickers(@PathParam("id") Integer id, @QueryParam("convert") String fiatCurrency);
+
+public class CmcTickerData {
+    private Map<String, CmcTickerQuote> quotes;
+
+    public Map<String, CmcTickerQuote> getQuotes() {
+        return quotes;
+    }
+
+    public void setQuotes(Map<String, CmcTickerQuote> quotes) {
+        this.quotes = quotes;
+    }
 }
