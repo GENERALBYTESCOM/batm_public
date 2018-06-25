@@ -66,7 +66,7 @@ public class Currencies {
     public static final String MKD = "MKD";
     public static final String MYR = "MYR";
     public static final String SGD = "SGD";
-    public static final String SGD = "TRY"; // Turkish lira
+    public static final String TRY = "TRY"; // Turkish lira
     public static final String USD = "USD";
     public static final String XAF = "XAF";
     public static final String XAU = "XAU"; //gold
