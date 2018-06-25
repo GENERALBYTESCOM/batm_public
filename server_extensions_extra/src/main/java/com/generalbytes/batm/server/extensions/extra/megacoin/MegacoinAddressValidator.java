@@ -25,7 +25,7 @@ public class MegacoinAddressValidator implements ICryptoAddressValidator {
 
     @Override
     public boolean isAddressValid(String address) {
-        if (address.startsWith("M") {
+        if (address.startsWith("M")) {
             try {
                 Base58.decodeToBigInteger(address);
                 Base58.decodeChecked(address);
