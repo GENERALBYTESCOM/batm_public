@@ -66,6 +66,9 @@
                 <cryptocurrency>POT</cryptocurrency>
                 <cryptocurrency>BTX</cryptocurrency>
                 <cryptocurrency>EFL</cryptocurrency>
+                <cryptocurrency>BSD</cryptocurrency>
+                <cryptocurrency>BTDX</cryptocurrency>
+                <cryptocurrency>MEC</cryptocurrency>
             </ratesource>
             <paymentprocessor prefix="bitcoinpay" name="BitcoinPay.com" >
                 <param name="apikey" />
@@ -462,6 +465,54 @@
             <cryptocurrency>BTX</cryptocurrency>
         </ratesource>
         <cryptologo cryptocurrency="BTX" file="btx.png"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.bitsend.BitsendExtension" >
+        <wallet prefix="bitsendd" name="Bitsendd">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>BSD</cryptocurrency>
+        </wallet>
+        <ratesource prefix="bsdfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>BSD</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="BSD" file="bsd.png"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.bitcloud.BitcloudExtension" >
+        <wallet prefix="bitcloudd" name="Bitcloudd">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>BTDX</cryptocurrency>
+        </wallet>
+        <ratesource prefix="btdxfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>BTDX</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="BTDX" file="btdx.png"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.megacoin.MegacoinExtension" >
+        <wallet prefix="megacoind" name="Megacoind">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>MEC</cryptocurrency>
+        </wallet>
+        <ratesource prefix="mecfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>MEC</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="MEC" file="mec.png"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.watchlists.BasicWatchlistsExtension" />
     <extension class="com.generalbytes.batm.server.extensions.extra.futurocoin.FuturocoinExtension" >
