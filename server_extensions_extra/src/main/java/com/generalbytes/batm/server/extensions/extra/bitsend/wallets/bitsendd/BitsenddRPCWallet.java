@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Set;
 
 public class BitsenddRPCWallet implements IWallet{
-    private static final Logger log = LoggerFactory.getLogger(BitsendRPCWallet.class);
+    private static final Logger log = LoggerFactory.getLogger(BitsenddRPCWallet.class);
     private static final String CRYPTO_CURRENCY = Currencies.BSD;
 
     public BitsenddRPCWallet(String rpcURL, String accountName) {
