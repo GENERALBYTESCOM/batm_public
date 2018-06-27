@@ -29,7 +29,7 @@ public class Currencies {
     public static final String BTX = "BTX"; //BitCore
     public static final String BSD = "BSD"; //BitSend
     public static final String BTDX = "BTDX"; //Bitcloud
-	public static final String ETH = "ETH";
+    public static final String ETH = "ETH";
     public static final String EFL = "EFL";
     public static final String LTC = "LTC";
     public static final String VIA = "VIA";
@@ -41,7 +41,7 @@ public class Currencies {
     public static final String FTO = "FTO";
     public static final String MAX = "MAX";
     public static final String MEC = "MEC"; // Megacoin
-	public static final String LEO = "LEO";
+    public static final String LEO = "LEO";
     public static final String NLG = "NLG";
     public static final String GRS = "GRS";
     public static final String ICG = "ICG";
