@@ -65,6 +65,7 @@
                 <cryptocurrency>XMR</cryptocurrency>
                 <cryptocurrency>POT</cryptocurrency>
                 <cryptocurrency>BTX</cryptocurrency>
+                <cryptocurrency>BTCP</cryptocurrency>
                 <cryptocurrency>EFL</cryptocurrency>
             </ratesource>
             <paymentprocessor prefix="bitcoinpay" name="BitcoinPay.com" >
@@ -494,5 +495,21 @@
             <cryptocurrency>EFL</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="EFL" file="efl.png"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.bitcoinprivate.BitcoinPrivateExtension" >
+        <wallet prefix="btcpd" name="Bitcoinprivated">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>BTCP</cryptocurrency>
+        </wallet>
+        <ratesource prefix="btcpfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>BTCP</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="BTCP" file="btcp.png"/>
     </extension>
 </extensions>
