@@ -27,7 +27,9 @@ public class Currencies {
     public static final String BCH = "BCH"; //Bitcoin Cash
     public static final String BTCP = "BTCP"; //Bitcoin Private
     public static final String BTX = "BTX"; //BitCore
-    public static final String ETH = "ETH";
+    public static final String BSD = "BSD"; //BitSend
+    public static final String BTDX = "BTDX"; //Bitcloud
+	public static final String ETH = "ETH";
     public static final String EFL = "EFL";
     public static final String LTC = "LTC";
     public static final String VIA = "VIA";
@@ -38,7 +40,8 @@ public class Currencies {
     public static final String FLASH = "FLASH";// FLASH Coin
     public static final String FTO = "FTO";
     public static final String MAX = "MAX";
-    public static final String LEO = "LEO";
+    public static final String MEC = "MEC"; // Megacoin
+	public static final String LEO = "LEO";
     public static final String NLG = "NLG";
     public static final String GRS = "GRS";
     public static final String ICG = "ICG";
@@ -64,6 +67,7 @@ public class Currencies {
     public static final String MKD = "MKD";
     public static final String MYR = "MYR";
     public static final String SGD = "SGD";
+    public static final String TRY = "TRY"; // Turkish lira
     public static final String USD = "USD";
     public static final String XAF = "XAF";
     public static final String XAU = "XAU"; //gold
@@ -78,6 +82,8 @@ public class Currencies {
         crypto.add(BCH);
         crypto.add(BTCP);
         crypto.add(BTX);
+        crypto.add(BSD);
+        crypto.add(BTDX);
         crypto.add(EFL);
         crypto.add(ETH);
         crypto.add(LTC);
@@ -88,6 +94,7 @@ public class Currencies {
         crypto.add(DOGE);
         crypto.add(FLASH);
         crypto.add(MAX);
+        crypto.add(MEC);
         crypto.add(LEO);
         crypto.add(NLG);
         crypto.add(GRS);
@@ -116,6 +123,7 @@ public class Currencies {
         fiat.add(MKD);
         fiat.add(MYR);
         fiat.add(SGD);
+        fiat.add(TRY);
         fiat.add(USD);
         fiat.add(XAF);
         fiat.add(XAU);

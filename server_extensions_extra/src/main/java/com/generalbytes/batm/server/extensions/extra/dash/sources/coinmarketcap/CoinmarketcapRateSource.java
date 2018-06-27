@@ -60,6 +60,9 @@ public class CoinmarketcapRateSource implements IRateSource {
         coinIDs.put(Currencies.FLASH, 1755);
         coinIDs.put(Currencies.BTCP, 2575);
         coinIDs.put(Currencies.EFL, 234);
+        coinIDs.put(Currencies.BSD, 366);
+        coinIDs.put(Currencies.BTDX, 1381);
+        coinIDs.put(Currencies.MEC, 37);
     }
 
     public CoinmarketcapRateSource() {
@@ -81,6 +84,9 @@ public class CoinmarketcapRateSource implements IRateSource {
         result.add(Currencies.FLASH);
         result.add(Currencies.BTCP);
         result.add(Currencies.EFL);
+        result.add(Currencies.BSD);
+        result.add(Currencies.BTDX);
+        result.add(Currencies.MEC);
 
         return result;
     }
