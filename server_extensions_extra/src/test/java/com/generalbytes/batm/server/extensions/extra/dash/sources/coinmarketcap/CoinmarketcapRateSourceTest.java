@@ -1,4 +1,4 @@
-package com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.v2;
+package com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 /**
  * Class CoinmarketcapRateSourceV2Test tests method getExchangeRateLast() of class CoinmarketcapRateSourceV2
  */
-public class CoinmarketcapRateSourceV2Test {
+public class CoinmarketcapRateSourceTest {
 
     /**
      * Unit test method getExchangeRateLastTest() create an object of type CoinmarketcapRateSourceV2
@@ -16,7 +16,7 @@ public class CoinmarketcapRateSourceV2Test {
      */
     @Test
     public void getExchangeRateLastTest() {
-        CoinmarketcapRateSourceV2 rateSource = new CoinmarketcapRateSourceV2();
+        CoinmarketcapRateSource rateSource = new CoinmarketcapRateSource("USD");
 
         final BigDecimal priceUSD = rateSource.getExchangeRateLast("BTC", "USD");
         Assert.assertNotNull(priceUSD);

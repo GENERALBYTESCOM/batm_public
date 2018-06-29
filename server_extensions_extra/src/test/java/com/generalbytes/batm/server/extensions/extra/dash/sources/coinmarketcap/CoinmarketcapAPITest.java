@@ -1,5 +1,9 @@
-package com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.v2;
+package com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap;
 
+import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.CmcTickerData;
+import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.CmcTickerQuote;
+import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.CmcTickerResponse;
+import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.ICoinmarketcapAPI;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -14,17 +18,17 @@ import java.util.concurrent.TimeUnit;
 /**
  * Class CoinmarketcapV2APITest tests method of interface ICoinmarketcapV2API.
  */
-public class CoinmarketcapV2APITest {
+public class CoinmarketcapAPITest {
 
     private static long currentUnix = System.currentTimeMillis();
 
     private static final long CACHE_EXPIRY_TIME_DEFAULT = 600;
 
-    private static ICoinmarketcapV2API api;
+    private static ICoinmarketcapAPI api;
 
     @BeforeClass
     public static  void setup() {
-        api = RestProxyFactory.createProxy(ICoinmarketcapV2API.class, "https://api.coinmarketcap.com");
+        api = RestProxyFactory.createProxy(ICoinmarketcapAPI.class, "https://api.coinmarketcap.com");
     }
 
     /**
@@ -35,10 +39,9 @@ public class CoinmarketcapV2APITest {
     @Test
     public void timeTest() throws InterruptedException {
         Assert.assertTrue(true);
-        Thread.sleep(3000);
         long recentUnix = System.currentTimeMillis();
         long diff = recentUnix - currentUnix;
-        long seconds = TimeUnit.SECONDS.convert(diff, TimeUnit.MILLISECONDS);
+        long seconds = TimeUnit.SECONDS.convert(diff, TimeUnit.MILLISECONDS) + 3;
 
         final Map<String, Integer> coinIDs = new HashMap<String, Integer>();
         long cacheExpiryTime = 2; //2 seconds
@@ -69,10 +72,9 @@ public class CoinmarketcapV2APITest {
     @Test
     public void timeNotExpiredTest() throws InterruptedException {
         Assert.assertTrue(true);
-        Thread.sleep(1000);
         long recentUnix = System.currentTimeMillis();
         long diff = recentUnix - currentUnix;
-        long seconds = TimeUnit.SECONDS.convert(diff, TimeUnit.MILLISECONDS);
+        long seconds = TimeUnit.SECONDS.convert(diff, TimeUnit.MILLISECONDS) + 1;
 
         final Map<String, Integer> coinIDs = new HashMap<String, Integer>();
         long cacheExpiryTime = 2; //2 seconds
@@ -102,10 +104,9 @@ public class CoinmarketcapV2APITest {
     @Test
     public void timeNotExpiredButCoinIdIsEmptyTest() throws InterruptedException {
         Assert.assertTrue(true);
-        Thread.sleep(1000);
         long recentUnix = System.currentTimeMillis();
         long diff = recentUnix - currentUnix;
-        long seconds = TimeUnit.SECONDS.convert(diff, TimeUnit.MILLISECONDS);
+        long seconds = TimeUnit.SECONDS.convert(diff, TimeUnit.MILLISECONDS) + 1;
 
         final Map<String, Integer> coinIDs = new HashMap<String, Integer>();
         if(coinIDs.isEmpty() || seconds > CACHE_EXPIRY_TIME_DEFAULT) {
@@ -127,142 +128,16 @@ public class CoinmarketcapV2APITest {
     }
 
     /**
-     * Method getGlobalTest() tests if method getGlobal() of the api has been correctly called.
-     */
-    @Test
-    public void getGlobalTest() {
-        final Map<String, Object> result = api.getGlobal();
-        Assert.assertNotNull(result);
-        Assert.assertNotNull(result.get("data"));
-        Assert.assertTrue(result.get("data") instanceof Map);
-
-        final Map<String, Integer> dataMap = (Map<String, Integer>) result.get("data");
-        Assert.assertFalse(dataMap.isEmpty());
-        Assert.assertEquals(5, dataMap.size());
-        Assert.assertNotNull(dataMap.get("active_cryptocurrencies"));
-
-        final Integer activeCrypto = dataMap.get("active_cryptocurrencies");
-        Assert.assertTrue(activeCrypto > 1000);
-    }
-
-    /**
-     * Method getAllTickersTest() checks if method getAllTickers() of the api is called correctly and
-     * that data is accepted accordingly.
-     */
-    @Test
-    public void getAllTickersTest() {
-        final Map<String, Object> result = api.getAllTickers();
-        Assert.assertNotNull(result);
-        Assert.assertEquals(2, result.size());
-
-        final Object object = result.get("data");
-        Assert.assertTrue(object instanceof Map);
-
-        final Map<String, Map<String, Object>> dataMap = (Map<String, Map<String, Object>>) object;
-        Assert.assertFalse(dataMap.isEmpty());
-
-        final Map<String, Object> btcMap = dataMap.get("1");
-        Assert.assertFalse(btcMap.isEmpty());
-
-        final Integer id = (Integer)btcMap.get("id");
-        final String symbol = (String)btcMap.get("symbol");
-
-        Assert.assertNotNull(id);
-        Assert.assertNotNull(symbol);
-        Assert.assertEquals(1, id.intValue());
-        Assert.assertEquals("BTC", symbol);
-    }
-
-    /**
-     * Method getTickerOneStringParameterTest() checks if method getTicker() of the api, with one parameter - id
-     * of type string is correctly called and that data is received.
-     */
-    @Test
-    public void getTickerOneStringParameterTest() {
-        final Map<String, Map<String, Object>> result = api.getTicker("1");
-        Assert.assertNotNull(result);
-
-        final Map<String, Object> data = result.get("data");
-        Assert.assertNotNull(data);
-
-        final Integer id = (Integer) data.get("id");
-        Assert.assertNotNull(id);
-        Assert.assertEquals(1, id.intValue());
-
-        final Map<String, Object> metadata = result.get("metadata");
-        Assert.assertNotNull(metadata);
-
-        final Integer timestamp = (Integer) metadata.get("timestamp");
-        Assert.assertNotNull(timestamp);
-    }
-
-    /**
-     * Method getTickerOneStringParameterTest() checks if method getTicker() of the api, with one parameter - id
-     * of type string is correctly called and that data is received.
-     */
-    @Test
-    public void getTickerTwoStringParametersTest() {
-        final Map<String, Map<String, Object>> result = api.getTicker("1", "EUR");
-        Assert.assertNotNull(result);
-
-        final Map<String, Object> data = result.get("data");
-        Assert.assertNotNull(data);
-
-        final Integer id = (Integer) data.get("id");
-        Assert.assertNotNull(id);
-        Assert.assertEquals(1, id.intValue());
-
-        final Map<String, Object> metadata = result.get("metadata");
-        Assert.assertNotNull(metadata);
-
-        final Integer timestamp = (Integer) metadata.get("timestamp");
-        Assert.assertNotNull(timestamp);
-    }
-
-    /**
-     * Method getTickerOneIntegerParameterTest() checks if method getTicker() of the api, with one parameter - id
-     * of type string is correctly called and that data is received.
-     */
-    @Test
-    public void getTickerOneIntegerParameterTest() {
-        final Map<String, Map<String, Object>> result = api.getTicker(1);
-        Assert.assertNotNull(result);
-
-        final Map<String, Object> data = result.get("data");
-        Assert.assertNotNull(data);
-
-        final Integer id = (Integer) data.get("id");
-        Assert.assertNotNull(id);
-        Assert.assertEquals(1, id.intValue());
-
-        final Map<String, Object> metadata = result.get("metadata");
-        Assert.assertNotNull(metadata);
-
-        final Integer timestamp = (Integer) metadata.get("timestamp");
-        Assert.assertNotNull(timestamp);
-    }
-
-    /**
      * Method getTickerOneIntegerOneStringParametersTest() checks if method getTicker() of the api, with one parameter - id
      * of type string is correctly called and that data is received.
      */
     @Test
     public void getTickerOneIntegerOneStringParametersTest() {
-        final Map<String, Map<String, Object>> result = api.getTicker(1, "EUR");
+        CmcTickerResponse result = api.getTicker(1, "USD");
         Assert.assertNotNull(result);
 
-        final Map<String, Object> data = result.get("data");
+        CmcTickerData data = result.getData();
         Assert.assertNotNull(data);
-
-        final Integer id = (Integer) data.get("id");
-        Assert.assertNotNull(id);
-        Assert.assertEquals(1, id.intValue());
-
-        final Map<String, Object> metadata = result.get("metadata");
-        Assert.assertNotNull(metadata);
-
-        final Integer timestamp = (Integer) metadata.get("timestamp");
-        Assert.assertNotNull(timestamp);
     }
 
     /**
@@ -271,21 +146,11 @@ public class CoinmarketcapV2APITest {
      */
     @Test
     public void getTickerOneIntegerOneNullParametersTest() {
-        final Map<String, Map<String, Object>> result = api.getTicker(1, null);
+        CmcTickerResponse result = api.getTicker(1, null);
         Assert.assertNotNull(result);
 
-        final Map<String, Object> data = result.get("data");
+        CmcTickerData data = result.getData();
         Assert.assertNotNull(data);
-
-        final Integer id = (Integer) data.get("id");
-        Assert.assertNotNull(id);
-        Assert.assertEquals(1, id.intValue());
-
-        final Map<String, Object> metadata = result.get("metadata");
-        Assert.assertNotNull(metadata);
-
-        final Integer timestamp = (Integer) metadata.get("timestamp");
-        Assert.assertNotNull(timestamp);
     }
 
     /**
@@ -294,26 +159,21 @@ public class CoinmarketcapV2APITest {
      */
     @Test
     public void getQuotesTest() {
-        String fiat = "EUR";
-
-        final Map<String, Map<String, Object>> result = api.getTicker("1", fiat);
+        CmcTickerResponse result = api.getTicker(1, "EUR");
         Assert.assertNotNull(result);
 
-        final Map<String, Object> data = result.get("data");
+        CmcTickerData data = result.getData();
         Assert.assertNotNull(data);
 
-        final Map<String, Object> quotes = (Map<String, Object>) data.get("quotes");
+        final Map<String, CmcTickerQuote> quotes = data.getQuotes();
         Assert.assertNotNull(quotes);
 
-        final Map<String, Object> quote = (Map<String, Object>) quotes.get(fiat);
+        CmcTickerQuote quote = quotes.get("EUR");
         Assert.assertNotNull(quote);
 
-        final double price = (double) quote.get("price");
-        Assert.assertTrue(price != 0);
-
-        final BigDecimal priceBD = new BigDecimal(price).setScale(2, BigDecimal.ROUND_HALF_EVEN);
-        Assert.assertNotNull(priceBD);
-        Assert.assertTrue(priceBD.doubleValue() != 0);
+        BigDecimal price = quote.getPrice();
+        Assert.assertNotNull(price);
+        Assert.assertTrue(price.doubleValue() != 0);
     }
 
     /**
@@ -452,26 +312,20 @@ public class CoinmarketcapV2APITest {
         final Integer id = coinIDs.get(currency);
         Assert.assertNotNull(id);
 
-        final Map<String, Map<String, Object>> result = api.getTicker(id, fiat);
+        CmcTickerResponse result = api.getTicker(1, fiat);
         Assert.assertNotNull(result);
 
-        final Map<String, Object> data = result.get("data");
+        CmcTickerData data = result.getData();
         Assert.assertNotNull(data);
 
-        final Map<String, Object> quotes = (Map<String, Object>) data.get("quotes");
+        final Map<String, CmcTickerQuote> quotes = data.getQuotes();
         Assert.assertNotNull(quotes);
-        Assert.assertEquals(2, quotes.size());
 
-        final Map<String, Object> quote = (Map<String, Object>) quotes.get(fiat);
+        CmcTickerQuote quote = quotes.get("EUR");
         Assert.assertNotNull(quote);
 
-        final double price = (double) quote.get("price");
-        Assert.assertTrue(price != 0);
-
-        final BigDecimal priceBD = new BigDecimal(price).setScale(2, BigDecimal.ROUND_HALF_EVEN);
-        Assert.assertNotNull(priceBD);
-        Assert.assertTrue(priceBD.doubleValue() != 0);
-
-        System.out.println("Price of " + currency + " = " + priceBD.doubleValue() + " " + fiat);
+        BigDecimal price = quote.getPrice();
+        Assert.assertNotNull(price);
+        Assert.assertTrue(price.doubleValue() != 0);
     }
 }

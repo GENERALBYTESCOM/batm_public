@@ -19,13 +19,11 @@ package com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap
 
 import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IRateSource;
+import si.mazi.rescu.RestProxyFactory;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.HashMap;
-import java.util.Map;
-import si.mazi.rescu.RestProxyFactory;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 /**
  * Created by kkyovsky on 11/29/17.
  *
@@ -33,9 +31,14 @@ import si.mazi.rescu.RestProxyFactory;
  */
 
 public class CoinmarketcapRateSource implements IRateSource {
+    /**
+     * Expiry of cache in seconds
+     */
+    private static final long CACHE_EXPIRY_TIME_DEFAULT = 600;
     private ICoinmarketcapAPI api;
-    private static HashMap<String,Integer> coinIDs = new HashMap<String, Integer>();
     private String preferredFiatCurrency = Currencies.USD;
+    private static volatile long recentUnix = System.currentTimeMillis();
+    private static volatile Map<String,Integer> coinIDs;
 
     public CoinmarketcapRateSource(String preferedFiatCurrency) {
         this();
@@ -48,25 +51,32 @@ public class CoinmarketcapRateSource implements IRateSource {
         if (Currencies.CAD.equalsIgnoreCase(preferedFiatCurrency)) {
             this.preferredFiatCurrency = Currencies.CAD;
         }
-        coinIDs.put(Currencies.BTC, 1);
-        coinIDs.put(Currencies.SYS, 541);
-        coinIDs.put(Currencies.BCH, 1831);
-        coinIDs.put(Currencies.BTX, 1654);
-        coinIDs.put(Currencies.LTC, 2);
-        coinIDs.put(Currencies.ETH, 1027);
-        coinIDs.put(Currencies.DASH, 131);
-        coinIDs.put(Currencies.XMR, 328);
-        coinIDs.put(Currencies.POT, 122);
-        coinIDs.put(Currencies.FLASH, 1755);
-        coinIDs.put(Currencies.BTCP, 2575);
-        coinIDs.put(Currencies.EFL, 234);
-        coinIDs.put(Currencies.BSD, 366);
-        coinIDs.put(Currencies.BTDX, 1381);
-        coinIDs.put(Currencies.MEC, 37);
     }
 
-    public CoinmarketcapRateSource() {
+    private CoinmarketcapRateSource() {
         api = RestProxyFactory.createProxy(ICoinmarketcapAPI.class, "https://api.coinmarketcap.com");
+        final long currentUnix = System.currentTimeMillis();
+        final long difference = currentUnix - recentUnix;
+        final long differenceInSeconds = TimeUnit.SECONDS.convert(difference, TimeUnit.MILLISECONDS);
+        if(coinIDs == null || coinIDs.isEmpty() || differenceInSeconds > CACHE_EXPIRY_TIME_DEFAULT) {
+            HashMap<String, Integer> localCoinIDs = new HashMap<>();
+            final Map<String, Object> listings = api.getListings();
+            if (listings != null && !listings.isEmpty()) {
+                final List<Object> dataList = (List<Object>) listings.get("data");
+                if(dataList != null && !dataList.isEmpty()) {
+                    for (Object dataobject : dataList) {
+                        final Map<String, Object> map = (Map<String, Object>) dataobject;
+                        final Integer id = (Integer) map.get("id");
+                        final String symbol = (String) map.get("symbol");
+                        if (!localCoinIDs.containsKey(symbol) && !localCoinIDs.containsValue(id)) {
+                            localCoinIDs.put(symbol, id);
+                        }
+                    }
+                }
+            }
+            CoinmarketcapRateSource.recentUnix = System.currentTimeMillis();
+            CoinmarketcapRateSource.coinIDs = localCoinIDs;
+        }
     }
 
     @Override
@@ -116,7 +126,7 @@ public class CoinmarketcapRateSource implements IRateSource {
         if (cryptoId == null) {
             return null;
         }
-        CmcTickerResponse ticker = api.getTickers(cryptoId, fiatCurrency);
+        CmcTickerResponse ticker = api.getTicker(cryptoId, fiatCurrency);
         if (ticker == null) {
             return null;
         }
