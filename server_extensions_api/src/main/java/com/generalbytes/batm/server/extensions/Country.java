@@ -141,7 +141,7 @@ public enum Country {
     LT("LT", "LTU", "Lithuania"),
     LU("LU", "LUX", "Luxembourg"),
     MO("MO", "MAC", "Macao"),
-    MK("MK", "MKD", "Macedonia (the former Yugoslav Republic of)"),
+    MK("MK", "MKD", "Macedonia"),
     MG("MG", "MDG", "Madagascar"),
     MW("MW", "MWI", "Malawi"),
     MY("MY", "MYS", "Malaysia"),

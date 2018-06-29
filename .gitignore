@@ -9,3 +9,7 @@ out/
 target
 install-libs.sh
 .mvn-repo
+..gitignore.swp
+.project
+.classpath
+.settings/
