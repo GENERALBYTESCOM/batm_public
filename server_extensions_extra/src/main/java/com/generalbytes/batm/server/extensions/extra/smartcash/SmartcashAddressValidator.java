@@ -18,14 +18,17 @@
 package com.generalbytes.batm.server.extensions.extra.smartcash;
 
 import com.generalbytes.batm.server.coinutil.AddressFormatException;
-import com.generalbytes.batm.server.coinutil.Base58;
-import com.generalbytes.batm.server.extensions.ExtensionsUtil;
+import com.generalbytes.batm.server.coinutil.SmartCash.Base58;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 
 public class SmartcashAddressValidator implements ICryptoAddressValidator {
 
     @Override
     public boolean isAddressValid(String address) {
+        String optionalPrefix = "smartcash:";
+        if (address.startsWith(optionalPrefix)) {
+            address = address.substring(optionalPrefix.length(), address.length());
+        }
         if (address.startsWith("S")) {
             try {
                 Base58.decodeToBigInteger(address);

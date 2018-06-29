@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2016 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2018 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -19,15 +19,11 @@ package com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-
-@Path("/v1/ticker")
+import java.util.Map;
+@Path("/v2/ticker")
 @Produces(MediaType.APPLICATION_JSON)
 public interface ICoinmarketcapAPI {
     @GET
-    @Path("/")
-    CMCTicker[]  getTickers(@QueryParam("convert") String fiatCurrency);
-
-    @GET
-    @Path("/{cryptoToGet}/?convert={convert}")
-    CMCTicker[]  getTickers(@PathParam("cryptoToGet") String cryptoToGet,@QueryParam("convert") String fiatCurrency);
+    @Path("/{id}/")
+    CmcTickerResponse  getTickers(@PathParam("id") Integer id, @QueryParam("convert") String fiatCurrency);
 }
