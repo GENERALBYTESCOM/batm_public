@@ -1,7 +1,5 @@
 package com.generalbytes.batm.server.extensions;
 
-import com.sun.corba.se.impl.encoding.CodeSetConversion;
-
 import java.math.BigDecimal;
 
 public class Converters {

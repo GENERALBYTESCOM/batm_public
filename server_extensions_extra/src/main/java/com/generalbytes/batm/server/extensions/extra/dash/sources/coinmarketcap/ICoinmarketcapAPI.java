@@ -20,10 +20,20 @@ package com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.Map;
-@Path("/v2/ticker")
+@Path("/v2")
 @Produces(MediaType.APPLICATION_JSON)
 public interface ICoinmarketcapAPI {
     @GET
-    @Path("/{id}/")
-    CmcTickerResponse  getTickers(@PathParam("id") Integer id, @QueryParam("convert") String fiatCurrency);
+    @Path("/ticker/{id}/")
+    CmcTickerResponse  getTicker(@PathParam("id") Integer id, @QueryParam("convert") String fiatCurrency);
+
+    /**
+     * Method getListings() returns map which contain all suported crypto currencies.
+     * For all cryptocurrencies there is associated id.
+     *
+     * @return Map of cryptocurrencies
+     */
+    @GET
+    @Path("/listings")
+    Map<String, Object> getListings();
 }
