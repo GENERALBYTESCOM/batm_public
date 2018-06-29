@@ -31,6 +31,17 @@
                 <param name="proxyurl" />
                 <cryptocurrency>BTC</cryptocurrency>
             </wallet>
+            <wallet prefix="bitgo" name="BitGo Wallet">
+                <param name="host" />
+                <param name="port" />
+                <param name="token" />
+                <param name="wallet_id" />
+                <param name="wallet_passphrase" />
+                <cryptocurrency>BCH</cryptocurrency>
+                <cryptocurrency>BTC</cryptocurrency>
+                <cryptocurrency>LTC</cryptocurrency>
+                <help>Host should start with http:// or https://</help>
+            </wallet>
             <ratesource prefix="yahoo" name ="finance.yahoo.com" >
                 <cryptocurrency>BTC</cryptocurrency>
             </ratesource>
@@ -57,6 +68,7 @@
             <ratesource prefix="coinmarketcap" name ="CoinMarketCap.com" >
                 <param name="fiatcurrency" />
                 <cryptocurrency>BTC</cryptocurrency>
+                <cryptocurrency>SYS</cryptocurrency>
                 <cryptocurrency>BCH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
@@ -64,6 +76,11 @@
                 <cryptocurrency>XMR</cryptocurrency>
                 <cryptocurrency>POT</cryptocurrency>
                 <cryptocurrency>BTX</cryptocurrency>
+                <cryptocurrency>BTCP</cryptocurrency>
+                <cryptocurrency>EFL</cryptocurrency>
+                <cryptocurrency>BSD</cryptocurrency>
+                <cryptocurrency>BTDX</cryptocurrency>
+                <cryptocurrency>MEC</cryptocurrency>
             </ratesource>
             <paymentprocessor prefix="bitcoinpay" name="BitcoinPay.com" >
                 <param name="apikey" />
@@ -139,10 +156,6 @@
             <cryptocurrency>FLASH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
         </ratesource>
-        <!--ratesource prefix="coinmarketcap" name ="coinmarketcap.com" >
-            <param name="fiatcurrency" />
-            <cryptocurrency>FLASH</cryptocurrency>
-        </ratesource-->
         <ratesource prefix="flashfix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>FLASH</cryptocurrency>
@@ -226,6 +239,42 @@
             <cryptocurrency>DASH</cryptocurrency>
         </ratesource>
         <cryptologo cryptocurrency="DASH" file="dash.png"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.syscoin.SyscoinExtension" >
+    <wallet prefix="syscoind" name="syscoind">
+      <param name="protocol" />
+      <param name="user" />
+      <param name="password" />
+      <param name="host" />
+      <param name="port" />
+      <param name="accountname" />
+      <cryptocurrency>SYS</cryptocurrency>
+    </wallet>
+    <ratesource prefix="syscoinfix" name ="Fix Price" >
+      <param name="price" />
+      <cryptocurrency>SYS</cryptocurrency>
+    </ratesource>
+    <cryptologo cryptocurrency="SYS" file="sys.png"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.digibyte.DigiByteExtension" >
+        <wallet prefix="digibyted" name="Digibyted">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>DGB</cryptocurrency>
+        </wallet>
+        <ratesource prefix="digibytefix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>DGB</cryptocurrency>
+        </ratesource>
+        <ratesource prefix="livecoin" name ="livecoin.net" >
+            <param name="fiatcurrency" />
+            <cryptocurrency>DGB</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="DGB" file="digibyte.png"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.maxcoin.MaxcoinExtension" >
         <wallet prefix="maxcoind" name="Maxcoind">
@@ -327,6 +376,10 @@
             <param name="price" />
             <cryptocurrency>SMART</cryptocurrency>
         </ratesource>
+        <ratesource prefix="smartapi" name ="SmartCash API" >
+            <param name="price" />
+            <cryptocurrency>SMART</cryptocurrency>
+        </ratesource>
         <cryptologo cryptocurrency="SMART" file="smart.png"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.startcoin.StartcoinExtension" >
@@ -390,10 +443,6 @@
             <param name="price" />
             <cryptocurrency>POT</cryptocurrency>
         </ratesource>
-        <ratesource prefix="coinmarketcap" name ="coinmarketcap.com" >
-            <param name="fiatcurrency" />
-            <cryptocurrency>POT</cryptocurrency>
-        </ratesource>
         <cryptologo cryptocurrency="POT" file="pot.png"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.dexacoin.DexCoinSupport">
@@ -413,7 +462,7 @@
         <cryptologo cryptocurrency="DEX" file="dex.png"/>
         <cryptologo cryptocurrency="BCH" file="bch.png"/>
     </extension>
-	    <extension class="com.generalbytes.batm.server.extensions.extra.bitcore.BitcoreExtension" >
+    <extension class="com.generalbytes.batm.server.extensions.extra.bitcore.BitcoreExtension" >
         <wallet prefix="bitcored" name="Bitcored">
             <param name="protocol" />
             <param name="user" />
@@ -423,15 +472,106 @@
             <param name="accountname" />
             <cryptocurrency>BTX</cryptocurrency>
         </wallet>
-        <ratesource prefix="coinmarketcap" name ="coinmarketcap.com" >
-            <param name="fiatcurrency" />
-            <cryptocurrency>BTX</cryptocurrency>
-        </ratesource>
         <ratesource prefix="btxfix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>BTX</cryptocurrency>
         </ratesource>
         <cryptologo cryptocurrency="BTX" file="btx.png"/>
-    </extension>	
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.bitsend.BitsendExtension" >
+        <wallet prefix="bitsendd" name="Bitsendd">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>BSD</cryptocurrency>
+        </wallet>
+        <ratesource prefix="bsdfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>BSD</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="BSD" file="bsd.png"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.bitcloud.BitcloudExtension" >
+        <wallet prefix="bitcloudd" name="Bitcloudd">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>BTDX</cryptocurrency>
+        </wallet>
+        <ratesource prefix="btdxfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>BTDX</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="BTDX" file="btdx.png"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.megacoin.MegacoinExtension" >
+        <wallet prefix="megacoind" name="Megacoind">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>MEC</cryptocurrency>
+        </wallet>
+        <ratesource prefix="mecfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>MEC</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="MEC" file="mec.png"/>
+    </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.watchlists.BasicWatchlistsExtension" />
+    <extension class="com.generalbytes.batm.server.extensions.extra.futurocoin.FuturocoinExtension" >
+        <wallet prefix="futurocoind" name="Futurocoind">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>FTO</cryptocurrency>
+        </wallet>
+        <ratesource prefix="yobit" name="Yobit" >
+            <cryptocurrency>FTO</cryptocurrency>
+        </ratesource>
+        <ratesource prefix="ftofix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>FTO</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="FTO" file="fto.png"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.egulden.EguldenExtension" >
+        <wallet prefix="eguldend" name="Eguldend">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>EFL</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="EFL" file="efl.png"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.bitcoinprivate.BitcoinPrivateExtension" >
+        <wallet prefix="btcpd" name="Bitcoinprivated">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>BTCP</cryptocurrency>
+        </wallet>
+        <ratesource prefix="btcpfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>BTCP</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="BTCP" file="btcp.png"/>
+    </extension>
 </extensions>

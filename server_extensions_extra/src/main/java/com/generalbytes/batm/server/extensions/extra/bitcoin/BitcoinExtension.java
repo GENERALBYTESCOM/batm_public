@@ -27,6 +27,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.bity.BityRa
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.mrcoin.MrCoinRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitcoind.BATMBitcoindRPCWallet;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitcore.BitcoreWallet;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.BitgoWallet;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.math.BigDecimal;
@@ -131,6 +132,32 @@ public class BitcoinExtension implements IExtension{
                 // instead use \n and then remove the leading :
                 String proxyUrl = st.nextToken("\n").replaceFirst(":", "");
                 return new BitcoreWallet(apiKey, proxyUrl);
+            }else if ("bitgo".equalsIgnoreCase(walletType)) { //bitgo:host:port:token:wallet_address:wallet_passphrase
+                String first = st.nextToken();
+                String protocol = "";
+                String host = "";
+                String fullHost = "";
+                if(first != null && first.startsWith("http")) {
+                    protocol = first ;
+                    host = st.nextToken();
+                    fullHost = protocol + ":" + host;
+                } else {
+                    host = first;
+                    fullHost = host;
+                }
+
+                String port = "";
+                String token = "";
+                String next = st.nextToken();
+                if(next != null && next.length() > 6) {
+                    token = next;
+                } else {
+                    port = next;
+                    token = st.nextToken();
+                }
+                String walletAddress = st.nextToken();
+                String walletPassphrase = st.nextToken();
+                return new BitgoWallet(fullHost, port, token, walletAddress, walletPassphrase);
             }
         }
         return null;
