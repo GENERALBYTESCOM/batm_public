@@ -31,6 +31,17 @@
                 <param name="proxyurl" />
                 <cryptocurrency>BTC</cryptocurrency>
             </wallet>
+            <wallet prefix="bitgo" name="BitGo Wallet">
+                <param name="host" />
+                <param name="port" />
+                <param name="token" />
+                <param name="wallet_id" />
+                <param name="wallet_passphrase" />
+                <cryptocurrency>BCH</cryptocurrency>
+                <cryptocurrency>BTC</cryptocurrency>
+                <cryptocurrency>LTC</cryptocurrency>
+                <help>Host should start with http:// or https://</help>
+            </wallet>
             <ratesource prefix="yahoo" name ="finance.yahoo.com" >
                 <cryptocurrency>BTC</cryptocurrency>
             </ratesource>
