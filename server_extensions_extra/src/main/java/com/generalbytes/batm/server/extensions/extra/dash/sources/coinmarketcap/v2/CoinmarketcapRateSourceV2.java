@@ -17,9 +17,9 @@ public class CoinmarketcapRateSourceV2 implements IRateSource {
      */
     private static final long CACHE_EXPIRY_TIME_DEFAULT = 600;
 
-    private static long recentUnix = System.currentTimeMillis();
+    private static volatile long recentUnix = System.currentTimeMillis();
 
-    private static Map<String,Integer> coinIDs;
+    private static volatile Map<String,Integer> coinIDs;
 
     private ICoinmarketcapV2API api;
 
@@ -29,7 +29,7 @@ public class CoinmarketcapRateSourceV2 implements IRateSource {
         final long difference = currentUnix - recentUnix;
         final long differenceInSeconds = TimeUnit.SECONDS.convert(difference, TimeUnit.MILLISECONDS);
         if(coinIDs == null || coinIDs.isEmpty() || differenceInSeconds > CACHE_EXPIRY_TIME_DEFAULT) {
-            coinIDs = new HashMap<String, Integer>();
+            HashMap<String, Integer> localCoinIDs = new HashMap<>();
             final Map<String, Object> listings = api.getListings();
             if (listings != null && !listings.isEmpty()) {
                 final List<Object> dataList = (List<Object>) listings.get("data");
@@ -38,12 +38,14 @@ public class CoinmarketcapRateSourceV2 implements IRateSource {
                         final Map<String, Object> map = (Map<String, Object>) dataobject;
                         final Integer id = (Integer) map.get("id");
                         final String symbol = (String) map.get("symbol");
-                        if (!coinIDs.containsKey(symbol) && !coinIDs.containsValue(id)) {
-                            coinIDs.put(symbol, id);
+                        if (!CoinmarketcapRateSourceV2.coinIDs.containsKey(symbol) && !CoinmarketcapRateSourceV2.coinIDs.containsValue(id)) {
+                            CoinmarketcapRateSourceV2.coinIDs.put(symbol, id);
                         }
                     }
                 }
             }
+            CoinmarketcapRateSourceV2.recentUnix = System.currentTimeMillis();
+            CoinmarketcapRateSourceV2.coinIDs = localCoinIDs;
         }
     }
 
