@@ -25,8 +25,12 @@ import java.util.List;
 public class Currencies {
     public static final String BTC = "BTC";
     public static final String BCH = "BCH"; //Bitcoin Cash
+    public static final String BTCP = "BTCP"; //Bitcoin Private
     public static final String BTX = "BTX"; //BitCore
+    public static final String BSD = "BSD"; //BitSend
+    public static final String BTDX = "BTDX"; //Bitcloud
     public static final String ETH = "ETH";
+    public static final String EFL = "EFL";
     public static final String LTC = "LTC";
     public static final String VIA = "VIA";
     public static final String DEX = "DEX";
@@ -36,6 +40,7 @@ public class Currencies {
     public static final String FLASH = "FLASH";// FLASH Coin
     public static final String FTO = "FTO";
     public static final String MAX = "MAX";
+    public static final String MEC = "MEC"; // Megacoin
     public static final String LEO = "LEO";
     public static final String NLG = "NLG";
     public static final String GRS = "GRS";
@@ -45,10 +50,12 @@ public class Currencies {
     public static final String POT = "POT";
     public static final String SMART = "SMART";
     public static final String START = "START";
+    public static final String SYS = "SYS"; //  Syscoin 3
     public static final String TKN = "TKN";
     public static final String WDC = "WDC";
     public static final String XMR = "XMR";
 
+    public static final String AMD = "AMD";
     public static final String CAD = "CAD";
     public static final String CHF = "CHF";
     public static final String CNY = "CNY";
@@ -60,19 +67,30 @@ public class Currencies {
     public static final String MKD = "MKD";
     public static final String MYR = "MYR";
     public static final String SGD = "SGD";
+    public static final String TRY = "TRY"; // Turkish lira
     public static final String USD = "USD";
     public static final String XAF = "XAF";
     public static final String XAU = "XAU"; //gold
+    public static final String TBTC = "TBTC"; //test btc
+    public static final String TXRP = "TXRP"; //test xrp
+    public static final String TBCH = "TBCH"; //test bch
+    public static final String TRMG = "TRMG"; //test rmg
+    public static final String TLTC = "TLTC"; //test ltc
+    public static final String TETH = "TETH"; //test eth
     public static final String NONE = "";
 
     public static final List<String> FIAT_CURRENCIES;
     public static final List<String> CRYPTO_CURRENCIES;
 
     static {
-        List<String> crypto = new ArrayList<>();
+        List<String> crypto = new ArrayList<String>();
         crypto.add(BTC);
         crypto.add(BCH);
+        crypto.add(BTCP);
         crypto.add(BTX);
+        crypto.add(BSD);
+        crypto.add(BTDX);
+        crypto.add(EFL);
         crypto.add(ETH);
         crypto.add(LTC);
         crypto.add(VIA);
@@ -82,6 +100,7 @@ public class Currencies {
         crypto.add(DOGE);
         crypto.add(FLASH);
         crypto.add(MAX);
+        crypto.add(MEC);
         crypto.add(LEO);
         crypto.add(NLG);
         crypto.add(GRS);
@@ -91,12 +110,14 @@ public class Currencies {
         crypto.add(POT);
         crypto.add(SMART);
         crypto.add(START);
+        crypto.add(SYS);
         crypto.add(TKN);
         crypto.add(WDC);
         crypto.add(XMR);
         CRYPTO_CURRENCIES = Collections.unmodifiableList(crypto);
 
-        List<String> fiat = new ArrayList<>();
+        List<String> fiat = new ArrayList<String>();
+        fiat.add(AMD);
         fiat.add(CAD);
         fiat.add(CHF);
         fiat.add(CNY);
@@ -108,6 +129,7 @@ public class Currencies {
         fiat.add(MKD);
         fiat.add(MYR);
         fiat.add(SGD);
+        fiat.add(TRY);
         fiat.add(USD);
         fiat.add(XAF);
         fiat.add(XAU);
