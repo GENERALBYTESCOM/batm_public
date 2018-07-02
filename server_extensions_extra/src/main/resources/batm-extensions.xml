@@ -37,6 +37,7 @@
             <ratesource prefix="btcfix" name ="Fix Price" >
                 <param name="price" />
                 <cryptocurrency>BTC</cryptocurrency>
+                <help>USD is default fiat currency.</help>
             </ratesource>
             <ratesource prefix="bity" name ="Bity.com" >
                 <cryptocurrency>BTC</cryptocurrency>
@@ -116,6 +117,7 @@
         <ratesource prefix="dogefix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>DOGE</cryptocurrency>
+            <help>USD is default fiat currency.</help>
         </ratesource>
         <cryptologo cryptocurrency="DOGE" file="doge.png"/>
     </extension>
@@ -146,6 +148,7 @@
         <ratesource prefix="flashfix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>FLASH</cryptocurrency>
+            <help>USD is default fiat currency.</help>
         </ratesource>
         <cryptologo cryptocurrency="FLASH" file="flash.png"/>
     </extension>
@@ -166,6 +169,7 @@
         <ratesource prefix="ltcfix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>LTC</cryptocurrency>
+            <help>USD is default fiat currency.</help>
         </ratesource>
         <cryptologo cryptocurrency="LTC" file="ltc.png"/>
     </extension>
@@ -182,6 +186,7 @@
         <ratesource prefix="viafix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>VIA</cryptocurrency>
+            <help>USD is default fiat currency.</help>
         </ratesource>
         <ratesource prefix="poloniexrs" name ="Poloniex.com vs bitcoinaverage.com" >
             <param name="fiatcurrency" />
@@ -202,9 +207,10 @@
         <ratesource prefix="cd" name="Cryptodiggers" >
             <cryptocurrency>WDC</cryptocurrency>
         </ratesource>
-	<ratesource prefix="wdcfix" name ="Fix Price" >
+    	<ratesource prefix="wdcfix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>WDC</cryptocurrency>
+            <help>USD is default fiat currency.</help>
         </ratesource>
         <cryptologo cryptocurrency="WDC" file="wdc.png"/>
     </extension>
@@ -224,6 +230,7 @@
         <ratesource prefix="dashfix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>DASH</cryptocurrency>
+            <help>USD is default fiat currency.</help>
         </ratesource>
         <cryptologo cryptocurrency="DASH" file="dash.png"/>
     </extension>
@@ -240,6 +247,7 @@
         <ratesource prefix="digibytefix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>DGB</cryptocurrency>
+            <help>USD is default fiat currency.</help>
         </ratesource>
         <ratesource prefix="livecoin" name ="livecoin.net" >
             <param name="fiatcurrency" />
@@ -263,6 +271,7 @@
         <ratesource prefix="maxfix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>MAX</cryptocurrency>
+            <help>USD is default fiat currency.</help>
         </ratesource>
         <cryptologo cryptocurrency="MAX" file="max.png"/>
     </extension>
@@ -279,6 +288,7 @@
         <ratesource prefix="leofix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>LEO</cryptocurrency>
+            <help>USD is default fiat currency.</help>
         </ratesource>
         <cryptologo cryptocurrency="LEO" file="leo.png"/>
     </extension>
@@ -292,6 +302,7 @@
         <ratesource prefix="tknfix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>TKN</cryptocurrency>
+            <help>USD is default fiat currency.</help>
         </ratesource>
         <cryptologo cryptocurrency="TKN" file="tkn.png"/>
     </extension>
@@ -308,6 +319,7 @@
         <ratesource prefix="nlgfix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>NLG</cryptocurrency>
+            <help>USD is default fiat currency.</help>
         </ratesource>
         <ratesource prefix="guldencom" name="Gulden.com" >
             <cryptocurrency>NLG</cryptocurrency>
@@ -327,6 +339,7 @@
         <ratesource prefix="grsfix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>GRS</cryptocurrency>
+            <help>USD is default fiat currency.</help>
         </ratesource>
         <ratesource prefix="groestlcoincom" name="Groestlcoin.org" >
             <cryptocurrency>GRS</cryptocurrency>
@@ -346,6 +359,7 @@
         <ratesource prefix="smartfix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>SMART</cryptocurrency>
+            <help>USD is default fiat currency.</help>
         </ratesource>
         <ratesource prefix="smartapi" name ="SmartCash API" >
             <param name="price" />
@@ -366,6 +380,7 @@
         <ratesource prefix="startfix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>START</cryptocurrency>
+            <help>USD is default fiat currency.</help>
         </ratesource>
         <cryptologo cryptocurrency="START" file="start.png"/>
     </extension>
@@ -382,6 +397,7 @@
         <ratesource prefix="nbtfix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>NBT</cryptocurrency>
+            <help>USD is default fiat currency.</help>
         </ratesource>
         <cryptologo cryptocurrency="NBT" file="nbt.png"/>
     </extension>
@@ -396,6 +412,7 @@
         <ratesource prefix="nxtfix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>NXT</cryptocurrency>
+            <help>USD is default fiat currency.</help>
         </ratesource>
         <ratesource prefix="poloniexrs" name ="Poloniex.com vs bitcoinaverage.com" >
             <param name="fiatcurrency" />
@@ -413,6 +430,7 @@
         <ratesource prefix="potfix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>POT</cryptocurrency>
+            <help>USD is default fiat currency.</help>
         </ratesource>
         <ratesource prefix="coinmarketcap" name ="coinmarketcap.com" >
             <param name="fiatcurrency" />
@@ -425,6 +443,7 @@
             <param name="price" />
             <param name="fiatcurrency" />
             <cryptocurrency>DEX</cryptocurrency>
+            <help>USD is default fiat currency.</help>
         </ratesource>
         <wallet prefix="dex_wallet" name="DEX Demo Wallet">
             <cryptocurrency>DEX</cryptocurrency>
@@ -454,6 +473,7 @@
         <ratesource prefix="btxfix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>BTX</cryptocurrency>
+            <help>USD is default fiat currency.</help>
         </ratesource>
         <cryptologo cryptocurrency="BTX" file="btx.png"/>
     </extension>
@@ -474,6 +494,7 @@
         <ratesource prefix="ftofix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>FTO</cryptocurrency>
+            <help>USD is default fiat currency.</help>
         </ratesource>
         <cryptologo cryptocurrency="FTO" file="fto.png"/>
     </extension>
