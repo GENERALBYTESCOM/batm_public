@@ -498,6 +498,23 @@
         </ratesource>
         <cryptologo cryptocurrency="BTX" file="btx.png"/>
     </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.sumcoin.SumcoinExtension" >
+        <wallet prefix="sumcoind" name="Sumcoind">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>SUM</cryptocurrency>
+        </wallet>
+        <ratesource prefix="sumfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>SUM</cryptocurrency>
+            <help>USD is default fiat currency.</help>
+        </ratesource>
+        <cryptologo cryptocurrency="SUM" file="sum.png"/>
+    </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.bitsend.BitsendExtension" >
         <wallet prefix="bitsendd" name="Bitsendd">
             <param name="protocol" />
