@@ -29,6 +29,7 @@ public class Currencies {
     public static final String BTX = "BTX"; //BitCore
     public static final String BSD = "BSD"; //BitSend
     public static final String BTDX = "BTDX"; //Bitcloud
+    public static final String BURST = "BURST"; //Burstcoin
     public static final String ETH = "ETH";
     public static final String EFL = "EFL";
     public static final String LTC = "LTC";
