@@ -50,7 +50,7 @@ public class BurstWallet implements IWallet{
     public BurstWallet(String masterPassword, String accountId) {
         this.masterPassword = masterPassword;
         this.accountId = accountId;
-        api = RestProxyFactory.createProxy(BurstWalletAPI.class, "https://wallet.burst.cryptoguru.org:8125");
+        api = RestProxyFactory.createProxy(BurstWallet.class, "https://wallet.burst.cryptoguru.org:8125");
     }
 
     @Override
