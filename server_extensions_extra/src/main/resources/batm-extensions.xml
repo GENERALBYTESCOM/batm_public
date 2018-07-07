@@ -449,6 +449,23 @@
         </ratesource>
         <cryptologo cryptocurrency="NXT" file="nxt.png"/>
     </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.burstcoin.BurstExtension" >
+        <wallet prefix="burstcoin" name="BurstWallet">
+            <param name="masterPassword" />
+            <param name="accountRS" />
+            <cryptocurrency>BURST</cryptocurrency>
+        </wallet>
+        <ratesource prefix="Burst" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>BURST</cryptocurrency>
+            <help>USD is default fiat currency.</help>
+        </ratesource>
+        <ratesource prefix="poloniexrs" name ="Poloniex.com" >
+            <param name="fiatcurrency" />
+            <cryptocurrency>BURST</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="Burst" file="burst.png"/>
+    </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.potcoin.PotcoinExtension" >
         <wallet prefix="potwallet" name="PotCoin">
             <param name="publicKey" />

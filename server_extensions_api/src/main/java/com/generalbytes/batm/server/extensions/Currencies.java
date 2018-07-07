@@ -92,6 +92,7 @@ public class Currencies {
         crypto.add(BTX);
         crypto.add(BSD);
         crypto.add(BTDX);
+        crypto.add(BURST);
         crypto.add(EFL);
         crypto.add(ETH);
         crypto.add(LTC);
