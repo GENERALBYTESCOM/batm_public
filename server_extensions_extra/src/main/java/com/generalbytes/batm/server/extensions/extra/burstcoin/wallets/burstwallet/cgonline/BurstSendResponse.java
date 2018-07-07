@@ -18,7 +18,7 @@
 
 package com.generalbytes.batm.server.extensions.extra.burstcoin.wallets.burstwallet.cgonline;
 
-public class BurstSendResponse extends BurstResponse{
+public class BurstSendResponse extends BurstResponse {
     private Data data;
 
     public Data getData() {

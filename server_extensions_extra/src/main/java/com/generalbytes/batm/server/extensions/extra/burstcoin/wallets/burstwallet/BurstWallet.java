@@ -16,9 +16,8 @@
  *
  ************************************************************************************/
 
-package com.generalbytes.batm.server.extensions.extra.burstcoin.wallets.cgonline;
+package com.generalbytes.batm.server.extensions.extra.burstcoin.wallets.burstwallet;
 
-import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.burstcoin.BurstAddressValidator;
@@ -37,7 +36,7 @@ import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Set;
 
-public class BurstWallet implements IWallet{
+public class BurstWallet implements IWallet {
     private static final Logger log = LoggerFactory.getLogger("batm.master.BurstWallet");
     private static final BigDecimal NQT = new BigDecimal("100000000");
     private static final BigDecimal DEFAULT_FEE_IN_NXT = new BigDecimal(1);
@@ -45,12 +44,12 @@ public class BurstWallet implements IWallet{
     private String masterPassword;
     private String accountId;
 
-    private BurstWallet api;
+    private BurstWalletAPI api;
 
     public BurstWallet(String masterPassword, String accountId) {
         this.masterPassword = masterPassword;
         this.accountId = accountId;
-        api = RestProxyFactory.createProxy(BurstWallet.class, "https://wallet.burst.cryptoguru.org:8125");
+        this.api = RestProxyFactory.createProxy(BurstWalletAPI.class, "https://wallet.burst.cryptoguru.org:8125");
     }
 
     @Override
@@ -71,23 +70,14 @@ public class BurstWallet implements IWallet{
             log.error("Cryptocurrency " + cryptoCurrency + " not supported.");
             return null;
         }
-        if (accountId != null) {
-            return accountId;
-        }
-        BurstAccountsResponse res = api.getAccount(accountId, masterPassword);
-        if (res != null) {
-            if (res.getStatus().equalsIgnoreCase("success")) {
-                Account[] accounts = res.getData().getAccounts();
-                Account selectedAccount = accounts[0];
-                accountId = selectedAccount.getTx_account_rs();
-                return accountId;
-            }else{
-                log.debug("No success received: " + res.getStatus() + " " + res.getMessage());
-            }
-        }else{
+
+        AccountResponse res = api.getAccount(accountId, masterPassword);
+        if (res == null) {
             log.debug("No response received.");
+            return null;
         }
-        return null;
+
+        return res.getAccountRS();
     }
 
     @Override
@@ -96,23 +86,19 @@ public class BurstWallet implements IWallet{
             log.error("Cryptocurrency " + cryptoCurrency + " not supported.");
             return null;
         }
-        if (accountId == null) {
-            getCryptoAddress(cryptoCurrency); //to load account_id
+
+        AccountResponse res = api.getAccount(accountId, masterPassword);
+        if (res == null) {
+            log.debug("No response received.");
+            return null;
         }
-        if (accountId != null) {
-            AccountResponse account = api.getAllAccounts(accountId,"getAccount");
-            if (account != null) {
-                String balanceNQT = account.getBalanceNQT();
-                if (balanceNQT == null) {
-                    return BigDecimal.ZERO;
-                }else{
-                    return new BigDecimal(balanceNQT).divide(NQT);
-                }
-            }else{
-                log.debug("No response received.");
-            }
+
+        String balanceNQT = res.getBalanceNQT();
+        if (balanceNQT == null) {
+            return BigDecimal.ZERO;
         }
-        return null;
+
+        return new BigDecimal(balanceNQT).divide(NQT);
     }
 
     @Override
@@ -121,24 +107,23 @@ public class BurstWallet implements IWallet{
             log.error("Cryptocurrency " + cryptoCurrency + " not supported.");
             return null;
         }
-        if (accountId == null) {
-            getCryptoAddress(cryptoCurrency); //to load account_id
-        }
-        String accId = BurstAddressValidator.getAccountIdFromRS(accountId) +"";
-        String recipient = destinationAddress;
 
         BigInteger recipientInt = BurstAddressValidator.getAccountIdFromRS(destinationAddress);
-        if (recipientInt != null) {
-            recipient = recipientInt.toString();
+        if (recipientInt == null) {
+            log.debug("Invalid destination address");
+            return null;
         }
 
-        SendResponse res = api.send2(masterPassword, accountId, recipient, amount.multiply(NQT).stripTrailingZeros(), DEFAULT_FEE_IN_NXT.multiply(NQT).stripTrailingZeros(), 1440, "sendMoney");
-        if (res != null) {
-            log.debug("Transaction " + res.getTransaction() + " sent.");
-            return res.getTransaction();
-        }else{
+        String recipient = recipientInt.toString();
+
+        SendResponse res = api.send(masterPassword, accountId, recipient, amount.multiply(NQT).stripTrailingZeros(), DEFAULT_FEE_IN_NXT.multiply(NQT).stripTrailingZeros(), 1440, "sendMoney");
+        if (res == null) {
             log.debug("No response received.");
+            return null;
         }
-        return null;
+
+        String transaction = res.getTransaction();
+        log.debug(String.format("Transaction %s sent.", transaction));
+        return transaction;
     }
 }
