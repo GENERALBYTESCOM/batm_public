@@ -21,8 +21,7 @@ package com.generalbytes.batm.server.extensions.extra.burstcoin;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.extra.burstcoin.sources.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.burstcoin.sources.poloniex.PoloniexRateSource;
-import com.generalbytes.batm.server.extensions.extra.burstcoin.wallets.burstwallet.cgonline.*;
-import com.generalbytes.batm.server.extensions.extra.burstcoin.wallets.burstwallet.BurstWalletAPI;
+import com.generalbytes.batm.server.extensions.extra.burstcoin.wallets.burstwallet.BurstWallet;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.math.BigDecimal;
@@ -51,7 +50,6 @@ public class BurstExtension implements IExtension{
                 if (st.hasMoreTokens()) {
                     accountId = st.nextToken();
                 }
-
 
                 if (masterPassword !=null) {
                     return new BurstWallet(masterPassword,accountId);
