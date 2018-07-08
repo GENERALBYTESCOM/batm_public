@@ -31,10 +31,14 @@ import java.util.StringTokenizer;
 
 public class BurstExtension implements IExtension{
     @Override
-    public String getName() { return "BATM Burstcoin extension"; }
+    public String getName() {
+        return "BATM Burstcoin extension";
+    }
 
     @Override
-    public IExchange createExchange(String exchangeLogin) { return null; }
+    public IExchange createExchange(String exchangeLogin) {
+        return null;
+    }
 
     @Override
     public IWallet createWallet(String walletLogin) {
@@ -43,15 +47,13 @@ public class BurstExtension implements IExtension{
             String walletType = st.nextToken();
 
             if ("burst".equalsIgnoreCase(walletType)) {
-                //"nud:protocol:user:password:ip:port:accountname"
-
                 String masterPassword = st.nextToken();
-                String accountId =null;
+                String accountId = null;
                 if (st.hasMoreTokens()) {
                     accountId = st.nextToken();
                 }
 
-                if (masterPassword !=null) {
+                if (masterPassword != null) {
                     return new BurstWallet(masterPassword,accountId);
                 }
             }
@@ -83,22 +85,16 @@ public class BurstExtension implements IExtension{
                 if (st.hasMoreTokens()) {
                     try {
                         rate = new BigDecimal(st.nextToken());
-                    } catch (Throwable e) {
-                    }
+                    } catch (Throwable ignored) {}
                 }
                 String preferedFiatCurrency = Currencies.USD;
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new FixPriceRateSource(rate,preferedFiatCurrency);
-            }else if ("poloniexrs".equalsIgnoreCase(rsType)) {
-                String preferredFiatCurrency = Currencies.USD;
-                if (st.hasMoreTokens()) {
-                    preferredFiatCurrency = st.nextToken();
-                }
-                return new PoloniexRateSource(preferredFiatCurrency);
+            } else if ("poloniexrs".equalsIgnoreCase(rsType)) {
+                return new PoloniexRateSource();
             }
-
         }
         return null;
     }
@@ -110,7 +106,7 @@ public class BurstExtension implements IExtension{
 
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         result.add(Currencies.BURST);
         return result;
     }

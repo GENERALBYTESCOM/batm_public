@@ -9,7 +9,6 @@ package com.generalbytes.batm.server.extensions.extra.burstcoin;
 import java.math.BigInteger;
 
 final class ReedSolomon {
-    public static final BigInteger two64 = new BigInteger("18446744073709551616");
     private static final int[] initial_codeword = {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     private static final int[] gexp = {1, 2, 4, 8, 16, 5, 10, 20, 13, 26, 17, 7, 14, 28, 29, 31, 27, 19, 3, 6, 12, 24, 21, 15, 30, 25, 23, 11, 22, 9, 18, 1};
     private static final int[] glog = {0, 0, 1, 18, 2, 5, 19, 11, 3, 29, 6, 27, 20, 8, 12, 23, 4, 10, 30, 17, 7, 22, 28, 26, 21, 25, 9, 16, 13, 14, 24, 15};
@@ -18,14 +17,6 @@ final class ReedSolomon {
 
     private static final int base_32_length = 13;
     private static final int base_10_length = 20;
-
-    public static String toUnsignedLong(long objectId) {
-        if (objectId >= 0) {
-            return String.valueOf(objectId);
-        }
-        BigInteger id = BigInteger.valueOf(objectId).add(two64);
-        return id.toString();
-    }
 
     static String encode(BigInteger plain) {
         String plain_string = plain.toString();

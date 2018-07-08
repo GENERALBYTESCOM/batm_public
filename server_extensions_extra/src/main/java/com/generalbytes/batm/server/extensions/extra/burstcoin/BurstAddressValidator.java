@@ -34,6 +34,7 @@ public class BurstAddressValidator implements ICryptoAddressValidator {
                 if (pieces.length != 5) {
                     return null;
                 }
+
                 if (pieces[0].length() != 3 ||
                         pieces[1].length() != 4 ||
                         pieces[2].length() != 4 ||
@@ -42,13 +43,12 @@ public class BurstAddressValidator implements ICryptoAddressValidator {
                     return null;
                 }
 
-                BigInteger l = rsDecode(pieces[1] + "-" + pieces[2] + "-" + pieces[3] + "-" + pieces[4]);
-                return l;
+                return rsDecode(pieces[1] + "-" + pieces[2] + "-" + pieces[3] + "-" + pieces[4]);
             } catch (RuntimeException e) {
                 e.printStackTrace();
                 return null;
             }
-        }else{
+        } else {
             return null;
         }
     }

@@ -29,8 +29,8 @@ import java.math.BigDecimal;
 @Produces(MediaType.APPLICATION_JSON)
 public interface BurstWalletAPI {
     @POST
-    public AccountResponse getAccount(@QueryParam("account") String accountId, @DefaultValue("getAccount") @QueryParam("requestType") String requestType);
+    AccountResponse getAccount(@QueryParam("account") String accountId, @DefaultValue("getAccount") @QueryParam("requestType") String requestType);
 
     @POST
-    public SendResponse send(@QueryParam("masterPassword") String masterPassword, @QueryParam("accountId") String accountId, @QueryParam("recipient") String recipient, @QueryParam("amountNQT") BigDecimal amountNQT,@QueryParam("feeNQT") BigDecimal feeNQT, @QueryParam("deadline") long deadline, @QueryParam("requestType") String requestType);
+    SendResponse send(@QueryParam("masterPassword") String masterPassword, @QueryParam("accountId") String accountId, @QueryParam("recipient") String recipient, @QueryParam("amountNQT") BigDecimal amountNQT, @QueryParam("feeNQT") BigDecimal feeNQT, @QueryParam("deadline") long deadline, @QueryParam("requestType") String requestType);
 }
