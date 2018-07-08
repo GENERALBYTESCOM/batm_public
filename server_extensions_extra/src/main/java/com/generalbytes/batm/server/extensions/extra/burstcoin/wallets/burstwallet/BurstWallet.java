@@ -107,7 +107,7 @@ public class BurstWallet implements IWallet {
 
         BigInteger recipientInt = BurstAddressValidator.getAccountIdFromRS(destinationAddress);
         if (recipientInt == null) {
-            log.debug("Invalid destination address"); // Error?
+            log.error("Invalid destination address");
             return null;
         }
 
@@ -115,7 +115,7 @@ public class BurstWallet implements IWallet {
 
         SendResponse res = api.send(masterPassword, accountId, recipient, amount.multiply(NQT).stripTrailingZeros(), DEFAULT_FEE_IN_NXT.multiply(NQT).stripTrailingZeros(), 1440, "sendMoney");
         if (res == null) {
-            log.debug("No response received."); // Error?
+            log.error("No response received.");
             return null;
         }
 

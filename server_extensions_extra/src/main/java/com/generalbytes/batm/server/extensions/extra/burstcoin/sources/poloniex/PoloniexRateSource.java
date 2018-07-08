@@ -96,7 +96,7 @@ public class PoloniexRateSource implements IRateSource{
         if (!Currencies.NXT.equalsIgnoreCase(cryptoCurrency)) {
             return null; // unsupported currency
         }
-        OrderBookResponse orderBookResponse = api.returnOrderBook("returnOrderBook", "BTC_BURST", 10000); // Was NXT?
+        OrderBookResponse orderBookResponse = api.returnOrderBook("returnOrderBook", "BTC_BURST", 10000);
         if (orderBookResponse != null) {
             BigDecimal[][] asks = orderBookResponse.getAsks();
             BigDecimal asksTotal = BigDecimal.ZERO;
