@@ -78,7 +78,7 @@ public class BurstExtension implements IExtension{
             StringTokenizer st = new StringTokenizer(sourceLogin,":");
             String rsType = st.nextToken();
 
-            if ("nxtfix".equalsIgnoreCase(rsType)) {
+            if ("brsfix".equalsIgnoreCase(rsType)) {
                 BigDecimal rate = BigDecimal.ZERO;
                 if (st.hasMoreTokens()) {
                     try {
