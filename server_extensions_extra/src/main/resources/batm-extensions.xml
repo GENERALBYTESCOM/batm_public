@@ -455,7 +455,7 @@
             <param name="accountRS" />
             <cryptocurrency>BURST</cryptocurrency>
         </wallet>
-        <ratesource prefix="Burst" name ="Fix Price" >
+        <ratesource prefix="brsfix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>BURST</cryptocurrency>
             <help>USD is default fiat currency.</help>
