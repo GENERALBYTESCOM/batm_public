@@ -21,12 +21,8 @@ package com.generalbytes.batm.server.extensions.extra.burstcoin.wallets.burstwal
 import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.burstcoin.BurstAddressValidator;
-import com.generalbytes.batm.server.extensions.extra.burstcoin.wallets.burstwallet.cgonline.Account;
 import com.generalbytes.batm.server.extensions.extra.burstcoin.wallets.burstwallet.cgonline.AccountResponse;
-import com.generalbytes.batm.server.extensions.extra.burstcoin.wallets.burstwallet.cgonline.BurstSendResponse;
-import com.generalbytes.batm.server.extensions.extra.burstcoin.wallets.burstwallet.cgonline.BurstAccountsResponse;
 import com.generalbytes.batm.server.extensions.extra.burstcoin.wallets.burstwallet.cgonline.SendResponse;
-import com.generalbytes.batm.server.extensions.extra.burstcoin.wallets.burstwallet.BurstWalletAPI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import si.mazi.rescu.RestProxyFactory;
@@ -42,10 +38,10 @@ public class BurstWallet implements IWallet {
     private static final BigDecimal DEFAULT_FEE_IN_NXT = new BigDecimal(1);
     private static final String GET_ACCOUNT = "getAccount";
 
-    private String masterPassword;
-    private String accountId;
+    private final String masterPassword;
+    private final String accountId;
 
-    private BurstWalletAPI api;
+    private final BurstWalletAPI api;
 
     public BurstWallet(String masterPassword, String accountId) {
         this.masterPassword = masterPassword;
@@ -60,7 +56,7 @@ public class BurstWallet implements IWallet {
 
     @Override
     public Set<String> getCryptoCurrencies() {
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         result.add(Currencies.BURST);
         return result;
     }
@@ -111,7 +107,7 @@ public class BurstWallet implements IWallet {
 
         BigInteger recipientInt = BurstAddressValidator.getAccountIdFromRS(destinationAddress);
         if (recipientInt == null) {
-            log.debug("Invalid destination address");
+            log.debug("Invalid destination address"); // Error?
             return null;
         }
 
@@ -119,7 +115,7 @@ public class BurstWallet implements IWallet {
 
         SendResponse res = api.send(masterPassword, accountId, recipient, amount.multiply(NQT).stripTrailingZeros(), DEFAULT_FEE_IN_NXT.multiply(NQT).stripTrailingZeros(), 1440, "sendMoney");
         if (res == null) {
-            log.debug("No response received.");
+            log.debug("No response received."); // Error?
             return null;
         }
 
