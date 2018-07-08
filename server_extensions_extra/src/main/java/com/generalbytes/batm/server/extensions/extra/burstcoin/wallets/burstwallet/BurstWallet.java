@@ -40,6 +40,7 @@ public class BurstWallet implements IWallet {
     private static final Logger log = LoggerFactory.getLogger("batm.master.BurstWallet");
     private static final BigDecimal NQT = new BigDecimal("100000000");
     private static final BigDecimal DEFAULT_FEE_IN_NXT = new BigDecimal(1);
+    private static final String GET_ACCOUNT = "getAccount";
 
     private String masterPassword;
     private String accountId;
@@ -71,7 +72,7 @@ public class BurstWallet implements IWallet {
             return null;
         }
 
-        AccountResponse res = api.getAccount(accountId, masterPassword);
+        AccountResponse res = api.getAccount(accountId, GET_ACCOUNT);
         if (res == null) {
             log.debug("No response received.");
             return null;
@@ -87,7 +88,7 @@ public class BurstWallet implements IWallet {
             return null;
         }
 
-        AccountResponse res = api.getAccount(accountId, masterPassword);
+        AccountResponse res = api.getAccount(accountId, GET_ACCOUNT);
         if (res == null) {
             log.debug("No response received.");
             return null;
