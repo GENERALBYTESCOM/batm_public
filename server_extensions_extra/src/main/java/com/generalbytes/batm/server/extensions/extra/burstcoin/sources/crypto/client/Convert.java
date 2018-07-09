@@ -4,12 +4,37 @@ import java.io.UnsupportedEncodingException;
 
 public class Convert {
 
-  public static byte[] toBytes(String s) {
-    try {
-      return s.getBytes("UTF-8");
-    } catch (UnsupportedEncodingException e) {
-      throw new RuntimeException(e.toString(), e);
-    }
-  }
+    private static final char[] hexChars = { '0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f' };
 
+    public static byte[] toBytes(String s) {
+        try {
+            return s.getBytes("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e.toString(), e);
+        }
+    }
+
+    public static byte[] emptyToNull(byte[] bytes) {
+        if (bytes == null) {
+            return null;
+        }
+        for (byte b : bytes) {
+            if (b != 0) {
+                return bytes;
+            }
+        }
+        return null;
+    }
+
+    public static String toHexString(byte[] bytes) {
+        if (bytes == null) {
+            return null;
+        }
+        char[] chars = new char[bytes.length * 2];
+        for (int i = 0; i < bytes.length; i++) {
+            chars[i * 2] = hexChars[((bytes[i] >> 4) & 0xF)];
+            chars[i * 2 + 1] = hexChars[(bytes[i] & 0xF)];
+        }
+        return String.valueOf(chars);
+    }
 }
