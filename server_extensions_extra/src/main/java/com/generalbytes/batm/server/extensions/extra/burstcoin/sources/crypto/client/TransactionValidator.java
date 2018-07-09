@@ -40,7 +40,7 @@ public class TransactionValidator {
     }
 
     validate(type == (byte) 0);
-    validate(subtype == (byte) 16);
+    validate(subtype == (byte) 0);
     validate(version == (byte) 1);
     validate(timestamp > 0);
     validate(deadline > 0 && deadline <= 1440);
