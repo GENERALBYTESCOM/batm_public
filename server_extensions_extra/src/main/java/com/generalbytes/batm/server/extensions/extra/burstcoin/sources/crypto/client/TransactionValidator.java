@@ -6,7 +6,7 @@ import java.nio.ByteOrder;
 public class TransactionValidator {
 
   public void validateUnsignedTransaction(byte[] unsignedTransactionBytes, long expectedRecipientId, long expectedAmountNQT, long expectedFeeNQT) throws IllegalArgumentException {
-    validate(unsignedTransactionBytes.length < 176);
+    validate(unsignedTransactionBytes.length == 176);
 
     ByteBuffer buffer = ByteBuffer.wrap(unsignedTransactionBytes);
     buffer.order(ByteOrder.LITTLE_ENDIAN);
