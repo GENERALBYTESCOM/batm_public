@@ -9,9 +9,11 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import si.mazi.rescu.ClientConfig;
+import si.mazi.rescu.HttpStatusIOException;
 import si.mazi.rescu.RestProxyFactory;
 
 import javax.net.ssl.SSLContext;
+import java.lang.reflect.UndeclaredThrowableException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -215,15 +217,15 @@ public class BitgoAPITest {
     }
 
     @Test
-    @Ignore("Local instance of bitgo-express is required to run")
+    @Ignore("Local instance of bitgo-express test environment is required to run")
     public void sendCoinsTest() {
         try {
-            IBitgoAPI localapi = RestProxyFactory.createProxy(IBitgoAPI.class, "https://test.bitgo.com/api");
+            IBitgoAPI localapi = RestProxyFactory.createProxy(IBitgoAPI.class, "http://localhost:3080/api");
             final String coin = "tbtc";
             final String id = "5b20e3a9266bbe80095757489d84a6bb";
             final String address = "2N5q4MwNSUxbAtaidhRgkiDrbwVR4yCZDhi";
             final Integer amount = 10000;
-            final String walletPassphrase = "Vranec8586";
+            final String walletPassphrase = "JSZSuGNlHfgqPHjrp0eO";
 
             final BitGoCoinRequest request = new BitGoCoinRequest(address, amount, walletPassphrase);
             String accessToken = "Bearer v2x8d5e9e46379dc328b2039a400a12b04ea986689b38107fd84cd339bc89e3fb21";
@@ -244,4 +246,5 @@ public class BitgoAPITest {
             e.printStackTrace();
         }
     }
+
 }

@@ -2,15 +2,18 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2;
 
 import com.generalbytes.batm.server.extensions.Converters;
 import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.BitGoCoinRequest;
 import com.generalbytes.batm.server.extensions.extra.worldcoin.sources.cd.CompatSSLSocketFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import si.mazi.rescu.ClientConfig;
+import si.mazi.rescu.HttpStatusIOException;
 import si.mazi.rescu.RestProxyFactory;
 
 import javax.net.ssl.SSLContext;
+import java.lang.reflect.UndeclaredThrowableException;
 import java.math.BigDecimal;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -72,13 +75,26 @@ public class BitgoWallet implements IWallet {
 
     @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
+        String status = null;
         final BitGoCoinRequest request = new BitGoCoinRequest(destinationAddress, toSatoshis(amount, cryptoCurrency), walletPassphrase);
-        Map<String, String> result = api.sendCoins(accessToken, "application/json", cryptoCurrency.toLowerCase(), this.walletId, request);
-        if(result == null) {
-            log.debug("send coins result = null");
-            return null;
+        try {
+            Map<String, String> result = api.sendCoins(accessToken, "application/json", cryptoCurrency.toLowerCase(), this.walletId, request);
+            if (result == null) {
+                log.debug("send coins result is null");
+                return null;
+            }
+
+            status = result.get("status");
+        } catch (UndeclaredThrowableException ute) {
+            HttpStatusIOException hse = (HttpStatusIOException)ute.getUndeclaredThrowable();
+            String body = hse.getHttpBody();
+            status = "ERROR";
+            String errorMessage = ExtensionsUtil.getErrorMessage(body);
+            log.debug("send coins error message = [" + errorMessage +"] ");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        final String status = result.get("status");
+
         log.debug("send coins status = {}", status);
         return status;
     }
