@@ -40,6 +40,9 @@ public class ExtensionsUtil {
     }
 
     public static String getErrorMessage(String body) {
+        if(body == null) {
+            return "";
+        }
         int index1 = body.indexOf("error") + 8;
         int index2 = body.indexOf(",") - 1;
         return body.substring(index1, index2);
