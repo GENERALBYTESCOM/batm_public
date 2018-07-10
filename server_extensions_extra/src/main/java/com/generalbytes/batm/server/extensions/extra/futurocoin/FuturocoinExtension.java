@@ -29,6 +29,13 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 public class FuturocoinExtension implements IExtension{
+    private IExtensionContext ctx;
+
+    @Override
+    public void init(IExtensionContext ctx) {
+        this.ctx = ctx;
+    }
+
     @Override
     public String getName() {
         return "BATM Futurocoin extra extension";

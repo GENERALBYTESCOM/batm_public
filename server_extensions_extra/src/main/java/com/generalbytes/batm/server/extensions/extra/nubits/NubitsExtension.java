@@ -14,6 +14,13 @@ import java.util.StringTokenizer;
  * Created by woolly_sammoth on 11/12/14.
  */
 public class NubitsExtension implements IExtension{
+    private IExtensionContext ctx;
+
+    @Override
+    public void init(IExtensionContext ctx) {
+        this.ctx = ctx;
+    }
+
     @Override
     public String getName() { return "BATM NuBits extension"; }
 

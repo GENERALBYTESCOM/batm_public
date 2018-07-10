@@ -21,6 +21,7 @@ import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.IExchange;
 import com.generalbytes.batm.server.extensions.IExtension;
+import com.generalbytes.batm.server.extensions.IExtensionContext;
 import com.generalbytes.batm.server.extensions.IPaperWalletGenerator;
 import com.generalbytes.batm.server.extensions.IPaymentProcessor;
 import com.generalbytes.batm.server.extensions.IRateSource;
@@ -36,8 +37,14 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 public class DigiByteExtension implements IExtension {
+    private IExtensionContext ctx;
 
-  @Override
+    @Override
+    public void init(IExtensionContext ctx) {
+        this.ctx = ctx;
+    }
+
+    @Override
   public String getName() {
     return "BATM DigiByte extra extension";
   }
