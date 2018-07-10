@@ -15,26 +15,16 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-
 package com.generalbytes.batm.server.extensions.extra.burstcoin.wallets.burstwallet.cgonline;
 
-public abstract class BurstResponse {
-    private String status;
-    private String message;
+public class BurstTransactionBytesResponse {
+    private String unsignedTransactionBytes;
 
-    public String getStatus() {
-        return status;
+    public String getUnsignedTransactionBytes() {
+        return unsignedTransactionBytes;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
+    public void setUnsignedTransactionBytes(String unsignedTransactionBytes) {
+        this.unsignedTransactionBytes = unsignedTransactionBytes;
     }
 }

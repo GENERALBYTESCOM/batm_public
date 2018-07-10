@@ -21,8 +21,12 @@ package com.generalbytes.batm.server.extensions.extra.burstcoin.wallets.burstwal
 import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.burstcoin.BurstAddressValidator;
+import com.generalbytes.batm.server.extensions.extra.burstcoin.sources.crypto.client.Convert;
+import com.generalbytes.batm.server.extensions.extra.burstcoin.sources.crypto.client.BurstCryptoUtils;
+import com.generalbytes.batm.server.extensions.extra.burstcoin.sources.crypto.client.TransactionValidator;
 import com.generalbytes.batm.server.extensions.extra.burstcoin.wallets.burstwallet.cgonline.AccountResponse;
-import com.generalbytes.batm.server.extensions.extra.burstcoin.wallets.burstwallet.cgonline.SendResponse;
+import com.generalbytes.batm.server.extensions.extra.burstcoin.wallets.burstwallet.cgonline.BurstTransactionBroadcastResponse;
+import com.generalbytes.batm.server.extensions.extra.burstcoin.wallets.burstwallet.cgonline.BurstTransactionBytesResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import si.mazi.rescu.RestProxyFactory;
@@ -39,12 +43,14 @@ public class BurstWallet implements IWallet {
     private static final String GET_ACCOUNT = "getAccount";
 
     private final String masterPassword;
+    private final String publicKey;
     private final String accountId;
 
     private final BurstWalletAPI api;
 
     public BurstWallet(String masterPassword, String accountId) {
         this.masterPassword = masterPassword;
+        this.publicKey = BurstCryptoUtils.getPublicKey(masterPassword);
         this.accountId = accountId;
         this.api = RestProxyFactory.createProxy(BurstWalletAPI.class, "https://wallet.burst.cryptoguru.org:8125");
     }
@@ -113,13 +119,30 @@ public class BurstWallet implements IWallet {
 
         String recipient = recipientInt.toString();
 
-        SendResponse res = api.send(masterPassword, accountId, recipient, amount.multiply(NQT).stripTrailingZeros(), DEFAULT_FEE_IN_NXT.multiply(NQT).stripTrailingZeros(), 1440, "sendMoney");
-        if (res == null) {
-            log.error("No response received.");
+        BurstTransactionBytesResponse transactionBytesResponse = api.sendMoney(recipient, publicKey, amount.multiply(NQT).stripTrailingZeros(), DEFAULT_FEE_IN_NXT.multiply(NQT).stripTrailingZeros(), 1440, "sendMoney", false);
+        if (transactionBytesResponse == null) {
+            log.error("No response received for transaction bytes.");
             return null;
         }
 
-        String transaction = res.getTransaction();
+        byte[] unsignedTransactionBytes = Convert.hexStringToByteArray(transactionBytesResponse.getUnsignedTransactionBytes());
+
+        try {
+            TransactionValidator.validateUnsignedTransaction(unsignedTransactionBytes, recipientInt.longValue(), amount.multiply(NQT).stripTrailingZeros().longValue(), DEFAULT_FEE_IN_NXT.multiply(NQT).stripTrailingZeros().longValue());
+        } catch (IllegalArgumentException e) {
+            log.error("Node response invalid.");
+            return null;
+        }
+
+        String signedTransaction = Convert.toHexString(BurstCryptoUtils.sign(unsignedTransactionBytes, masterPassword));
+
+        BurstTransactionBroadcastResponse transactionBroadcastResponse = api.broadcastTransaction(signedTransaction, "broadcastTransaction");
+        if (transactionBroadcastResponse == null) {
+            log.error("No response received for transaction broadcast.");
+            return null;
+        }
+
+        String transaction = transactionBroadcastResponse.getTransaction();
         log.debug(String.format("Transaction %s sent.", transaction));
         return transaction;
     }

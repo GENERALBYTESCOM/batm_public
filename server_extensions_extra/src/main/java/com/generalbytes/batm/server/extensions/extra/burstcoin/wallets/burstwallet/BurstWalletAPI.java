@@ -19,6 +19,8 @@
 package com.generalbytes.batm.server.extensions.extra.burstcoin.wallets.burstwallet;
 
 import com.generalbytes.batm.server.extensions.extra.burstcoin.wallets.burstwallet.cgonline.AccountResponse;
+import com.generalbytes.batm.server.extensions.extra.burstcoin.wallets.burstwallet.cgonline.BurstTransactionBroadcastResponse;
+import com.generalbytes.batm.server.extensions.extra.burstcoin.wallets.burstwallet.cgonline.BurstTransactionBytesResponse;
 import com.generalbytes.batm.server.extensions.extra.burstcoin.wallets.burstwallet.cgonline.SendResponse;
 
 import javax.ws.rs.*;
@@ -32,5 +34,8 @@ public interface BurstWalletAPI {
     AccountResponse getAccount(@QueryParam("account") String accountId, @DefaultValue("getAccount") @QueryParam("requestType") String requestType);
 
     @POST
-    SendResponse send(@QueryParam("masterPassword") String masterPassword, @QueryParam("accountId") String accountId, @QueryParam("recipient") String recipient, @QueryParam("amountNQT") BigDecimal amountNQT, @QueryParam("feeNQT") BigDecimal feeNQT, @QueryParam("deadline") long deadline, @QueryParam("requestType") String requestType);
+    BurstTransactionBytesResponse sendMoney(@QueryParam("recipient") String recipient, @QueryParam("publicKey") String publicKey, @QueryParam("amountNQT") BigDecimal amountNQT, @QueryParam("feeNQT") BigDecimal feeNQT, @QueryParam("deadline") long deadline, @QueryParam("requestType") String requestType, @QueryParam("broadcast") boolean broadcast);
+
+    @POST
+    BurstTransactionBroadcastResponse broadcastTransaction(@QueryParam("transactionBytes") String transactionBytes, @QueryParam("requestType") String requestType);
 }

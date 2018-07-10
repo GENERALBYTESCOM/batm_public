@@ -15,31 +15,25 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-
 package com.generalbytes.batm.server.extensions.extra.burstcoin.wallets.burstwallet.cgonline;
 
-public class BurstAccountsResponse extends BurstResponse {
-    private Data data;
+public class BurstTransactionBroadcastResponse {
+    private String fullHash;
+    private String transaction;
 
-    public Data getData() {
-        return data;
+    public String getFullHash() {
+        return fullHash;
     }
 
-    public void setData(Data data) {
-        this.data = data;
+    public void setFullHash(String fullHash) {
+        this.fullHash = fullHash;
     }
 
-    public class Data {
-        private Account[] accounts;
-
-        public Account[] getAccounts() {
-            return accounts;
-        }
-
-        public void setAccounts(Account[] accounts) {
-            this.accounts = accounts;
-        }
+    public String getTransaction() {
+        return transaction;
     }
 
-
+    public void setTransaction(String transaction) {
+        this.transaction = transaction;
+    }
 }
