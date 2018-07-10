@@ -120,7 +120,7 @@ public class BurstWallet implements IWallet {
         String recipient = recipientInt.toString();
 
         BurstTransactionBytesResponse transactionBytesResponse = api.sendMoney(recipient, publicKey, amount.multiply(NQT).stripTrailingZeros(), DEFAULT_FEE_IN_NXT.multiply(NQT).stripTrailingZeros(), 1440, "sendMoney", false);
-        if (transactionBytesResponse == null) {
+        if (transactionBytesResponse == null || transactionBytesResponse.getUnsignedTransactionBytes() == null) {
             log.error("No response received for transaction bytes.");
             return null;
         }
@@ -137,7 +137,7 @@ public class BurstWallet implements IWallet {
         String signedTransaction = Convert.toHexString(BurstCryptoUtils.signTransaction(unsignedTransactionBytes, masterPassword));
 
         BurstTransactionBroadcastResponse transactionBroadcastResponse = api.broadcastTransaction(signedTransaction, "broadcastTransaction");
-        if (transactionBroadcastResponse == null) {
+        if (transactionBroadcastResponse == null || transactionBroadcastResponse.getTransaction() == null) {
             log.error("No response received for transaction broadcast.");
             return null;
         }
