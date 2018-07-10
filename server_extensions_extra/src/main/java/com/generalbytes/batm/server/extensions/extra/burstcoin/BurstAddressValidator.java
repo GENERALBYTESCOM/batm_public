@@ -35,7 +35,7 @@ public class BurstAddressValidator implements ICryptoAddressValidator {
                     return null;
                 }
 
-                if (pieces[0].length() != 3 ||
+                if (pieces[0].length() != 5 ||
                         pieces[1].length() != 4 ||
                         pieces[2].length() != 4 ||
                         pieces[3].length() != 4 ||

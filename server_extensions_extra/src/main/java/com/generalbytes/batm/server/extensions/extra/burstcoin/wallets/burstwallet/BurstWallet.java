@@ -134,7 +134,7 @@ public class BurstWallet implements IWallet {
             return null;
         }
 
-        String signedTransaction = Convert.toHexString(BurstCryptoUtils.sign(unsignedTransactionBytes, masterPassword));
+        String signedTransaction = Convert.toHexString(BurstCryptoUtils.signTransaction(unsignedTransactionBytes, masterPassword));
 
         BurstTransactionBroadcastResponse transactionBroadcastResponse = api.broadcastTransaction(signedTransaction, "broadcastTransaction");
         if (transactionBroadcastResponse == null) {
