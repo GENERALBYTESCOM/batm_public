@@ -21,23 +21,10 @@ public class TransactionValidator {
         long recipientId = buffer.getLong();
         long amountNQT = buffer.getLong();
         long feeNQT = buffer.getLong();
-        String referencedTransactionFullHash = null;
         byte[] referencedTransactionFullHashBytes = new byte[32];
         buffer.get(referencedTransactionFullHashBytes);
-        if (Convert.emptyToNull(referencedTransactionFullHashBytes) != null) {
-            referencedTransactionFullHash = Convert.toHexString(referencedTransactionFullHashBytes);
-        }
         byte[] signature = new byte[64];
         buffer.get(signature);
-        signature = Convert.emptyToNull(signature);
-        int flags = 0;
-        int ecBlockHeight = 0;
-        long ecBlockId = 0;
-        if (version > 0) {
-            flags = buffer.getInt();
-            ecBlockHeight = buffer.getInt();
-            ecBlockId = buffer.getLong();
-        }
 
         validate(type == (byte) 0);
         validate(subtype == (byte) 0);
@@ -50,7 +37,7 @@ public class TransactionValidator {
     }
 
     private static void validate(boolean validationResult) {
-        if(! validationResult) {
+        if(!validationResult) {
             throw new IllegalArgumentException();
         }
     }

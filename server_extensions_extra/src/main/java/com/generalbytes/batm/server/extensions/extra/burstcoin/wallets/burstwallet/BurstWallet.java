@@ -21,8 +21,8 @@ package com.generalbytes.batm.server.extensions.extra.burstcoin.wallets.burstwal
 import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.burstcoin.BurstAddressValidator;
-import com.generalbytes.batm.server.extensions.extra.burstcoin.sources.crypto.client.Convert;
 import com.generalbytes.batm.server.extensions.extra.burstcoin.sources.crypto.client.BurstCryptoUtils;
+import com.generalbytes.batm.server.extensions.extra.burstcoin.sources.crypto.client.Convert;
 import com.generalbytes.batm.server.extensions.extra.burstcoin.sources.crypto.client.TransactionValidator;
 import com.generalbytes.batm.server.extensions.extra.burstcoin.wallets.burstwallet.cgonline.AccountResponse;
 import com.generalbytes.batm.server.extensions.extra.burstcoin.wallets.burstwallet.cgonline.BurstTransactionBroadcastResponse;

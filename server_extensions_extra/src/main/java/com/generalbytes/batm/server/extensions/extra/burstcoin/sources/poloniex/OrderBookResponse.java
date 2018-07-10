@@ -10,7 +10,6 @@ public class OrderBookResponse {
     private BigDecimal[][] bids;
     private String isFrozen;
 
-
     public BigDecimal[][] getAsks() {
         return asks;
     }

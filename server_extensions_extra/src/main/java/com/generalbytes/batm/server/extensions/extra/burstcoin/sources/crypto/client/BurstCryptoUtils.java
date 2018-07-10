@@ -48,12 +48,8 @@ public class BurstCryptoUtils {
     }
 
     private static MessageDigest sha256() {
-        return getMessageDigest("SHA-256");
-    }
-
-    private static MessageDigest getMessageDigest(String algorithm) {
         try {
-            return MessageDigest.getInstance(algorithm);
+            return MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e.getMessage(), e);
         }

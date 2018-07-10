@@ -21,7 +21,6 @@ package com.generalbytes.batm.server.extensions.extra.burstcoin.wallets.burstwal
 import com.generalbytes.batm.server.extensions.extra.burstcoin.wallets.burstwallet.cgonline.AccountResponse;
 import com.generalbytes.batm.server.extensions.extra.burstcoin.wallets.burstwallet.cgonline.BurstTransactionBroadcastResponse;
 import com.generalbytes.batm.server.extensions.extra.burstcoin.wallets.burstwallet.cgonline.BurstTransactionBytesResponse;
-import com.generalbytes.batm.server.extensions.extra.burstcoin.wallets.burstwallet.cgonline.SendResponse;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

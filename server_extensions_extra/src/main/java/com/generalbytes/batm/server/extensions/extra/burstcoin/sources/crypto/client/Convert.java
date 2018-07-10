@@ -6,24 +6,12 @@ public class Convert {
 
     private static final char[] hexChars = { '0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f' };
 
-    public static byte[] toBytes(String s) {
+    static byte[] toBytes(String s) {
         try {
             return s.getBytes("UTF-8");
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e.toString(), e);
         }
-    }
-
-    public static byte[] emptyToNull(byte[] bytes) {
-        if (bytes == null) {
-            return null;
-        }
-        for (byte b : bytes) {
-            if (b != 0) {
-                return bytes;
-            }
-        }
-        return null;
     }
 
     public static String toHexString(byte[] bytes) {

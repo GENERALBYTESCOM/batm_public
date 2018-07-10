@@ -166,10 +166,10 @@ final class ReedSolomon {
     abstract static class DecodeException extends Exception {
     }
 
-    static final class CodewordTooLongException extends DecodeException {
+    private static final class CodewordTooLongException extends DecodeException {
     }
 
-    static final class CodewordInvalidException extends DecodeException {
+    private static final class CodewordInvalidException extends DecodeException {
     }
 
     private ReedSolomon() {} // never
