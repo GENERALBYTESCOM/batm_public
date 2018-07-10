@@ -38,6 +38,7 @@ public class BitgoWalletTest {
     }
 
     @Test
+    @Ignore
     public void getCryptAddressTest() {
         String coin = Currencies.TBTC;
         String host = "https://test.bitgo.com";
@@ -53,6 +54,7 @@ public class BitgoWalletTest {
     }
 
     @Test
+    @Ignore
     public void getCryptBalanceTest() {
         String coin = Currencies.TBTC;
         String host = "https://test.bitgo.com";
