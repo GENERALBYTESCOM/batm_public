@@ -31,6 +31,13 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 public class TKNExtension implements IExtension{
+    private IExtensionContext ctx;
+
+    @Override
+    public void init(IExtensionContext ctx) {
+        this.ctx = ctx;
+    }
+
     @Override
     public String getName() { return "BATM TKN extension"; }
 

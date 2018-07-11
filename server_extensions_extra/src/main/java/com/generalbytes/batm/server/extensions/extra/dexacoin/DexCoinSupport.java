@@ -9,6 +9,13 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 public class DexCoinSupport implements IExchange, IWallet, IRateSource, IExtension, ICryptoAddressValidator {
+    private IExtensionContext ctx;
+
+    @Override
+    public void init(IExtensionContext ctx) {
+        this.ctx = ctx;
+    }
+
 
     private static final String CRYPTO_CURRENCY = Currencies.DEX;
     private static final BigDecimal WALLET_BALANCE = new BigDecimal("1000000");

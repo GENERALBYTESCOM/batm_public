@@ -28,6 +28,13 @@ import java.math.BigDecimal;
 import java.util.*;
 
 public class DogecoinExtension implements IExtension{
+    private IExtensionContext ctx;
+
+    @Override
+    public void init(IExtensionContext ctx) {
+        this.ctx = ctx;
+    }
+
     @Override
     public String getName() {
         return "BATM Dogecoin extra extension";

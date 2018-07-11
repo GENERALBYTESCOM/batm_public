@@ -15,6 +15,13 @@ import java.util.StringTokenizer;
  * Created by Pega88 on 6/8/18.
  */
 public class BitcoinPrivateExtension implements IExtension {
+    private IExtensionContext ctx;
+
+    @Override
+    public void init(IExtensionContext ctx) {
+        this.ctx = ctx;
+    }
+
     @Override
     public String getName() {
         return "BATM Bitcoin Private extra extension";

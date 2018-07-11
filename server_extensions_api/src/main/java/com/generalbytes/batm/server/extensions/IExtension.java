@@ -28,6 +28,12 @@ import java.util.Set;
  */
 public interface IExtension {
     /**
+     * This method is called after Extension is instantiated and before any other extension is called
+     * @param ctx
+     */
+    public void init(IExtensionContext ctx);
+
+    /**
      * Returns the name of the extension.
      * @return
      */
@@ -107,6 +113,7 @@ public interface IExtension {
      * @return
      */
     public IWatchList getWatchList(String name);
+
 
 
 }

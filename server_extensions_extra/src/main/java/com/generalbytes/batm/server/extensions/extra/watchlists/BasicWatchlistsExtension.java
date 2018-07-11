@@ -26,6 +26,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class BasicWatchlistsExtension implements IExtension{
+    private IExtensionContext ctx;
+
+    @Override
+    public void init(IExtensionContext ctx) {
+        this.ctx = ctx;
+    }
+
     private IWatchList ofacWatchList = new OFACWatchList();
 
     @Override
