@@ -81,7 +81,6 @@ public class BittrexAPITest {
     }
 
     @Test
-    @Ignore
     public void getTickerBTResponseTest() {
         final BtResponseTickerDto response = api.getTicker("USD-BTC");
         Assert.assertNotNull(response);
@@ -99,6 +98,21 @@ public class BittrexAPITest {
         Assert.assertNotNull(ticker.getAsk());
         Assert.assertNotNull(ticker.getBid());
         Assert.assertNotNull(ticker.getLast());
+        System.out.println(ticker);
+    }
+
+    @Test
+    @Ignore
+    public void getDepositAddressTest() throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException {
+        String apikey = "ff82c6f42b494d5fa12d7fdfb2cb0634";
+        String secret = "f04d0b581b4d424fb13c95f1d03f66a9";
+        String nonce = String.valueOf(System.currentTimeMillis());
+        String currency = "BTC";
+        String url = "https://bittrex.com/api/v1.1/account/getdepositaddress?apikey=ff82c6f42b494d5fa12d7fdfb2cb0634&currency=BTC&nonce="+nonce;
+        String apisign = HmacSha512.HMACSHA512(url, secret);
+        Map<String, Object> response = api.getDepositAddress(apisign, apikey, currency, nonce);
+        Assert.assertNotNull(response);
+        System.out.println(response);
     }
 
     @Test
@@ -107,8 +121,8 @@ public class BittrexAPITest {
         String apikey = "ff82c6f42b494d5fa12d7fdfb2cb0634";
         String secret = "f04d0b581b4d424fb13c95f1d03f66a9";
         String nonce = String.valueOf(System.currentTimeMillis());
-        String currency = "BTC";
-        String apisign = "https://bittrex.com/api/v1.1/account/getbalance?apikey=ff82c6f42b494d5fa12d7fdfb2cb0634&currency=BTC&nonce="+nonce;
+        String currency = "USD";
+        String apisign = "https://bittrex.com/api/v1.1/account/getbalance?apikey=ff82c6f42b494d5fa12d7fdfb2cb0634&currency=USD&nonce="+nonce;
         String hash = HmacSha512.HMACSHA512(apisign, secret);
         Map<String, Object> response = api.getBalance(hash, apikey, currency, nonce);
         Assert.assertNotNull(response);
@@ -131,6 +145,46 @@ public class BittrexAPITest {
         System.out.println(apisign);
 
         Map<String, Object> response = api.withdraw(apisign, apikey, currency, quantity, address, nonce);
+        Assert.assertNotNull(response);
+    }
+
+    @Test
+    public void buyLimitTest() throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, MalformedURLException {
+        String apikey = "ff82c6f42b494d5fa12d7fdfb2cb0634";
+        String secret = "f04d0b581b4d424fb13c95f1d03f66a9";
+        String nonce = "123456";
+        String currency = "BTC";
+        double quantity = 100000.0;
+        double rate = 1.0;
+        String address = "1ARpsabbU9tABWkeVTxxpTHjLvD5vr9EAT";
+        String market = "BTC-LTC";
+        String uri = "https://bittrex.com/api/v1.1/market/buylimit?apikey="+apikey+"&market="+market+"&quantity="+quantity+"&rate="+rate+"&nonce="+nonce;
+        URL url = new URL(uri);
+        System.out.println("url path = " + uri);
+        String apisign = HmacSha512.HMACSHA512(uri, secret);
+        System.out.println(apisign);
+
+        Map<String, Object> response = api.buyLimit(apisign, apikey, market, quantity, rate, nonce);
+        Assert.assertNotNull(response);
+    }
+
+    @Test
+    public void sellLimitTest() throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, MalformedURLException {
+        String apikey = "ff82c6f42b494d5fa12d7fdfb2cb0634";
+        String secret = "f04d0b581b4d424fb13c95f1d03f66a9";
+        String nonce = "123456";
+        String currency = "BTC";
+        double quantity = 100000.0;
+        double rate = 1.0;
+        String address = "1ARpsabbU9tABWkeVTxxpTHjLvD5vr9EAT";
+        String market = "BTC-LTC";
+        String uri = "https://bittrex.com/api/v1.1/market/selllimit?apikey="+apikey+"&market="+market+"&quantity="+quantity+"&rate="+rate+"&nonce="+nonce;
+        URL url = new URL(uri);
+        System.out.println("url path = " + uri);
+        String apisign = HmacSha512.HMACSHA512(uri, secret);
+        System.out.println(apisign);
+
+        Map<String, Object> response = api.sellLimit(apisign, apikey, market, quantity, rate, nonce);
         Assert.assertNotNull(response);
     }
 }
