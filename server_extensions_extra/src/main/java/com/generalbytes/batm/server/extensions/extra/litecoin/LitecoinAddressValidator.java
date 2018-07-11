@@ -26,7 +26,7 @@ public class LitecoinAddressValidator implements ICryptoAddressValidator {
 
     @Override
     public boolean isAddressValid(String address) {
-        if (address.startsWith("L") || address.startsWith("3")) {
+        if (address.startsWith("L") || address.startsWith("M")) {
             try {
                 Base58.decodeToBigInteger(address);
                 Base58.decodeChecked(address);
