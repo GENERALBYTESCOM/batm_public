@@ -5,6 +5,7 @@ import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IExchangeAdvanced;
 import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
 import com.generalbytes.batm.server.extensions.ITask;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bittrex.BittrexExchange;
 import org.knowm.xchange.Exchange;
 import org.knowm.xchange.ExchangeFactory;
 import org.knowm.xchange.ExchangeSpecification;
@@ -34,13 +35,9 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
     private static final Set<String> FIAT_CURRENCIES = new HashSet<>();
     private static final Set<String> CRYPTO_CURRENCIES = new HashSet<>();
 
-    private IBittrexAPI api;
-
     private Exchange exchange = null;
     private String apiKey;
     private String apiSecret;
-    private String preferedFiatCurrency;
-    private static final String nonce = "123456";
 
     private static final HashMap<String,BigDecimal> rateAmounts = new HashMap<String, BigDecimal>();
     private static HashMap<String,Long> rateTimes = new HashMap<String, Long>();
@@ -457,13 +454,275 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
 
     @Override
     public ITask createPurchaseCoinsTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
-        //TODO not implemented
-        return null;
+        if (!getCryptoCurrencies().contains(cryptoCurrency)) {
+            log.error("Bittrex implementation supports only " + Arrays.toString(getCryptoCurrencies().toArray()));
+            return null;
+        }
+        if (!Currencies.USD.equalsIgnoreCase(fiatCurrencyToUse)) {
+            log.error("Bittrex supports only " + Currencies.USD );
+            return null;
+        }
+        return new BittrexExchange.PurchaseCoinsTask(amount,cryptoCurrency,fiatCurrencyToUse,description);
     }
 
     @Override
     public ITask createSellCoinsTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
-        //TODO not implemented
-        return null;
+        if (!getCryptoCurrencies().contains(cryptoCurrency)) {
+            log.error("Bittrex implementation supports only " + Arrays.toString(getCryptoCurrencies().toArray()));
+            return null;
+        }
+        if (!Currencies.USD.equalsIgnoreCase(fiatCurrencyToUse)) {
+            log.error("Bittrex supports only " + Currencies.USD );
+            return null;
+        }
+        return new BittrexExchange.SellCoinsTask(amount,cryptoCurrency,fiatCurrencyToUse,description);
+    }
+
+    class PurchaseCoinsTask implements ITask {
+        private long MAXIMUM_TIME_TO_WAIT_FOR_ORDER_TO_FINISH = 5 * 60 * 60 * 1000; //5 hours
+
+        private BigDecimal amount;
+        private String cryptoCurrency;
+        private String fiatCurrencyToUse;
+        private String description;
+
+        private String orderId;
+        private String result;
+        private boolean finished;
+
+        PurchaseCoinsTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
+            this.amount = amount;
+            this.cryptoCurrency = cryptoCurrency;
+            this.fiatCurrencyToUse = fiatCurrencyToUse;
+            this.description = description;
+        }
+
+        @Override
+        public boolean onCreate() {
+            log.info("Calling Bittrex exchange (purchase " + amount + " " + cryptoCurrency + ")");
+            AccountService accountService = getExchange().getAccountService();
+            TradeService tradeService = getExchange().getTradeService();
+
+            try {
+                log.debug("AccountInfo as String: " + accountService.getAccountInfo().toString());
+
+                CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrencyToUse);
+
+                MarketOrder order = new MarketOrder(Order.OrderType.BID, amount, currencyPair);
+                log.debug("marketOrder = " + order);
+                DDOSUtils.waitForPossibleCall(getClass());
+                orderId = tradeService.placeMarketOrder(order);
+                log.debug("orderId = " + orderId + " " + order);
+
+                try {
+                    Thread.sleep(2000); //give exchange 2 seconds to reflect open order in order book
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                log.error("Bittrex exchange (purchaseCoins) failed with message: " + e.getMessage());
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+            return (orderId != null);
+        }
+
+        @Override
+        public boolean onDoStep() {
+            if (orderId == null) {
+                log.debug("Giving up on waiting for trade to complete. Because it did not happen");
+                finished = true;
+                result = "Skipped";
+                return false;
+            }
+            TradeService tradeService = getExchange().getTradeService();
+            // get open orders
+            boolean orderProcessed = false;
+            long checkTillTime = System.currentTimeMillis() + MAXIMUM_TIME_TO_WAIT_FOR_ORDER_TO_FINISH;
+            if (System.currentTimeMillis() > checkTillTime) {
+                log.debug("Giving up on waiting for trade " + orderId + " to complete");
+                finished = true;
+                return false;
+            }
+
+            log.debug("Open orders:");
+            boolean orderFound = false;
+            try {
+                DDOSUtils.waitForPossibleCall(getClass());
+                OpenOrders openOrders = tradeService.getOpenOrders();
+                for (LimitOrder openOrder : openOrders.getOpenOrders()) {
+                    log.debug("openOrder = " + openOrder);
+                    if (orderId.equals(openOrder.getId())) {
+                        orderFound = true;
+                        break;
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if (orderFound) {
+                log.debug("Waiting for order to be processed.");
+            }else{
+                orderProcessed = true;
+            }
+
+            if (orderProcessed) {
+                result = orderId;
+                finished = true;
+            }
+
+            return result != null;
+        }
+
+        @Override
+        public boolean isFinished() {
+            return finished;
+        }
+
+        @Override
+        public String getResult() {
+            return result;
+        }
+
+        @Override
+        public boolean isFailed() {
+            return finished && result == null;
+        }
+
+        @Override
+        public void onFinish() {
+            log.debug("Purchase task finished.");
+        }
+
+        @Override
+        public long getShortestTimeForNexStepInvocation() {
+            return 5 * 1000; //it doesn't make sense to run step sooner than after 5 seconds
+        }
+    }
+
+    class SellCoinsTask implements ITask {
+        private long MAXIMUM_TIME_TO_WAIT_FOR_ORDER_TO_FINISH = 5 * 60 * 60 * 1000; //5 hours
+
+        private BigDecimal cryptoAmount;
+        private String cryptoCurrency;
+        private String fiatCurrencyToUse;
+        private String description;
+
+        private String orderId;
+        private String result;
+        private boolean finished;
+
+        SellCoinsTask(BigDecimal cryptoAmount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
+            this.cryptoAmount = cryptoAmount;
+            this.cryptoCurrency = cryptoCurrency;
+            this.fiatCurrencyToUse = fiatCurrencyToUse;
+            this.description = description;
+        }
+
+        @Override
+        public boolean onCreate() {
+            log.info("Calling Bittrex exchange (sell " + cryptoAmount + " " + cryptoCurrency + ")");
+            AccountService accountService = getExchange().getAccountService();
+            TradeService tradeService = getExchange().getTradeService();
+
+            try {
+                log.debug("AccountInfo as String: " + accountService.getAccountInfo().toString());
+
+                CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrencyToUse);
+
+                MarketOrder order = new MarketOrder(Order.OrderType.ASK, cryptoAmount, currencyPair);
+                log.debug("marketOrder = " + order);
+                DDOSUtils.waitForPossibleCall(getClass());
+                orderId = tradeService.placeMarketOrder(order);
+                log.debug("orderId = " + orderId + " " + order);
+
+                try {
+                    Thread.sleep(2000); //give exchange 2 seconds to reflect open order in order book
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                log.error("Bittrex exchange (sellCoins) failed with message: " + e.getMessage());
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+            return (orderId != null);
+        }
+
+        @Override
+        public boolean onDoStep() {
+            if (orderId == null) {
+                log.debug("Giving up on waiting for trade to complete. Because it did not happen");
+                finished = true;
+                result = "Skipped";
+                return false;
+            }
+            TradeService tradeService = getExchange().getTradeService();
+            // get open orders
+            boolean orderProcessed = false;
+            long checkTillTime = System.currentTimeMillis() + MAXIMUM_TIME_TO_WAIT_FOR_ORDER_TO_FINISH;
+            if (System.currentTimeMillis() > checkTillTime) {
+                log.debug("Giving up on waiting for trade " + orderId + " to complete");
+                finished = true;
+                return false;
+            }
+
+            log.debug("Open orders:");
+            boolean orderFound = false;
+            try {
+                DDOSUtils.waitForPossibleCall(getClass());
+                OpenOrders openOrders = tradeService.getOpenOrders();
+                for (LimitOrder openOrder : openOrders.getOpenOrders()) {
+                    log.debug("openOrder = " + openOrder);
+                    if (orderId.equals(openOrder.getId())) {
+                        orderFound = true;
+                        break;
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if (orderFound) {
+                log.debug("Waiting for order to be processed.");
+            }else{
+                orderProcessed = true;
+            }
+
+            if (orderProcessed) {
+                result = orderId;
+                finished = true;
+            }
+
+            return result != null;
+        }
+
+        @Override
+        public boolean isFinished() {
+            return finished;
+        }
+
+        @Override
+        public String getResult() {
+            return result;
+        }
+
+        @Override
+        public boolean isFailed() {
+            return finished && result == null;
+        }
+
+        @Override
+        public void onFinish() {
+            log.debug("Sell task finished.");
+        }
+
+        @Override
+        public long getShortestTimeForNexStepInvocation() {
+            return 5 * 1000; //it doesn't make sense to run step sooner than after 5 seconds
+        }
     }
 }
