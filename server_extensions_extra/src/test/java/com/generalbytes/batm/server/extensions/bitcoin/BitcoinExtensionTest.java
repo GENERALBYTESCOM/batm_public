@@ -215,4 +215,28 @@ public class BitcoinExtensionTest {
         Assert.assertEquals("5b20e3a9266bbe80095757489d84a6bb", bitgoWallet.getWalletId());
         log.info("wallet = " + bitgoWallet);
     }
+
+    @Test
+    public void bitgoErrorTest() {
+        String body = "{\"error\":\"invalid address for network\",\"name\":\"Invalid\",\"requestId\":\"cjjectv6y2zlgill815ppvp4g\",\"message\":\"invalid address for network\"}";
+        int index1 = body.indexOf("error") + 8;
+        int index2 = body.indexOf(",") - 1;
+        String value = body.substring(index1, index2);
+        Assert.assertNotNull(value);
+        Assert.assertEquals("invalid address for network", value);
+
+        body = "{\"error\":\"sub-dust-threshold amount for LWcx7VHK3hKDV5KaiE2EQLPpGt9GEVwzdM: 10000\",\"name\":\"Invalid\",\"requestId\":\"cjjebbtly2ew1gmldyr9h2dnk\",\"message\":\"sub-dust-threshold amount for LWcx7VHK3hKDV5KaiE2EQLPpGt9GEVwzdM: 10000\"}";
+        index1 = body.indexOf("error") + 8;
+        index2 = body.indexOf(",") - 1;
+        value = body.substring(index1, index2);
+        Assert.assertNotNull(value);
+        Assert.assertEquals("sub-dust-threshold amount for LWcx7VHK3hKDV5KaiE2EQLPpGt9GEVwzdM: 10000", value);
+
+        body = "{\"error\":\"needs unlock\",\"needsOTP\":true,\"needsUnlock\":true,\"name\":\"Response\",\"requestId\":\"cjjebd0lq2ke0g7l73czlu75j\",\"message\":\"needs unlock\"}";
+        index1 = body.indexOf("error") + 8;
+        index2 = body.indexOf(",") - 1;
+        value = body.substring(index1, index2);
+        Assert.assertNotNull(value);
+        Assert.assertEquals("needs unlock", value);
+    }
 }
