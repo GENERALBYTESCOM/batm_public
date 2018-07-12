@@ -97,6 +97,7 @@ public class CoinmarketcapRateSource implements IRateSource {
         result.add(Currencies.BSD);
         result.add(Currencies.BTDX);
         result.add(Currencies.MEC);
+        result.add(Currencies.DOGE);
 
         return result;
     }

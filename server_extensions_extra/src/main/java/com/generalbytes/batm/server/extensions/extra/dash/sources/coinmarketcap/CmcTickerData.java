@@ -29,4 +29,13 @@ public class CmcTickerData {
     public void setQuotes(Map<String, CmcTickerQuote> quotes) {
         this.quotes = quotes;
     }
+
+    @Override
+    public String toString() {
+        return "CmcTickerData{" +
+            "quotes=" + quotes +
+            '}';
+    }
 }
+
+
