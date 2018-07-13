@@ -30,4 +30,11 @@ public class CmcTickerQuote {
     public void setPrice(BigDecimal price) {
         this.price = price;
     }
+
+    @Override
+    public String toString() {
+        return "CmcTickerQuote{" +
+            "price=" + price +
+            '}';
+    }
 }

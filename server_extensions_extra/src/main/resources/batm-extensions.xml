@@ -62,6 +62,11 @@
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
             </ratesource>
+            <ratesource prefix="bittrex" name ="Bittrex.com Exchange" >
+                <cryptocurrency>BTC</cryptocurrency>
+                <cryptocurrency>ETH</cryptocurrency>
+                <cryptocurrency>LTC</cryptocurrency>
+            </ratesource>
             <ratesource prefix="itbit" name ="itBit.com Exchange" >
                 <param name="fiatcurrency" />
                 <cryptocurrency>BTC</cryptocurrency>
@@ -83,6 +88,7 @@
                 <cryptocurrency>BTDX</cryptocurrency>
                 <cryptocurrency>MEC</cryptocurrency>
                 <cryptocurrency>BURST</cryptocurrency>
+                <cryptocurrency>DOGE</cryptocurrency>
             </ratesource>
             <paymentprocessor prefix="bitcoinpay" name="BitcoinPay.com" >
                 <param name="apikey" />
@@ -94,6 +100,13 @@
                 <cryptocurrency>BTC</cryptocurrency>
             </paymentprocessor>
             <exchange prefix="bitfinex" name="Bitfinex.com Exchange">
+                <param name="apikey" />
+                <param name="apisecret" />
+                <cryptocurrency>BTC</cryptocurrency>
+                <cryptocurrency>ETH</cryptocurrency>
+                <cryptocurrency>LTC</cryptocurrency>
+            </exchange>
+            <exchange prefix="bittrex" name="Bittrex.com Exchange">
                 <param name="apikey" />
                 <param name="apisecret" />
                 <cryptocurrency>BTC</cryptocurrency>

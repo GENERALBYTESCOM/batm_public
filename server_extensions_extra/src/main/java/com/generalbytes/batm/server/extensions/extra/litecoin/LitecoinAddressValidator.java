@@ -21,17 +21,22 @@ import com.generalbytes.batm.server.coinutil.AddressFormatException;
 import com.generalbytes.batm.server.coinutil.Base58;
 import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
+import com.generalbytes.batm.server.extensions.extra.groestlcoin.wallets.groestlcoind.GroestlcoindRPCWallet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LitecoinAddressValidator implements ICryptoAddressValidator {
 
+    private static final Logger log = LoggerFactory.getLogger(LitecoinAddressValidator.class);
+
     @Override
     public boolean isAddressValid(String address) {
-        if (address.startsWith("L") || address.startsWith("3")) {
+        if (address.startsWith("L") || address.startsWith("3") || address.startsWith("M")) {
             try {
                 Base58.decodeToBigInteger(address);
                 Base58.decodeChecked(address);
             } catch (AddressFormatException e) {
-                e.printStackTrace();
+                log.debug("Address ["+address+"] is not recognized.", e);
                 return false;
             }
             return true;
