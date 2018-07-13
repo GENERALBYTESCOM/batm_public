@@ -19,6 +19,7 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin;
 
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitfinex.BitfinexExchange;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bittrex.BittrexExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.itbit.ItBitExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.bitcoinpay.BitcoinPayPP;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.coinofsale.CoinOfSalePP;
@@ -58,6 +59,10 @@ public class BitcoinExtension implements IExtension{
                 String apiKey = paramTokenizer.nextToken();
                 String apiSecret = paramTokenizer.nextToken();
                 return new BitfinexExchange(apiKey, apiSecret);
+            } if ("bittrex".equalsIgnoreCase(prefix)) {
+                String apiKey = paramTokenizer.nextToken();
+                String apiSecret = paramTokenizer.nextToken();
+                return new BittrexExchange(apiKey, apiSecret);
             } else if ("itbit".equalsIgnoreCase(prefix)) {
                 String preferredFiatCurrency = Currencies.USD;
                 String userId = paramTokenizer.nextToken();
@@ -202,6 +207,8 @@ public class BitcoinExtension implements IExtension{
                 return new FixPriceRateSource(rate,preferredFiatCurrency);
             }else if ("bitfinex".equalsIgnoreCase(rsType)) {
                return new BitfinexExchange("**","**");
+            }else if ("bittrex".equalsIgnoreCase(rsType)) {
+                return new BittrexExchange("**","**");
             }else if ("bity".equalsIgnoreCase(rsType)) {
                return new BityRateSource();
             }else if ("mrcoin".equalsIgnoreCase(rsType)) {
