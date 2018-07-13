@@ -26,6 +26,7 @@ import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.StringTokenizer;
 
@@ -56,12 +57,28 @@ public class BurstExtension implements IExtension{
             if ("burst".equalsIgnoreCase(walletType)) {
                 String masterPassword = st.nextToken();
                 String accountId = null;
+                String nodeAddress = null;
+                String useSSL = null;
                 if (st.hasMoreTokens()) {
                     accountId = st.nextToken();
                 }
 
-                if (masterPassword != null) {
-                    return new BurstWallet(masterPassword,accountId);
+                if (st.hasMoreTokens()) {
+                    nodeAddress = st.nextToken();
+                }
+
+                if (st.hasMoreTokens()) {
+                    useSSL = st.nextToken();
+                }
+
+                if (masterPassword != null && accountId != null && nodeAddress != null) {
+                    if (Objects.equals(useSSL, "true")) {
+                        nodeAddress = "https://" + nodeAddress;
+                    } else {
+                        nodeAddress = "http://" + nodeAddress;
+                    }
+
+                    return new BurstWallet(masterPassword, accountId, nodeAddress);
                 }
             }
         }

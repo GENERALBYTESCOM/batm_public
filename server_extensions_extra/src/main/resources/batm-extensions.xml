@@ -454,6 +454,8 @@
         <wallet prefix="burstcoin" name="BurstWallet">
             <param name="masterPassword" />
             <param name="accountRS" />
+            <param name="nodeAddress" />
+            <param name="useSSL" />
             <cryptocurrency>BURST</cryptocurrency>
         </wallet>
         <ratesource prefix="burstfix" name ="Fix Price" >
