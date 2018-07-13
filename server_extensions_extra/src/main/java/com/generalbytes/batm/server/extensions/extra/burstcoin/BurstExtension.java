@@ -36,7 +36,7 @@ public class BurstExtension implements IExtension{
     public void init(IExtensionContext ctx) {
         this.ctx = ctx;
     }
-	
+
     @Override
     public String getName() {
         return "BATM Burstcoin extension";
@@ -87,7 +87,7 @@ public class BurstExtension implements IExtension{
             StringTokenizer st = new StringTokenizer(sourceLogin,":");
             String rsType = st.nextToken();
 
-            if ("brsfix".equalsIgnoreCase(rsType)) {
+            if ("burstfix".equalsIgnoreCase(rsType)) {
                 BigDecimal rate = BigDecimal.ZERO;
                 if (st.hasMoreTokens()) {
                     try {
@@ -99,7 +99,7 @@ public class BurstExtension implements IExtension{
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new FixPriceRateSource(rate,preferedFiatCurrency);
-            } else if ("poloniexrs".equalsIgnoreCase(rsType)) {
+            } else if ("poloniexburst".equalsIgnoreCase(rsType)) {
                 return new PoloniexRateSource();
             }
         }

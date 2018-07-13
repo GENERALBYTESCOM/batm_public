@@ -18,6 +18,7 @@
 package com.generalbytes.batm.server.extensions.extra.burstcoin;
 
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
+import com.generalbytes.batm.server.extensions.extra.nxt.ReedSolomon;
 
 import java.math.BigInteger;
 
