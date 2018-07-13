@@ -26,6 +26,7 @@ import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.StringTokenizer;
 
@@ -36,7 +37,7 @@ public class BurstExtension implements IExtension{
     public void init(IExtensionContext ctx) {
         this.ctx = ctx;
     }
-	
+
     @Override
     public String getName() {
         return "BATM Burstcoin extension";
@@ -56,12 +57,37 @@ public class BurstExtension implements IExtension{
             if ("burst".equalsIgnoreCase(walletType)) {
                 String masterPassword = st.nextToken();
                 String accountId = null;
+                String nodeAddress = null;
+                String nodePort = null;
+                String useSSL = null;
                 if (st.hasMoreTokens()) {
                     accountId = st.nextToken();
                 }
 
-                if (masterPassword != null) {
-                    return new BurstWallet(masterPassword,accountId);
+                if (st.hasMoreTokens()) {
+                    nodeAddress = st.nextToken();
+                }
+
+                if (st.hasMoreTokens()) {
+                    useSSL = st.nextToken();
+                }
+
+                if (st.hasMoreTokens()) {
+                    nodePort = st.nextToken();
+                }
+
+                if (masterPassword != null && accountId != null && nodeAddress != null) {
+                    if (Objects.equals(useSSL, "true")) {
+                        nodeAddress = "https://" + nodeAddress;
+                    } else {
+                        nodeAddress = "http://" + nodeAddress;
+                    }
+
+                    if (nodePort != null) {
+                        nodeAddress += ":" + nodePort;
+                    }
+
+                    return new BurstWallet(masterPassword, accountId, nodeAddress);
                 }
             }
         }
@@ -87,7 +113,7 @@ public class BurstExtension implements IExtension{
             StringTokenizer st = new StringTokenizer(sourceLogin,":");
             String rsType = st.nextToken();
 
-            if ("brsfix".equalsIgnoreCase(rsType)) {
+            if ("burstfix".equalsIgnoreCase(rsType)) {
                 BigDecimal rate = BigDecimal.ZERO;
                 if (st.hasMoreTokens()) {
                     try {
@@ -99,7 +125,7 @@ public class BurstExtension implements IExtension{
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new FixPriceRateSource(rate,preferedFiatCurrency);
-            } else if ("poloniexrs".equalsIgnoreCase(rsType)) {
+            } else if ("poloniexburst".equalsIgnoreCase(rsType)) {
                 return new PoloniexRateSource();
             }
         }

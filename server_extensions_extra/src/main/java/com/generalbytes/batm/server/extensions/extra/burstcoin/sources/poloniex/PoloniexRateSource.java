@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-public class PoloniexRateSource implements IRateSource{
+public class PoloniexRateSource implements IRateSource {
     private static final Logger log = LoggerFactory.getLogger(PoloniexRateSource.class);
 
     private final BitfinexExchange btcRs;

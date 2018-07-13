@@ -140,6 +140,21 @@ public class CoinmarketcapAPITest {
         Assert.assertNotNull(data);
     }
 
+    @Test
+    public void getTickerDogecoinTest() {
+        Integer dogeCoinId = 74;//coinmarketcap id
+        CmcTickerResponse result = api.getTicker(dogeCoinId, "USD");
+        Assert.assertNotNull(result);
+
+        CmcTickerData data = result.getData();
+        Assert.assertNotNull(data);
+        Assert.assertNotNull(data.getQuotes());
+
+        //CmcTickerQuote quote = (CmcTickerQuote) data.getQuotes();
+        System.out.println(data);
+        System.out.println();
+    }
+
     /**
      * Method getTickerOneIntegerOneStringParametersTest() checks if method getTicker() of the api, with one parameter - id
      * of type string is correctly called and that data is received.
