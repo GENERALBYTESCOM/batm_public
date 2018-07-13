@@ -456,6 +456,7 @@
             <param name="accountRS" />
             <param name="nodeAddress" />
             <param name="useSSL" />
+            <param name="nodePort" />
             <cryptocurrency>BURST</cryptocurrency>
         </wallet>
         <ratesource prefix="burstfix" name ="Fix Price" >

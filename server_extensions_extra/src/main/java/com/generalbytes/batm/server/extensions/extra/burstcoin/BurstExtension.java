@@ -58,6 +58,7 @@ public class BurstExtension implements IExtension{
                 String masterPassword = st.nextToken();
                 String accountId = null;
                 String nodeAddress = null;
+                String nodePort = null;
                 String useSSL = null;
                 if (st.hasMoreTokens()) {
                     accountId = st.nextToken();
@@ -71,11 +72,19 @@ public class BurstExtension implements IExtension{
                     useSSL = st.nextToken();
                 }
 
+                if (st.hasMoreTokens()) {
+                    nodePort = st.nextToken();
+                }
+
                 if (masterPassword != null && accountId != null && nodeAddress != null) {
                     if (Objects.equals(useSSL, "true")) {
                         nodeAddress = "https://" + nodeAddress;
                     } else {
                         nodeAddress = "http://" + nodeAddress;
+                    }
+
+                    if (nodePort != null) {
+                        nodeAddress += ":" + nodePort;
                     }
 
                     return new BurstWallet(masterPassword, accountId, nodeAddress);
