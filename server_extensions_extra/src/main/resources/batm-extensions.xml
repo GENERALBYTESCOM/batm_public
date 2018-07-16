@@ -612,4 +612,20 @@
         </ratesource>
         <cryptologo cryptocurrency="BTCP" file="btcp.png"/>
     </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.electra.ElectraExtension" >
+        <wallet prefix="electra" name="Electracoin">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>ECA</cryptocurrency>
+        </wallet>
+        <ratesource prefix="electrafix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>ECA</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="ECA" file="eca.png"/>
+    </extension>
 </extensions>
