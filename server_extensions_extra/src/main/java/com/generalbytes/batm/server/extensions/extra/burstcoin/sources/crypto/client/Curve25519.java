@@ -3,6 +3,10 @@ package com.generalbytes.batm.server.extensions.extra.burstcoin.sources.crypto.c
 /* Ported from C to Java by Dmitry Skiba [sahn0], 23/02/08.
  * Original: http://cds.xs4all.nl:8081/ecdh/
  *
+ * GENERAL BYTES version:
+ * - based on https://github.com/PoC-Consortium/burstcoin/blob/a06d6f8/src/brs/crypto/Curve25519.java
+ * - removed unused code
+ *
  * Generic 64-bit integer implementation of Curve25519 ECDH
  * Written by Matthijs van Duin, 200608242056
  * Public domain.
