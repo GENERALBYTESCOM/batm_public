@@ -32,7 +32,7 @@ public class BitgoWalletTest {
         String port = "3080";
         String token = "v2x8d5e9e46379dc328b2039a400a12b04ea986689b38107fd84cd339bc89e3fb21";
         String walletId = "5b20e3a9266bbe80095757489d84a6bb";
-        String walletPassphrase = "Vranec8586";
+        String walletPassphrase = "JSZSuGNlHfgqPHjrp0eO";
 
         wallet = new BitgoWallet(host, port, token, walletId, walletPassphrase);
     }
@@ -44,12 +44,12 @@ public class BitgoWalletTest {
         String port = null;
         String token = "v2x8d5e9e46379dc328b2039a400a12b04ea986689b38107fd84cd339bc89e3fb21";
         String walletId = "5b20e3a9266bbe80095757489d84a6bb";
-        String walletPassphrase = "Vranec8586";
+        String walletPassphrase = "JSZSuGNlHfgqPHjrp0eO";
 
         final BitgoWallet remotewallet = new BitgoWallet(host, port, token, walletId, walletPassphrase);
         final String address = remotewallet.getCryptoAddress(coin);
         Assert.assertNotNull(address);
-        Assert.assertEquals("2N7xTPv1xQsxRMXRcoRtZc6c6AWGy9WzuqA", address);
+        Assert.assertEquals("2N2WR6aVSEgq5ZLTED9vHvCWFdAMf6yhebd", address);
     }
 
     @Test
@@ -59,7 +59,7 @@ public class BitgoWalletTest {
         String port = null;
         String token = "v2x8d5e9e46379dc328b2039a400a12b04ea986689b38107fd84cd339bc89e3fb21";
         String walletId = "5b20e3a9266bbe80095757489d84a6bb";
-        String walletPassphrase = "Vranec8586";
+        String walletPassphrase = "JSZSuGNlHfgqPHjrp0eO";
 
         final BitgoWallet remotewallet = new BitgoWallet(host, port, token, walletId, walletPassphrase);
         BigDecimal balance = remotewallet.getCryptoBalance(coin);
