@@ -29,6 +29,7 @@ public class Currencies {
     public static final String BTX = "BTX"; //BitCore
     public static final String BSD = "BSD"; //BitSend
     public static final String BTDX = "BTDX"; //Bitcloud
+    public static final String BURST = "BURST"; //Burstcoin
     public static final String ETH = "ETH";
     public static final String EFL = "EFL";
     public static final String LTC = "LTC";
@@ -91,6 +92,7 @@ public class Currencies {
         crypto.add(BTX);
         crypto.add(BSD);
         crypto.add(BTDX);
+        crypto.add(BURST);
         crypto.add(EFL);
         crypto.add(ETH);
         crypto.add(LTC);

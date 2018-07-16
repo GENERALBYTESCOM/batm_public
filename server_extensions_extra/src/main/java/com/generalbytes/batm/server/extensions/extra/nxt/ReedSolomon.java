@@ -8,7 +8,7 @@ package com.generalbytes.batm.server.extensions.extra.nxt;
 */
 import java.math.BigInteger;
 
-final class ReedSolomon {
+public final class ReedSolomon {
     public static final BigInteger two64 = new BigInteger("18446744073709551616");
     private static final int[] initial_codeword = {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     private static final int[] gexp = {1, 2, 4, 8, 16, 5, 10, 20, 13, 26, 17, 7, 14, 28, 29, 31, 27, 19, 3, 6, 12, 24, 21, 15, 30, 25, 23, 11, 22, 9, 18, 1};
@@ -27,7 +27,7 @@ final class ReedSolomon {
         return id.toString();
     }
 
-    static String encode(BigInteger plain) {
+    public static String encode(BigInteger plain) {
         String plain_string = plain.toString();
         int length = plain_string.length();
         int[] plain_string_10 = new int[ReedSolomon.base_10_length];
@@ -81,7 +81,7 @@ final class ReedSolomon {
         return cypher_string_builder.toString();
     }
 
-    static BigInteger decode(String cypher_string) throws DecodeException {
+    public static BigInteger decode(String cypher_string) throws DecodeException {
 
         int[] codeword = new int[ReedSolomon.initial_codeword.length];
         System.arraycopy(ReedSolomon.initial_codeword, 0, codeword, 0, ReedSolomon.initial_codeword.length);
@@ -172,7 +172,7 @@ final class ReedSolomon {
         return sum == 0;
     }
 
-    abstract static class DecodeException extends Exception {
+    public abstract static class DecodeException extends Exception {
     }
 
     static final class CodewordTooLongException extends DecodeException {
