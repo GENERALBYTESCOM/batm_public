@@ -17,18 +17,20 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions;
 
+import java.util.Map;
+
 public interface ITransactionListener {
     /**
      * Callback method that is called by server when transaction is created on server
      * @param transactionDetails
      * @return
      */
-    String transactionCreated(ITransactionDetails transactionDetails);
+    Map<String,String> transactionCreated(ITransactionDetails transactionDetails);
 
     /**
      * Callback method that is called by server when transaction is updated by server
      * @param transactionDetails
      * @return
      */
-    String transactionUpdated(ITransactionDetails transactionDetails);
+    Map<String,String> transactionUpdated(ITransactionDetails transactionDetails);
 }
