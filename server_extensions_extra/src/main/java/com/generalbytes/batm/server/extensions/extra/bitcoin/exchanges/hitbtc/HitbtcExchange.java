@@ -18,8 +18,8 @@ public class HitbtcExchange extends XChangeExchange {
         super(getDefaultSpecification(), preferredFiatCurrency);
     }
 
-    public HitbtcExchange(String userId, String accountId, String clientKey, String clientSecret, String preferredFiatCurrency) {
-        super(getSpecification(userId, accountId, clientKey, clientSecret), preferredFiatCurrency);
+    public HitbtcExchange(String clientKey, String clientSecret, String preferredFiatCurrency) {
+        super(getSpecification(clientKey, clientSecret), preferredFiatCurrency);
         this.accountId = accountId;
     }
 
@@ -28,10 +28,8 @@ public class HitbtcExchange extends XChangeExchange {
         return new org.knowm.xchange.hitbtc.v2.HitbtcExchange().getDefaultExchangeSpecification();
     }
 
-    private static ExchangeSpecification getSpecification(String userId, String accountId, String clientKey, String clientSecret) {
+    private static ExchangeSpecification getSpecification(String clientKey, String clientSecret) {
         ExchangeSpecification spec = getDefaultSpecification();
-        spec.setExchangeSpecificParametersItem("userId", userId);
-        spec.setExchangeSpecificParametersItem("walletId", accountId);
         spec.setApiKey(clientKey);
         spec.setSecretKey(clientSecret);
         return spec;
@@ -64,16 +62,4 @@ public class HitbtcExchange extends XChangeExchange {
         return 10;
     }
 
-    @Override
-    public Wallet getWallet(AccountInfo accountInfo, String fiatCurrency) {
-        return accountInfo.getWallet(accountId);
-    }
-
-    @Override
-    protected String translateCryptoCurrencySymbolToExchangeSpecificSymbol(String from) {
-        if (Currencies.BTC.equalsIgnoreCase(from)) {
-            return "XBT";
-        }
-        return from;
-    }
 }

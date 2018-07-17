@@ -78,11 +78,9 @@ public class BitcoinExtension implements IExtension{
             }
             else if("hitbtc".equalsIgnoreCase(prefix)) {
                 String preferredFiatCurrency = Currencies.USD;
-                String userId = "";
-                String accountId = "";
                 String apiKey = paramTokenizer.nextToken();
                 String apiSecret = paramTokenizer.nextToken();
-                return new HitbtcExchange(userId,accountId,apiKey, apiSecret,preferredFiatCurrency);
+                return new HitbtcExchange(apiKey, apiSecret,preferredFiatCurrency);
             }
         }
         return null;
