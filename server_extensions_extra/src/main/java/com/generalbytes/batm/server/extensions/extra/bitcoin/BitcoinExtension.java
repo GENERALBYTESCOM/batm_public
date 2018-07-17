@@ -20,6 +20,7 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitfinex.BitfinexExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bittrex.BittrexExchange;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.hitbtc.HitbtcExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.itbit.ItBitExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.bitcoinpay.BitcoinPayPP;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.coinofsale.CoinOfSalePP;
@@ -59,7 +60,8 @@ public class BitcoinExtension implements IExtension{
                 String apiKey = paramTokenizer.nextToken();
                 String apiSecret = paramTokenizer.nextToken();
                 return new BitfinexExchange(apiKey, apiSecret);
-            } if ("bittrex".equalsIgnoreCase(prefix)) {
+            }
+            else if ("bittrex".equalsIgnoreCase(prefix)) {
                 String apiKey = paramTokenizer.nextToken();
                 String apiSecret = paramTokenizer.nextToken();
                 return new BittrexExchange(apiKey, apiSecret);
@@ -73,6 +75,14 @@ public class BitcoinExtension implements IExtension{
                     preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase();
                 }
                 return new ItBitExchange(userId, accountId, clientKey, clientSecret, preferredFiatCurrency);
+            }
+            else if("hitbtc".equalsIgnoreCase(prefix)) {
+                String preferredFiatCurrency = Currencies.USD;
+                String userId = "";
+                String accountId = "";
+                String apiKey = paramTokenizer.nextToken();
+                String apiSecret = paramTokenizer.nextToken();
+                return new HitbtcExchange(userId,accountId,apiKey, apiSecret,preferredFiatCurrency);
             }
         }
         return null;
