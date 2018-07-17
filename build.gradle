@@ -1,17 +1,17 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     repositories {
-        jcenter()
+        jcenter { url "http://jcenter.bintray.com/"}
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0'
+        //classpath 'com.android.tools.build:gradle:2.3.0'
     }
 }
 
 final File repoDir = project.file('libs')
 allprojects {
     repositories {
-        jcenter()
+        jcenter { url "http://jcenter.bintray.com/"}
     }
     repositories {
         //bitcoin-json-rpc-client-1.0.jar isn't part of any well known maven repo
