@@ -60,12 +60,11 @@ public class BitcoinExtension implements IExtension{
                 String apiKey = paramTokenizer.nextToken();
                 String apiSecret = paramTokenizer.nextToken();
                 return new BitfinexExchange(apiKey, apiSecret);
-            }
-            else if ("bittrex".equalsIgnoreCase(prefix)) {
+            }else if ("bittrex".equalsIgnoreCase(prefix)) {
                 String apiKey = paramTokenizer.nextToken();
                 String apiSecret = paramTokenizer.nextToken();
                 return new BittrexExchange(apiKey, apiSecret);
-            } else if ("itbit".equalsIgnoreCase(prefix)) {
+            }else if ("itbit".equalsIgnoreCase(prefix)) {
                 String preferredFiatCurrency = Currencies.USD;
                 String userId = paramTokenizer.nextToken();
                 String accountId = paramTokenizer.nextToken();
@@ -75,8 +74,7 @@ public class BitcoinExtension implements IExtension{
                     preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase();
                 }
                 return new ItBitExchange(userId, accountId, clientKey, clientSecret, preferredFiatCurrency);
-            }
-            else if("hitbtc".equalsIgnoreCase(prefix)) {
+            }else if("hitbtc".equalsIgnoreCase(prefix)) {
                 String preferredFiatCurrency = Currencies.USD;
                 String apiKey = paramTokenizer.nextToken();
                 String apiSecret = paramTokenizer.nextToken();
