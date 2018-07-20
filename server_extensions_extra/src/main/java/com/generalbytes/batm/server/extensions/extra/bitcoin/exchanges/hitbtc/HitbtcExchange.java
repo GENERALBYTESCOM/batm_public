@@ -12,15 +12,12 @@ import java.util.Set;
 
 public class HitbtcExchange extends XChangeExchange {
 
-    private String accountId;
-
     public HitbtcExchange(String preferredFiatCurrency) {
         super(getDefaultSpecification(), preferredFiatCurrency);
     }
 
     public HitbtcExchange(String clientKey, String clientSecret, String preferredFiatCurrency) {
         super(getSpecification(clientKey, clientSecret), preferredFiatCurrency);
-        this.accountId = accountId;
     }
 
 
