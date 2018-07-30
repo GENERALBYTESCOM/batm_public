@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2018 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2015-2016 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -11,30 +11,20 @@
  * Contact information
  * -------------------
  *
- * GENERAL BYTES s.r.o.
+ * GENERAL BYTES s.r.o
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap;
+package com.generalbytes.batm.server.extensions.extra.burstcoin.wallets.burstwallet.cgonline;
 
-import java.math.BigDecimal;
+public class BurstTransactionBytesResponse {
+    private String unsignedTransactionBytes;
 
-public class CmcTickerQuote {
-    private BigDecimal price;
-
-
-    public BigDecimal getPrice() {
-        return price;
+    public String getUnsignedTransactionBytes() {
+        return unsignedTransactionBytes;
     }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    @Override
-    public String toString() {
-        return "CmcTickerQuote{" +
-            "price=" + price +
-            '}';
+    public void setUnsignedTransactionBytes(String unsignedTransactionBytes) {
+        this.unsignedTransactionBytes = unsignedTransactionBytes;
     }
 }

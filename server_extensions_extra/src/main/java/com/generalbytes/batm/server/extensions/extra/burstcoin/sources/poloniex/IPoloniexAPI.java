@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2018 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2015-2016 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -11,30 +11,22 @@
  * Contact information
  * -------------------
  *
- * GENERAL BYTES s.r.o.
+ * GENERAL BYTES s.r.o
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap;
+package com.generalbytes.batm.server.extensions.extra.burstcoin.sources.poloniex;
 
-import java.math.BigDecimal;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 
-public class CmcTickerQuote {
-    private BigDecimal price;
-
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    @Override
-    public String toString() {
-        return "CmcTickerQuote{" +
-            "price=" + price +
-            '}';
-    }
+@Path("/")
+@Produces(MediaType.APPLICATION_JSON)
+public interface IPoloniexAPI {
+    @GET
+    @Path("/public")
+    OrderBookResponse returnOrderBook(@QueryParam("command") String command, @QueryParam("currencyPair") String currencyPair, @QueryParam("depth") long depth);
 }

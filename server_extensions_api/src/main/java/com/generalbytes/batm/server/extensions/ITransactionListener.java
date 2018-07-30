@@ -17,18 +17,22 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions;
 
+import java.util.Map;
+
 public interface ITransactionListener {
     /**
      * Callback method that is called by server when transaction is created on server
+     * Returned value is a map of keys and values that will be stored in the database and available for later use in ticket template
      * @param transactionDetails
      * @return
      */
-    String transactionCreated(ITransactionDetails transactionDetails);
+    Map<String,String> transactionCreated(ITransactionDetails transactionDetails);
 
     /**
      * Callback method that is called by server when transaction is updated by server
+     * Returned value is a map of keys and values that will be stored in the database and available for later use in ticket template
      * @param transactionDetails
      * @return
      */
-    String transactionUpdated(ITransactionDetails transactionDetails);
+    Map<String,String> transactionUpdated(ITransactionDetails transactionDetails);
 }
