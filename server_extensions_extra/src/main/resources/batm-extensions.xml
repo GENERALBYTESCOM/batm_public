@@ -646,4 +646,5 @@
         </ratesource>
         <cryptologo cryptocurrency="BTCP" file="btcp.png"/>
     </extension>
+    <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.TransactionExtension" />-->
 </extensions>
