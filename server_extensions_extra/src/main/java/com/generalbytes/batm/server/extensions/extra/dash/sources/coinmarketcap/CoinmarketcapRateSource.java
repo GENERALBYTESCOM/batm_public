@@ -99,6 +99,7 @@ public class CoinmarketcapRateSource implements IRateSource {
         result.add(Currencies.MEC);
         result.add(Currencies.BURST);
         result.add(Currencies.DOGE);
+        result.add(Currencies.ECA);
 
         return result;
     }
