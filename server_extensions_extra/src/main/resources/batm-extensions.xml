@@ -671,4 +671,5 @@
         </ratesource>
         <cryptologo cryptocurrency="ECA" file="eca.png"/>
     </extension>
+    <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.TransactionExtension" />-->
 </extensions>

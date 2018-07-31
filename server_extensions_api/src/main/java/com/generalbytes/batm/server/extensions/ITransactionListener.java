@@ -26,7 +26,7 @@ public interface ITransactionListener {
      * @param transactionDetails
      * @return
      */
-    Map<String,String> transactionCreated(ITransactionDetails transactionDetails);
+    Map<String,String> onTransactionCreated(ITransactionDetails transactionDetails);
 
     /**
      * Callback method that is called by server when transaction is updated by server
@@ -34,5 +34,5 @@ public interface ITransactionListener {
      * @param transactionDetails
      * @return
      */
-    Map<String,String> transactionUpdated(ITransactionDetails transactionDetails);
+    Map<String,String> onTransactionUpdated(ITransactionDetails transactionDetails);
 }
