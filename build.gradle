@@ -21,30 +21,10 @@ allprojects {
             dirs repoDir
         }
     }
-    //cross-compilation stuff for Java 7
-    assert (System.env.JDK_7_HOME != null): "Set environment variable JDK_7_HOME"
-    project.ext.targetJavaHome = System.env.JDK_7_HOME
-    def javaExecutablesPath = new File(targetJavaHome, 'bin')
-    def javaExecutables = [:].withDefault { execName ->
-        def executable = new File(javaExecutablesPath, execName)
-        assert executable.exists(): "There is no ${execName} executable in ${javaExecutablesPath}"
-        executable
-    }
     tasks.withType(JavaCompile) {
-        project.sourceCompatibility = '1.7'
-        options.with {
-            fork = true
-            forkOptions.javaHome = file(targetJavaHome)
-        }
-    }
-    tasks.withType(Javadoc) {
-        executable = javaExecutables.javadoc
-    }
-    tasks.withType(Test) {
-        executable = javaExecutables.java
-    }
-    tasks.withType(JavaExec) {
-        executable = javaExecutables.java
+        project.sourceCompatibility = '1.8'
+        options.encoding = 'UTF-8'
+        options.incremental = true
     }
 }
 
