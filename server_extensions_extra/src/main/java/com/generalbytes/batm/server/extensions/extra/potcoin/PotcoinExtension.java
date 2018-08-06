@@ -8,22 +8,10 @@ import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 import java.math.BigDecimal;
 import java.util.*;
 
-public class PotcoinExtension implements IExtension{
-    private IExtensionContext ctx;
-
-    @Override
-    public void init(IExtensionContext ctx) {
-        this.ctx = ctx;
-    }
-
+public class PotcoinExtension extends AbstractExtension{
     @Override
     public String getName() {
         return "BATM Potcoin extension";
-    }
-
-    @Override
-    public IExchange createExchange(String exchangeLogin) {
-        return null;
     }
 
     @Override
@@ -51,16 +39,6 @@ public class PotcoinExtension implements IExtension{
             return new PotcoinAddressValidator();
         }
         return null;
-    }
-
-    @Override
-    public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency) {
-        return null;
-    }
-
-    @Override
-    public IPaymentProcessor createPaymentProcessor(String paymentProcessorLogin) {
-        return null; //no payment processors available
     }
 
     @Override
@@ -93,15 +71,5 @@ public class PotcoinExtension implements IExtension{
         Set<String> result = new HashSet<String>();
         result.add(Currencies.POT);
         return result;
-    }
-
-    @Override
-    public Set<String> getSupportedWatchListsNames() {
-        return null;
-    }
-
-    @Override
-    public IWatchList getWatchList(String name) {
-        return null;
     }
 }

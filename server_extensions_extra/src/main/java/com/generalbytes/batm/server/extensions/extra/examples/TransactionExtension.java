@@ -18,17 +18,15 @@
 package com.generalbytes.batm.server.extensions.extra.examples;
 
 import com.generalbytes.batm.server.extensions.*;
-import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 /* Comment out this extension class in batm-extensions.xml */
-public class TransactionExtension implements IExtension, ITransactionListener {
+public class TransactionExtension extends AbstractExtension implements ITransactionListener {
 
     private final Map<String, Long> ticketCounters = new HashMap<>(); //each terminal has its counter
-    private IExtensionContext ctx;
 
     @Override
     public String getName() {
@@ -37,11 +35,9 @@ public class TransactionExtension implements IExtension, ITransactionListener {
 
     @Override
     public void init(IExtensionContext ctx) {
-        this.ctx = ctx;
+        super.init(ctx);
         ctx.addTransactionListener(this);
     }
-
-
 
     @Override
     public Map<String, String> onTransactionCreated(ITransactionDetails transactionDetails) {
@@ -78,46 +74,6 @@ public class TransactionExtension implements IExtension, ITransactionListener {
 
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
-        return null;
-    }
-
-    @Override
-    public IExchange createExchange(String exchangeLogin) {
-        return null;
-    }
-
-    @Override
-    public IPaymentProcessor createPaymentProcessor(String paymentProcessorLogin) {
-        return null;
-    }
-
-    @Override
-    public IRateSource createRateSource(String sourceLogin) {
-        return null;
-    }
-
-    @Override
-    public IWallet createWallet(String walletLogin) {
-        return null;
-    }
-
-    @Override
-    public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        return null;
-    }
-
-    @Override
-    public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency) {
-        return null;
-    }
-
-    @Override
-    public Set<String> getSupportedWatchListsNames() {
-        return null;
-    }
-
-    @Override
-    public IWatchList getWatchList(String name) {
-        return null;
+        return null; // no need to define supported cryptocurrencies
     }
 }

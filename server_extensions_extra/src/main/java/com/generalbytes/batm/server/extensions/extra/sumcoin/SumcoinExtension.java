@@ -17,33 +17,21 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.sumcoin;
 
+import com.generalbytes.batm.server.extensions.AbstractExtension;
 import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.IExchange;
-import com.generalbytes.batm.server.extensions.IExtension;
-import com.generalbytes.batm.server.extensions.IExtensionContext;
-import com.generalbytes.batm.server.extensions.IPaperWalletGenerator;
-import com.generalbytes.batm.server.extensions.IPaymentProcessor;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.sumcoin.sumcored.SumcoinRPCWallet;
 import com.generalbytes.batm.server.extensions.extra.sumcoin.sources.FixPriceRateSource;
-import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-public class SumcoinExtension implements IExtension{
-    private IExtensionContext ctx;
-
-    @Override
-    public void init(IExtensionContext ctx) {
-        this.ctx = ctx;
-    }
-
-
+public class SumcoinExtension extends AbstractExtension{
     public static String getCoinSymbol (){
         return Currencies.SUM;
     }
@@ -51,11 +39,6 @@ public class SumcoinExtension implements IExtension{
     @Override
     public String getName() {
         return "BATM SumCoin extension";
-    }
-
-    @Override
-    public IExchange createExchange(String exchangeLogin) {
-        return null;
     }
 
     @Override
@@ -96,11 +79,6 @@ public class SumcoinExtension implements IExtension{
     }
 
     @Override
-    public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency) {
-        return null;
-    }
-
-    @Override
     public IRateSource createRateSource(String sourceLogin) {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(sourceLogin,":");
@@ -126,24 +104,9 @@ public class SumcoinExtension implements IExtension{
     }
 
     @Override
-    public IPaymentProcessor createPaymentProcessor(String paymentProcessorLogin) {
-        return null; //no payment processors available
-    }
-
-    @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
         result.add(getCoinSymbol());
         return result;
-    }
-
-    @Override
-    public Set<String> getSupportedWatchListsNames() {
-        return null;
-    }
-
-    @Override
-    public IWatchList getWatchList(String name) {
-        return null;
     }
 }

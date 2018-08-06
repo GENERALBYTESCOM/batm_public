@@ -15,17 +15,17 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions;
+package com.generalbytes.batm.server.extensions.payment;
 
-import java.math.BigDecimal;
-
-public class Converters {
-
-    public static final BigDecimal BCH = BigDecimal.valueOf(Math.pow(10, 8));
-    public static final BigDecimal BTC = BigDecimal.valueOf(Math.pow(10, 8));
-    public static final BigDecimal LTC = BigDecimal.valueOf(Math.pow(10, 8));
-
-    public static final BigDecimal TBCH = BigDecimal.valueOf(Math.pow(10, 8));
-    public static final BigDecimal TBTC = BigDecimal.valueOf(Math.pow(10, 8));
-    public static final BigDecimal TLTC = BigDecimal.valueOf(Math.pow(10, 8));
+/**
+ * BATM Server's Payment Manager typically implements this interface.
+ */
+public interface IPaymentSupportListener {
+    /**
+     * IPaymentSupport implementation calls this method to tell server to store its payment index.
+     * By index is meant index inside xpub for receive addresses.
+     * @param cryptocurrency
+     * @param index
+     */
+    void paymentIndexChanged(String cryptocurrency, int index);
 }

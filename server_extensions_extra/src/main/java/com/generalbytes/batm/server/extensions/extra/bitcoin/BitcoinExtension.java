@@ -43,7 +43,6 @@ public class BitcoinExtension implements IExtension{
         this.ctx = ctx;
     }
 
-
     @Override
     public String getName() {
         return "BATM Bitcoin extra extension";
@@ -247,6 +246,11 @@ public class BitcoinExtension implements IExtension{
 
     @Override
     public IWatchList getWatchList(String name) {
+        return null;
+    }
+
+    @Override
+    public Set<ICryptoCurrencyDefinition> getCryptoCurrencyDefinitions() {
         return null;
     }
 }

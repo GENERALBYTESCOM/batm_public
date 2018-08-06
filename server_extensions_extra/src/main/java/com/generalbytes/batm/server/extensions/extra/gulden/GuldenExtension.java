@@ -21,29 +21,16 @@ import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.extra.gulden.sources.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.gulden.sources.GuldenTickerRateSource;
 import com.generalbytes.batm.server.extensions.extra.gulden.wallets.guldend.GuldendRPCWallet;
-import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-public class GuldenExtension implements IExtension{
-    private IExtensionContext ctx;
-
-    @Override
-    public void init(IExtensionContext ctx) {
-        this.ctx = ctx;
-    }
-
+public class GuldenExtension extends AbstractExtension{
     @Override
     public String getName() {
         return "BATM Gulden extension";
-    }
-
-    @Override
-    public IExchange createExchange(String exchangeLogin) {
-        return null;
     }
 
     @Override
@@ -84,11 +71,6 @@ public class GuldenExtension implements IExtension{
     }
 
     @Override
-    public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency) {
-        return null;
-    }
-
-    @Override
     public IRateSource createRateSource(String sourceLogin) {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(sourceLogin,":");
@@ -110,17 +92,8 @@ public class GuldenExtension implements IExtension{
             }else if ("guldencom".equalsIgnoreCase(prefix)) {
                 return new GuldenTickerRateSource();
             }
-
-
-
-
         }
         return null;
-    }
-
-    @Override
-    public IPaymentProcessor createPaymentProcessor(String paymentProcessorLogin) {
-        return null; //no payment processors available
     }
 
     @Override
@@ -128,15 +101,5 @@ public class GuldenExtension implements IExtension{
         Set<String> result = new HashSet<String>();
         result.add(Currencies.NLG);
         return result;
-    }
-
-    @Override
-    public Set<String> getSupportedWatchListsNames() {
-        return null;
-    }
-
-    @Override
-    public IWatchList getWatchList(String name) {
-        return null;
     }
 }

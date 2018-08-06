@@ -21,27 +21,14 @@ import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.extra.viacoin.sources.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.viacoin.sources.poloniex.PoloniexRateSource;
 import com.generalbytes.batm.server.extensions.extra.viacoin.wallets.viacoind.ViacoindRPCWallet;
-import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.math.BigDecimal;
 import java.util.*;
 
-public class ViacoinExtension implements IExtension{
-    private IExtensionContext ctx;
-
-    @Override
-    public void init(IExtensionContext ctx) {
-        this.ctx = ctx;
-    }
-
+public class ViacoinExtension extends AbstractExtension{
     @Override
     public String getName(){
         return "BATM Viacoin extension";
-    }
-
-    @Override
-    public IExchange createExchange(String exchangeLogin){
-        return null;
     }
 
     @Override
@@ -82,16 +69,6 @@ public class ViacoinExtension implements IExtension{
     }
 
     @Override
-    public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency) {
-        return null;
-    }
-
-    @Override
-    public IPaymentProcessor createPaymentProcessor(String paymentProcessorLogin){
-        return null;
-    }
-
-    @Override
     public IRateSource createRateSource(String sourceLogin) {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(sourceLogin,":");
@@ -128,15 +105,4 @@ public class ViacoinExtension implements IExtension{
         result.add(Currencies.VIA);
         return result;
     }
-
-    @Override
-    public Set<String> getSupportedWatchListsNames(){
-        return null;
-    }
-
-    @Override
-    public IWatchList getWatchList(String name){
-        return null;
-    }
-
 }

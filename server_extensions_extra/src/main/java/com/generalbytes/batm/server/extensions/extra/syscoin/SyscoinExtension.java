@@ -21,32 +21,14 @@ import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.extra.syscoin.sources.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.CoinmarketcapRateSource;
 import com.generalbytes.batm.server.extensions.extra.syscoin.wallets.syscoind.SyscoinRPCWallet;
-import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.math.BigDecimal;
 import java.util.*;
 
-public class SyscoinExtension implements IExtension{
-    private IExtensionContext ctx;
-
-    @Override
-    public void init(IExtensionContext ctx) {
-        this.ctx = ctx;
-    }
-
+public class SyscoinExtension extends AbstractExtension{
     @Override
     public String getName() {
         return "BATM Syscoin extra extension";
-    }
-
-    @Override
-    public IExchange createExchange(String exchangeLogin) {
-        return null;
-    }
-
-    @Override
-    public IPaymentProcessor createPaymentProcessor(String paymentProcessorLogin) {
-        return null; //no payment processors available
     }
 
     @Override
@@ -88,11 +70,6 @@ public class SyscoinExtension implements IExtension{
     }
 
     @Override
-    public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency) {
-        return null;
-    }
-
-    @Override
     public IRateSource createRateSource(String sourceLogin) {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(sourceLogin, ":");
@@ -126,15 +103,5 @@ public class SyscoinExtension implements IExtension{
         Set<String> result = new HashSet<String>();
         result.add(Currencies.SYS);
         return result;
-    }
-
-    @Override
-    public Set<String> getSupportedWatchListsNames() {
-        return null;
-    }
-
-    @Override
-    public IWatchList getWatchList(String name) {
-        return null;
     }
 }

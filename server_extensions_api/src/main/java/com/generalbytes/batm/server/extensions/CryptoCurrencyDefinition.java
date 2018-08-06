@@ -17,15 +17,39 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions;
 
-import java.math.BigDecimal;
+import com.generalbytes.batm.server.extensions.payment.IPaymentSupport;
 
-public class Converters {
+/**
+ * This class is used to define crypto currency
+ */
+public class CryptoCurrencyDefinition implements ICryptoCurrencyDefinition {
+    private String symbol;
+    private String name;
+    private  String authorWebsiteURL;
 
-    public static final BigDecimal BCH = BigDecimal.valueOf(Math.pow(10, 8));
-    public static final BigDecimal BTC = BigDecimal.valueOf(Math.pow(10, 8));
-    public static final BigDecimal LTC = BigDecimal.valueOf(Math.pow(10, 8));
+    public CryptoCurrencyDefinition(String symbol, String name, String authorWebsiteURL) {
+        this.symbol = symbol;
+        this.name = name;
+        this.authorWebsiteURL = authorWebsiteURL;
+    }
 
-    public static final BigDecimal TBCH = BigDecimal.valueOf(Math.pow(10, 8));
-    public static final BigDecimal TBTC = BigDecimal.valueOf(Math.pow(10, 8));
-    public static final BigDecimal TLTC = BigDecimal.valueOf(Math.pow(10, 8));
+    @Override
+    public String getSymbol() {
+        return symbol;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String getAuthorWebsiteURL() {
+        return authorWebsiteURL;
+    }
+
+    @Override
+    public IPaymentSupport getPaymentSupport() {
+        return null;
+    }
 }

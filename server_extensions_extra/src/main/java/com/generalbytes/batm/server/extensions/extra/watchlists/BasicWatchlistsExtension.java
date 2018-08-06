@@ -25,14 +25,7 @@ import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 import java.util.HashSet;
 import java.util.Set;
 
-public class BasicWatchlistsExtension implements IExtension{
-    private IExtensionContext ctx;
-
-    @Override
-    public void init(IExtensionContext ctx) {
-        this.ctx = ctx;
-    }
-
+public class BasicWatchlistsExtension extends AbstractExtension{
     private IWatchList ofacWatchList = new OFACWatchList();
 
     @Override
@@ -55,40 +48,8 @@ public class BasicWatchlistsExtension implements IExtension{
         return null;
     }
 
-
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         return null;
     }
-
-    @Override
-    public IExchange createExchange(String exchangeLogin) {
-        return null;
-    }
-
-    @Override
-    public IPaymentProcessor createPaymentProcessor(String paymentProcessorLogin) {
-        return null;
-    }
-
-    @Override
-    public IRateSource createRateSource(String sourceLogin) {
-        return null;
-    }
-
-    @Override
-    public IWallet createWallet(String walletLogin) {
-        return null;
-    }
-
-    @Override
-    public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        return null;
-    }
-
-    @Override
-    public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency) {
-        return null;
-    }
-
 }

@@ -22,32 +22,15 @@ import com.generalbytes.batm.server.extensions.extra.dogecoin.sources.FixPriceRa
 import com.generalbytes.batm.server.extensions.extra.dogecoin.sources.chainso.ChainSoRateSource;
 import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.BlockIOWallet;
 import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.dogecoind.DogecoindRPCWallet;
-import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.math.BigDecimal;
 import java.util.*;
 
-public class DogecoinExtension implements IExtension{
-    private IExtensionContext ctx;
-
-    @Override
-    public void init(IExtensionContext ctx) {
-        this.ctx = ctx;
-    }
+public class DogecoinExtension extends AbstractExtension{
 
     @Override
     public String getName() {
         return "BATM Dogecoin extra extension";
-    }
-
-    @Override
-    public IExchange createExchange(String exchangeLogin) {
-        return null;
-    }
-
-    @Override
-    public IPaymentProcessor createPaymentProcessor(String paymentProcessorLogin) {
-        return null; //no payment processors available
     }
 
     @Override
@@ -98,11 +81,6 @@ public class DogecoinExtension implements IExtension{
     }
 
     @Override
-    public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency) {
-        return null;
-    }
-
-    @Override
     public IRateSource createRateSource(String sourceLogin) {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(sourceLogin,":");
@@ -135,13 +113,4 @@ public class DogecoinExtension implements IExtension{
         return result;
     }
 
-    @Override
-    public Set<String> getSupportedWatchListsNames() {
-        return null;
-    }
-
-    @Override
-    public IWatchList getWatchList(String name) {
-        return null;
-    }
 }

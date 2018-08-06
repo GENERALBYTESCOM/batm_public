@@ -1,22 +1,30 @@
+/*************************************************************************************
+ * Copyright (C) 2014-2018 GENERAL BYTES s.r.o. All rights reserved.
+ *
+ * This software may be distributed and modified under the terms of the GNU
+ * General Public License version 2 (GPL2) as published by the Free Software
+ * Foundation and appearing in the file GPL2.TXT included in the packaging of
+ * this file. Please note that GPL2 Section 2[b] requires that all works based
+ * on this software must also be made publicly available under the terms of
+ * the GPL2 ("Copyleft").
+ *
+ * Contact information
+ * -------------------
+ *
+ * GENERAL BYTES s.r.o.
+ * Web      :  http://www.generalbytes.com
+ *
+ ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.dexacoin;
 
 import com.generalbytes.batm.server.extensions.*;
-import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-public class DexCoinSupport implements IExchange, IWallet, IRateSource, IExtension, ICryptoAddressValidator {
-    private IExtensionContext ctx;
-
-    @Override
-    public void init(IExtensionContext ctx) {
-        this.ctx = ctx;
-    }
-
-
+public class DexCoinSupport extends AbstractExtension implements IExchange, IWallet, IRateSource, ICryptoAddressValidator {
     private static final String CRYPTO_CURRENCY = Currencies.DEX;
     private static final BigDecimal WALLET_BALANCE = new BigDecimal("1000000");
     private static final BigDecimal EXCHANGE_BALANCE = new BigDecimal("2000000");
@@ -38,6 +46,12 @@ public class DexCoinSupport implements IExchange, IWallet, IRateSource, IExtensi
             this.preferredFiatCurrency = Currencies.USD;
         }
     }
+
+    @Override
+    public String getName() {
+        return "BATM " + CRYPTO_CURRENCY + " extension";
+    }
+
 
     @Override
     public BigDecimal getExchangeRateLast(String cryptoCurrency, String cashCurrency) {
@@ -124,11 +138,6 @@ public class DexCoinSupport implements IExchange, IWallet, IRateSource, IExtensi
     }
 
     @Override
-    public String getName() {
-        return "BATM " + CRYPTO_CURRENCY + " extension";
-    }
-
-    @Override
     public IExchange createExchange(String exchangeLogin) {
         if (exchangeLogin !=null && !exchangeLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(exchangeLogin,":");
@@ -199,31 +208,10 @@ public class DexCoinSupport implements IExchange, IWallet, IRateSource, IExtensi
     }
 
     @Override
-    public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency) {
-        return null;
-    }
-
-
-    @Override
-    public IPaymentProcessor createPaymentProcessor(String paymentProcessorLogin) {
-        return null; //no payment processors available
-    }
-
-    @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
         result.add(CRYPTO_CURRENCY);
         return result;
-    }
-
-    @Override
-    public Set<String> getSupportedWatchListsNames() {
-        return null;
-    }
-
-    @Override
-    public IWatchList getWatchList(String name) {
-        return null;
     }
 
     @Override

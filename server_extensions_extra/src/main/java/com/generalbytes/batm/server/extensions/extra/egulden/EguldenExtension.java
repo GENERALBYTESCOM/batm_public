@@ -20,29 +20,16 @@ package com.generalbytes.batm.server.extensions.extra.egulden;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.extra.egulden.sources.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.egulden.wallets.eguldend.EguldendRPCWallet;
-import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-public class EguldenExtension implements IExtension{
-    private IExtensionContext ctx;
-
-    @Override
-    public void init(IExtensionContext ctx) {
-        this.ctx = ctx;
-    }
-
+public class EguldenExtension extends AbstractExtension{
     @Override
     public String getName() {
         return "BATM e-Gulden extension";
-    }
-
-    @Override
-    public IExchange createExchange(String exchangeLogin) {
-        return null;
     }
 
     @Override
@@ -83,16 +70,6 @@ public class EguldenExtension implements IExtension{
     }
 
     @Override
-    public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency) {
-        return null;
-    }
-
-    @Override
-    public IPaymentProcessor createPaymentProcessor(String paymentProcessorLogin) {
-        return null; //no payment processors available
-    }
-
-    @Override
     public IRateSource createRateSource(String sourceLogin) {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(sourceLogin,":");
@@ -121,15 +98,5 @@ public class EguldenExtension implements IExtension{
         Set<String> result = new HashSet<String>();
         result.add(Currencies.EFL);
         return result;
-    }
-
-    @Override
-    public Set<String> getSupportedWatchListsNames() {
-        return null;
-    }
-
-    @Override
-    public IWatchList getWatchList(String name) {
-        return null;
     }
 }

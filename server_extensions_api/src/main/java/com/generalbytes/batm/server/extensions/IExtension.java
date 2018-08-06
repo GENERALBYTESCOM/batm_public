@@ -31,20 +31,27 @@ public interface IExtension {
      * This method is called after Extension is instantiated and before any other extension is called
      * @param ctx
      */
-    public void init(IExtensionContext ctx);
+    void init(IExtensionContext ctx);
 
     /**
      * Returns the name of the extension.
      * @return
      */
-    public String getName();
+    String getName();
 
     /**
      * Returns list of crypto currencies that this extension supports
      * @return
      */
-    public Set<String> getSupportedCryptoCurrencies();
+    Set<String> getSupportedCryptoCurrencies();
 
+    /**
+     * Extension can optionally provide crypto currency definitions.
+     * Crypto currency definition must exist if you want to have a support for two way ATM and Point of sale terminal for your crypto currency
+     * Only one @{@link ICryptoCurrencyDefinition} can exist in whole server.
+     * @return
+     */
+    Set<ICryptoCurrencyDefinition> getCryptoCurrencyDefinitions();
     /**
      * This method is used for creating implementation of crypto exchange
      * @param exchangeLogin
@@ -52,7 +59,7 @@ public interface IExtension {
      *
      * @see com.generalbytes.batm.server.extensions.IExchange
      */
-    public IExchange createExchange(String exchangeLogin);
+    IExchange createExchange(String exchangeLogin);
 
     /**
      * This method is used for creating implementation of payment processor
@@ -61,7 +68,7 @@ public interface IExtension {
      *
      * @see com.generalbytes.batm.server.extensions.IPaymentProcessor
      */
-    public IPaymentProcessor createPaymentProcessor(String paymentProcessorLogin);
+    IPaymentProcessor createPaymentProcessor(String paymentProcessorLogin);
 
     /**
      * This method is used for creating implementation of coin price source
@@ -70,7 +77,7 @@ public interface IExtension {
      *
      * @see com.generalbytes.batm.server.extensions.IRateSource
      */
-    public IRateSource createRateSource(String sourceLogin);
+    IRateSource createRateSource(String sourceLogin);
 
     /**
      * This method is used for creating implementation of cryptocurrency hot wallet used by the server
@@ -79,7 +86,7 @@ public interface IExtension {
      *
      * @see com.generalbytes.batm.server.extensions.IWallet
      */
-    public IWallet createWallet(String walletLogin);
+    IWallet createWallet(String walletLogin);
 
     /**
      * This method is used for creating implementation cryptocurrency address validator used by the server
@@ -88,7 +95,7 @@ public interface IExtension {
      *
      * @see com.generalbytes.batm.server.extensions.ICryptoAddressValidator
      */
-    public ICryptoAddressValidator createAddressValidator(String cryptoCurrency);
+    ICryptoAddressValidator createAddressValidator(String cryptoCurrency);
 
     /**
      * This method is used for creating implementation cryptocurrency paper wallet generator
@@ -98,13 +105,13 @@ public interface IExtension {
      * @see com.generalbytes.batm.server.extensions.IPaperWalletGenerator
      * @see com.generalbytes.batm.server.extensions.IPaperWallet
      */
-    public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency);
+    IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency);
 
     /**
      * Returns the list of watchlists that extenstion contains
      * @return
      */
-    public Set<String> getSupportedWatchListsNames();
+    Set<String> getSupportedWatchListsNames();
 
 
     /**
@@ -112,8 +119,6 @@ public interface IExtension {
      * @param name
      * @return
      */
-    public IWatchList getWatchList(String name);
-
-
+    IWatchList getWatchList(String name);
 
 }

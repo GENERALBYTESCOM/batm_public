@@ -21,34 +21,16 @@ import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.extra.futurocoin.sources.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.futurocoin.sources.yobit.YobitRateSource;
 import com.generalbytes.batm.server.extensions.extra.futurocoin.wallets.futurocoind.FuturocoinRPCWallet;
-import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-public class FuturocoinExtension implements IExtension{
-    private IExtensionContext ctx;
-
-    @Override
-    public void init(IExtensionContext ctx) {
-        this.ctx = ctx;
-    }
-
+public class FuturocoinExtension extends AbstractExtension{
     @Override
     public String getName() {
         return "BATM Futurocoin extra extension";
-    }
-
-    @Override
-    public IExchange createExchange(String exchangeLogin) {
-        return null;
-    }
-
-    @Override
-    public IPaymentProcessor createPaymentProcessor(String paymentProcessorLogin) {
-        return null; //no payment processors available
     }
 
     @Override
@@ -88,11 +70,6 @@ public class FuturocoinExtension implements IExtension{
     }
 
     @Override
-    public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency) {
-        return null;
-    }
-
-    @Override
     public IRateSource createRateSource(String sourceLogin) {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(sourceLogin, ":");
@@ -123,15 +100,5 @@ public class FuturocoinExtension implements IExtension{
         Set<String> result = new HashSet<String>();
         result.add(Currencies.FTO);
         return result;
-    }
-
-    @Override
-    public Set<String> getSupportedWatchListsNames() {
-        return null;
-    }
-
-    @Override
-    public IWatchList getWatchList(String name) {
-        return null;
     }
 }

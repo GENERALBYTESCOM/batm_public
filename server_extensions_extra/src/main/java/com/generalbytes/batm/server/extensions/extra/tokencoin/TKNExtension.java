@@ -23,26 +23,15 @@ import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.extra.tokencoin.sources.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.tokencoin.wallets.paperwallet.TokencoinPaperWalletGenerator;
 import com.generalbytes.batm.server.extensions.extra.tokencoin.wallets.tokencoind.TokenWallet;
-import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-public class TKNExtension implements IExtension{
-    private IExtensionContext ctx;
-
-    @Override
-    public void init(IExtensionContext ctx) {
-        this.ctx = ctx;
-    }
-
+public class TKNExtension extends AbstractExtension{
     @Override
     public String getName() { return "BATM TKN extension"; }
-
-    @Override
-    public IExchange createExchange(String exchangeLogin) { return null; }
 
     @Override
     public IWallet createWallet(String walletLogin) {
@@ -109,24 +98,9 @@ public class TKNExtension implements IExtension{
     }
 
     @Override
-    public IPaymentProcessor createPaymentProcessor(String paymentProcessorLogin) {
-        return null; //no payment processors available
-    }
-
-    @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
         result.add(Currencies.TKN);
         return result;
-    }
-
-    @Override
-    public Set<String> getSupportedWatchListsNames() {
-        return null;
-    }
-
-    @Override
-    public IWatchList getWatchList(String name) {
-        return null;
     }
 }

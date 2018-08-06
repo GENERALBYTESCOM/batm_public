@@ -19,37 +19,17 @@ package com.generalbytes.batm.server.extensions.extra.dash;
 
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.extra.dash.sources.FixPriceRateSource;
-//import com.generalbytes.batm.server.extensions.extra.dogecoin.sources.chainso.ChainSoRateSource;
-//import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.BlockIOWallet;
 import com.generalbytes.batm.server.extensions.extra.dash.sources.cddash.CryptodiggersRateSource;
 import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.CoinmarketcapRateSource;
 import com.generalbytes.batm.server.extensions.extra.dash.wallets.dashd.DashRPCWallet;
-import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.math.BigDecimal;
 import java.util.*;
 
-public class DashExtension implements IExtension{
-    private IExtensionContext ctx;
-
-    @Override
-    public void init(IExtensionContext ctx) {
-        this.ctx = ctx;
-    }
-
+public class DashExtension extends AbstractExtension{
     @Override
     public String getName() {
         return "BATM Dash extra extension";
-    }
-
-    @Override
-    public IExchange createExchange(String exchangeLogin) {
-        return null;
-    }
-
-    @Override
-    public IPaymentProcessor createPaymentProcessor(String paymentProcessorLogin) {
-        return null; //no payment processors available
     }
 
     @Override
@@ -87,11 +67,6 @@ public class DashExtension implements IExtension{
         if (Currencies.DASH.equalsIgnoreCase(cryptoCurrency)) {
             return new DashAddressValidator();
         }
-        return null;
-    }
-
-    @Override
-    public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency) {
         return null;
     }
 
@@ -140,15 +115,5 @@ public class DashExtension implements IExtension{
         result.add(Currencies.DASH);
         result.add(Currencies.POT);
         return result;
-    }
-
-    @Override
-    public Set<String> getSupportedWatchListsNames() {
-        return null;
-    }
-
-    @Override
-    public IWatchList getWatchList(String name) {
-        return null;
     }
 }

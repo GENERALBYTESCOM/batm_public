@@ -22,29 +22,16 @@ import com.generalbytes.batm.server.extensions.extra.flashcoin.sources.FixPriceR
 import com.generalbytes.batm.server.extensions.extra.flashcoin.sources.coinexchange.CoinexchangeRateSource;
 import com.generalbytes.batm.server.extensions.extra.flashcoin.sources.cryptopia.CryptopiaRateSource;
 import com.generalbytes.batm.server.extensions.extra.flashcoin.wallets.flashcoind.FlashcoinRPCWallet;
-import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-public class FlashcoinExtension implements IExtension{
-    private IExtensionContext ctx;
-
-    @Override
-    public void init(IExtensionContext ctx) {
-        this.ctx = ctx;
-    }
-
+public class FlashcoinExtension extends AbstractExtension{
     @Override
     public String getName() {
         return "BATM Flashcoin extension";
-    }
-
-    @Override
-    public IExchange createExchange(String exchangeLogin) {
-        return null;
     }
 
     @Override
@@ -82,16 +69,6 @@ public class FlashcoinExtension implements IExtension{
             return new FlashcoinAddressValidator();
         }
         return null;
-    }
-
-    @Override
-    public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency) {
-        return null;
-    }
-
-    @Override
-    public IPaymentProcessor createPaymentProcessor(String paymentProcessorLogin) {
-        return null; //no payment processors available
     }
 
     @Override
@@ -137,15 +114,5 @@ public class FlashcoinExtension implements IExtension{
         Set<String> result = new HashSet<String>();
         result.add(Currencies.FLASH);
         return result;
-    }
-
-    @Override
-    public Set<String> getSupportedWatchListsNames() {
-        return null;
-    }
-
-    @Override
-    public IWatchList getWatchList(String name) {
-        return null;
     }
 }

@@ -4,7 +4,6 @@ import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.extra.bitcoinprivate.sources.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoinprivate.wallets.btcpd.BitcoinPrivateRPCWallet;
 import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.CoinmarketcapRateSource;
-import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -14,27 +13,11 @@ import java.util.StringTokenizer;
 /**
  * Created by Pega88 on 6/8/18.
  */
-public class BitcoinPrivateExtension implements IExtension {
-    private IExtensionContext ctx;
-
-    @Override
-    public void init(IExtensionContext ctx) {
-        this.ctx = ctx;
-    }
+public class BitcoinPrivateExtension extends AbstractExtension {
 
     @Override
     public String getName() {
         return "BATM Bitcoin Private extra extension";
-    }
-
-    @Override
-    public IExchange createExchange(String exchangeLogin) {
-        return null;
-    }
-
-    @Override
-    public IPaymentProcessor createPaymentProcessor(String paymentProcessorLogin) {
-        return null;
     }
 
     @Override
@@ -74,11 +57,6 @@ public class BitcoinPrivateExtension implements IExtension {
     }
 
     @Override
-    public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency) {
-        return null;
-    }
-
-    @Override
     public IRateSource createRateSource(String sourceLogin) {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(sourceLogin, ":");
@@ -114,14 +92,5 @@ public class BitcoinPrivateExtension implements IExtension {
         return result;
     }
 
-    @Override
-    public Set<String> getSupportedWatchListsNames() {
-        return null;
-    }
-
-    @Override
-    public IWatchList getWatchList(String name) {
-        return null;
-    }
 }
 
