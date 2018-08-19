@@ -36,6 +36,7 @@ public class Currencies {
     public static final String ETH = "ETH";
     public static final String EFL = "EFL";
     public static final String LTC = "LTC";
+    public static final String LSK = "LSK"; //lisk
     public static final String VIA = "VIA";
     public static final String DEX = "DEX";
     public static final String DASH = "DASH";
@@ -146,6 +147,7 @@ public class Currencies {
         crypto.add(MAX);
         crypto.add(MEC);
         crypto.add(LEO);
+        crypto.add(LSK);
         crypto.add(NLG);
         crypto.add(GRS);
         crypto.add(ICG);
