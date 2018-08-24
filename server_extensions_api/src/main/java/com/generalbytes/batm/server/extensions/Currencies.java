@@ -64,6 +64,8 @@ public class Currencies {
     public static final String ANON = "ANON"; // ANON, formerly Anonymous Bitcoin
     public static final String USDT = "USDT";
   
+    public static final String XZC = "XZC"; //Zcoin
+
     public static final String AED = "AED";
     public static final String AMD = "AMD";
     public static final String AUD = "AUD";
@@ -166,8 +168,9 @@ public class Currencies {
         crypto.add(WDC);
         crypto.add(XMR);
         crypto.add(ANON);
-        crypto.add(USDT);
-        
+        crypto.add(USDT);        
+        crypto.add(XZC);
+
         CRYPTO_CURRENCIES = Collections.unmodifiableList(crypto);
 
         List<String> fiat = new ArrayList<>();
