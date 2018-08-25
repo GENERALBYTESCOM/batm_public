@@ -59,6 +59,7 @@ public class Currencies {
     public static final String TKN = "TKN";
     public static final String WDC = "WDC";
     public static final String XMR = "XMR";
+    public static final String ANON = "ANON"; // ANON, formerly Anonymous Bitcoin
 
     public static final String AED = "AED";
     public static final String AMD = "AMD";
@@ -158,6 +159,7 @@ public class Currencies {
         crypto.add(TKN);
         crypto.add(WDC);
         crypto.add(XMR);
+        crypto.add(ANON);
 
         CRYPTO_CURRENCIES = Collections.unmodifiableList(crypto);
 

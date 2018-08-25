@@ -90,6 +90,7 @@
                 <cryptocurrency>BURST</cryptocurrency>
                 <cryptocurrency>ECA</cryptocurrency>
                 <cryptocurrency>DOGE</cryptocurrency>
+                <cryptocurrency>ANON</cryptocurrency>
             </ratesource>
             <paymentprocessor prefix="bitcoinpay" name="BitcoinPay.com" >
                 <param name="apikey" />
@@ -671,5 +672,21 @@
         </ratesource>
         <cryptologo cryptocurrency="ECA" file="eca.png"/>
     </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.anon.ANONExtension" >
+        <wallet prefix="anond" name="ANONd">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>ANON</cryptocurrency>
+        </wallet>
+        <ratesource prefix="anonfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>ANON</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="ANON" file="anon.png"/>
+    </extension>    
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.TransactionExtension" />-->
 </extensions>
