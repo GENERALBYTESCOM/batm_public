@@ -21,7 +21,7 @@ Here is the list of functionality that can be extended with extenstions API:
 Content
 =======
 * **server_extensions_api** - contains extension api that all extensions use to extend BATM Server's functionality.
-* **server_extensions_extra** - reference extension implementation that implements BTC, LTC, DGB, DASH, POT, VIA, BTX, SYS, FLASH, DOGE, NLG, ICG, NBT, GRS, MAX, BSD, MEC, BTDX, SUM, BURST and ECA coin support functionality.
+* **server_extensions_extra** - reference extension implementation that implements BTC, LTC, DGB, DASH, POT, VIA, BTX, SYS, FLASH, DOGE, NLG, ICG, NBT, GRS, MAX, BSD, MEC, BTDX, SUM, BURST, ECA and LINDA coin support functionality.
 * **server_extensions_test** - contains tester for testing the extensions without requirement of having a BATM server
 
 Note for developers
@@ -49,4 +49,3 @@ How to run Tester
 ./gradlew :server_extensions_test:install
 ./server_extensions_test/build/install/server_extensions_test/bin/server_extensions_test
 ```
-
