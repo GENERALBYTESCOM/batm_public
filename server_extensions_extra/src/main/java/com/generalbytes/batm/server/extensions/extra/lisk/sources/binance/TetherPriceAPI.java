@@ -21,12 +21,11 @@ import javax.ws.rs.*;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
 import java.util.Map;
+
 @Path("/api/v3/coins") 
 @Produces(MediaType.APPLICATION_JSON)
 public interface TetherPriceAPI {
-	@GET
-	@Path("/markets")
-	List<Object> getTetherPrice(@QueryParam("vs_currency") String vs_currency, @QueryParam("ids") String Flatcurrency);
-	 
-    
+    @GET
+    @Path("/markets")
+    List<Object> getTetherPrice(@QueryParam("vs_currency") String vsCurrency, @QueryParam("ids") String fiatCurrency);    
 }

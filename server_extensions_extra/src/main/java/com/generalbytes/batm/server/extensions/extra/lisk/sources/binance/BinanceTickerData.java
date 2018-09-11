@@ -17,15 +17,19 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.lisk.sources.binance;
 
-import javax.ws.rs.*;
-import java.util.List;
-import javax.ws.rs.core.MediaType;
+import java.math.BigDecimal;
 import java.util.Map;
-@Path("/api/v3") 
-@Produces(MediaType.APPLICATION_JSON)
-public interface BnbAPI {
-	@GET
-	@Path("/ticker/price")
-	BnbTickerData getTicker(@QueryParam("symbol") String symbol);
- 
+
+public class BinanceTickerData {
+    private BigDecimal price;
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
 }
+
+

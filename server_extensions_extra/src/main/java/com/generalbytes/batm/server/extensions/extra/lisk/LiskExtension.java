@@ -20,7 +20,7 @@ package com.generalbytes.batm.server.extensions.extra.lisk;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.extra.lisk.sources.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.lisk.sources.binance.BinanceRateSource;
-import com.generalbytes.batm.server.extensions.extra.lisk.wallets.liskbnb.Lskwallet;
+import com.generalbytes.batm.server.extensions.extra.lisk.wallets.liskbinancewallet.Lskwallet;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -37,18 +37,17 @@ public class LiskExtension extends AbstractExtension{
             StringTokenizer st = new StringTokenizer(walletLogin,":");
             String walletType = st.nextToken();
 
-            if ("liskbnb".equalsIgnoreCase(walletType)) {
-                //"liskbnb:address:bnbkey:bnbsecret" 
+            if ("liskBinance".equalsIgnoreCase(walletType)) {
+                //"liskBinance:address:binanceApiKey:binanceApiSecret" 
 
                 String address = st.nextToken();
-                String bnbapikey = st.nextToken();
-                String bnbapisecret = st.nextToken(); 
+                String binanceApiKey = st.nextToken();
+                String binanceApiSecret = st.nextToken(); 
 
-                if ( address != null && bnbapikey !=null && bnbapisecret != null ) {
-                    return new Lskwallet(address,bnbapikey,bnbapisecret);
+                if (address != null && binanceApiKey !=null && binanceApiSecret != null ) {
+                    return new Lskwallet(address,binanceApiKey,binanceApiSecret);
                 }
             }
-
         }
         return null;
     }
@@ -66,7 +65,7 @@ public class LiskExtension extends AbstractExtension{
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(sourceLogin, ":");
             String exchangeType = st.nextToken();
-            if ("lisk_bnb".equalsIgnoreCase(exchangeType)) {
+            if ("binanceFix".equalsIgnoreCase(exchangeType)) {
                 String preferedFiatCurrency = Currencies.USD;
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
@@ -82,7 +81,5 @@ public class LiskExtension extends AbstractExtension{
         Set<String> result = new HashSet<String>();
         result.add(Currencies.LSK); 
         return result;
-    } 
- 
- 
+    }
 }

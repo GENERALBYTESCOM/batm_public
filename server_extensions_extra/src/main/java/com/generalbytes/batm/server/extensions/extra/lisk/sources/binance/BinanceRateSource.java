@@ -19,45 +19,41 @@ package com.generalbytes.batm.server.extensions.extra.lisk.sources.binance;
 
 import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IRateSource;
-import com.generalbytes.batm.server.extensions.extra.lisk.wallets.liskbnb.Lskwallet;
- 
- 
-import si.mazi.rescu.RestProxyFactory;
- 
-import java.math.BigDecimal;
-import java.util.*; 
+import com.generalbytes.batm.server.extensions.extra.lisk.wallets.liskbinancewallet.Lskwallet;
 
- 
+import si.mazi.rescu.RestProxyFactory;
+
+import java.math.BigDecimal;
+import java.util.*;
 
 import java.util.List;
 /**
  * Created by kkyovsky on 11/29/17.
  *
- * Modified by sidhujag on 6/3/2018
+ * Modified by kelvin on 8/20/2018
  */
 
 public class BinanceRateSource implements IRateSource {
     /**
      * Expiry of cache in seconds
-     */ 
-    private BnbAPI api;
-    private TetherPriceAPI api_tether;
-    private String preferredFiatCurrency = Currencies.USD; 
+     */
+    private BinanceAPI api;
+    private TetherPriceAPI apiUsdt;
+    private String preferredFiatCurrency = Currencies.USD;
 
     public BinanceRateSource(String preferedFiatCurrency) {
-    	
-    	api = RestProxyFactory.createProxy(BnbAPI.class, "https://api.binance.com");
-        api_tether = RestProxyFactory.createProxy(TetherPriceAPI.class, "https://api.coingecko.com");
-         
+        api = RestProxyFactory.createProxy(BinanceAPI.class, "https://api.binance.com");
+        apiUsdt = RestProxyFactory.createProxy(TetherPriceAPI.class, "https://api.coingecko.com");
+
         if (Currencies.USD.equalsIgnoreCase(preferedFiatCurrency)) {
             this.preferredFiatCurrency = Currencies.USD;
-        } 
-        
+        }
+
         if (Currencies.HKD.equalsIgnoreCase(preferedFiatCurrency)) {
             this.preferredFiatCurrency = Currencies.HKD;
         }
     }
- 
+
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
@@ -80,7 +76,6 @@ public class BinanceRateSource implements IRateSource {
         return result;
     }
 
-
     @Override
     public String getPreferredFiatCurrency() {
         return this.preferredFiatCurrency;
@@ -88,30 +83,25 @@ public class BinanceRateSource implements IRateSource {
 
     @Override
     public BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency) {
-    	
         if (!getFiatCurrencies().contains(fiatCurrency)) {
             return null;
         }
-        
-        final BnbTickerData BTC_USD_Price = api.getTicker("BTCUSDT");
-		final BnbTickerData Coin_BTC_Price = api.getTicker(cryptoCurrency + "BTC");
-		final List<Object> USDT_Fiat_data = api_tether.getTetherPrice(fiatCurrency.toLowerCase(), "tether");
-		
-		if (USDT_Fiat_data != null && BTC_USD_Price.getPrice()!=null && Coin_BTC_Price.getPrice() !=null ) {
-			final Map<String, Object> USDT_Fiat_json = (Map<String, Object>) USDT_Fiat_data.get(0); 
-			final Double USDT_Fiat = (Double) USDT_Fiat_json.get("current_price");
-			if (USDT_Fiat != 0) {
-				final Float Coin_Fiat_Price = (float) (BTC_USD_Price.getPrice() * Coin_BTC_Price.getPrice() * USDT_Fiat);
-				
-				return new BigDecimal(String.format( "%.3f", Coin_Fiat_Price ));
-			}
-			else
-		    	return null;
-		}
-        
-        
-      	return null;
+        final BinanceTickerData BtcUsdt = api.getTicker("BTCUSDT");
+        final BinanceTickerData lskBtc = api.getTicker(cryptoCurrency + "BTC");
+        final List<Object> UsdtFiat = apiUsdt.getTetherPrice(fiatCurrency.toLowerCase(), "tether");
+
+        if (UsdtFiat != null && BtcUsdt.getPrice()!=null && lskBtc.getPrice() !=null ) {
+            final Map<String, Object> UsdtFiatJson = (Map<String, Object>) UsdtFiat.get(0);
+            final Double lastUsdtFiat = (Double) UsdtFiatJson.get("current_price");
+
+            BigDecimal lastUsdtFiatBig = BigDecimal.valueOf(lastUsdtFiat);
+            BigDecimal lastBtcPriceInUsdt = BtcUsdt.getPrice();
+            BigDecimal lastLskPriceInBtc = lskBtc.getPrice();
+            BigDecimal lastLskPriceInUsdt = lastLskPriceInBtc.multiply(lastBtcPriceInUsdt);
+            BigDecimal lastLskPriceInFiat = lastLskPriceInUsdt.multiply(lastUsdtFiatBig);
+
+            return lastLskPriceInFiat;
+        }
+        return null;
     }
-    
- 
 }

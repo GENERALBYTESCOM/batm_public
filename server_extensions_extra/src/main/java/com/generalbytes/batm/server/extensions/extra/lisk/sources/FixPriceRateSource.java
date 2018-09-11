@@ -1,7 +1,6 @@
 package com.generalbytes.batm.server.extensions.extra.lisk.sources;
 
 import com.generalbytes.batm.server.extensions.Currencies;
-import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IRateSource;
 
 import java.math.BigDecimal;

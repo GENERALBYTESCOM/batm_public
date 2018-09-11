@@ -1,6 +1,5 @@
-package com.generalbytes.batm.server.extensions.extra.lisk.wallets.liskbnb;
+package com.generalbytes.batm.server.extensions.extra.lisk.wallets.liskbinancewallet;
 
-import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IWallet;
 
@@ -34,20 +33,19 @@ public class Lskwallet implements IWallet {
     private String accessHash;
 
     private String address;
-    private String bnbapikey;
-    private String bnbapisecret; 
+    private String binanceApiKey;
+    private String binanceApiSecret; 
  
-    private LskBNBAPI api_bnb;
+    private LskBinanceAPI apiBinance;
 
-    public Lskwallet(String address, String bnbapikey, String bnbapisecret) {
+    public Lskwallet(String address, String binanceApiKey, String binanceApiSecret) {
         this.nonce = generateRandomString(8);
 
         this.address = address;
-        this.bnbapikey = bnbapikey;
-        this.bnbapisecret = bnbapisecret; 
- 
-        
-        api_bnb = RestProxyFactory.createProxy(LskBNBAPI.class, "https://api.binance.com");
+        this.binanceApiKey = binanceApiKey;
+        this.binanceApiSecret = binanceApiSecret; 
+
+        apiBinance = RestProxyFactory.createProxy(LskBinanceAPI.class, "https://api.binance.com");
     }
 
     @Override
@@ -71,7 +69,7 @@ public class Lskwallet implements IWallet {
         if (address != null) {
             return address;
         }
-        
+
         return null;
     }
 
@@ -81,28 +79,27 @@ public class Lskwallet implements IWallet {
             log.error("Cryptocurrency " + cryptoCurrency + " not supported.");
             return null;
         }
-        try {  
-        	
-        	String query = "";
-        	String timestamp = String.valueOf(new Date().getTime());
-        	query = "recvWindow=" + 5000 +
-                    "&timestamp=" + timestamp; 
-            
-            String sign_i = sign(query, bnbapisecret);
-            
-            final Map<String, Object> account_info = api_bnb.getCryptoBalance(this.bnbapikey, String.valueOf(5000), timestamp, sign_i);
-             
-            if (account_info != null && !account_info.isEmpty()) {
-                final List<Object> balances = (List<Object>) account_info.get("balances");
-               
+        try {
+
+            String query = "";
+            String timeStamp = String.valueOf(new Date().getTime());
+            query = "recvWindow=" + 5000 + "&timestamp=" + timeStamp; 
+ 
+            String signing = sign(query, binanceApiSecret);
+
+            final Map<String, Object> accountInfo = apiBinance.getCryptoBalance(this.binanceApiKey, String.valueOf(5000), timeStamp, signing);
+ 
+            if (accountInfo != null && !accountInfo.isEmpty()) {
+                final List<Object> balances = (List<Object>) accountInfo.get("balances");
+
                 if(balances != null && !balances.isEmpty()) {
-                    for (Object dataobject : balances) {
-                        final Map<String, Object> map = (Map<String, Object>) dataobject;
+                    for (Object dataObject : balances) {
+                        final Map<String, Object> map = (Map<String, Object>) dataObject;
                         final String asset = (String) map.get("asset"); 
-                        final float value = (float) Float.valueOf((String) map.get("free"));
-                         
+                        BigDecimal value = new BigDecimal((String) map.get("free"));
+
                         if (asset.equals(cryptoCurrency)) {
-                        	return new BigDecimal(value);
+                            return value;
                         }
                     }
                 }
@@ -117,22 +114,14 @@ public class Lskwallet implements IWallet {
 
     @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
-        
         try{ 
-        	String query = "";
-        	String timestamp = String.valueOf(new Date().getTime());
-        	query = "asset=" + cryptoCurrency +
-                    "&address=" + destinationAddress +
-                    "&amount=" + amount +
-                    "&name=" + "123" + 
-                    "&recvWindow=" + 5000 +
-                    "&timestamp=" + timestamp;
-        	  
-        	  
-            String sign_i = sign(query, bnbapisecret);
-            
-        	LskSendCoinResponse response = api_bnb.sendLsks(this.bnbapikey, cryptoCurrency, destinationAddress, String.valueOf(amount), "123",String.valueOf(5000), timestamp, sign_i);
-        	 
+            String query = "";
+            String timeStamp = String.valueOf(new Date().getTime());
+            query = "asset=" + cryptoCurrency + "&address=" + destinationAddress + "&amount=" + amount + "&name=" + "123" + "&recvWindow=" + 5000 + "&timestamp=" + timeStamp;
+
+            String signing = sign(query, binanceApiSecret);
+            LskSendCoinResponse response = apiBinance.sendLsks(this.binanceApiKey, cryptoCurrency, destinationAddress, String.valueOf(amount), "123", String.valueOf(5000), timeStamp, signing);
+ 
             if (response != null && response.getMsg() != null && response.getSuccess()) {
                 return response.getMsg();
             }
@@ -144,8 +133,7 @@ public class Lskwallet implements IWallet {
         return null;
     }
 
-    private static String generateRandomString(int length)
-    {
+    private static String generateRandomString(int length) {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         Random rng = new Random();
         char[] text = new char[length];
@@ -165,7 +153,5 @@ public class Lskwallet implements IWallet {
         } catch (Exception e) {
           throw new RuntimeException("Unable to sign message.", e);
         }
-      }
-    
-    
+    }
 }

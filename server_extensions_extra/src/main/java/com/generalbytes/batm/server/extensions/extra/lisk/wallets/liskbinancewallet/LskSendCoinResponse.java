@@ -1,6 +1,6 @@
-package com.generalbytes.batm.server.extensions.extra.lisk.wallets.liskbnb;
+package com.generalbytes.batm.server.extensions.extra.lisk.wallets.liskbinancewallet;
 
-import java.math.BigDecimal; 
+import java.math.BigDecimal;
 
 public class LskSendCoinResponse {
     private Boolean success; 
@@ -14,12 +14,10 @@ public class LskSendCoinResponse {
     }
     
     public String getMsg() {
-    	return msg;
+        return msg;
     }
-    
+
     public void setMsg(String msg) {
-    	this.msg = msg;
-    	
+        this.msg = msg;
     }
-    
 }

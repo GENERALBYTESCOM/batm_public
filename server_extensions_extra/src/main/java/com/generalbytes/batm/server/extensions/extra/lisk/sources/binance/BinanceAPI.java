@@ -15,26 +15,16 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.lisk.sources.coinmarketcap;
+package com.generalbytes.batm.server.extensions.extra.lisk.sources.binance;
 
-import java.math.BigDecimal;
-
-public class CmcTickerQuote {
-    private BigDecimal price;
-
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    @Override
-    public String toString() {
-        return "CmcTickerQuote{" +
-            "price=" + price +
-            '}';
-    }
+import javax.ws.rs.*;
+import java.util.List;
+import javax.ws.rs.core.MediaType;
+import java.util.Map;
+@Path("/api/v3") 
+@Produces(MediaType.APPLICATION_JSON)
+public interface BinanceAPI {
+    @GET
+    @Path("/ticker/price")
+    BinanceTickerData getTicker(@QueryParam("symbol") String symbol);
 }

@@ -672,13 +672,13 @@
         <cryptologo cryptocurrency="ECA" file="eca.png"/>
     </extension>
             <extension class="com.generalbytes.batm.server.extensions.extra.lisk.LiskExtension" >
-        <wallet prefix="liskbnb" name="Lisk">
+        <wallet prefix="liskBinance" name="Lisk">
             <param name="address" />
-            <param name="bnbapikey" />
-            <param name="bnbapisecret" />
+            <param name="binanceApiKey" />
+            <param name="binanceApiSecret" />
             <cryptocurrency>LSK</cryptocurrency>
         </wallet>
-        <ratesource prefix="lisk_bnb" name ="Fix Price" >
+        <ratesource prefix="binanceFix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>LSK</cryptocurrency>
         </ratesource>

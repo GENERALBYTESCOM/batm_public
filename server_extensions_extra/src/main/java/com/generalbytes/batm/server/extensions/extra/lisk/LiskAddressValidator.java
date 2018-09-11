@@ -26,16 +26,15 @@ public class LiskAddressValidator implements ICryptoAddressValidator {
     @Override
     public boolean isAddressValid(String address) {
         if (address.endsWith("L")) {
-        	
-        	String address_noL = address.substring(0, address.length() - 1); 
-        	
-        	if (address_noL.length() != 20) {
-        		return false;
-        	}
-        	
-        	for (char addressCharacter : address_noL.toCharArray()) {
+            String addressWithoutL = address.substring(0, address.length() - 1); 
+
+            if (addressWithoutL.length() != 20) {
+                return false;
+            }
+
+            for (char addressCharacter : addressWithoutL.toCharArray()) {
                 if (!Character.isDigit(addressCharacter)) { 
-                	return false;
+                    return false;
                 }
              } 
             return true;
@@ -43,7 +42,7 @@ public class LiskAddressValidator implements ICryptoAddressValidator {
             return false;
         }
     }
-
+    
     @Override
     public boolean isPaperWalletSupported() {
         return false;
@@ -53,7 +52,4 @@ public class LiskAddressValidator implements ICryptoAddressValidator {
     public boolean mustBeBase58Address() {
         return true;
     }
-    
-   
-
 }

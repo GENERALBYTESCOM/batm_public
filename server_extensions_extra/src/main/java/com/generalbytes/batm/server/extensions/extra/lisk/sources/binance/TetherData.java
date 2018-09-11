@@ -29,7 +29,4 @@ public class TetherData {
     public void setCurrent_price(Float current_price) { 
         this.current_price = current_price;
     }
- 
 }
-
-
