@@ -72,6 +72,7 @@ public class Currencies {
     public static final String CZK = "CZK";
     public static final String DKK = "DKK";
     public static final String DOP = "DOP";
+    public static final String ECO = "ECO"; // Scottish pound
     public static final String EUR = "EUR";
     public static final String GEL = "GEL";
     public static final String GBP = "GBP";
