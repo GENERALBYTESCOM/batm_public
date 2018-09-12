@@ -678,7 +678,7 @@
             <param name="binanceApiSecret" />
             <cryptocurrency>LSK</cryptocurrency>
         </wallet>
-        <ratesource prefix="binanceFix" name ="Fix Price" >
+        <ratesource prefix="lskFix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>LSK</cryptocurrency>
         </ratesource>

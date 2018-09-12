@@ -19,7 +19,7 @@ package com.generalbytes.batm.server.extensions.extra.lisk.sources.binance;
 
 import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IRateSource;
-import com.generalbytes.batm.server.extensions.extra.lisk.wallets.liskbinancewallet.Lskwallet;
+import com.generalbytes.batm.server.extensions.extra.lisk.wallets.liskbinancewallet.LskWallet;
 
 import si.mazi.rescu.RestProxyFactory;
 
@@ -86,16 +86,16 @@ public class BinanceRateSource implements IRateSource {
         if (!getFiatCurrencies().contains(fiatCurrency)) {
             return null;
         }
-        final BinanceTickerData BtcUsdt = api.getTicker("BTCUSDT");
+        final BinanceTickerData btcUsdt = api.getTicker("BTCUSDT");
         final BinanceTickerData lskBtc = api.getTicker(cryptoCurrency + "BTC");
-        final List<Object> UsdtFiat = apiUsdt.getTetherPrice(fiatCurrency.toLowerCase(), "tether");
+        final List<Object> usdtFiat = apiUsdt.getTetherPrice(fiatCurrency.toLowerCase(), "tether");
 
-        if (UsdtFiat != null && BtcUsdt.getPrice()!=null && lskBtc.getPrice() !=null ) {
-            final Map<String, Object> UsdtFiatJson = (Map<String, Object>) UsdtFiat.get(0);
-            final Double lastUsdtFiat = (Double) UsdtFiatJson.get("current_price");
+        if (usdtFiat != null && btcUsdt.getPrice()!=null && lskBtc.getPrice() !=null ) {
+            final Map<String, Object> usdtFiatJson = (Map<String, Object>) usdtFiat.get(0);
+            final Double lastUsdtFiat = (Double) usdtFiatJson.get("current_price");
 
             BigDecimal lastUsdtFiatBig = BigDecimal.valueOf(lastUsdtFiat);
-            BigDecimal lastBtcPriceInUsdt = BtcUsdt.getPrice();
+            BigDecimal lastBtcPriceInUsdt = btcUsdt.getPrice();
             BigDecimal lastLskPriceInBtc = lskBtc.getPrice();
             BigDecimal lastLskPriceInUsdt = lastLskPriceInBtc.multiply(lastBtcPriceInUsdt);
             BigDecimal lastLskPriceInFiat = lastLskPriceInUsdt.multiply(lastUsdtFiatBig);

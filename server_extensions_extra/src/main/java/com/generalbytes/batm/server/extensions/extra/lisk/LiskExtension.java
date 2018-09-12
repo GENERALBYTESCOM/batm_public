@@ -20,7 +20,7 @@ package com.generalbytes.batm.server.extensions.extra.lisk;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.extra.lisk.sources.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.lisk.sources.binance.BinanceRateSource;
-import com.generalbytes.batm.server.extensions.extra.lisk.wallets.liskbinancewallet.Lskwallet;
+import com.generalbytes.batm.server.extensions.extra.lisk.wallets.liskbinancewallet.LskWallet;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -45,7 +45,7 @@ public class LiskExtension extends AbstractExtension{
                 String binanceApiSecret = st.nextToken(); 
 
                 if (address != null && binanceApiKey !=null && binanceApiSecret != null ) {
-                    return new Lskwallet(address,binanceApiKey,binanceApiSecret);
+                    return new LskWallet(address,binanceApiKey,binanceApiSecret);
                 }
             }
         }
@@ -65,7 +65,7 @@ public class LiskExtension extends AbstractExtension{
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(sourceLogin, ":");
             String exchangeType = st.nextToken();
-            if ("binanceFix".equalsIgnoreCase(exchangeType)) {
+            if ("lskFix".equalsIgnoreCase(exchangeType)) {
                 String preferedFiatCurrency = Currencies.USD;
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();

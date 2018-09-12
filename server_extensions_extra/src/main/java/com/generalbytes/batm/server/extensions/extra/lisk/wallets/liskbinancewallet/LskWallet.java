@@ -26,8 +26,8 @@ import java.security.NoSuchAlgorithmException;
 
 import java.util.Random; 
 
-public class Lskwallet implements IWallet {
-    private static final Logger log = LoggerFactory.getLogger("batm.master.Lskwallet");
+public class LskWallet implements IWallet {
+    private static final Logger log = LoggerFactory.getLogger("batm.master.LskWallet");
 
     private String nonce;
     private String accessHash;
@@ -38,7 +38,7 @@ public class Lskwallet implements IWallet {
  
     private LskBinanceAPI apiBinance;
 
-    public Lskwallet(String address, String binanceApiKey, String binanceApiSecret) {
+    public LskWallet(String address, String binanceApiKey, String binanceApiSecret) {
         this.nonce = generateRandomString(8);
 
         this.address = address;
@@ -114,7 +114,7 @@ public class Lskwallet implements IWallet {
 
     @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
-        try{ 
+        try { 
             String query = "";
             String timeStamp = String.valueOf(new Date().getTime());
             query = "asset=" + cryptoCurrency + "&address=" + destinationAddress + "&amount=" + amount + "&name=" + "123" + "&recvWindow=" + 5000 + "&timestamp=" + timeStamp;
@@ -146,12 +146,12 @@ public class Lskwallet implements IWallet {
 
     public static String sign(String message, String secret) {
         try {
-          Mac sha256_HMAC = Mac.getInstance("HmacSHA256");
-          SecretKeySpec secretKeySpec = new SecretKeySpec(secret.getBytes(), "HmacSHA256");
-          sha256_HMAC.init(secretKeySpec);
-          return new String(Hex.encodeHex(sha256_HMAC.doFinal(message.getBytes())));
+            Mac sha256_HMAC = Mac.getInstance("HmacSHA256");
+            SecretKeySpec secretKeySpec = new SecretKeySpec(secret.getBytes(), "HmacSHA256");
+            sha256_HMAC.init(secretKeySpec);
+            return new String(Hex.encodeHex(sha256_HMAC.doFinal(message.getBytes())));
         } catch (Exception e) {
-          throw new RuntimeException("Unable to sign message.", e);
+            throw new RuntimeException("Unable to sign message.", e);
         }
     }
 }

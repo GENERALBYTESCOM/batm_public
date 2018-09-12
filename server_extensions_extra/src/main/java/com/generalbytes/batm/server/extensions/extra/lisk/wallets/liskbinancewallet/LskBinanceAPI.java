@@ -12,6 +12,7 @@ public interface LskBinanceAPI {
     @GET
     @Path("/api/v3/account")
     Map<String, Object> getCryptoBalance(@HeaderParam("X-MBX-APIKEY") String apiKey, @QueryParam("recvWindow") String recvWindow, @QueryParam("timestamp") String timeStamp, @QueryParam("signature") String signature ) throws IOException;
+
     @POST
     @Path("wapi/v1/withdraw.html")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
