@@ -66,6 +66,20 @@ public class LiskExtension extends AbstractExtension{
             StringTokenizer st = new StringTokenizer(sourceLogin, ":");
             String exchangeType = st.nextToken();
             if ("lskFix".equalsIgnoreCase(exchangeType)) {
+                BigDecimal rate = BigDecimal.ZERO;
+                if (st.hasMoreTokens()) {
+                    try {
+                        rate = new BigDecimal(st.nextToken());
+                    } catch (Throwable e) {
+                    }
+                }
+                String preferedFiatCurrency = Currencies.USD;
+                if (st.hasMoreTokens()) {
+                    preferedFiatCurrency = st.nextToken().toUpperCase();
+                }
+                return new FixPriceRateSource(rate, preferedFiatCurrency);
+            }
+            else if ("binanceRateSource".equalsIgnoreCase(exchangeType)) {
                 String preferedFiatCurrency = Currencies.USD;
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
@@ -75,7 +89,6 @@ public class LiskExtension extends AbstractExtension{
         }
         return null;
     }
-
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();

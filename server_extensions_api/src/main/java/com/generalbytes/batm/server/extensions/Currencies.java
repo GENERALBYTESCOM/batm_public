@@ -111,6 +111,7 @@ public class Currencies {
     public static final String VND = "VND";
     public static final String XAF = "XAF";
     public static final String ZAR = "ZAR";
+    public static final String USDT = "USDT";
 
     public static final String XAU = "XAU"; // gold
 

@@ -671,7 +671,7 @@
         </ratesource>
         <cryptologo cryptocurrency="ECA" file="eca.png"/>
     </extension>
-            <extension class="com.generalbytes.batm.server.extensions.extra.lisk.LiskExtension" >
+    <extension class="com.generalbytes.batm.server.extensions.extra.lisk.LiskExtension" >
         <wallet prefix="liskBinance" name="Lisk">
             <param name="address" />
             <param name="binanceApiKey" />
@@ -680,6 +680,10 @@
         </wallet>
         <ratesource prefix="lskFix" name ="Fix Price" >
             <param name="price" />
+            <cryptocurrency>LSK</cryptocurrency>
+        </ratesource>
+        <ratesource prefix="binanceRateSource" name ="Binance Rate Source" >
+            <param name="fiatCurrency" />
             <cryptocurrency>LSK</cryptocurrency>
         </ratesource>
         <cryptologo cryptocurrency="LSK" file="lisk.png"/>
