@@ -8,8 +8,6 @@ import org.slf4j.LoggerFactory;
 import si.mazi.rescu.HttpStatusIOException;
 import si.mazi.rescu.RestProxyFactory;
 
-import org.apache.commons.codec.binary.Hex;
-
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -122,11 +120,25 @@ public class LskWallet implements IWallet {
     }
     
     public static String sign(String message, String secret) {
+
+        String digest = null;
         try {
-            Mac sha256_HMAC = Mac.getInstance("HmacSHA256");
-            SecretKeySpec secretKeySpec = new SecretKeySpec(secret.getBytes(), "HmacSHA256");
-            sha256_HMAC.init(secretKeySpec);
-            return new String(Hex.encodeHex(sha256_HMAC.doFinal(message.getBytes())));
+            SecretKeySpec key = new SecretKeySpec(secret.getBytes(), "HmacSHA256");
+            Mac mac = Mac.getInstance("HmacSHA256");
+            mac.init(key);
+
+            byte[] bytes = mac.doFinal(message.getBytes("ASCII"));
+
+            StringBuffer hash = new StringBuffer();
+
+            for (int i=0; i<bytes.length; i++) {
+                String hex = Integer.toHexString(0xFF &  bytes[i]);
+                if (hex.length() == 1) {
+                    hash.append('0');
+                }
+                hash.append(hex);
+            }   
+            return hash.toString();
         } catch (Exception e) {
             throw new RuntimeException("Unable to sign message.", e);
         }
