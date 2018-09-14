@@ -19,7 +19,6 @@ package com.generalbytes.batm.server.extensions.extra.lisk.sources.binance;
 
 import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IRateSource;
-import com.generalbytes.batm.server.extensions.extra.lisk.wallets.liskbinancewallet.LskWallet;
 import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.CoinmarketcapRateSource;
 
 import si.mazi.rescu.RestProxyFactory;
@@ -27,23 +26,14 @@ import si.mazi.rescu.RestProxyFactory;
 import java.math.BigDecimal;
 import java.util.*;
 
-import java.util.List;
-/**
- * Created by kkyovsky on 11/29/17.
- *
- * Modified by kelvin on 8/20/2018
- */
-
 public class BinanceRateSource implements IRateSource {
-    /**
-     * Expiry of cache in seconds
-     */
+
     private BinanceAPI api;
     private String preferredFiatCurrency = Currencies.USD;
 
     public BinanceRateSource(String preferedFiatCurrency) {
         api = RestProxyFactory.createProxy(BinanceAPI.class, "https://api.binance.com");
-
+        
         if (Currencies.USD.equalsIgnoreCase(preferedFiatCurrency)) {
             this.preferredFiatCurrency = Currencies.USD;
         }
@@ -85,7 +75,6 @@ public class BinanceRateSource implements IRateSource {
         if (!getFiatCurrencies().contains(fiatCurrency)) {
             return null;
         }
-
         final BinanceTickerData btcUsdt = api.getTicker("BTCUSDT");
         final BinanceTickerData lskBtc = api.getTicker(cryptoCurrency + "BTC");
         CoinmarketcapRateSource coinMarketCapSource = new CoinmarketcapRateSource(fiatCurrency);
@@ -95,7 +84,6 @@ public class BinanceRateSource implements IRateSource {
             BigDecimal lastLskPriceInBtc = lskBtc.getPrice();
             BigDecimal lastLskPriceInUsdt = lastLskPriceInBtc.multiply(lastBtcPriceInUsdt);
             BigDecimal lastLskPriceInFiat = lastLskPriceInUsdt.multiply(lastUsdtFiat);
-
             return lastLskPriceInFiat;
         }
         return null;

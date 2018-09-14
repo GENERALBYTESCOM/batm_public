@@ -89,10 +89,12 @@ public class LiskExtension extends AbstractExtension{
         }
         return null;
     }
+    
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
         result.add(Currencies.LSK); 
         return result;
     }
+
 }

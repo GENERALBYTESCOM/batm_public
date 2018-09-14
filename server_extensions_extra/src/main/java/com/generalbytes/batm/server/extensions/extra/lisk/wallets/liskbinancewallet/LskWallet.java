@@ -15,22 +15,14 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-
-import java.util.Random; 
+ 
 
 public class LskWallet implements IWallet {
     private static final Logger log = LoggerFactory.getLogger("batm.master.LskWallet");
-
-    private String nonce;
-    private String accessHash;
 
     private String address;
     private String binanceApiKey;
@@ -39,7 +31,6 @@ public class LskWallet implements IWallet {
     private LskBinanceAPI apiBinance;
 
     public LskWallet(String address, String binanceApiKey, String binanceApiSecret) {
-        this.nonce = generateRandomString(8);
 
         this.address = address;
         this.binanceApiKey = binanceApiKey;
@@ -87,17 +78,14 @@ public class LskWallet implements IWallet {
  
             String signing = sign(query, binanceApiSecret);
 
-            final Map<String, Object> accountInfo = apiBinance.getCryptoBalance(this.binanceApiKey, String.valueOf(5000), timeStamp, signing);
- 
-            if (accountInfo != null && !accountInfo.isEmpty()) {
-                final List<Object> balances = (List<Object>) accountInfo.get("balances");
+            final LskBinanceRespond accountInfo = apiBinance.getCryptoBalance(this.binanceApiKey, String.valueOf(5000), timeStamp, signing);
 
+            if (accountInfo != null) {
+                List<LskBinanceAssetData> balances = (List<LskBinanceAssetData>) accountInfo.getBalance();
                 if(balances != null && !balances.isEmpty()) {
-                    for (Object dataObject : balances) {
-                        final Map<String, Object> map = (Map<String, Object>) dataObject;
-                        final String asset = (String) map.get("asset"); 
-                        BigDecimal value = new BigDecimal((String) map.get("free"));
-
+                    for (LskBinanceAssetData assetData : balances) {
+                        final String asset = (String) assetData.getAsset(); 
+                        BigDecimal value = assetData.getFree(); 
                         if (asset.equals(cryptoCurrency)) {
                             return value;
                         }
@@ -132,18 +120,7 @@ public class LskWallet implements IWallet {
         }
         return null;
     }
-
-    private static String generateRandomString(int length) {
-        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        Random rng = new Random();
-        char[] text = new char[length];
-        for (int i = 0; i < length; i++)
-        {
-            text[i] = characters.charAt(rng.nextInt(characters.length()));
-        }
-        return new String(text);
-    }
-
+    
     public static String sign(String message, String secret) {
         try {
             Mac sha256_HMAC = Mac.getInstance("HmacSHA256");

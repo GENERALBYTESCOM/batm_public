@@ -15,18 +15,27 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.lisk.sources.binance;
+package com.generalbytes.batm.server.extensions.extra.lisk.wallets.liskbinancewallet;
 
-import java.math.BigDecimal; 
+import java.math.BigDecimal;
 
-public class BinanceTickerData {
-    private BigDecimal price;
+public class LskBinanceAssetData {
+    private String asset;
+    private BigDecimal free;
 
-    public BigDecimal getPrice() {
-        return price;
+    public String getAsset() {
+        return asset;
     }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
+    public void setAsset(String asset) {
+        this.asset = asset;
+    }
+
+    public BigDecimal getFree() {
+        return free;
+    }
+
+    public void setFree(BigDecimal free) {
+        this.free = free;
     }
 }

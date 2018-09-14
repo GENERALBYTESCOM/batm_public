@@ -60,7 +60,8 @@ public class Currencies {
     public static final String TKN = "TKN";
     public static final String WDC = "WDC";
     public static final String XMR = "XMR";
-
+    public static final String USDT = "USDT";
+    
     public static final String AED = "AED";
     public static final String AMD = "AMD";
     public static final String AUD = "AUD";
@@ -111,7 +112,6 @@ public class Currencies {
     public static final String VND = "VND";
     public static final String XAF = "XAF";
     public static final String ZAR = "ZAR";
-    public static final String USDT = "USDT";
 
     public static final String XAU = "XAU"; // gold
 
@@ -161,6 +161,7 @@ public class Currencies {
         crypto.add(TKN);
         crypto.add(WDC);
         crypto.add(XMR);
+        crypto.add(USDT);
 
         CRYPTO_CURRENCIES = Collections.unmodifiableList(crypto);
 

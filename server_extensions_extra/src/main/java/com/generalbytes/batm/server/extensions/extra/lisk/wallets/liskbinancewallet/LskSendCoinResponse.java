@@ -1,7 +1,5 @@
 package com.generalbytes.batm.server.extensions.extra.lisk.wallets.liskbinancewallet;
 
-import java.math.BigDecimal;
-
 public class LskSendCoinResponse {
     private Boolean success; 
     private String msg;

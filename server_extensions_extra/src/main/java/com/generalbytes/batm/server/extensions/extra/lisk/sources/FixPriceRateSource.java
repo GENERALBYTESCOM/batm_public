@@ -51,5 +51,4 @@ public class FixPriceRateSource implements IRateSource {
     public String getPreferredFiatCurrency() {
         return preferedFiatCurrency;
     }
-
 }
