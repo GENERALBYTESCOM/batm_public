@@ -673,7 +673,7 @@
         <cryptologo cryptocurrency="ECA" file="eca.png"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.linda.LindaExtension" >
-        <wallet prefix="linda" name="Linda">
+        <wallet prefix="lindad" name="Lindad">
             <param name="protocol" />
             <param name="user" />
             <param name="password" />

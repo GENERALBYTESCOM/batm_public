@@ -39,7 +39,7 @@ public class LindaExtension extends AbstractExtension{
             StringTokenizer st = new StringTokenizer(walletLogin,":");
             String walletType = st.nextToken();
 
-            if ("electrad".equalsIgnoreCase(walletType)) {
+            if ("lindad".equalsIgnoreCase(walletType)) {
                 //"lindad:protocol:user:password:ip:port:accountname"
 
                 String protocol = st.nextToken();
