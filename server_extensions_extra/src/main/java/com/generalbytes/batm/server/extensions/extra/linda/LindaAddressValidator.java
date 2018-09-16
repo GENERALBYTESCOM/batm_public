@@ -23,34 +23,34 @@ import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 
 public class LindaAddressValidator implements ICryptoAddressValidator {
 
-  @Override
-  public boolean isAddressValid(String address) {
-    //For whatever reason this may occur, cover the case
-   if (address.startsWith("L")) {
-      try {
-        if(address.length() == 34) {
-          Base58.decodeToBigInteger(address);
-          Base58.decodeChecked(address);
-          return true;
+    @Override
+    public boolean isAddressValid(String address) {
+        //For whatever reason this may occur, cover the case
+        if (address.startsWith("L")) {
+            try {
+                if(address.length() == 34) {
+                    Base58.decodeToBigInteger(address);
+                    Base58.decodeChecked(address);
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch (AddressFormatException e) {
+                e.printStackTrace();
+                return false;
+            }
         } else {
-          return false;
+            return false;
         }
-      } catch (AddressFormatException e) {
-        e.printStackTrace();
-        return false;
-      }
-    } else {
-      return false;
     }
-  }
 
-  @Override
-  public boolean isPaperWalletSupported() {
-    return false;
-  }
+    @Override
+    public boolean isPaperWalletSupported() {
+        return false;
+    }
 
-  @Override
-  public boolean mustBeBase58Address() {
-    return true;
-  }
+    @Override
+    public boolean mustBeBase58Address() {
+        return true;
+    }
 }
