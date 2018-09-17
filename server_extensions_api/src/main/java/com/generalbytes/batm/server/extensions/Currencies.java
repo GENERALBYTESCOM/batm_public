@@ -36,6 +36,7 @@ public class Currencies {
     public static final String ETH = "ETH";
     public static final String EFL = "EFL";
     public static final String LTC = "LTC";
+    public static final String LSK = "LSK"; //lisk
     public static final String VIA = "VIA";
     public static final String DEX = "DEX";
     public static final String DASH = "DASH";
@@ -60,7 +61,8 @@ public class Currencies {
     public static final String WDC = "WDC";
     public static final String XMR = "XMR";
     public static final String ANON = "ANON"; // ANON, formerly Anonymous Bitcoin
-
+    public static final String USDT = "USDT";
+  
     public static final String AED = "AED";
     public static final String AMD = "AMD";
     public static final String AUD = "AUD";
@@ -148,6 +150,7 @@ public class Currencies {
         crypto.add(MAX);
         crypto.add(MEC);
         crypto.add(LEO);
+        crypto.add(LSK);
         crypto.add(NLG);
         crypto.add(GRS);
         crypto.add(ICG);
@@ -161,7 +164,8 @@ public class Currencies {
         crypto.add(WDC);
         crypto.add(XMR);
         crypto.add(ANON);
-
+        crypto.add(USDT);
+        
         CRYPTO_CURRENCIES = Collections.unmodifiableList(crypto);
 
         List<String> fiat = new ArrayList<>();

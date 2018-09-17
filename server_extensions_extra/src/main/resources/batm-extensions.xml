@@ -687,6 +687,26 @@
             <cryptocurrency>ANON</cryptocurrency>
         </ratesource>
         <cryptologo cryptocurrency="ANON" file="anon.png"/>
-    </extension>    
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.lisk.LiskExtension" >
+        <wallet prefix="liskBinance" name="Lisk">
+            <param name="address" />
+            <param name="binanceApiKey" />
+            <param name="binanceApiSecret" />
+            <cryptocurrency>LSK</cryptocurrency>
+        </wallet>
+        <ratesource prefix="lskFix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>LSK</cryptocurrency>
+        </ratesource>
+        <ratesource prefix="binanceRateSource" name ="Binance Rate Source" >
+            <param name="fiatCurrency" />
+            <cryptocurrency>LSK</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="LSK" file="lisk.png"/>
+    </extension>
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.TransactionExtension" />-->
 </extensions>
