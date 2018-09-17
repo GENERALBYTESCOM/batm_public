@@ -26,7 +26,7 @@ public class LskWallet implements IWallet {
     private String binanceApiKey;
     private String binanceApiSecret; 
  
-    private LskBinanceAPI apiBinance;
+    private ILskBinanceAPI apiBinance;
 
     public LskWallet(String address, String binanceApiKey, String binanceApiSecret) {
 
@@ -34,7 +34,7 @@ public class LskWallet implements IWallet {
         this.binanceApiKey = binanceApiKey;
         this.binanceApiSecret = binanceApiSecret; 
 
-        apiBinance = RestProxyFactory.createProxy(LskBinanceAPI.class, "https://api.binance.com");
+        apiBinance = RestProxyFactory.createProxy(ILskBinanceAPI.class, "https://api.binance.com");
     }
 
     @Override
@@ -76,7 +76,7 @@ public class LskWallet implements IWallet {
  
             String signing = sign(query, binanceApiSecret);
 
-            final LskBinanceRespond accountInfo = apiBinance.getCryptoBalance(this.binanceApiKey, String.valueOf(5000), timeStamp, signing);
+            final LskBinanceResponse accountInfo = apiBinance.getCryptoBalance(this.binanceApiKey, String.valueOf(5000), timeStamp, signing);
 
             if (accountInfo != null) {
                 List<LskBinanceAssetData> balances = (List<LskBinanceAssetData>) accountInfo.getBalance();
