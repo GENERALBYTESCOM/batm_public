@@ -51,6 +51,9 @@ public class CoinmarketcapRateSource implements IRateSource {
         if (Currencies.CAD.equalsIgnoreCase(preferedFiatCurrency)) {
             this.preferredFiatCurrency = Currencies.CAD;
         }
+        if (Currencies.HKD.equalsIgnoreCase(preferedFiatCurrency)) {
+            this.preferredFiatCurrency = Currencies.HKD;
+        }
     }
 
     private CoinmarketcapRateSource() {
@@ -101,6 +104,8 @@ public class CoinmarketcapRateSource implements IRateSource {
         result.add(Currencies.DOGE);
         result.add(Currencies.ECA);
         result.add(Currencies.ANON);
+        result.add(Currencies.LSK);
+        result.add(Currencies.USDT);
 
         return result;
     }
@@ -111,6 +116,7 @@ public class CoinmarketcapRateSource implements IRateSource {
         result.add(Currencies.USD);
         result.add(Currencies.CAD);
         result.add(Currencies.EUR);
+        result.add(Currencies.HKD);
         return result;
     }
 
