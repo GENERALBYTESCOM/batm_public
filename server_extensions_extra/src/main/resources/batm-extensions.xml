@@ -74,6 +74,7 @@
             <ratesource prefix="coinmarketcap" name ="CoinMarketCap.com" >
                 <param name="fiatcurrency" />
                 <cryptocurrency>BTC</cryptocurrency>
+                <cryptocurrency>LINDA</cryptocurrency>
                 <cryptocurrency>SYS</cryptocurrency>
                 <cryptocurrency>BCH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
@@ -671,6 +672,22 @@
             <cryptocurrency>ECA</cryptocurrency>
         </ratesource>
         <cryptologo cryptocurrency="ECA" file="eca.png"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.linda.LindaExtension" >
+        <wallet prefix="lindad" name="Lindad">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>LINDA</cryptocurrency>
+        </wallet>
+        <ratesource prefix="lindafix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>LINDA</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="LINDA" file="linda.png"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.anon.ANONExtension" >
         <wallet prefix="anond" name="ANONd">

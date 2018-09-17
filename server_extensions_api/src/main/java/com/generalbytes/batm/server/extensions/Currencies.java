@@ -47,6 +47,7 @@ public class Currencies {
     public static final String MAX = "MAX";
     public static final String MEC = "MEC"; // Megacoin
     public static final String LEO = "LEO";
+    public static final String LINDA = "LINDA";
     public static final String NLG = "NLG";
     public static final String GRS = "GRS";
     public static final String ICG = "ICG";
@@ -150,6 +151,7 @@ public class Currencies {
         crypto.add(MAX);
         crypto.add(MEC);
         crypto.add(LEO);
+        crypto.add(LINDA);
         crypto.add(LSK);
         crypto.add(NLG);
         crypto.add(GRS);
