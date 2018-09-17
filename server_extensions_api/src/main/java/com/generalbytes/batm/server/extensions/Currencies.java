@@ -60,8 +60,9 @@ public class Currencies {
     public static final String TKN = "TKN";
     public static final String WDC = "WDC";
     public static final String XMR = "XMR";
+    public static final String ANON = "ANON"; // ANON, formerly Anonymous Bitcoin
     public static final String USDT = "USDT";
-    
+  
     public static final String AED = "AED";
     public static final String AMD = "AMD";
     public static final String AUD = "AUD";
@@ -74,6 +75,7 @@ public class Currencies {
     public static final String CZK = "CZK";
     public static final String DKK = "DKK";
     public static final String DOP = "DOP";
+    public static final String ECO = "ECO"; // Scottish pound
     public static final String EUR = "EUR";
     public static final String GEL = "GEL";
     public static final String GBP = "GBP";
@@ -161,8 +163,9 @@ public class Currencies {
         crypto.add(TKN);
         crypto.add(WDC);
         crypto.add(XMR);
+        crypto.add(ANON);
         crypto.add(USDT);
-
+        
         CRYPTO_CURRENCIES = Collections.unmodifiableList(crypto);
 
         List<String> fiat = new ArrayList<>();
