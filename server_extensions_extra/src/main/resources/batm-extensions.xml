@@ -702,6 +702,9 @@
         <ratesource prefix="binanceRateSource" name ="Binance Rate Source" >
             <param name="fiatCurrency" />
             <cryptocurrency>LSK</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
         </ratesource>
         <cryptologo cryptocurrency="LSK" file="lisk.png"/>
     </extension>
