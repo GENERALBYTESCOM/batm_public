@@ -687,7 +687,7 @@
             <param name="price" />
             <cryptocurrency>LINDA</cryptocurrency>
         </ratesource>
-        <cryptologo cryptocurrency="LINDA" file="linda.svg"/>
+        <cryptologo cryptocurrency="LINDA" file="linda.png"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.anon.ANONExtension" >
         <wallet prefix="anond" name="ANONd">
