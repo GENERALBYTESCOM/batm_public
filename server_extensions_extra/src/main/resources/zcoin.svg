@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1000px" height="1000px" viewBox="0 0 1000 1000" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>App-Icon02</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="100%" y1="0%" x2="0%" y2="95.6974638%" id="linearGradient-1">
+            <stop stop-color="#52527A" stop-opacity="0.5" offset="0%"></stop>
+            <stop stop-color="#1F1F2E" offset="100%"></stop>
+        </linearGradient>
+        <circle id="path-2" cx="500" cy="500" r="450"></circle>
+        <linearGradient x1="100%" y1="0%" x2="0%" y2="95.6974638%" id="linearGradient-3">
+            <stop stop-color="#59F979" offset="0%"></stop>
+            <stop stop-color="#23B852" offset="100%"></stop>
+        </linearGradient>
+        <path d="M573.773771,585.110953 L665.570745,585.110953 L665.570745,665.569089 L389.886794,665.569089 L732.514075,322.941808 C743.729292,311.727163 747.082525,294.860841 741.013625,280.207116 C734.944725,265.553962 720.645839,255.999623 704.785086,255.999623 L295.215048,255.999623 C273.557248,255.999623 256.001279,273.556164 256.001279,295.213964 L256.001279,414.885296 L256.000134,414.885296 L256.000134,585.110953 L426.225791,414.885296 L334.429389,414.885296 L334.429389,334.427733 L610.113912,334.427733 L267.486631,677.053869 C256.271987,688.269086 252.916464,705.137125 258.985936,719.789707 C265.055981,734.443433 279.354867,743.997199 295.215048,743.997199 L704.785086,743.997199 C726.441169,743.997199 743.998855,726.440085 743.998855,704.78343 L743.998855,585.110953 L744,585.110953 L744,414.885296 L573.773771,585.110953 Z" id="path-4"></path>
+        <filter x="-0.1%" y="-0.1%" width="100.2%" height="100.2%" filterUnits="objectBoundingBox" id="filter-5">
+            <feOffset dx="-1" dy="1" in="SourceAlpha" result="shadowOffsetInner1"></feOffset>
+            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0.290196078   0 0 0 0 1   0 0 0 0 0.51372549  0 0 0 1 0" type="matrix" in="shadowInnerInner1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="App" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="App-Icon02">
+            <g id="Oval">
+                <use fill="#1F1F2E" xlink:href="#path-2"></use>
+                <use fill="url(#linearGradient-1)" xlink:href="#path-2"></use>
+            </g>
+            <g id="Fill-1">
+                <use fill="url(#linearGradient-3)" fill-rule="evenodd" xlink:href="#path-4"></use>
+                <use fill="black" fill-opacity="1" filter="url(#filter-5)" xlink:href="#path-4"></use>
+            </g>
+        </g>
+    </g>
+</svg>
