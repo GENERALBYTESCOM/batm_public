@@ -677,9 +677,6 @@
     <extension class="com.generalbytes.batm.server.extensions.extra.linda.LindaExtension" >
         <wallet prefix="lindad" name="Lindad">
             <param name="protocol" />
-    <extension class="com.generalbytes.batm.server.extensions.extra.zcoin.ZcoinExtension" >
-        <wallet prefix="zcoind" name="Zcoind">
-            <param name="protocol"/>
             <param name="user" />
             <param name="password" />
             <param name="host" />
@@ -692,6 +689,22 @@
             <cryptocurrency>LINDA</cryptocurrency>
         </ratesource>
         <cryptologo cryptocurrency="LINDA" file="linda.png"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.zcoin.ZcoinExtension" >
+        <wallet prefix="zcoind" name="Zcoind">
+            <param name="protocol"/>
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>XZC</cryptocurrency>
+        </wallet>
+        <ratesource prefix="zcoinfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>XZC</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="XZC" file="zcoin.png"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.anon.ANONExtension" >
         <wallet prefix="anond" name="ANONd">
@@ -728,13 +741,6 @@
             <cryptocurrency>ETH</cryptocurrency>
         </ratesource>
         <cryptologo cryptocurrency="LSK" file="lisk.png"/>
-            <cryptocurrency>XZC</cryptocurrency>
-        </wallet>
-        <ratesource prefix="zcoinfix" name ="Fix Price" >
-            <param name="price" />
-            <cryptocurrency>XZC</cryptocurrency>
-        </ratesource>
-        <cryptologo cryptocurrency="XZC" file="zcoin.png"/>
     </extension>
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.TransactionExtension" />-->
 </extensions>
