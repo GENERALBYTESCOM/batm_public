@@ -23,12 +23,7 @@ public class LiskAddressValidator implements ICryptoAddressValidator {
     @Override
     public boolean isAddressValid(String address) {
         if (address.endsWith("L")) {
-            String addressWithoutL = address.substring(0, address.length() - 1); 
-
-            if (addressWithoutL.length() != 20) {
-                return false;
-            }
-
+            String addressWithoutL = address.substring(0, address.length() - 1);
             for (char addressCharacter : addressWithoutL.toCharArray()) {
                 if (!Character.isDigit(addressCharacter)) { 
                     return false;
