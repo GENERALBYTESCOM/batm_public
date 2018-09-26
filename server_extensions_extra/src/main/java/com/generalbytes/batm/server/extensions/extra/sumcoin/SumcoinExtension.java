@@ -17,6 +17,7 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.sumcoin;
 
+import com.generalbytes.batm.server.extensions.*; 
 import com.generalbytes.batm.server.extensions.AbstractExtension;
 import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
@@ -26,6 +27,7 @@ import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.sumcoin.sumcored.SumcoinRPCWallet;
 import com.generalbytes.batm.server.extensions.extra.sumcoin.sources.FixPriceRateSource;
 
+import java.util.*;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
@@ -72,7 +74,7 @@ public class SumcoinExtension extends AbstractExtension{
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (getCoinSymbol().equalsIgnoreCase(cryptoCurrency)) {
+        if (Currencies.SUM.equalsIgnoreCase(cryptoCurrency)) {
             return new SumcoinAddressValidator();
         }
         return null;
@@ -106,7 +108,7 @@ public class SumcoinExtension extends AbstractExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(getCoinSymbol());
+        result.add(Currencies.SUM);
         return result;
     }
 }
