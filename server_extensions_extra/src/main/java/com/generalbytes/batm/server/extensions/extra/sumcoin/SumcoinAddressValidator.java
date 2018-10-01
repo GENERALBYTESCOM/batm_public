@@ -26,7 +26,7 @@ public class SumcoinAddressValidator implements ICryptoAddressValidator {
 
     @Override
     public boolean isAddressValid(String address) {
-        if (address.startsWith("S") || address.startsWith("2")) || address.startsWith("sum1")) {
+        if (address.startsWith("S") || address.startsWith("2") || address.startsWith("sum1")) {
             try {
                 Base58.decodeToBigInteger(address);
                 Base58.decodeChecked(address);
