@@ -10,15 +10,6 @@
                 <param name="accountname" />
                 <cryptocurrency>BTC</cryptocurrency>
             </wallet>
-            <wallet prefix="bitcoincashd" name="BitcoinABC/BitcoinClassic Cash Core - bitcoind" >
-                <param name="protocol" />
-                <param name="user" />
-                <param name="password" />
-                <param name="host" />
-                <param name="port" />
-                <param name="accountname" />
-                <cryptocurrency>BCH</cryptocurrency>
-            </wallet>
             <wallet prefix="coinkite" name="Coinkite.com Wallet" >
                 <param name="apikey" />
                 <param name="apisecret" />
@@ -133,7 +124,21 @@
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>SMART</cryptocurrency>
         </exchange>
-            <cryptologo cryptocurrency="BTC" file="btc.png"/>
+        <cryptologo cryptocurrency="BTC" file="btc.png"/>
+        <cryptologo cryptocurrency="BTC" file="btc.svg"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.bitcoincash.BitcoinCashExtension">
+        <wallet prefix="bitcoincashd" name="BitcoinABC/BitcoinClassic Cash Core - bitcoind" >
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>BCH</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="BCH" file="bch.png"/>
+        <cryptologo cryptocurrency="BCH" file="bch.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.dogecoin.DogecoinExtension">
         <wallet prefix="blockio" name="Block.io Wallet">
@@ -163,6 +168,7 @@
             <help>USD is default fiat currency.</help>
         </ratesource>
         <cryptologo cryptocurrency="DOGE" file="doge.png"/>
+        <cryptologo cryptocurrency="DOGE" file="doge.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.flashcoin.FlashcoinExtension" >
         <wallet prefix="flashcoind" name="Flashcoind">
@@ -211,6 +217,7 @@
             <help>USD is default fiat currency.</help>
         </ratesource>
         <cryptologo cryptocurrency="LTC" file="ltc.png"/>
+        <cryptologo cryptocurrency="LTC" file="ltc.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.viacoin.ViacoinExtension" >
         <wallet prefix="viacoind" name="Viacoind">
@@ -272,6 +279,7 @@
             <help>USD is default fiat currency.</help>
         </ratesource>
         <cryptologo cryptocurrency="DASH" file="dash.png"/>
+        <cryptologo cryptocurrency="DASH" file="dash.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.syscoin.SyscoinExtension" >
     <wallet prefix="syscoind" name="syscoind">
@@ -525,7 +533,6 @@
             <cryptocurrency>DEX</cryptocurrency>
         </exchange>
         <cryptologo cryptocurrency="DEX" file="dex.png"/>
-        <cryptologo cryptocurrency="BCH" file="bch.png"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.bitcore.BitcoreExtension" >
         <wallet prefix="bitcored" name="Bitcored">
