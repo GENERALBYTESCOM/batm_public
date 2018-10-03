@@ -72,7 +72,6 @@
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>DASH</cryptocurrency>
                 <cryptocurrency>XMR</cryptocurrency>
-                <cryptocurrency>$PAC</cryptocurrency>
                 <cryptocurrency>POT</cryptocurrency>
                 <cryptocurrency>BTX</cryptocurrency>
                 <cryptocurrency>BTCP</cryptocurrency>
@@ -503,22 +502,6 @@
             <cryptocurrency>BURST</cryptocurrency>
         </ratesource>
         <cryptologo cryptocurrency="Burst" file="burst.png"/>
-    </extension>
-    <extension class="com.generalbytes.batm.server.extensions.extra.pac.PacExtension" >
-        <wallet prefix="paccoind" name="PACcoin">
-            <param name="protocol" />
-            <param name="user" />
-            <param name="password" />
-            <param name="host" />
-            <param name="port" />
-            <param name="accountname" />
-            <cryptocurrency>$PAC</cryptocurrency>
-        </wallet>
-        <ratesource prefix="paccoinfix" name ="Fix Price" >
-            <param name="price" />
-            <cryptocurrency>$PAC</cryptocurrency>
-        </ratesource>
-        <cryptologo cryptocurrency="$PAC" file="pac.png"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.potcoin.PotcoinExtension" >
         <wallet prefix="potwallet" name="PotCoin">
