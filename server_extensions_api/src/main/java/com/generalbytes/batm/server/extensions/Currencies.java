@@ -53,7 +53,6 @@ public class Currencies {
     public static final String ICG = "ICG";
     public static final String NBT = "NBT";
     public static final String NXT = "NXT";
-    public static final String PAC = "$PAC";
     public static final String POT = "POT";
     public static final String SMART = "SMART";
     public static final String START = "START";
@@ -161,7 +160,6 @@ public class Currencies {
         crypto.add(ICG);
         crypto.add(NBT);
         crypto.add(NXT);
-        crypto.add(PAC);
         crypto.add(POT);
         crypto.add(SMART);
         crypto.add(START);
