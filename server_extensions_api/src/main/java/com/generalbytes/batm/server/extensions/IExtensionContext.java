@@ -49,5 +49,11 @@ public interface IExtensionContext {
     //SMS related stuff
     void sendSMSAsync(final String terminalSN, final String phonenumber, final String messageText);
 
-
-    }
+    /**
+     * Add task to server's task manager
+     * @param name
+     * @param tt
+     * @param onFinish
+     */
+    void addTask(String name, final ITask tt, final Runnable onFinish);
+}

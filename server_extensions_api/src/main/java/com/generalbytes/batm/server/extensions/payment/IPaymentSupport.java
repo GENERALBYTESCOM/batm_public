@@ -18,8 +18,8 @@
 package com.generalbytes.batm.server.extensions.payment;
 
 import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
+import com.generalbytes.batm.server.extensions.IExtensionContext;
 
-import java.io.File;
 
 /**
  * {@link IPaymentSupport} is used to handle more complex interactions with coin network for BATM server.
@@ -27,22 +27,12 @@ import java.io.File;
  * Each cryptocurrency can have only one {@link IPaymentSupport} implementation @see {@link ICryptoCurrencyDefinition}
  */
 public interface IPaymentSupport {
-
     /**
      * BATM server calls this method to initialize your payment support.
-     * @param seedMnemonic server provides you with a seed that is shared among all crypto-currencies to simplify the backup
-     * @param password password for seed
-     * @param file file storage which is free to be used by cryptocurrency support. Typically it is used to store block headers
-     * @param paymentIndex initial index for generating receiving addresses from seed. For more read @{@link IPaymentSupportListener}
+     * @param context - context of the extension providing the payment support
      * @return
      */
-    boolean init(String seedMnemonic, String password, File file, int paymentIndex);
-
-    /**
-     * Method used by server to listen to your @{@link IPaymentSupport} implementation
-     * @param listener
-     */
-    void addListener(IPaymentSupportListener listener);
+    boolean init(IExtensionContext context);
 
     /**
      * Server calls this method to create request for payment.
