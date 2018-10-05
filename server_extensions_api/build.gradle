@@ -1,6 +1,6 @@
 apply plugin: "java"
 apply plugin: "distribution"
-apply plugin: "gb-gradle"
+apply plugin: "com.generalbytes.gradle.main"
 apply plugin: 'maven-publish'
 
 group = projectGroup
@@ -44,4 +44,13 @@ if (hasProperty('gbArtifactoryUser') && hasProperty('gbArtifactoryPassword') && 
             }
         }
     }
+}
+
+dependencyVerification {
+
+    //configuration ':server_extensions_api:runtime' (2018-10-03T16:33:00); showing only previously unlisted assertions
+    verifyModule 'com.sun.mail:javax.mail:f56957fcc9a91d011acec066100f6acfe3c130e325db552b8ea26118e1d07029'
+    verifyModule 'javax.activation:activation:2881c79c9d6ef01c58e62beea13e9d1ac8b8baa16f2fc198ad6e6776defdcdd3'
+    verifyModule 'org.slf4j:slf4j-api:18c4a0095d5c1da6b817592e767bb23d29dd2f560ad74df75ff3961dbde25b79'
+    verifyModule 'org.slf4j:slf4j-simple:0966e86fffa5be52d3d9e7b89dd674d98a03eed0a454fbaf7c1bd9493bd9d874'
 }

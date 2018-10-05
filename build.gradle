@@ -29,5 +29,5 @@ allprojects {
 }
 
 ext.with {
-    BatmDependencySubstitutionConfig = file('dependencySubstitutions.txt')
+    batmDependencySubstitutionConfig = file('dependencySubstitutions.txt')
 }

@@ -1,10 +1,8 @@
-package com.generalbytes.batm.gradle
+package com.generalbytes.gradle.model
 
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 import org.gradle.api.artifacts.ModuleVersionIdentifier
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -12,7 +10,6 @@ import java.util.regex.Pattern
 @EqualsAndHashCode
 @ToString
 class SimpleModuleVersionIdentifier implements ModuleVersionIdentifier {
-    private Logger logger = LoggerFactory.getLogger(DependencySubstitutionPluginExtension.class.simpleName)
     final SimpleModuleIdentifier module
     final String version
 
@@ -20,7 +17,6 @@ class SimpleModuleVersionIdentifier implements ModuleVersionIdentifier {
         final Matcher matcher = Pattern.compile('^([^:]*):([^:]*):([^:]*)$').matcher(id)
         if (!matcher.matches()) {
             def msg = "Module identifier '$id' has incorrect format."
-//            logger.error(msg)
             throw new IllegalArgumentException(msg)
         }
         this.module = new SimpleModuleIdentifier(matcher.group(1), matcher.group(2))
@@ -40,5 +36,9 @@ class SimpleModuleVersionIdentifier implements ModuleVersionIdentifier {
     @Override
     String getName() {
         return module.name
+    }
+
+    String toGradleString() {
+        return "${module.group}:${module.name}:$version"
     }
 }

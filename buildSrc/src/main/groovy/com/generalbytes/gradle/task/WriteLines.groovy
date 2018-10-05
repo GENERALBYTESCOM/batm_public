@@ -1,15 +1,10 @@
-package com.generalbytes.batm.gradle;
+package com.generalbytes.gradle.task;
 
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.OutputFile;
-import org.gradle.api.tasks.TaskAction;
+import org.gradle.api.tasks.TaskAction
 
-import java.io.*;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.concurrent.Callable;
 
 class WriteLines extends DefaultTask {
