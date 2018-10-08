@@ -18,9 +18,8 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoincash;
 
 import com.generalbytes.batm.server.extensions.AbstractExtension;
-import com.generalbytes.batm.server.extensions.CryptoCurrencyDefinition;
 import com.generalbytes.batm.server.extensions.Currencies;
-import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
+import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.bitcoincash.wallets.BATMBitcoinCashdRPCWallet;
 
@@ -29,7 +28,8 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 public class BitcoinCashExtension extends AbstractExtension {
-//    private static final CryptoCurrencyDefinition DEFINITION_BCH = new BitcoinCashDefinition();
+//    private static final CryptoCurrencyDefinition DEFINITION = new BitcoinCashDefinition();
+    public static final String CURRENCY = Currencies.BCH;
 
     @Override
     public String getName() {
@@ -67,15 +67,23 @@ public class BitcoinCashExtension extends AbstractExtension {
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(Currencies.BCH);
+        result.add(CURRENCY);
         return result;
     }
 
-    @Override
-    public Set<ICryptoCurrencyDefinition> getCryptoCurrencyDefinitions() {
+    //Disable for now
+//    @Override
+//    public Set<ICryptoCurrencyDefinition> getCryptoCurrencyDefinitions() {
 //        Set<ICryptoCurrencyDefinition> result = new HashSet<>();
-//        result.add(DEFINITION_BCH);
+//        result.add(DEFINITION);
 //        return result;
+//    }
+
+    @Override
+    public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
+        if (CURRENCY.equalsIgnoreCase(cryptoCurrency)) {
+            return new BitcoinCashAddressValidator();
+        }
         return null;
     }
 }
