@@ -97,7 +97,7 @@ public class RPCClient extends BitcoinJSONRPCClient {
                 public double amount() {
                     return ((Number)e.get("amount")).doubleValue();
                 }
--
+
                 public int confirmations() {
                     return ((Number)e.get("confirmations")).intValue();
                 }
