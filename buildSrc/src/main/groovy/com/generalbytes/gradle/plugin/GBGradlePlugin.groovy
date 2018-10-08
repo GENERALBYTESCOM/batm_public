@@ -1,6 +1,8 @@
 package com.generalbytes.gradle.plugin
 
 import com.generalbytes.gradle.Util
+import com.generalbytes.gradle.task.DependencyChecksums
+import com.generalbytes.gradle.task.DependencyVerification
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.PluginManager
@@ -41,25 +43,28 @@ class GBGradlePlugin implements Plugin<Project> {
         ].each {
             project.strictDependencies.confine(it)
         }
-        logger.debug("Applied plugin 'com.generalbytes.gradle.dependency-strict'.")
+        logger.debug("Applied plugin 'com.generalbytes.gradle.dependency.strict'.")
     }
 
     private void applyPluginDependencySubstitution(Project project) {
         final PluginManager pluginMgr = project.pluginManager
         pluginMgr.apply(DependencySubstitutionPlugin.class)
-        logger.debug("Applied plugin 'com.generalbytes.gradle.dependency-substitution'.")
+        logger.debug("Applied plugin 'com.generalbytes.gradle.dependency.substitution'.")
     }
 
     private void applyPluginDependencyVerification(Project project) {
         final PluginManager pluginMgr = project.pluginManager
         pluginMgr.apply(DependencyVerificationPlugin.class)
         if (Util.isAndroidProject(project)) {
-            project.dependencyVerification.configuration('releaseRuntimeClasspath')
-            project.dependencyVerification.configuration('debugRuntimeClasspath')
+            project.tasks.getByName(DependencyVerification.TASK_NAME).configuration('releaseRuntimeClasspath')
+            project.tasks.getByName(DependencyVerification.TASK_NAME).configuration('debugRuntimeClasspath')
+            project.tasks.getByName(DependencyChecksums.TASK_NAME).configuration('releaseRuntimeClasspath')
+            project.tasks.getByName(DependencyChecksums.TASK_NAME).configuration('debugRuntimeClasspath')
         } else if (pluginMgr.hasPlugin('org.gradle.java')) {
-            project.dependencyVerification.configuration('runtime')
+            project.tasks.getByName(DependencyVerification.TASK_NAME).configuration('runtime')
+            project.tasks.getByName(DependencyChecksums.TASK_NAME).configuration('runtime')
         }
-        project.dependencyVerification.strict = true
-        logger.debug("Applied plugin 'com.generalbytes.gradle.dependency-verification'.")
+        project.tasks.getByName(DependencyVerification.TASK_NAME).strict = true
+        logger.debug("Applied plugin 'com.generalbytes.gradle.dependency.verification'.")
     }
 }
