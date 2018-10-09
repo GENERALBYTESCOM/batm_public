@@ -1,35 +1,196 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="1000px" height="1000px" viewBox="0 0 1000 1000" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
-    <title>App-Icon02</title>
-    <desc>Created with Sketch.</desc>
-    <defs>
-        <linearGradient x1="100%" y1="0%" x2="0%" y2="95.6974638%" id="linearGradient-1">
-            <stop stop-color="#52527A" stop-opacity="0.5" offset="0%"></stop>
-            <stop stop-color="#1F1F2E" offset="100%"></stop>
-        </linearGradient>
-        <circle id="path-2" cx="500" cy="500" r="450"></circle>
-        <linearGradient x1="100%" y1="0%" x2="0%" y2="95.6974638%" id="linearGradient-3">
-            <stop stop-color="#59F979" offset="0%"></stop>
-            <stop stop-color="#23B852" offset="100%"></stop>
-        </linearGradient>
-        <path d="M573.773771,585.110953 L665.570745,585.110953 L665.570745,665.569089 L389.886794,665.569089 L732.514075,322.941808 C743.729292,311.727163 747.082525,294.860841 741.013625,280.207116 C734.944725,265.553962 720.645839,255.999623 704.785086,255.999623 L295.215048,255.999623 C273.557248,255.999623 256.001279,273.556164 256.001279,295.213964 L256.001279,414.885296 L256.000134,414.885296 L256.000134,585.110953 L426.225791,414.885296 L334.429389,414.885296 L334.429389,334.427733 L610.113912,334.427733 L267.486631,677.053869 C256.271987,688.269086 252.916464,705.137125 258.985936,719.789707 C265.055981,734.443433 279.354867,743.997199 295.215048,743.997199 L704.785086,743.997199 C726.441169,743.997199 743.998855,726.440085 743.998855,704.78343 L743.998855,585.110953 L744,585.110953 L744,414.885296 L573.773771,585.110953 Z" id="path-4"></path>
-        <filter x="-0.1%" y="-0.1%" width="100.2%" height="100.2%" filterUnits="objectBoundingBox" id="filter-5">
-            <feOffset dx="-1" dy="1" in="SourceAlpha" result="shadowOffsetInner1"></feOffset>
-            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner1"></feComposite>
-            <feColorMatrix values="0 0 0 0 0.290196078   0 0 0 0 1   0 0 0 0 0.51372549  0 0 0 1 0" type="matrix" in="shadowInnerInner1"></feColorMatrix>
-        </filter>
-    </defs>
-    <g id="App" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="App-Icon02">
-            <g id="Oval">
-                <use fill="#1F1F2E" xlink:href="#path-2"></use>
-                <use fill="url(#linearGradient-1)" xlink:href="#path-2"></use>
-            </g>
-            <g id="Fill-1">
-                <use fill="url(#linearGradient-3)" fill-rule="evenodd" xlink:href="#path-4"></use>
-                <use fill="black" fill-opacity="1" filter="url(#filter-5)" xlink:href="#path-4"></use>
-            </g>
-        </g>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   height="120"
+   width="120"
+   version="1.1"
+   id="svg4247"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="zcoin.svg">
+  <metadata
+     id="metadata4259">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs4257">
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient4761">
+      <stop
+         style="stop-color:#1a1a1a;stop-opacity:1;"
+         offset="0"
+         id="stop4763" />
+      <stop
+         style="stop-color:#1a1a1a;stop-opacity:0;"
+         offset="1"
+         id="stop4765" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4761"
+       id="linearGradient4769"
+       x1="-409.44958"
+       y1="-20.942795"
+       x2="-57.60104"
+       y2="133.44374"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(-1.0090909,0,0,-1.0090909,-74.103737,135.33971)" />
+    <linearGradient
+       id="linearGradient-1"
+       y2="911.27716"
+       x2="50"
+       y1="50"
+       x1="950"
+       gradientUnits="userSpaceOnUse">
+      <stop
+         id="stop4908"
+         offset="0%"
+         stop-opacity="0.5"
+         stop-color="#52527A" />
+      <stop
+         id="stop4910"
+         offset="100%"
+         stop-color="#1F1F2E" />
+    </linearGradient>
+    <circle
+       r="450"
+       cy="500"
+       cx="500"
+       id="path-2" />
+    <linearGradient
+       id="linearGradient-3"
+       y2="723.00272"
+       x2="255.99936"
+       y1="256.00026"
+       x1="743.99815"
+       gradientTransform="scale(1.0000025,0.99999752)"
+       gradientUnits="userSpaceOnUse">
+      <stop
+         id="stop4914"
+         offset="0%"
+         stop-color="#59F979" />
+      <stop
+         id="stop4916"
+         offset="100%"
+         stop-color="#23B852" />
+    </linearGradient>
+    <path
+       id="path-4"
+       d="M573.773771,585.110953 L665.570745,585.110953 L665.570745,665.569089 L389.886794,665.569089 L732.514075,322.941808 C743.729292,311.727163 747.082525,294.860841 741.013625,280.207116 C734.944725,265.553962 720.645839,255.999623 704.785086,255.999623 L295.215048,255.999623 C273.557248,255.999623 256.001279,273.556164 256.001279,295.213964 L256.001279,414.885296 L256.000134,414.885296 L256.000134,585.110953 L426.225791,414.885296 L334.429389,414.885296 L334.429389,334.427733 L610.113912,334.427733 L267.486631,677.053869 C256.271987,688.269086 252.916464,705.137125 258.985936,719.789707 C265.055981,734.443433 279.354867,743.997199 295.215048,743.997199 L704.785086,743.997199 C726.441169,743.997199 743.998855,726.440085 743.998855,704.78343 L743.998855,585.110953 L744,585.110953 L744,414.885296 L573.773771,585.110953 Z" />
+    <filter
+       id="filter-5"
+       filterUnits="objectBoundingBox"
+       height="100.2%"
+       width="100.2%"
+       y="-0.1%"
+       x="-0.1%">
+      <feOffset
+         id="feOffset4920"
+         result="shadowOffsetInner1"
+         in="SourceAlpha"
+         dy="1"
+         dx="-1" />
+      <feComposite
+         id="feComposite4922"
+         result="shadowInnerInner1"
+         k3="1"
+         k2="-1"
+         operator="arithmetic"
+         in2="SourceAlpha"
+         in="shadowOffsetInner1" />
+      <feColorMatrix
+         id="feColorMatrix4924"
+         in="shadowInnerInner1"
+         type="matrix"
+         values="0 0 0 0 0.290196078   0 0 0 0 1   0 0 0 0 0.51372549  0 0 0 1 0" />
+    </filter>
+  </defs>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1023"
+     id="namedview4255"
+     showgrid="false"
+     inkscape:zoom="3.2460938"
+     inkscape:cx="120.75129"
+     inkscape:cy="16.089123"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg4247" />
+  <path
+     style="fill:url(#linearGradient4769);fill-opacity:1;stroke:none;stroke-opacity:1"
+     inkscape:connector-curvature="0"
+     id="path4251-6"
+     d="M 6.6612254,48.073886 C 14.074737,18.341792 44.19189,0.24725348 73.930899,7.6616275 103.65782,15.074269 121.75447,45.189649 114.33749,74.920005 106.92746,104.65554 76.810279,122.75183 47.079931,115.33918 17.342646,107.92654 -0.7522758,77.807711 6.6612254,48.073886 Z" />
+  <g
+     id="App"
+     style="fill:none;fill-rule:evenodd;stroke:none;stroke-width:1"
+     transform="matrix(0.12222222,0,0,0.12222222,-1.1111111,-1.1111111)">
+    <g
+       id="App-Icon02">
+      <g
+         id="Oval">
+        <use
+           id="use4929"
+           xlink:href="#path-2"
+           style="fill:#1f1f2e"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           id="use4931"
+           xlink:href="#path-2"
+           style="fill:url(#linearGradient-1)"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+      </g>
+      <g
+         id="Fill-1">
+        <use
+           id="use4934"
+           xlink:href="#path-4"
+           style="fill:url(#linearGradient-3);fill-rule:evenodd"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+        <use
+           id="use4936"
+           xlink:href="#path-4"
+           style="fill:#000000;fill-opacity:1;filter:url(#filter-5)"
+           x="0"
+           y="0"
+           width="100%"
+           height="100%" />
+      </g>
     </g>
+  </g>
 </svg>

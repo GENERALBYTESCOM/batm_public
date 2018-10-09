@@ -15,18 +15,16 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.sumcoin;
+package com.generalbytes.batm.server.extensions.extra.bitcoincash;
 
 import com.generalbytes.batm.server.coinutil.AddressFormatException;
 import com.generalbytes.batm.server.coinutil.Base58;
-import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 
-public class SumcoinAddressValidator implements ICryptoAddressValidator {
-
+public class BitcoinCashAddressValidator implements ICryptoAddressValidator {
     @Override
     public boolean isAddressValid(String address) {
-        if (address.startsWith("S") || address.startsWith("2") || address.startsWith("sum1")) {
+        if (address.startsWith("q")) {
             try {
                 Base58.decodeToBigInteger(address);
                 Base58.decodeChecked(address);
@@ -49,4 +47,5 @@ public class SumcoinAddressValidator implements ICryptoAddressValidator {
     public boolean mustBeBase58Address() {
         return true;
     }
+
 }

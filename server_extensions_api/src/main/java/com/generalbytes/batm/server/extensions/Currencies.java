@@ -53,6 +53,7 @@ public class Currencies {
     public static final String ICG = "ICG";
     public static final String NBT = "NBT";
     public static final String NXT = "NXT";
+    public static final String PAC = "$PAC";
     public static final String POT = "POT";
     public static final String SMART = "SMART";
     public static final String START = "START";
@@ -63,8 +64,8 @@ public class Currencies {
     public static final String XMR = "XMR";
     public static final String ANON = "ANON"; // ANON, formerly Anonymous Bitcoin
     public static final String USDT = "USDT";
-  
     public static final String XZC = "XZC"; //Zcoin
+
 
     public static final String AED = "AED";
     public static final String AMD = "AMD";
@@ -160,6 +161,7 @@ public class Currencies {
         crypto.add(ICG);
         crypto.add(NBT);
         crypto.add(NXT);
+        crypto.add(PAC);
         crypto.add(POT);
         crypto.add(SMART);
         crypto.add(START);
@@ -168,7 +170,7 @@ public class Currencies {
         crypto.add(WDC);
         crypto.add(XMR);
         crypto.add(ANON);
-        crypto.add(USDT);        
+        crypto.add(USDT);
         crypto.add(XZC);
 
         CRYPTO_CURRENCIES = Collections.unmodifiableList(crypto);

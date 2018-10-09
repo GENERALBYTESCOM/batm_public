@@ -15,32 +15,23 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.sumcoin;
+package com.generalbytes.batm.server.extensions.extra.pac;
 
-import com.generalbytes.batm.server.extensions.*; 
-import com.generalbytes.batm.server.extensions.AbstractExtension;
-import com.generalbytes.batm.server.extensions.Currencies;
-import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
-import com.generalbytes.batm.server.extensions.IExchange;
-import com.generalbytes.batm.server.extensions.IRateSource;
-import com.generalbytes.batm.server.extensions.IWallet;
-import com.generalbytes.batm.server.extensions.extra.sumcoin.sumcored.SumcoinRPCWallet;
-import com.generalbytes.batm.server.extensions.extra.sumcoin.sources.FixPriceRateSource;
 
-import java.util.*;
+import com.generalbytes.batm.server.extensions.*;
+import com.generalbytes.batm.server.extensions.extra.pac.sources.FixPriceRateSource;
+import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.CoinmarketcapRateSource;
+import com.generalbytes.batm.server.extensions.extra.pac.wallets.paccoind.PacRPCWallet;
+
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-public class SumcoinExtension extends AbstractExtension{
-    public static String getCoinSymbol (){
-        return Currencies.SUM;
-    }
-
+public class PacExtension extends AbstractExtension{
     @Override
     public String getName() {
-        return "BATM SumCoin extension";
+        return "BATM $PAC extension";
     }
 
     @Override
@@ -49,8 +40,8 @@ public class SumcoinExtension extends AbstractExtension{
             StringTokenizer st = new StringTokenizer(walletLogin,":");
             String walletType = st.nextToken();
 
-            if ("sumcoind".equalsIgnoreCase(walletType)) {
-                //"sumcoind:protocol:user:password:ip:port:accountname"
+            if ("paccoind".equalsIgnoreCase(walletType)) {
+                //"paccoind:protocol:user:password:ip:port:accountname"
 
                 String protocol = st.nextToken();
                 String username = st.nextToken();
@@ -65,7 +56,7 @@ public class SumcoinExtension extends AbstractExtension{
 
                 if (protocol != null && username != null && password != null && hostname !=null && port != null && accountName != null) {
                     String rpcURL = protocol +"://" + username +":" + password + "@" + hostname +":" + port;
-                    return new SumcoinRPCWallet(rpcURL,accountName);
+                    return new PacRPCWallet(rpcURL,accountName);
                 }
             }
         }
@@ -74,8 +65,8 @@ public class SumcoinExtension extends AbstractExtension{
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (Currencies.SUM.equalsIgnoreCase(cryptoCurrency)) {
-            return new SumcoinAddressValidator();
+        if (Currencies.PAC.equalsIgnoreCase(cryptoCurrency)) {
+            return new PacAddressValidator();
         }
         return null;
     }
@@ -84,9 +75,9 @@ public class SumcoinExtension extends AbstractExtension{
     public IRateSource createRateSource(String sourceLogin) {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(sourceLogin,":");
-            String exchangeType = st.nextToken();
+            String rsType = st.nextToken();
 
-            if ("sumfix".equalsIgnoreCase(exchangeType)) {
+            if ("paccoinfix".equalsIgnoreCase(rsType)) {
                 BigDecimal rate = BigDecimal.ZERO;
                 if (st.hasMoreTokens()) {
                     try {
@@ -100,7 +91,13 @@ public class SumcoinExtension extends AbstractExtension{
                 }
                 return new FixPriceRateSource(rate,preferedFiatCurrency);
             }
-
+            else if ("coinmarketcap".equalsIgnoreCase(rsType)) {
+                String preferedFiatCurrency = Currencies.USD;
+                if (st.hasMoreTokens()) {
+                    preferedFiatCurrency = st.nextToken().toUpperCase();
+                }
+                return new CoinmarketcapRateSource(preferedFiatCurrency);
+            }
         }
         return null;
     }
@@ -108,7 +105,8 @@ public class SumcoinExtension extends AbstractExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(Currencies.SUM);
+        result.add(Currencies.PAC);
         return result;
     }
+
 }

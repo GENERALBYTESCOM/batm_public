@@ -125,24 +125,6 @@ public class BitcoinExtension implements IExtension{
                     String rpcURL = protocol + "://" + username + ":" + password + "@" + hostname + ":" + port;
                     return new BATMBitcoindRPCWallet(rpcURL, accountName, Currencies.BTC);
                 }
-            }else if ("bitcoincashd".equalsIgnoreCase(walletType)) {
-                //"bitcoind:protocol:user:password:ip:port:accountname"
-
-                String protocol = st.nextToken();
-                String username = st.nextToken();
-                String password = st.nextToken();
-                String hostname = st.nextToken();
-                String port = st.nextToken();
-                String accountName ="";
-                if (st.hasMoreTokens()) {
-                    accountName = st.nextToken();
-                }
-
-
-                if (protocol != null && username != null && password != null && hostname !=null && port != null && accountName != null) {
-                    String rpcURL = protocol +"://" + username +":" + password + "@" + hostname +":" + port;
-                    return new BATMBitcoindRPCWallet(rpcURL,accountName, Currencies.BCH);
-                }
             }else if ("bitcore".equalsIgnoreCase(walletType)) { //bitcore:apiKey:proxyUrl
                 String apiKey = st.nextToken();
                 // the next token is a URL, so we can't use : as a delimiter
