@@ -79,7 +79,7 @@ if (hasProperty('gbArtifactoryUser') && hasProperty('gbArtifactoryPassword') && 
 dependencyVerification {
 
     //configuration ':server_extensions_extra:runtime' (2018-10-03T16:33:26); showing only previously unlisted assertions
-    verifyModule 'com.azazar:bitcoin-json-rpc-client:b7bb332db7c066783c6d5238701ec7ee7f436d8f89ef1f07b6ccf58d535f6dba'
+    verifyModule 'com.azazar:bitcoin-json-rpc-client:8787b912974776d693ab0d8888757ae7b94fbf29d1da5b124d6206505cde4957'
     verifyModule 'com.fasterxml.jackson.core:jackson-annotations:e61b7343aceeb6ecda291d4ef133cd3e765f178c631c357ffd081abab7f15db8'
     verifyModule 'com.fasterxml.jackson.core:jackson-core:4efd0e05ec7c4688769f612dcdd9264e5695c93b88295cded6bc94d0b9526c3f'
     verifyModule 'com.fasterxml.jackson.core:jackson-databind:a2a90499657d7f67c17933869def7745f0155944460073d2f1b5590804859576'
