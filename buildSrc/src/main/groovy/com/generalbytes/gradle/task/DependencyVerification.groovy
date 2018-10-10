@@ -27,19 +27,19 @@ import com.generalbytes.gradle.Util
 import com.generalbytes.gradle.exception.MismatchedChecksumsException
 import com.generalbytes.gradle.exception.MissingChecksumAssertionsException
 import com.generalbytes.gradle.model.ChecksumAssertion
-import com.generalbytes.gradle.model.SimpleModuleIdentifier
+import com.generalbytes.gradle.model.SimpleModuleVersionIdentifier
 import groovy.transform.PackageScope
 import org.gradle.api.DefaultTask
 import org.gradle.api.InvalidUserDataException
 import org.gradle.api.Project
 import org.gradle.api.artifacts.ArtifactCollection
 import org.gradle.api.artifacts.Configuration
-import org.gradle.api.artifacts.ModuleIdentifier
 import org.gradle.api.artifacts.component.ComponentArtifactIdentifier
 import org.gradle.api.artifacts.component.ComponentIdentifier
 import org.gradle.api.artifacts.component.ModuleComponentIdentifier
 import org.gradle.api.artifacts.component.ProjectComponentIdentifier
 import org.gradle.api.attributes.Attribute
+import org.gradle.api.provider.SetProperty
 import org.gradle.api.tasks.TaskAction
 
 import java.security.MessageDigest
@@ -47,43 +47,55 @@ import java.security.MessageDigest
 class DependencyVerification extends DefaultTask {
     public static final String TASK_NAME = 'dependencyVerification'
 
-    Map<ModuleIdentifier, ChecksumAssertion> assertionsByModule = new HashMap<>()
-    Set<Object> configurations = []
+    final SetProperty<ChecksumAssertion> assertions = project.objects.setProperty(ChecksumAssertion)
+    final SetProperty<Object> configurations = project.objects.setProperty(Object)
     boolean strict = false
 
+    @SuppressWarnings('unused')
     void configuration(String configuration) {
         configurations.add(configuration)
     }
 
+    @SuppressWarnings('unused')
     void configuration(Configuration configuration) {
         configurations.add(configuration)
     }
 
+    @SuppressWarnings('unused')
     void verifyModule(String s) {
-        ChecksumAssertion assertion = new ChecksumAssertion(s)
-        assertionsByModule[assertion.artifactIdentifier] = assertion
+        assertions.add(new ChecksumAssertion(s))
     }
 
     @TaskAction
+    @SuppressWarnings('unused')
     private void verifyChecksums() {
-        final Set<Configuration> configurationsToCheck = toConfigurations(project, configurations)
+        final List<Configuration> configurationsToCheck = toConfigurations(project, configurations.get()).sort {
+            Configuration a, Configuration b ->
+                a.name.compareTo(b.name)
+        }
+        final Map<ModuleComponentIdentifier, ChecksumAssertion> assertionsByModule =
+            assertions.get().collectEntries( { [ (it.artifactIdentifier): it ] } )
 
         if (configurationsToCheck == null || configurationsToCheck.isEmpty()) {
             throw new IllegalStateException("No configurations set for checksum verification.")
         } else {
-            final Set<ChecksumAssertion> unusedAssertions = new HashSet<>(assertionsByModule.values())
+            final Set<ChecksumAssertion> unusedAssertions = new HashSet<>(assertions.get())
             configurationsToCheck.each { Configuration configuration ->
+
                 final Set<ChecksumAssertion> assertionsUsedForConfiguration =
-                    verifyChecksumsForConfiguration(configuration)
+                    verifyChecksumsForConfiguration(configuration, assertionsByModule)
                 unusedAssertions.removeAll(assertionsUsedForConfiguration)
             }
             unusedAssertions.each { ChecksumAssertion assertion ->
-                logger.warn("Unused ${assertion.displayName()}.")
+                logger.warn("Unused ${assertion.displayName}.")
             }
         }
     }
 
-    protected Set<ChecksumAssertion> verifyChecksumsForConfiguration(Configuration configuration) {
+    protected Set<ChecksumAssertion> verifyChecksumsForConfiguration(
+                                            Configuration configuration,
+                                            Map<ModuleComponentIdentifier, ChecksumAssertion> assertionsByModule) {
+
         final Set<ChecksumAssertion> usedAssertions = new HashSet<>()
         final Set<ChecksumAssertion> missingAssertions = new HashSet<>()
         final Map<ChecksumAssertion, String> mismatchedChecksumsByAssertion = new HashMap<>()
@@ -94,9 +106,15 @@ class DependencyVerification extends DefaultTask {
                 try {
                     final ChecksumAssertion assertionUsed = verifyModuleChecksum(
                         configuration,
-                        new SimpleModuleIdentifier(identifier.moduleIdentifier),
+                        assertionsByModule,
+                        /**
+                         * inefficient, but no Gradle-internal objects (e.g. MavenUniqueSnapshotComponentIdentifier)
+                         * have to be used
+                         */
+                        new SimpleModuleVersionIdentifier(identifier.toString()),
                         it.file
                     )
+
 
                     usedAssertions.add(assertionUsed)
                 } catch (MissingChecksumAssertionsException e) {
@@ -134,7 +152,7 @@ class DependencyVerification extends DefaultTask {
             .append('Consider verifying the following assertions:').append('\n')
 
         mismatchedChecksumsByAssertion.sort().each { ChecksumAssertion assertion, String actualChecksum ->
-            sb.append('    ').append(assertion.displayName()).append(", actual checksum: '$actualChecksum'")
+            sb.append('    ').append(assertion.displayName).append(", actual checksum: '$actualChecksum'")
                 .append('\n')
         }
         throw new MismatchedChecksumsException(sb.toString(), mismatchedChecksumsByAssertion)
@@ -146,11 +164,16 @@ class DependencyVerification extends DefaultTask {
 
         final StringBuilder sb = new StringBuilder()
         sb.append("Missing integrity assertion(s) for $configuration.").append('\n')
-            .append("Consider adding the following to the '$TASK_NAME' block:").append('\n')
+            .append("Consider adding the following to the '$TASK_NAME' block:")
+            .append('\n')
 
         missingAssertions.sort().each { ChecksumAssertion missingAssertion ->
             sb.append('    ').append(missingAssertion.definition()).append('\n')
         }
+
+        sb.append('\n')
+            .append("Alternatively, you can run ${project.tasks.getByName(DependencyChecksums.TASK_NAME)} to generate" +
+            " complete listing.")
 
         if (strict) {
             throw new MissingChecksumAssertionsException(sb.toString(), missingAssertions)
@@ -173,13 +196,17 @@ class DependencyVerification extends DefaultTask {
         }
     }
 
-    protected ChecksumAssertion verifyModuleChecksum(Configuration configuration,
-                                                   SimpleModuleIdentifier module, File file) {
+    protected ChecksumAssertion verifyModuleChecksum(
+                                    Configuration configuration,
+                                    Map<ModuleComponentIdentifier, ChecksumAssertion> assertionsByModule,
+                                    SimpleModuleVersionIdentifier module,
+                                    File file) {
+
         final ChecksumAssertion userDefinedAssertion = assertionsByModule.get(module)
         final def dependencyFileChecksum = calculateSha256(file)
         if (userDefinedAssertion == null) {
             final ChecksumAssertion missingAssertion = new ChecksumAssertion(module, dependencyFileChecksum)
-            final def msg = "No integrity assertion for ${module.displayName()} ($configuration).\n" +
+            final def msg = "No integrity assertion for ${module.displayName} ($configuration).\n" +
                 "Consider adding '${missingAssertion.definition()}' to the '$TASK_NAME' block."
 
             throw new MissingChecksumAssertionsException(msg, missingAssertion)
@@ -187,13 +214,13 @@ class DependencyVerification extends DefaultTask {
 
             if (userDefinedAssertion.checksum != dependencyFileChecksum) {
                 throw new MismatchedChecksumsException(
-                    "Checksum mismatch for ${userDefinedAssertion.displayName()}, $configuration (actual checksum: " +
+                    "Checksum mismatch for ${userDefinedAssertion.displayName}, $configuration (actual checksum: " +
                         "'$dependencyFileChecksum').",
                     userDefinedAssertion,
                     dependencyFileChecksum
                 )
             } else {
-                logger.info("Checksum match successfully verified for ${userDefinedAssertion.displayName()}, "
+                logger.info("Checksum match successfully verified for ${userDefinedAssertion.displayName}, "
                     + "$configuration.")
                 return userDefinedAssertion
             }

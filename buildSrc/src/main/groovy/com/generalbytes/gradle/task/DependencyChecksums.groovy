@@ -1,6 +1,7 @@
 package com.generalbytes.gradle.task
 
 import com.generalbytes.gradle.model.ChecksumAssertion
+import com.generalbytes.gradle.plugin.DependencyVerificationPluginExtension
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
@@ -8,29 +9,33 @@ import org.gradle.api.artifacts.component.ComponentArtifactIdentifier
 import org.gradle.api.artifacts.component.ComponentIdentifier
 import org.gradle.api.artifacts.component.ModuleComponentIdentifier
 import org.gradle.api.artifacts.component.ProjectComponentIdentifier
+import org.gradle.api.provider.SetProperty
 import org.gradle.api.tasks.TaskAction
 
 class DependencyChecksums extends DefaultTask {
     public static final String TASK_NAME = 'dependencyChecksums'
 
-    Set<Object> configurations = []
+    final SetProperty<Object> configurations = project.objects.setProperty(Object)
 
+    @SuppressWarnings('unused')
     void configuration(String configuration) {
         configurations.add(configuration)
     }
 
+    @SuppressWarnings('unused')
     void configuration(Configuration configuration) {
         configurations.add(configuration)
     }
 
     @TaskAction
+    @SuppressWarnings('unused')
     private void taskAction() {
         printAssertions(buildAssertions(project))
     }
 
     private Map<Configuration, SortedSet<ChecksumAssertion>> buildAssertions(Project project) {
         final Map<Configuration, SortedSet<ChecksumAssertion>> assertionsByConfiguration = new HashMap<>()
-        DependencyVerification.toConfigurations(project, configurations).each { Configuration configuration ->
+        DependencyVerification.toConfigurations(project, configurations.get()).each { Configuration configuration ->
             Set<ChecksumAssertion> assertions = assertionsForConfiguration(project, configuration)
             assertionsByConfiguration[configuration] = assertions
 
@@ -44,8 +49,7 @@ class DependencyChecksums extends DefaultTask {
             final ComponentIdentifier identifier = it.id.componentIdentifier
             if (identifier instanceof ModuleComponentIdentifier) {
                 assertions.add(
-                    new ChecksumAssertion(identifier.moduleIdentifier,
-                    DependencyVerification.calculateSha256(it.file))
+                    new ChecksumAssertion(identifier, DependencyVerification.calculateSha256(it.file))
                 )
             } else if (identifier instanceof ProjectComponentIdentifier) {
                 logger.info("Skipped generating $DependencyVerification.TASK_NAME assertion for project-local dependency " +
@@ -64,7 +68,7 @@ class DependencyChecksums extends DefaultTask {
     private static void printAssertions(Map<Configuration, SortedSet<ChecksumAssertion>> assertionsByConfiguration) {
         final Set<ChecksumAssertion> printedAssertions = new HashSet<>()
         println ""
-        println "$DependencyVerification.TASK_NAME {"
+        println "$DependencyVerificationPluginExtension.BLOCK_NAME {"
         assertionsByConfiguration.each { Configuration configuration,
                                          SortedSet<ChecksumAssertion> assertions ->
 

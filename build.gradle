@@ -3,9 +3,6 @@ buildscript {
     repositories {
         jcenter()
     }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0'
-    }
 }
 
 final File repoDir = project.file('libs')

@@ -6,10 +6,23 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 
 class DependencyVerificationPlugin implements Plugin<Project> {
-    void apply(Project project) {
-        project.tasks.create(DependencyVerification.TASK_NAME, DependencyVerification.class)
-        project.tasks.getByName('check').dependsOn(DependencyVerification.TASK_NAME)
+    private DependencyVerificationPluginExtension extension
 
-        project.tasks.create(DependencyChecksums.TASK_NAME, DependencyChecksums.class)
+    void apply(Project project) {
+        extension = project.extensions.create(
+            DependencyVerificationPluginExtension.BLOCK_NAME,
+            DependencyVerificationPluginExtension,
+            project
+        )
+
+        project.tasks.create(DependencyVerification.TASK_NAME, DependencyVerification) { DependencyVerification task ->
+            task.assertions.set(extension.assertions)
+            task.configurations.set(extension.configurations)
+        }
+
+        project.tasks.create(DependencyChecksums.TASK_NAME, DependencyChecksums).configurations.set(
+            extension.configurations)
+
+        project.tasks.getByName('check').dependsOn(DependencyVerification.TASK_NAME)
     }
 }
