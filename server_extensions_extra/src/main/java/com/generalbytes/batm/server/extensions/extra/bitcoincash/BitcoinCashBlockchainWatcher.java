@@ -302,42 +302,42 @@ public class BitcoinCashBlockchainWatcher implements IBlockchainWatcher{
         }
     }
 
-    public static void main(String[] args) {
-        try {
-            RPCClient rpcClient = new RPCClient(BitcoinCashPaymentSupport.RPC_URL);
-            final BitcoinCashBlockchainWatcher w = new BitcoinCashBlockchainWatcher(rpcClient);
-            IBlockchainWatcherTransactionListener tlistener = new IBlockchainWatcherTransactionListener() {
-                @Override
-                public void removedFromWatch(String cryptoCurrency, String transactionHash, Object tag) {
-                    System.out.println("Removed from Watch");
-                }
-
-                @Override
-                public void numberOfConfirmationsChanged(String cryptoCurrency, String transactionHash, Object tag, int numberOfConfirmations) {
-                    System.out.println("numberOfConfirmationsChanged " + transactionHash + " = " + numberOfConfirmations);
-                }
-
-                @Override
-                public void newBlockMined(String cryptoCurrency, String transactionHash, Object tag, long blockHeight) {
-
-                }
-            };
-            w.addAddress(Currencies.BCH, "qzezfqhxej3nyz3t5pq3vzmhazgkgns5qcvyul5cqj", new IBlockchainWatcherAddressListener() {
-                @Override
-                public void newTransactionSeen(String cryptoCurrency, String address, String transactionId, int confirmations, Object tag) {
-                    System.out.println("New transaction " + transactionId + " seen on address " + address + " confirmations: " + confirmations + " tag:" + tag);
-                    w.addTransaction(cryptoCurrency,transactionId,tlistener,tag);
-                }
-            },null);
-            w.start();
-            Thread.sleep(50000000);
-            w.stop();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-    }
+//    public static void main(String[] args) {
+//        try {
+//            RPCClient rpcClient = new RPCClient(BitcoinCashPaymentSupport.RPC_URL);
+//            final BitcoinCashBlockchainWatcher w = new BitcoinCashBlockchainWatcher(rpcClient);
+//            IBlockchainWatcherTransactionListener tlistener = new IBlockchainWatcherTransactionListener() {
+//                @Override
+//                public void removedFromWatch(String cryptoCurrency, String transactionHash, Object tag) {
+//                    System.out.println("Removed from Watch");
+//                }
+//
+//                @Override
+//                public void numberOfConfirmationsChanged(String cryptoCurrency, String transactionHash, Object tag, int numberOfConfirmations) {
+//                    System.out.println("numberOfConfirmationsChanged " + transactionHash + " = " + numberOfConfirmations);
+//                }
+//
+//                @Override
+//                public void newBlockMined(String cryptoCurrency, String transactionHash, Object tag, long blockHeight) {
+//
+//                }
+//            };
+//            w.addAddress(Currencies.BCH, "qzezfqhxej3nyz3t5pq3vzmhazgkgns5qcvyul5cqj", new IBlockchainWatcherAddressListener() {
+//                @Override
+//                public void newTransactionSeen(String cryptoCurrency, String address, String transactionId, int confirmations, Object tag) {
+//                    System.out.println("New transaction " + transactionId + " seen on address " + address + " confirmations: " + confirmations + " tag:" + tag);
+//                    w.addTransaction(cryptoCurrency,transactionId,tlistener,tag);
+//                }
+//            },null);
+//            w.start();
+//            Thread.sleep(50000000);
+//            w.stop();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        } catch (MalformedURLException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     @Override
     public void addAddress(String cryptoCurrency, String address, IBlockchainWatcherAddressListener listener, Object tag) {
