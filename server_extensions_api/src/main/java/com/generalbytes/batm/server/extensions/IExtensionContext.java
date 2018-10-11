@@ -163,7 +163,7 @@ public interface IExtensionContext {
     Map<String,IAmountWithDiscount> calculateCryptoAmounts(String terminalSerialNumber, List<String> cryptoCurrencies, BigDecimal cashAmount, String cashCurrency, int direction, String discountCode, String identityPublicId);
 
     /**
-     * Returns
+     * Returns details about cash inside of the machine
      * @param terminalSerialNumber
      * @return
      */
