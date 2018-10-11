@@ -1,5 +1,6 @@
 package com.generalbytes.gradle.task
 
+import com.generalbytes.gradle.DependencyVerificationHelper
 import com.generalbytes.gradle.model.ChecksumAssertion
 import com.generalbytes.gradle.plugin.DependencyVerificationPluginExtension
 import org.gradle.api.DefaultTask
@@ -35,9 +36,10 @@ class DependencyChecksums extends DefaultTask {
 
     private Map<Configuration, SortedSet<ChecksumAssertion>> buildAssertions(Project project) {
         final Map<Configuration, SortedSet<ChecksumAssertion>> assertionsByConfiguration = new HashMap<>()
-        DependencyVerification.toConfigurations(project, configurations.get()).each { Configuration configuration ->
-            Set<ChecksumAssertion> assertions = assertionsForConfiguration(project, configuration)
-            assertionsByConfiguration[configuration] = assertions
+        DependencyVerificationHelper.toConfigurations(project, configurations.get()).each {
+            Configuration configuration ->
+                Set<ChecksumAssertion> assertions = assertionsForConfiguration(project, configuration)
+                assertionsByConfiguration[configuration] = assertions
 
         }
         assertionsByConfiguration
@@ -45,18 +47,18 @@ class DependencyChecksums extends DefaultTask {
 
     protected SortedSet<ChecksumAssertion> assertionsForConfiguration(Project project, Configuration configuration) {
         final SortedSet<ChecksumAssertion> assertions = new TreeSet<>()
-        DependencyVerification.getIncomingArtifactCollection(project, configuration).each {
+        DependencyVerificationHelper.getIncomingArtifactCollection(project, configuration).each {
             final ComponentIdentifier identifier = it.id.componentIdentifier
             if (identifier instanceof ModuleComponentIdentifier) {
                 assertions.add(
-                    new ChecksumAssertion(identifier, DependencyVerification.calculateSha256(it.file))
+                    new ChecksumAssertion(identifier, DependencyVerificationHelper.calculateSha256(it.file))
                 )
             } else if (identifier instanceof ProjectComponentIdentifier) {
-                logger.info("Skipped generating $DependencyVerification.TASK_NAME assertion for project-local dependency " +
-                    "$identifier.")
+                logger.info("Skipped generating $DependencyVerificationPluginExtension.BLOCK_NAME assertion for " +
+                    "project-local dependency $identifier.")
             } else if (identifier instanceof ComponentArtifactIdentifier) {
-                logger.info("Skipped generating $DependencyVerification.TASK_NAME assertion for local file dependency" +
-                    " $identifier.")
+                logger.info("Skipped generating $DependencyVerificationPluginExtension.BLOCK_NAME assertion for local" +
+                    "  file dependency $identifier.")
             } else {
                 throw new IllegalStateException("Unexpected component identifier type (${identifier.class}) for " +
                     "identifier '$identifier'.")

@@ -35,6 +35,7 @@ dependencyVerifications {
     verifyModule 'commons-codec:commons-codec:1.10:4241dfa94e711d435f29a4604a3e2de5c4aa3c165e23bd066be6fc1fc4309569'
     verifyModule 'commons-io:commons-io:2.5:a10418348d234968600ccb1d988efcbbd08716e1d96936ccc1880e7d22513474'
     verifyModule 'javax.activation:activation:1.1:2881c79c9d6ef01c58e62beea13e9d1ac8b8baa16f2fc198ad6e6776defdcdd3'
+    verifyModule 'javax.servlet:javax.servlet-api:3.1.0:af456b2dd41c4e82cf54f3e743bc678973d9fe35bd4d3071fa05c7e5333b8482'
     verifyModule 'javax.ws.rs:javax.ws.rs-api:2.0.1:38607d626f2288d8fbc1b1f8a62c369e63806d9a313ac7cbc5f9d6c94f4b466d'
     verifyModule 'javax.ws.rs:jsr311-api:1.1.1:ab1534b73b5fa055808e6598a5e73b599ccda28c3159c3c0908977809422ee4a'
     verifyModule 'net.iharder:base64:2.3.9:f1a0e359eee29a5939c35e5fdedc574dd7e8ca065b056fc14b2b29e3ed3cd54d'

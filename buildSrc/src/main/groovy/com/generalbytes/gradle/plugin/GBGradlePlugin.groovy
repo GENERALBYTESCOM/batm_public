@@ -57,21 +57,20 @@ class GBGradlePlugin implements Plugin<Project> {
         final PluginManager pluginMgr = project.pluginManager
         pluginMgr.apply(DependencyVerificationPlugin.class)
 
-        [DependencyVerification.TASK_NAME, DependencyChecksums.TASK_NAME].each { String taskName ->
-            if (Util.isAndroidProject(project)) {
-                project.tasks.getByName(taskName).configuration('releaseRuntimeClasspath')
-                project.tasks.getByName(taskName).configuration('debugRuntimeClasspath')
-            } else if (pluginMgr.hasPlugin('org.gradle.java')) {
-                project.tasks.getByName(taskName).configuration('runtime')
-            }
 
-            final Configuration buildScriptClasspathConfiguration =
-                project.buildscript.configurations.getByName(project.buildscript.CLASSPATH_CONFIGURATION)
-
-            project.tasks.getByName(taskName).configuration(buildScriptClasspathConfiguration)
+        if (Util.isAndroidProject(project)) {
+            project.dependencyVerifications.configuration('releaseRuntimeClasspath')
+            project.dependencyVerifications.configuration('debugRuntimeClasspath')
+        } else if (pluginMgr.hasPlugin('org.gradle.java')) {
+            project.dependencyVerifications.configuration('runtime')
         }
 
-        project.tasks.getByName(DependencyVerification.TASK_NAME).strict = true
+        final Configuration buildScriptClasspathConfiguration =
+            project.buildscript.configurations.getByName(project.buildscript.CLASSPATH_CONFIGURATION)
+
+        project.dependencyVerifications.configuration(buildScriptClasspathConfiguration)
+
+        project.dependencyVerifications.strict = true
         logger.debug("Applied plugin 'com.generalbytes.gradle.dependency.verification'.")
     }
 }

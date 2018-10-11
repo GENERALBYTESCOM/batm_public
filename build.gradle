@@ -25,6 +25,4 @@ allprojects {
     }
 }
 
-ext.with {
-    batmDependencySubstitutionConfig = file('dependencySubstitutions.txt')
-}
+ext['batmDependencySubstitutionConfig'] = file('dependencySubstitutions.txt')
