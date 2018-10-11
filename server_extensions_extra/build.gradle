@@ -29,6 +29,7 @@ dependencies {
     compile(group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25')
     compile(group: 'com.github.mmazi', name: 'rescu', version: '1.9.1')
     compile(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0.1')
+    compile(group: 'javax.servlet', name: 'javax.servlet-api', version: '3.1.0')
     compile(group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.8.0')
     compile(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.8.2')
     compile(group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.8.2')
@@ -93,6 +94,7 @@ dependencyVerification {
     verifyModule 'javax.activation:activation:2881c79c9d6ef01c58e62beea13e9d1ac8b8baa16f2fc198ad6e6776defdcdd3'
     verifyModule 'javax.ws.rs:javax.ws.rs-api:38607d626f2288d8fbc1b1f8a62c369e63806d9a313ac7cbc5f9d6c94f4b466d'
     verifyModule 'javax.ws.rs:jsr311-api:ab1534b73b5fa055808e6598a5e73b599ccda28c3159c3c0908977809422ee4a'
+    verifyModule 'javax.servlet:javax.servlet-api:af456b2dd41c4e82cf54f3e743bc678973d9fe35bd4d3071fa05c7e5333b8482'
     verifyModule 'net.iharder:base64:f1a0e359eee29a5939c35e5fdedc574dd7e8ca065b056fc14b2b29e3ed3cd54d'
     verifyModule 'oauth.signpost:signpost-core:a1d69c5346ebf086b0f63c382b4500ceb29304d8fe95157b060aa4cd3861f230'
     verifyModule 'org.apache.commons:commons-lang3:734c8356420cc8e30c795d64fd1fcd5d44ea9d90342a2cc3262c5158fbc6d98b'

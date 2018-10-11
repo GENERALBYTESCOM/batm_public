@@ -768,4 +768,5 @@
         <cryptologo cryptocurrency="LSK" file="lisk.png"/>
     </extension>
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.TransactionExtension" />-->
+    <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.rest.RESTExampleExtension" />-->
 </extensions>

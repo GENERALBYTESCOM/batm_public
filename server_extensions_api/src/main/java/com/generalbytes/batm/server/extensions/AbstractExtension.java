@@ -77,4 +77,14 @@ public abstract class AbstractExtension implements IExtension{
     public IWatchList getWatchList(String name) {
         return null;
     }
+
+    @Override
+    public Set<IRestService> getRestServices() {
+        return null;
+    }
+
+    @Override
+    public Set<String> getSupportedCryptoCurrencies() {
+        return null; // no need to define supported cryptocurrencies
+    }
 }
