@@ -56,4 +56,10 @@ public interface IExtensionContext {
      * @param onFinish
      */
     void addTask(String name, final ITask tt, final Runnable onFinish);
+
+    /**
+     * Returns version of the server software. Useful for compatibility checks
+     * @return
+     */
+    String getServerVersion();
 }

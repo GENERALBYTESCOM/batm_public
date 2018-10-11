@@ -121,4 +121,9 @@ public interface IExtension {
      */
     IWatchList getWatchList(String name);
 
+    /**
+     * Returns set of the rest services classes that will be added on https://localhost:7743/extensions/xxx
+     * @return
+     */
+    Set<IRestService> getRestServices();
 }

@@ -30,7 +30,7 @@ public class TransactionExtension extends AbstractExtension implements ITransact
 
     @Override
     public String getName() {
-        return "BATM Example extension which respons to creation of transaction an populates data to the ticket.";
+        return "BATM Example extension that reacts to creation of transaction an populates data to the ticket.";
     }
 
     @Override
@@ -72,8 +72,4 @@ public class TransactionExtension extends AbstractExtension implements ITransact
         return result;
     }
 
-    @Override
-    public Set<String> getSupportedCryptoCurrencies() {
-        return null; // no need to define supported cryptocurrencies
-    }
 }

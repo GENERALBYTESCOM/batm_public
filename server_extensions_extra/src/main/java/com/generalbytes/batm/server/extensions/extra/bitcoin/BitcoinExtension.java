@@ -35,7 +35,7 @@ import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 import java.math.BigDecimal;
 import java.util.*;
 
-public class BitcoinExtension implements IExtension{
+public class BitcoinExtension extends AbstractExtension{
     private IExtensionContext ctx;
 
     @Override
