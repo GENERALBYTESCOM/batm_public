@@ -17,9 +17,17 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions;
 
+import com.generalbytes.batm.server.extensions.exceptions.SellException;
+
 import java.io.File;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 
 public interface IExtensionContext {
+    int DIRECTION_NONE          = 1;
+    int DIRECTION_BUY_CRYPTO    = 2; //from customer view
+    int DIRECTION_SELL_CRYPTO   = 4; //from customer view
 
     /**
      * Registers listener for listening to transaction events
@@ -105,4 +113,59 @@ public interface IExtensionContext {
      * @return
      */
     String getServerVersion();
+
+    /**
+     * Returns list of terminal serial numbers that have available cash to be dispensed by sell transactions
+     * @param fiatAmount
+     * @param fiatCurrency
+     * @return
+     */
+    List<String> findTerminalsWithAvailableCashForSell(BigDecimal fiatAmount, String fiatCurrency);
+
+    /**
+     * This method returns how much is in the machine available for withdraw - what is already allocated
+     * @param terminalSerialNumber
+     * @param fiatCurrency
+     * @return
+     */
+    BigDecimal calculateCashAvailableForSell(String terminalSerialNumber, String fiatCurrency);
+
+    /**
+     * Call this transaction to create a sell transaction. After this call server will await crypto transaction to arrive and allocate cash for the customer.
+     * @param fiatAmount
+     * @param fiatCurrency
+     * @param cryptoAmount
+     * @param cryptoCurrency
+     * @return
+     */
+    ITransactionSellInfo sellCrypto(String terminalSerialNumber, BigDecimal fiatAmount, String fiatCurrency, BigDecimal cryptoAmount, String cryptoCurrency) throws SellException;
+
+
+    /**
+     * This method is used to get exchange rates of specific terminal and specified directions (@see DIRECTION_BUY_CRYPTO|DIRECTION_SELL_CRYPTO  etc)
+     * @param terminalSerialNumber
+     * @param directions
+     * @return
+     */
+    Map<Integer,List<IExchangeRateInfo>> getExchangeRateInfo(String terminalSerialNumber, int directions);
+
+    /**
+     * This method is used to calculate crypto amounts for various cryotocurrencies based on one specified fiat amount and currency, optional discount code and identity id can influence calculation due to discounts
+     * @param terminalSerialNumber
+     * @param cryptoCurrencies
+     * @param cashAmount
+     * @param cashCurrency
+     * @param direction
+     * @param discountCode
+     * @param identityPublicId
+     * @return
+     */
+    Map<String,IAmountWithDiscount> calculateCryptoAmounts(String terminalSerialNumber, List<String> cryptoCurrencies, BigDecimal cashAmount, String cashCurrency, int direction, String discountCode, String identityPublicId);
+
+    /**
+     * Returns
+     * @param terminalSerialNumber
+     * @return
+     */
+    List<IBanknoteCounts> getCashBoxes(String terminalSerialNumber);
 }

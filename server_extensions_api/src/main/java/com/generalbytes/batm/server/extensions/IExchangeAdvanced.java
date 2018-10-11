@@ -31,7 +31,7 @@ public interface IExchangeAdvanced extends IExchange{
      * @param description
      * @return
      */
-    public ITask createPurchaseCoinsTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description);
+    ITask createPurchaseCoinsTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description);
 
     /**
      * This method is used for instantiating task that is later called to sell coins on the exchange for specified fiat currency.
@@ -43,5 +43,5 @@ public interface IExchangeAdvanced extends IExchange{
      * @param description
      * @return
      */
-    public ITask createSellCoinsTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description);
+    ITask createSellCoinsTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description);
 }
