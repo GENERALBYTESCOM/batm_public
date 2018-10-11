@@ -41,12 +41,55 @@ public interface IExtensionContext {
         public File pathToImage;
     }
 
+    /**
+     * Sends plain-text email asynchronously
+     * @param from
+     * @param addresslistTo
+     * @param subject
+     * @param messageText
+     */
     void sendMailAsync(final String from, final String addresslistTo, final String subject, final String messageText);
+
+    /**
+     * Sends plain-text email containing attachment asynchronously
+     * @param from
+     * @param addresslistTo
+     * @param subject
+     * @param messageText
+     * @param attachmentFileName
+     * @param attachmentContent
+     * @param attachmentMimeType
+     */
     void sendMailAsyncWithAttachment(final String from, final String addresslistTo, final String subject, final String messageText, final String attachmentFileName, final byte[] attachmentContent, final String attachmentMimeType);
+
+    /**
+     * Sends email containing html text
+     * @param from
+     * @param addresslistTo
+     * @param subject
+     * @param messageText
+     * @param embeddedEmailImages
+     */
     void sendHTMLMailAsync(final String from, final String addresslistTo, final String subject, final String messageText, final EmbeddedEmailImage... embeddedEmailImages);
+
+    /**
+     * Sends email containing html and attachments
+     * @param from
+     * @param addresslistTo
+     * @param subject
+     * @param messageText
+     * @param attachmentFileName
+     * @param attachmentContent
+     * @param attachmentMimeType
+     */
     void sendHTMLMailAsyncWithAttachment(final String from, final String addresslistTo, final String subject, final String messageText, final String attachmentFileName, final byte[] attachmentContent, final String attachmentMimeType);
 
-    //SMS related stuff
+    /**
+     * Sends SMS message to specified phone number asynchronously. Terminal serial number is used to detect country code prefix from its location
+     * @param terminalSN
+     * @param phonenumber
+     * @param messageText
+     */
     void sendSMSAsync(final String terminalSN, final String phonenumber, final String messageText);
 
     /**
