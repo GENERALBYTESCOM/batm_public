@@ -1,7 +1,7 @@
 BATM Public Repository
 ===========
 
-This repository contains Bitcoin ATM related code used in BATMTwo, BATMThree, BATM Server products.
+This repository contains Bitcoin ATM related code used in BATMTwo, BATMThree, BATM Server (CAS) products.
 
 More information about the products can be found here: http://www.generalbytes.com
 
@@ -16,6 +16,7 @@ Architecture
 
 Overview
 ========
+
 Here is the list of functionality that can be extended with extenstions API:
 * **Implement support for different cryptocurrency wallets** - for more see <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/main/java/com/generalbytes/batm/server/extensions/IWallet.java">IWallet</a> interface
 * **Implement support for different cryptocurrency exchanges** - for more see <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/main/java/com/generalbytes/batm/server/extensions/IExchange.java">IExchange</a> interface
