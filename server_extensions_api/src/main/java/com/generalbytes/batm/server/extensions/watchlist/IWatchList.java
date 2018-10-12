@@ -18,7 +18,7 @@
 package com.generalbytes.batm.server.extensions.watchlist;
 
 /**
- * This class defines basic interface which every watchlist sould conform to
+ * This class defines basic interface which every watchlist should conform to
  */
 public interface IWatchList {
     public static final int LIST_NOT_CHANGED    = 0;
