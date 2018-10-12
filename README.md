@@ -8,6 +8,12 @@ More information about the products can be found here: http://www.generalbytes.c
 
 All source code is released under GPL2.
 
+Architecture
+========
+![Architecture](https://raw.githubusercontent.com/GENERALBYTESCOM/batm_public/master/doc/open_extensions.png)
+
+
+
 Overview
 ========
 Here is the list of functionality that can be extended with extenstions API:
