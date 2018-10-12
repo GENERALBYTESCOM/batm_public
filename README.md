@@ -1,4 +1,4 @@
-BATM Public Repository
+BATM Public Repository - Open Extensions
 ===========
 
 This repository contains Bitcoin ATM related code used in BATMTwo, BATMThree, BATM Server (CAS) products.
