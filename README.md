@@ -46,7 +46,7 @@ ExtensionContext is possible to call from any extension. Reference to ExtensionC
 Content
 =======
 * **server_extensions_api** - contains extension api that all extensions use to extend BATM Server's functionality.
-* **server_extensions_extra** - reference extension implementation that implements BTC, LTC, DGB, DASH, POT, VIA, BTX, SYS, FLASH, DOGE, NLG, ICG, NBT, GRS, MAX, BSD, MEC, BTDX, SUM, BURST, ECA, LINDA and $PAC coin support functionality.
+* **server_extensions_extra** - reference extension implementation that implements BTC, LTC, CLOAK, DGB, DASH, POT, VIA, BTX, SYS, FLASH, DOGE, NLG, ICG, NBT, GRS, MAX, BSD, MEC, BTDX, SUM, BURST, ECA, LINDA and $PAC coin support functionality.
 * **server_extensions_test** - contains tester for testing the extensions without requirement of having a BATM server
 
 Note for developers
