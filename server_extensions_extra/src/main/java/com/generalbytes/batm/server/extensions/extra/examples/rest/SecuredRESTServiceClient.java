@@ -28,7 +28,6 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -47,12 +46,10 @@ public class SecuredRESTServiceClient {
     interface ISecuredServiceAPI {
         @GET
         @Path("/example/helloworld")
-        @Consumes(MediaType.APPLICATION_JSON)
         MyExtensionExampleResponse getServerVersion();
 
         @GET
         @Path("/secured/helloworld")
-        @Consumes(MediaType.APPLICATION_JSON)
         MyExtensionExampleResponse getServerVersion(@QueryParam("api_key") String apiKey, @QueryParam("nonce") String nonce, @QueryParam("signature") String signature, @QueryParam("serial_number") String serialNumber);
     }
 
