@@ -52,11 +52,11 @@ public interface IExtensionContext {
     /**
      * Sends plain-text email asynchronously
      * @param from
-     * @param addresslistTo
+     * @param addressListTo
      * @param subject
      * @param messageText
      */
-    void sendMailAsync(final String from, final String addresslistTo, final String subject, final String messageText);
+    void sendMailAsync(final String from, final String addressListTo, final String subject, final String messageText);
 
     /**
      * Sends plain-text email containing attachment asynchronously
@@ -115,28 +115,33 @@ public interface IExtensionContext {
     String getServerVersion();
 
     /**
-     * Returns list of terminal serial numbers that have available cash to be dispensed by sell transactions
-     * @param fiatAmount
-     * @param fiatCurrency
-     * @return
-     */
-    List<String> findTerminalsWithAvailableCashForSell(BigDecimal fiatAmount, String fiatCurrency);
-
-    /**
-     * This method returns how much is in the machine available for withdraw - what is already allocated
+     * Returns cash amount that is available to be dispensed by sell transactions.
+     * Algorithm takes into account also that some of the banknotes are reserved(are excluded from sum) for upcoming withdrawals by other customers.
      * @param terminalSerialNumber
      * @param fiatCurrency
      * @return
      */
     BigDecimal calculateCashAvailableForSell(String terminalSerialNumber, String fiatCurrency);
 
+
+    /**
+     * Returns banknotes that are available to be dispensed by sell transactions.
+     * Algorithm takes into account also that some of the banknotes are reserved(are excluded from sum) for upcoming withdrawals by other customers.
+     * First String in returning
+     * @param terminalSerialNumber
+     * @param fiatCurrency
+     * @return
+     */
+    Map<BigDecimal, Integer> getAvailableBanknotesConsideringFutureWithdrawals(String terminalSerialNumber, String fiatCurrency);
+
+
     /**
      * Call this transaction to create a sell transaction. After this call server will await crypto transaction to arrive and allocate cash for the customer.
      * @param fiatAmount
      * @param fiatCurrency
-     * @param cryptoAmount
+     * @param cryptoAmount - ignored - reserved for future.
      * @param cryptoCurrency
-     * @return
+     * @return - read ITransactionSellInfo.getTransactionUUID() to find out what should be filled in sell QR code.
      */
     ITransactionSellInfo sellCrypto(String terminalSerialNumber, BigDecimal fiatAmount, String fiatCurrency, BigDecimal cryptoAmount, String cryptoCurrency) throws SellException;
 
@@ -168,4 +173,24 @@ public interface IExtensionContext {
      * @return
      */
     List<IBanknoteCounts> getCashBoxes(String terminalSerialNumber);
+
+
+    /**
+     * Returns list of all terminals registered on the system.
+     * @return
+     */
+    List<ITerminal> findAllTerminals();
+
+    /**
+     * Returns list of terminal serial numbers of terminals that have available cash to be dispensed by sell transactions.
+     * Algorithm takes into account also if amount can be built by banknotes in output cash boxes and
+     * if some of the banknotes are reserved for upcoming withdrawals by other customers.
+     * @param fiatAmount
+     * @param fiatCurrency
+     * @param listOfTerminalSerialNumbers - null means all
+     * @return
+     */
+    List<String> findTerminalsWithAvailableCashForSell(BigDecimal fiatAmount, String fiatCurrency,List<String> listOfTerminalSerialNumbers);
+
+
 }

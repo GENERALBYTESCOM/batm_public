@@ -25,9 +25,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * This class demonstrates how to write a simple REST service that will respond to
- * https://localhost:7743/extensions/example/helloworld
- * https://localhost:7743/extensions/secured/helloworld
+ * This class demonstrates how to write a simple REST service that will respond to HTTPS calls.
+ * For exact URLs @see {@link RESTServiceExample}
+ * For security reasons this extension is not enabled by default.
+ * You need to enable it in batm-extensions.xml
  */
 public class RESTExampleExtension extends AbstractExtension{
     private static IExtensionContext ctx;
