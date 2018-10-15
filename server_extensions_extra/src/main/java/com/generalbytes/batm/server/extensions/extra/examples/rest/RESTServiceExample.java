@@ -31,17 +31,6 @@ import javax.ws.rs.core.MediaType;
  */
 @Path("/")
 public class RESTServiceExample {
-    class MyExtensionResponse {
-        int resultCode;
-        String message;
-
-        public MyExtensionResponse(int resultCode, String message) {
-            this.resultCode = resultCode;
-            this.message = message;
-        }
-    }
-
-
     @GET
     @Path("/helloworld")
     @Produces(MediaType.APPLICATION_JSON)
@@ -50,6 +39,6 @@ public class RESTServiceExample {
      */
     public Object helloWorld(@Context HttpServletRequest request, @Context HttpServletResponse response, @QueryParam("serial_number") String serialNumber) {
         String serverVersion = RESTExampleExtension.getExtensionContext().getServerVersion();
-        return new MyExtensionResponse(0, "Server version is: " + serverVersion);
+        return new MyExtensionExampleResponse(0, "Server version is: " + serverVersion);
     }
 }

@@ -25,7 +25,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * This class demonstrates how to write a simple REST service that will respond to https://localhost:7743/extensions/example/helloworld
+ * This class demonstrates how to write a simple REST service that will respond to
+ * https://localhost:7743/extensions/example/helloworld
+ * https://localhost:7743/extensions/secured/helloworld
  */
 public class RESTExampleExtension extends AbstractExtension{
     private static IExtensionContext ctx;
@@ -54,6 +56,18 @@ public class RESTExampleExtension extends AbstractExtension{
             @Override
             public Class getImplementation() {
                 return RESTServiceExample.class;
+            }
+        });
+
+        services.add(new IRestService() {
+            @Override
+            public String getPrefixPath() {
+                return "secured";
+            }
+
+            @Override
+            public Class getImplementation() {
+                return SecuredRESTServiceExample.class;
             }
         });
         return services;
