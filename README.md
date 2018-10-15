@@ -58,7 +58,14 @@ Requirements:
 * Gradle
 
 When you implement support for new crypto-coin add it please to **server_extensions_extra** this way it will get into default BATM Server installation pack for customers. 
-For adding new functionality please use Fork and Pull Request Github workflow. Please have in mind that your code will be code reviewed before merge to master.
+For adding new functionality please use Fork and Pull Request GitHub workflow. Please have in mind that your code will be code reviewed before merge to master.
+
+When adding new cryptocurrency support bare in mind that you need to also add its logo. This logo will be later downloaded by ATM from ATM Server and displayed on screen. SVG and PNG logos are supported however on newer version of terminals only SVG logo is used. PNG logo is present only for backward compatibility reason or for cases when SVG logo would have high byte size.
+SVG logos must comply with following rules:
+1. SVG logo should not contain filters or bitmap images
+2. SVG and PNG logo should have predefined size 120x120px. See other logos to find out details
+3. To preserve unified design on ATM's screen. Every SVG logo must contain background from <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_extra/src/main/resources/template.svg">template.svg</a>. Example use of background you can see <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_extra/src/main/resources/lisk.svg">here</a>.
+
 
 After you implement the the extension make sure you test it with Tester which you will find in **server_extensions_test**
 If you want to implement an extension that you don't want to share with the rest of the world then a create separate module for example server_extensions_mycompany and use different jar name (server_extensions_mycompany.jar). 
