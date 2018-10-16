@@ -49,6 +49,7 @@
                 <cryptocurrency>ETH</cryptocurrency>
             </ratesource>
             <ratesource prefix="bitfinex" name ="Bitfinex.com Exchange" >
+                <param name="fiatcurrency" />
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
@@ -98,6 +99,7 @@
             <exchange prefix="bitfinex" name="Bitfinex.com Exchange">
                 <param name="apikey" />
                 <param name="apisecret" />
+                <param name="fiatcurrency" />
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
