@@ -17,18 +17,57 @@ import org.gradle.api.artifacts.component.ProjectComponentIdentifier
 import org.gradle.api.attributes.Attribute
 
 import java.security.MessageDigest
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 class DependencyVerificationHelper {
+    private static Pattern CHECKSUM_TASK_NAME_PATTERN = ~"^((:)?(([^:]+:)*)?)${DependencyChecksums.TASK_NAME}\$"
+
     static void verifyChecksums(Project project) {
-        final DependencyVerificationPluginExtension extension = project.dependencyVerifications
-        verifyChecksums(project, extension.configurations.get(), extension.assertions.get(), extension.strict.get(),
-            extension.skip.get())
+        if (onlyPrintingChecksums(project)) {
+            project.logger.warn("Dependency verification skipped to allow checksum printing!")
+        } else {
+            final DependencyVerificationPluginExtension extension = project.dependencyVerifications
+            verifyChecksums(project, extension.configurations.get(), extension.assertions.get(), extension.strict.get(),
+                extension.skip.get())
+        }
+    }
+
+    private static boolean onlyPrintingChecksums(Project project) {
+        for (String requestedTaskName : project.gradle.startParameter.taskNames) {
+            final Matcher checksumTaskNameMatcher = requestedTaskName =~ CHECKSUM_TASK_NAME_PATTERN
+            if (!checksumTaskNameMatcher.matches()) {
+                return false
+            }
+
+            final String requestedTaskProjectName = checksumTaskNameMatcher.group(1)
+            final Project requestedTaskProject = (requestedTaskProjectName.isEmpty()
+                ? findProjectByCurrentDir(project)
+                : project.findProject(requestedTaskProjectName))
+
+            if (requestedTaskProject != null && !requestedTaskProject.pluginManager.hasPlugin(
+                'com.generalbytes.gradle.dependency.verification')
+            ) {
+                return false
+            }
+
+        }
+        return true
+    }
+
+    static Project findProjectByCurrentDir(Project project) {
+        project.allprojects.each { Project it ->
+            if (it.projectDir.equals(project.gradle.startParameter.currentDir)) {
+                return it
+            }
+        }
+        return null
     }
 
     static void verifyChecksums(Project project, Set<Object> configurations, Set<ChecksumAssertion> assertions,
                                 boolean strict, boolean skip) {
         if (skip) {
-            project.logger.warn("Dependency verification skipped!")
+            project.logger.warn("Dependency verification skipped because of user settings!")
         } else {
             final List<Configuration> configurationsToCheck = toConfigurations(project, configurations).sort {
                 Configuration a, Configuration b ->
@@ -47,6 +86,7 @@ class DependencyVerificationHelper {
                         verifyChecksumsForConfiguration(project, configuration, assertionsByModule, strict)
                     unusedAssertions.removeAll(assertionsUsedForConfiguration)
                 }
+                project.logger.info("Dependency verification for $project completed successfuly.")
                 unusedAssertions.each { ChecksumAssertion assertion ->
                     project.logger.warn("Unused ${assertion.displayName}.")
                 }
@@ -98,7 +138,7 @@ class DependencyVerificationHelper {
 
         }
         if (missingAssertions.isEmpty() && mismatchedChecksumsByAssertion.isEmpty()) {
-            project.logger.quiet("All dependency checksums of ${configuration} have been successfully verified.")
+            project.logger.debug("All dependency checksums of ${configuration} have been successfully verified.")
         } else {
             if (!missingAssertions.isEmpty()) {
                 reportMissingAssertions(project, configuration, missingAssertions, strict)
