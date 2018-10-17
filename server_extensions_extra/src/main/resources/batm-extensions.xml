@@ -732,6 +732,7 @@
             <cryptocurrency>XZC</cryptocurrency>
         </ratesource>
         <cryptologo cryptocurrency="XZC" file="zcoin.png"/>
+        <cryptologo cryptocurrency="XZC" file="zcoin.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.anon.ANONExtension" >
         <wallet prefix="anond" name="ANONd">
@@ -748,6 +749,7 @@
             <cryptocurrency>ANON</cryptocurrency>
         </ratesource>
         <cryptologo cryptocurrency="ANON" file="anon.png"/>
+        <cryptologo cryptocurrency="ANON" file="anon.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.lisk.LiskExtension" >
         <wallet prefix="liskBinance" name="Lisk">
@@ -768,6 +770,7 @@
             <cryptocurrency>ETH</cryptocurrency>
         </ratesource>
         <cryptologo cryptocurrency="LSK" file="lisk.png"/>
+        <cryptologo cryptocurrency="LSK" file="lisk.svg"/>
     </extension>
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.TransactionExtension" />-->
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.rest.RESTExampleExtension" />-->
