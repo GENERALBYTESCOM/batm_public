@@ -40,7 +40,7 @@ public class PoloniexRateSource implements IRateSource {
     private static final long MAXIMUM_ALLOWED_TIME_OFFSET = 30 * 1000; //30sec
 
     public PoloniexRateSource() {
-        btcRs = new BitfinexExchange("***","***");
+        btcRs = new BitfinexExchange("***","***",Currencies.USD);
         api = RestProxyFactory.createProxy(IPoloniexAPI.class, "https://poloniex.com");
     }
 
