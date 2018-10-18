@@ -22,7 +22,7 @@ The purpose of this project is to give operators the desired power to add featur
 
 Our software is written in Java and any Java developer may be recruited to create/implement these extensions. No unusual qualifications are required.
 
-When the CAS services are started, they scan the /batm/app/master/extensions/ folder for all files that have the ".jar" extension.
+When the CAS services are started, they scan the '''/batm/app/master/extensions/''' folder for all files that have the ".jar" extension.
 CAS then parses any "batm-extensions.xml" found in the JAR file to enumerate the extensions present within the JAR package.
 
 <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/main/java/com/generalbytes/batm/server/extensions/IExtension.java">Extension</a> is a high level component - something like a plugin - that encapsulates and instantiates the rest of the features.
@@ -78,7 +78,7 @@ Build information
 ./gradlew build
 cp server_extensions_extra/build/libs/batm_server_extensions_extra.jar /batm/app/master/extensions/
 ```
-Note that on startup, CAS scans the: /batm/app/master/extensions/ folder for all files that have the .jar extension.
+Note that on startup, CAS scans the: '''/batm/app/master/extensions/''' folder for all files that have the .jar extension.
 
 How to run Tester
 ==========
