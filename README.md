@@ -65,7 +65,7 @@ Please use the appropriate Fork and Pull Request in the GitHub workflow when add
 When adding new cryptocurrency support, please remember to provide it's logo! This logo will later be downloaded by the BATM from CAS and displayed on the BATM screen. Both SVG and PNG logos are supported; however, only the SVG logo is used on newer BATM versions. A PNG logo is offered only for backward compatibility, and in certain cases when the SVG logo has an unusually large size.
 SVG logos must comply with following rules:
 1. SVG logo should not contain filters or bitmap images
-2. SVG and PNG logo should have predefined size: 120 x 120px. See other logos for examples.
+2. SVG and PNG logo should have this predefined size: 120 x 120px. See other logos for examples.
 3. Preserve the unified BATM design: every SVG logo must contain the background from <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_extra/src/main/resources/template.svg">template.svg</a>. An example background can be found <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_extra/src/main/resources/lisk.svg">here</a>.
 
 
