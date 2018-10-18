@@ -51,14 +51,16 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
     private Exchange exchange = null;
     private String apiKey;
     private String apiSecret;
+    private String preferredFiatCurrency;
 
     private static final HashMap<String,BigDecimal> rateAmounts = new HashMap<String, BigDecimal>();
     private static HashMap<String,Long> rateTimes = new HashMap<String, Long>();
     private static final long MAXIMUM_ALLOWED_TIME_OFFSET = 30 * 1000;
 
-    public BitfinexExchange(String apiKey, String apiSecret) {
+    public BitfinexExchange(String apiKey, String apiSecret, String preferredFiatCurrency) {
         this.apiKey = apiKey;
         this.apiSecret = apiSecret;
+        this.preferredFiatCurrency = preferredFiatCurrency;
     }
 
     private synchronized Exchange getExchange() {
@@ -82,11 +84,14 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
     public Set<String> getFiatCurrencies() {
         Set<String> fiatCurrencies = new HashSet<String>();
         fiatCurrencies.add(Currencies.USD);
+        fiatCurrencies.add(Currencies.EUR);
+        fiatCurrencies.add(Currencies.GBP);
+        fiatCurrencies.add(Currencies.JPY);
         return fiatCurrencies;
     }
 
     public String getPreferredFiatCurrency() {
-        return Currencies.USD;
+        return preferredFiatCurrency;
     }
 
 
@@ -148,7 +153,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
     }
 
     public BigDecimal getFiatBalance(String fiatCurrency) {
-        if (!Currencies.USD.equalsIgnoreCase(fiatCurrency)) {
+        if (!getFiatCurrencies().contains(fiatCurrency)) {
             return BigDecimal.ZERO;
         }
         log.debug("Calling Bitfinex exchange (getBalance)");
@@ -197,8 +202,8 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
             log.error("Bitfinex implementation supports only " + Arrays.toString(getCryptoCurrencies().toArray()));
             return null;
         }
-        if (!Currencies.USD.equalsIgnoreCase(fiatCurrencyToUse)) {
-            log.error("Bitfinex supports only " + Currencies.USD );
+        if (!getFiatCurrencies().contains(fiatCurrencyToUse)) {
+            log.error("Bitfinex doesn't support " + fiatCurrencyToUse );
             return null;
         }
 
@@ -266,8 +271,8 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
             log.error("Bitfinex implementation supports only " + Arrays.toString(getCryptoCurrencies().toArray()));
             return null;
         }
-        if (!Currencies.USD.equalsIgnoreCase(fiatCurrencyToUse)) {
-            log.error("Bitfinex supports only " + Currencies.USD );
+        if (!getFiatCurrencies().contains(fiatCurrencyToUse)) {
+            log.error("Bitfinex doesn't support " + fiatCurrencyToUse );
             return null;
         }
         return new PurchaseCoinsTask(amount,cryptoCurrency,fiatCurrencyToUse,description);
@@ -295,8 +300,8 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
             log.error("Bitfinex implementation supports only " + Arrays.toString(getCryptoCurrencies().toArray()));
             return null;
         }
-        if (!Currencies.USD.equalsIgnoreCase(fiatCurrencyToUse)) {
-            log.error("Bitfinex supports only " + Currencies.USD );
+        if (!getFiatCurrencies().contains(fiatCurrencyToUse)) {
+            log.error("Bitfinex doesn't support " + fiatCurrencyToUse );
             return null;
         }
 
@@ -364,8 +369,8 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
             log.error("Bitfinex implementation supports only " + Arrays.toString(getCryptoCurrencies().toArray()));
             return null;
         }
-        if (!Currencies.USD.equalsIgnoreCase(fiatCurrencyToUse)) {
-            log.error("Bitfinex supports only " + Currencies.USD );
+        if (!getFiatCurrencies().contains(fiatCurrencyToUse)) {
+            log.error("Bitfinex doesn't support " + fiatCurrencyToUse );
             return null;
         }
         return new SellCoinsTask(amount,cryptoCurrency,fiatCurrencyToUse,description);

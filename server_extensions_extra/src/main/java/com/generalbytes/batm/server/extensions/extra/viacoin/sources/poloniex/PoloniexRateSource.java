@@ -45,7 +45,7 @@ public class PoloniexRateSource implements IRateSource{
             preferedFiatCurrency = Currencies.USD;
         }
         this.preferedFiatCurrency = preferedFiatCurrency;
-        btcRs = new BitfinexExchange("***","***");
+        btcRs = new BitfinexExchange("***","***", preferedFiatCurrency);
         api = RestProxyFactory.createProxy(IPoloniexAPI.class, "https://poloniex.com");
     }
 

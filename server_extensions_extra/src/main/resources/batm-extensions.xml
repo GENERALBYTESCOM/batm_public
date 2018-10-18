@@ -49,6 +49,7 @@
                 <cryptocurrency>ETH</cryptocurrency>
             </ratesource>
             <ratesource prefix="bitfinex" name ="Bitfinex.com Exchange" >
+                <param name="fiatcurrency" />
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
@@ -85,6 +86,7 @@
                 <cryptocurrency>DOGE</cryptocurrency>
                 <cryptocurrency>ANON</cryptocurrency>
                 <cryptocurrency>XZC</cryptocurrency>
+                <cryptocurrency>CLOAK</cryptocurrency>
             </ratesource>
             <paymentprocessor prefix="bitcoinpay" name="BitcoinPay.com" >
                 <param name="apikey" />
@@ -98,6 +100,7 @@
             <exchange prefix="bitfinex" name="Bitfinex.com Exchange">
                 <param name="apikey" />
                 <param name="apisecret" />
+                <param name="fiatcurrency" />
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
@@ -730,6 +733,7 @@
             <cryptocurrency>XZC</cryptocurrency>
         </ratesource>
         <cryptologo cryptocurrency="XZC" file="zcoin.png"/>
+        <cryptologo cryptocurrency="XZC" file="zcoin.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.anon.ANONExtension" >
         <wallet prefix="anond" name="ANONd">
@@ -746,7 +750,25 @@
             <cryptocurrency>ANON</cryptocurrency>
         </ratesource>
         <cryptologo cryptocurrency="ANON" file="anon.png"/>
+        <cryptologo cryptocurrency="ANON" file="anon.svg"/>
     </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.cloakcoin.CloakcoinExtension" >
+        <wallet prefix="cloakcoind" name="Cloakcoind">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>CLOAK</cryptocurrency>
+        </wallet>
+        <ratesource prefix="cloakcoinfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>CLOAK</cryptocurrency>
+        </ratesource>
+	<cryptologo cryptocurrency="CLOAK" file="cloak.png"/>
+	<cryptologo cryptocurrency="CLOAK" file="cloak.svg"/>
+    </extension>    
     <extension class="com.generalbytes.batm.server.extensions.extra.lisk.LiskExtension" >
         <wallet prefix="liskBinance" name="Lisk">
             <param name="address" />
@@ -766,6 +788,7 @@
             <cryptocurrency>ETH</cryptocurrency>
         </ratesource>
         <cryptologo cryptocurrency="LSK" file="lisk.png"/>
+        <cryptologo cryptocurrency="LSK" file="lisk.svg"/>
     </extension>
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.TransactionExtension" />-->
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.rest.RESTExampleExtension" />-->
