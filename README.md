@@ -16,11 +16,11 @@ Architecture
 
 Overview
 ========
-Operators often request new features be added to our BATM Server (CAS). Typically, the requests are for adding support for "crypto currency XYZ" or "digital asset exchange XY".
+Operators frequently request new features to be added to our BATM Server (CAS). Typically, the requests are for adding support for "crypto currency XYZ" or "digital asset exchange XY".
 
 The purpose of this project is to give operators the desired power to add features themselves by **extending** CAS via this published **Extensions** mechanism.
 
-Our software is written in Java and any Java developer may be recruited to create/implement these extensions. No special qualifications are required.
+Our software is written in Java and any Java developer may be recruited to create/implement these extensions. No unusual qualifications are required.
 
 When CAS is started, it scans the /batm/app/master/extensions/ folder for all files that have the ".jar" extension.
 CAS parses any "batm-extensions.xml" found in the JAR file to enumerate the extensions present within the JAR package.
