@@ -1,8 +1,6 @@
 package com.generalbytes.gradle.model
 
 import groovy.transform.EqualsAndHashCode
-import org.gradle.api.artifacts.ModuleIdentifier
-import org.gradle.api.artifacts.ModuleVersionIdentifier
 import org.gradle.api.artifacts.component.ModuleComponentIdentifier
 
 import java.util.regex.Matcher

@@ -12,15 +12,15 @@ class StrictDependenciesPlugin implements Plugin<Project> {
     private StrictDependenciesPluginExtension extension
     private Logger logger = LoggerFactory.getLogger('StrictDependenciesPlugin')
 
-    private void confine(Project project, String configurationName) {
+    private void makeNontransitive(Project project, String configurationName) {
         try {
-            confine(project.configurations[configurationName])
+            makeNontransitive(project.configurations[configurationName])
         } catch (UnknownConfigurationException ignored) {
-            logger.info("Plugin-specified confined configuration $configurationName not found, skipping...")
+            logger.info("Plugin-specified nontransitive configuration $configurationName not found, skipping...")
         }
     }
 
-    private void confine(Configuration configuration) {
+    private void makeNontransitive(Configuration configuration) {
         configuration.transitive = false
         logger.debug("Disabled transitivity for configuration ${configuration}.")
     }
@@ -30,29 +30,30 @@ class StrictDependenciesPlugin implements Plugin<Project> {
         extension = project.extensions.create('strictDependencies', StrictDependenciesPluginExtension)
 
         project.afterEvaluate {
-            installConfinementConfigured(project)
+            installNontransitivity(project)
             installConflictFail(project)
         }
     }
 
-    private List<Object> installConfinementConfigured(Project project) {
-        extension.confineConfigurations.each {
+    private List<Object> installNontransitivity(Project project) {
+        extension.nontransitiveConfigurations.each {
             switch (it) {
                 case String:
-                    confine(project, (String) it)
+                    makeNontransitive(project, (String) it)
                     break
                 case Configuration:
-                    confine((Configuration) it)
+                    makeNontransitive((Configuration) it)
                     break
                 default:
-                    throw new InvalidUserDataException("Illegal specification for confined configuration: $it (${it.class})")
+                    throw new InvalidUserDataException(
+                        "Illegal specification for nontransitive configuration: $it (${it.class})")
             }
         }
     }
 
     private void installConflictFail(Project project) {
         if (extension.conflictFail) {
-            project.configurations.all {
+            project.configurations.all { Configuration it ->
                 if (!shouldSkip(it)) {
                     resolutionStrategy {
                         failOnVersionConflict()

@@ -2,6 +2,7 @@ package com.generalbytes.gradle.task
 
 import com.generalbytes.gradle.DependencyVerificationHelper
 import com.generalbytes.gradle.model.ChecksumAssertion
+import com.generalbytes.gradle.plugin.DependencyVerificationPlugin
 import com.generalbytes.gradle.plugin.DependencyVerificationPluginExtension
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
@@ -10,6 +11,7 @@ import org.gradle.api.artifacts.component.ComponentArtifactIdentifier
 import org.gradle.api.artifacts.component.ComponentIdentifier
 import org.gradle.api.artifacts.component.ModuleComponentIdentifier
 import org.gradle.api.artifacts.component.ProjectComponentIdentifier
+import org.gradle.api.provider.Property
 import org.gradle.api.provider.SetProperty
 import org.gradle.api.tasks.TaskAction
 
@@ -17,6 +19,7 @@ class DependencyChecksums extends DefaultTask {
     public static final String TASK_NAME = 'dependencyChecksums'
 
     final SetProperty<Object> configurations = project.objects.setProperty(Object)
+    final Property<Boolean> global = project.objects.property(Boolean)
 
     @SuppressWarnings('unused')
     void configuration(String configuration) {
@@ -31,40 +34,25 @@ class DependencyChecksums extends DefaultTask {
     @TaskAction
     @SuppressWarnings('unused')
     private void taskAction() {
-        printAssertions(buildAssertions(project))
-    }
-
-    private Map<Configuration, SortedSet<ChecksumAssertion>> buildAssertions(Project project) {
-        final Map<Configuration, SortedSet<ChecksumAssertion>> assertionsByConfiguration = new HashMap<>()
-        DependencyVerificationHelper.toConfigurations(project, configurations.get()).each {
-            Configuration configuration ->
-                Set<ChecksumAssertion> assertions = assertionsForConfiguration(project, configuration)
-                assertionsByConfiguration[configuration] = assertions
-
-        }
-        assertionsByConfiguration
-    }
-
-    protected SortedSet<ChecksumAssertion> assertionsForConfiguration(Project project, Configuration configuration) {
-        final SortedSet<ChecksumAssertion> assertions = new TreeSet<>()
-        DependencyVerificationHelper.getIncomingArtifactCollection(project, configuration).each {
-            final ComponentIdentifier identifier = it.id.componentIdentifier
-            if (identifier instanceof ModuleComponentIdentifier) {
-                assertions.add(
-                    new ChecksumAssertion(identifier, DependencyVerificationHelper.calculateSha256(it.file))
-                )
-            } else if (identifier instanceof ProjectComponentIdentifier) {
-                logger.info("Skipped generating $DependencyVerificationPluginExtension.BLOCK_NAME assertion for " +
-                    "project-local dependency $identifier.")
-            } else if (identifier instanceof ComponentArtifactIdentifier) {
-                logger.info("Skipped generating $DependencyVerificationPluginExtension.BLOCK_NAME assertion for local" +
-                    "  file dependency $identifier.")
-            } else {
-                throw new IllegalStateException("Unexpected component identifier type (${identifier.class}) for " +
-                    "identifier '$identifier'.")
+        if (global.get()) {
+            SortedSet<ChecksumAssertion> assertions = new TreeSet<>()
+            project.allprojects { Project p ->
+                if (p.pluginManager.hasPlugin(DependencyVerificationPlugin.ID) ) {
+                    final DependencyChecksums checksumsTask = p.tasks.getByName(TASK_NAME)
+                    DependencyVerificationHelper.buildAssertions(p, checksumsTask.configurations.get()).values().each {
+                        assertions.addAll(it)
+                    }
+                }
             }
+            println ""
+            println "$DependencyVerificationPluginExtension.BLOCK_NAME {"
+            println "    // generated at ${currentTimestamp()}"
+            assertions.each { println "    ${it.definition()}" }
+            println "}"
+            println ""
+        } else {
+            printAssertions(DependencyVerificationHelper.buildAssertions(project, configurations.get()))
         }
-        assertions
     }
 
     private static void printAssertions(Map<Configuration, SortedSet<ChecksumAssertion>> assertionsByConfiguration) {
@@ -75,7 +63,7 @@ class DependencyChecksums extends DefaultTask {
                                          SortedSet<ChecksumAssertion> assertions ->
 
             println ""
-            print "    // $configuration (${new Date().format('yyyy-MM-dd\'T\'HH:mm:ss')});"
+            print "    // $configuration (${currentTimestamp()});"
             println " showing only previously unlisted assertions"
             assertions.each { ChecksumAssertion assertion ->
                 if (!printedAssertions.contains(assertion)) {
@@ -86,6 +74,10 @@ class DependencyChecksums extends DefaultTask {
         }
         println "}"
         println ""
+    }
+
+    private static String currentTimestamp() {
+        new Date().format('yyyy-MM-dd\'T\'HH:mm:ss')
     }
 
 

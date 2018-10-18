@@ -47,11 +47,11 @@ class DependencySubstitutionPluginExtension {
         substitute(from, toVersion)
     }
 
-    void skip(Configuration cfg) {
+    void skipConfiguration(Configuration cfg) {
         skipConfigurations.add(cfg.name)
     }
 
-    void skip(String cfgName) {
+    void skipConfiguration(String cfgName) {
         skipConfigurations.add(cfgName)
     }
 }

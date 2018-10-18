@@ -1,8 +1,6 @@
 package com.generalbytes.gradle.plugin
 
 import com.generalbytes.gradle.Util
-import com.generalbytes.gradle.task.DependencyChecksums
-import com.generalbytes.gradle.task.DependencyVerification
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
@@ -42,7 +40,7 @@ class GBGradlePlugin implements Plugin<Project> {
             'releaseAndroidTestCompileClasspath',
             'releaseUnitTestCompileClasspath'
         ].each {
-            project.strictDependencies.confine(it)
+            project.strictDependencies.nontransitive(it)
         }
         logger.debug("Applied plugin 'com.generalbytes.gradle.dependency.strict'.")
     }
@@ -70,7 +68,7 @@ class GBGradlePlugin implements Plugin<Project> {
 
         project.dependencyVerifications.configuration(buildScriptClasspathConfiguration)
 
-        project.dependencyVerifications.strict = true
-        logger.debug("Applied plugin 'com.generalbytes.gradle.dependency.verification'.")
+        project.dependencyVerifications.failOnChecksumError = true
+        logger.debug("Applied plugin '${DependencyVerificationPlugin.ID}'.")
     }
 }

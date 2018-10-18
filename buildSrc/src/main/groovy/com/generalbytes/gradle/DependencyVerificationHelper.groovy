@@ -4,6 +4,7 @@ import com.generalbytes.gradle.exception.MismatchedChecksumsException
 import com.generalbytes.gradle.exception.MissingChecksumAssertionsException
 import com.generalbytes.gradle.model.ChecksumAssertion
 import com.generalbytes.gradle.model.SimpleModuleVersionIdentifier
+import com.generalbytes.gradle.plugin.DependencyVerificationPlugin
 import com.generalbytes.gradle.plugin.DependencyVerificationPluginExtension
 import com.generalbytes.gradle.task.DependencyChecksums
 import org.gradle.api.InvalidUserDataException
@@ -17,80 +18,46 @@ import org.gradle.api.artifacts.component.ProjectComponentIdentifier
 import org.gradle.api.attributes.Attribute
 
 import java.security.MessageDigest
-import java.util.regex.Matcher
-import java.util.regex.Pattern
 
 class DependencyVerificationHelper {
-    private static Pattern CHECKSUM_TASK_NAME_PATTERN = ~"^((:)?(([^:]+:)*)?)${DependencyChecksums.TASK_NAME}\$"
-
-    static void verifyChecksums(Project project) {
-        if (onlyPrintingChecksums(project)) {
-            project.logger.warn("Dependency verification skipped to allow checksum printing!")
-        } else {
-            final DependencyVerificationPluginExtension extension = project.dependencyVerifications
-            verifyChecksums(project, extension.configurations.get(), extension.assertions.get(), extension.strict.get(),
-                extension.skip.get())
-        }
-    }
-
-    private static boolean onlyPrintingChecksums(Project project) {
-        for (String requestedTaskName : project.gradle.startParameter.taskNames) {
-            final Matcher checksumTaskNameMatcher = requestedTaskName =~ CHECKSUM_TASK_NAME_PATTERN
-            if (!checksumTaskNameMatcher.matches()) {
-                return false
-            }
-
-            final String requestedTaskProjectName = checksumTaskNameMatcher.group(1)
-            final Project requestedTaskProject = (requestedTaskProjectName.isEmpty()
-                ? findProjectByCurrentDir(project)
-                : project.findProject(requestedTaskProjectName))
-
-            if (requestedTaskProject != null && !requestedTaskProject.pluginManager.hasPlugin(
-                'com.generalbytes.gradle.dependency.verification')
-            ) {
-                return false
-            }
-
-        }
-        return true
-    }
-
-    static Project findProjectByCurrentDir(Project project) {
-        project.allprojects.each { Project it ->
-            if (it.projectDir.equals(project.gradle.startParameter.currentDir)) {
-                return it
-            }
-        }
-        return null
-    }
 
     static void verifyChecksums(Project project, Set<Object> configurations, Set<ChecksumAssertion> assertions,
-                                boolean strict, boolean skip) {
-        if (skip) {
-            project.logger.warn("Dependency verification skipped because of user settings!")
+                                boolean failOnChecksumError, boolean printUnusedAssertions) {
+        final List<Configuration> configurationsToCheck = toConfigurations(project, configurations).sort {
+            Configuration a, Configuration b ->
+                (a.name <=> b.name)
+        }
+        final Map<ModuleComponentIdentifier, ChecksumAssertion> assertionsByModule =
+            assertions.collectEntries({ [(it.artifactIdentifier): it] })
+        if (configurationsToCheck == null || configurationsToCheck.isEmpty()) {
+            project.logger.warn("No configurations set for checksum verification.")
         } else {
-            final List<Configuration> configurationsToCheck = toConfigurations(project, configurations).sort {
-                Configuration a, Configuration b ->
-                    a.name.compareTo(b.name)
-            }
-            final Map<ModuleComponentIdentifier, ChecksumAssertion> assertionsByModule =
-                assertions.collectEntries({ [(it.artifactIdentifier): it] })
+            final Set<ChecksumAssertion> unusedAssertions = printUnusedAssertions ? new TreeSet<>(assertions) : []
+            configurationsToCheck.each { Configuration configuration ->
 
-            if (configurationsToCheck == null || configurationsToCheck.isEmpty()) {
-                throw new IllegalStateException("No configurations set for checksum verification.")
-            } else {
-                final Set<ChecksumAssertion> unusedAssertions = new HashSet<>(assertions)
-                configurationsToCheck.each { Configuration configuration ->
+                final Set<ChecksumAssertion> assertionsUsedForConfiguration =
+                    verifyChecksumsForConfiguration(project, configuration, assertionsByModule, failOnChecksumError)
 
-                    final Set<ChecksumAssertion> assertionsUsedForConfiguration =
-                        verifyChecksumsForConfiguration(project, configuration, assertionsByModule, strict)
+                if (printUnusedAssertions) {
                     unusedAssertions.removeAll(assertionsUsedForConfiguration)
                 }
-                project.logger.info("Dependency verification for $project completed successfuly.")
-                unusedAssertions.each { ChecksumAssertion assertion ->
-                    project.logger.warn("Unused ${assertion.displayName}.")
-                }
             }
+            project.logger.info("Dependency verification for $project completed successfuly.")
+
+            if (printUnusedAssertions) {
+                printUnused(project, unusedAssertions)
+            }
+        }
+    }
+
+    private static void printUnused(Project project, Set<ChecksumAssertion> unusedAssertions) {
+        if (unusedAssertions != null && !unusedAssertions.isEmpty()) {
+            final StringBuilder sb = new StringBuilder()
+            sb.append('Unused assertions:\n')
+            unusedAssertions.each { ChecksumAssertion assertion ->
+                sb.append("    ${assertion.displayName}\n")
+            }
+            project.logger.warn(sb.toString())
         }
     }
 
@@ -98,7 +65,7 @@ class DependencyVerificationHelper {
         Project project,
         Configuration configuration,
         Map<ModuleComponentIdentifier, ChecksumAssertion> assertionsByModule,
-        boolean strict) {
+        boolean failOnChecksumError) {
 
         final Set<ChecksumAssertion> usedAssertions = new HashSet<>()
         final Set<ChecksumAssertion> missingAssertions = new HashSet<>()
@@ -132,8 +99,8 @@ class DependencyVerificationHelper {
             } else if (identifier instanceof ComponentArtifactIdentifier) {
                 project.logger.info("Skipped checksum verification for local file dependency $identifier.")
             } else {
-                throw new IllegalStateException("Unexpected component identifier type (${identifier.class}) for " +
-                    "identifier '$identifier'.")
+                throw new IllegalStateException(
+                    "Unexpected component identifier type (${identifier.class}) for identifier '$identifier'.")
             }
 
         }
@@ -141,7 +108,7 @@ class DependencyVerificationHelper {
             project.logger.debug("All dependency checksums of ${configuration} have been successfully verified.")
         } else {
             if (!missingAssertions.isEmpty()) {
-                reportMissingAssertions(project, configuration, missingAssertions, strict)
+                reportMissingAssertions(project, configuration, missingAssertions, failOnChecksumError)
             }
             if (!mismatchedChecksumsByAssertion.isEmpty()) {
                 reportChecksumMismatches(configuration, mismatchedChecksumsByAssertion)
@@ -166,22 +133,28 @@ class DependencyVerificationHelper {
     private static void reportMissingAssertions(Project project,
                                                 Configuration configuration,
                                                 Set<ChecksumAssertion> missingAssertions,
-                                                boolean strict) {
+                                                boolean failOnChecksumError) {
 
         final StringBuilder sb = new StringBuilder()
         sb.append("Missing integrity assertion(s) for $configuration.").append('\n')
-            .append("Consider adding the following to the '${DependencyVerificationPluginExtension.BLOCK_NAME}' block:")
-            .append('\n')
+            .append("    Consider adding the following to the '${DependencyVerificationPluginExtension.BLOCK_NAME}'")
+            .append(" block or checksum file:\n")
 
         missingAssertions.sort().each { ChecksumAssertion missingAssertion ->
-            sb.append('    ').append(missingAssertion.definition()).append('\n')
+            sb.append('        ').append(missingAssertion.definition()).append('\n')
         }
 
         sb.append('\n')
-            .append("Alternatively, you can run ${project.tasks.getByName(DependencyChecksums.TASK_NAME)} to generate" +
-            " complete listing.")
+            .append('    Alternatively, you can run ')
+            .append(project.tasks.getByName(DependencyChecksums.TASK_NAME))
+            .append(' to generate a complete listing. You might need to disable build failures on verification')
+            .append(' problems for the task to run.\n')
+            .append("    To do this, include the following snippet in the main Gradle script:\n")
+            .append("        allprojects { afterEvaluate { if (pluginManager.hasPlugin('")
+            .append("${DependencyVerificationPlugin.ID}')) { dependencyVerifications.failOnChecksumError = false } } }")
+            .append('\n')
 
-        if (strict) {
+        if (failOnChecksumError) {
             throw new MissingChecksumAssertionsException(sb.toString(), missingAssertions)
         } else {
             project.logger.warn(sb.toString())
@@ -212,23 +185,22 @@ class DependencyVerificationHelper {
         final def dependencyFileChecksum = calculateSha256(file)
         if (userDefinedAssertion == null) {
             final ChecksumAssertion missingAssertion = new ChecksumAssertion(module, dependencyFileChecksum)
-            final def msg = "No integrity assertion for ${module.displayName} ($configuration).\n" +
-                "Consider adding '${missingAssertion.definition()}' to the " +
-                "'$DependencyVerificationPluginExtension.BLOCK_NAME' block."
+            final String msg = ("No integrity assertion for ${module.displayName} ($configuration).\n"
+                + "Consider adding '${missingAssertion.definition()}' to the "
+                + "'$DependencyVerificationPluginExtension.BLOCK_NAME' block."
+            )
 
             throw new MissingChecksumAssertionsException(msg, missingAssertion)
         } else {
 
             if (userDefinedAssertion.checksum != dependencyFileChecksum) {
-                throw new MismatchedChecksumsException(
-                    "Checksum mismatch for ${userDefinedAssertion.displayName}, $configuration (actual checksum: " +
-                        "'$dependencyFileChecksum').",
-                    userDefinedAssertion,
-                    dependencyFileChecksum
-                )
+                final String msg = ("Checksum mismatch for ${userDefinedAssertion.displayName}, $configuration (actual"
+                    + " checksum: '$dependencyFileChecksum').")
+                throw new MismatchedChecksumsException(msg, userDefinedAssertion, dependencyFileChecksum)
             } else {
-                project.logger.info("Checksum match successfully verified for ${userDefinedAssertion.displayName}, "
+                final String msg = ("Checksum match successfully verified for ${userDefinedAssertion.displayName}, "
                     + "$configuration.")
+                project.logger.info(msg)
                 return userDefinedAssertion
             }
 
@@ -254,11 +226,47 @@ class DependencyVerificationHelper {
                     ret.add(cfg as Configuration)
                     break
                 default:
-                    throw new InvalidUserDataException("Illegal configuration specification ($cfg,  class: " +
-                        "${cfg?.class}) for $project.")
+                    throw new InvalidUserDataException(
+                        "Illegal configuration specification ($cfg,  class: ${cfg?.class}) for $project.")
             }
 
         }
         return ret
+    }
+
+    static Map<Configuration, SortedSet<ChecksumAssertion>> buildAssertions(Project project,
+                                                                            Set<Object> configurations) {
+        final Map<Configuration, SortedSet<ChecksumAssertion>> assertionsByConfiguration = new TreeMap<>({
+            Configuration a, Configuration b ->
+                (a.name <=> b.name)
+        })
+        toConfigurations(project, configurations).each {
+            Configuration configuration ->
+                SortedSet<ChecksumAssertion> assertions = assertionsForConfiguration(project, configuration)
+                assertionsByConfiguration[configuration] = assertions
+        }
+        assertionsByConfiguration
+    }
+
+    static SortedSet<ChecksumAssertion> assertionsForConfiguration(Project project, Configuration configuration) {
+        final SortedSet<ChecksumAssertion> assertions = new TreeSet<>()
+        getIncomingArtifactCollection(project, configuration).each {
+            final ComponentIdentifier identifier = it.id.componentIdentifier
+            if (identifier instanceof ModuleComponentIdentifier) {
+                assertions.add(
+                    new ChecksumAssertion(identifier, calculateSha256(it.file))
+                )
+            } else if (identifier instanceof ProjectComponentIdentifier) {
+                project.logger.info("Skipped generating $DependencyVerificationPluginExtension.BLOCK_NAME assertion " +
+                    "for project-local dependency $identifier.")
+            } else if (identifier instanceof ComponentArtifactIdentifier) {
+                project.logger.info("Skipped generating $DependencyVerificationPluginExtension.BLOCK_NAME assertion " +
+                    "for local file dependency $identifier.")
+            } else {
+                throw new IllegalStateException("Unexpected component identifier type (${identifier.class}) for " +
+                    "identifier '$identifier'.")
+            }
+        }
+        assertions
     }
 }

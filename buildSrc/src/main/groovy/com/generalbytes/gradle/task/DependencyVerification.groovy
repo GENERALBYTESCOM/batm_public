@@ -36,8 +36,12 @@ class DependencyVerification extends DefaultTask {
 
     final SetProperty<ChecksumAssertion> assertions = project.objects.setProperty(ChecksumAssertion)
     final SetProperty<Object> configurations = project.objects.setProperty(Object)
-    final Property<Boolean> strict = project.objects.property(Boolean)
-    final Property<Boolean> skip = project.objects.property(Boolean)
+    final Property<Boolean> failOnChecksumError = project.objects.property(Boolean)
+    final Property<Boolean> printUnusedAssertions = project.objects.property(Boolean)
+
+    DependencyVerification() {
+        printUnusedAssertions.set(true)
+    }
 
     @SuppressWarnings('unused')
     void configuration(String configuration) {
@@ -50,13 +54,8 @@ class DependencyVerification extends DefaultTask {
     }
 
     @SuppressWarnings('unused')
-    void strict(boolean strict) {
-        this.strict.set(strict)
-    }
-
-    @SuppressWarnings('unused')
-    void skip(boolean skip) {
-        this.skip.set(skip)
+    void failOnChecksumError(boolean failOnChecksumError) {
+        this.failOnChecksumError.set(failOnChecksumError)
     }
 
     @SuppressWarnings('unused')
@@ -67,6 +66,12 @@ class DependencyVerification extends DefaultTask {
     @TaskAction
     @SuppressWarnings('unused')
     private void verifyChecksums() {
-        DependencyVerificationHelper.verifyChecksums(project)
+        DependencyVerificationHelper.verifyChecksums(
+            project,
+            configurations.get(),
+            assertions.get(),
+            failOnChecksumError.get(),
+            printUnusedAssertions.get()
+        )
     }
 }

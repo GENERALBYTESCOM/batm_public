@@ -1,28 +1,49 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+import com.generalbytes.gradle.task.DependencyChecksums
+
 buildscript {
-    repositories {
-        jcenter()
+    ext.with {
+        setRepositoriesFor = { RepositoryHandler repositoryHandler ->
+            repositoryHandler.jcenter()
+        }
+        batmDependencySubstitutionConfig = file('dependencySubstitutions.txt')
+        batmDependencyChecksumsConfig = file('dependencyChecksums.txt')
     }
+    setRepositoriesFor(repositories)
 }
 
-final File repoDir = project.file('libs')
 allprojects {
-    repositories {
-        jcenter()
-    }
+    setRepositoriesFor(repositories)
     repositories {
         //bitcoin-json-rpc-client-1.0.jar isn't part of any well known maven repo
         //so we search the libs dir; gradle generates (guesses) metadata except dependencies.
         //Artifacts from repos with real metadata take precedence.
         flatDir {
-            dirs repoDir
+            dirs rootProject.file('libs')
         }
     }
     tasks.withType(JavaCompile) {
-        project.sourceCompatibility = '1.8'
+        project.sourceCompatibility = JavaVersion.VERSION_1_8
         options.encoding = 'UTF-8'
         options.incremental = true
     }
 }
 
-ext['batmDependencySubstitutionConfig'] = file('dependencySubstitutions.txt')
+allprojects {
+    afterEvaluate {
+        if (pluginManager.hasPlugin('com.generalbytes.gradle.dependency.verification')) {
+            dependencyVerifications {
+//                setConfigurations([]) // effectively turns off all checksum verifications
+//                failOnChecksumError = false // turns off failure on checksum problem (only warnings are printed)
+            }
+        }
+        if (pluginManager.hasPlugin('com.generalbytes.gradle.dependency.strict')) {
+            strictDependencies {
+//                conflictFail false // turns off failure on version conflict
+            }
+        }
+    }
+}
+
+task globalDependencyChecksums(type: DependencyChecksums) {
+    global = true
+}
