@@ -59,7 +59,7 @@ Requirements:
 * Java
 * Gradle
 
-When you implement support for new crypto-coin, please add it to **server_extensions_extra** - so that it may get into the default CAS installation pack for customers. 
+When you implement support for a new crypto-coin, please add it to **server_extensions_extra** - so that it may get into the default CAS installation pack for customers. 
 Please use the appropriate Fork and Pull Request in the GitHub workflow when adding new functions, and bear in mind that your code will be reviewed prior to any merge with the master.
 
 When adding new cryptocurrency support, please remember to provide it's logo! This logo will later be downloaded by the BATM from CAS and displayed on the BATM screen. Both SVG and PNG logos are supported; however, only the SVG logo is used on newer BATM versions. A PNG logo is offered only for backward compatibility, and in certain cases when the SVG logo has an unusually large size.
