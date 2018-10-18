@@ -208,10 +208,6 @@
             <param name="accountname" />
             <cryptocurrency>LTC</cryptocurrency>
         </wallet>
-        <ratesource prefix="btce" name="BTC-e.com" >
-            <cryptocurrency>LTC</cryptocurrency>
-            <cryptocurrency>BTC</cryptocurrency>
-        </ratesource>
         <ratesource prefix="ltcfix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>LTC</cryptocurrency>
