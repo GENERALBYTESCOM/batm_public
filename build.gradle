@@ -1,5 +1,3 @@
-import com.generalbytes.gradle.task.DependencyChecksums
-
 buildscript {
     ext.with {
         setRepositoriesFor = { RepositoryHandler repositoryHandler ->
@@ -31,6 +29,9 @@ allprojects {
 allprojects {
     afterEvaluate {
         if (pluginManager.hasPlugin('com.generalbytes.gradle.dependency.verification')) {
+            dependencyChecksums {
+                global = true
+            }
             dependencyVerifications {
 //                setConfigurations([]) // effectively turns off all checksum verifications
 //                failOnChecksumError = false // turns off failure on checksum problem (only warnings are printed)
@@ -42,8 +43,4 @@ allprojects {
             }
         }
     }
-}
-
-task globalDependencyChecksums(type: DependencyChecksums) {
-    global = true
 }

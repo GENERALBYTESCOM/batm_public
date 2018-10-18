@@ -36,7 +36,7 @@ class DependencyChecksums extends DefaultTask {
     private void taskAction() {
         if (global.get()) {
             SortedSet<ChecksumAssertion> assertions = new TreeSet<>()
-            project.allprojects { Project p ->
+            project.rootProject.allprojects { Project p ->
                 if (p.pluginManager.hasPlugin(DependencyVerificationPlugin.ID) ) {
                     final DependencyChecksums checksumsTask = p.tasks.getByName(TASK_NAME)
                     DependencyVerificationHelper.buildAssertions(p, checksumsTask.configurations.get()).values().each {
