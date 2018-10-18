@@ -78,7 +78,7 @@ Build information
 ./gradlew build
 cp server_extensions_extra/build/libs/batm_server_extensions_extra.jar /batm/app/master/extensions/
 ```
-Note that on startup, CAS scans the: '''/batm/app/master/extensions/''' folder for all files that have the .jar extension.
+Note that on startup, CAS scans the: <code>/batm/app/master/extensions/</code> folder for all files that have the .jar extension.
 
 How to run Tester
 ==========
