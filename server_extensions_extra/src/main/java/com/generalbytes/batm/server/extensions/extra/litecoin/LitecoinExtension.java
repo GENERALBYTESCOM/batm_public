@@ -19,7 +19,6 @@ package com.generalbytes.batm.server.extensions.extra.litecoin;
 
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.extra.litecoin.sources.FixPriceRateSource;
-import com.generalbytes.batm.server.extensions.extra.litecoin.sources.btce.BTCeRateSource;
 import com.generalbytes.batm.server.extensions.extra.litecoin.wallets.litecoind.LitecoindRPCWallet;
 
 import java.math.BigDecimal;
@@ -74,12 +73,7 @@ public class LitecoinExtension extends AbstractExtension{
             StringTokenizer st = new StringTokenizer(sourceLogin,":");
             String exchangeType = st.nextToken();
 
-            if ("btce".equalsIgnoreCase(exchangeType)) {
-                if (st.hasMoreTokens()) {
-                    return new BTCeRateSource(st.nextToken());
-                }
-                return new BTCeRateSource();
-            }else if ("ltcfix".equalsIgnoreCase(exchangeType)) {
+            if ("ltcfix".equalsIgnoreCase(exchangeType)) {
                 BigDecimal rate = BigDecimal.ZERO;
                 if (st.hasMoreTokens()) {
                     try {
