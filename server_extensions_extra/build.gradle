@@ -105,6 +105,9 @@ dependencyVerifications {
     verifyModule 'org.knowm.xchange:xchange-itbit:4.2.3:eb39e8ff8a0a1f00a30c1e4767ce11e9b569ce42e8119cc375fc74b4bcfd6bb1'
     verifyModule 'org.slf4j:slf4j-api:1.7.25:18c4a0095d5c1da6b817592e767bb23d29dd2f560ad74df75ff3961dbde25b79'
     verifyModule 'org.slf4j:slf4j-simple:1.7.25:0966e86fffa5be52d3d9e7b89dd674d98a03eed0a454fbaf7c1bd9493bd9d874'
+    verifyModule 'com.fasterxml.jackson.core:jackson-annotations:2.8.11:d9e3565ee9896f54965bf1fa42ae1fe99b19b03b10a94535ae878e429e2c1923'
+    verifyModule 'com.fasterxml.jackson.core:jackson-core:2.8.11:b51bf33caa83a10b67a30fceb3111a58df1089cc1b59c23f0442661ecbef7f22'
+    verifyModule 'com.fasterxml.jackson.core:jackson-databind:2.8.11.2:2cdefe7718cf828ea9fe0c04f328fdc7979c0b6e8e6b302b1c9defd92a07628e'
 
     // configuration ':server_extensions_extra:classpath' (2018-10-10T15:32:29); showing only previously unlisted assertions
 }
