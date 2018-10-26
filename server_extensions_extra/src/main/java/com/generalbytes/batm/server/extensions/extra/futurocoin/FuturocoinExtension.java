@@ -19,6 +19,7 @@ package com.generalbytes.batm.server.extensions.extra.futurocoin;
 
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.extra.futurocoin.sources.FixPriceRateSource;
+import com.generalbytes.batm.server.extensions.extra.futurocoin.sources.coindeal.CoindealRateSource;
 import com.generalbytes.batm.server.extensions.extra.futurocoin.sources.yobit.YobitRateSource;
 import com.generalbytes.batm.server.extensions.extra.futurocoin.wallets.futurocoind.FuturocoinRPCWallet;
 
@@ -90,6 +91,8 @@ public class FuturocoinExtension extends AbstractExtension{
                 return new FixPriceRateSource(rate, preferedFiatCurrency);
             } else if ("yobit".equalsIgnoreCase(exchangeType)) {
                 return new YobitRateSource();
+            } else if ("coindeal".equalsIgnoreCase(exchangeType)) {
+                return new CoindealRateSource();
             }
         }
         return null;
