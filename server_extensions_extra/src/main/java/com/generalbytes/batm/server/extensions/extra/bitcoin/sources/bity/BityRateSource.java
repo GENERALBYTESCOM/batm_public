@@ -20,7 +20,6 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.sources.bity;
 
 import com.generalbytes.batm.server.extensions.Currencies;
-import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.bity.dto.RateInfo;
 import si.mazi.rescu.RestProxyFactory;
@@ -31,21 +30,26 @@ import java.util.Set;
 
 public class BityRateSource implements IRateSourceAdvanced{
     private final IBity api;
-    public BityRateSource() {
+    private final String preferredFiatCurrency;
+
+    public BityRateSource(String preferredFiatCurrency) {
+        this.preferredFiatCurrency = preferredFiatCurrency.toUpperCase();
         api = RestProxyFactory.createProxy(IBity.class, "https://bity.com");
     }
 
     @Override
     public Set<String> getCryptoCurrencies() {
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         result.add(Currencies.BTC);
+        result.add(Currencies.ETH);
         return result;
     }
 
     @Override
     public Set<String> getFiatCurrencies() {
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         result.add(Currencies.CHF);
+        result.add(Currencies.EUR);
         return result;
     }
 
@@ -56,7 +60,7 @@ public class BityRateSource implements IRateSourceAdvanced{
 
     @Override
     public String getPreferredFiatCurrency() {
-        return Currencies.CHF;
+        return preferredFiatCurrency;
     }
 
 
