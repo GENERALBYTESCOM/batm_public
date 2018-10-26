@@ -10,13 +10,6 @@
                 <param name="accountname" />
                 <cryptocurrency>BTC</cryptocurrency>
             </wallet>
-            <wallet prefix="coinkite" name="Coinkite.com Wallet" >
-                <param name="apikey" />
-                <param name="apisecret" />
-                <param name="accountnumber" />
-                <cryptocurrency>BTC</cryptocurrency>
-                <cryptocurrency>LTC</cryptocurrency>
-            </wallet>
             <wallet prefix="bitcore" name="BitCore Wallet">
                 <param name="apikey" />
                 <param name="proxyurl" />
@@ -764,7 +757,7 @@
         </ratesource>
 	<cryptologo cryptocurrency="CLOAK" file="cloak.png"/>
 	<cryptologo cryptocurrency="CLOAK" file="cloak.svg"/>
-    </extension>    
+    </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.lisk.LiskExtension" >
         <wallet prefix="liskBinance" name="Lisk">
             <param name="address" />
