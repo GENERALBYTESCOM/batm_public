@@ -83,7 +83,10 @@ class DependencyVerificationHelper {
                          * inefficient, but no Gradle-internal objects (e.g. MavenUniqueSnapshotComponentIdentifier)
                          * have to be used
                          */
-                        new SimpleModuleVersionIdentifier(identifier.toString()),
+                        SimpleModuleVersionIdentifier.createWithClassifierHeuristics(
+                            identifier.toString(),
+                            it.file.name
+                        ),
                         it.file
                     )
 
@@ -111,14 +114,16 @@ class DependencyVerificationHelper {
                 reportMissingAssertions(project, configuration, missingAssertions, failOnChecksumError)
             }
             if (!mismatchedChecksumsByAssertion.isEmpty()) {
-                reportChecksumMismatches(configuration, mismatchedChecksumsByAssertion)
+                reportChecksumMismatches(project, configuration, mismatchedChecksumsByAssertion, failOnChecksumError)
             }
         }
         return usedAssertions
     }
 
-    private static void reportChecksumMismatches(Configuration configuration,
-                                                 Map<ChecksumAssertion, String> mismatchedChecksumsByAssertion) {
+    private static void reportChecksumMismatches(Project project,
+                                                 Configuration configuration,
+                                                 Map<ChecksumAssertion, String> mismatchedChecksumsByAssertion,
+                                                 boolean failOnChecksumError) {
         final StringBuilder sb = new StringBuilder()
         sb.append("Mismatched checksum(s) for $configuration.").append('\n')
             .append('Consider verifying the following assertions:').append('\n')
@@ -127,7 +132,11 @@ class DependencyVerificationHelper {
             sb.append('    ').append(assertion.displayName).append(", actual checksum: '$actualChecksum'")
                 .append('\n')
         }
-        throw new MismatchedChecksumsException(sb.toString(), mismatchedChecksumsByAssertion)
+        if (failOnChecksumError) {
+            throw new MismatchedChecksumsException(sb.toString(), mismatchedChecksumsByAssertion)
+        } else {
+            project.logger.warn(sb.toString())
+        }
     }
 
     private static void reportMissingAssertions(Project project,
@@ -254,7 +263,13 @@ class DependencyVerificationHelper {
             final ComponentIdentifier identifier = it.id.componentIdentifier
             if (identifier instanceof ModuleComponentIdentifier) {
                 assertions.add(
-                    new ChecksumAssertion(identifier, calculateSha256(it.file))
+                    new ChecksumAssertion(
+                        SimpleModuleVersionIdentifier.createWithClassifierHeuristics(
+                            identifier.toString(),
+                            it.file.name
+                        ),
+                        calculateSha256(it.file)
+                    )
                 )
             } else if (identifier instanceof ProjectComponentIdentifier) {
                 project.logger.info("Skipped generating $DependencyVerificationPluginExtension.BLOCK_NAME assertion " +

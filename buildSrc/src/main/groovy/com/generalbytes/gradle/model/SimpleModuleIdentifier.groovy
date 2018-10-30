@@ -11,24 +11,20 @@ import java.util.regex.Pattern
 class SimpleModuleIdentifier implements ModuleIdentifier {
     final String group
     final String name
+    final String classifier
 
     SimpleModuleIdentifier(String group, String name) {
+        this(group, name, null)
+    }
+
+    SimpleModuleIdentifier(String group, String name, String classifier) {
         this.group = group
         this.name = name
+        this.classifier = classifier
     }
 
     SimpleModuleIdentifier(ModuleIdentifier other) {
         this(other.group, other.name)
-    }
-
-    SimpleModuleIdentifier(String id) {
-        final Matcher matcher = Pattern.compile('^([^:]*):([^:]*)$').matcher(id)
-        if (!matcher.matches()) {
-            def msg = "Module identifier '$id' has incorrect format."
-            throw new IllegalArgumentException(msg)
-        }
-        this.group = matcher.group(1)
-        this.name = matcher.group(2)
     }
 
 
