@@ -636,8 +636,15 @@
             <param name="accountname" />
             <cryptocurrency>FTO</cryptocurrency>
         </wallet>
-        <ratesource prefix="yobit" name="Yobit" >
+        <ratesource prefix="yobit" name="Yobit">
             <cryptocurrency>FTO</cryptocurrency>
+            <cryptocurrency>MAX</cryptocurrency>
+            <cryptocurrency>DASH</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>LSK</cryptocurrency>
+            <cryptocurrency>DOGE</cryptocurrency>
         </ratesource>
         <ratesource prefix="ftofix" name ="Fix Price" >
             <param name="price" />
