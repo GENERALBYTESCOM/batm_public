@@ -60,13 +60,13 @@ public class YobitRateSource implements IRateSourceAdvanced {
     @Override
     public BigDecimal getExchangeRateForBuy(String cryptoCurrency, String fiatCurrency) {
         Ticker ticker = getTicker(cryptoCurrency, fiatCurrency);
-        return ticker == null ? null : ticker.getBuy();
+        return ticker == null ? null : ticker.getSell(); //customer buy, exchange sell
     }
 
     @Override
     public BigDecimal getExchangeRateForSell(String cryptoCurrency, String fiatCurrency) {
         Ticker ticker = getTicker(cryptoCurrency, fiatCurrency);
-        return ticker == null ? null : ticker.getSell();
+        return ticker == null ? null : ticker.getBuy(); //customer sell, exchange buy
     }
 
     @Override
