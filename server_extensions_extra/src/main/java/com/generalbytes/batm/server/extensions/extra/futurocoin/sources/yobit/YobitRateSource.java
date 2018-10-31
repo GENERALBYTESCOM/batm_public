@@ -40,7 +40,9 @@ public class YobitRateSource implements IRateSourceAdvanced {
     }
 
     private Ticker getTicker(String cryptoCurrency, String fiatCurrency) {
-        if (!isCurrencySupported(cryptoCurrency, fiatCurrency)) return null;
+        if (!isCurrencySupported(cryptoCurrency, fiatCurrency)) {
+            return null;
+        }
         return api
             .getTicker(cryptoCurrency.toLowerCase(), fiatCurrency.toLowerCase())
             .get(cryptoCurrency.toLowerCase() + "_" + fiatCurrency.toLowerCase());
