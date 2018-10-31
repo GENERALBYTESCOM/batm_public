@@ -205,7 +205,11 @@ public class BitcoinExtension extends AbstractExtension{
             }else if ("bittrex".equalsIgnoreCase(rsType)) {
                 return new BittrexExchange("**","**");
             }else if ("bity".equalsIgnoreCase(rsType)) {
-               return new BityRateSource();
+                String preferredFiatCurrency = Currencies.CHF;
+                if (st.hasMoreTokens()) {
+                    preferredFiatCurrency = st.nextToken().toUpperCase();
+                }
+                return new BityRateSource(preferredFiatCurrency);
             }else if ("mrcoin".equalsIgnoreCase(rsType)) {
                 return new MrCoinRateSource();
             }else if ("itbit".equalsIgnoreCase(rsType)) {

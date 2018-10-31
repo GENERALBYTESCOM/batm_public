@@ -1,13 +1,14 @@
 package com.generalbytes.batm.server.extensions.extra.futurocoin.sources.yobit.dto;
 
-public class YobitResponse {
-    private Ticker fto_usd;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
 
-    public Ticker getFto_usd() {
-        return fto_usd;
+import java.util.HashMap;
+
+public class YobitResponse extends HashMap<String, Ticker> {
+
+    @JsonAnySetter
+    public void set(String name, Ticker value) {
+        put(name, value);
     }
 
-    public void setFto_usd(Ticker fto_usd) {
-        this.fto_usd = fto_usd;
-    }
 }

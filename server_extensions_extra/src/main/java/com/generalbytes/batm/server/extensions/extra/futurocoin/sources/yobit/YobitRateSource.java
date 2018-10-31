@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.generalbytes.batm.server.extensions.extra.futurocoin.sources.yobit.dto.Ticker;
 import si.mazi.rescu.RestProxyFactory;
 
 public class YobitRateSource implements IRateSourceAdvanced {
@@ -21,6 +22,13 @@ public class YobitRateSource implements IRateSourceAdvanced {
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
         result.add(Currencies.FTO);
+        result.add(Currencies.BTC);
+        result.add(Currencies.LTC);
+        result.add(Currencies.MAX);
+        result.add(Currencies.DASH);
+        result.add(Currencies.ETH);
+        result.add(Currencies.LSK);
+        result.add(Currencies.DOGE);
         return result;
     }
 
@@ -31,12 +39,19 @@ public class YobitRateSource implements IRateSourceAdvanced {
         return result;
     }
 
+    private Ticker getTicker(String cryptoCurrency, String fiatCurrency) {
+        if (!isCurrencySupported(cryptoCurrency, fiatCurrency)) {
+            return null;
+        }
+        return api
+            .getTicker(cryptoCurrency.toLowerCase(), fiatCurrency.toLowerCase())
+            .get(cryptoCurrency.toLowerCase() + "_" + fiatCurrency.toLowerCase());
+    }
+
     @Override
     public BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency) {
-        return isCurrencySupported(cryptoCurrency, fiatCurrency) ? api
-            .getTicker(cryptoCurrency.toLowerCase(), fiatCurrency.toLowerCase())
-            .getFto_usd()
-            .getLast() : null;
+        Ticker ticker = getTicker(cryptoCurrency, fiatCurrency);
+        return ticker == null ? null : ticker.getLast();
     }
 
     @Override
@@ -46,18 +61,14 @@ public class YobitRateSource implements IRateSourceAdvanced {
 
     @Override
     public BigDecimal getExchangeRateForBuy(String cryptoCurrency, String fiatCurrency) {
-        return isCurrencySupported(cryptoCurrency, fiatCurrency) ? api
-            .getTicker(cryptoCurrency.toLowerCase(), fiatCurrency.toLowerCase())
-            .getFto_usd()
-            .getBuy() : null;
+        Ticker ticker = getTicker(cryptoCurrency, fiatCurrency);
+        return ticker == null ? null : ticker.getBuy();
     }
 
     @Override
     public BigDecimal getExchangeRateForSell(String cryptoCurrency, String fiatCurrency) {
-        return isCurrencySupported(cryptoCurrency, fiatCurrency) ? api
-            .getTicker(cryptoCurrency.toLowerCase(), fiatCurrency.toLowerCase())
-            .getFto_usd()
-            .getSell() : null;
+        Ticker ticker = getTicker(cryptoCurrency, fiatCurrency);
+        return ticker == null ? null : ticker.getSell();
     }
 
     @Override
