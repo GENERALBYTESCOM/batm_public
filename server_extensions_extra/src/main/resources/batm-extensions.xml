@@ -108,6 +108,7 @@
                 <param name="apikey" />
                 <param name="apisecret" />
                 <cryptocurrency>BTC</cryptocurrency>
+                <cryptocurrency>BCH</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
             </exchange>
