@@ -41,6 +41,12 @@ dependencies {
     compile(group: 'org.knowm.xchange', name: 'xchange-bittrex', version: '4.2.3')
     compile(group: 'org.knowm.xchange', name: 'xchange-hitbtc', version: '4.2.3')
 
+    if (hasGbArtifactory) {
+        compile(group: 'com.generalbytes.bitrafael.public', name: 'bitrafael-client', version: bitrafaelVersion)
+    } else {
+        compile(group: 'com.github.GENERALBYTESCOM.bitrafael_public', name: 'bitrafael-client', version: bitrafaelVersion)
+    }
+
     testCompile (group: 'junit', name: 'junit', version: '4.10')
 }
 

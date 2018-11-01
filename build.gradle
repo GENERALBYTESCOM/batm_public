@@ -1,7 +1,22 @@
 buildscript {
     ext.with {
+        hasGbArtifactory = (project.hasProperty('gbArtifactoryUrl')
+            && project.hasProperty('gbArtifactoryUser')
+            && project.hasProperty('gbArtifactoryPassword'))
+        
         setRepositoriesFor = { RepositoryHandler repositoryHandler ->
-            repositoryHandler.jcenter()
+            if (hasGbArtifactory) {
+                repositoryHandler.maven {
+                    credentials {
+                        username gbArtifactoryUser
+                        password gbArtifactoryPassword
+                    }
+                    url gbArtifactoryUrl
+                }
+            } else {
+                repositoryHandler.jcenter()
+            }
+            repositoryHandler.maven { url 'https://jitpack.io' }
         }
         batmDependencySubstitutionConfig = file('dependencySubstitutions.txt')
         batmDependencyChecksumsConfig = file('dependencyChecksums.txt')
@@ -10,6 +25,7 @@ buildscript {
 }
 
 allprojects {
+    setRepositoriesFor(buildscript.repositories)
     setRepositoriesFor(repositories)
     repositories {
         //bitcoin-json-rpc-client-1.0.jar isn't part of any well known maven repo
