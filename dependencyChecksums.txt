@@ -82,7 +82,7 @@ verifyModule 'com.github.jnr:jnr-enxio:0.14:1c26367e4fb7f3d6be5fd945a9e7f3c484bc
 verifyModule 'com.github.jnr:jnr-ffi:2.1.2:e663b74d4511c7339cd5896135bc09b2518acf9fc4b9b80db6a0de5a574a6ad9'
 verifyModule 'com.github.jnr:jnr-posix:3.0.33:43ec05db55abf056b607b669dcdb76637f7b42af994fb17428c19ffc3efd7071'
 verifyModule 'com.github.jnr:jnr-unixsocket:0.15:af345f6a50f3194f2b038c7b0de851dac519cac4c43cdf19efae9e4b64ce2c21'
-verifyModule 'com.github.jnr:jnr-x86asm:1.0.2:b041b85ddd621881e4db6b841bff5088785207109a3917bb113e89fdd0434331'
+verifyModule 'com.github.jnr:jnr-x86asm:1.0.2:39f3675b910e6e9b93825f8284bec9f4ad3044cd20a6f7c8ff9e2f8695ebf21e'
 verifyModule 'com.squareup.okhttp3:logging-interceptor:3.8.1:1e84fce63c46ce41fb7f8ca65d5b67ffe61aa0350e964288e66391fda7399ff8'
 verifyModule 'io.reactivex:rxjava:1.2.4:436a2d73616688a851d6dd512c79c4034bdd26055c6f0aa7d4b0b9b7ecce245f'
 verifyModule 'org.java-websocket:Java-WebSocket:1.3.8:64d38c6b4d6c9e830be6820d408caa02d1217e59e8bf34198cc22bd23429fa48'
