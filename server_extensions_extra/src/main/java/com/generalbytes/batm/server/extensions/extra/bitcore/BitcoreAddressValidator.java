@@ -25,7 +25,7 @@ public class BitcoreAddressValidator implements ICryptoAddressValidator {
 
     @Override
     public boolean isAddressValid(String address) {
-        if (address.startsWith("1") || address.startsWith("3")) {
+        if (address.startsWith("2") || address.startsWith("s")) {
             try {
                 Base58.decodeToBigInteger(address);
                 Base58.decodeChecked(address);
