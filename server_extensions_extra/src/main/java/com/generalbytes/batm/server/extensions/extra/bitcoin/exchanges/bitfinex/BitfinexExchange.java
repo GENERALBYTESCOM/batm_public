@@ -730,22 +730,4 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
         return null;
 
     }
-//
-//    public static void main(String[] args) {
-//////        System.out.println(new BitfinexExchange("awpoUDsttmShlOzdy6awd3gG7OlTKgxm1nFJE2Fs39y", "DQVrk2o0sn8UpGeu9qrVqEHSWloZAFHVjtq8l01VE5L", "USD")
-//////            .getDepositAddress("XMR")); // not supported by the lib - only BTC, LTC, ETH
-////
-//////        System.out.println(new BitfinexExchange("awpoUDsttmShlOzdy6awd3gG7OlTKgxm1nFJE2Fs39y", "DQVrk2o0sn8UpGeu9qrVqEHSWloZAFHVjtq8l01VE5L", "USD")
-//////            .sendCoins("dest", BigDecimal.ONE, "XMR", "desc")); // This API key does not have permission for this action
-////        System.out.println(new BitfinexExchange("awpoUDsttmShlOzdy6awd3gG7OlTKgxm1nFJE2Fs39y", "DQVrk2o0sn8UpGeu9qrVqEHSWloZAFHVjtq8l01VE5L", "USD")
-////            .sellCoins(new BigDecimal("0.08861918"), "DASH", "USD", "desc")); // This API key does not have permission for this action
-//////        System.out.println(new BitfinexExchange("awpoUDsttmShlOzdy6awd3gG7OlTKgxm1nFJE2Fs39y", "DQVrk2o0sn8UpGeu9qrVqEHSWloZAFHVjtq8l01VE5L", "USD")
-//////            .purchaseCoins(BigDecimal.ONE, "XMR", "USD", "desc")); // This API key does not have permission for this action
-////
-////        System.out.println(new BitfinexExchange("awpoUDsttmShlOzdy6awd3gG7OlTKgxm1nFJE2Fs39y", "DQVrk2o0sn8UpGeu9qrVqEHSWloZAFHVjtq8l01VE5L", "USD")
-////            .getCryptoBalance("DASH") + "DASH");
-////        System.out.println(new BitfinexExchange("awpoUDsttmShlOzdy6awd3gG7OlTKgxm1nFJE2Fs39y", "DQVrk2o0sn8UpGeu9qrVqEHSWloZAFHVjtq8l01VE5L", "USD")
-////            .getFiatBalance("USD") + "USD");
-//
-//    }
 }
