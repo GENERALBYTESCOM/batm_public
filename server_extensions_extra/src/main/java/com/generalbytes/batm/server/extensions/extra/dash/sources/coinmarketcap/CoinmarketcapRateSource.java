@@ -109,6 +109,7 @@ public class CoinmarketcapRateSource implements IRateSource {
         result.add(Currencies.USDT);
         result.add(Currencies.XZC);
         result.add(Currencies.CLOAK);
+        result.add(Currencies.DAI);
 
         return result;
     }

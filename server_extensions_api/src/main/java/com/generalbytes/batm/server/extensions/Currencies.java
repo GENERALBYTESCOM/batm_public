@@ -40,6 +40,7 @@ public class Currencies {
     public static final String LSK = "LSK"; //lisk
     public static final String VIA = "VIA";
     public static final String DEX = "DEX";
+    public static final String DAI = "DAI";
     public static final String DASH = "DASH";
     public static final String DGB = "DGB";
     public static final String DOGE = "DOGE";
