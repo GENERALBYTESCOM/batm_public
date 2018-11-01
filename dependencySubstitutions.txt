@@ -11,3 +11,8 @@ substitute from: 'com.fasterxml.jackson.core:jackson-core:2.8.10', toVersion: '2
 substitute from: 'com.google.code.findbugs:jsr305:2.0.1', toVersion: '3.0.1'
 substitute from: 'com.squareup.okio:okio:1.6.0', toVersion: '1.11.0'
 substitute from: 'com.madgag.spongycastle:core:1.51.0.0', toVersion: '1.52.0.0'
+substitute from: 'com.squareup.okhttp3:okhttp:3.6.0', toVersion: '3.8.1'
+substitute from: 'com.squareup.okio:okio:1.11.0', toVersion: '1.13.0'
+substitute from: 'com.squareup.okio:okio:1.6.0', toVersion: '1.13.0'
+substitute from: 'com.github.jnr:jnr-ffi:2.1.1', toVersion: '2.1.2'
+substitute from: 'com.fasterxml.jackson.core:jackson-databind:2.8.5', toVersion: '2.8.11.2'
