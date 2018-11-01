@@ -61,6 +61,10 @@ public class Ticker {
         this.last = last;
     }
 
+    /**
+     *
+     * @return the price the EXCHANGE is BUYing for
+     */
     public BigDecimal getBuy() {
         return buy;
     }
@@ -69,6 +73,10 @@ public class Ticker {
         this.buy = buy;
     }
 
+    /**
+     *
+     * @return the price the EXCHANGE is SELLING for
+     */
     public BigDecimal getSell() {
         return sell;
     }
