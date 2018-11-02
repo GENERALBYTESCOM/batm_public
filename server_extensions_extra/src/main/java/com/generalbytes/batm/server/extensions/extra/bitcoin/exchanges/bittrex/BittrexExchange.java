@@ -5,7 +5,6 @@ import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IExchangeAdvanced;
 import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
 import com.generalbytes.batm.server.extensions.ITask;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bittrex.BittrexExchange;
 import org.knowm.xchange.Exchange;
 import org.knowm.xchange.ExchangeFactory;
 import org.knowm.xchange.ExchangeSpecification;
@@ -15,9 +14,7 @@ import org.knowm.xchange.dto.Order;
 import org.knowm.xchange.dto.marketdata.OrderBook;
 import org.knowm.xchange.dto.marketdata.Ticker;
 import org.knowm.xchange.dto.trade.LimitOrder;
-import org.knowm.xchange.dto.trade.MarketOrder;
 import org.knowm.xchange.dto.trade.OpenOrders;
-import org.knowm.xchange.exceptions.ExchangeException;
 import org.knowm.xchange.service.account.AccountService;
 import org.knowm.xchange.service.marketdata.MarketDataService;
 import org.knowm.xchange.service.trade.TradeService;
@@ -33,7 +30,8 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
     private static final Logger log = LoggerFactory.getLogger("batm.master.BittrexExchange");
 
     private static final Set<String> FIAT_CURRENCIES = new HashSet<>();
-    private static final Set<String> CRYPTO_CURRENCIES = new HashSet<>();
+    public static final Comparator<LimitOrder> asksComparator = Comparator.comparing(LimitOrder::getLimitPrice);
+    public static final Comparator<LimitOrder> bidsComparator = Comparator.comparing(LimitOrder::getLimitPrice).reversed();
 
     private Exchange exchange = null;
     private String apiKey;
@@ -49,7 +47,6 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
 
     private static void initConstants() {
         FIAT_CURRENCIES.add(Currencies.USD);
-        CRYPTO_CURRENCIES.add(Currencies.BTC);
     }
 
     private synchronized Exchange getExchange() {
@@ -163,54 +160,29 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
         }
 
         log.info("Calling Bittrex exchange (sell " + cryptoAmount + " " + cryptoCurrency + ")");
-        AccountService accountService = getExchange().getAccountService();
         TradeService tradeService = getExchange().getTradeService();
+        MarketDataService marketDataService = getExchange().getMarketDataService();
 
         try {
-            log.debug("AccountInfo as String: " + accountService.getAccountInfo().toString());
-
             CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrencyToUse);
 
-            MarketOrder order = new MarketOrder(Order.OrderType.ASK, cryptoAmount, currencyPair);
-            log.debug("marketOrder = " + order);
+            OrderBook orderBook = marketDataService.getOrderBook(currencyPair);
+            List<LimitOrder> bids = orderBook.getBids();
+            log.debug("bids.size(): {}", bids.size());
+
+            Collections.sort(bids, bidsComparator);
+
+            LimitOrder order = new LimitOrder(Order.OrderType.ASK, cryptoAmount, currencyPair,
+                "", null, getTradablePrice(cryptoAmount, bids));
+
+            log.debug("order: {}", order);
             DDOSUtils.waitForPossibleCall(getClass());
-            String orderId = tradeService.placeMarketOrder(order);
-            log.debug("orderId = " + orderId + " " + order);
+            String orderId = tradeService.placeLimitOrder(order);
+            log.debug("orderId: {}", orderId);
 
-            try {
-                Thread.sleep(2000); //give exchange 2 seconds to reflect open order in order book
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            sleep(2000); //give exchange 2 seconds to reflect open order in order book
 
-            // get open orders
-            log.debug("Open orders:");
-            boolean orderProcessed = false;
-            int numberOfChecks = 0;
-            while (!orderProcessed && numberOfChecks < 10) {
-                boolean orderFound = false;
-                DDOSUtils.waitForPossibleCall(getClass());
-                OpenOrders openOrders = tradeService.getOpenOrders();
-                for (LimitOrder openOrder : openOrders.getOpenOrders()) {
-                    log.debug("openOrder = " + openOrder);
-                    if (orderId.equals(openOrder.getId())) {
-                        orderFound = true;
-                        break;
-                    }
-                }
-                if (orderFound) {
-                    log.debug("Waiting for order to be processed.");
-                    try {
-                        Thread.sleep(3000); //don't get your ip address banned
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }else{
-                    orderProcessed = true;
-                }
-                numberOfChecks++;
-            }
-            if (orderProcessed) {
+            if (waitForOrderProcessed(tradeService, orderId, 10)) {
                 return orderId;
             }
         } catch (IOException e) {
@@ -221,7 +193,7 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
     }
 
     @Override
-    public String purchaseCoins(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
+    public String purchaseCoins(BigDecimal cryptoAmount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
         if (!getCryptoCurrencies().contains(cryptoCurrency)) {
             log.error("Bittrex implementation supports only " + Arrays.toString(getCryptoCurrencies().toArray()));
             return null;
@@ -231,55 +203,27 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
             return null;
         }
 
-        log.info("Calling Bittrex exchange (purchase " + amount + " " + cryptoCurrency + ")");
-        AccountService accountService = getExchange().getAccountService();
+        log.info("Calling Bittrex exchange (purchase " + cryptoAmount + " " + cryptoCurrency + ")");
         TradeService tradeService = getExchange().getTradeService();
+        MarketDataService marketDataService = getExchange().getMarketDataService();
 
         try {
-            log.debug("AccountInfo as String: " + accountService.getAccountInfo().toString());
-
             CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrencyToUse);
 
-            MarketOrder order = new MarketOrder(Order.OrderType.BID, amount, currencyPair);
-            log.debug("marketOrder = " + order);
+            OrderBook orderBook = marketDataService.getOrderBook(currencyPair);
+            List<LimitOrder> asks = orderBook.getAsks();
+
+            Collections.sort(asks, asksComparator);
+
+            LimitOrder limitOrder = new LimitOrder(Order.OrderType.BID, cryptoAmount, currencyPair, "", null, getTradablePrice(cryptoAmount, asks));
+            log.debug("limitOrder = {}", limitOrder);
             DDOSUtils.waitForPossibleCall(getClass());
-            String orderId = tradeService.placeMarketOrder(order);
-            log.debug("orderId = " + orderId + " " + order);
+            String orderId = tradeService.placeLimitOrder(limitOrder);
+            log.debug("orderId = {}", orderId);
 
-            try {
-                Thread.sleep(2000); //give exchange 2 seconds to reflect open order in order book
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            sleep(2000); //give exchange 2 seconds to reflect open order in order book
 
-            // get open orders
-            log.debug("Open orders:");
-            boolean orderProcessed = false;
-            int numberOfChecks = 0;
-            while (!orderProcessed && numberOfChecks < 10) {
-                boolean orderFound = false;
-                OpenOrders openOrders = tradeService.getOpenOrders();
-                DDOSUtils.waitForPossibleCall(getClass());
-                for (LimitOrder openOrder : openOrders.getOpenOrders()) {
-                    log.debug("openOrder = " + openOrder);
-                    if (orderId.equals(openOrder.getId())) {
-                        orderFound = true;
-                        break;
-                    }
-                }
-                if (orderFound) {
-                    log.debug("Waiting for order to be processed.");
-                    try {
-                        Thread.sleep(3000); //don't get your ip address banned
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }else{
-                    orderProcessed = true;
-                }
-                numberOfChecks++;
-            }
-            if (orderProcessed) {
+            if (waitForOrderProcessed(tradeService, orderId, 10)) {
                 return orderId;
             }
         } catch (IOException e) {
@@ -287,6 +231,57 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
             log.error("Bittrex exchange (purchaseCoins) failed with message: " + e.getMessage());
         }
         return null;
+    }
+
+    /**
+     *
+     * @param cryptoAmount
+     * @param bidsOrAsksSorted bids: highest first, asks: lowest first
+     * @return
+     */
+    private BigDecimal getTradablePrice(BigDecimal cryptoAmount, List<LimitOrder> bidsOrAsksSorted) {
+        BigDecimal total = BigDecimal.ZERO;
+        BigDecimal tradableAmount = null;
+        BigDecimal tradablePrice = null;
+
+        for (LimitOrder order : bidsOrAsksSorted) {
+            total = total.add(order.getOriginalAmount());
+            if (cryptoAmount.compareTo(total) <= 0) {
+                tradableAmount = order.getOriginalAmount();
+                tradablePrice = order.getLimitPrice();
+                break;
+            }
+        }
+
+        log.debug("tradableAmount: {}", tradableAmount);
+        log.debug("tradablePrice: {}", tradablePrice);
+        return tradablePrice;
+    }
+
+    /**
+     * wait for order to be processed
+     * @param tradeService
+     * @param orderId
+     * @param maxTries
+     * @return true if order was processed
+     * @throws IOException
+     */
+    private boolean waitForOrderProcessed(TradeService tradeService, String orderId, int maxTries) throws IOException {
+        boolean orderProcessed = false;
+        int numberOfChecks = 0;
+        while (!orderProcessed && numberOfChecks < maxTries) {
+            DDOSUtils.waitForPossibleCall(getClass());
+            OpenOrders openOrders = tradeService.getOpenOrders(tradeService.createOpenOrdersParams());
+            boolean orderFound = openOrders.getOpenOrders().stream().map(LimitOrder::getId).anyMatch(orderId::equals);
+            if (orderFound) {
+                log.debug("Waiting for order to be processed.");
+                sleep(3000); //don't get your ip address banned
+            } else {
+                orderProcessed = true;
+            }
+            numberOfChecks++;
+        }
+        return orderProcessed;
     }
 
     @Override
@@ -332,35 +327,18 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
         DDOSUtils.waitForPossibleCall(getClass());
         MarketDataService marketDataService = getExchange().getMarketDataService();
         try {
-            CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrency);
             DDOSUtils.waitForPossibleCall(getClass());
-            OrderBook orderBook = marketDataService.getOrderBook(currencyPair);
-            List<LimitOrder> asks = orderBook.getAsks();
-            BigDecimal targetAmount = cryptoAmount;
-            BigDecimal asksTotal = BigDecimal.ZERO;
-            BigDecimal tradableLimit = null;
-            Collections.sort(asks, new Comparator<LimitOrder>() {
-                @Override
-                public int compare(LimitOrder lhs, LimitOrder rhs) {
-                    return lhs.getLimitPrice().compareTo(rhs.getLimitPrice());
-                }
-            });
-            for (LimitOrder ask : asks) {
-                asksTotal = asksTotal.add(ask.getTradableAmount());
-                if (targetAmount.compareTo(asksTotal) <= 0) {
-                    tradableLimit = ask.getLimitPrice();
-                    break;
-                }
-            }
+
+            CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrency);
+            List<LimitOrder> asks = marketDataService.getOrderBook(currencyPair).getAsks();
+            Collections.sort(asks, asksComparator);
+
+            BigDecimal tradableLimit = getTradablePrice(cryptoAmount, asks);
 
             if (tradableLimit != null) {
-                log.debug("Called Bittrex exchange for BUY rate: " + cryptoCurrency + fiatCurrency + " = " + tradableLimit);
+                log.debug("Called Bittrex exchange for BUY rate: {}{} = {}", cryptoCurrency, fiatCurrency, tradableLimit);
                 return tradableLimit.multiply(cryptoAmount);
             }
-        } catch (ExchangeException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Throwable e) {
             e.printStackTrace();
         }
@@ -375,35 +353,16 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
             CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrency);
             DDOSUtils.waitForPossibleCall(getClass());
             OrderBook orderBook = marketDataService.getOrderBook(currencyPair);
+
             List<LimitOrder> bids = orderBook.getBids();
+            Collections.sort(bids, bidsComparator);
 
-            BigDecimal targetAmount = cryptoAmount;
-            BigDecimal bidsTotal = BigDecimal.ZERO;
-            BigDecimal tradableLimit = null;
-
-            Collections.sort(bids, new Comparator<LimitOrder>() {
-                @Override
-                public int compare(LimitOrder lhs, LimitOrder rhs) {
-                    return rhs.getLimitPrice().compareTo(lhs.getLimitPrice());
-                }
-            });
-
-            for (LimitOrder bid : bids) {
-                bidsTotal = bidsTotal.add(bid.getTradableAmount());
-                if (targetAmount.compareTo(bidsTotal) <= 0) {
-                    tradableLimit = bid.getLimitPrice();
-                    break;
-                }
-            }
+            BigDecimal tradableLimit = getTradablePrice(cryptoAmount, bids);
 
             if (tradableLimit != null) {
-                log.debug("Called Bittrex exchange for SELL rate: " + cryptoCurrency + fiatCurrency + " = " + tradableLimit);
+                log.debug("Called Bittrex exchange for SELL rate: {}{} = {}", cryptoCurrency, fiatCurrency, tradableLimit);
                 return tradableLimit.multiply(cryptoAmount);
             }
-        } catch (ExchangeException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Throwable e) {
             e.printStackTrace();
         }
@@ -501,25 +460,26 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
         @Override
         public boolean onCreate() {
             log.info("Calling Bittrex exchange (purchase " + amount + " " + cryptoCurrency + ")");
-            AccountService accountService = getExchange().getAccountService();
             TradeService tradeService = getExchange().getTradeService();
+            MarketDataService marketDataService = getExchange().getMarketDataService();
 
             try {
-                log.debug("AccountInfo as String: " + accountService.getAccountInfo().toString());
-
                 CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrencyToUse);
 
-                MarketOrder order = new MarketOrder(Order.OrderType.BID, amount, currencyPair);
-                log.debug("marketOrder = " + order);
+                OrderBook orderBook = marketDataService.getOrderBook(currencyPair);
+                List<LimitOrder> asks = orderBook.getAsks();
+
+                Collections.sort(asks, asksComparator);
+
+                LimitOrder order = new LimitOrder(Order.OrderType.BID, amount, currencyPair, "", null,
+                    getTradablePrice(amount, asks));
+
+                log.debug("order: {}", order);
                 DDOSUtils.waitForPossibleCall(getClass());
-                orderId = tradeService.placeMarketOrder(order);
+                orderId = tradeService.placeLimitOrder(order);
                 log.debug("orderId = " + orderId + " " + order);
 
-                try {
-                    Thread.sleep(2000); //give exchange 2 seconds to reflect open order in order book
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                sleep(2000); //give exchange 2 seconds to reflect open order in order book
             } catch (IOException e) {
                 e.printStackTrace();
                 log.error("Bittrex exchange (purchaseCoins) failed with message: " + e.getMessage());
@@ -625,25 +585,27 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
         @Override
         public boolean onCreate() {
             log.info("Calling Bittrex exchange (sell " + cryptoAmount + " " + cryptoCurrency + ")");
-            AccountService accountService = getExchange().getAccountService();
             TradeService tradeService = getExchange().getTradeService();
+            MarketDataService marketDataService = getExchange().getMarketDataService();
 
             try {
-                log.debug("AccountInfo as String: " + accountService.getAccountInfo().toString());
-
                 CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrencyToUse);
 
-                MarketOrder order = new MarketOrder(Order.OrderType.ASK, cryptoAmount, currencyPair);
-                log.debug("marketOrder = " + order);
-                DDOSUtils.waitForPossibleCall(getClass());
-                orderId = tradeService.placeMarketOrder(order);
-                log.debug("orderId = " + orderId + " " + order);
+                OrderBook orderBook = marketDataService.getOrderBook(currencyPair);
+                List<LimitOrder> bids = orderBook.getBids();
+                log.debug("bids.size(): {}", bids.size());
 
-                try {
-                    Thread.sleep(2000); //give exchange 2 seconds to reflect open order in order book
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                Collections.sort(bids, bidsComparator);
+
+                LimitOrder order = new LimitOrder(Order.OrderType.ASK, cryptoAmount, currencyPair,
+                    "", null, getTradablePrice(cryptoAmount, bids));
+
+                log.debug("order: {}", order);
+                DDOSUtils.waitForPossibleCall(getClass());
+                orderId = tradeService.placeLimitOrder(order);
+                log.debug("orderId: {}", orderId);
+
+                sleep(2000); //give exchange 2 seconds to reflect open order in order book
             } catch (IOException e) {
                 e.printStackTrace();
                 log.error("Bittrex exchange (sellCoins) failed with message: " + e.getMessage());
@@ -726,4 +688,17 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
             return 5 * 1000; //it doesn't make sense to run step sooner than after 5 seconds
         }
     }
+
+    private void sleep(long millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            log.info("", e);
+        }
+    }
+
+//    public static void main(String[] args) {
+//        System.out.println(new BittrexExchange("XXX", "XXX")
+//            .purchaseCoins(new BigDecimal(50), "BCH", "USD", "desc"));
+//    }
 }
