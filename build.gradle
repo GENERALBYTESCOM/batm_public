@@ -4,6 +4,10 @@ buildscript {
             && project.hasProperty('gbArtifactoryUser')
             && project.hasProperty('gbArtifactoryPassword'))
         
+        hasGbUploadArtifactory = (project.hasProperty('gbArtifactoryUploadUrl')
+            && project.hasProperty('gbArtifactoryUser')
+            && project.hasProperty('gbArtifactoryPassword'))
+        
         setRepositoriesFor = { RepositoryHandler repositoryHandler ->
             if (hasGbArtifactory) {
                 repositoryHandler.maven {

@@ -48,7 +48,7 @@ class SimpleModuleVersionIdentifier implements ModuleComponentIdentifier {
     static SimpleModuleVersionIdentifier createWithClassifierHeuristics(String id, String fileName) {
         final Matcher matcher = PATTERN.matcher(id)
         if (!matcher.matches()) {
-            def msg = "Module identifier '$id' has incorrect format."
+            final String msg = "Module identifier '$id' has incorrect format (fileName='$fileName')."
             throw new IllegalArgumentException(msg)
         }
         final String group = matcher.group(1)

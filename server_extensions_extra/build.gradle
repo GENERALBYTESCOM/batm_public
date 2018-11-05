@@ -63,7 +63,7 @@ distributions {
     }
 }
 
-if (hasProperty('gbArtifactoryUser') && hasProperty('gbArtifactoryPassword') && hasProperty('gbArtifactoryUploadUrl')) {
+if (hasGbUploadArtifactory) {
     publishing {
         repositories {
             maven {
