@@ -63,6 +63,7 @@
                 <cryptocurrency>BCH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
+                <cryptocurrency>DAI</cryptocurrency>
                 <cryptocurrency>DASH</cryptocurrency>
                 <cryptocurrency>XMR</cryptocurrency>
                 <cryptocurrency>$PAC</cryptocurrency>
@@ -764,8 +765,8 @@
             <param name="price" />
             <cryptocurrency>CLOAK</cryptocurrency>
         </ratesource>
-	<cryptologo cryptocurrency="CLOAK" file="cloak.png"/>
-	<cryptologo cryptocurrency="CLOAK" file="cloak.svg"/>
+        <cryptologo cryptocurrency="CLOAK" file="cloak.png"/>
+        <cryptologo cryptocurrency="CLOAK" file="cloak.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.lisk.LiskExtension" >
         <wallet prefix="liskBinance" name="Lisk">
@@ -787,6 +788,24 @@
         </ratesource>
         <cryptologo cryptocurrency="LSK" file="lisk.png"/>
         <cryptologo cryptocurrency="LSK" file="lisk.svg"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.ethereum.EthereumExtension" >
+        <wallet prefix="infura" name="infura.io wallet">
+            <param name="apiKey" />
+            <param name="mnemonic" />
+            <help>Mnemonic should be 24 words delimited by spaces</help>
+            <cryptocurrency>ETH</cryptocurrency>
+        </wallet>
+        <wallet prefix="infuraERC20_DAI_18_0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359" name="Infura.io wallet - DAI">
+            <!-- Hint: infuraERC20_TOKENSYMBOL_DECIMALPLACES_CONTRACTADDRESS -->
+            <param name="apiKey" />
+            <param name="mnemonic" />
+            <help>Mnemonic should be 24 words delimited by spaces</help>
+            <cryptocurrency>DAI</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="DAI" file="dai.png"/>
+        <cryptologo cryptocurrency="DAI" file="dai.svg"/>
+        <!-- ADD Your ERC20 tokens here. And don't forget to add cryptologos. -->
     </extension>
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.TransactionExtension" />-->
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.rest.RESTExampleExtension" />-->
