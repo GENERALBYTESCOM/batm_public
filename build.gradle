@@ -27,7 +27,7 @@ buildscript {
     }
     setRepositoriesFor(repositories)
 }
-
+allprojects { afterEvaluate { if (pluginManager.hasPlugin('com.generalbytes.gradle.dependency.verification')) { dependencyVerifications.failOnChecksumError = false } } }
 allprojects {
     setRepositoriesFor(buildscript.repositories)
     setRepositoriesFor(repositories)
