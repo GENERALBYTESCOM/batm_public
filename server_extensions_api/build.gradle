@@ -26,7 +26,7 @@ dependencies {
     compile(group: 'com.sun.mail', name: 'javax.mail', version: '1.4.7')
 }
 
-if (hasProperty('gbArtifactoryUser') && hasProperty('gbArtifactoryPassword') && hasProperty('gbArtifactoryUploadUrl')) {
+if (hasGbUploadArtifactory) {
     publishing {
         repositories {
             maven {
