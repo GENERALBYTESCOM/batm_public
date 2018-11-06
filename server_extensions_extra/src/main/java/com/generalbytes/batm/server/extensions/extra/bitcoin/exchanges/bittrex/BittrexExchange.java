@@ -186,8 +186,7 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
                 return orderId;
             }
         } catch (IOException e) {
-            e.printStackTrace();
-            log.error("Bittrex exchange (sellCoins) failed with message: " + e.getMessage());
+            log.error("Bittrex exchange (sellCoins) failed", e);
         }
         return null;
     }
@@ -227,8 +226,7 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
                 return orderId;
             }
         } catch (IOException e) {
-            e.printStackTrace();
-            log.error("Bittrex exchange (purchaseCoins) failed with message: " + e.getMessage());
+            log.error("Bittrex exchange (purchaseCoins) failed", e);
         }
         return null;
     }
@@ -238,24 +236,19 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
      * @param cryptoAmount
      * @param bidsOrAsksSorted bids: highest first, asks: lowest first
      * @return
+     * @throws IOException when tradable price not found, e.g orderbook not received or too small.
      */
-    private BigDecimal getTradablePrice(BigDecimal cryptoAmount, List<LimitOrder> bidsOrAsksSorted) {
+    private BigDecimal getTradablePrice(BigDecimal cryptoAmount, List<LimitOrder> bidsOrAsksSorted) throws IOException {
         BigDecimal total = BigDecimal.ZERO;
-        BigDecimal tradableAmount = null;
-        BigDecimal tradablePrice = null;
 
         for (LimitOrder order : bidsOrAsksSorted) {
             total = total.add(order.getOriginalAmount());
             if (cryptoAmount.compareTo(total) <= 0) {
-                tradableAmount = order.getOriginalAmount();
-                tradablePrice = order.getLimitPrice();
-                break;
+                log.debug("tradablePrice: {}", order.getLimitPrice());
+                return order.getLimitPrice();
             }
         }
-
-        log.debug("tradableAmount: {}", tradableAmount);
-        log.debug("tradablePrice: {}", tradablePrice);
-        return tradablePrice;
+        throw new IOException("Bittrex TradablePrice not available");
     }
 
     /**
