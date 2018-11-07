@@ -48,6 +48,7 @@ import org.knowm.xchange.service.marketdata.MarketDataService;
 import org.knowm.xchange.service.trade.TradeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import si.mazi.rescu.HttpStatusIOException;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -210,6 +211,8 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
             } else {
                 log.error("{} exchange withdrawal failed with result: '{}'", name, result);
             }
+        } catch (HttpStatusIOException e) {
+            log.info("{} exchange withdrawal failed; HTTP status: {}, body: {}", name, e.getHttpStatusCode(), e.getHttpBody(), e);
         } catch (IOException e) {
             log.error("{} exchange withdrawal failed", name, e);
         }

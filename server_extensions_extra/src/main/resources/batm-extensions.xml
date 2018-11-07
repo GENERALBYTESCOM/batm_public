@@ -45,6 +45,9 @@
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
+                <cryptocurrency>BCH</cryptocurrency>
+                <cryptocurrency>DASH</cryptocurrency>
+                <cryptocurrency>XMR</cryptocurrency>
             </ratesource>
             <ratesource prefix="bittrex" name ="Bittrex.com Exchange" >
                 <cryptocurrency>BTC</cryptocurrency>
@@ -97,11 +100,16 @@
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
+                <!-- Sell on exchange & receive to exchange will work only for BTC, LTC, ETH, see org.knowm.xchange.bitfinex.v1.service.BitfinexAccountServiceRaw.requestDepositAddressRaw -->
+                <cryptocurrency>BCH</cryptocurrency>
+                <cryptocurrency>DASH</cryptocurrency>
+                <cryptocurrency>XMR</cryptocurrency>
             </exchange>
             <exchange prefix="bittrex" name="Bittrex.com Exchange">
                 <param name="apikey" />
                 <param name="apisecret" />
                 <cryptocurrency>BTC</cryptocurrency>
+                <cryptocurrency>BCH</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
             </exchange>
@@ -120,6 +128,11 @@
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>SMART</cryptocurrency>
+            <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>DOGE</cryptocurrency>
+            <cryptocurrency>XMR</cryptocurrency>
+            <cryptocurrency>DASH</cryptocurrency>
+            <cryptocurrency>NXT</cryptocurrency>
         </exchange>
         <cryptologo cryptocurrency="BTC" file="btc.png"/>
         <cryptologo cryptocurrency="BTC" file="btc.svg"/>
