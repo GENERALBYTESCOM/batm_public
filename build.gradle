@@ -26,8 +26,11 @@ buildscript {
         batmDependencyChecksumsConfig = file('dependencyChecksums.txt')
     }
     setRepositoriesFor(repositories)
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:4.0.2'
+    }
 }
-allprojects { afterEvaluate { if (pluginManager.hasPlugin('com.generalbytes.gradle.dependency.verification')) { dependencyVerifications.failOnChecksumError = false } } }
+
 allprojects {
     setRepositoriesFor(buildscript.repositories)
     setRepositoriesFor(repositories)
@@ -53,8 +56,8 @@ allprojects {
                 global = true
             }
             dependencyVerifications {
-//                setConfigurations([]) // effectively turns off all checksum verifications
-//                failOnChecksumError = false // turns off failure on checksum problem (only warnings are printed)
+                setConfigurations([]) // effectively turns off all checksum verifications
+                failOnChecksumError = false // turns off failure on checksum problem (only warnings are printed)
             }
         }
         if (pluginManager.hasPlugin('com.generalbytes.gradle.dependency.strict')) {
