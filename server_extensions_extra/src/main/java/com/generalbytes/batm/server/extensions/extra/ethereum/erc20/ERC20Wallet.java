@@ -24,12 +24,11 @@ import com.generalbytes.batm.server.extensions.extra.ethereum.erc20.generated.ER
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.web3j.abi.FunctionEncoder;
-import org.web3j.abi.TypeReference;
 import org.web3j.abi.datatypes.Function;
-import org.web3j.abi.datatypes.Type;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.request.Transaction;
+import org.web3j.protocol.core.methods.response.EthEstimateGas;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.gas.ContractGasProvider;
@@ -37,6 +36,7 @@ import org.web3j.tx.gas.ContractGasProvider;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -46,7 +46,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import static com.generalbytes.batm.server.extensions.extra.ethereum.erc20.generated.ERC20Interface.FUNC_TRANSFER;
 
 public class ERC20Wallet implements IWallet{
     private String tokenSymbol;
@@ -56,8 +55,6 @@ public class ERC20Wallet implements IWallet{
     private Credentials credentials;
     private String apiKey;
     private Web3j w;
-
-    private final BigInteger GAS_LIMIT = new BigInteger("60000");
 
     private static final Logger log = LoggerFactory.getLogger(ERC20Wallet.class);
 
@@ -70,8 +67,8 @@ public class ERC20Wallet implements IWallet{
         credentials = initCredentials(mnemonicOrPassword);
         w = Web3j.build(new HttpService("https://mainnet.infura.io/v3/" + apiKey));
         try {
-            final BigInteger gasPrice = w.ethGasPrice().send().getGasPrice().multiply(new BigInteger("2"));
-            final BigInteger gasLimit = GAS_LIMIT;
+            final BigInteger gasPrice = w.ethGasPrice().send().getGasPrice();
+
             ContractGasProvider gasProvider = new ContractGasProvider() {
                 @Override
                 public BigInteger getGasPrice(String contractFunc) {
@@ -85,12 +82,20 @@ public class ERC20Wallet implements IWallet{
 
                 @Override
                 public BigInteger getGasLimit(String contractFunc) {
-                    return gasLimit;
+                    if (ERC20Interface.FUNC_TRANSFER.equals(contractFunc)) {
+                        //get gas estimate for the transaction
+                        BigInteger transferGasEstimate = getTransferGasEstimate(credentials.getAddress(), new BigDecimal("1"));
+                        //Make gas limit 10% higher than estimate just to be safe
+                        BigInteger gasLimit = new BigDecimal(transferGasEstimate).multiply(new BigDecimal("1.1")).setScale(0, RoundingMode.UP).toBigInteger();
+                        return gasLimit;
+                    }else{
+                        return null;
+                    }
                 }
 
                 @Override
                 public BigInteger getGasLimit() {
-                    return gasLimit;
+                    return null;
                 }
             };
             contract = ERC20Interface.load(contractAddress, w, credentials, gasProvider);
@@ -98,6 +103,23 @@ public class ERC20Wallet implements IWallet{
             e.printStackTrace();
         }
     }
+
+    public BigInteger getTransferGasEstimate(String to, BigDecimal tokens) {
+        final Function function = new Function(
+            ERC20Interface.FUNC_TRANSFER,
+            Arrays.asList(new org.web3j.abi.datatypes.Address(to), new org.web3j.abi.datatypes.generated.Uint256(convertFromBigDecimal(tokens))),
+            Collections.emptyList());
+
+        Transaction tx = Transaction.createEthCallTransaction(credentials.getAddress(), contract.getContractAddress(), FunctionEncoder.encode(function));
+        try {
+            EthEstimateGas estimateGas = w.ethEstimateGas(tx).send();
+            return estimateGas.getAmountUsed();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
     private BigDecimal convertToBigDecimal(BigInteger value) {
         if (value == null) {
