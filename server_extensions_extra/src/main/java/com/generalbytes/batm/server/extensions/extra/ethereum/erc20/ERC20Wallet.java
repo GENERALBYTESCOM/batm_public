@@ -87,6 +87,7 @@ public class ERC20Wallet implements IWallet{
                         BigInteger transferGasEstimate = getTransferGasEstimate(credentials.getAddress(), new BigDecimal("1"));
                         //Make gas limit 10% higher than estimate just to be safe
                         BigInteger gasLimit = new BigDecimal(transferGasEstimate).multiply(new BigDecimal("1.1")).setScale(0, RoundingMode.UP).toBigInteger();
+                        log.debug("Calculated gasLimit is: " + gasLimit);
                         return gasLimit;
                     }else{
                         return null;
