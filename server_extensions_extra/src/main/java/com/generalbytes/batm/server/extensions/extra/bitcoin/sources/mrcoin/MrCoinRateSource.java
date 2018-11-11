@@ -41,6 +41,8 @@ public class MrCoinRateSource implements IRateSourceAdvanced{
         Set<String> result = new HashSet<String>();
         result.add(Currencies.BTC);
         result.add(Currencies.ETH);
+        result.add(Currencies.BCH);
+        result.add(Currencies.LTC);
         return result;
     }
 
