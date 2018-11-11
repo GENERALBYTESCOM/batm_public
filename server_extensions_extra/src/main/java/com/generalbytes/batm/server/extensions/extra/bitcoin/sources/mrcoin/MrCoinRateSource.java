@@ -33,7 +33,7 @@ import java.util.Set;
 public class MrCoinRateSource implements IRateSourceAdvanced{
     private final IMrCoin api;
     public MrCoinRateSource() {
-        api = RestProxyFactory.createProxy(IMrCoin.class, "https://www.mrcoin.eu");
+        api = RestProxyFactory.createProxy(IMrCoin.class, "https://api.mrcoin.eu");
     }
 
     @Override
