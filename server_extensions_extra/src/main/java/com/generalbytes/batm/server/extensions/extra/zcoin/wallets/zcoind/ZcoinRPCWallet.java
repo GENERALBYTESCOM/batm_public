@@ -1,7 +1,7 @@
 package com.generalbytes.batm.server.extensions.extra.zcoin.wallets.zcoind;
 
-import com.azazar.bitcoin.jsonrpcclient.BitcoinException;
-import com.azazar.bitcoin.jsonrpcclient.BitcoinJSONRPCClient;
+import wf.bitcoin.javabitcoindrpcclient.BitcoinRPCException;
+import wf.bitcoin.javabitcoindrpcclient.BitcoinJSONRPCClient;
 import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IWallet;
 
@@ -45,10 +45,10 @@ public class ZcoinRPCWallet implements IWallet{
 
         log.info("Zcoind sending coins from " + accountName + " to: " + destinationAddress + " " + amount);
         try {
-            String result = getClient(rpcURL).sendFrom(accountName, destinationAddress, amount.doubleValue());
+            String result = getClient(rpcURL).sendFrom(accountName, destinationAddress, amount);
             log.debug("result = " + result);
             return result;
-        }catch (BitcoinException e) {
+        }catch (BitcoinRPCException e) {
             e.printStackTrace();
             return null;
         }
@@ -68,7 +68,7 @@ public class ZcoinRPCWallet implements IWallet{
             }else {
                 return addressByAccount.get(0);
             }
-        }catch (BitcoinException e) {
+        }catch (BitcoinRPCException e) {
             e.printStackTrace();
             return null;
         }
@@ -82,9 +82,8 @@ public class ZcoinRPCWallet implements IWallet{
         }
 
         try {
-            double balance = getClient(rpcURL).getBalance(accountName);
-            return BigDecimal.valueOf(balance);
-        }catch (BitcoinException e) {
+            return getClient(rpcURL).getBalance(accountName);
+        }catch (BitcoinRPCException e) {
             e.printStackTrace();
             return null;
         }
