@@ -12,6 +12,9 @@ import java.util.regex.Pattern
 class DependencyVerificationPluginExtension {
     static final String BLOCK_NAME = 'dependencyVerifications'
 
+    private static final Pattern COMMENT_PATTERN = Pattern.compile('^\\p{Blank}*((#|//).*)?$')
+    private static final Pattern ASSERTION_PATTERN = Pattern.compile('^\\p{Blank}*verifyModule\\p{Blank}*\'([^\']*)\'\\p{Blank}*((#|//).*)?$')
+
     SetProperty<ChecksumAssertion> assertions
     SetProperty<Object> configurations
     Property<Boolean> failOnChecksumError
@@ -52,18 +55,15 @@ class DependencyVerificationPluginExtension {
 
     @SuppressWarnings('unused')
     void checksums(File file) {
-        final Pattern commentPattern = Pattern.compile('(?m)^\\p{Blank}*((#|//).*)?$')
-        final Pattern assertionPattern = Pattern.compile(
-            '(?m)^\\p{Blank}*verifyModule\\p{Blank}*\'([^\']*)\'\\p{Blank}*((#|//).*)?$')
         int lineNo = 0
         file.eachLine { line ->
             lineNo++
-            Matcher assertionMatcher = assertionPattern.matcher(line)
+            Matcher assertionMatcher = ASSERTION_PATTERN.matcher(line)
             if (assertionMatcher.matches()) {
                 final String assertion = assertionMatcher.group(1)
                 verifyModule(assertion)
-            } else if (!line.matches(commentPattern)) {
-                def msg = "Error on line $lineNo of file ${file.canonicalPath}: illegal line format."
+            } else if (!line.matches(COMMENT_PATTERN)) {
+                def msg = "Error on line $lineNo of file ${file.canonicalPath}: illegal line format ('$line')."
                 throw new IllegalStateException(msg)
             }
         }

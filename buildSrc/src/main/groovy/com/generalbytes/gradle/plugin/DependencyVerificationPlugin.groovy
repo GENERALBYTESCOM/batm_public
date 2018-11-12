@@ -1,13 +1,14 @@
 package com.generalbytes.gradle.plugin
 
-import com.generalbytes.gradle.DependencyVerificationHelper
+import com.generalbytes.gradle.task.DependencyVerification
 import com.generalbytes.gradle.task.DependencyChecksums
-//import com.generalbytes.gradle.task.DependencyVerification
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
 class DependencyVerificationPlugin implements Plugin<Project> {
     static final String ID = 'com.generalbytes.gradle.dependency.verification'
+    static final String PLUGIN_BUILD_DIR_NAME = 'dependencyVerification'
+
     private DependencyVerificationPluginExtension extension
 
     void apply(Project project) {
@@ -34,9 +35,9 @@ class DependencyVerificationPlugin implements Plugin<Project> {
             task.configurations.set(extension.configurations)
         }
 
-        project.afterEvaluate {
+        project.gradle.projectsEvaluated {
             final DependencyVerificationPluginExtension extension = project.dependencyVerifications
-            DependencyVerificationHelper.verifyChecksums(
+            DependencyVerification.verifyChecksums(
                 project,
                 extension.configurations.get(),
                 extension.assertions.get(),

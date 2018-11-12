@@ -7,21 +7,22 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 class DependencySubstitutionPluginExtension {
+    private static final Pattern COMMENT_PATTERN = Pattern.compile('^\\p{Blank}*((#|//).*)?$')
+    private static final Pattern SUBSTITUTION_PATTERN = Pattern.compile('^\\p{Blank}*substitute\\p{Blank}*from\\p{Blank}*:\\p{Blank}*\'([^\']*)\'\\p{Blank}*,\\p{Blank}*toVersion\\p{Blank}*:\\p{Blank}*\'([^\']*)\'\\p{Blank}*((#|//).*)?$')
+
     List<String> skipConfigurations = new LinkedList<>()
     Map<SimpleModuleVersionIdentifier, String> substitutions = new HashMap<>()
 
     void substitute(File file) {
-        final Pattern commentPattern = Pattern.compile('(?m)^\\p{Blank}*((#|//).*)?$')
-        final Pattern substitutionPattern = Pattern.compile('(?m)^\\p{Blank}*substitute\\p{Blank}*from\\p{Blank}*:\\p{Blank}*\'([^\']*)\'\\p{Blank}*,\\p{Blank}*toVersion\\p{Blank}*:\\p{Blank}*\'([^\']*)\'\\p{Blank}*((#|//).*)?$')
         int lineNo = 0
         file.eachLine { line ->
             lineNo++
-            Matcher substitutionMatcher = substitutionPattern.matcher(line)
+            Matcher substitutionMatcher = SUBSTITUTION_PATTERN.matcher(line)
             if (substitutionMatcher.matches()) {
                 final String from = substitutionMatcher.group(1)
                 final String toVersion = substitutionMatcher.group(2)
                 substitute(from, toVersion)
-            } else if (!line.matches(commentPattern)) {
+            } else if (!line.matches(COMMENT_PATTERN)) {
                 def msg = "Error on line $lineNo of file ${file.canonicalPath}: illegal line format."
                 throw new IllegalStateException(msg)
             }
