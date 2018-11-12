@@ -33,7 +33,7 @@ import java.util.Set;
 public class MrCoinRateSource implements IRateSourceAdvanced{
     private final IMrCoin api;
     public MrCoinRateSource() {
-        api = RestProxyFactory.createProxy(IMrCoin.class, "https://www.mrcoin.eu");
+        api = RestProxyFactory.createProxy(IMrCoin.class, "https://api.mrcoin.eu");
     }
 
     @Override
@@ -41,6 +41,8 @@ public class MrCoinRateSource implements IRateSourceAdvanced{
         Set<String> result = new HashSet<String>();
         result.add(Currencies.BTC);
         result.add(Currencies.ETH);
+        result.add(Currencies.BCH);
+        result.add(Currencies.LTC);
         return result;
     }
 
