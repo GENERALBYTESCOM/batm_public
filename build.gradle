@@ -17,9 +17,8 @@ buildscript {
                     }
                     url gbArtifactoryUrl
                 }
-            } else {
-                repositoryHandler.jcenter()
             }
+            repositoryHandler.jcenter()
             repositoryHandler.maven { url 'https://jitpack.io' }
         }
         batmDependencySubstitutionConfig = file('dependencySubstitutions.txt')
