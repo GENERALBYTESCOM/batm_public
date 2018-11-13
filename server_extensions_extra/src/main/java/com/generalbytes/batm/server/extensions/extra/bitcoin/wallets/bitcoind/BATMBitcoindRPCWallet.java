@@ -17,19 +17,20 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitcoind;
 
-import com.azazar.bitcoin.jsonrpcclient.BitcoinException;
-import com.azazar.bitcoin.jsonrpcclient.BitcoinJSONRPCClient;
 import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IWallet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import wf.bitcoin.javabitcoindrpcclient.BitcoinJSONRPCClient;
+import wf.bitcoin.javabitcoindrpcclient.BitcoinRPCException;
 
-import javax.net.ssl.*;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.HashSet;
 import java.util.List;
@@ -68,13 +69,19 @@ public class BATMBitcoindRPCWallet implements IWallet{
             return null;
         }
 
-        log.info("Bitcoind sending coins from " + accountName + " to: " + destinationAddress + " " + amount);
         try {
-            String result = client.sendFrom(accountName, destinationAddress, amount.doubleValue());
+            String result;
+            if (accountName.isEmpty()) {
+                log.info("Bitcoind sending coins to: " + destinationAddress + " " + amount);
+                result = client.sendToAddress(destinationAddress, amount, description);
+            } else {
+                log.info("Bitcoind sending coins from " + accountName + " to: " + destinationAddress + " " + amount);
+                result = client.sendFrom(accountName, destinationAddress, amount);
+            }
             log.debug("result = " + result);
             return result;
-        } catch (BitcoinException e) {
-            e.printStackTrace();
+        } catch (BitcoinRPCException e) {
+            log.error("Error in sendCoins", e);
             return null;
         }
     }
@@ -87,14 +94,18 @@ public class BATMBitcoindRPCWallet implements IWallet{
         }
 
         try {
-            List<String> addressesByAccount = client.getAddressesByAccount(accountName);
-            if (addressesByAccount == null || addressesByAccount.size() == 0) {
-                return null;
-            }else{
-                return addressesByAccount.get(0);
+            if (accountName.isEmpty()) {
+                return client.getNewAddress();
+            } else {
+                List<String> addressesByAccount = client.getAddressesByAccount(accountName);
+                if (addressesByAccount == null || addressesByAccount.isEmpty()) {
+                    return null;
+                } else {
+                    return addressesByAccount.get(0);
+                }
             }
-        } catch (BitcoinException e) {
-            e.printStackTrace();
+        } catch (BitcoinRPCException e) {
+            log.error("Error in getCryptoAddress", e);
             return null;
         }
     }
@@ -106,10 +117,13 @@ public class BATMBitcoindRPCWallet implements IWallet{
             return null;
         }
         try {
-            double balance = client.getBalance(accountName);
-            return BigDecimal.valueOf(balance);
-        } catch (BitcoinException e) {
-            e.printStackTrace();
+            if (accountName.isEmpty()) {
+                return client.getBalance();
+            } else {
+                return client.getBalance(accountName);
+            }
+        } catch (BitcoinRPCException e) {
+            log.error("Error in getCryptoBalance", e);
             return null;
         }
     }
@@ -117,34 +131,24 @@ public class BATMBitcoindRPCWallet implements IWallet{
     private static BitcoinJSONRPCClient createClient(String rpcURL) {
         try {
             final BitcoinJSONRPCClient bitcoinJSONRPCClient = new BitcoinJSONRPCClient(rpcURL);
-            bitcoinJSONRPCClient.setHostnameVerifier(new HostnameVerifier() {
+            bitcoinJSONRPCClient.setHostnameVerifier((s, sslSession) -> true);
+
+            SSLContext sslcontext = SSLContext.getInstance("TLS");
+            sslcontext.init(null, new TrustManager[] {new X509TrustManager() {
                 @Override
-                public boolean verify(String s, SSLSession sslSession) {
-                    return true;
-                }
-            });
-            try {
-                SSLContext sslcontext = SSLContext.getInstance("TLS");
-                sslcontext.init(null, new TrustManager[] {new X509TrustManager() {
-                    @Override
-                    public void checkClientTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {}
+                public void checkClientTrusted(X509Certificate[] x509Certificates, String s) {}
 
-                    @Override
-                    public void checkServerTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {}
+                @Override
+                public void checkServerTrusted(X509Certificate[] x509Certificates, String s) {}
 
-                    @Override
-                    public X509Certificate[] getAcceptedIssuers() { return new X509Certificate[0]; }
-                }}, null);
-                bitcoinJSONRPCClient.setSslSocketFactory(sslcontext.getSocketFactory());
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            } catch (KeyManagementException e) {
-                e.printStackTrace();
-            }
+                @Override
+                public X509Certificate[] getAcceptedIssuers() { return new X509Certificate[0]; }
+            }}, null);
+            bitcoinJSONRPCClient.setSslSocketFactory(sslcontext.getSocketFactory());
             return bitcoinJSONRPCClient;
-        } catch (MalformedURLException e) {
+        } catch (MalformedURLException | NoSuchAlgorithmException | KeyManagementException e) {
             e.printStackTrace();
+            return null;
         }
-        return null;
     }
 }

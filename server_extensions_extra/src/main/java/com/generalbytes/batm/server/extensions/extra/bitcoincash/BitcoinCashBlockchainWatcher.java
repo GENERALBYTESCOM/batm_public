@@ -17,8 +17,8 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.bitcoincash;
 
-import com.azazar.bitcoin.jsonrpcclient.Bitcoin;
-import com.azazar.bitcoin.jsonrpcclient.BitcoinException;
+import wf.bitcoin.javabitcoindrpcclient.BitcoindRpcClient;
+import wf.bitcoin.javabitcoindrpcclient.BitcoinRPCException;
 import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.payment.IBlockchainWatcher;
 import com.generalbytes.batm.server.extensions.payment.IBlockchainWatcherAddressListener;
@@ -120,10 +120,10 @@ public class BitcoinCashBlockchainWatcher implements IBlockchainWatcher{
     public void addTransaction(String cryptoCurrency, String txId, IBlockchainWatcherTransactionListener l, Object tag) {
         synchronized (trecords) {
             try {
-                Bitcoin.RawTransaction transaction = rpcClient.getTransaction(txId);
+                BitcoindRpcClient.Transaction transaction = rpcClient.getTransaction(txId);
                 TransactionWatchRecord t = new TransactionWatchRecord(cryptoCurrency, txId, l, tag,transaction.confirmations());
                 trecords.add(t);
-            } catch (BitcoinException e) {
+            } catch (BitcoinRPCException e) {
                 e.printStackTrace();
             }
         }
@@ -241,7 +241,7 @@ public class BitcoinCashBlockchainWatcher implements IBlockchainWatcher{
                                 for (String newTxId : newTxIds) {
                                     IBlockchainWatcherAddressListener listener = arecord.getListener();
                                     if (listener != null) {
-                                        Bitcoin.RawTransaction transaction = rpcClient.getTransaction(newTxId);
+                                        BitcoindRpcClient.Transaction transaction = rpcClient.getTransaction(newTxId);
                                         listener.newTransactionSeen(arecord.getCryptoCurrency(), arecord.getAddress(), newTxId,  transaction.confirmations(), arecord.tag);
                                     }
                                 }
@@ -253,7 +253,7 @@ public class BitcoinCashBlockchainWatcher implements IBlockchainWatcher{
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
-        } catch (BitcoinException e) {
+        } catch (BitcoinRPCException e) {
             e.printStackTrace();
         }
     }
@@ -264,12 +264,12 @@ public class BitcoinCashBlockchainWatcher implements IBlockchainWatcher{
         return result;
     }
 
-    private void checkTransactionRecord(TransactionWatchRecord record, long currentBlockChainHeight) throws BitcoinException {
+    private void checkTransactionRecord(TransactionWatchRecord record, long currentBlockChainHeight) throws BitcoinRPCException {
         String txHash = record.getTransactionHash();
         if (record.getListener() != null) {
             record.getListener().newBlockMined(record.getCryptoCurrency(), txHash,record.tag, currentBlockChainHeight);
         }
-        Bitcoin.RawTransaction t = rpcClient.getTransaction(txHash);
+        BitcoindRpcClient.Transaction t = rpcClient.getTransaction(txHash);
         long transactionHeight = -1;
         if (t != null) {
             String blockHash = t.blockHash();

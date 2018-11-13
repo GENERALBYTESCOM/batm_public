@@ -1,5 +1,5 @@
 // generated at 2018-11-13T16:57:17
-verifyModule 'com.azazar:bitcoin-json-rpc-client:1.1:8787b912974776d693ab0d8888757ae7b94fbf29d1da5b124d6206505cde4957'
+verifyModule 'com.github.Polve:JavaBitcoindRpcClient:860f5d735539ea52838efe3149c98b57f1decd7a:a23da9719712a0de19cf095da8b596cafbe3333ed88724c837256ca3d58cc975'
 verifyModule 'com.fasterxml.jackson.core:jackson-annotations:2.8.11:d9e3565ee9896f54965bf1fa42ae1fe99b19b03b10a94535ae878e429e2c1923'
 verifyModule 'com.fasterxml.jackson.core:jackson-core:2.8.11:b51bf33caa83a10b67a30fceb3111a58df1089cc1b59c23f0442661ecbef7f22'
 verifyModule 'com.fasterxml.jackson.core:jackson-databind:2.8.11.2:2cdefe7718cf828ea9fe0c04f328fdc7979c0b6e8e6b302b1c9defd92a07628e'
