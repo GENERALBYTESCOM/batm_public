@@ -36,7 +36,7 @@ dependencies {
     compile project(':server_extensions_api')
     compile(group: 'com.github.Polve', name: 'JavaBitcoindRpcClient', version:javaBitcoindRpcVersion)
     compile(group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25')
-    compile(group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25')
+    compile(group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3')
     compile(group: 'com.github.mmazi', name: 'rescu', version: '1.9.1')
     compile(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0.1')
     compile(group: 'javax.servlet', name: 'javax.servlet-api', version: '3.1.0')
