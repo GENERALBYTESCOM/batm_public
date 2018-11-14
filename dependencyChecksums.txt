@@ -1,4 +1,6 @@
-// generated at 2018-11-14T16:15:29
+// generated at 2018-11-14T16:46:44
+verifyModule 'ch.qos.logback:logback-classic:1.2.3:fb53f8539e7fcb8f093a56e138112056ec1dc809ebb020b59d8a36a5ebac37e0'
+verifyModule 'ch.qos.logback:logback-core:1.2.3:5946d837fe6f960c02a53eda7a6926ecc3c758bbdd69aa453ee429f858217f22'
 verifyModule 'com.fasterxml.jackson.core:jackson-annotations:2.8.11:d9e3565ee9896f54965bf1fa42ae1fe99b19b03b10a94535ae878e429e2c1923'
 verifyModule 'com.fasterxml.jackson.core:jackson-core:2.8.11:b51bf33caa83a10b67a30fceb3111a58df1089cc1b59c23f0442661ecbef7f22'
 verifyModule 'com.fasterxml.jackson.core:jackson-databind:2.8.11.2:2cdefe7718cf828ea9fe0c04f328fdc7979c0b6e8e6b302b1c9defd92a07628e'

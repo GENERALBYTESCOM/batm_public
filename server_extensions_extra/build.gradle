@@ -1,5 +1,4 @@
 apply plugin: "java"
-apply plugin: "distribution"
 apply plugin: "com.generalbytes.gradle.main"
 apply plugin: 'maven-publish'
 
@@ -36,7 +35,6 @@ dependencies {
     compile project(':server_extensions_api')
     compile(group: 'com.github.Polve', name: 'JavaBitcoindRpcClient', version:javaBitcoindRpcVersion)
     compile(group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25')
-    compile(group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3')
     compile(group: 'com.github.mmazi', name: 'rescu', version: '1.9.1')
     compile(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0.1')
     compile(group: 'javax.servlet', name: 'javax.servlet-api', version: '3.1.0')
@@ -65,19 +63,12 @@ dependencies {
     githubCompile(group: 'com.github.GENERALBYTESCOM.bitrafael_public', name: 'bitrafael-client', version: bitrafaelVersion)
 
     testCompile (group: 'junit', name: 'junit', version: '4.10')
+    testCompile(group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3')
+    testCompile(group: 'ch.qos.logback', name: 'logback-core', version: '1.2.3')
 }
 
 dependencySubstitutions {
     substitute file(batmDependencySubstitutionConfig)
-}
-
-distributions {
-    main {
-        contents {
-            from jar
-            from configurations.runtime
-        }
-    }
 }
 
 if (hasGbUploadArtifactory) {
