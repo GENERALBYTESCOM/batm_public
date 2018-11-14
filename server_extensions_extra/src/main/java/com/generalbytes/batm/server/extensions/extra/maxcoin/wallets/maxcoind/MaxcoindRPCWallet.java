@@ -17,8 +17,8 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.maxcoin.wallets.maxcoind;
 
-import com.azazar.bitcoin.jsonrpcclient.BitcoinException;
-import com.azazar.bitcoin.jsonrpcclient.BitcoinJSONRPCClient;
+import wf.bitcoin.javabitcoindrpcclient.BitcoinRPCException;
+import wf.bitcoin.javabitcoindrpcclient.BitcoinJSONRPCClient;
 import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IWallet;
 import org.slf4j.Logger;
@@ -64,10 +64,10 @@ public class MaxcoindRPCWallet implements IWallet{
 
         log.info("Maxcoind sending coins from " + accountName + " to: " + destinationAddress + " " + amount);
         try {
-            String result = getClient(rpcURL).sendFrom(accountName, destinationAddress,amount.doubleValue());
+            String result = getClient(rpcURL).sendFrom(accountName, destinationAddress, amount);
             log.debug("result = " + result);
             return result;
-        } catch (BitcoinException e) {
+        } catch (BitcoinRPCException e) {
             e.printStackTrace();
             return null;
         }
@@ -87,7 +87,7 @@ public class MaxcoindRPCWallet implements IWallet{
             }else{
                 return addressesByAccount.get(0);
             }
-        } catch (BitcoinException e) {
+        } catch (BitcoinRPCException e) {
             e.printStackTrace();
             return null;
         }
@@ -100,9 +100,8 @@ public class MaxcoindRPCWallet implements IWallet{
             return null;
         }
         try {
-            double balance = getClient(rpcURL).getBalance(accountName);
-            return BigDecimal.valueOf(balance);
-        } catch (BitcoinException e) {
+            return getClient(rpcURL).getBalance(accountName);
+        } catch (BitcoinRPCException e) {
             e.printStackTrace();
             return null;
         }
