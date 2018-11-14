@@ -247,7 +247,7 @@ class DependencyVerification extends DefaultTask {
 
         final File checksumsFile = checksumsFile(project, false)
         sb.append('\n')
-            .append("    Alternatively, you take a look at saved assertions in file '$checksumsFile' file that's")
+            .append("    Alternatively, you can take a look at saved assertions in file '$checksumsFile' file that's")
             .append(' available now. Its content corresponds to the output of ')
             .append(project.tasks.getByName(DependencyChecksums.TASK_NAME))
             .append(", as configured for $project.\n")
