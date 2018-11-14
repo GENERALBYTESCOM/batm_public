@@ -807,7 +807,7 @@
         <cryptologo cryptocurrency="DAI" file="dai.svg"/>
         <!-- ADD Your ERC20 tokens here. And don't forget to add cryptologos. -->
     </extension>
-	<extension class="com.generalbytes.batm.server.extensions.extra.decent.AdapterDecentExtension">
+	<extension class="com.generalbytes.batm.server.extensions.extra.decent.JavaDecentExtension">
         <wallet prefix="dctd" name="DCT Wallet Adapter">
             <param name="protocol" />
             <param name="user" />

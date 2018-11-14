@@ -12,14 +12,14 @@ class DecentWalletRestApiTest extends FlatSpec with Matchers {
 
   it should "return a nice error when sending money to invalid address" in {
     val loginInfo = "dctd:http:admin:admin:207.154.255.239:9696"
-    val walletApi = new DecentExtension().createWallet(loginInfo).right.get
+    val walletApi = new JavaDecentExtension().createWallet(loginInfo).right.get
     val error = walletApi.issuePayment("N/A", 10).attempt.unsafeRunSync().left.getOrElse(null)
     error should not be null
   }
 
   it should "return work when sending a small payment" in {
     val loginInfo = "dctd:http:admin:admin:207.154.255.239:9696"
-    val walletApi = new DecentExtension().createWallet(loginInfo).right.get
+    val walletApi = new JavaDecentExtension().createWallet(loginInfo).right.get
     val validAddress = "ud4842222bc4bba988f3f696929dab106"
     val result = walletApi.issuePayment(validAddress, 0.01).attempt.unsafeRunSync().log
     result.left.foreach(println)
@@ -28,7 +28,7 @@ class DecentWalletRestApiTest extends FlatSpec with Matchers {
 
   it should "get balance" in {
     val loginInfo = "dctd:http:admin:admin:207.154.255.239:9696"
-    val walletApi = new DecentExtension().createWallet(loginInfo).right.get
+    val walletApi = new JavaDecentExtension().createWallet(loginInfo).right.get
     val result = walletApi.getBalance.attempt.unsafeRunSync().log
     result.left.getOrElse(null) should be (null)
     result.right.get should be > zero
