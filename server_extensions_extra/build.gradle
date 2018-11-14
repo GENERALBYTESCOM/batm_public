@@ -16,6 +16,16 @@ configurations {
     runtimeNoArtifact {
         extendsFrom compile
     }
+
+    // handle Github (e.g. community) vs GENERAL BYTES dichotomy
+    generalBytesCompile
+    githubCompile
+    if (hasGbArtifactory) {
+        compile { extendsFrom generalBytesCompile }
+    } else {
+        compile { extendsFrom githubCompile }
+
+    }
 }
 
 artifacts {
@@ -51,11 +61,8 @@ dependencies {
     runtime(group: 'com.madgag.spongycastle', name: 'core', version: '1.51.0.0')
     runtime(group: 'com.google.protobuf',  name: 'protobuf-java', version: '2.6.1')
 
-    if (hasGbArtifactory) {
-        compile(group: 'com.generalbytes.bitrafael.public', name: 'bitrafael-client', version: bitrafaelVersion)
-    } else {
-        compile(group: 'com.github.GENERALBYTESCOM.bitrafael_public', name: 'bitrafael-client', version: bitrafaelVersion)
-    }
+    generalBytesCompile(group: 'com.generalbytes.bitrafael.public', name: 'bitrafael-client', version: bitrafaelVersion)
+    githubCompile(group: 'com.github.GENERALBYTESCOM.bitrafael_public', name: 'bitrafael-client', version: bitrafaelVersion)
 
     testCompile (group: 'junit', name: 'junit', version: '4.10')
 }
@@ -96,4 +103,8 @@ if (hasGbUploadArtifactory) {
 dependencyVerifications {
     checksums batmDependencyChecksumsConfig
     printUnusedAssertions false
+    
+    // additional configurations
+    configuration project.configurations.generalBytesCompile
+    configuration project.configurations.githubCompile
 }
