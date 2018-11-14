@@ -103,8 +103,10 @@ if (hasGbUploadArtifactory) {
 dependencyVerifications {
     checksums batmDependencyChecksumsConfig
     printUnusedAssertions false
-    
+
     // additional configurations
-    configuration project.configurations.generalBytesCompile
+    if (hasGbArtifactory) {
+        configuration project.configurations.generalBytesCompile
+    }
     configuration project.configurations.githubCompile
 }
