@@ -23,6 +23,7 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitfinex
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import com.generalbytes.batm.server.coinutil.DDOSUtils;
 import com.generalbytes.batm.server.extensions.*;
@@ -74,20 +75,23 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
     }
 
     public Set<String> getCryptoCurrencies() {
-        Set<String> cryptoCurrencies = new HashSet<String>();
-        cryptoCurrencies.add(Currencies.BTC);
-        cryptoCurrencies.add(Currencies.ETH);
-        cryptoCurrencies.add(Currencies.LTC);
-        return cryptoCurrencies;
+        return getExchange().getExchangeSymbols().stream()
+            .map(pair -> pair.base.getCurrencyCode())
+            .collect(Collectors.toSet());
     }
 
     public Set<String> getFiatCurrencies() {
-        Set<String> fiatCurrencies = new HashSet<String>();
-        fiatCurrencies.add(Currencies.USD);
-        fiatCurrencies.add(Currencies.EUR);
-        fiatCurrencies.add(Currencies.GBP);
-        fiatCurrencies.add(Currencies.JPY);
-        return fiatCurrencies;
+        return getExchange().getExchangeSymbols().stream()
+            .map(pair -> pair.counter.getCurrencyCode())
+            .collect(Collectors.toSet());
+    }
+
+    private boolean isCurrencyPairSupported(CurrencyPair pair) {
+        boolean supported = getExchange().getExchangeSymbols().contains(pair);
+        if (!supported) {
+            log.info("Currency pair not supported: {}. Pairs supported by exchange: {}", pair, getExchange().getExchangeSymbols());
+        }
+        return supported;
     }
 
     public String getPreferredFiatCurrency() {
@@ -198,12 +202,9 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
     }
 
     public String purchaseCoins(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
-        if (!getCryptoCurrencies().contains(cryptoCurrency)) {
-            log.error("Bitfinex implementation supports only " + Arrays.toString(getCryptoCurrencies().toArray()));
-            return null;
-        }
-        if (!getFiatCurrencies().contains(fiatCurrencyToUse)) {
-            log.error("Bitfinex doesn't support " + fiatCurrencyToUse );
+        CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrencyToUse);
+
+        if(!isCurrencyPairSupported(currencyPair)) {
             return null;
         }
 
@@ -213,8 +214,6 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
         try {
             log.debug("AccountInfo as String: " + accountService.getAccountInfo().toString());
-
-            CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrencyToUse);
 
             MarketOrder order = new MarketOrder(Order.OrderType.BID, amount, currencyPair);
             log.debug("marketOrder = " + order);
@@ -267,12 +266,9 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
     @Override
     public ITask createPurchaseCoinsTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
-        if (!getCryptoCurrencies().contains(cryptoCurrency)) {
-            log.error("Bitfinex implementation supports only " + Arrays.toString(getCryptoCurrencies().toArray()));
-            return null;
-        }
-        if (!getFiatCurrencies().contains(fiatCurrencyToUse)) {
-            log.error("Bitfinex doesn't support " + fiatCurrencyToUse );
+        CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrencyToUse);
+
+        if(!isCurrencyPairSupported(currencyPair)) {
             return null;
         }
         return new PurchaseCoinsTask(amount,cryptoCurrency,fiatCurrencyToUse,description);
@@ -296,12 +292,9 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
     @Override
     public String sellCoins(BigDecimal cryptoAmount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
-        if (!getCryptoCurrencies().contains(cryptoCurrency)) {
-            log.error("Bitfinex implementation supports only " + Arrays.toString(getCryptoCurrencies().toArray()));
-            return null;
-        }
-        if (!getFiatCurrencies().contains(fiatCurrencyToUse)) {
-            log.error("Bitfinex doesn't support " + fiatCurrencyToUse );
+        CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrencyToUse);
+
+        if(!isCurrencyPairSupported(currencyPair)) {
             return null;
         }
 
@@ -311,8 +304,6 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
         try {
             log.debug("AccountInfo as String: " + accountService.getAccountInfo().toString());
-
-            CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrencyToUse);
 
             MarketOrder order = new MarketOrder(Order.OrderType.ASK, cryptoAmount, currencyPair);
             log.debug("marketOrder = " + order);
@@ -365,12 +356,8 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
     @Override
     public ITask createSellCoinsTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
-        if (!getCryptoCurrencies().contains(cryptoCurrency)) {
-            log.error("Bitfinex implementation supports only " + Arrays.toString(getCryptoCurrencies().toArray()));
-            return null;
-        }
-        if (!getFiatCurrencies().contains(fiatCurrencyToUse)) {
-            log.error("Bitfinex doesn't support " + fiatCurrencyToUse );
+        CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrencyToUse);
+        if(!isCurrencyPairSupported(currencyPair)) {
             return null;
         }
         return new SellCoinsTask(amount,cryptoCurrency,fiatCurrencyToUse,description);
@@ -649,10 +636,15 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
     @Override
     public BigDecimal calculateBuyPrice(String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount) {
+        CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrency);
+
+        if(!isCurrencyPairSupported(currencyPair)) {
+            return null;
+        }
+
         DDOSUtils.waitForPossibleCall(getClass());
         MarketDataService marketDataService = getExchange().getMarketDataService();
         try {
-            CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrency);
             DDOSUtils.waitForPossibleCall(getClass());
             OrderBook orderBook = marketDataService.getOrderBook(currencyPair);
             List<LimitOrder> asks = orderBook.getAsks();
@@ -692,10 +684,15 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
     @Override
     public BigDecimal calculateSellPrice(String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount) {
+        CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrency);
+
+        if(!isCurrencyPairSupported(currencyPair)) {
+            return null;
+        }
+
         DDOSUtils.waitForPossibleCall(getClass());
         MarketDataService marketDataService = getExchange().getMarketDataService();
         try {
-            CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrency);
             DDOSUtils.waitForPossibleCall(getClass());
             OrderBook orderBook = marketDataService.getOrderBook(currencyPair);
             List<LimitOrder> bids = orderBook.getBids();

@@ -1,5 +1,7 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.LoggerContext;
 import com.generalbytes.batm.server.extensions.Converters;
 import com.generalbytes.batm.server.extensions.Currencies;
 import org.junit.Assert;
@@ -11,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import si.mazi.rescu.RestProxyFactory;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 
 public class BitgoWalletTest {
@@ -21,10 +24,26 @@ public class BitgoWalletTest {
 
     private static BitgoWallet wallet;
 
+    private static void setLoggerLevel(String name, String level) {
+        try {
+            LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+            List<ch.qos.logback.classic.Logger> loggers = loggerContext.getLoggerList();
+
+            for (ch.qos.logback.classic.Logger logger : loggers) {
+                if (logger.getName().startsWith(name)) {
+                    logger.setLevel(Level.toLevel(level));
+                }
+            }
+        } catch (Throwable e) {
+            System.err.println("batm.master.ServerUtil - setLoggerLevel");
+            log.error("setLoggerLevel", e);
+        }
+    }
+
     @BeforeClass
     public static void setup() {
-        System.setProperty("org.slf4j.simpleLogger.log.batm", "trace");
-        System.setProperty("org.slf4j.simpleLogger.log.si.mazi.rescu","trace");
+        setLoggerLevel("batm", "trace");
+        setLoggerLevel("si.mazi.rescu","trace");
 
         api = RestProxyFactory.createProxy(IBitgoAPI.class, "http://localhost:3080/api");
 

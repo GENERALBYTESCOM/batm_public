@@ -1,5 +1,4 @@
 apply plugin: "java"
-apply plugin: "distribution"
 apply plugin: "com.generalbytes.gradle.main"
 apply plugin: 'maven-publish'
 apply plugin: 'com.github.johnrengelman.shadow'
@@ -17,6 +16,16 @@ configurations {
     runtimeNoArtifact {
         extendsFrom compile
     }
+
+    // handle Github (e.g. community) vs GENERAL BYTES dichotomy
+    generalBytesCompile
+    githubCompile
+    if (hasGbArtifactory) {
+        compile { extendsFrom generalBytesCompile }
+    } else {
+        compile { extendsFrom githubCompile }
+
+    }
 }
 
 artifacts {
@@ -25,9 +34,8 @@ artifacts {
 
 dependencies {
     compile project(':server_extensions_api')
-    compile(group: 'com.azazar', name: 'bitcoin-json-rpc-client', version: '1.1')
+    compile(group: 'com.github.Polve', name: 'JavaBitcoindRpcClient', version:javaBitcoindRpcVersion)
     compile(group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25')
-    compile(group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25')
     compile(group: 'com.github.mmazi', name: 'rescu', version: '1.9.1')
     compile(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0.1')
     compile(group: 'javax.servlet', name: 'javax.servlet-api', version: '3.1.0')
@@ -54,26 +62,16 @@ dependencies {
     runtime(group: 'com.madgag.spongycastle', name: 'core', version: '1.51.0.0')
     runtime(group: 'com.google.protobuf',  name: 'protobuf-java', version: '2.6.1')
 
-    if (hasGbArtifactory) {
-        compile(group: 'com.generalbytes.bitrafael.public', name: 'bitrafael-client', version: bitrafaelVersion)
-    } else {
-        compile(group: 'com.github.GENERALBYTESCOM.bitrafael_public', name: 'bitrafael-client', version: bitrafaelVersion)
-    }
+    generalBytesCompile(group: 'com.generalbytes.bitrafael.public', name: 'bitrafael-client', version: bitrafaelVersion)
+    githubCompile(group: 'com.github.GENERALBYTESCOM.bitrafael_public', name: 'bitrafael-client', version: bitrafaelVersion)
 
     testCompile (group: 'junit', name: 'junit', version: '4.10')
+    testCompile(group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3')
+    testCompile(group: 'ch.qos.logback', name: 'logback-core', version: '1.2.3')
 }
 
 dependencySubstitutions {
     substitute file(batmDependencySubstitutionConfig)
-}
-
-distributions {
-    main {
-        contents {
-            from jar
-            from configurations.runtime
-        }
-    }
 }
 
 if (hasGbUploadArtifactory) {
@@ -99,4 +97,10 @@ if (hasGbUploadArtifactory) {
 dependencyVerifications {
     checksums batmDependencyChecksumsConfig
     printUnusedAssertions false
+
+    // additional configurations
+    if (hasGbArtifactory) {
+        configuration project.configurations.generalBytesCompile
+    }
+    configuration project.configurations.githubCompile
 }

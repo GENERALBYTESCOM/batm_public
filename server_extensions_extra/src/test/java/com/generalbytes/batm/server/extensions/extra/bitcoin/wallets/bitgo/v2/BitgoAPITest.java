@@ -1,5 +1,7 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.LoggerContext;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.BitGoCoinRequest;
 import com.generalbytes.batm.server.extensions.extra.worldcoin.sources.cd.CompatSSLSocketFactory;
 import org.junit.Assert;
@@ -30,10 +32,26 @@ public class BitgoAPITest {
 
     private static final Integer readTimeout = 90 * 1000; //90 seconds
 
+    private static void setLoggerLevel(String name, String level) {
+        try {
+            LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+            List<ch.qos.logback.classic.Logger> loggers = loggerContext.getLoggerList();
+
+            for (ch.qos.logback.classic.Logger logger : loggers) {
+                if (logger.getName().startsWith(name)) {
+                    logger.setLevel(Level.toLevel(level));
+                }
+            }
+        } catch (Throwable e) {
+            System.err.println("batm.master.ServerUtil - setLoggerLevel");
+            log.error("setLoggerLevel", e);
+        }
+    }
+
     @BeforeClass
     public static void setup() {
-        System.setProperty("org.slf4j.simpleLogger.log.batm", "trace");
-        System.setProperty("org.slf4j.simpleLogger.log.si.mazi.rescu","trace");
+        setLoggerLevel("batm", "trace");
+        setLoggerLevel("si.mazi.rescu","trace");
 
         ClientConfig config = new ClientConfig();
         config.setHttpReadTimeout(readTimeout);

@@ -39,12 +39,17 @@
             <ratesource prefix="mrcoin" name ="MrCoin.eu" >
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
+                <cryptocurrency>BCH</cryptocurrency>
+                <cryptocurrency>LTC</cryptocurrency>
             </ratesource>
             <ratesource prefix="bitfinex" name ="Bitfinex.com Exchange" >
                 <param name="fiatcurrency" />
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
+                <cryptocurrency>BCH</cryptocurrency>
+                <cryptocurrency>DASH</cryptocurrency>
+                <cryptocurrency>XMR</cryptocurrency>
             </ratesource>
             <ratesource prefix="bittrex" name ="Bittrex.com Exchange" >
                 <cryptocurrency>BTC</cryptocurrency>
@@ -64,6 +69,9 @@
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>DAI</cryptocurrency>
+                <cryptocurrency>MKR</cryptocurrency>
+                <cryptocurrency>BAT</cryptocurrency>
+                <cryptocurrency>REP</cryptocurrency>
                 <cryptocurrency>DASH</cryptocurrency>
                 <cryptocurrency>XMR</cryptocurrency>
                 <cryptocurrency>$PAC</cryptocurrency>
@@ -97,11 +105,16 @@
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
+                <!-- Sell on exchange & receive to exchange will work only for BTC, LTC, ETH, see org.knowm.xchange.bitfinex.v1.service.BitfinexAccountServiceRaw.requestDepositAddressRaw -->
+                <cryptocurrency>BCH</cryptocurrency>
+                <cryptocurrency>DASH</cryptocurrency>
+                <cryptocurrency>XMR</cryptocurrency>
             </exchange>
             <exchange prefix="bittrex" name="Bittrex.com Exchange">
                 <param name="apikey" />
                 <param name="apisecret" />
                 <cryptocurrency>BTC</cryptocurrency>
+                <cryptocurrency>BCH</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
             </exchange>
@@ -120,6 +133,11 @@
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>SMART</cryptocurrency>
+            <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>DOGE</cryptocurrency>
+            <cryptocurrency>XMR</cryptocurrency>
+            <cryptocurrency>DASH</cryptocurrency>
+            <cryptocurrency>NXT</cryptocurrency>
         </exchange>
         <cryptologo cryptocurrency="BTC" file="btc.png"/>
         <cryptologo cryptocurrency="BTC" file="btc.svg"/>
@@ -805,7 +823,31 @@
         </wallet>
         <cryptologo cryptocurrency="DAI" file="dai.png"/>
         <cryptologo cryptocurrency="DAI" file="dai.svg"/>
-        <!-- ADD Your ERC20 tokens here. And don't forget to add cryptologos. -->
+        <wallet prefix="infuraERC20_MKR_18_0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2" name="Infura.io wallet - MKR">
+            <param name="apiKey" />
+            <param name="mnemonic" />
+            <help>Mnemonic should be 24 words delimited by spaces</help>
+            <cryptocurrency>MKR</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="MKR" file="mkr.png"/>
+        <cryptologo cryptocurrency="MKR" file="mkr.svg"/>
+        <wallet prefix="infuraERC20_BAT_18_0x0d8775f648430679a709e98d2b0cb6250d2887ef" name="Infura.io wallet - BAT">
+            <param name="apiKey" />
+            <param name="mnemonic" />
+            <help>Mnemonic should be 24 words delimited by spaces</help>
+            <cryptocurrency>BAT</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="BAT" file="bat.png"/>
+        <cryptologo cryptocurrency="BAT" file="bat.svg"/>
+        <wallet prefix="infuraERC20_REP_18_0x1985365e9f78359a9B6AD760e32412f4a445E862" name="Infura.io wallet - REP">
+            <param name="apiKey" />
+            <param name="mnemonic" />
+            <help>Mnemonic should be 24 words delimited by spaces</help>
+            <cryptocurrency>REP</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="REP" file="rep.png"/>
+        <cryptologo cryptocurrency="REP" file="rep.svg"/>
+        <!-- ADD your ERC20 tokens here. And don't forget to add cryptologos. -->
     </extension>
 	<extension class="com.generalbytes.batm.server.extensions.extra.decent.JavaDecentExtension">
         <wallet prefix="dctd" name="DCT Wallet Adapter">

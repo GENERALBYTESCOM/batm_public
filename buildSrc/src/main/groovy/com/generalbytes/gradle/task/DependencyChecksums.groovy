@@ -2,21 +2,17 @@ package com.generalbytes.gradle.task
 
 import com.generalbytes.gradle.DependencyVerificationHelper
 import com.generalbytes.gradle.model.ChecksumAssertion
-import com.generalbytes.gradle.plugin.DependencyVerificationPlugin
 import com.generalbytes.gradle.plugin.DependencyVerificationPluginExtension
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
-import org.gradle.api.artifacts.component.ComponentArtifactIdentifier
-import org.gradle.api.artifacts.component.ComponentIdentifier
-import org.gradle.api.artifacts.component.ModuleComponentIdentifier
-import org.gradle.api.artifacts.component.ProjectComponentIdentifier
 import org.gradle.api.provider.Property
 import org.gradle.api.provider.SetProperty
 import org.gradle.api.tasks.TaskAction
 
 class DependencyChecksums extends DefaultTask {
-    public static final String TASK_NAME = 'dependencyChecksums'
+    static final String TASK_NAME = 'dependencyChecksums'
+    static final String CHECKSUMS_FILE = 'dependencyChecksums.txt'
 
     final SetProperty<Object> configurations = project.objects.setProperty(Object)
     final Property<Boolean> global = project.objects.property(Boolean)
@@ -34,51 +30,71 @@ class DependencyChecksums extends DefaultTask {
     @TaskAction
     @SuppressWarnings('unused')
     private void taskAction() {
-        if (global.get()) {
-            SortedSet<ChecksumAssertion> assertions = new TreeSet<>()
-            project.rootProject.allprojects { Project p ->
-                if (p.pluginManager.hasPlugin(DependencyVerificationPlugin.ID) ) {
-                    final DependencyChecksums checksumsTask = p.tasks.getByName(TASK_NAME)
-                    DependencyVerificationHelper.buildAssertions(p, checksumsTask.configurations.get()).values().each {
-                        assertions.addAll(it)
-                    }
-                }
-            }
-            println ""
-            println "$DependencyVerificationPluginExtension.BLOCK_NAME {"
-            println "    // generated at ${currentTimestamp()}"
-            assertions.each { println "    ${it.definition()}" }
-            println "}"
-            println ""
+        printChecksumsTaskOutput(this, System.out)
+    }
+
+    static void printChecksumsTaskOutput(DependencyChecksums checksumsTask, PrintStream printStream) {
+        if (checksumsTask.global.get()) {
+            printGlobalAssertions(DependencyVerificationHelper.globalAssertions(checksumsTask.project), printStream)
         } else {
-            printAssertions(DependencyVerificationHelper.buildAssertions(project, configurations.get()))
+            final Map<Configuration, SortedSet<ChecksumAssertion>> assertionsByConfiguration =
+                DependencyVerificationHelper.assertionsByConfiguration(
+                    checksumsTask.project,
+                    checksumsTask.configurations.get()
+                )
+            printAssertions(assertionsByConfiguration, printStream)
         }
     }
 
-    private static void printAssertions(Map<Configuration, SortedSet<ChecksumAssertion>> assertionsByConfiguration) {
+    static void printGlobalAssertions(SortedSet<ChecksumAssertion> assertions, PrintStream printStream) {
+        final boolean stdout = printStream == System.out
+        final String indent = stdout ? '    ' : ''
+        if (stdout) {
+            printStream.println ""
+            printStream.println "$DependencyVerificationPluginExtension.BLOCK_NAME {"
+        }
+        printStream.println "$indent// generated at ${currentTimestamp()}"
+        assertions.each { printStream.println "${indent}${it.definition()}" }
+        if (stdout) {
+            printStream.println "}"
+            printStream.println ""
+        }
+    }
+
+    static void printAssertions(Map<Configuration, SortedSet<ChecksumAssertion>> assertionsByConfiguration,
+                                PrintStream printStream) {
+        final boolean stdout = printStream == System.out
+        final String indent = stdout ? '    ' : ''
         final Set<ChecksumAssertion> printedAssertions = new HashSet<>()
-        println ""
-        println "$DependencyVerificationPluginExtension.BLOCK_NAME {"
+        if (stdout) {
+            printStream.println ""
+            printStream.println "$DependencyVerificationPluginExtension.BLOCK_NAME {"
+        }
         assertionsByConfiguration.each { Configuration configuration,
                                          SortedSet<ChecksumAssertion> assertions ->
 
-            println ""
-            print "    // $configuration (${currentTimestamp()});"
-            println " showing only previously unlisted assertions"
+            printStream.println ""
+            printStream.print "$indent// $configuration (${currentTimestamp()});"
+            printStream.println " showing only previously unlisted assertions"
             assertions.each { ChecksumAssertion assertion ->
                 if (!printedAssertions.contains(assertion)) {
-                    println "    ${assertion.definition()}"
+                    printStream.println "${indent}${assertion.definition()}"
                     printedAssertions.add(assertion)
                 }
             }
         }
-        println "}"
-        println ""
+        if (stdout) {
+            printStream.println "}"
+            printStream.println ""
+        }
     }
 
-    private static String currentTimestamp() {
+    static DependencyChecksums getChecksumsTask(Project project) {
+        project.tasks.getByName(TASK_NAME) as DependencyChecksums
+    }
+
+    static String currentTimestamp() {
         new Date().format('yyyy-MM-dd\'T\'HH:mm:ss')
     }
-
 
 }

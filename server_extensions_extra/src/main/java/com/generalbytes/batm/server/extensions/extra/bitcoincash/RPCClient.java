@@ -17,8 +17,8 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.bitcoincash;
 
-import com.azazar.bitcoin.jsonrpcclient.BitcoinException;
-import com.azazar.bitcoin.jsonrpcclient.BitcoinJSONRPCClient;
+import wf.bitcoin.javabitcoindrpcclient.BitcoinRPCException;
+import wf.bitcoin.javabitcoindrpcclient.BitcoinJSONRPCClient;
 
 import java.net.MalformedURLException;
 import java.security.KeyManagementException;
@@ -56,7 +56,7 @@ public class RPCClient extends BitcoinJSONRPCClient {
         }
     }
 
-    public double getEstimateFee(int numberOfBlocks) throws BitcoinException {
+    public double getEstimateFee(int numberOfBlocks) throws BitcoinRPCException {
         return ((Number)query("estimatefee",numberOfBlocks)).doubleValue();
     }
     public interface ReceivedAddress {
@@ -67,7 +67,7 @@ public class RPCClient extends BitcoinJSONRPCClient {
         String label();
         List<String> txids();
     }
-    public List<ReceivedAddress> listReceivedByAddress2(int minConf) throws BitcoinException {
+    public List<ReceivedAddress> listReceivedByAddress2(int minConf) throws BitcoinRPCException {
         return new ReceivedAddressListWrapper((List)this.query("listreceivedbyaddress", minConf));
     }
 

@@ -40,7 +40,7 @@ Here is the list of some functionality that can be extended using Extensions API
 * **Perform actions whenever a transaction on CAS is created or updated** - This is useful; for example, in those locales where you may need to notify the tax office about the transaction in realtime and print a unique tax office onetime id on the ticket printed by the BATM. For more information, see the <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/main/java/com/generalbytes/batm/server/extensions/ITransactionListener.java">ITransactionListener</a> interface.
 * **Implement a paper wallet generator for your crypto currency XYZ** - Do you want your BATM to be able print a paper wallet or write the transaction's private key on an NFC card? You will need to implement this interface. For more information, see the <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/main/java/com/generalbytes/batm/server/extensions/IPaperWalletGenerator.java">IPaperWalletGenerator</a> interface.
 * **Implement a fiat-to-fiat currency exchange rate provider** - Do you want CAS to use the fiat currency exchange rates provided by your local bank (or exchange) instead of the international market? For more information, see the <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/main/java/com/generalbytes/batm/server/extensions/IFiatExchangeRateProvider.java">IFiatExchangeRateProvider</a> interface.
-* **Send emails or SMSes from extension** - To notify your customer via SMS or email with custom messages, call the methods exposed by the <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/main/java/com/generalbytes/batm/server/extensions/IExtensionContext.java">IExtensionContext</a> interface. 
+* **Send emails or SMSes from extension** - To notify your customer via SMS or email with custom messages, call the methods exposed by the <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/main/java/com/generalbytes/batm/server/extensions/IExtensionContext.java">IExtensionContext</a> interface.
 * **<a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/main/java/com/generalbytes/batm/server/extensions/IExtensionContext.java">ExtensionContext</a>** is your main entrypoint for interacting with CAS.
 ExtensionContext may be called from any extension. A reference to ExtensionContext is passed to an Extension when the **init** method is called by CAS on any Extension. Please make sure you read all of the methods that are available on the IExtensionContext interface. There are, for example: cash related operations, sell functionality, and more!
 * **Implement RESTful services** - facilitates integration of the Server with a 3rd party system. Extensions enable you to quickly and easily create a RESTful service that sends/receives data via JSON and HTTPS. Do you want your website to contact  CAS to find the current exchange rate on your BATM (or even more complicated functions)? Use <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/main/java/com/generalbytes/batm/server/extensions/IRestService.java">IRestService</a> for that. A simple example that returns your current CAS version can be found <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_extra/src/main/java/com/generalbytes/batm/server/extensions/extra/examples/rest">here</a>.
@@ -48,7 +48,7 @@ ExtensionContext may be called from any extension. A reference to ExtensionConte
 Content
 =======
 * **server_extensions_api** - contains the extension API that all extensions use to extend CAS' functionality.
-* **server_extensions_extra** - reference extension implementation that demonstrates BTC, LTC, CLOAK, DGB, DASH, POT, VIA, BTX, SYS, FLASH, DOGE, NLG, ICG, NBT, GRS, MAX, BSD, MEC, BTDX, SUM, BURST, ECA, LINDA and $PAC coin support functionality.
+* **server_extensions_extra** - reference extension implementation that demonstrates BTC, LTC, CLOAK, DGB, DASH, POT, VIA, BTX, SYS, FLASH, DOGE, NLG, ICG, NBT, GRS, MAX, BSD, MEC, BTDX, SUM, BURST, ECA, LINDA, $PAC, DAI, MKR, BAT and REP coin support functionality.
 * **server_extensions_test** - contains tester for testing the extensions (CAS not required).
 
 Note for developers
@@ -59,7 +59,7 @@ Requirements:
 * Java
 * Gradle
 
-When you implement support for a new crypto-coin, please add it to **server_extensions_extra** - so that it may get into the default CAS installation pack for customers. 
+When you implement support for a new crypto-coin, please add it to **server_extensions_extra** - so that it may get into the default CAS installation pack for customers.
 Please use the appropriate Fork and Pull Request in the GitHub workflow when adding new functions, and bear in mind that your code will be reviewed prior to any merge with the master.
 
 When adding new cryptocurrency support, please remember to provide it's logo! This logo will later be downloaded by the BATM from CAS and displayed on the BATM screen. Both SVG and PNG logos are supported; however, only the SVG logo is used on newer BATM versions. A PNG logo is offered only for backward compatibility, and in the few cases where the SVG logo has an unusually large size.
@@ -70,7 +70,7 @@ SVG logos must comply with following rules:
 
 
 After you implement the the extension make sure you test it with "Tester" (which you will find in **server_extensions_test**).
-If you want to implement an extension that you don't want to share with the rest of the world, then create a separate module (e.g. server_extensions_mycompany) and use a different jar name (server_extensions_mycompany.jar). 
+If you want to implement an extension that you don't want to share with the rest of the world, then create a separate module (e.g. server_extensions_mycompany) and use a different jar name (server_extensions_mycompany.jar).
 
 Build information
 =================
