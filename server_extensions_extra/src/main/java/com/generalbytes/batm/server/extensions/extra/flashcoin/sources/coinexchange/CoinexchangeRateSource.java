@@ -71,7 +71,7 @@ public class CoinexchangeRateSource implements IRateSource {
             BigDecimal amount = rateAmounts.get(key);
             if (amount == null) {
                 BigDecimal result = getExchangeRateLastSync(cryptoCurrency, fiatCurrency);
-                log.debug("Called bitcoinaverage exchange for rate: " + key + " = " + result);
+                log.debug("Called coinexchange exchange for rate: " + key + " = " + result);
                 rateAmounts.put(key,result);
                 rateTimes.put(key,now+MAXIMUM_ALLOWED_TIME_OFFSET);
                 return result;
