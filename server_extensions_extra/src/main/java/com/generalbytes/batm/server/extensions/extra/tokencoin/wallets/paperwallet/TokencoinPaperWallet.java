@@ -9,6 +9,7 @@ import com.generalbytes.batm.server.extensions.IPaperWallet;
 
 
 public class TokencoinPaperWallet implements IPaperWallet {
+    private String cryptoCurrency;
     private String address;
     private String privateKey;
     private String message;
@@ -37,6 +38,15 @@ public class TokencoinPaperWallet implements IPaperWallet {
     @Override
     public String getMessage() {
         return message;
+    }
+
+    @Override
+    public String getCryptoCurrency() {
+        return cryptoCurrency;
+    }
+
+    public void setCryptoCurrency(String cryptoCurrency) {
+        this.cryptoCurrency = cryptoCurrency;
     }
 
     public void setMessage(String message) {

@@ -1,13 +1,13 @@
-// generated at 2018-11-14T16:46:44
+// generated at 2018-11-21T15:11:47
 verifyModule 'ch.qos.logback:logback-classic:1.2.3:fb53f8539e7fcb8f093a56e138112056ec1dc809ebb020b59d8a36a5ebac37e0'
 verifyModule 'ch.qos.logback:logback-core:1.2.3:5946d837fe6f960c02a53eda7a6926ecc3c758bbdd69aa453ee429f858217f22'
 verifyModule 'com.fasterxml.jackson.core:jackson-annotations:2.8.11:d9e3565ee9896f54965bf1fa42ae1fe99b19b03b10a94535ae878e429e2c1923'
 verifyModule 'com.fasterxml.jackson.core:jackson-core:2.8.11:b51bf33caa83a10b67a30fceb3111a58df1089cc1b59c23f0442661ecbef7f22'
 verifyModule 'com.fasterxml.jackson.core:jackson-databind:2.8.11.2:2cdefe7718cf828ea9fe0c04f328fdc7979c0b6e8e6b302b1c9defd92a07628e'
-verifyModule 'com.generalbytes.bitrafael.public:bitrafael-client:1.0.14:30f3f528a8391d83b0d55c70e59ccce2d9d737c9768dfa4f9fcad470c4008e07'
-verifyModule 'com.generalbytes.bitrafael.public:bitrafael-common:1.0.14:93214cb271c137b4bef0f8937f59ccece4418e4cfb749bdd6f80d845b5674834'
-verifyModule 'com.github.GENERALBYTESCOM.bitrafael_public:bitrafael-client:1.0.14:a780c99fad27d5353defa68a281e952078ea6d194fff1cff935ccf871ba31319'
-verifyModule 'com.github.GENERALBYTESCOM.bitrafael_public:bitrafael-common:1.0.14:37657e54c5285c9fa8e2490d6c9a7aecf575952dad7915932826c1d873a68983'
+verifyModule 'com.generalbytes.bitrafael.public:bitrafael-client:1.0.15:f2fd5b2f9388c4f7a0a205332225c43961bca013bae44c5437e9fdf9c53d2195'
+verifyModule 'com.generalbytes.bitrafael.public:bitrafael-common:1.0.15:831809f6b2b8a019f30eddc0bba519a6ba0653185542b8bc7276e6b452245656'
+verifyModule 'com.github.GENERALBYTESCOM.bitrafael_public:bitrafael-client:1.0.15:c3c6296ba0a824013948e882a63bd562fcbf3c326ea3359d8a878312ee52d128'
+verifyModule 'com.github.GENERALBYTESCOM.bitrafael_public:bitrafael-common:1.0.15:6703f72767b98c3b5813503aba96c65949870152924ebf94beb9683e3b8ce6f1'
 verifyModule 'com.github.GENERALBYTESCOM.dashj:dashj-core:0.14.4.7.20180927:0321eaf09bd287ff265e2b5f1c1804a83ce5efd8d7681c57df49a14463d86503'
 verifyModule 'com.github.GENERALBYTESCOM.litecoinj:litecoinj-core:0.15.20181101:f36a145d1ed7e6e8521fc035a57f61a23b27db3450d0f861a77e608f9b9473cf'
 verifyModule 'com.github.Polve:JavaBitcoindRpcClient:860f5d735539ea52838efe3149c98b57f1decd7a:a23da9719712a0de19cf095da8b596cafbe3333ed88724c837256ca3d58cc975'

@@ -59,4 +59,9 @@ public interface IPaperWallet {
     public String getMessage();
 
 
+    /**
+     * Returns cryptocurrency for which the wallet was generated
+     * @return
+     */
+    public String getCryptoCurrency();
 }
