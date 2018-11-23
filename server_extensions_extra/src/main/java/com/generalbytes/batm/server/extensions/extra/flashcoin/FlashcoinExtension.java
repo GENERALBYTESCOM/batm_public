@@ -19,8 +19,6 @@ package com.generalbytes.batm.server.extensions.extra.flashcoin;
 
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.extra.flashcoin.sources.FixPriceRateSource;
-import com.generalbytes.batm.server.extensions.extra.flashcoin.sources.coinexchange.CoinexchangeRateSource;
-import com.generalbytes.batm.server.extensions.extra.flashcoin.sources.cryptopia.CryptopiaRateSource;
 import com.generalbytes.batm.server.extensions.extra.flashcoin.wallets.flashcoind.FlashcoinRPCWallet;
 
 import java.math.BigDecimal;
@@ -77,21 +75,7 @@ public class FlashcoinExtension extends AbstractExtension{
             StringTokenizer st = new StringTokenizer(sourceLogin,":");
             String exchangeType = st.nextToken();
 
-            if ("cryptopia".equalsIgnoreCase(exchangeType)) {
-                String preferredFiatCurrency = Currencies.BTC;
-                if (st.hasMoreTokens()) {
-                    preferredFiatCurrency = st.nextToken();
-                }
-                return new CryptopiaRateSource(preferredFiatCurrency);
-            }else  if ("coinexchange".equalsIgnoreCase(exchangeType)) {
-                String preferredFiatCurrency = Currencies.BTC;
-                if (st.hasMoreTokens()) {
-                    preferredFiatCurrency = st.nextToken();
-                }
-                return new CoinexchangeRateSource(preferredFiatCurrency);
-            //} else if ("coinmarketcap".equalsIgnoreCase(exchangeType)) {
-           //     return new CoinmarketcapRateSource();
-            }else if ("flashfix".equalsIgnoreCase(exchangeType)) {
+            if ("flashfix".equalsIgnoreCase(exchangeType)) {
                 BigDecimal rate = BigDecimal.ZERO;
                 if (st.hasMoreTokens()) {
                     try {
