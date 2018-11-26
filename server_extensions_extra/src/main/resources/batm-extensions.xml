@@ -840,6 +840,28 @@
         <cryptologo cryptocurrency="REP" file="rep.svg"/>
         <!-- ADD your ERC20 tokens here. And don't forget to add cryptologos. -->
     </extension>
+	<extension class="com.generalbytes.batm.server.extensions.extra.decent.JavaDecentExtension">
+        <wallet prefix="dctd" name="DCT Wallet Adapter">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <cryptocurrency>DCT</cryptocurrency>
+        </wallet>
+        <exchange prefix="dct_bittrex" name="Bittrex.com Exchange (ext)">
+            <param name="apikey" />
+            <param name="apisecret" />
+            <param name="replacements" />
+            <param name="intermediates" />
+            <cryptocurrency>DCT</cryptocurrency>
+        </exchange>
+        <ratesource prefix="dct_bittrex" name ="Bittrex.com Rate Source (ext)" >
+            <param name="intermediates" />
+            <cryptocurrency>DCT</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="DCT" file="dct.png"/>
+    </extension>
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.TransactionExtension" />-->
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.rest.RESTExampleExtension" />-->
 </extensions>
