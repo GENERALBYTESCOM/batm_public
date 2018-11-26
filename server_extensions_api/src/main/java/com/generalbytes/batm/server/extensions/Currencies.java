@@ -33,6 +33,7 @@ public class Currencies {
     public static final String BTDX = "BTDX"; //Bitcloud
     public static final String BURST = "BURST"; //Burstcoin
     public static final String CLOAK = "CLOAK"; //CloakCoin
+    public static final String DCT = "DCT"; //Decent
     public static final String ECA = "ECA"; //Electra
     public static final String ETH = "ETH";
     public static final String EFL = "EFL";
@@ -144,6 +145,7 @@ public class Currencies {
         crypto.add(BTDX);
         crypto.add(BURST);
         crypto.add(CLOAK);
+        crypto.add(DCT);
         crypto.add(ECA);
         crypto.add(EFL);
         crypto.add(ETH);
