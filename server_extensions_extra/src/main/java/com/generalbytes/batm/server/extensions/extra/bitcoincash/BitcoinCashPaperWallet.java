@@ -15,27 +15,27 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.ethereum;
+package com.generalbytes.batm.server.extensions.extra.bitcoincash;
 
 import com.generalbytes.batm.server.extensions.IPaperWallet;
 
-public class EtherPaperWallet implements IPaperWallet{
+public class BitcoinCashPaperWallet implements IPaperWallet{
+    private String cryptoCurrency;
     private byte[] content;
     private String address;
     private String privateKey;
     private String message;
     private String contentType;
     private String fileExtension;
-    private String cryptoCurrency;
 
-    public EtherPaperWallet(byte[] content, String address, String privateKey, String message, String contentType, String fileExtension, String cryptoCurrency) {
+    public BitcoinCashPaperWallet(String cryptoCurrency, byte[] content, String address, String privateKey, String message, String contentType, String fileExtension) {
+        this.cryptoCurrency = cryptoCurrency;
         this.content = content;
         this.address = address;
         this.privateKey = privateKey;
         this.message = message;
         this.contentType = contentType;
         this.fileExtension = fileExtension;
-        this.cryptoCurrency = cryptoCurrency;
     }
 
     public byte[] getContent() {

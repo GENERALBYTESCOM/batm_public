@@ -25,7 +25,7 @@ import java.util.Set;
  * This class serves as an optional parent for extensions.
  */
 public abstract class AbstractExtension implements IExtension{
-    private IExtensionContext ctx;
+    protected IExtensionContext ctx;
 
     @Override
     public void init(IExtensionContext ctx) {

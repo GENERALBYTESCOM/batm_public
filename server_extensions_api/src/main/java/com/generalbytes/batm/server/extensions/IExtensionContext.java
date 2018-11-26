@@ -192,5 +192,15 @@ public interface IExtensionContext {
      */
     List<String> findTerminalsWithAvailableCashForSell(BigDecimal fiatAmount, String fiatCurrency,List<String> listOfTerminalSerialNumbers);
 
-
+    /**
+     * This method helps to you to package and store paper wallet in password encrypted archive.
+     * It also includes privateKey and address in form of QR code into the archive.
+     * Such package is safe to later be sent via email as used 7ZIP AES_STRENGTH_256 seems sufficient protection against brute-force.
+     * @param privateKey
+     * @param address
+     * @param password
+     * @param cryptoCurrency
+     * @return
+     */
+    byte[] createPaperWallet7ZIP(String privateKey, String address, String password, String cryptoCurrency);
 }

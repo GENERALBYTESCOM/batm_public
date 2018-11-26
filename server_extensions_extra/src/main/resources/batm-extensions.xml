@@ -88,6 +88,7 @@
                 <cryptocurrency>ANON</cryptocurrency>
                 <cryptocurrency>XZC</cryptocurrency>
                 <cryptocurrency>CLOAK</cryptocurrency>
+                <cryptocurrency>FLASH</cryptocurrency>
             </ratesource>
             <paymentprocessor prefix="bitcoinpay" name="BitcoinPay.com" >
                 <param name="apikey" />
@@ -195,16 +196,6 @@
             <param name="accountname" />
             <cryptocurrency>FLASH</cryptocurrency>
         </wallet>
-        <ratesource prefix="cryptopia" name="cryptopia.co.nz" >
-            <param name="fiatcurrency" />
-            <cryptocurrency>FLASH</cryptocurrency>
-            <cryptocurrency>BTC</cryptocurrency>
-            <cryptocurrency>LTC</cryptocurrency>
-        </ratesource>
-        <ratesource prefix="coinexchange" name="coinexchange.io" >
-            <cryptocurrency>FLASH</cryptocurrency>
-            <cryptocurrency>BTC</cryptocurrency>
-        </ratesource>
         <ratesource prefix="flashfix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>FLASH</cryptocurrency>
