@@ -17,24 +17,29 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.bitcoincash;
 
-import com.generalbytes.batm.server.coinutil.AddressFormatException;
-import com.generalbytes.batm.server.coinutil.Base58;
+import com.generalbytes.batm.server.coinutil.Bech32;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 
 public class BitcoinCashAddressValidator implements ICryptoAddressValidator {
     @Override
     public boolean isAddressValid(String address) {
-        if (address.startsWith("q")) {
-            try {
-                Base58.decodeToBigInteger(address);
-                Base58.decodeChecked(address);
-            } catch (AddressFormatException e) {
-                e.printStackTrace();
-                return false;
-            }
-            return true;
-        }else{
+        if (address == null) {
             return false;
+        } else {
+            address = address.trim();
+            if (address.startsWith("xpub")) {
+                return false;
+            } else if (!address.startsWith("p") && !address.startsWith("q")) {
+                return false;
+            } else {
+                try {
+                    byte[] checksumData = Bech32.concatenateByteArrays(Bech32.concatenateByteArrays(Bech32.getPrefixBytes("bitcoincash"), new byte[]{0}), Bech32.decode(address));
+                    byte[] calculateChecksumBytesPolymod = Bech32.calculateChecksumBytesPolymod(checksumData);
+                    return Bech32.bytes2Long(calculateChecksumBytesPolymod) == 0L;
+                } catch (RuntimeException var3) {
+                    return false;
+                }
+            }
         }
     }
 

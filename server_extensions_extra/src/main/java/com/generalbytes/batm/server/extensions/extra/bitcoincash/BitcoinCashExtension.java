@@ -20,6 +20,7 @@ package com.generalbytes.batm.server.extensions.extra.bitcoincash;
 import com.generalbytes.batm.server.extensions.AbstractExtension;
 import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
+import com.generalbytes.batm.server.extensions.IPaperWalletGenerator;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.bitcoincash.wallets.BATMBitcoinCashdRPCWallet;
 
@@ -85,5 +86,10 @@ public class BitcoinCashExtension extends AbstractExtension {
             return new BitcoinCashAddressValidator();
         }
         return null;
+    }
+
+    @Override
+    public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency) {
+        return new BitcoinCashWalletGenerator("qqqq", ctx);
     }
 }
