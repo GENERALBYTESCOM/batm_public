@@ -858,20 +858,15 @@
             <param name="port" />
             <cryptocurrency>DCT</cryptocurrency>
         </wallet>
-        <!--<exchange prefix="dummy" name="Dummy Exchange">-->
-            <!--<cryptocurrency>DCT</cryptocurrency>-->
-        <!--</exchange>-->
-        <exchange prefix="btrx" name="Bittrex.com Exchange">
+        <exchange prefix="dct_bittrex" name="Bittrex.com Exchange (ext)">
             <param name="apikey" />
             <param name="apisecret" />
+            <param name="replacements" />
+            <param name="intermediates" />
             <cryptocurrency>DCT</cryptocurrency>
-            <cryptocurrency>BTC</cryptocurrency>
         </exchange>
-        <ratesource prefix="fixed" name ="Fixed Price" >
-            <param name="rate" />
-            <cryptocurrency>DCT</cryptocurrency>
-        </ratesource>
-        <ratesource prefix="btrx" name ="Bittrex Rate Source" >
+        <ratesource prefix="dct_bittrex" name ="Bittrex.com Rate Source (ext)" >
+            <param name="intermediates" />
             <cryptocurrency>DCT</cryptocurrency>
         </ratesource>
         <cryptologo cryptocurrency="DCT" file="dct.png"/>
