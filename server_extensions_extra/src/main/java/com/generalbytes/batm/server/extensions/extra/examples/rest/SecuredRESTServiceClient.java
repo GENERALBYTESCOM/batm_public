@@ -19,6 +19,9 @@ package com.generalbytes.batm.server.extensions.extra.examples.rest;
 
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
@@ -41,6 +44,7 @@ import si.mazi.rescu.RestProxyFactory;
  * This class demonstrates how to call your REST services from Java and get your JSON response unmarshalled
  */
 public class SecuredRESTServiceClient {
+    private static final Logger log = LoggerFactory.getLogger("batm.master.extensions.SecuredRESTServiceClient");
     @Path("/extensions")
     @Produces(MediaType.APPLICATION_JSON)
     interface ISecuredServiceAPI {
@@ -86,7 +90,7 @@ public class SecuredRESTServiceClient {
             cc.setHostnameVerifier(hostnameVerifier);
             return cc;
         } catch (NoSuchAlgorithmException | KeyManagementException e) {
-            e.printStackTrace();
+            log.error("Error", e);
         }
         return null;
     }
@@ -96,13 +100,13 @@ public class SecuredRESTServiceClient {
 
         //lets call unsecured service
         MyExtensionExampleResponse response = service.getServerVersion();
-        System.out.println("Response from unsecured service = " + response);
+        log.info("Response from unsecured service = " + response);
 
         //lets call secured service
         String nonce = System.currentTimeMillis() + "";
         String serialNumber = "BT100001";
         String signature = SecuredRESTServiceExample.generateSignature(nonce + serialNumber + SecuredRESTServiceExample.API_KEY, SecuredRESTServiceExample.API_SECRET);
         response = service.getServerVersion(SecuredRESTServiceExample.API_KEY, nonce, signature, serialNumber);
-        System.out.println("Response from secured service = " + response);
+        log.info("Response from secured service = " + response);
     }
 }

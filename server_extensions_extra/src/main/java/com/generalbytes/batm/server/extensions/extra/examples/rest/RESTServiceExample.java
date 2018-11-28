@@ -19,6 +19,9 @@ package com.generalbytes.batm.server.extensions.extra.examples.rest;
 
 import com.generalbytes.batm.server.extensions.IExtensionContext;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.math.BigDecimal;
 import java.util.Arrays;
 
@@ -36,6 +39,7 @@ import javax.ws.rs.core.MediaType;
  */
 @Path("/")
 public class RESTServiceExample {
+    private static final Logger log = LoggerFactory.getLogger("batm.master.extensions.RESTServiceExample");
     @GET
     @Path("/helloworld")
     @Produces(MediaType.APPLICATION_JSON)
@@ -57,7 +61,7 @@ public class RESTServiceExample {
         try {
             return RESTExampleExtension.getExtensionContext().findAllTerminals();
         } catch (Throwable e) {
-            e.printStackTrace();
+            log.error("Error", e);
         }
         return "ERROR";
     }
@@ -75,7 +79,7 @@ public class RESTServiceExample {
         try {
             return RESTExampleExtension.getExtensionContext().getCashBoxes(serialNumber);
         } catch (Throwable e) {
-            e.printStackTrace();
+            log.error("Error", e);
         }
         return "ERROR";
     }
@@ -93,7 +97,7 @@ public class RESTServiceExample {
         try {
             return RESTExampleExtension.getExtensionContext().findTerminalsWithAvailableCashForSell(new BigDecimal(amount), fiatCurrency,null);
         } catch (Throwable e) {
-            e.printStackTrace();
+            log.error("Error", e);
         }
         return "ERROR";
     }
@@ -112,7 +116,7 @@ public class RESTServiceExample {
         try {
             return RESTExampleExtension.getExtensionContext().calculateCryptoAmounts(serialNumber, Arrays.<String>asList(new String[]{cryptoCurrency}), new BigDecimal(fiatAmount), fiatCurrency, IExtensionContext.DIRECTION_BUY_CRYPTO,null,null);
         } catch (Throwable e) {
-            e.printStackTrace();
+            log.error("Error", e);
         }
         return "ERROR";
     }
@@ -131,7 +135,7 @@ public class RESTServiceExample {
         try {
             return RESTExampleExtension.getExtensionContext().getExchangeRateInfo(serialNumber, IExtensionContext.DIRECTION_BUY_CRYPTO | IExtensionContext.DIRECTION_SELL_CRYPTO);
         } catch (Throwable e) {
-            e.printStackTrace();
+            log.error("Error", e);
         }
         return "ERROR";
     }
@@ -149,7 +153,7 @@ public class RESTServiceExample {
         try {
             return RESTExampleExtension.getExtensionContext().sellCrypto(serialNumber, fiatAmount, fiatCurrency,cryptoAmount,cryptoCurrency);
         } catch (Throwable e) {
-            e.printStackTrace();
+            log.error("Error", e);
         }
         return "ERROR";
     }
