@@ -125,6 +125,6 @@ public class PoloniexRateSource implements IRateSource {
 
     public static void main(String[] args) {
         PoloniexRateSource rs = new PoloniexRateSource();
-        System.out.println("rs = " + rs.getExchangeRateLast(Currencies.NXT,Currencies.USD));
+        log.info("rs = " + rs.getExchangeRateLast(Currencies.NXT,Currencies.USD));
     }
 }
