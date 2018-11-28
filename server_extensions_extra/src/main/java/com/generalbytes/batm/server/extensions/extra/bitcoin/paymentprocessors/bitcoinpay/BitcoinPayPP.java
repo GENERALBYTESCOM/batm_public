@@ -80,7 +80,7 @@ public class BitcoinPayPP implements IPaymentProcessor{
                 }else if ("timeout".equalsIgnoreCase(statusString)) {
                     statusInt = IPaymentProcessorPaymentStatus.STATUS_TIMEOUT;
                 }else if ("paid_after_timeout".equalsIgnoreCase(statusString)) {
-                    statusInt = IPaymentProcessorPaymentStatus.STATUS_TIMEOUT;
+                    statusInt = IPaymentProcessorPaymentStatus.STATUS_PAID_AFTER_TIMEOUT;
                 }else if ("refund".equalsIgnoreCase(statusString)) {
                     statusInt = IPaymentProcessorPaymentStatus.STATUS_REFUNDED;
                 }else if ("confirmed".equalsIgnoreCase(statusString)) {

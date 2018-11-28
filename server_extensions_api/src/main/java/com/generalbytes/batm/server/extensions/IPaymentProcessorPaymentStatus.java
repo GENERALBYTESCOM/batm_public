@@ -23,7 +23,9 @@ public interface IPaymentProcessorPaymentStatus {
     public static final int STATUS_INSUFFICIENT_AMOUNT      = 2;
     public static final int STATUS_INVALID                  = 3;
     public static final int STATUS_TIMEOUT                  = 4;
-    public static final int STATUS_CONFIRMED                = 5;
+    public static final int STATUS_CONFIRMED                = 5; //only this should be considered as final = paid
+    public static final int STATUS_PAID_AFTER_TIMEOUT       = 6;
+    public static final int STATUS_REFUNDED                 = 7;
 
     public int getStatus();
 }
