@@ -49,7 +49,11 @@ public class BitcoinPayPP implements IPaymentProcessor{
         }
         BitcoinPayPaymentResponseDTO r = api.createNewPaymentRequest("Token " + apiKey, new BitcoinPayPaymentRequestRequestDTO(currency, amount, settledCurrency, reference));
         if (r != null) {
-            return new BitcoinPayPPResponse(r.getData().address,r.getData().paid_amount,r.getData().paid_currency,r.getData().settled_amount,r.getData().settled_currency,r.getData().payment_id,r.getData().reference);
+            String cryptoCurrency = r.getData().paid_currency;
+            if (cryptoCurrency == null || cryptoCurrency.isEmpty()) {
+                cryptoCurrency = r.getData().settled_currency;
+            }
+            return new BitcoinPayPPResponse(r.getData().address,r.getData().expected_amount, cryptoCurrency,r.getData().settled_amount,currency,r.getData().payment_id,r.getData().reference);
         }else{
             log.error("Payment request call to Payment Processor failed.");
             return null;
@@ -75,6 +79,10 @@ public class BitcoinPayPP implements IPaymentProcessor{
                     statusInt = IPaymentProcessorPaymentStatus.STATUS_INVALID;
                 }else if ("timeout".equalsIgnoreCase(statusString)) {
                     statusInt = IPaymentProcessorPaymentStatus.STATUS_TIMEOUT;
+                }else if ("paid_after_timeout".equalsIgnoreCase(statusString)) {
+                    statusInt = IPaymentProcessorPaymentStatus.STATUS_TIMEOUT;
+                }else if ("refund".equalsIgnoreCase(statusString)) {
+                    statusInt = IPaymentProcessorPaymentStatus.STATUS_REFUNDED;
                 }else if ("confirmed".equalsIgnoreCase(statusString)) {
                     statusInt = IPaymentProcessorPaymentStatus.STATUS_CONFIRMED;
                 }
