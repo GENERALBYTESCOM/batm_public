@@ -7,6 +7,9 @@ import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import si.mazi.rescu.RestProxyFactory;
 
 import java.math.BigDecimal;
@@ -19,6 +22,7 @@ import java.util.concurrent.TimeUnit;
  * Class CoinmarketcapV2APITest tests method of interface ICoinmarketcapV2API.
  */
 public class CoinmarketcapAPITest {
+    private static final Logger log = LoggerFactory.getLogger("batm.master.extensions.CoinmarketcapAPITest");
 
     private static long currentUnix = System.currentTimeMillis();
 
@@ -151,8 +155,8 @@ public class CoinmarketcapAPITest {
         Assert.assertNotNull(data.getQuotes());
 
         //CmcTickerQuote quote = (CmcTickerQuote) data.getQuotes();
-        System.out.println(data);
-        System.out.println();
+        log.info(data.toString());
+        log.info("");
     }
 
     /**
@@ -292,7 +296,7 @@ public class CoinmarketcapAPITest {
         Assert.assertFalse(coinIDs.isEmpty());
 
         final Integer id = coinIDs.get(currency);
-        System.out.println("ETH id = " + id.toString());
+        log.info("ETH id = " + id.toString());
         Assert.assertNotNull(id);
         Assert.assertEquals(1027, id.intValue());
     }
