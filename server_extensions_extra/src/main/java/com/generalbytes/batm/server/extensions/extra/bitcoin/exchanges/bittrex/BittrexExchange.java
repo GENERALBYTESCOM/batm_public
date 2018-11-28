@@ -90,7 +90,7 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
             DDOSUtils.waitForPossibleCall(getClass());
             return getExchange().getAccountService().getAccountInfo().getWallet().getBalance(Currency.getInstance(cryptoCurrency)).getAvailable();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Error", e);
             log.error("Bittrex exchange (getbalance) failed with message: " + e.getMessage());
         }
         return null;
@@ -125,7 +125,7 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
                 return null;
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Error", e);
             log.error("Bittrex exchange (withdrawFunds) failed with message: " + e.getMessage());
         }
         return null;
@@ -142,7 +142,7 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
             DDOSUtils.waitForPossibleCall(getClass());
             return getExchange().getAccountService().getAccountInfo().getWallet().getBalance(Currency.getInstance(fiatCurrency)).getAvailable();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Error", e);
             log.error("Bittrex exchange (getbalance) failed with message: " + e.getMessage());
         }
         return null;
@@ -288,7 +288,7 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
             DDOSUtils.waitForPossibleCall(getClass());
             return accountService.requestDepositAddress(Currency.getInstance(cryptoCurrency));
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Error", e);
         }
         return null;
     }
@@ -333,7 +333,7 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
                 return tradableLimit.multiply(cryptoAmount);
             }
         } catch (Throwable e) {
-            e.printStackTrace();
+            log.error("Error", e);
         }
         return null;
     }
@@ -357,7 +357,7 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
                 return tradableLimit.multiply(cryptoAmount);
             }
         } catch (Throwable e) {
-            e.printStackTrace();
+            log.error("Error", e);
         }
         return null;
     }
@@ -399,7 +399,7 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
             Ticker ticker = marketDataService.getTicker(new CurrencyPair(cryptoCurrency,cashCurrency));
             return ticker.getLast();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Error", e);
         }
         return null;
     }
@@ -474,10 +474,10 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
 
                 sleep(2000); //give exchange 2 seconds to reflect open order in order book
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("Error", e);
                 log.error("Bittrex exchange (purchaseCoins) failed with message: " + e.getMessage());
             } catch (Throwable e) {
-                e.printStackTrace();
+                log.error("Error", e);
             }
             return (orderId != null);
         }
@@ -513,7 +513,7 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
                     }
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("Error", e);
             }
 
             if (orderFound) {
@@ -600,10 +600,10 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
 
                 sleep(2000); //give exchange 2 seconds to reflect open order in order book
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("Error", e);
                 log.error("Bittrex exchange (sellCoins) failed with message: " + e.getMessage());
             } catch (Throwable e) {
-                e.printStackTrace();
+                log.error("Error", e);
             }
             return (orderId != null);
         }
@@ -639,7 +639,7 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
                     }
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("Error", e);
             }
 
             if (orderFound) {
@@ -691,7 +691,7 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
     }
 
 //    public static void main(String[] args) {
-//        System.out.println(new BittrexExchange("XXX", "XXX")
+//        log.info(new BittrexExchange("XXX", "XXX")
 //            .purchaseCoins(new BigDecimal(50), "BCH", "USD", "desc"));
 //    }
 }
