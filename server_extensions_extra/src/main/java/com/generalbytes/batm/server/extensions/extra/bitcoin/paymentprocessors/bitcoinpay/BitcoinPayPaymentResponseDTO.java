@@ -32,6 +32,12 @@ public class BitcoinPayPaymentResponseDTO {
         long create_time;
         @JsonProperty("currency")
         String currency;
+        @JsonProperty("expected_amount")
+        BigDecimal expected_amount;
+        @JsonProperty("item")
+        String item;
+        @JsonProperty("desccription")
+        String description;
         @JsonProperty("paid_amount")
         BigDecimal paid_amount;
         @JsonProperty("paid_currency")
