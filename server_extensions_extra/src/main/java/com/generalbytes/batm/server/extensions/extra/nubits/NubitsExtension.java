@@ -1,7 +1,7 @@
 package com.generalbytes.batm.server.extensions.extra.nubits;
 
 import com.generalbytes.batm.server.extensions.*;
-import com.generalbytes.batm.server.extensions.extra.nubits.sources.FixPriceRateSource;
+import com.generalbytes.batm.server.extensions.extra.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.nubits.wallets.nud.NubitsRPCWallet;
 
 import java.math.BigDecimal;

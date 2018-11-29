@@ -18,7 +18,7 @@
 package com.generalbytes.batm.server.extensions.extra.futurocoin;
 
 import com.generalbytes.batm.server.extensions.*;
-import com.generalbytes.batm.server.extensions.extra.futurocoin.sources.FixPriceRateSource;
+import com.generalbytes.batm.server.extensions.extra.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.futurocoin.sources.coindeal.CoindealRateSource;
 import com.generalbytes.batm.server.extensions.extra.futurocoin.sources.yobit.YobitRateSource;
 import com.generalbytes.batm.server.extensions.extra.futurocoin.wallets.futurocoind.FuturocoinRPCWallet;

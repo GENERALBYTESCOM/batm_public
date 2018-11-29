@@ -19,7 +19,7 @@
 package com.generalbytes.batm.server.extensions.extra.burstcoin;
 
 import com.generalbytes.batm.server.extensions.*;
-import com.generalbytes.batm.server.extensions.extra.burstcoin.sources.FixPriceRateSource;
+import com.generalbytes.batm.server.extensions.extra.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.burstcoin.sources.poloniex.PoloniexRateSource;
 import com.generalbytes.batm.server.extensions.extra.burstcoin.wallets.burstwallet.BurstWallet;
 

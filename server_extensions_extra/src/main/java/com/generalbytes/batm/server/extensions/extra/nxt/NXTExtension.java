@@ -19,7 +19,7 @@
 package com.generalbytes.batm.server.extensions.extra.nxt;
 
 import com.generalbytes.batm.server.extensions.*;
-import com.generalbytes.batm.server.extensions.extra.nxt.sources.FixPriceRateSource;
+import com.generalbytes.batm.server.extensions.extra.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.nxt.sources.poloniex.PoloniexRateSource;
 import com.generalbytes.batm.server.extensions.extra.nxt.wallets.mynxt.MynxtWallet;
 

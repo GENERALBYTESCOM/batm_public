@@ -1,12 +1,14 @@
-package com.generalbytes.batm.server.extensions.extra.dogecoin.sources;
+package com.generalbytes.batm.server.extensions.extra;
 
-import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IRateSource;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
+
+import static com.generalbytes.batm.server.extensions.Currencies.CRYPTO_CURRENCIES;
+import static com.generalbytes.batm.server.extensions.Currencies.FIAT_CURRENCIES;
 
 /**
  * Created by b00lean on 7/31/14.
@@ -16,26 +18,24 @@ public class FixPriceRateSource implements IRateSource {
 
     private String preferedFiatCurrency = Currencies.USD;
 
-    public FixPriceRateSource(BigDecimal rate,String preferedFiatCurrency) {
+    public FixPriceRateSource(BigDecimal rate, String preferedFiatCurrency) {
         this.rate = rate;
-        if (Currencies.EUR.equalsIgnoreCase(preferedFiatCurrency)) {
-            this.preferedFiatCurrency = Currencies.EUR;
-        }
-        if (Currencies.USD.equalsIgnoreCase(preferedFiatCurrency)) {
-            this.preferedFiatCurrency = Currencies.USD;
+
+        if (FIAT_CURRENCIES.contains(preferedFiatCurrency.toUpperCase())) {
+            this.preferedFiatCurrency = preferedFiatCurrency.toUpperCase();
         }
     }
 
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(Currencies.DOGE);
+        result.addAll(CRYPTO_CURRENCIES);
         return result;
     }
 
     @Override
     public BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency) {
-        if (Currencies.DOGE.equalsIgnoreCase(cryptoCurrency)) {
+        if (CRYPTO_CURRENCIES.contains(cryptoCurrency.toUpperCase()) && fiatCurrency.equals(preferedFiatCurrency)) {
             return rate;
         }
         return null;
@@ -44,8 +44,7 @@ public class FixPriceRateSource implements IRateSource {
     @Override
     public Set<String> getFiatCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(Currencies.USD);
-        result.add(Currencies.EUR);
+        result.addAll(FIAT_CURRENCIES);
         return result;
     }
     @Override

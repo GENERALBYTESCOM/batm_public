@@ -18,7 +18,7 @@
 package com.generalbytes.batm.server.extensions.extra.anon;
 
 import com.generalbytes.batm.server.extensions.*;
-import com.generalbytes.batm.server.extensions.extra.anon.sources.FixPriceRateSource;
+import com.generalbytes.batm.server.extensions.extra.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.anon.wallets.anond.ANONRPCWallet;
 import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.CoinmarketcapRateSource;
 

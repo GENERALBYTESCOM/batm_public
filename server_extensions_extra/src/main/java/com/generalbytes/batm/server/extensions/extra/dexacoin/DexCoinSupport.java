@@ -18,6 +18,7 @@
 package com.generalbytes.batm.server.extensions.extra.dexacoin;
 
 import com.generalbytes.batm.server.extensions.*;
+import com.generalbytes.batm.server.extensions.extra.FixPriceRateSource;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -192,7 +193,7 @@ public class DexCoinSupport extends AbstractExtension implements IExchange, IWal
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
-                return new DexCoinSupport(preferedFiatCurrency,rate);
+                return new FixPriceRateSource(rate,preferedFiatCurrency);
             }
         }
         return null;

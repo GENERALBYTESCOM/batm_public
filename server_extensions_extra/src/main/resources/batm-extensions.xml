@@ -155,6 +155,11 @@
         </wallet>
         <cryptologo cryptocurrency="BCH" file="bch.png"/>
         <cryptologo cryptocurrency="BCH" file="bch.svg"/>
+        <ratesource prefix="bchfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>BCH</cryptocurrency>
+            <help>USD is default fiat currency.</help>
+        </ratesource>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.dogecoin.DogecoinExtension">
         <wallet prefix="blockio" name="Block.io Wallet">
