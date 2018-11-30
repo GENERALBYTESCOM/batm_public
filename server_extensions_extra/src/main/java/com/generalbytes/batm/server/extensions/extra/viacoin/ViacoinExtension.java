@@ -18,7 +18,7 @@
 package com.generalbytes.batm.server.extensions.extra.viacoin;
 
 import com.generalbytes.batm.server.extensions.*;
-import com.generalbytes.batm.server.extensions.extra.FixPriceRateSource;
+import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.viacoin.sources.poloniex.PoloniexRateSource;
 import com.generalbytes.batm.server.extensions.extra.viacoin.wallets.viacoind.ViacoindRPCWallet;
 

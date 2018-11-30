@@ -1,4 +1,4 @@
-package com.generalbytes.batm.server.extensions.extra;
+package com.generalbytes.batm.server.extensions;
 
 import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IRateSource;

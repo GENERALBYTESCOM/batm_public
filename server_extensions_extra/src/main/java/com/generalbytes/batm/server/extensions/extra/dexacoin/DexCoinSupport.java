@@ -18,7 +18,7 @@
 package com.generalbytes.batm.server.extensions.extra.dexacoin;
 
 import com.generalbytes.batm.server.extensions.*;
-import com.generalbytes.batm.server.extensions.extra.FixPriceRateSource;
+import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 
 import java.math.BigDecimal;
 import java.util.HashSet;

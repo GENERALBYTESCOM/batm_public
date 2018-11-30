@@ -18,7 +18,7 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin;
 
 import com.generalbytes.batm.server.extensions.*;
-import com.generalbytes.batm.server.extensions.extra.FixPriceRateSource;
+import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitfinex.BitfinexExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bittrex.BittrexExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.hitbtc.HitbtcExchange;
@@ -184,6 +184,19 @@ public class BitcoinExtension extends AbstractExtension{
             String rsType = st.nextToken();
 
             if ("btcfix".equalsIgnoreCase(rsType)) {
+                BigDecimal rate = BigDecimal.ZERO;
+                String preferredFiatCurrency = Currencies.USD;
+                if (st.hasMoreTokens()) {
+                    try {
+                        rate = new BigDecimal(st.nextToken());
+                    } catch (Throwable e) {
+                    }
+                }
+                if (st.hasMoreTokens()) {
+                    preferredFiatCurrency = st.nextToken().toUpperCase();
+                }
+                return new FixPriceRateSource(rate,preferredFiatCurrency);
+            } else if ("fixprice".equalsIgnoreCase(rsType)) {
                 BigDecimal rate = BigDecimal.ZERO;
                 String preferredFiatCurrency = Currencies.USD;
                 if (st.hasMoreTokens()) {

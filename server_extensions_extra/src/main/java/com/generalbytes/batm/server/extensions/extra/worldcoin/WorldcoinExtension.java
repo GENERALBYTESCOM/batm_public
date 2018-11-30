@@ -18,7 +18,7 @@
 package com.generalbytes.batm.server.extensions.extra.worldcoin;
 
 import com.generalbytes.batm.server.extensions.*;
-import com.generalbytes.batm.server.extensions.extra.FixPriceRateSource;
+import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.worldcoin.sources.cd.CryptodiggersRateSource;
 import com.generalbytes.batm.server.extensions.extra.worldcoin.wallets.worldcoind.WorldcoindRPCWallet;
 

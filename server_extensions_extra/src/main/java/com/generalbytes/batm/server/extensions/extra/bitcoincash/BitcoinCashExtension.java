@@ -21,12 +21,9 @@ import com.generalbytes.batm.server.extensions.AbstractExtension;
 import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.IPaperWalletGenerator;
-import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.IWallet;
-import com.generalbytes.batm.server.extensions.extra.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoincash.wallets.BATMBitcoinCashdRPCWallet;
 
-import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -63,29 +60,6 @@ public class BitcoinCashExtension extends AbstractExtension {
                     String rpcURL = protocol + "://" + username + ":" + password + "@" + hostname + ":" + port;
                     return new BATMBitcoinCashdRPCWallet(rpcURL, accountName, Currencies.BCH);
                 }
-            }
-        }
-        return null;
-    }
-    @Override
-    public IRateSource createRateSource(String sourceLogin) {
-        if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
-            StringTokenizer st = new StringTokenizer(sourceLogin,":");
-            String rsType = st.nextToken();
-
-            if ("bchfix".equalsIgnoreCase(rsType)) {
-                BigDecimal rate = BigDecimal.ZERO;
-                String preferredFiatCurrency = Currencies.USD;
-                if (st.hasMoreTokens()) {
-                    try {
-                        rate = new BigDecimal(st.nextToken());
-                    } catch (Throwable e) {
-                    }
-                }
-                if (st.hasMoreTokens()) {
-                    preferredFiatCurrency = st.nextToken().toUpperCase();
-                }
-                return new FixPriceRateSource(rate,preferredFiatCurrency);
             }
         }
         return null;
