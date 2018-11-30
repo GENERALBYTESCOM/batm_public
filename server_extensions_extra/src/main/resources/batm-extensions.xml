@@ -90,7 +90,7 @@
                 <cryptocurrency>CLOAK</cryptocurrency>
                 <cryptocurrency>FLASH</cryptocurrency>
             </ratesource>
-            <ratesource prefix="fixprice" name ="Fix Price New" >
+            <ratesource prefix="fixprice" name ="Fix Price Universal" >
                 <param name="fiatcurrency" />
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>BCH</cryptocurrency>
