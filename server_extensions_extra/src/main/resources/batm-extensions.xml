@@ -838,6 +838,14 @@
         </wallet>
         <cryptologo cryptocurrency="REP" file="rep.png"/>
         <cryptologo cryptocurrency="REP" file="rep.svg"/>
+        <wallet prefix="infuraERC20_HBX_18_0x6fe355c62c6faf6946ce888ffaba9fd12355ae27" name="Infura.io wallet - HBX">
+            <param name="apiKey" />
+            <param name="mnemonic" />
+            <help>Mnemonic should be 24 words delimited by spaces</help>
+            <cryptocurrency>REP</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="HBX" file="hbx.png"/>
+        <cryptologo cryptocurrency="HBX" file="hbx.svg"/>
         <!-- ADD your ERC20 tokens here. And don't forget to add cryptologos. -->
     </extension>
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.TransactionExtension" />-->
