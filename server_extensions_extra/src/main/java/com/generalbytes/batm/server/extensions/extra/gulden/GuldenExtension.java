@@ -18,7 +18,7 @@
 package com.generalbytes.batm.server.extensions.extra.gulden;
 
 import com.generalbytes.batm.server.extensions.*;
-import com.generalbytes.batm.server.extensions.extra.gulden.sources.FixPriceRateSource;
+import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.gulden.sources.GuldenTickerRateSource;
 import com.generalbytes.batm.server.extensions.extra.gulden.wallets.guldend.GuldendRPCWallet;
 

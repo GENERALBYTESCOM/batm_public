@@ -18,7 +18,7 @@
 package com.generalbytes.batm.server.extensions.extra.egulden;
 
 import com.generalbytes.batm.server.extensions.*;
-import com.generalbytes.batm.server.extensions.extra.egulden.sources.FixPriceRateSource;
+import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.egulden.wallets.eguldend.EguldendRPCWallet;
 
 import java.math.BigDecimal;

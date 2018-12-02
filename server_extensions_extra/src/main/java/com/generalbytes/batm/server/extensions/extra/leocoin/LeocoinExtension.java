@@ -18,7 +18,7 @@
 package com.generalbytes.batm.server.extensions.extra.leocoin;
 
 import com.generalbytes.batm.server.extensions.*;
-import com.generalbytes.batm.server.extensions.extra.leocoin.sources.FixPriceRateSource;
+import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.leocoin.wallets.leocoind.LeocoindRPCWallet;
 
 import java.math.BigDecimal;

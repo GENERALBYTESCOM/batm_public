@@ -18,7 +18,7 @@
 package com.generalbytes.batm.server.extensions.extra.flashcoin;
 
 import com.generalbytes.batm.server.extensions.*;
-import com.generalbytes.batm.server.extensions.extra.flashcoin.sources.FixPriceRateSource;
+import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.flashcoin.wallets.flashcoind.FlashcoinRPCWallet;
 
 import java.math.BigDecimal;
