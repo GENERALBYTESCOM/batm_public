@@ -116,7 +116,7 @@ public class GroestlcoinTickerRateSource implements IRateSource{
 
     public static void main(String[] args) {
         BigDecimal exchangeRateLast = (new GroestlcoinTickerRateSource()).getExchangeRateLast("GRS", "EUR");
-        System.out.println("exchangeRateLast = " + exchangeRateLast);
+        log.info("exchangeRateLast = " + exchangeRateLast);
     }
 
 

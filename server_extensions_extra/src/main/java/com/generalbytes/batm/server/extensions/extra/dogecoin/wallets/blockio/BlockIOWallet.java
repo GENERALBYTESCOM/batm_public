@@ -4,6 +4,9 @@ import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IWallet;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import si.mazi.rescu.RestProxyFactory;
 
 import java.math.BigDecimal;
@@ -17,6 +20,7 @@ import static com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blo
  * Created by b00lean on 8/11/14.
  */
 public class BlockIOWallet implements IWallet {
+    private static final Logger log = LoggerFactory.getLogger("batm.master.extensions.BlockIOWallet");
     private String apiKey;
     private String pin;
     private String priority;
@@ -67,7 +71,7 @@ public class BlockIOWallet implements IWallet {
                 return response.getData().getAddresses()[0].getAddress();
             }
         }catch (Throwable t) {
-            t.printStackTrace();
+            log.error("Error", t);
         }
 
         return null;
@@ -85,7 +89,7 @@ public class BlockIOWallet implements IWallet {
                 return new BigDecimal(response.getData().getAvailable_balance());
             }
         }catch (Throwable t) {
-            t.printStackTrace();
+            log.error("Error", t);
         }
 
         return null;
@@ -102,7 +106,7 @@ public class BlockIOWallet implements IWallet {
                 return response.getData().getTxid();
             }
         }catch (Throwable t) {
-            t.printStackTrace();
+            log.error("Error", t);
         }
 
         return null;

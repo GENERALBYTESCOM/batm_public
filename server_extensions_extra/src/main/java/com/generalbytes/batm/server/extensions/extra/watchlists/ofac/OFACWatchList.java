@@ -123,7 +123,7 @@ public class OFACWatchList implements IWatchList{
                 return true;
             }
         } catch (JAXBException e) {
-            e.printStackTrace();
+            log.error("Error", e);
         }
 
         return false;
@@ -170,7 +170,7 @@ public class OFACWatchList implements IWatchList{
                 return ParsedSanctions.parse(temporary);
 
             } catch (JAXBException e) {
-                e.printStackTrace();
+                log.error("Error", e);
             }
         }
         return null;
@@ -184,7 +184,7 @@ public class OFACWatchList implements IWatchList{
             fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
             return true;
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Error", e);
         }
         return false;
     }

@@ -63,9 +63,9 @@ public class CryptodiggersRateSource implements IRateSource{
             config.setIgnoreHttpErrorCodes(true);
             api = RestProxyFactory.createProxy(ICryptodiggersRateAPI.class, "https://www.cryptodiggers.eu", config);
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            log.error("Error", e);
         } catch (KeyManagementException e) {
-            e.printStackTrace();
+            log.error("Error", e);
         }
     }
 

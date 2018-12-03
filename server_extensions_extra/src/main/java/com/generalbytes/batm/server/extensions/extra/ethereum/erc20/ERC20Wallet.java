@@ -101,7 +101,7 @@ public class ERC20Wallet implements IWallet{
             };
             contract = ERC20Interface.load(contractAddress, w, credentials, gasProvider);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Error", e);
         }
     }
 
@@ -116,7 +116,7 @@ public class ERC20Wallet implements IWallet{
             EthEstimateGas estimateGas = w.ethEstimateGas(tx).send();
             return estimateGas.getAmountUsed();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Error", e);
         }
         return null;
     }

@@ -54,7 +54,7 @@ public class NubitsRPCWallet implements IWallet{
             log.debug("result = " + result);
             return result;
         } catch (BitcoinRPCException e) {
-            e.printStackTrace();
+            log.error("Error", e);
             return null;
         }
     }
@@ -74,7 +74,7 @@ public class NubitsRPCWallet implements IWallet{
                 return addressesByAccount.get(0);
             }
         } catch (BitcoinRPCException e) {
-            e.printStackTrace();
+            log.error("Error", e);
             return null;
         }
     }
@@ -88,7 +88,7 @@ public class NubitsRPCWallet implements IWallet{
         try {
             return getClient(rpcURL).getBalance(accountName);
         } catch (BitcoinRPCException e) {
-            e.printStackTrace();
+            log.error("Error", e);
             return null;
         }
     }
@@ -97,7 +97,7 @@ public class NubitsRPCWallet implements IWallet{
         try {
             return new BitcoinJSONRPCClient(rpcURL);
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            log.error("Error", e);
         }
         return null;
     }

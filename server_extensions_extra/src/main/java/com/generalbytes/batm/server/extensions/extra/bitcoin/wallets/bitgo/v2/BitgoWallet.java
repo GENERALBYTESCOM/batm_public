@@ -92,7 +92,7 @@ public class BitgoWallet implements IWallet {
             String errorMessage = ExtensionsUtil.getErrorMessage(body);
             log.debug("send coins error message = [" + errorMessage +"] ");
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Error", e);
         }
 
         log.debug("send coins status = {}", status);

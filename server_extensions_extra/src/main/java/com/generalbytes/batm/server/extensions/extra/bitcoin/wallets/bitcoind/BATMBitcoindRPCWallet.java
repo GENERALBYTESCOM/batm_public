@@ -147,7 +147,7 @@ public class BATMBitcoindRPCWallet implements IWallet{
             bitcoinJSONRPCClient.setSslSocketFactory(sslcontext.getSocketFactory());
             return bitcoinJSONRPCClient;
         } catch (MalformedURLException | NoSuchAlgorithmException | KeyManagementException e) {
-            e.printStackTrace();
+            log.error("Error", e);
             return null;
         }
     }

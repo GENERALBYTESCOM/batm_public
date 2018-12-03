@@ -43,7 +43,7 @@ public class BitgoAPITest {
                 }
             }
         } catch (Throwable e) {
-            System.err.println("batm.master.ServerUtil - setLoggerLevel");
+            log.error("batm.master.ServerUtil - setLoggerLevel");
             log.error("setLoggerLevel", e);
         }
     }
@@ -261,7 +261,7 @@ public class BitgoAPITest {
             String txid = result.get("txid");
             Assert.assertNotNull(txid);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Error", e);
         }
     }
 
