@@ -184,6 +184,14 @@ public interface IExtensionContext {
     List<ITerminal> findAllTerminals();
 
     /**
+     * Returns terminal by serial number.
+     * @param serialNumber
+     * @return
+     */
+    ITerminal findTerminalBySerialNumber(String serialNumber);
+
+
+    /**
      * Returns list of terminal serial numbers of terminals that have available cash to be dispensed by sell transactions.
      * Algorithm takes into account also if amount can be built by banknotes in output cash boxes and
      * if some of the banknotes are reserved for upcoming withdrawals by other customers.
