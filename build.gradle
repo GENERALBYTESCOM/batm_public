@@ -55,8 +55,8 @@ allprojects {
                 global = true
             }
             dependencyVerifications {
-                setConfigurations([]) // effectively turns off all checksum verifications
-                failOnChecksumError = false // turns off failure on checksum problem (only warnings are printed)
+//                setConfigurations([]) // effectively turns off all checksum verifications
+//                failOnChecksumError = false // turns off failure on checksum problem (only warnings are printed)
             }
         }
         if (pluginManager.hasPlugin('com.generalbytes.gradle.dependency.strict')) {
