@@ -146,12 +146,12 @@ public class RESTServiceExample {
     /**
      * Creates sell transaction.
      */
-    public Object sellCrypto(@QueryParam("serial_number") String serialNumber, @QueryParam("fiat_amount") BigDecimal fiatAmount, @QueryParam("fiat_currency") String fiatCurrency, @QueryParam("crypto_amount") BigDecimal cryptoAmount, @QueryParam("crypto_currency") String cryptoCurrency) {
+    public Object sellCrypto(@QueryParam("serial_number") String serialNumber, @QueryParam("fiat_amount") BigDecimal fiatAmount, @QueryParam("fiat_currency") String fiatCurrency, @QueryParam("crypto_amount") BigDecimal cryptoAmount, @QueryParam("crypto_currency") String cryptoCurrency, @QueryParam("identity_public_id") String identityPublicId, @QueryParam("discount_code") String discountCode ) {
         if (serialNumber == null || fiatAmount == null || fiatCurrency == null || cryptoAmount == null || cryptoCurrency == null) {
             return "missing parameters";
         }
         try {
-            return RESTExampleExtension.getExtensionContext().sellCrypto(serialNumber, fiatAmount, fiatCurrency,cryptoAmount,cryptoCurrency);
+            return RESTExampleExtension.getExtensionContext().sellCrypto(serialNumber, fiatAmount, fiatCurrency, cryptoAmount, cryptoCurrency, identityPublicId, discountCode);
         } catch (Throwable e) {
             log.error("Error", e);
         }

@@ -141,9 +141,11 @@ public interface IExtensionContext {
      * @param fiatCurrency
      * @param cryptoAmount - ignored - reserved for future.
      * @param cryptoCurrency
+     * @param identityPublicId
+     * @param discountCode
      * @return - read ITransactionSellInfo.getTransactionUUID() to find out what should be filled in sell QR code.
      */
-    ITransactionSellInfo sellCrypto(String terminalSerialNumber, BigDecimal fiatAmount, String fiatCurrency, BigDecimal cryptoAmount, String cryptoCurrency) throws SellException;
+    ITransactionSellInfo sellCrypto(String terminalSerialNumber, BigDecimal fiatAmount, String fiatCurrency, BigDecimal cryptoAmount, String cryptoCurrency, String identityPublicId, String discountCode) throws SellException;
 
 
     /**
