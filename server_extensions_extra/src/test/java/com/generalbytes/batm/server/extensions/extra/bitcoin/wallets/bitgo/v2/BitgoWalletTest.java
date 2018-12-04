@@ -35,7 +35,7 @@ public class BitgoWalletTest {
                 }
             }
         } catch (Throwable e) {
-            System.err.println("batm.master.ServerUtil - setLoggerLevel");
+            log.error("batm.master.ServerUtil - setLoggerLevel");
             log.error("setLoggerLevel", e);
         }
     }

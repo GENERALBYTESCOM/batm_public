@@ -157,13 +157,13 @@ public class Potwallet implements IWallet {
             digest = hash.toString();
         }
         catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            log.error("Error", e);
         }
         catch(InvalidKeyException e){
-            e.printStackTrace();
+            log.error("Error", e);
         }
         catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            log.error("Error", e);
         }
         return digest ;
     }

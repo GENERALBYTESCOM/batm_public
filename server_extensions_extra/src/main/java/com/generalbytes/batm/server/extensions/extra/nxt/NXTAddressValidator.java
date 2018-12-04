@@ -20,9 +20,13 @@ package com.generalbytes.batm.server.extensions.extra.nxt;
 import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.math.BigInteger;
 
 public class NXTAddressValidator implements ICryptoAddressValidator {
+    private static final Logger log = LoggerFactory.getLogger("batm.master.extensions.NXTAddressValidator");
     @Override
     public boolean isAddressValid(String address) {
         return isNXTAddressValid(address);
@@ -46,7 +50,7 @@ public class NXTAddressValidator implements ICryptoAddressValidator {
                 BigInteger l = rsDecode(pieces[1] + "-" + pieces[2] + "-" + pieces[3] + "-" + pieces[4]);
                 return l;
             } catch (RuntimeException e) {
-                e.printStackTrace();
+                log.error("Error", e);
                 return null;
             }
         }else{

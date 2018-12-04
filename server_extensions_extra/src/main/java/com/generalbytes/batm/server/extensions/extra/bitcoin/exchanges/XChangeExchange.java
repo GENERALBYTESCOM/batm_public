@@ -122,13 +122,13 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
                         .getTicker(new CurrencyPair(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency), fiatCurrency))
                         .getLast();
             } catch (ExchangeException e) {
-                e.printStackTrace();
+                log.error("Error", e);
             } catch (NotAvailableFromExchangeException e) {
-                e.printStackTrace();
+                log.error("Error", e);
             } catch (NotYetImplementedForExchangeException e) {
-                e.printStackTrace();
+                log.error("Error", e);
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("Error", e);
             }
             return null;
         }
@@ -167,7 +167,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
             log.debug("{} exchange balance request: {} = {}", name, cryptoCurrency, balance);
             return balance;
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Error", e);
             log.error("{} exchange balance request: {}", name, cryptoCurrency, e);
         }
         return null;
@@ -185,7 +185,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
             log.debug("{} exchange balance request: {} = {}", name, fiatCurrency, balance);
             return balance;
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Error", e);
             log.error("{} exchange balance request: {}", name, fiatCurrency, e);
         }
         return null;
@@ -253,7 +253,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
             try {
                 Thread.sleep(2000); //give exchange 2 seconds to reflect open order in order book
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                log.error("Error", e);
             }
 
             // get open orders
@@ -275,7 +275,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
                     try {
                         Thread.sleep(3000); //don't get your ip address banned
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        log.error("Error", e);
                     }
                 } else {
                     orderProcessed = true;
@@ -318,7 +318,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
         try {
             return accountService.requestDepositAddress(Currency.getInstance(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency)));
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Error", e);
         }
         return null;
     }
@@ -355,7 +355,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
             try {
                 Thread.sleep(2000); //give exchange 2 seconds to reflect open order in order book
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                log.error("Error", e);
             }
 
             // get open orders
@@ -377,7 +377,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
                     try {
                         Thread.sleep(3000); //don't get your ip address banned
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        log.error("Error", e);
                     }
                 }else{
                     orderProcessed = true;
@@ -568,10 +568,10 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
                 try {
                     Thread.sleep(2000); //give exchange 2 seconds to reflect open order in order book
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    log.error("Error", e);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("Error", e);
                 log.error("{} exchange purchase task failed", name, e);
             }
             return (orderId != null);
@@ -607,7 +607,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
                     }
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("Error", e);
             }
 
             if (orderFound) {
@@ -689,13 +689,13 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
                 try {
                     Thread.sleep(2000); //give exchange 2 seconds to reflect open order in order book
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    log.error("Error", e);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("Error", e);
                 log.error("{} exchange sell coins task failed", name, e);
             } catch (Throwable e) {
-                e.printStackTrace();
+                log.error("Error", e);
             }
             return (orderId != null);
         }
@@ -730,7 +730,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
                     }
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("Error", e);
             }
 
             if (orderFound) {

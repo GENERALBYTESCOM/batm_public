@@ -141,9 +141,11 @@ public interface IExtensionContext {
      * @param fiatCurrency
      * @param cryptoAmount - ignored - reserved for future.
      * @param cryptoCurrency
+     * @param identityPublicId
+     * @param discountCode
      * @return - read ITransactionSellInfo.getTransactionUUID() to find out what should be filled in sell QR code.
      */
-    ITransactionSellInfo sellCrypto(String terminalSerialNumber, BigDecimal fiatAmount, String fiatCurrency, BigDecimal cryptoAmount, String cryptoCurrency) throws SellException;
+    ITransactionSellInfo sellCrypto(String terminalSerialNumber, BigDecimal fiatAmount, String fiatCurrency, BigDecimal cryptoAmount, String cryptoCurrency, String identityPublicId, String discountCode) throws SellException;
 
 
     /**
@@ -180,6 +182,14 @@ public interface IExtensionContext {
      * @return
      */
     List<ITerminal> findAllTerminals();
+
+    /**
+     * Returns terminal by serial number.
+     * @param serialNumber
+     * @return
+     */
+    ITerminal findTerminalBySerialNumber(String serialNumber);
+
 
     /**
      * Returns list of terminal serial numbers of terminals that have available cash to be dispensed by sell transactions.

@@ -17,6 +17,9 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.examples.rest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -39,6 +42,7 @@ import javax.ws.rs.core.MediaType;
  */
 @Path("/")
 public class SecuredRESTServiceExample {
+    private static final Logger log = LoggerFactory.getLogger("batm.master.extensions.SecuredRESTServiceExample");
     public static final String API_KEY      = "P123454S6818ASMSISNSOS2USJAODKMW";
     public static final String API_SECRET   = "SHDDOSMsS5540OK9KD7F53J4EIA2J383";
 
@@ -110,7 +114,7 @@ public class SecuredRESTServiceExample {
             byte[] result = sha256_HMAC.doFinal(input.getBytes());
             return bytesToHexString(result).toUpperCase();
         } catch (NoSuchAlgorithmException | InvalidKeyException e) {
-            e.printStackTrace();
+            log.error("Error", e);
         }
         return null;
     }

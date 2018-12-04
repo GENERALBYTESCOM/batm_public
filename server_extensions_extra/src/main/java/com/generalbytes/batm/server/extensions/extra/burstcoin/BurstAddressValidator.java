@@ -20,9 +20,13 @@ package com.generalbytes.batm.server.extensions.extra.burstcoin;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.extra.nxt.ReedSolomon;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.math.BigInteger;
 
 public class BurstAddressValidator implements ICryptoAddressValidator {
+    private static final Logger log = LoggerFactory.getLogger("batm.master.extensions.BurstAddressValidator");
     @Override
     public boolean isAddressValid(String address) {
         return isBurstAddressValid(address);
@@ -46,7 +50,7 @@ public class BurstAddressValidator implements ICryptoAddressValidator {
 
                 return rsDecode(pieces[1] + "-" + pieces[2] + "-" + pieces[3] + "-" + pieces[4]);
             } catch (RuntimeException e) {
-                e.printStackTrace();
+                log.error("Error", e);
                 return null;
             }
         } else {

@@ -119,6 +119,6 @@ public class MaxcoinTickerRateSource implements IRateSource{
     public static void main(String[] args) {
         MaxcoinTickerRateSource rs = new MaxcoinTickerRateSource();
         BigDecimal exchangeRateLast = rs.getExchangeRateLast(Currencies.MAX, Currencies.USD);
-        System.out.println("exchangeRateLast = " + exchangeRateLast);
+        log.info("exchangeRateLast = " + exchangeRateLast);
     }
 }

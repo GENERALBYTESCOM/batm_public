@@ -17,6 +17,9 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.bitcoincash;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import wf.bitcoin.javabitcoindrpcclient.BitcoinRPCException;
 import wf.bitcoin.javabitcoindrpcclient.BitcoinJSONRPCClient;
 
@@ -33,6 +36,7 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 public class RPCClient extends BitcoinJSONRPCClient {
+    private static final Logger log = LoggerFactory.getLogger("batm.master.extensions.RPCClient");
     public RPCClient(String rpcUrl) throws MalformedURLException {
         super(rpcUrl);
         setHostnameVerifier((s, sslSession) -> true);
@@ -50,9 +54,9 @@ public class RPCClient extends BitcoinJSONRPCClient {
             }}, null);
             setSslSocketFactory(sslcontext.getSocketFactory());
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            log.error("Error", e);
         } catch (KeyManagementException e) {
-            e.printStackTrace();
+            log.error("Error", e);
         }
     }
 

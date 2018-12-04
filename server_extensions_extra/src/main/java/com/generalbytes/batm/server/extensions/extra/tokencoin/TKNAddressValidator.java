@@ -19,9 +19,13 @@ package com.generalbytes.batm.server.extensions.extra.tokencoin;
 
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.math.BigInteger;
 
 public class TKNAddressValidator implements ICryptoAddressValidator {
+    private static final Logger log = LoggerFactory.getLogger("batm.master.extensions.TKNAddressValidator");
     @Override
     public boolean isAddressValid(String address) {
         return isTKNAddressValid(address);
@@ -45,7 +49,7 @@ public class TKNAddressValidator implements ICryptoAddressValidator {
                 BigInteger l = rsDecode(pieces[1] + "-" + pieces[2] + "-" + pieces[3] + "-" + pieces[4]);
                 return l;
             } catch (RuntimeException e) {
-                e.printStackTrace();
+                log.error("Error", e);
                 return null;
             }
         }else{

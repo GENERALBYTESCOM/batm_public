@@ -70,7 +70,7 @@ public class BATMBitcoinCashdRPCWallet implements IWallet{
             log.debug("result = " + result);
             return result;
         } catch (BitcoinRPCException e) {
-            e.printStackTrace();
+            log.error("Error", e);
             return null;
         }
     }
@@ -90,7 +90,7 @@ public class BATMBitcoinCashdRPCWallet implements IWallet{
                 return addressesByAccount.get(0);
             }
         } catch (BitcoinRPCException e) {
-            e.printStackTrace();
+            log.error("Error", e);
             return null;
         }
     }
@@ -104,7 +104,7 @@ public class BATMBitcoinCashdRPCWallet implements IWallet{
         try {
             return client.getBalance(accountName);
         } catch (BitcoinRPCException e) {
-            e.printStackTrace();
+            log.error("Error", e);
             return null;
         }
     }
@@ -113,7 +113,7 @@ public class BATMBitcoinCashdRPCWallet implements IWallet{
         try {
             return new RPCClient(rpcURL);
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            log.error("Error", e);
         }
         return null;
     }

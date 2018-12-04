@@ -194,6 +194,6 @@ public class EtherUtils {
 //    public static void main(String[] args) {
 //        Credentials credentials = EtherUtils.loadBip44Credentials("abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about","");
 //        String address = credentials.getAddress();
-//        System.out.println("address = " + address);
+//        log.info("address = " + address);
 //    }
 }

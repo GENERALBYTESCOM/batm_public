@@ -1,8 +1,8 @@
 package com.generalbytes.batm.server.extensions.extra.cloakcoin;
 
 import com.generalbytes.batm.server.extensions.*;
+import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.CoinmarketcapRateSource;
-import com.generalbytes.batm.server.extensions.extra.cloakcoin.sources.FixPriceRateSource;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
