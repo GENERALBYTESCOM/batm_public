@@ -159,7 +159,7 @@ public class Sanctions {
                 }
             }
         }else {
-            //search against lastname ans firstname
+            //search against lastname and firstname
             for (int i = 0; i < records.size(); i++) {
                 Record record = records.get(i);
                 if (record.type == INDIVIDUAL && record.lastName.trim().equalsIgnoreCase(lastName)) {

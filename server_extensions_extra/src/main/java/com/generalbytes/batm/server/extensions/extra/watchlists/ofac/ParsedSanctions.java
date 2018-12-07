@@ -157,7 +157,6 @@ public class ParsedSanctions {
 
         if (firstName.isEmpty()) {
             //search just against last names
-
             List<ParsedNamePart> parsedNameParts = nameParts.get(TYPE_LAST_NAME);
             if (parsedNameParts != null) {
                 for (int i = 0; i < parsedNameParts.size(); i++) {
@@ -168,7 +167,7 @@ public class ParsedSanctions {
                 }
             }
         }else {
-            //search against lastname ans firstname
+            //search against lastname and firstname
             List<ParsedNamePart> parsedNameParts = nameParts.get(TYPE_LAST_NAME);
             if (parsedNameParts != null) {
                 for (int i = 0; i < parsedNameParts.size(); i++) {
