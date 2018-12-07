@@ -141,6 +141,13 @@ public class ParsedSanctions {
      * @return
      */
     public Set<Match> search(String firstName, String lastName) {
+        if (firstName == null) {
+            firstName = "";
+        }
+        if (lastName == null) {
+            lastName = "";
+        }
+
         lastName = lastName.trim();
         firstName = firstName.trim();
 
@@ -149,7 +156,7 @@ public class ParsedSanctions {
 
 
         if (firstName.isEmpty()) {
-            //search just against lastnames
+            //search just against last names
 
             List<ParsedNamePart> parsedNameParts = nameParts.get(TYPE_LAST_NAME);
             if (parsedNameParts != null) {

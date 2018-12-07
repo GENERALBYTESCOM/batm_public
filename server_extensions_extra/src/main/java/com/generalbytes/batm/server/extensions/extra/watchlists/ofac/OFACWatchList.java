@@ -151,7 +151,7 @@ public class OFACWatchList implements IWatchList{
             final ArrayList<WatchListMatch> matches = new ArrayList<WatchListMatch>();
             for (Match match : result) {
                 final String partyIndex = sanctions.getPartyIndexByPartyId(match.getPartyId());
-                matches.add(new WatchListMatch(match.getScore(),"Matched SDN Number: " + match.getPartyId() + " partyIndex: "+ partyIndex + ". For more details click <a href=\'https://sanctionssearch.ofac.treas.gov\'>here</a>.",getName()));
+                matches.add(new WatchListMatch(match.getScore(),"Matched OFAC SDN Number: " + match.getPartyId() + " partyIndex: "+ partyIndex + ". For more details click <a href=\'https://sanctionssearch.ofac.treas.gov\'>here</a>.",getName()));
             }
             return new WatchListResult(matches);
         }

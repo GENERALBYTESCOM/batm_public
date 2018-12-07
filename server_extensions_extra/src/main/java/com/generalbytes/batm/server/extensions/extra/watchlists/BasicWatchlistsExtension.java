@@ -19,6 +19,7 @@
 package com.generalbytes.batm.server.extensions.extra.watchlists;
 
 import com.generalbytes.batm.server.extensions.*;
+import com.generalbytes.batm.server.extensions.extra.watchlists.czech.CzechSanctionList;
 import com.generalbytes.batm.server.extensions.extra.watchlists.ofac.OFACWatchList;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
@@ -27,6 +28,7 @@ import java.util.Set;
 
 public class BasicWatchlistsExtension extends AbstractExtension{
     private IWatchList ofacWatchList = new OFACWatchList();
+    private IWatchList czechSanctionList = new CzechSanctionList();
 
     @Override
     public String getName() {
@@ -37,6 +39,7 @@ public class BasicWatchlistsExtension extends AbstractExtension{
     public Set<String> getSupportedWatchListsNames() {
         final HashSet<String> watchListNames = new HashSet<String>();
         watchListNames.add(ofacWatchList.getName());
+        watchListNames.add(czechSanctionList.getName());
         return watchListNames;
     }
 
@@ -45,11 +48,9 @@ public class BasicWatchlistsExtension extends AbstractExtension{
         if (ofacWatchList.getName().equals(name)) {
             return ofacWatchList;
         }
-        return null;
-    }
-
-    @Override
-    public Set<String> getSupportedCryptoCurrencies() {
+        if (czechSanctionList.getName().equals(name)) {
+            return czechSanctionList;
+        }
         return null;
     }
 }
