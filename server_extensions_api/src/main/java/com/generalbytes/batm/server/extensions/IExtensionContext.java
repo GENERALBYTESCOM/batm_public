@@ -86,7 +86,7 @@ public interface IExtensionContext {
      * @param subject
      * @param messageText
      */
-    void sendMailAsync(final String from, final String addressListTo, final String subject, final String messageText);
+    void sendMailAsync(final String from, final String addressListTo, final String subject, final String messageText, String replyTo);
 
     /**
      * Sends plain-text email containing attachment asynchronously
@@ -98,7 +98,7 @@ public interface IExtensionContext {
      * @param attachmentContent
      * @param attachmentMimeType
      */
-    void sendMailAsyncWithAttachment(final String from, final String addresslistTo, final String subject, final String messageText, final String attachmentFileName, final byte[] attachmentContent, final String attachmentMimeType);
+    void sendMailAsyncWithAttachment(final String from, final String addresslistTo, final String subject, final String messageText, final String attachmentFileName, final byte[] attachmentContent, final String attachmentMimeType, String replyTo);
 
     /**
      * Sends email containing html text
@@ -108,7 +108,7 @@ public interface IExtensionContext {
      * @param messageText
      * @param embeddedEmailImages
      */
-    void sendHTMLMailAsync(final String from, final String addresslistTo, final String subject, final String messageText, final EmbeddedEmailImage... embeddedEmailImages);
+    void sendHTMLMailAsync(final String from, final String addresslistTo, final String subject, final String messageText, String replyTo, final EmbeddedEmailImage... embeddedEmailImages);
 
     /**
      * Sends email containing html and attachments
@@ -120,7 +120,7 @@ public interface IExtensionContext {
      * @param attachmentContent
      * @param attachmentMimeType
      */
-    void sendHTMLMailAsyncWithAttachment(final String from, final String addresslistTo, final String subject, final String messageText, final String attachmentFileName, final byte[] attachmentContent, final String attachmentMimeType);
+    void sendHTMLMailAsyncWithAttachment(final String from, final String addresslistTo, final String subject, final String messageText, final String attachmentFileName, final byte[] attachmentContent, final String attachmentMimeType, String replyTo);
 
     /**
      * Sends SMS message to specified phone number asynchronously. Terminal serial number is used to detect country code prefix from its location
