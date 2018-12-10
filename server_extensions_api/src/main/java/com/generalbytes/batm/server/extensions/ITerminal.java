@@ -35,4 +35,8 @@ public interface ITerminal {
     Date getExchangeRateUpdatedAt();
     String getExchangeRatesBuy();
     String getExchangeRatesSell();
+
+    long getErrors();
+    int getOperationalMode();
+    int getRejectedReason();
 }

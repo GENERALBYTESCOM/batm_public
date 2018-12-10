@@ -85,6 +85,7 @@ public interface IExtensionContext {
      * @param addressListTo
      * @param subject
      * @param messageText
+     * @param replyTo - optional
      */
     void sendMailAsync(final String from, final String addressListTo, final String subject, final String messageText, String replyTo);
 
@@ -97,6 +98,7 @@ public interface IExtensionContext {
      * @param attachmentFileName
      * @param attachmentContent
      * @param attachmentMimeType
+     * @param replyTo - optional
      */
     void sendMailAsyncWithAttachment(final String from, final String addresslistTo, final String subject, final String messageText, final String attachmentFileName, final byte[] attachmentContent, final String attachmentMimeType, String replyTo);
 
@@ -119,6 +121,7 @@ public interface IExtensionContext {
      * @param attachmentFileName
      * @param attachmentContent
      * @param attachmentMimeType
+     * @param replyTo - optional
      */
     void sendHTMLMailAsyncWithAttachment(final String from, final String addresslistTo, final String subject, final String messageText, final String attachmentFileName, final byte[] attachmentContent, final String attachmentMimeType, String replyTo);
 

@@ -18,6 +18,7 @@
 package com.generalbytes.batm.server.extensions.extra.examples.chat;
 
 import com.generalbytes.batm.server.extensions.IExtensionContext;
+import com.generalbytes.batm.server.extensions.ILocation;
 import com.generalbytes.batm.server.extensions.IPerson;
 import com.generalbytes.batm.server.extensions.ITerminal;
 import com.generalbytes.batm.server.extensions.ITransactionDetails;
@@ -31,6 +32,9 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -46,9 +50,11 @@ import static com.generalbytes.batm.server.extensions.ITransactionDetails.STATUS
 import static com.generalbytes.batm.server.extensions.ITransactionDetails.STATUS_WITHDRAW_IN_PROGRESS;
 
 @ChatCommand( names = {"info","i"},
-    help = "/info remoteTransactionId - display transaction information.")
+    help = "/info remoteTransactionId|terminals [serial number] - display terminal or transaction information.")
 //    help = "/info [balances|terminals [serial number]|remoteTransactionId|identityId] - display various information\n")
 public class InfoCommand extends AbstractChatCommnad{
+
+    public static final String PERMISSION_DENIED = "Permission denied. We are sorry, but you don't have access to this information.";
 
     public boolean processCommand(IExtensionContext ctx, IConversation conversation, String command, StringTokenizer parameters, String commandLine) {
         boolean displayInfoAboutTerminals = false;
@@ -67,14 +73,14 @@ public class InfoCommand extends AbstractChatCommnad{
                 displayInfoAboutTerminals = true;
                 while (parameters.hasMoreTokens()) {
                     String serialNumber = parameters.nextToken();
-                    if (serialNumber.startsWith("BT") || serialNumber.startsWith("PS")) {
+                    if (serialNumber.startsWith("BT") || serialNumber.startsWith("PS") || serialNumber.startsWith("bt") || serialNumber.startsWith("ps")) {
                         serialNumbers.add(serialNumber);
                     }
                 }
-            }else if ((parameter.startsWith("R") || (parameter.startsWith("L"))) && parameter.length() == 6) {
+            }else if ((parameter.startsWith("R") || parameter.startsWith("r") || parameter.startsWith("L") || parameter.startsWith("l")) && parameter.length() == 6) {
                 displayTransactionInformation(ctx, conversation, parameter.toUpperCase());
                 return true;
-            }else if (parameter.startsWith("I") && parameter.length() == 6) {
+            }else if ((parameter.startsWith("I") || parameter.startsWith("i")) && parameter.length() == 6) {
                 displayIdentityInformation(ctx, conversation, parameter.toUpperCase());
                 return true;
             }
@@ -103,6 +109,8 @@ public class InfoCommand extends AbstractChatCommnad{
             if (ctx.hasPersonPermissionToObject(IExtensionContext.PERMISSION_READ, person, td)) {
                 sb.append("Transaction details of " + td.getRemoteTransactionId() + ":\n");
                 sb.append(formatTransactionDetails(ctx, person, td));
+            }else{
+                sb.append(PERMISSION_DENIED);
             }
         }
         String response = sb.toString();
@@ -113,7 +121,13 @@ public class InfoCommand extends AbstractChatCommnad{
         ITerminal terminal = ctx.findTerminalBySerialNumber(td.getTerminalSerialNumber());
 
         SimpleDateFormat timeFormat = ctx.getTimeFormatByPerson(person);
-        String result = emojiByTransactionStatus(td) + " " + timeFormat.format(td.getTerminalTime()) + " " +  td.getTerminalSerialNumber() + " (" + terminal.getName() + ") " + formatTxType(td) + " " + td.getRemoteTransactionId();
+        String name = terminal.getName();
+        if (name == null) {
+            name = "";
+        }else{
+            name = " (" + name + ")";
+        }
+        String result = emojiByTransactionStatus(td) + " " + timeFormat.format(td.getTerminalTime()) + " " +  td.getTerminalSerialNumber() + name + " "  + formatTxType(td) + " " + td.getRemoteTransactionId();
         if (td.getType() == ITransactionDetails.TYPE_BUY_CRYPTO) {
             result+=" " + formatFiat(td.getCashAmount()) + " " + td.getCashCurrency() +  " > " + formatCrypto(td.getCryptoAmount()) + " " + td.getCryptoCurrency() + " " + td.getCryptoAddress() + " " + formatTxStatus(td);
         }else if (td.getType() == ITransactionDetails.TYPE_SELL_CRYPTO) {
@@ -236,12 +250,81 @@ public class InfoCommand extends AbstractChatCommnad{
         }
         return amount.stripTrailingZeros().toPlainString();
     }
+    private void displayTerminalsInformation(IExtensionContext ctx, IConversation conversation, List<String> serialNumbers) {
+        List<ITerminal> foundTerminals = new ArrayList<>();
+        if (serialNumbers == null || serialNumbers.isEmpty()) {
+            //all terminals.
+            foundTerminals.addAll(ctx.findAllTerminals());
+        }else{
+            for (int i = 0; i < serialNumbers.size(); i++) {
+                String serialNumber = serialNumbers.get(i);
+                ITerminal t = ctx.findTerminalBySerialNumber(serialNumber);
+                foundTerminals.add(t);
+            }
+        }
+        IPerson person = ctx.findPersonByChatId(conversation.getSenderUserId());
+        List<ITerminal> resultingTerminals = new ArrayList<>();
+        for (int i = 0; i < foundTerminals.size(); i++) {
+            ITerminal terminal = foundTerminals.get(i);
+            if (ctx.hasPersonPermissionToObject(IExtensionContext.PERMISSION_READ, person, terminal)) {
+                if (terminal.isActive()) {
+                    resultingTerminals.add(terminal);
+                }else{
+                    //do not show terminals that are not marked as active.
+                }
+            }
+        }
 
-    private void displayBalanceInformation(IExtensionContext ctx, IConversation conversation) {
-        //TODO:
+        if (resultingTerminals.isEmpty()) {
+            conversation.sendText("I'm sorry but no terminals found.");
+            return;
+        }else{
+            //sort terminals by serial number
+            Collections.sort(resultingTerminals, new Comparator<ITerminal>() {
+                @Override
+                public int compare(ITerminal t1, ITerminal t2) {
+                    return t1.getSerialNumber().compareTo(t2.getSerialNumber());
+                }
+            });
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("Status of terminals:\n");
+            for (int i = 0; i < resultingTerminals.size(); i++) {
+                ITerminal terminal = resultingTerminals.get(i);
+                sb.append(emojiByTerminalStatus(terminal) + " " + terminal.getSerialNumber());
+                String name = terminal.getName();
+                if (name != null) {
+                    sb.append(" (" + name + ")");
+                }
+                ILocation location = terminal.getLocation();
+                if (location != null) {
+                    sb.append(" " + location.getName());
+                }
+                sb.append("\n");
+            }
+            conversation.sendText(sb.toString());
+        }
     }
 
-    private void displayTerminalsInformation(IExtensionContext ctx, IConversation conversation, List<String> serialNumbers) {
+    private String emojiByTerminalStatus(ITerminal terminal) {
+        Date lastPingAt = terminal.getLastPingAt();
+        if (lastPingAt != null) {
+            if (lastPingAt.getTime() + (60000) > System.currentTimeMillis()) {
+                if (terminal.getErrors() == 0) {
+                    return EmojiParser.parseToUnicode(":green_heart:");
+                } else {
+                    return EmojiParser.parseToUnicode(":triangular_flag_on_post:");
+                }
+            } else {
+                // Not online (very old ping)
+                return EmojiParser.parseToUnicode(":red_circle:");
+            }
+        } else {
+            //never pinged terminal
+            return EmojiParser.parseToUnicode(":large_blue_circle:");
+        }
+    }
+    private void displayBalanceInformation(IExtensionContext ctx, IConversation conversation) {
         //TODO:
     }
 
