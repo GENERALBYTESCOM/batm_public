@@ -887,5 +887,5 @@
     </extension>
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.TransactionExtension" />-->
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.rest.RESTExampleExtension" />-->
-    <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.chat.ChatBotExtensionExample" />-->
+    <extension class="com.generalbytes.batm.server.extensions.extra.examples.chat.ChatBotExtensionExample" />
 </extensions>

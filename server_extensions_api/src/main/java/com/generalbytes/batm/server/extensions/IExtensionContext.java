@@ -21,6 +21,7 @@ import com.generalbytes.batm.server.extensions.exceptions.SellException;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +29,11 @@ public interface IExtensionContext {
     int DIRECTION_NONE          = 1;
     int DIRECTION_BUY_CRYPTO    = 2; //from customer view
     int DIRECTION_SELL_CRYPTO   = 4; //from customer view
+
+    int PERMISSION_NONE = 0;
+    int PERMISSION_READ = 1;
+    int PERMISSION_WRITE = 2;
+    int PERMISSION_EXECUTE = 4;
 
     /**
      * Registers listener for listening to transaction events
@@ -41,6 +47,30 @@ public interface IExtensionContext {
      * @return
      */
     boolean removeTransactionListener(ITransactionListener listener);
+
+    /**
+     * Finds and returns transaction by given remote or local transaction id
+     * @param remoteOrLocalTransactionId
+     * @return
+     */
+    ITransactionDetails findTransactionByTransactionId(String remoteOrLocalTransactionId);
+
+    /**
+     * Finds person by chat user id
+     * @param chatUserId
+     * @return
+     */
+    IPerson findPersonByChatId(String chatUserId);
+
+    /**
+     * Check if person has access to provided object.
+     * For example person needs to be in same organization or needs to have at least read-only role
+     * @param permissionLevel
+     * @param person
+     * @param obj
+     * @return
+     */
+    boolean hasPersonPermissionToObject(int permissionLevel, IPerson person, Object obj);
 
 
     //Email related stuff
@@ -213,4 +243,11 @@ public interface IExtensionContext {
      * @return
      */
     byte[] createPaperWallet7ZIP(String privateKey, String address, String password, String cryptoCurrency);
+
+    /**
+     * Returns time format by person. In US users they prefer mm/dd/yyyy anywhere else dd.mm.yyyy
+     * @param person
+     * @return
+     */
+    SimpleDateFormat getTimeFormatByPerson(IPerson person);
 }

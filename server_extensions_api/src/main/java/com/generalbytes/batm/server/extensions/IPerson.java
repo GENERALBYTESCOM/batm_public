@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2018 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2016 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -15,24 +15,22 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.examples.chat;
+package com.generalbytes.batm.server.extensions;
 
-import com.generalbytes.batm.server.extensions.AbstractExtension;
+import java.util.Date;
 
-import java.util.HashSet;
-import java.util.Set;
-
-public class ChatBotExtensionExample extends AbstractExtension {
-    @Override
-    public String getName() {
-        return  "BATM Example extension that demonstrates how to write ChatBot commands";
-    }
-
-    @Override
-    public Set<Class> getChatCommands() {
-        Set<Class> result = new HashSet<>();
-        result.add(VersionCommand.class);
-        result.add(InfoCommand.class);
-        return result;
-    }
+public interface IPerson {
+    String getFirstname();
+    String getLastname();
+    String getContactEmail();
+    String getContactPhone();
+    String getContactAddress();
+    String getContactCity();
+    String getContactCountry();
+    String getContactProvince();
+    String getContactZIP();
+    String getQrcodeId();
+    Date getCreatedAt();
+    String getTelegramUserId();
+    String getTelegramChatId();
 }
