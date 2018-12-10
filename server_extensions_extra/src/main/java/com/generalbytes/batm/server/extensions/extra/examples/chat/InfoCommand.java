@@ -17,11 +17,14 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.examples.chat;
 
+import com.generalbytes.batm.server.extensions.ICryptoConfiguration;
+import com.generalbytes.batm.server.extensions.IExchange;
 import com.generalbytes.batm.server.extensions.IExtensionContext;
 import com.generalbytes.batm.server.extensions.ILocation;
 import com.generalbytes.batm.server.extensions.IPerson;
 import com.generalbytes.batm.server.extensions.ITerminal;
 import com.generalbytes.batm.server.extensions.ITransactionDetails;
+import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.chat.AbstractChatCommnad;
 import com.generalbytes.batm.server.extensions.chat.ChatCommand;
 import com.generalbytes.batm.server.extensions.chat.IConversation;
@@ -50,7 +53,7 @@ import static com.generalbytes.batm.server.extensions.ITransactionDetails.STATUS
 import static com.generalbytes.batm.server.extensions.ITransactionDetails.STATUS_WITHDRAW_IN_PROGRESS;
 
 @ChatCommand( names = {"info","i"},
-    help = "/info remoteTransactionId|terminals [serial number] - display terminal or transaction information.")
+    help = "/info [balances|terminals [serial number]|remoteTransactionId] - display various information.")
 //    help = "/info [balances|terminals [serial number]|remoteTransactionId|identityId] - display various information\n")
 public class InfoCommand extends AbstractChatCommnad{
 
@@ -85,16 +88,18 @@ public class InfoCommand extends AbstractChatCommnad{
                 return true;
             }
         }
-        if (displayInfoAboutTerminals) {
-            displayTerminalsInformation(ctx, conversation, serialNumbers);
-            return true;
-        }
+        if (displayInfoAboutTerminals || displayInfoAboutBalances) {
+            if (displayInfoAboutTerminals) {
+                displayTerminalsInformation(ctx, conversation, serialNumbers);
+            }
 
-        if (displayInfoAboutBalances) {
-            displayBalanceInformation(ctx, conversation);
+            if (displayInfoAboutBalances) {
+                displayBalanceInformation(ctx, conversation);
+            }
             return true;
+        }else {
+            conversation.sendText("Invalid parameters. See help for more information.");
         }
-        conversation.sendText("Invalid parameters. See help for more information.");
         return true;
     }
 
@@ -276,7 +281,7 @@ public class InfoCommand extends AbstractChatCommnad{
         }
 
         if (resultingTerminals.isEmpty()) {
-            conversation.sendText("I'm sorry but no terminals found.");
+            conversation.sendText("I'm sorry but no terminals were found.");
             return;
         }else{
             //sort terminals by serial number
@@ -325,7 +330,85 @@ public class InfoCommand extends AbstractChatCommnad{
         }
     }
     private void displayBalanceInformation(IExtensionContext ctx, IConversation conversation) {
-        //TODO:
+        List<ITerminal> foundTerminals = new ArrayList<>(ctx.findAllTerminals());
+        IPerson person = ctx.findPersonByChatId(conversation.getSenderUserId());
+        List<String> resultingTerminalSerials = new ArrayList<>();
+        for (int i = 0; i < foundTerminals.size(); i++) {
+            ITerminal terminal = foundTerminals.get(i);
+            if (ctx.hasPersonPermissionToObject(IExtensionContext.PERMISSION_READ, person, terminal)) {
+                if (terminal.isActive()) {
+                    if (ctx.isTerminalFromSameOrganizationAsPerson(terminal.getSerialNumber(),person)) {
+                        resultingTerminalSerials.add(terminal.getSerialNumber());
+                    }
+                } else {
+                    //do not show terminals that are not marked as active.
+                }
+            }
+        }
+
+        if (resultingTerminalSerials.isEmpty()) {
+            conversation.sendText("I'm sorry but no terminals in your organization were found. So no balance can be shown.");
+            return;
+        }else{
+            conversation.sendText("Please wait...");
+            List<ICryptoConfiguration> ccs = ctx.findCryptoConfigurationsByTerminalSerialNumbers(resultingTerminalSerials);
+            Collections.sort(ccs, new Comparator<ICryptoConfiguration>() {
+                @Override
+                public int compare(ICryptoConfiguration c1, ICryptoConfiguration c2) {
+                    return c1.getCryptoCurrency().compareTo(c2.getCryptoCurrency());
+                }
+            });
+            StringBuilder sb = new StringBuilder();
+            sb.append("Cryptoconfigurations are following:\n");
+            for (int i = 0; i < ccs.size(); i++) {
+                ICryptoConfiguration c = ccs.get(i);
+                sb.append(EmojiParser.parseToUnicode(":money_with_wings:") + c.getName() + ":\n");
+                IWallet wallet = c.getBuyWallet();
+                if (wallet != null) {
+                    BigDecimal cryptoBalance = wallet.getCryptoBalance(c.getCryptoCurrency());
+                    if (cryptoBalance != null) {
+                        sb.append(" Buy Wallet: " + cryptoBalance + " " + c.getCryptoCurrency() + " " + wallet.getCryptoAddress(c.getCryptoCurrency()) + "\n");
+                    }
+                }
+                wallet = c.getSellWallet();
+                if (wallet != null) {
+                    BigDecimal cryptoBalance = wallet.getCryptoBalance(c.getCryptoCurrency());
+                    if (cryptoBalance != null) {
+                        sb.append(" Sell Wallet: " + cryptoBalance + " " + c.getCryptoCurrency() + " " + wallet.getCryptoAddress(c.getCryptoCurrency()) + "\n");
+                    }
+                }
+                IExchange exchange = c.getBuyExchange();
+                if (exchange != null) {
+                    BigDecimal cryptoBalance = exchange.getCryptoBalance(c.getCryptoCurrency());
+                    BigDecimal fiatBalance = exchange.getFiatBalance(exchange.getPreferredFiatCurrency());
+                    if (cryptoBalance != null ) {
+                        sb.append(" Buy Exchange: " + cryptoBalance + " " + c.getCryptoCurrency() + "\n");
+                    }
+                    if (cryptoBalance != null ) {
+                        sb.append(" Buy Exchange: " + fiatBalance + " " + exchange.getPreferredFiatCurrency() + "\n");
+                    }
+                    sb.append(" Buy Exchange: " + exchange.getDepositAddress(c.getCryptoCurrency()) + "\n");
+                }
+
+                exchange = c.getSellExchange();
+                if (exchange != null) {
+                    BigDecimal cryptoBalance = exchange.getCryptoBalance(c.getCryptoCurrency());
+                    BigDecimal fiatBalance = exchange.getFiatBalance(exchange.getPreferredFiatCurrency());
+                    if (cryptoBalance != null) {
+                        sb.append(" Sell Exchange: " + cryptoBalance + " " + c.getCryptoCurrency() + "\n");
+                    }
+                    if (fiatBalance != null) {
+                        sb.append(" Sell Exchange: " + fiatBalance + " " + exchange.getPreferredFiatCurrency() + "\n");
+                    }
+                    sb.append(" Sell Exchange: " + exchange.getDepositAddress(c.getCryptoCurrency()) + "\n");
+                }
+            }
+            conversation.sendText(sb.toString());
+        }
+
+
+
+
     }
 
     private void displayIdentityInformation(IExtensionContext ctx, IConversation conversation, String publicIdentityId) {

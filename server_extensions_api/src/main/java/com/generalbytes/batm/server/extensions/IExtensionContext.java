@@ -72,6 +72,14 @@ public interface IExtensionContext {
      */
     boolean hasPersonPermissionToObject(int permissionLevel, IPerson person, Object obj);
 
+    /**
+     * Checks whether the terminal belongs to same organization as person.
+     * @param terminalSerialNumber
+     * @param person
+     * @return
+     */
+    boolean isTerminalFromSameOrganizationAsPerson(String terminalSerialNumber, IPerson person);
+
 
     //Email related stuff
     public static class EmbeddedEmailImage {
@@ -253,4 +261,11 @@ public interface IExtensionContext {
      * @return
      */
     SimpleDateFormat getTimeFormatByPerson(IPerson person);
+
+    /**
+     * Returns crypto configurations used by terminals of specified serial numbers.
+     * @param serialNumbers
+     * @return
+     */
+    List<ICryptoConfiguration> findCryptoConfigurationsByTerminalSerialNumbers(List<String> serialNumbers);
 }
