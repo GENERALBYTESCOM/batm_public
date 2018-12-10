@@ -136,33 +136,33 @@ public class InfoCommand extends AbstractChatCommnad{
             //Buy states
             switch (td.getStatus()) {
                 case STATUS_BUY_IN_PROGRESS:
-                    return EmojiParser.parseToUnicode(" :blue_heart:");
+                    return EmojiParser.parseToUnicode(":blue_heart:");
                 case STATUS_BUY_COMPLETED:
-                    return EmojiParser.parseToUnicode(" :green_heart:");
+                    return EmojiParser.parseToUnicode(":green_heart:");
                 case STATUS_BUY_ERROR:
-                    return EmojiParser.parseToUnicode(" :red_circle:");
+                    return EmojiParser.parseToUnicode(":red_circle:");
             }
         }else if (td.getType() == ITransactionDetails.TYPE_SELL_CRYPTO) {
             //Sell states
             switch (td.getStatus()) {
                 case STATUS_SELL_PAYMENT_REQUESTED:
-                    return EmojiParser.parseToUnicode(" :red_circle:");
+                    return EmojiParser.parseToUnicode(":red_circle:");
                 case STATUS_SELL_PAYMENT_ARRIVING:
-                    return EmojiParser.parseToUnicode(" :blue_heart:");
+                    return EmojiParser.parseToUnicode(":blue_heart:");
                 case STATUS_SELL_ERROR:
-                    return EmojiParser.parseToUnicode(" :red_circle:");
+                    return EmojiParser.parseToUnicode(":red_circle:");
                 case STATUS_SELL_PAYMENT_ARRIVED:
-                    return EmojiParser.parseToUnicode(" :green_heart:");
+                    return EmojiParser.parseToUnicode(":green_heart:");
             }
         }else if (td.getType() == ITransactionDetails.TYPE_WITHDRAW_CASH) {
             //Sell states
             switch (td.getStatus()) {
                 case STATUS_WITHDRAW_IN_PROGRESS:
-                    return EmojiParser.parseToUnicode(" :blue_heart:");
+                    return EmojiParser.parseToUnicode(":blue_heart:");
                 case STATUS_WITHDRAW_COMPLETED:
-                    return EmojiParser.parseToUnicode(" :green_heart:");
+                    return EmojiParser.parseToUnicode(":green_heart:");
                 case STATUS_WITHDRAW_ERROR:
-                    return EmojiParser.parseToUnicode(" :red_circle:");
+                    return EmojiParser.parseToUnicode(":red_circle:");
             }
         }
         return " ";

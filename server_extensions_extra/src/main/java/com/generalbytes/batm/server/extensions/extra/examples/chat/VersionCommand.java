@@ -28,7 +28,7 @@ import java.util.StringTokenizer;
 public class VersionCommand extends AbstractChatCommnad{
     @Override
     public boolean processCommand(IExtensionContext ctx, IConversation conversation, String command, StringTokenizer parameters, String commandLine) {
-        conversation.sendText("My " + EmojiParser.parseToUnicode(" :computer:") +  " version is " + ctx.getServerVersion() + " thanks for asking.");
+        conversation.sendText("My " + EmojiParser.parseToUnicode(":computer:") +  " version is " + ctx.getServerVersion() + " thanks for asking.");
         return true;
     }
 }
