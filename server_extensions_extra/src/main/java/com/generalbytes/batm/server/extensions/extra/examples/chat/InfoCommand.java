@@ -20,6 +20,8 @@ package com.generalbytes.batm.server.extensions.extra.examples.chat;
 import com.generalbytes.batm.server.extensions.ICryptoConfiguration;
 import com.generalbytes.batm.server.extensions.IExchange;
 import com.generalbytes.batm.server.extensions.IExtensionContext;
+import com.generalbytes.batm.server.extensions.IIdentity;
+import com.generalbytes.batm.server.extensions.IIdentityPiece;
 import com.generalbytes.batm.server.extensions.ILocation;
 import com.generalbytes.batm.server.extensions.IPerson;
 import com.generalbytes.batm.server.extensions.ITerminal;
@@ -30,6 +32,7 @@ import com.generalbytes.batm.server.extensions.chat.ChatCommand;
 import com.generalbytes.batm.server.extensions.chat.IConversation;
 import com.vdurmont.emoji.EmojiParser;
 
+import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -41,20 +44,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import static com.generalbytes.batm.server.extensions.ITransactionDetails.STATUS_BUY_COMPLETED;
-import static com.generalbytes.batm.server.extensions.ITransactionDetails.STATUS_BUY_ERROR;
-import static com.generalbytes.batm.server.extensions.ITransactionDetails.STATUS_BUY_IN_PROGRESS;
-import static com.generalbytes.batm.server.extensions.ITransactionDetails.STATUS_SELL_ERROR;
-import static com.generalbytes.batm.server.extensions.ITransactionDetails.STATUS_SELL_PAYMENT_ARRIVED;
-import static com.generalbytes.batm.server.extensions.ITransactionDetails.STATUS_SELL_PAYMENT_ARRIVING;
-import static com.generalbytes.batm.server.extensions.ITransactionDetails.STATUS_SELL_PAYMENT_REQUESTED;
-import static com.generalbytes.batm.server.extensions.ITransactionDetails.STATUS_WITHDRAW_COMPLETED;
-import static com.generalbytes.batm.server.extensions.ITransactionDetails.STATUS_WITHDRAW_ERROR;
-import static com.generalbytes.batm.server.extensions.ITransactionDetails.STATUS_WITHDRAW_IN_PROGRESS;
+import static com.generalbytes.batm.server.extensions.ITransactionDetails.*;
 
 @ChatCommand( names = {"info","i"},
-    help = "/info [balances|terminals [serial number]|remoteTransactionId] - display various information.")
-//    help = "/info [balances|terminals [serial number]|remoteTransactionId|identityId] - display various information\n")
+    help = "/info [balances|terminals [serial number]|remoteTransactionId|identityId|phonenumber] - display various information.")
 public class InfoCommand extends AbstractChatCommnad{
 
     public static final String PERMISSION_DENIED = "Permission denied. We are sorry, but you don't have access to this information.";
@@ -80,11 +73,14 @@ public class InfoCommand extends AbstractChatCommnad{
                         serialNumbers.add(serialNumber);
                     }
                 }
-            }else if ((parameter.startsWith("R") || parameter.startsWith("r") || parameter.startsWith("L") || parameter.startsWith("l")) && parameter.length() == 6) {
+            }else if ((parameter.startsWith("R") || parameter.startsWith("r") || parameter.startsWith("L") || parameter.startsWith("l")) && parameter.length() == 5+1) {
                 displayTransactionInformation(ctx, conversation, parameter.toUpperCase());
                 return true;
-            }else if ((parameter.startsWith("I") || parameter.startsWith("i")) && parameter.length() == 6) {
-                displayIdentityInformation(ctx, conversation, parameter.toUpperCase());
+            }else if ((parameter.startsWith("I") || parameter.startsWith("i")) && parameter.length() == 15+1) {
+                displayIdentityInformation(ctx, conversation, parameter.toUpperCase(), null);
+                return true;
+            }else if (isPhoneNumber(parameter)) {
+                displayIdentityInformation(ctx, conversation, null, parsePhoneNumber(parameter));
                 return true;
             }
         }
@@ -101,6 +97,22 @@ public class InfoCommand extends AbstractChatCommnad{
             conversation.sendText("Invalid parameters. See help for more information.");
         }
         return true;
+    }
+
+    private boolean isPhoneNumber(String text) {
+        String phonenumber = parsePhoneNumber(text);
+        return phonenumber != null;
+    }
+
+    private String parsePhoneNumber(String text) {
+        text = text.replace(" ", "").replace("-","").replace("\"","");
+        try {
+            //try to parse number
+            long testNumber = Long.parseLong(text.replace("+",""));
+            return text;
+        } catch (NumberFormatException e) {
+        }
+        return null;
     }
 
     private void displayTransactionInformation(IExtensionContext ctx, IConversation conversation, String remoteOrLocalTransactionId) {
@@ -135,10 +147,19 @@ public class InfoCommand extends AbstractChatCommnad{
         String result = emojiByTransactionStatus(td) + " " + timeFormat.format(td.getTerminalTime()) + " " +  td.getTerminalSerialNumber() + name + " "  + formatTxType(td) + " " + td.getRemoteTransactionId();
         if (td.getType() == ITransactionDetails.TYPE_BUY_CRYPTO) {
             result+=" " + formatFiat(td.getCashAmount()) + " " + td.getCashCurrency() +  " > " + formatCrypto(td.getCryptoAmount()) + " " + td.getCryptoCurrency() + " " + td.getCryptoAddress() + " " + formatTxStatus(td);
+            if (td.getIdentityPublicId() != null) {
+                result+=" " + td.getIdentityPublicId();
+            }
         }else if (td.getType() == ITransactionDetails.TYPE_SELL_CRYPTO) {
             result+= " " + formatCrypto(td.getCryptoAmount()) + " " + td.getCryptoCurrency() + " > " + formatFiat(td.getCashAmount()) + " " + td.getCashCurrency() + " " + td.getCryptoAddress() + " " + formatTxStatus(td);
+            if (td.getIdentityPublicId() != null) {
+                result+=" " + td.getIdentityPublicId();
+            }
         }else if (td.getType() == ITransactionDetails.TYPE_WITHDRAW_CASH) {
             result+= " "  + formatFiat(td.getCashAmount()) + " " + td.getCashCurrency() + " " + formatTxStatus(td);
+            if (td.getIdentityPublicId() != null) {
+                result+=" " + td.getIdentityPublicId();
+            }
             ITransactionDetails td2 = ctx.findTransactionByTransactionId(td.getRelatedRemoteTransactionId());
             if (td2 != null) {
                 result+="\nRelated SELL transaction " + td2.getRemoteTransactionId();
@@ -197,7 +218,7 @@ public class InfoCommand extends AbstractChatCommnad{
                 case STATUS_BUY_COMPLETED:
                     return "COMPLETED";
                 case STATUS_BUY_ERROR:
-                    return "ERROR";
+                    return getErrorMessage(td);
             }
         }else if (td.getType() == ITransactionDetails.TYPE_SELL_CRYPTO) {
             //Sell states
@@ -207,7 +228,7 @@ public class InfoCommand extends AbstractChatCommnad{
                 case STATUS_SELL_PAYMENT_ARRIVING:
                     return "PAYMENT_ARRIVING";
                 case STATUS_SELL_ERROR:
-                    return "ERROR";
+                    return getErrorMessage(td);
                 case STATUS_SELL_PAYMENT_ARRIVED:
                     return "PAYMENT_ARRIVED";
             }
@@ -219,11 +240,143 @@ public class InfoCommand extends AbstractChatCommnad{
                 case STATUS_WITHDRAW_COMPLETED:
                     return "COMPLETED";
                 case STATUS_WITHDRAW_ERROR:
-                    return "ERROR";
+                    return getErrorMessage(td);
             }
         }
         return "UNKNOWN";
     }
+
+    private String getErrorMessage(ITransactionDetails td) {
+        if (td.getType() == ITransactionDetails.TYPE_BUY_CRYPTO) {
+            String error = "";
+            switch (td.getErrorCode()) {
+                case BUY_ERROR_NO_ERROR:
+                    error = "NO ERROR";
+                    break;
+                case BUY_ERROR_INVALID_PARAMETERS:
+                    error = "INVALID PARAMETERS";
+                    break;
+                case BUY_ERROR_INVALID_CURRENCY:
+                    error = "INVALID CURRENCY";
+                    break;
+                case BUY_ERROR_INVALID_BALANCE:
+                    error = "INVALID BALANCE";
+                    break;
+                case BUY_ERROR_INVALID_UNKNOWN_ERROR:
+                    error = "INVALID UNKNOWN ERROR";
+                    break;
+                case BUY_ERROR_PROBLEM_SENDING_FROM_HOT_WALLET:
+                    error = "PROBLEM SENDING FROM HOT WALLET";
+                    break;
+                case BUY_ERROR_PROBLEM_GETTING_BALANCE_FROM_HOT_WALLET:
+                    error = "PROBLEM GETTING BALANCE FROM HOT WALLET";
+                    break;
+                case BUY_ERROR_PROBLEM_GETTING_BALANCE_FROM_EXCHANGE:
+                    error = "PROBLEM GETTING BALANCE FROM EXCHANGE";
+                    break;
+                case BUY_ERROR_EXCHANGE_WITHDRAWAL:
+                    error = "EXCHANGE WITHDRAWAL";
+                    break;
+                case BUY_ERROR_EXCHANGE_PURCHASE:
+                    error = "EXCHANGE PURCHASE";
+                    break;
+                case BUY_ERROR_UNKNOWN_EXCHANGE_STRATEGY:
+                    error = "UNKNOWN EXCHANGE STRATEGY";
+                    break;
+                case BUY_ERROR_CONFIGURATION_PROBLEM:
+                    error = "CONFIGURATION PROBLEM";
+                    break;
+                case BUY_ERROR_FINGERPRINT_UNKNOWN:
+                    error = "FINGERPRINT UNKNOWN";
+                    break;
+                case BUY_ERROR_FEE_GREATER_THAN_AMOUNT:
+                    error = "FEE GREATER THAN AMOUNT";
+                    break;
+                case BUY_ERROR_PUBLIC_ID_UNKNOWN:
+                    error = "PUBLIC ID UNKNOWN";
+                    break;
+                default:
+                    error = "UNKNOWN";
+                    break;
+            }
+            return "ERROR (" + error + ")";
+        } else if (td.getType() == ITransactionDetails.TYPE_SELL_CRYPTO) {
+            String error = "";
+            switch (td.getErrorCode()) {
+                case SELL_ERROR_NO_ERROR:
+                    error = "NO ERROR";
+                    break;
+                case SELL_ERROR_INVALID_PARAMETERS:
+                    error = "INVALID PARAMETERS";
+                    break;
+                case SELL_ERROR_INVALID_CURRENCY:
+                    error = "INVALID CURRENCY";
+                    break;
+                case SELL_ERROR_INVALID_BALANCE:
+                    error = "INVALID BALANCE";
+                    break;
+                case SELL_ERROR_INVALID_UNKNOWN_ERROR:
+                    error = "INVALID UNKNOWN ERROR";
+                    break;
+                case SELL_ERROR_CONFIGURATION_PROBLEM:
+                    error = "CONFIGURATION PROBLEM";
+                    break;
+                case SELL_ERROR_FINGERPRINT_UNKNOWN:
+                    error = "FINGERPRINT UNKNOWN";
+                    break;
+                case SELL_ERROR_GETTING_DEPOSIT_ADDRESS:
+                    error = "GETTING DEPOSIT ADDRESS";
+                    break;
+                case SELL_ERROR_PAYMENT_WAIT_TIMED_OUT:
+                    error = "PAYMENT WAIT TIMED OUT";
+                    break;
+                case SELL_ERROR_NOT_ENOUGH_COINS_ON_EXCHANGE:
+                    error = "NOT ENOUGH COINS ON EXCHANGE";
+                    break;
+                case SELL_ERROR_EXCHANGE_SELL:
+                    error = "EXCHANGE SELL";
+                    break;
+                case SELL_ERROR_PAYMENT_INVALID:
+                    error = "INVALID PAYMENT";
+                    break;
+                default:
+                    error = "UNKNOWN";
+                    break;
+            }
+            return "ERROR (" + error + ")";
+        } else if (td.getType() == ITransactionDetails.TYPE_WITHDRAW_CASH) {
+            String error= "";
+            switch (td.getErrorCode()) {
+                case WITHDRAW_ERROR_NO_ERROR:
+                    error = "NO ERROR";
+                    break;
+                case WITHDRAW_ERROR_INVALID_PARAMETERS:
+                    error = "INVALID PARAMETERS";
+                    break;
+                case WITHDRAW_ERROR_INVALID_CURRENCY:
+                    error = "INVALID CURRENCY";
+                    break;
+                case WITHDRAW_ERROR_INVALID_UNKNOWN_ERROR:
+                    error = "INVALID UNKNOWN ERROR";
+                    break;
+                case WITHDRAW_ERROR_FINGERPRINT_UNKNOWN:
+                    error = "FINGERPRINT UNKNOWN";
+                    break;
+                case WITHDRAW_ERROR_NOT_ENOUGH_CASH:
+                    error = "NOT ENOUGH CASH";
+                    break;
+                case WITHDRAW_ERROR_PHONE_NUMBER_UNKNOWN:
+                    error = "PHONE NUMBER UNKNOWN";
+                    break;
+                default:
+                    error = "UNKNOWN";
+                    break;
+            }
+            return "ERROR (" + error + ")";
+        }
+        return "ERROR";
+    }
+
 
     private String formatTxType(ITransactionDetails td) {
         if (td.getType() == ITransactionDetails.TYPE_BUY_CRYPTO) {
@@ -405,14 +558,113 @@ public class InfoCommand extends AbstractChatCommnad{
             }
             conversation.sendText(sb.toString());
         }
-
-
-
-
     }
 
-    private void displayIdentityInformation(IExtensionContext ctx, IConversation conversation, String publicIdentityId) {
-        //TODO:
+    private void displayIdentityInformation(IExtensionContext ctx, IConversation conversation, String publicIdentityId, String phoneNumber) {
+        IIdentity identity = null;
+        if (publicIdentityId != null) {
+            identity = ctx.findIdentityByIdentityId(publicIdentityId);
+            if (identity == null) {
+                conversation.sendText("Identity was not found.");
+            }
+        }else if (phoneNumber != null) {
+            identity = ctx.findIdentityByPhoneNumber(phoneNumber);
+            if (identity == null) {
+                conversation.sendText("Identity was not found by phone number. Make sure you search phone number with +countrycode prefix.");
+            }
+        }
+        if (identity != null) {
+            IPerson person = ctx.findPersonByChatId(conversation.getSenderUserId());
+            if (ctx.hasPersonPermissionToObject(IExtensionContext.PERMISSION_READ, person, identity)) {
+                formatAndSendIdentityDetails(ctx, conversation, person, identity);
+            }else{
+                conversation.sendText(PERMISSION_DENIED);
+            }
+        }
+    }
+
+    private static String emptyStringIfNull(String value) {
+        if (value == null) {
+            return "";
+        }
+        return value;
+    }
+    private static String formatDateTime(SimpleDateFormat sdf, Date date) {
+        if (date == null) {
+            return "";
+        }else{
+            return sdf.format(date);
+        }
+    }
+
+    private void formatAndSendIdentityDetails(IExtensionContext ctx, IConversation conversation, IPerson person, IIdentity identity) {
+        StringBuilder sb = new StringBuilder();
+        if (identity != null) {
+            SimpleDateFormat timeFormat = ctx.getTimeFormatByPerson(person);
+            sb.append("Id: " + identity.getPublicId() + "\n");
+            sb.append("Status: " + formatIdentityStatus(identity.getState()) + "\n");
+            sb.append("Created on terminal: " + identity.getCreatedByTerminalSerialNumber() + "\n");
+            sb.append("Created at: " + formatDateTime(timeFormat, identity.getCreated()) + "\n");
+            sb.append("Last updated at: " + formatDateTime(timeFormat, identity.getLastUpdatedAt()) + "\n");
+            sb.append("Watchlist scanned at: " + formatDateTime(timeFormat, identity.getWatchListLastScanAt()) + "\n");
+            sb.append("Note: " + emptyStringIfNull(identity.getNote()) +"\n");
+            List<IIdentityPiece> identityPieces = identity.getIdentityPieces();
+            if (identityPieces != null) {
+                for (int i = 0; i < identityPieces.size(); i++) {
+                    IIdentityPiece p = identityPieces.get(i);
+                    switch (p.getPieceType()) {
+                        case IIdentityPiece.TYPE_CELLPHONE:
+                            sb.append("Cellphone: " + emptyStringIfNull(p.getPhoneNumber()) +"\n");
+                            break;
+                        case IIdentityPiece.TYPE_EMAIL:
+                            sb.append("Email: " + emptyStringIfNull(p.getEmailAddress()) +"\n");
+                            break;
+                        case IIdentityPiece.TYPE_PERSONAL_INFORMATION:
+                            sb.append("Created at: " + formatDateTime(timeFormat, p.getCreated()) + "\n");
+                            sb.append("First name: " + emptyStringIfNull(p.getFirstname()) + "\n");
+                            sb.append("Last name: " + emptyStringIfNull(p.getLastname()) + "\n");
+                            sb.append("Document Number: " + emptyStringIfNull(p.getIdCardNumber()) + "\n");
+                            sb.append("Address: " + emptyStringIfNull(p.getContactAddress()) + "\n");
+                            sb.append("City: " + emptyStringIfNull(p.getContactCity()) + "\n");
+                            sb.append("ZIP: " + emptyStringIfNull(p.getContactZIP()) + "\n");
+                            sb.append("Country: " + emptyStringIfNull(p.getContactCountry()) + "\n");
+                            break;
+                        case IIdentityPiece.TYPE_CAMERA_IMAGE:
+                            if (p.getData() != null) {
+                                conversation.sendPhoto("Camera " + formatDateTime(timeFormat, p.getCreated()), new ByteArrayInputStream(p.getData()));
+                            }
+                            break;
+                        case IIdentityPiece.TYPE_ID_SCAN:
+                            if (p.getData() != null) {
+                                conversation.sendPhoto("Document " + formatDateTime(timeFormat, p.getCreated()), new ByteArrayInputStream(p.getData()));
+                            }
+                            break;
+                        case IIdentityPiece.TYPE_SELFIE:
+                            if (p.getData() != null) {
+                                conversation.sendPhoto("Selfie " + formatDateTime(timeFormat, p.getCreated()), new ByteArrayInputStream(p.getData()));
+                            }
+                            break;
+                    }
+                }
+            }
+            conversation.sendText(sb.toString());
+        }
+    }
+
+    private String formatIdentityStatus(int state) {
+        switch (state){
+            case IIdentity.STATE_ANONYMOUS:
+                return "ANONYMOUS";
+            case IIdentity.STATE_NOT_REGISTERED:
+                return "NOT REGISTERED";
+            case IIdentity.STATE_PROHIBITED:
+                return "PROHIBITED";
+            case IIdentity.STATE_REGISTERED:
+                return "REGISTERED";
+            case IIdentity.STATE_TO_BE_REGISTERED:
+                return "AWAITING REGISTRATION";
+        }
+        return "UNKNOWN";
     }
 
 }
