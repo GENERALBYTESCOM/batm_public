@@ -134,7 +134,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
             Ticker ticker = marketDataService.getTicker(new CurrencyPair(cryptoCurrency,cashCurrency));
             return ticker.getLast();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Error", e);
         }
         return null;
     }
@@ -150,7 +150,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
             DDOSUtils.waitForPossibleCall(getClass());
             return getExchange().getAccountService().getAccountInfo().getWallet().getBalance(Currency.getInstance(cryptoCurrency)).getAvailable();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Error", e);
             log.error("Bitfinex exchange (getBalance) failed with message: " + e.getMessage());
         }
         return null;
@@ -166,7 +166,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
             DDOSUtils.waitForPossibleCall(getClass());
             return getExchange().getAccountService().getAccountInfo().getWallet().getBalance(Currency.getInstance(fiatCurrency)).getAvailable();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Error", e);
             log.error("Bitfinex exchange (getBalance) failed with message: " + e.getMessage());
         }
         return null;
@@ -195,7 +195,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
                 return null;
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Error", e);
             log.error("Bitfinex exchange (withdrawFunds) failed with message: " + e.getMessage());
         }
         return null;
@@ -224,7 +224,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
             try {
                 Thread.sleep(2000); //give exchange 2 seconds to reflect open order in order book
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                log.error("Error", e);
             }
 
             // get open orders
@@ -247,7 +247,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
                     try {
                         Thread.sleep(3000); //don't get your ip address banned
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        log.error("Error", e);
                     }
                 }else{
                     orderProcessed = true;
@@ -258,7 +258,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
                 return orderId;
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Error", e);
             log.error("Bitfinex exchange (purchaseCoins) failed with message: " + e.getMessage());
         }
         return null;
@@ -285,7 +285,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
             DDOSUtils.waitForPossibleCall(getClass());
             return accountService.requestDepositAddress(Currency.getInstance(cryptoCurrency));
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Error", e);
         }
         return null;
     }
@@ -314,7 +314,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
             try {
                 Thread.sleep(2000); //give exchange 2 seconds to reflect open order in order book
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                log.error("Error", e);
             }
 
             // get open orders
@@ -337,7 +337,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
                     try {
                         Thread.sleep(3000); //don't get your ip address banned
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        log.error("Error", e);
                     }
                 }else{
                     orderProcessed = true;
@@ -348,7 +348,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
                 return orderId;
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Error", e);
             log.error("Bitfinex exchange (sellCoins) failed with message: " + e.getMessage());
         }
         return null;
@@ -402,13 +402,13 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
                 try {
                     Thread.sleep(2000); //give exchange 2 seconds to reflect open order in order book
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    log.error("Error", e);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("Error", e);
                 log.error("Bitfinex exchange (purchaseCoins) failed with message: " + e.getMessage());
             } catch (Throwable e) {
-                e.printStackTrace();
+                log.error("Error", e);
             }
             return (orderId != null);
         }
@@ -444,7 +444,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
                     }
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("Error", e);
             }
 
             if (orderFound) {
@@ -526,13 +526,13 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
                 try {
                     Thread.sleep(2000); //give exchange 2 seconds to reflect open order in order book
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    log.error("Error", e);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("Error", e);
                 log.error("Bitfinex exchange (sellCoins) failed with message: " + e.getMessage());
             } catch (Throwable e) {
-                e.printStackTrace();
+                log.error("Error", e);
             }
             return (orderId != null);
         }
@@ -568,7 +568,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
                     }
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("Error", e);
             }
 
             if (orderFound) {
@@ -673,11 +673,11 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
                 return tradableLimit.multiply(cryptoAmount);
             }
         } catch (ExchangeException e) {
-            e.printStackTrace();
+            log.error("Error", e);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Error", e);
         } catch (Throwable e) {
-            e.printStackTrace();
+            log.error("Error", e);
         }
         return null;
     }
@@ -721,11 +721,11 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
                 return tradableLimit.multiply(cryptoAmount);
             }
         } catch (ExchangeException e) {
-            e.printStackTrace();
+            log.error("Error", e);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Error", e);
         } catch (Throwable e) {
-            e.printStackTrace();
+            log.error("Error", e);
         }
         return null;
 

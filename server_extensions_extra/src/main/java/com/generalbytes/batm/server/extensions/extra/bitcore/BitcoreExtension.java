@@ -18,7 +18,7 @@
 package com.generalbytes.batm.server.extensions.extra.bitcore;
 
 import com.generalbytes.batm.server.extensions.*;
-import com.generalbytes.batm.server.extensions.extra.bitcore.sources.FixPriceRateSource;
+import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcore.wallets.bitcored.BitcoredRPCWallet;
 
 import java.math.BigDecimal;

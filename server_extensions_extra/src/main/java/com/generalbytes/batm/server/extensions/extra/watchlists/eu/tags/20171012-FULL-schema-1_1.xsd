@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fsdexport="http://eu.europa.ec/fpi/fsd/export" targetNamespace="http://eu.europa.ec/fpi/fsd/export" elementFormDefault="qualified" version="1.1">
+	<xs:element name="export" type="fsdexport:ExportType"/>
+	<xs:attributeGroup name="country">
+		<xs:attribute name="countryIso2Code" type="fsdexport:Iso2CodeType" use="required"/>
+		<xs:attribute name="countryDescription" type="fsdexport:DefaultDescriptionType" use="required"/>
+	</xs:attributeGroup>
+	<xs:attributeGroup name="identificationType">
+		<xs:attribute name="identificationTypeCode" type="fsdexport:DefaultCodeType" use="required"/>
+		<xs:attribute name="identificationTypeDescription" type="fsdexport:LargeDescriptionType" use="required"/>
+	</xs:attributeGroup>
+	<xs:simpleType name="DateType">
+		<xs:restriction base="xs:date"/>
+	</xs:simpleType>
+	<xs:simpleType name="DateTimeType">
+		<xs:restriction base="xs:dateTime"/>
+	</xs:simpleType>
+	<xs:simpleType name="BooleanType">
+		<xs:restriction base="xs:boolean"/>
+	</xs:simpleType>
+	<xs:simpleType name="LanguageCodeType">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="6"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Iso2CodeType">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DefaultCodeType">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="32"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DefaultDescriptionType">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="256"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="LargeDescriptionType">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="2048"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DefaultUrlType">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="512"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="UnlimitedTextType">
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:complexType name="ExportType">
+		<xs:sequence>
+			<xs:element name="sanctionEntity" type="fsdexport:SanctionEntityType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="generationDate" type="fsdexport:DateTimeType" use="required"/>
+		<xs:attribute name="globalFileId" type="xs:long" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="OperableType" abstract="true">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">OperableType contains all the elements and attributes common to all the operables. This is an abstract type, so no element of this type will be present in the XML.
+			The logical ID is a unique logical identifier of a sanctioned entity, of a regulation or of a detail of a sanction entity. This information is also provided to external actors for help, especially when entity multiple aliases make it difficult the identification task. For entities imported from previous database, the old value is retained.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="remark" type="fsdexport:UnlimitedTextType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="additionalInformation" type="fsdexport:AdditionalInfoType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="logicalId" type="xs:long" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="RegulationType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">The regulation is a type that describes the information related to an official publication.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="fsdexport:OperableType">
+				<xs:sequence>
+					<xs:element name="publicationUrl" type="fsdexport:DefaultUrlType" minOccurs="0"/>
+					<xs:element name="corrigendum" type="fsdexport:RegulationSummaryType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+				<xs:attribute name="regulationType" type="fsdexport:DefaultCodeType" use="required"/>
+				<xs:attribute name="organisationType" type="fsdexport:DefaultCodeType" use="required"/>
+				<xs:attribute name="publicationDate" type="fsdexport:DateType" use="required"/>
+				<xs:attribute name="entryIntoForceDate" type="fsdexport:DateType" use="required"/>
+				<xs:attribute name="numberTitle" type="fsdexport:DefaultDescriptionType" use="required"/>
+				<xs:attribute name="programme" type="fsdexport:DefaultCodeType" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="RegulationSummaryType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">The regulation summary is a type that contains the main information about a regulation.</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="regulationType" type="fsdexport:DefaultCodeType" use="required"/>
+		<xs:attribute name="publicationDate" type="fsdexport:DateType" use="required"/>
+		<xs:attribute name="numberTitle" type="fsdexport:DefaultDescriptionType" use="required"/>
+		<xs:attribute name="publicationUrl" type="fsdexport:DefaultUrlType"/>
+	</xs:complexType>
+	<xs:complexType name="SanctionEntityType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">The sanction entity is a type that describes all that the system knows about an entity that is currently sanctioned.
+			The delisting date is the date from which the entity should not be sanctioned anymore for the regulation.
+			The designation date is the date of the first time the entity has been identified to be sanctioned.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="fsdexport:OperableType">
+				<xs:sequence>
+					<xs:element name="regulation" type="fsdexport:RegulationType"/>
+					<xs:element name="subjectType" type="fsdexport:SubjectTypeType"/>
+					<xs:element name="nameAlias" type="fsdexport:NameAliasType" maxOccurs="unbounded"/>
+					<xs:element name="citizenship" type="fsdexport:CitizenshipType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="birthdate" type="fsdexport:BirthdateType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="address" type="fsdexport:AddressType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="identification" type="fsdexport:IdentificationType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+				<xs:attribute name="delistingDate" type="fsdexport:DateType"/>
+				<xs:attribute name="designationDate" type="fsdexport:DateType"/>
+				<xs:attribute name="designationDetails" type="fsdexport:UnlimitedTextType"/>
+				<xs:attribute name="unitedNationId" type="fsdexport:DefaultDescriptionType"/>
+				<xs:attribute name="euReferenceNumber" type="fsdexport:DefaultDescriptionType"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="SubjectTypeType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">The subject type is a type that gives information about the kind of entity that is sanctioned.</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="code" type="fsdexport:DefaultCodeType" use="required"/>
+		<xs:attribute name="classificationCode" type="fsdexport:SubjectTypeClassificationCodeType" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="SubjectTypeClassificationCodeType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">The classification code is used to specify if a subject type is a kind of physical person (P) or is a kind of enterprise (E).</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="P"/>
+			<xs:enumeration value="E"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="SanctionableType" abstract="true">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">SanctionableType contains all the elements and attributes common to all the details of a sanction entity. This is an abstract type, so no element of this type will be present in the XML.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="fsdexport:OperableType">
+				<xs:sequence>
+					<xs:element name="regulationSummary" type="fsdexport:RegulationSummaryType"/>
+				</xs:sequence>
+				<xs:attribute name="regulationLanguage" type="fsdexport:LanguageCodeType" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="NameAliasType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">The name alias is a type that describes all that the system knows about the name associated to a sanctioned entity.
+			The nameLanguage, if present, might be different than the regulationLanguage if the name is expressed in another language than the one of the regulation.
+			The strong flag means that the current name alias is the main on for the sanctioned entity.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="fsdexport:SanctionableType">
+				<xs:attribute name="firstName" type="fsdexport:DefaultDescriptionType"/>
+				<xs:attribute name="middleName" type="fsdexport:DefaultDescriptionType"/>
+				<xs:attribute name="lastName" type="fsdexport:DefaultDescriptionType"/>
+				<xs:attribute name="wholeName" type="fsdexport:DefaultDescriptionType"/>
+				<xs:attribute name="function" type="fsdexport:LargeDescriptionType"/>
+				<xs:attribute name="gender" type="fsdexport:GenderType"/>
+				<xs:attribute name="title" type="fsdexport:LargeDescriptionType"/>
+				<xs:attribute name="nameLanguage" type="fsdexport:LanguageCodeType"/>
+				<xs:attribute name="strong" type="fsdexport:BooleanType"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="CitizenshipType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">The citizenship is a type that describes all that the system knows about the citizenship associated to a sanctioned entity.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="fsdexport:SanctionableType">
+				<xs:attribute name="acquisitionDate" type="fsdexport:DateType"/>
+				<xs:attribute name="disenfranchisementDate" type="fsdexport:DateType"/>
+				<xs:attribute name="region" type="fsdexport:DefaultDescriptionType"/>
+				<xs:attributeGroup ref="fsdexport:country"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="BirthdateType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">The birthdate is a type that describes all that the system knows about the birthdate associated to a sanctioned entity.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="fsdexport:SanctionableType">
+				<xs:attribute name="circa" type="fsdexport:BooleanType"/>
+				<xs:attribute name="calendarType" type="fsdexport:CalendarTypeType" use="required"/>
+				<xs:attribute name="city" type="fsdexport:LargeDescriptionType"/>
+				<xs:attribute name="zipCode" type="fsdexport:DefaultDescriptionType"/>
+				<xs:attribute name="birthdate" type="fsdexport:DateType"/>
+				<xs:attribute name="dayOfMonth" type="xs:int"/>
+				<xs:attribute name="monthOfYear" type="xs:int"/>
+				<xs:attribute name="year" type="xs:int"/>
+				<xs:attribute name="yearRangeFrom" type="xs:int"/>
+				<xs:attribute name="yearRangeTo" type="xs:int"/>
+				<xs:attribute name="region" type="fsdexport:DefaultDescriptionType"/>
+				<xs:attribute name="place" type="fsdexport:DefaultDescriptionType"/>
+				<xs:attributeGroup ref="fsdexport:country"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="AddressType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">The address is a type that describes all that the system knows about the address associated to a sanctioned entity.
+			The asAtListingTime flag means that this was the know address of the sanctioned entity what it was listed for the first time.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="fsdexport:SanctionableType">
+				<xs:sequence>
+					<xs:element name="contactInfo" type="fsdexport:ContactInfoType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+				<xs:attribute name="city" type="fsdexport:DefaultDescriptionType"/>
+				<xs:attribute name="street" type="fsdexport:LargeDescriptionType"/>
+				<xs:attribute name="poBox" type="fsdexport:DefaultDescriptionType"/>
+				<xs:attribute name="zipCode" type="fsdexport:DefaultDescriptionType"/>
+				<xs:attribute name="region" type="fsdexport:DefaultDescriptionType"/>
+				<xs:attribute name="place" type="fsdexport:DefaultDescriptionType"/>
+				<xs:attribute name="asAtListingTime" type="fsdexport:BooleanType"/>
+				<xs:attributeGroup ref="fsdexport:country"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="IdentificationType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">The identification is a type that describes all that the system knows about the identification document associated to a sanctioned entity.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="fsdexport:SanctionableType">
+				<xs:attribute name="diplomatic" type="fsdexport:BooleanType"/>
+				<xs:attribute name="knownExpired" type="fsdexport:BooleanType"/>
+				<xs:attribute name="knownFalse" type="fsdexport:BooleanType"/>
+				<xs:attribute name="reportedLost" type="fsdexport:BooleanType"/>
+				<xs:attribute name="revokedByIssuer" type="fsdexport:BooleanType"/>
+				<xs:attribute name="issueDate" type="fsdexport:DateType"/>
+				<xs:attribute name="issuedBy" type="fsdexport:DefaultDescriptionType"/>
+				<xs:attribute name="latinNumber" type="fsdexport:DefaultDescriptionType"/>
+				<xs:attribute name="nameOnDocument" type="fsdexport:DefaultDescriptionType"/>
+				<xs:attribute name="number" type="fsdexport:DefaultDescriptionType"/>
+				<xs:attribute name="validFrom" type="fsdexport:DateType"/>
+				<xs:attribute name="validTo" type="fsdexport:DateType"/>
+				<xs:attributeGroup ref="fsdexport:identificationType"/>
+				<xs:attribute name="region" type="fsdexport:DefaultDescriptionType"/>
+				<xs:attributeGroup ref="fsdexport:country"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:simpleType name="GenderType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">The gender is a type that describes the gender of a name. Gender can be female (F), male (M) or unknown (?).</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="F"/>
+			<xs:enumeration value="M"/>
+			<xs:enumeration value="?"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="CalendarTypeType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">The calendar type is a type that describes the calendar in which a birthdate is expressed.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="GREGORIAN"/>
+			<xs:enumeration value="ISLAMIC"/>
+			<xs:enumeration value="BUDDHIST"/>
+			<xs:enumeration value="COPTIC"/>
+			<xs:enumeration value="ETHIOPIC"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="AdditionalInfoType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">The additional info are a placeholder that will be used in case some information has to be added into the XML but we don't want to update the XSD to avoid to break the compatibility for the consumers.</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="key" type="fsdexport:DefaultCodeType" use="required"/>
+		<xs:attribute name="value" type="fsdexport:UnlimitedTextType" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="ContactInfoType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">The contact info is a type that can be used to provide any supplementary contact information as, for example, email, phone number, fax, website etc... The key contains the kind of contact infomation. More than one contact info with the same key can be present for the same instance of AddressType.</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="key" type="fsdexport:DefaultCodeType" use="required"/>
+		<xs:attribute name="value" type="fsdexport:DefaultDescriptionType" use="required"/>
+	</xs:complexType>
+</xs:schema>

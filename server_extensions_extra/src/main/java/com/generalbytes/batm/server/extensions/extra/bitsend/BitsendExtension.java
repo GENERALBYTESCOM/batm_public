@@ -18,7 +18,7 @@
 package com.generalbytes.batm.server.extensions.extra.bitsend;
 
 import com.generalbytes.batm.server.extensions.*;
-import com.generalbytes.batm.server.extensions.extra.bitsend.sources.FixPriceRateSource;
+import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitsend.wallets.bitsendd.BitsenddRPCWallet;
 
 import java.math.BigDecimal;

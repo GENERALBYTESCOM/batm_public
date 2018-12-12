@@ -18,7 +18,7 @@
 package com.generalbytes.batm.server.extensions.extra.startcoin;
 
 import com.generalbytes.batm.server.extensions.*;
-import com.generalbytes.batm.server.extensions.extra.startcoin.sources.FixPriceRateSource;
+import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.startcoin.wallets.startcoind.StartcoindRPCWallet;
 
 import java.math.BigDecimal;

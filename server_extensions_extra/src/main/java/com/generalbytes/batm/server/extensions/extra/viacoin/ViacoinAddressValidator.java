@@ -23,7 +23,11 @@ import com.generalbytes.batm.server.coinutil.Base58;
 import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class ViacoinAddressValidator implements ICryptoAddressValidator {
+    private static final Logger log = LoggerFactory.getLogger("batm.master.extensions.ViacoinAddressValidator");
 
     @Override
     public boolean isAddressValid(String address) {
@@ -32,7 +36,7 @@ public class ViacoinAddressValidator implements ICryptoAddressValidator {
                 Base58.decodeToBigInteger(address);
                 Base58.decodeChecked(address);
             } catch (AddressFormatException e) {
-                e.printStackTrace();
+                log.error("Error", e);
                 return false;
             }
             return true;

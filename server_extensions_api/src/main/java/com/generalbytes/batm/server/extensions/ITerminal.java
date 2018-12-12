@@ -18,6 +18,7 @@
 package com.generalbytes.batm.server.extensions;
 
 import java.util.Date;
+import java.util.List;
 
 public interface ITerminal {
     int TYPE_PHYSICAL = 0;
@@ -35,4 +36,11 @@ public interface ITerminal {
     Date getExchangeRateUpdatedAt();
     String getExchangeRatesBuy();
     String getExchangeRatesSell();
+
+    long getErrors();
+    int getOperationalMode();
+    int getRejectedReason();
+
+    List<String> getAllowedCashCurrencies();
+    List<String> getAllowedCryptoCurrencies();
 }

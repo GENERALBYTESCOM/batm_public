@@ -18,13 +18,14 @@
 package com.generalbytes.batm.server.extensions.extra.dexacoin;
 
 import com.generalbytes.batm.server.extensions.*;
+import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-public class DexCoinSupport extends AbstractExtension implements IExchange, IWallet, IRateSource, ICryptoAddressValidator {
+public class DexCoinSupport extends AbstractExtension implements IExchange, IWallet, ICryptoAddressValidator {
     private static final String CRYPTO_CURRENCY = Currencies.DEX;
     private static final BigDecimal WALLET_BALANCE = new BigDecimal("1000000");
     private static final BigDecimal EXCHANGE_BALANCE = new BigDecimal("2000000");
@@ -53,13 +54,6 @@ public class DexCoinSupport extends AbstractExtension implements IExchange, IWal
     }
 
 
-    @Override
-    public BigDecimal getExchangeRateLast(String cryptoCurrency, String cashCurrency) {
-        if (CRYPTO_CURRENCY.equalsIgnoreCase(cryptoCurrency)) {
-            return rate;
-        }
-        return null;
-    }
 
     @Override
     public String purchaseCoins(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
@@ -192,7 +186,7 @@ public class DexCoinSupport extends AbstractExtension implements IExchange, IWal
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
-                return new DexCoinSupport(preferedFiatCurrency,rate);
+                return new FixPriceRateSource(rate,preferedFiatCurrency);
             }
         }
         return null;

@@ -18,6 +18,7 @@
 
 package com.generalbytes.batm.server.extensions;
 
+import com.generalbytes.batm.server.extensions.chat.IChatCommand;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.util.Set;
@@ -126,4 +127,10 @@ public interface IExtension {
      * @return
      */
     Set<IRestService> getRestServices();
+
+    /**
+     * Returns list of available commands that will be available to server's chatbot
+     * @return
+     */
+    Set<Class> getChatCommands();
 }

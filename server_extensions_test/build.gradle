@@ -12,7 +12,7 @@ dependencies {
     compile project(':server_extensions_api');
     compile project(':server_extensions_extra');
     compile(group: 'net.sf.jopt-simple', name: 'jopt-simple', version: '4.9')
-    runtime(group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3')
+    runtime(group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25')
 }
 
 dependencySubstitutions {

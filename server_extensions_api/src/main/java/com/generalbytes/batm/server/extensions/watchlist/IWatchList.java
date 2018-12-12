@@ -21,46 +21,46 @@ package com.generalbytes.batm.server.extensions.watchlist;
  * This class defines basic interface which every watchlist should conform to
  */
 public interface IWatchList {
-    public static final int LIST_NOT_CHANGED    = 0;
-    public static final int LIST_CHANGED        = 1;
-    public static final int LIST_REFRESH_FAILED = 2;
+    int LIST_NOT_CHANGED    = 0;
+    int LIST_CHANGED        = 1;
+    int LIST_REFRESH_FAILED = 2;
 
 
     /**
      * Ths method is called just once and before refresh method is called
      * @param downloadDirectory
      */
-    public void init(String downloadDirectory);
+    void init(String downloadDirectory);
 
     /**
      * Unique name of the watchlist
      * @return
      */
-    public String getName();
+    String getName();
 
     /**
      * Short description of the watchlist. For instance link to a website containing more information about the watchlist data
      * @return
      */
-    public String getDescription();
+    String getDescription();
 
     /**
      * Performs the re-download of the watchlist from the remote side @see LIST_NOT_CHANGED or LIST_CHANGED or LIST_REFRESH_FAILED if download fails.
      * @return
      */
-    public int refresh();
+    int refresh();
 
     /**
      * This method returns number of recommended minutes for which the watchlist is considered valid. After this period method refresh() should be called again.
      * @return
      */
-    public int recommendedRefreshPeriodInMins();
+    int recommendedRefreshPeriodInMins();
 
     /**
      * This method is used to query the watchlist for results
      * @param query
      * @return
      */
-    public WatchListResult search(WatchListQuery query);
+    WatchListResult search(WatchListQuery query);
 
 }
