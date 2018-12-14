@@ -49,7 +49,7 @@ import static com.generalbytes.batm.server.extensions.ITransactionDetails.*;
 @ChatCommand( names = {"info","i"},
     help = "/info [balances|terminals [serial number]|remoteTransactionId|identityId|phonenumber] - display various information.")
 public class InfoCommand extends AbstractChatCommnad{
-
+    //TODO: See status of last 50 transactions.
     public static final String PERMISSION_DENIED = "Permission denied. We are sorry, but you don't have access to this information.";
 
     public boolean processCommand(IExtensionContext ctx, IConversation conversation, String command, StringTokenizer parameters, String commandLine) {
@@ -568,9 +568,10 @@ public class InfoCommand extends AbstractChatCommnad{
                 conversation.sendText("Identity was not found.");
             }
         }else if (phoneNumber != null) {
-            identity = ctx.findIdentityByPhoneNumber(phoneNumber);
+            IPerson person = ctx.findPersonByChatId(conversation.getSenderUserId());
+            identity = ctx.findIdentityByPhoneNumber(phoneNumber, person.getContactCountry());
             if (identity == null) {
-                conversation.sendText("Identity was not found by phone number. Make sure you search phone number with +countrycode prefix.");
+                conversation.sendText("Identity was not found by phone number.");
             }
         }
         if (identity != null) {
