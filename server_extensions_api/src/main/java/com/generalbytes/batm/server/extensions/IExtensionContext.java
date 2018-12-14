@@ -80,6 +80,19 @@ public interface IExtensionContext {
      */
     boolean isTerminalFromSameOrganizationAsPerson(String terminalSerialNumber, IPerson person);
 
+    /**
+     * Finds and returns identity based on provided publicIdentityId
+     * @param publicIdentityId
+     * @return
+     */
+    IIdentity findIdentityByIdentityId(String publicIdentityId);
+
+    /**
+     * Finds and returns identity based on provided phone number
+     * @param phoneNumber
+     * @return
+     */
+    IIdentity findIdentityByPhoneNumber(String phoneNumber);
 
     //Email related stuff
     public static class EmbeddedEmailImage {
