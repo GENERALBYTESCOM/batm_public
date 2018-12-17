@@ -97,6 +97,7 @@ public class Currencies {
     public static final String JPY = "JPY";
     public static final String KES = "KES";
     public static final String KRW = "KRW";
+    public static final String KWD = "KWD"; // Kuwaiti dinar
     public static final String KZT = "KZT";
     public static final String MKD = "MKD";
     public static final String MXN = "MXN";
@@ -206,6 +207,7 @@ public class Currencies {
         fiat.add(JPY);
         fiat.add(KES);
         fiat.add(KRW);
+        fiat.add(KWD);
         fiat.add(KZT);
         fiat.add(MKD);
         fiat.add(MXN);
