@@ -88,11 +88,18 @@ public interface IExtensionContext {
     IIdentity findIdentityByIdentityId(String publicIdentityId);
 
     /**
-     * Finds and returns identity based on provided phone number
+     * Finds and returns identity based on provided phone number. This number has to be in international format (leading +countrycode is required)
      * @param phoneNumber
      * @return
      */
     IIdentity findIdentityByPhoneNumber(String phoneNumber);
+
+    /**
+     * Finds and returns identity based on provided phone number this number. If you don't specify country then number has to be in international format (leading +countrycode is required)
+     * @param phoneNumber
+     * @return
+     */
+    IIdentity findIdentityByPhoneNumber(String phoneNumber, String countryName);
 
     //Email related stuff
     public static class EmbeddedEmailImage {
