@@ -24,6 +24,7 @@ import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.sumcoin.sumcored.SumcoinRPCWallet;
+import com.generalbytes.batm.server.extensions.extra.sumcoin.sources.sumcoincash.SumcoincashRateSource;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -82,8 +83,14 @@ public class SumcoinExtension extends AbstractExtension{
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(sourceLogin,":");
             String exchangeType = st.nextToken();
-
-            if ("sumfix".equalsIgnoreCase(exchangeType)) {
+            
+            if ("sumcoincash".equalsIgnoreCase(exchangeType)) {
+                if (st.hasMoreTokens()) {
+                    return new SumcoincashRateSource(st.nextToken().toUpperCase());
+                }
+                return new SumcoincashRateSource(Currencies.USD);
+            }
+            else if ("sumfix".equalsIgnoreCase(exchangeType)) {
                 BigDecimal rate = BigDecimal.ZERO;
                 if (st.hasMoreTokens()) {
                     try {
