@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2018 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2016 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -17,23 +17,17 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.sumcoin.sources.sumcoincash;
 
-import javax.ws.rs.*;
+import com.generalbytes.batm.server.extensions.extra.sumcoin.sources.sumcoincash.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.util.Map;
-@Path("/sumprice")
-@Produces(MediaType.APPLICATION_JSON)
-public interface ISumcoincashAPI {
-    @GET
-    @Path("/ticker/{id}/")
-    SccTickerResponse  getTicker(@PathParam("id") Integer id, @QueryParam("convert") String fiatCurrency);
 
-    /**
-     * Method getListings() returns map which contain all suported crypto currencies.
-     * For all cryptocurrencies there is associated id.
-     *
-     * @return Map of cryptocurrencies
-     */
+@Path("/")
+@Produces(MediaType.APPLICATION_JSON)
+public interface ISumcoinCashAPI {
     @GET
-    @Path("/listings")
-    Map<String, Object> getListings();
+    @Path("{f1}/{f2}")
+    SumcoincashResponse getTicker(@PathParam("f1") String fieldOne, @PathParam("f2") String fieldTwo);
 }

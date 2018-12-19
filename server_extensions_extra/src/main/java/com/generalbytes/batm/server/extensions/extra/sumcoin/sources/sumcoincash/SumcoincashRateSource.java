@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2018 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2016 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -18,100 +18,126 @@
 package com.generalbytes.batm.server.extensions.extra.sumcoin.sources.sumcoincash;
 
 import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.server.extensions.extra.sumcoin.sources.sumcoincash.*;
+import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IRateSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.KeyManagementException;
 import si.mazi.rescu.RestProxyFactory;
+import si.mazi.rescu.ClientConfig;
 
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
-/**
- * Created by kkyovsky on 11/29/17.
- *
- * Modified by sidhujag on 6/3/2018
- */
 
-public class SumcoincashRateSource implements IRateSource {
-    /**
-     * Expiry of cache in seconds
-     */
-    private static final long CACHE_EXPIRY_TIME_DEFAULT = 600;
-    private ICoinmarketcapAPI api;
-    private String preferredFiatCurrency = Currencies.USD;
-    private static volatile long recentUnix = System.currentTimeMillis();
-    private static volatile Map<String,Integer> coinIDs;
+public class SumcoincashRateSource implements IRateSource{
+    private static final Logger log = LoggerFactory.getLogger(SumcoincashRateSource.class);
+
+    private static HashMap<String,BigDecimal> rateAmounts = new HashMap<String, BigDecimal>();
+    private static HashMap<String,Long> rateTimes = new HashMap<String, Long>();
+    private static final long MAXIMUM_ALLOWED_TIME_OFFSET = 30 * 1000; //30sec
+
+    private String preferedFiatCurrency = Currencies.USD;
+    private ISumcoincashRateAPI api;
 
     public SumcoincashRateSource(String preferedFiatCurrency) {
         this();
         if (Currencies.EUR.equalsIgnoreCase(preferedFiatCurrency)) {
-            this.preferredFiatCurrency = Currencies.EUR;
+            this.preferedFiatCurrency = Currencies.EUR;
         }
         if (Currencies.USD.equalsIgnoreCase(preferedFiatCurrency)) {
-            this.preferredFiatCurrency = Currencies.USD;
-        }
-        if (Currencies.CAD.equalsIgnoreCase(preferedFiatCurrency)) {
-            this.preferredFiatCurrency = Currencies.CAD;
-        }
-        if (Currencies.HKD.equalsIgnoreCase(preferedFiatCurrency)) {
-            this.preferredFiatCurrency = Currencies.HKD;
+            this.preferedFiatCurrency = Currencies.USD;
         }
     }
 
-    private SumcoincashRateSource() {
-        api = RestProxyFactory.createProxy(ISumcoincashAPI.class, "http://159.65.72.249/");
-        final long currentUnix = System.currentTimeMillis();
-        final long difference = currentUnix - recentUnix;
-        final long differenceInSeconds = TimeUnit.SECONDS.convert(difference, TimeUnit.MILLISECONDS);
-        if(coinIDs == null || coinIDs.isEmpty() || differenceInSeconds > CACHE_EXPIRY_TIME_DEFAULT) {
-            HashMap<String, Integer> localCoinIDs = new HashMap<>();
-            final Map<String, Object> listings = api.getListings();
-            if (listings != null && !listings.isEmpty()) {
-                final List<Object> dataList = (List<Object>) listings.get("data");
-                if(dataList != null && !dataList.isEmpty()) {
-                    for (Object dataobject : dataList) {
-                        final Map<String, Object> map = (Map<String, Object>) dataobject;
-                        final Integer id = (Integer) map.get("name");
-                        final String symbol = (String) map.get("code");
-                        if (!localCoinIDs.containsKey(symbol) && !localCoinIDs.containsValue(id)) {
-                            localCoinIDs.put(symbol, id);
-                        }
-                    }
+    public SumcoincashRateSource() {
+	final ClientConfig config = new ClientConfig();
+        try {
+            SSLContext sslcontext=SSLContext.getInstance("TLS");
+            sslcontext.init(null,null,null);
+            final CompatSSLSocketFactory socketFactory = new CompatSSLSocketFactory(sslcontext.getSocketFactory());
+            config.setSslSocketFactory(socketFactory);
+            config.setIgnoreHttpErrorCodes(true);
+            api = RestProxyFactory.createProxy(ISumcoincashRateAPI.class, "http://159.65.72.249", config);
+        } catch (NoSuchAlgorithmException e) {
+            log.error("Error", e);
+        } catch (KeyManagementException e) {
+            log.error("Error", e);
+        }
+    }
+
+    @Override
+    public BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency) {
+        if (!(Currencies.SUM.equalsIgnoreCase(cryptoCurrency))) {
+            return null;
+        }
+        if (!(Currencies.USD.equalsIgnoreCase(fiatCurrency))) {
+            return null;
+        }
+
+        String key = cryptoCurrency +"_" + fiatCurrency;
+        synchronized (rateAmounts) {
+
+            long now  = System.currentTimeMillis();
+            BigDecimal amount = rateAmounts.get(key);
+            if (amount == null) {
+                BigDecimal result = getExchangeRateLastSync(cryptoCurrency,fiatCurrency);
+                log.debug("Called Sumcoincash ticker for rate: " + key + " = " + result);
+                rateAmounts.put(key,result);
+                rateTimes.put(key,now+MAXIMUM_ALLOWED_TIME_OFFSET);
+                return result;
+            }else {
+                Long expirationTime = rateTimes.get(key);
+                if (expirationTime > now) {
+                    return rateAmounts.get(key);
+                }else{
+                    //do the job;
+                    BigDecimal result = getExchangeRateLastSync(cryptoCurrency,fiatCurrency);
+                    log.debug("Called Sumcoincash ticker for rate: " + key + " = " + result);
+                    rateAmounts.put(key,result);
+                    rateTimes.put(key,now+MAXIMUM_ALLOWED_TIME_OFFSET);
+                    return result;
                 }
             }
-            CoinmarketcapRateSource.recentUnix = System.currentTimeMillis();
-            CoinmarketcapRateSource.coinIDs = localCoinIDs;
         }
+
+    }
+
+    private BigDecimal getExchangeRateLastSync(String cryptoCurrency, String fiatCurrency) {
+	//String cd_fiatCurrency;
+        /*cd_fiatCurrency="2";
+        if(Currencies.USD.equalsIgnoreCase(fiatCurrency)){
+            cd_fiatCurrency="2";
+        } */
+        /*if(Currencies.EUR.equalsIgnoreCase(fiatCurrency)){
+            cd_fiatCurrency="1";
+        } */
+        if (!(Currencies.SUM.equalsIgnoreCase(cryptoCurrency))) {
+            return null;
+        }
+        if (!(Currencies.USD.equalsIgnoreCase(fiatCurrency))) {
+            return null;
+        }
+        SumcoincashResponse ticker = api.getTicker("sumprice","price2.json");
+        if (ticker != null && ticker.geterror() == 0) {
+            return ticker.getrate();
+        }
+	else{
+	    if(ticker.geterror()!=0){
+		 log.debug("API ticker error: " + ticker.geterror_msg());
+	    }
+	}
+        return null;
     }
 
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        /*result.add(Currencies.BTC);
-        result.add(Currencies.SYS);
-        result.add(Currencies.BCH);
-        result.add(Currencies.BTX);
-        result.add(Currencies.LTC);
-        result.add(Currencies.ETH);
-        result.add(Currencies.DASH);
-        result.add(Currencies.XMR);
-        result.add(Currencies.PAC);
-        result.add(Currencies.POT);
-        result.add(Currencies.FLASH);
-        result.add(Currencies.BTCP);
-        result.add(Currencies.EFL);
-        result.add(Currencies.BSD);
-        result.add(Currencies.BTDX);
-        result.add(Currencies.MEC);
-        result.add(Currencies.BURST);
-        result.add(Currencies.DOGE);
-        result.add(Currencies.ECA);
-        result.add(Currencies.ANON);
-        result.add(Currencies.LSK);
-        result.add(Currencies.USDT);
-        result.add(Currencies.XZC);
-        result.add(Currencies.CLOAK);
-        result.add(Currencies.DAI); */
-		result.add(Currencies.SUM);
-
+        //result.add(Currencies.BTC);
+	result.add(Currencies.SUM);
         return result;
     }
 
@@ -119,44 +145,12 @@ public class SumcoincashRateSource implements IRateSource {
     public Set<String> getFiatCurrencies() {
         Set<String> result = new HashSet<String>();
         result.add(Currencies.USD);
-        /*result.add(Currencies.CAD);
-        result.add(Currencies.EUR);
-        result.add(Currencies.HKD); */
+        //result.add(Currencies.EUR);
         return result;
     }
 
-
     @Override
     public String getPreferredFiatCurrency() {
-        return Currencies.USD;
-    }
-
-    @Override
-    public BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency) {
-        if (!getFiatCurrencies().contains(fiatCurrency)) {
-            return null;
-        }
-
-        Integer cryptoId = coinIDs.get(cryptoCurrency);
-        if (cryptoId == null) {
-            return null;
-        }
-        SccTickerResponse ticker = api.getTicker(cryptoId, fiatCurrency);
-        if (ticker == null) {
-            return null;
-        }
-        SccTickerData data = ticker.getData();
-        if (data == null) {
-            return null;
-        }
-        Map<String, SccTickerQuote> quotesByFiatCurrency = data.getQuotes();
-        if (quotesByFiatCurrency == null) {
-            return null;
-        }
-        SccTickerQuote quote = quotesByFiatCurrency.get(fiatCurrency);
-        if (quote == null) {
-            return null;
-        }
-        return quote.getPrice();
+        return preferedFiatCurrency;
     }
 }
