@@ -26,7 +26,7 @@ import javax.ws.rs.core.MediaType;
 
 @Path("/")
 @Produces(MediaType.APPLICATION_JSON)
-public interface ISumcoinCashAPI {
+public interface ISumcoincashAPI {
     @GET
     @Path("{f1}/{f2}")
     SumcoincashResponse getTicker(@PathParam("f1") String fieldOne, @PathParam("f2") String fieldTwo);
