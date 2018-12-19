@@ -123,7 +123,7 @@ public class SumcoincashRateSource implements IRateSource{
         }
         SumcoincashResponse ticker = api.getTicker("sumprice","price2.json");
         if (ticker != null && ticker.geterror() == 0) {
-            return ticker.getrate();
+            return ticker.getexch_rate_buy();
         }
 	else{
 	    if(ticker.geterror()!=0){
