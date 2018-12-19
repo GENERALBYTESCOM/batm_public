@@ -41,7 +41,7 @@ public class SumcoincashRateSource implements IRateSource{
     private static final long MAXIMUM_ALLOWED_TIME_OFFSET = 30 * 1000; //30sec
 
     private String preferedFiatCurrency = Currencies.USD;
-    private ISumcoincashRateAPI api;
+    private ISumcoincashAPI api;
 
     public SumcoincashRateSource(String preferedFiatCurrency) {
         this();
@@ -61,7 +61,7 @@ public class SumcoincashRateSource implements IRateSource{
             final CompatSSLSocketFactory socketFactory = new CompatSSLSocketFactory(sslcontext.getSocketFactory());
             config.setSslSocketFactory(socketFactory);
             config.setIgnoreHttpErrorCodes(true);
-            api = RestProxyFactory.createProxy(ISumcoincashRateAPI.class, "http://159.65.72.249", config);
+            api = RestProxyFactory.createProxy(ISumcoincashAPI.class, "http://159.65.72.249", config);
         } catch (NoSuchAlgorithmException e) {
             log.error("Error", e);
         } catch (KeyManagementException e) {
