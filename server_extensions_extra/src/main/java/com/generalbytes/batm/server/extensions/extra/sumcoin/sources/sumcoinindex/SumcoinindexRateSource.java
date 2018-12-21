@@ -15,10 +15,10 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.sumcoin.sources.sumcoincash;
+package com.generalbytes.batm.server.extensions.extra.sumcoin.sources.sumcoinindex;
 
 import com.generalbytes.batm.server.extensions.Currencies;
-import com.generalbytes.batm.server.extensions.extra.sumcoin.sources.sumcoincash.*;
+import com.generalbytes.batm.server.extensions.extra.sumcoin.sources.sumcoinindex.*;
 import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import org.slf4j.Logger;
@@ -33,17 +33,17 @@ import si.mazi.rescu.ClientConfig;
 import java.math.BigDecimal;
 import java.util.*;
 
-public class SumcoincashRateSource implements IRateSource{
-    private static final Logger log = LoggerFactory.getLogger(SumcoincashRateSource.class);
+public class SumcoinindexRateSource implements IRateSource{
+    private static final Logger log = LoggerFactory.getLogger(SumcoinindexRateSource.class);
 
     private static HashMap<String,BigDecimal> rateAmounts = new HashMap<String, BigDecimal>();
     private static HashMap<String,Long> rateTimes = new HashMap<String, Long>();
     private static final long MAXIMUM_ALLOWED_TIME_OFFSET = 30 * 1000; //30sec
 
     private String preferedFiatCurrency = Currencies.USD;
-    private ISumcoincashAPI api;
+    private ISumcoinindexAPI api;
 
-    public SumcoincashRateSource(String preferedFiatCurrency) {
+    public SumcoinindexRateSource(String preferedFiatCurrency) {
         this();
         if (Currencies.EUR.equalsIgnoreCase(preferedFiatCurrency)) {
             this.preferedFiatCurrency = Currencies.EUR;
@@ -53,7 +53,7 @@ public class SumcoincashRateSource implements IRateSource{
         }
     }
 
-    public SumcoincashRateSource() {
+    public SumcoinindexRateSource() {
 	final ClientConfig config = new ClientConfig();
         try {
             SSLContext sslcontext=SSLContext.getInstance("TLS");
@@ -61,7 +61,7 @@ public class SumcoincashRateSource implements IRateSource{
             final CompatSSLSocketFactory socketFactory = new CompatSSLSocketFactory(sslcontext.getSocketFactory());
             config.setSslSocketFactory(socketFactory);
             config.setIgnoreHttpErrorCodes(true);
-            api = RestProxyFactory.createProxy(ISumcoincashAPI.class, "http://159.65.72.249", config);
+            api = RestProxyFactory.createProxy(ISumcoinindexAPI.class, "http://159.65.72.249", config);
         } catch (NoSuchAlgorithmException e) {
             log.error("Error", e);
         } catch (KeyManagementException e) {
@@ -85,7 +85,7 @@ public class SumcoincashRateSource implements IRateSource{
             BigDecimal amount = rateAmounts.get(key);
             if (amount == null) {
                 BigDecimal result = getExchangeRateLastSync(cryptoCurrency,fiatCurrency);
-                log.debug("Called Sumcoincash ticker for rate: " + key + " = " + result);
+                log.debug("Called Sumcoinindex ticker for rate: " + key + " = " + result);
                 rateAmounts.put(key,result);
                 rateTimes.put(key,now+MAXIMUM_ALLOWED_TIME_OFFSET);
                 return result;
@@ -96,7 +96,7 @@ public class SumcoincashRateSource implements IRateSource{
                 }else{
                     //do the job;
                     BigDecimal result = getExchangeRateLastSync(cryptoCurrency,fiatCurrency);
-                    log.debug("Called Sumcoincash ticker for rate: " + key + " = " + result);
+                    log.debug("Called Sumcoinindex ticker for rate: " + key + " = " + result);
                     rateAmounts.put(key,result);
                     rateTimes.put(key,now+MAXIMUM_ALLOWED_TIME_OFFSET);
                     return result;
@@ -121,7 +121,7 @@ public class SumcoincashRateSource implements IRateSource{
         if (!(Currencies.USD.equalsIgnoreCase(fiatCurrency))) {
             return null;
         }
-        SumcoincashResponse ticker = api.getTicker("sumprice","price2.json");
+        SumcoinindexResponse ticker = api.getTicker("sumprice","price2.json");
         if (ticker != null && ticker.geterror() == 0) {
             return ticker.getexch_rate_buy();
         }

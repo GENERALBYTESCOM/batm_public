@@ -625,7 +625,7 @@
             <param name="accountname" />
             <cryptocurrency>SUM</cryptocurrency>
         </wallet>
-        <ratesource prefix="sumcoincash" name="Sumcoincash" >
+        <ratesource prefix="sumcoinindex" name="Sumcoinindex" >
             <cryptocurrency>SUM</cryptocurrency>
         </ratesource>
         <ratesource prefix="sumfix" name ="Fix Price" >

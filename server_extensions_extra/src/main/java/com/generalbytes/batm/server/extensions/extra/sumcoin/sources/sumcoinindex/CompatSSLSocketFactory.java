@@ -1,4 +1,4 @@
-package com.generalbytes.batm.server.extensions.extra.sumcoin.sources.sumcoincash;
+package com.generalbytes.batm.server.extensions.extra.sumcoin.sources.sumcoinindex;
 import javax.net.ssl.SSLSocket;
 
 import java.io.IOException;

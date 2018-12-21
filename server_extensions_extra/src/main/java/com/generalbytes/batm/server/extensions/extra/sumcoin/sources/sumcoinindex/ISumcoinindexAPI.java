@@ -15,9 +15,9 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.sumcoin.sources.sumcoincash;
+package com.generalbytes.batm.server.extensions.extra.sumcoin.sources.sumcoinindex;
 
-import com.generalbytes.batm.server.extensions.extra.sumcoin.sources.sumcoincash.*;
+import com.generalbytes.batm.server.extensions.extra.sumcoin.sources.sumcoinindex.*;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -26,8 +26,8 @@ import javax.ws.rs.core.MediaType;
 
 @Path("/")
 @Produces(MediaType.APPLICATION_JSON)
-public interface ISumcoincashAPI {
+public interface ISumcoinindexAPI {
     @GET
     @Path("{f1}/{f2}")
-    SumcoincashResponse getTicker(@PathParam("f1") String fieldOne, @PathParam("f2") String fieldTwo);
+    SumcoinindexResponse getTicker(@PathParam("f1") String fieldOne, @PathParam("f2") String fieldTwo);
 }

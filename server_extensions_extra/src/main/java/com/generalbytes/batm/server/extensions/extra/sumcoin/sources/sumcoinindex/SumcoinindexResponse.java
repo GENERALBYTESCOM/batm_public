@@ -15,12 +15,12 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.sumcoin.sources.sumcoincash;
+package com.generalbytes.batm.server.extensions.extra.sumcoin.sources.sumcoinindex;
 
-import com.generalbytes.batm.server.extensions.extra.sumcoin.sources.sumcoincash.*;
+import com.generalbytes.batm.server.extensions.extra.sumcoin.sources.sumcoinindex.*;
 import java.math.BigDecimal;
 
-public class SumcoincashResponse {
+public class SumcoinindexResponse {
     
     private BigDecimal exch_rate;
     private BigDecimal exch_rate_sell;
