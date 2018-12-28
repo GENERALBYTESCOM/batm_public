@@ -189,6 +189,8 @@
         <cryptologo cryptocurrency="BTC" file="btc.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.bitcoincash.BitcoinCashExtension">
+        </exchange>
+        <exchange prefix="coinasset" name="Coinasset.co.th Exchange">
                 <param name="accountId" />
                 <param name="apikey" />
                 <param name="apisecret" />
