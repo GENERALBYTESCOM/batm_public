@@ -719,7 +719,7 @@
             <cryptocurrency>LSK</cryptocurrency>
             <cryptocurrency>DOGE</cryptocurrency>
         </ratesource>
-    <ratesource prefix="coindeal" name="Coindeal" >
+        <ratesource prefix="coindeal" name="Coindeal" >
             <cryptocurrency>FTO</cryptocurrency>
         </ratesource>
         <ratesource prefix="ftofix" name ="Fix Price" >
