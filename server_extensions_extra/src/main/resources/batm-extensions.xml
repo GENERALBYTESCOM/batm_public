@@ -4,7 +4,7 @@
             <wallet prefix="bitcoind" name="Bitcoin Core - bitcoind" >
                 <param name="protocol" />
                 <param name="user" />
-                <param name="password" /> 
+                <param name="password" />
                 <param name="host" />
                 <param name="port" />
                 <param name="accountname" />
@@ -709,7 +709,7 @@
             <param name="accountname" />
             <cryptocurrency>FTO</cryptocurrency>
         </wallet>
-        <ratesource prefix="Yobit" name="Yobit">
+        <ratesource prefix="yobit" name="Yobit">
             <cryptocurrency>FTO</cryptocurrency>
             <cryptocurrency>MAX</cryptocurrency>
             <cryptocurrency>DASH</cryptocurrency>
@@ -899,8 +899,8 @@
             <help>Mnemonic should be 24 words delimited by spaces</help>
             <cryptocurrency>REP</cryptocurrency>
         </wallet>
-         <cryptologo cryptocurrency="REP" file="rep.png"/>
-         <cryptologo cryptocurrency="REP" file="rep.svg"/>
+          <cryptologo cryptocurrency="REP" file="rep.png"/>
+          <cryptologo cryptocurrency="REP" file="rep.svg"/>
         <!-- ADD your ERC20 tokens here. And don't forget to add cryptologos. -->
     </extension>
 <extension class="com.generalbytes.batm.server.extensions.extra.ethereum.EthereumExtension" >
