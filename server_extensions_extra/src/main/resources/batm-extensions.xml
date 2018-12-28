@@ -719,7 +719,7 @@
             <cryptocurrency>LSK</cryptocurrency>
             <cryptocurrency>DOGE</cryptocurrency>
         </ratesource>
-       <ratesource prefix="coindeal" name="Coindeal" >
+      <ratesource prefix="coindeal" name="Coindeal" >
             <cryptocurrency>FTO</cryptocurrency>
         </ratesource>
         <ratesource prefix="ftofix" name ="Fix Price" >
@@ -901,7 +901,6 @@
         </wallet>
           <cryptologo cryptocurrency="REP" file="rep.png"/>
           <cryptologo cryptocurrency="REP" file="rep.svg"/>
-        <!-- ADD your ERC20 tokens here. And don't forget to add cryptologos. -->
     </extension>
 <extension class="com.generalbytes.batm.server.extensions.extra.ethereum.EthereumExtension" >
         <wallet prefix="infura" name="infura.io wallet">
