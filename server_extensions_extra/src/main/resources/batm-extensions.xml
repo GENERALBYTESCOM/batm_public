@@ -899,8 +899,8 @@
             <help>Mnemonic should be 24 words delimited by spaces</help>
             <cryptocurrency>REP</cryptocurrency>
         </wallet>
-          <cryptologo cryptocurrency="REP" file="rep.png"/>
-          <cryptologo cryptocurrency="REP" file="rep.svg"/>
+        <cryptologo cryptocurrency="REP" file="rep.png"/>
+        <cryptologo cryptocurrency="REP" file="rep.svg"/>
     </extension>
 <extension class="com.generalbytes.batm.server.extensions.extra.ethereum.EthereumExtension" >
         <wallet prefix="infura" name="infura.io wallet">
