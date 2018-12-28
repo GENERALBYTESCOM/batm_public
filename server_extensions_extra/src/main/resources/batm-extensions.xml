@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-      <extensions>
-      <extension class="com.generalbytes.batm.server.extensions.extra.bitcoin.BitcoinExtension" >
+<extensions>
+    <extension class="com.generalbytes.batm.server.extensions.extra.bitcoin.BitcoinExtension" >
             <wallet prefix="bitcoind" name="Bitcoin Core - bitcoind" >
                 <param name="protocol" />
                 <param name="user" />
@@ -187,9 +187,8 @@
         </exchange>
         <cryptologo cryptocurrency="BTC" file="btc.png"/>
         <cryptologo cryptocurrency="BTC" file="btc.svg"/>
-     </extension>
-     <exchange prefix="Coinasset" name="coinasset.co.th Exchange">
-                <param name="userId" />
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.bitcoincash.BitcoinCashExtension">
                 <param name="accountId" />
                 <param name="apikey" />
                 <param name="apisecret" />
@@ -205,8 +204,8 @@
                 <cryptocurrency>Voltz</cryptocurrency>
                 <cryptocurrency>365</cryptocurrency>
         </exchange>
-    </extension>
-<extension class="com.generalbytes.batm.server.extensions.extra.bitcoincash.BitcoinCashExtension">
+  </extension>
+      <extension class="com.generalbytes.batm.server.extensions.extra.bitcoincash.BitcoinCashExtension">
         <wallet prefix="bitcoincashd" name="BitcoinABC/BitcoinClassic Cash Core - bitcoind" >
             <param name="protocol" />
             <param name="user" />
