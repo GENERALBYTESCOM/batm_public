@@ -187,6 +187,24 @@
         </exchange>
         <cryptologo cryptocurrency="BTC" file="btc.png"/>
         <cryptologo cryptocurrency="BTC" file="btc.svg"/>
+        </exchange>
+        <exchange prefix="Coinasset" name="coinasset.co.th Exchange">
+                <param name="userId" />
+                <param name="accountId" />
+                <param name="apikey" />
+                <param name="apisecret" />
+                <param name="fiatcurrency" />
+                <cryptocurrency>HBX</cryptocurrency>
+        </exchange>
+        <exchange prefix="365Stream" name="365.stream Exchange">
+                <param name="userId" />
+                <param name="accountId" />
+                <param name="apikey" />
+                <param name="apisecret" />
+                <param name="fiatcurrency" />
+                <cryptocurrency>Voltz</cryptocurrency>
+                <cryptocurrency>365</cryptocurrency>
+        </exchange>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.bitcoincash.BitcoinCashExtension">
         <wallet prefix="bitcoincashd" name="BitcoinABC/BitcoinClassic Cash Core - bitcoind" >
@@ -682,14 +700,14 @@
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.watchlists.BasicWatchlistsExtension" />
     <extension class="com.generalbytes.batm.server.extensions.extra.futurocoin.FuturocoinExtension" >
-        <wallet prefix="hashbxcoin" name="HashBXCoin">
+        <wallet prefix="futurocoind" name="Futurocoind">
             <param name="protocol" />
             <param name="user" />
             <param name="password" />
             <param name="host" />
             <param name="port" />
             <param name="accountname" />
-            <cryptocurrency>HBX</cryptocurrency>
+            <cryptocurrency>FTO</cryptocurrency>
         </wallet>
         <ratesource prefix="Yobit" name="Yobit">
             <cryptocurrency>FTO</cryptocurrency>
@@ -701,15 +719,15 @@
             <cryptocurrency>LSK</cryptocurrency>
             <cryptocurrency>DOGE</cryptocurrency>
         </ratesource>
-        <ratesource prefix="365.stream" name="365.Stream" >
-            <cryptocurrency>HBX</cryptocurrency>
+       <ratesource prefix="coindeal" name="Coindeal" >
+            <cryptocurrency>FTO</cryptocurrency>
         </ratesource>
-        <ratesource prefix="hbxfix" name ="Fix Price" >
+        <ratesource prefix="ftofix" name ="Fix Price" >
             <param name="price" />
-            <cryptocurrency>HBX</cryptocurrency>
+            <cryptocurrency>FTO</cryptocurrency>
             <help>USD is default fiat currency.</help>
         </ratesource>
-        <cryptologo cryptocurrency="HBX" file="hbx.png"/>
+        <cryptologo cryptocurrency="FTO" file="fto.png"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.egulden.EguldenExtension" >
         <wallet prefix="eguldend" name="Eguldend">
@@ -873,16 +891,59 @@
             <help>Mnemonic should be 24 words delimited by spaces</help>
             <cryptocurrency>BAT</cryptocurrency>
         </wallet>
-        <cryptologo cryptocurrency="HBX" file="hbx.png"/>
-        <cryptologo cryptocurrency="HBX" file="hbx.svg"/>
-        <wallet prefix="infuraERC20_HBX_18_0x6fe355c62c6faf6946ce888ffaba9fd12355ae27" name="Infura.io wallet - HBX">
+        <cryptologo cryptocurrency="BAT" file="bat.png"/>
+        <cryptologo cryptocurrency="BAT" file="bat.svg"/>
+        <wallet prefix="infuraERC20_REP_18_0x1985365e9f78359a9B6AD760e32412f4a445E862" name="Infura.io wallet - REP">
             <param name="apiKey" />
             <param name="mnemonic" />
             <help>Mnemonic should be 24 words delimited by spaces</help>
             <cryptocurrency>REP</cryptocurrency>
         </wallet>
+         <cryptologo cryptocurrency="REP" file="rep.png"/>
+         <cryptologo cryptocurrency="REP" file="rep.svg"/>
+        <!-- ADD your ERC20 tokens here. And don't forget to add cryptologos. -->
+    </extension>
+<extension class="com.generalbytes.batm.server.extensions.extra.ethereum.EthereumExtension" >
+        <wallet prefix="infura" name="infura.io wallet">
+            <param name="apiKey" />
+            <param name="mnemonic" />
+            <help>Mnemonic should be 24 words delimited by spaces</help>
+            <cryptocurrency>ETH</cryptocurrency>
+        </wallet>
+        <wallet prefix="infuraERC20_HBX_18_0x6fe355c62c6faf6946ce888ffaba9fd12355ae27" name="Infura.io wallet - HBX">
+            <!-- Hint: infuraERC20_TOKENSYMBOL_DECIMALPLACES_CONTRACTADDRESS -->
+            <param name="apiKey" />
+            <param name="mnemonic" />
+            <help>Mnemonic should be 24 words delimited by spaces</help>
+            <cryptocurrency>HBX</cryptocurrency>
+        </wallet>
         <cryptologo cryptocurrency="HBX" file="hbx.png"/>
         <cryptologo cryptocurrency="HBX" file="hbx.svg"/>
+         </extension>
+<extension class="com.generalbytes.batm.server.extensions.extra.ethereum.EthereumExtension" >
+        <wallet prefix="infura" name="infura.io wallet">
+            <param name="apiKey" />
+            <param name="mnemonic" />
+            <help>Mnemonic should be 24 words delimited by spaces</help>
+            <cryptocurrency>ETH</cryptocurrency>
+        </wallet>
+        <wallet prefix="infuraERC20_Voltz_18_0x60715e436c37444e29772c0d26a98ae1e8e1a989" name="Infura.io wallet - Voltz">
+            <!-- Hint: infuraERC20_TOKENSYMBOL_DECIMALPLACES_CONTRACTADDRESS -->
+            <param name="apiKey" />
+            <param name="mnemonic" />
+            <help>Mnemonic should be 24 words delimited by spaces</help>
+            <cryptocurrency>Voltz</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="Voltz" file="voltz.png"/>
+        <cryptologo cryptocurrency="Voltz" file="voltz.svg"/>
+        <wallet prefix="infuraERC20_365_18_0xb1771c3fe7c5c4f3ab02ecaa65f51e4dd512bc07" name="Infura.io wallet - 365">
+            <param name="apiKey" />
+            <param name="mnemonic" />
+            <help>Mnemonic should be 24 words delimited by spaces</help>
+            <cryptocurrency>365</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="365" file="365.png"/>
+        <cryptologo cryptocurrency="365" file="365.svg"/>
         <!-- ADD your ERC20 tokens here. And don't forget to add cryptologos. -->
     </extension>
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.TransactionExtension" />-->
