@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extensions>
+   <extensions>
       <extension class="com.generalbytes.batm.server.extensions.extra.bitcoin.BitcoinExtension" >
             <wallet prefix="bitcoind" name="Bitcoin Core - bitcoind" >
                 <param name="protocol" />
@@ -188,7 +188,7 @@
         <cryptologo cryptocurrency="BTC" file="btc.png"/>
         <cryptologo cryptocurrency="BTC" file="btc.svg"/>
     </extension>
-        <exchange prefix="Coinasset" name="coinasset.co.th Exchange">
+    <exchange prefix="Coinasset" name="coinasset.co.th Exchange">
                 <param name="userId" />
                 <param name="accountId" />
                 <param name="apikey" />
