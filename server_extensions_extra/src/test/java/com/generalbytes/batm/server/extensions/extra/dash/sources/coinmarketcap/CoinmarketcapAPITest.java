@@ -203,7 +203,7 @@ public class CoinmarketcapAPITest {
     public void getListingsTest() {
         final Map<String, Object> result = api.getListings();
         Assert.assertNotNull(result);
-        Assert.assertEquals(2, result.size());
+        Assert.assertEquals(3, result.size());
 
         final Object object = result.get("data");
         Assert.assertTrue(object instanceof List);
