@@ -57,7 +57,7 @@ public class SumcoinindexRateSource implements IRateSource{
         try {
             SSLContext sslcontext=SSLContext.getInstance("TLS");
             sslcontext.init(null,null,null);
-            api = RestProxyFactory.createProxy(ISumcoinindexAPI.class, "http://sumcoinindex.com", config);
+            api = RestProxyFactory.createProxy(ISumcoinindexAPI.class, "https://sumcoinindex.com", config);
         } catch (NoSuchAlgorithmException e) {
             log.error("Error", e);
         } catch (KeyManagementException e) {
@@ -117,7 +117,7 @@ public class SumcoinindexRateSource implements IRateSource{
         if (!(Currencies.USD.equalsIgnoreCase(fiatCurrency))) {
             return null;
         }
-        SumcoinindexResponse ticker = api.getTicker("rates","price2.json");
+        SumcoinindexResponse ticker = api.getTicker();
         if (ticker != null && ticker.geterror() == 0) {
             return ticker.getexch_rate_buy();
         }

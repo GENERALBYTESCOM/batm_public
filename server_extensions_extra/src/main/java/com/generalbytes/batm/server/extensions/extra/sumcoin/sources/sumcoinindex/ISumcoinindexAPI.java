@@ -28,6 +28,6 @@ import javax.ws.rs.core.MediaType;
 @Produces(MediaType.APPLICATION_JSON)
 public interface ISumcoinindexAPI {
     @GET
-    @Path("{f1}/{f2}")
-    SumcoinindexResponse getTicker(@PathParam("f1") String fieldOne, @PathParam("f2") String fieldTwo);
+    @Path("rates/price2.json")
+    SumcoinindexResponse getTicker();
 }
