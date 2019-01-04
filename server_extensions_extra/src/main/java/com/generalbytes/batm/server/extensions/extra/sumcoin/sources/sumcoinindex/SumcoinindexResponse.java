@@ -19,6 +19,7 @@ package com.generalbytes.batm.server.extensions.extra.sumcoin.sources.sumcoinind
 
 import com.generalbytes.batm.server.extensions.extra.sumcoin.sources.sumcoinindex.*;
 import java.math.BigDecimal;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class SumcoinindexResponse {
 
