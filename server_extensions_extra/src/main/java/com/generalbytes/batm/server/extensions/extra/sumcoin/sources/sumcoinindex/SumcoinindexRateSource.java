@@ -24,7 +24,6 @@ import com.generalbytes.batm.server.extensions.IRateSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.KeyManagementException;
 import si.mazi.rescu.RestProxyFactory;
@@ -58,9 +57,6 @@ public class SumcoinindexRateSource implements IRateSource{
         try {
             SSLContext sslcontext=SSLContext.getInstance("TLS");
             sslcontext.init(null,null,null);
-            final CompatSSLSocketFactory socketFactory = new CompatSSLSocketFactory(sslcontext.getSocketFactory());
-            config.setSslSocketFactory(socketFactory);
-            config.setIgnoreHttpErrorCodes(true);
             api = RestProxyFactory.createProxy(ISumcoinindexAPI.class, "http://sumcoinindex.com", config);
         } catch (NoSuchAlgorithmException e) {
             log.error("Error", e);
