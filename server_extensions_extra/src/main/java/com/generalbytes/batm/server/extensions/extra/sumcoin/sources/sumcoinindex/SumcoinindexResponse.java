@@ -21,50 +21,54 @@ import com.generalbytes.batm.server.extensions.extra.sumcoin.sources.sumcoininde
 import java.math.BigDecimal;
 
 public class SumcoinindexResponse {
-    
-    private BigDecimal exch_rate;
-    private BigDecimal exch_rate_sell;
-    private BigDecimal exch_rate_buy;
+
+    @JsonProperty("exch_rate")
+    private BigDecimal exchRate;
+    @JsonProperty("exch_rate_sell")
+    private BigDecimal exchRateSell;
+    @JsonProperty("exch_rate_buy")
+    private BigDecimal exchRateBuy;
     private int error;
-    String error_msg;
-    
-    public BigDecimal getexch_rate() {
-        return exch_rate;
+    @JsonProperty("error_msg")
+    private String errorMsg;
+
+    public BigDecimal getExchRate() {
+        return exchRate;
     }
 
-    public void setexch_rate(BigDecimal exch_rate) {
-        this.exch_rate = exch_rate;
-    }
-    
-    public BigDecimal getexch_rate_sell() {
-        return exch_rate_sell;
+    public void setExchRate(BigDecimal exchRate) {
+        this.exchRate = exchRate;
     }
 
-    public void setexch_rate_sell(BigDecimal exch_rate_sell) {
-        this.exch_rate_sell = exch_rate_sell;
-    }
-    
-    public BigDecimal getexch_rate_buy() {
-        return exch_rate_buy;
+    public BigDecimal getExchRateSell() {
+        return exchRateSell;
     }
 
-    public void setexch_rate_buy(BigDecimal exch_rate_buy) {
-        this.exch_rate_buy = exch_rate_buy;
+    public void setExchRateSell(BigDecimal exchRateSell) {
+        this.exchRateSell = exchRateSell;
     }
-    
-    public int geterror() {
+
+    public BigDecimal getExchRateBuy() {
+        return exchRateBuy;
+    }
+
+    public void setExchRateBuy(BigDecimal exchRateBuy) {
+        this.exchRateBuy = exchRateBuy;
+    }
+
+    public int getError() {
         return error;
     }
 
-    public void seterror(int error) {
+    public void setError(int error) {
         this.error = error;
     }
-    
-    public String geterror_msg() {
-        return error_msg;
+
+    public String getErrorMsg() {
+        return errorMsg;
     }
 
-    public void seterror_msg(String error_msg) {
-        this.error_msg = error_msg;
+    public void setErrorMsg(String errorMsg) {
+        this.errorMsg = errorMsg;
     }
 }

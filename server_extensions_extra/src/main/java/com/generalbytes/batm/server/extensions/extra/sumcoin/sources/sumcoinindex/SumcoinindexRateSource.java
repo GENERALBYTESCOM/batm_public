@@ -118,12 +118,12 @@ public class SumcoinindexRateSource implements IRateSource{
             return null;
         }
         SumcoinindexResponse ticker = api.getTicker();
-        if (ticker != null && ticker.geterror() == 0) {
-            return ticker.getexch_rate_buy();
+        if (ticker != null && ticker.getError() == 0) {
+            return ticker.getExchRateBuy();
         }
 	else{
-	    if(ticker.geterror()!=0){
-		 log.debug("API ticker error: " + ticker.geterror_msg());
+	    if(ticker.getError()!=0){
+		 log.debug("API ticker error: " + ticker.getErrorMsg());
 	    }
 	}
         return null;
