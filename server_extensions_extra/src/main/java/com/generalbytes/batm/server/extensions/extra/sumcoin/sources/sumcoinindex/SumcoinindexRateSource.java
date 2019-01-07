@@ -23,11 +23,9 @@ import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import javax.net.ssl.SSLContext;
 import java.security.NoSuchAlgorithmException;
 import java.security.KeyManagementException;
 import si.mazi.rescu.RestProxyFactory;
-import si.mazi.rescu.ClientConfig;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -53,16 +51,7 @@ public class SumcoinindexRateSource implements IRateSource{
     }
 
     public SumcoinindexRateSource() {
-	final ClientConfig config = new ClientConfig();
-        try {
-            SSLContext sslcontext=SSLContext.getInstance("TLS");
-            sslcontext.init(null,null,null);
-            api = RestProxyFactory.createProxy(ISumcoinindexAPI.class, "https://sumcoinindex.com", config);
-        } catch (NoSuchAlgorithmException e) {
-            log.error("Error", e);
-        } catch (KeyManagementException e) {
-            log.error("Error", e);
-        }
+            api = RestProxyFactory.createProxy(ISumcoinindexAPI.class, "https://sumcoinindex.com");
     }
 
     @Override
