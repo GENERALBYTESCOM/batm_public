@@ -60,8 +60,12 @@ dependencies {
     runtime(group: 'com.madgag.spongycastle', name: 'core', version: '1.51.0.0')
     runtime(group: 'com.google.protobuf',  name: 'protobuf-java', version: '2.6.1')
 
-    generalBytesCompile(group: 'com.generalbytes.bitrafael.public', name: 'bitrafael-client', version: bitrafaelVersion)
-    githubCompile(group: 'com.github.GENERALBYTESCOM.bitrafael_public', name: 'bitrafael-client', version: bitrafaelVersion)
+    generalBytesCompile(group: 'com.generalbytes.bitrafael.public', name: 'bitrafael-client', version: bitrafaelVersion) {
+        exclude group: 'org.slf4j', module: 'slf4j-simple'
+    }
+    githubCompile(group: 'com.github.GENERALBYTESCOM.bitrafael_public', name: 'bitrafael-client', version: bitrafaelVersion) {
+        exclude group: 'org.slf4j', module: 'slf4j-simple'
+    }
 
     testCompile (group: 'junit', name: 'junit', version: '4.10')
     testCompile(group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3')

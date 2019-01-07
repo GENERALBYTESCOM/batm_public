@@ -19,7 +19,7 @@ public class CoinmarketcapRateSourceTest {
      */
     @Test
     public void getExchangeRateLastTest() {
-        CoinmarketcapRateSource rateSource = new CoinmarketcapRateSource("USD");
+        CoinmarketcapRateSource rateSource = new CoinmarketcapRateSource("ba025ccf-579b-40e4-be05-cbcebd83c476", "USD");
 
         final BigDecimal priceUSD = rateSource.getExchangeRateLast("BTC", "USD");
         Assert.assertNotNull(priceUSD);

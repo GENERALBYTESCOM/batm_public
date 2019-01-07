@@ -22,8 +22,9 @@ import com.generalbytes.batm.server.extensions.IRateSource;
 import si.mazi.rescu.RestProxyFactory;
 
 import java.math.BigDecimal;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 /**
  * Created by kkyovsky on 11/29/17.
  *
@@ -31,17 +32,14 @@ import java.util.concurrent.TimeUnit;
  */
 
 public class CoinmarketcapRateSource implements IRateSource {
-    /**
-     * Expiry of cache in seconds
-     */
-    private static final long CACHE_EXPIRY_TIME_DEFAULT = 600;
-    private ICoinmarketcapAPI api;
+    private final ICoinmarketcapAPI api;
     private String preferredFiatCurrency = Currencies.USD;
-    private static volatile long recentUnix = System.currentTimeMillis();
-    private static volatile Map<String,Integer> coinIDs;
+    private final String apiKey;
 
-    public CoinmarketcapRateSource(String preferedFiatCurrency) {
-        this();
+    public CoinmarketcapRateSource(String apiKey, String preferedFiatCurrency) {
+        api = RestProxyFactory.createProxy(ICoinmarketcapAPI.class, "https://pro-api.coinmarketcap.com"); // https://sandbox-api.coinmarketcap.com
+        this.apiKey = apiKey;
+
         if (Currencies.EUR.equalsIgnoreCase(preferedFiatCurrency)) {
             this.preferredFiatCurrency = Currencies.EUR;
         }
@@ -53,32 +51,6 @@ public class CoinmarketcapRateSource implements IRateSource {
         }
         if (Currencies.HKD.equalsIgnoreCase(preferedFiatCurrency)) {
             this.preferredFiatCurrency = Currencies.HKD;
-        }
-    }
-
-    private CoinmarketcapRateSource() {
-        api = RestProxyFactory.createProxy(ICoinmarketcapAPI.class, "https://api.coinmarketcap.com");
-        final long currentUnix = System.currentTimeMillis();
-        final long difference = currentUnix - recentUnix;
-        final long differenceInSeconds = TimeUnit.SECONDS.convert(difference, TimeUnit.MILLISECONDS);
-        if(coinIDs == null || coinIDs.isEmpty() || differenceInSeconds > CACHE_EXPIRY_TIME_DEFAULT) {
-            HashMap<String, Integer> localCoinIDs = new HashMap<>();
-            final Map<String, Object> listings = api.getListings();
-            if (listings != null && !listings.isEmpty()) {
-                final List<Object> dataList = (List<Object>) listings.get("data");
-                if(dataList != null && !dataList.isEmpty()) {
-                    for (Object dataobject : dataList) {
-                        final Map<String, Object> map = (Map<String, Object>) dataobject;
-                        final Integer id = (Integer) map.get("id");
-                        final String symbol = (String) map.get("symbol");
-                        if (!localCoinIDs.containsKey(symbol) && !localCoinIDs.containsValue(id)) {
-                            localCoinIDs.put(symbol, id);
-                        }
-                    }
-                }
-            }
-            CoinmarketcapRateSource.recentUnix = System.currentTimeMillis();
-            CoinmarketcapRateSource.coinIDs = localCoinIDs;
         }
     }
 
@@ -127,7 +99,7 @@ public class CoinmarketcapRateSource implements IRateSource {
 
     @Override
     public String getPreferredFiatCurrency() {
-        return Currencies.USD;
+        return preferredFiatCurrency;
     }
 
     @Override
@@ -136,19 +108,15 @@ public class CoinmarketcapRateSource implements IRateSource {
             return null;
         }
 
-        Integer cryptoId = coinIDs.get(cryptoCurrency);
-        if (cryptoId == null) {
-            return null;
-        }
-        CmcTickerResponse ticker = api.getTicker(cryptoId, fiatCurrency);
+        CmcTickerResponse ticker = api.getTicker(apiKey, cryptoCurrency, fiatCurrency);
         if (ticker == null) {
             return null;
         }
-        CmcTickerData data = ticker.getData();
+        CmcTickerData data = ticker.getData().get(cryptoCurrency);
         if (data == null) {
             return null;
         }
-        Map<String, CmcTickerQuote> quotesByFiatCurrency = data.getQuotes();
+        Map<String, CmcTickerQuote> quotesByFiatCurrency = data.getQuote();
         if (quotesByFiatCurrency == null) {
             return null;
         }
