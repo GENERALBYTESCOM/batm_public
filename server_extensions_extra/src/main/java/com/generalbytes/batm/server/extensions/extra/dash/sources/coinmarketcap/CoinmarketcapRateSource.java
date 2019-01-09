@@ -19,11 +19,16 @@ package com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap
 
 import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.IRateSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import si.mazi.rescu.HttpStatusIOException;
 import si.mazi.rescu.RestProxyFactory;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 /**
  * Created by kkyovsky on 11/29/17.
@@ -32,13 +37,15 @@ import java.util.Set;
  */
 
 public class CoinmarketcapRateSource implements IRateSource {
+    private static final Logger log = LoggerFactory.getLogger(CoinmarketcapRateSource.class);
+
     private final ICoinmarketcapAPI api;
     private String preferredFiatCurrency = Currencies.USD;
     private final String apiKey;
 
     public CoinmarketcapRateSource(String apiKey, String preferedFiatCurrency) {
         api = RestProxyFactory.createProxy(ICoinmarketcapAPI.class, "https://pro-api.coinmarketcap.com"); // https://sandbox-api.coinmarketcap.com
-        this.apiKey = apiKey;
+        this.apiKey = Objects.requireNonNull(apiKey, "CoinmarketcapRateSource API key must be configured, see https://coinmarketcap.com/api/");
 
         if (Currencies.EUR.equalsIgnoreCase(preferedFiatCurrency)) {
             this.preferredFiatCurrency = Currencies.EUR;
@@ -108,22 +115,29 @@ public class CoinmarketcapRateSource implements IRateSource {
             return null;
         }
 
-        CmcTickerResponse ticker = api.getTicker(apiKey, cryptoCurrency, fiatCurrency);
-        if (ticker == null) {
-            return null;
+        try {
+            CmcTickerResponse ticker = api.getTicker(apiKey, cryptoCurrency, fiatCurrency);
+            if (ticker == null) {
+                return null;
+            }
+            CmcTickerData data = ticker.getData().get(cryptoCurrency);
+            if (data == null) {
+                return null;
+            }
+            Map<String, CmcTickerQuote> quotesByFiatCurrency = data.getQuote();
+            if (quotesByFiatCurrency == null) {
+                return null;
+            }
+            CmcTickerQuote quote = quotesByFiatCurrency.get(fiatCurrency);
+            if (quote == null) {
+                return null;
+            }
+            return quote.getPrice();
+        } catch (HttpStatusIOException e) {
+            log.warn(e.getHttpBody(), e);
+        } catch (IOException e) {
+            log.error("", e);
         }
-        CmcTickerData data = ticker.getData().get(cryptoCurrency);
-        if (data == null) {
-            return null;
-        }
-        Map<String, CmcTickerQuote> quotesByFiatCurrency = data.getQuote();
-        if (quotesByFiatCurrency == null) {
-            return null;
-        }
-        CmcTickerQuote quote = quotesByFiatCurrency.get(fiatCurrency);
-        if (quote == null) {
-            return null;
-        }
-        return quote.getPrice();
+        return null;
     }
 }

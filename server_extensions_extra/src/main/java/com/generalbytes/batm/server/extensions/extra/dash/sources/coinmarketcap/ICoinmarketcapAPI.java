@@ -19,6 +19,7 @@ package com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.io.IOException;
 
 // https://pro-api.coinmarketcap.com/v1/
 // https://coinmarketcap.com/api/documentation/v1
@@ -28,5 +29,5 @@ import javax.ws.rs.core.MediaType;
 public interface ICoinmarketcapAPI {
     @GET
     @Path("/cryptocurrency/quotes/latest")
-    CmcTickerResponse getTicker(@HeaderParam("X-CMC_PRO_API_KEY") String apikey, @QueryParam("symbol") String symbol, @QueryParam("convert") String fiatCurrency);
+    CmcTickerResponse getTicker(@HeaderParam("X-CMC_PRO_API_KEY") String apikey, @QueryParam("symbol") String symbol, @QueryParam("convert") String fiatCurrency) throws IOException;
 }

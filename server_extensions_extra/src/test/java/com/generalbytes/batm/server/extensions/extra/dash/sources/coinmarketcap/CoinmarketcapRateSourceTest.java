@@ -13,13 +13,18 @@ import java.math.BigDecimal;
 public class CoinmarketcapRateSourceTest {
     private static final Logger log = LoggerFactory.getLogger("batm.master.extensions.CoinmarketcapRateSourceTest");
 
+    @Test(expected = NullPointerException.class)
+    public void nullApi() {
+        new CoinmarketcapRateSource(null, "USD");
+    }
+
     /**
      * Unit test method getExchangeRateLastTest() create an object of type CoinmarketcapRateSourceV2
      * with parameter null
      */
     @Test
     public void getExchangeRateLastTest() {
-        CoinmarketcapRateSource rateSource = new CoinmarketcapRateSource("ba025ccf-579b-40e4-be05-cbcebd83c476", "USD");
+        CoinmarketcapRateSource rateSource = new CoinmarketcapRateSource("ce83e9de-db96-4cdd-871d-cf9eb07a8381", "USD");
 
         final BigDecimal priceUSD = rateSource.getExchangeRateLast("BTC", "USD");
         Assert.assertNotNull(priceUSD);

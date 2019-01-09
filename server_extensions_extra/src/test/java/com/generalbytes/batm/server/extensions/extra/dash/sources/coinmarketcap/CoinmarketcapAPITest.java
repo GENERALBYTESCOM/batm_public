@@ -5,8 +5,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import si.mazi.rescu.HttpStatusIOException;
 import si.mazi.rescu.RestProxyFactory;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Map;
 
@@ -20,12 +22,22 @@ public class CoinmarketcapAPITest {
         api = RestProxyFactory.createProxy(ICoinmarketcapAPI.class, "https://sandbox-api.coinmarketcap.com");
     }
 
+    @Test
+    public void nullApiKey() throws IOException {
+        try {
+            api.getTicker(null, "BTC", "USD");
+        } catch (HttpStatusIOException e) {
+            Assert.assertTrue(e.getHttpBody().contains("API key missing"));
+        }
+        Assert.fail();
+    }
+
     /**
      * Method getTickerOneIntegerOneStringParametersTest() checks if method getTicker() of the api, with one parameter - id
      * of type string is correctly called and that data is received.
      */
     @Test
-    public void getTickerOneIntegerOneStringParametersTest() {
+    public void getTickerOneIntegerOneStringParametersTest() throws IOException {
         CmcTickerResponse result = api.getTicker(API_KEY, "BTC", "USD");
         Assert.assertNotNull(result);
 
@@ -34,7 +46,7 @@ public class CoinmarketcapAPITest {
     }
 
     @Test
-    public void getTickerDogecoinTest() {
+    public void getTickerDogecoinTest() throws IOException {
         CmcTickerResponse result = api.getTicker(API_KEY, "DOGE", "USD");
         Assert.assertNotNull(result);
 
@@ -52,7 +64,7 @@ public class CoinmarketcapAPITest {
      * of type string is correctly called and that data is received.
      */
     @Test
-    public void getTickerOneIntegerOneNullParametersTest() {
+    public void getTickerOneIntegerOneNullParametersTest() throws IOException {
         CmcTickerResponse result = api.getTicker(API_KEY, "BTC", null);
         Assert.assertNotNull(result);
 
@@ -65,7 +77,7 @@ public class CoinmarketcapAPITest {
      * and fiat of type String is correctly called and that data and quotes has been received.
      */
     @Test
-    public void getQuotesTest() {
+    public void getQuotesTest() throws IOException {
         CmcTickerResponse result = api.getTicker(API_KEY, "BTC", "EUR");
         Assert.assertNotNull(result);
 
@@ -88,7 +100,7 @@ public class CoinmarketcapAPITest {
      * and for particular fiat currency and makes sure that data is provided.
      */
     @Test
-    public void getQuoteByCurrencySymbolAndFiatCurrencyTest() {
+    public void getQuoteByCurrencySymbolAndFiatCurrencyTest() throws IOException {
         String currency = "BTC";
         String fiat = "EUR";
 
