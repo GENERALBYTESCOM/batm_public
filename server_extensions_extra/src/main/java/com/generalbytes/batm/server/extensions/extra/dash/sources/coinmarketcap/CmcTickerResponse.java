@@ -17,14 +17,16 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap;
 
-public class CmcTickerResponse {
-    private CmcTickerData data;
+import java.util.Map;
 
-    public CmcTickerData getData() {
+public class CmcTickerResponse {
+    private Map<String, CmcTickerData> data;
+
+    public Map<String, CmcTickerData> getData() {
         return data;
     }
 
-    public void setData(CmcTickerData data) {
+    public void setData(Map<String, CmcTickerData> data) {
         this.data = data;
     }
 }

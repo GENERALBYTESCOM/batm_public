@@ -17,17 +17,23 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap;
 
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
+import java.util.Map;
 
-// https://pro-api.coinmarketcap.com/v1/
-// https://coinmarketcap.com/api/documentation/v1
-// replaces legacy "v2" API
+/**
+ * A copy of {@link ICoinmarketcapAPI} that returns just map of strings instead of deserialized objects.
+ * Used for tests only
+ */
 @Path("/v1")
 @Produces(MediaType.APPLICATION_JSON)
-public interface ICoinmarketcapAPI {
+public interface TestCoinmarketcapAPI {
     @GET
     @Path("/cryptocurrency/quotes/latest")
-    CmcTickerResponse getTicker(@HeaderParam("X-CMC_PRO_API_KEY") String apikey, @QueryParam("symbol") String symbol, @QueryParam("convert") String fiatCurrency) throws IOException;
+    Map<String, Map<String, Object>> getTicker(@HeaderParam("X-CMC_PRO_API_KEY") String apikey, @QueryParam("symbol") String symbol, @QueryParam("convert") String fiatCurrency) throws IOException;
 }
