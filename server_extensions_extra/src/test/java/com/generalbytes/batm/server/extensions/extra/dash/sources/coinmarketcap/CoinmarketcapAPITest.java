@@ -23,6 +23,17 @@ public class CoinmarketcapAPITest {
     }
 
     @Test
+    public void jsonTest() throws IOException {
+            Map<String, Map<String, Object>> r = RestProxyFactory.createProxy(TestCoinmarketcapAPI.class, "https://sandbox-api.coinmarketcap.com")
+                .getTicker(API_KEY, "BTC", "USD");
+            Assert.assertEquals(2, r.size());
+            Assert.assertEquals(5, r.get("status").size());
+            Assert.assertNull(r.get("status").get("error_message"));
+            Assert.assertEquals(1, r.get("data").size());
+            Assert.assertNotNull(r.get("data").get("BTC"));
+    }
+
+    @Test
     public void nullApiKey() throws IOException {
         try {
             api.getTicker(null, "BTC", "USD");
