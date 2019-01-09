@@ -39,6 +39,7 @@ public class CoinmarketcapAPITest {
             api.getTicker(null, "BTC", "USD");
         } catch (HttpStatusIOException e) {
             Assert.assertTrue(e.getHttpBody().contains("API key missing"));
+            return;
         }
         Assert.fail();
     }
