@@ -892,14 +892,6 @@
         </wallet>
         <cryptologo cryptocurrency="Voltz" file="voltz.png"/>
         <cryptologo cryptocurrency="Voltz" file="voltz.svg"/>
-        <wallet prefix="infuraERC20_365_18_0xb1771c3fe7c5c4f3ab02ecaa65f51e4dd512bc07" name="Infura.io wallet - 365">
-            <param name="apiKey" />
-            <param name="mnemonic" />
-            <help>Mnemonic should be 24 words delimited by spaces</help>
-            <cryptocurrency>365</cryptocurrency>
-        </wallet>
-        <cryptologo cryptocurrency="365" file="365.png"/>
-        <cryptologo cryptocurrency="365" file="365.svg"/>
         <wallet prefix="infuraERC20_HBX_18_0x6fe355c62c6faf6946ce888ffaba9fd12355ae27" name="Infura.io wallet - HBX">
             <!-- Hint: infuraERC20_TOKENSYMBOL_DECIMALPLACES_CONTRACTADDRESS -->
             <param name="apiKey" />
@@ -910,34 +902,7 @@
         <cryptologo cryptocurrency="HBX" file="hbx.png"/>
         <cryptologo cryptocurrency="HBX" file="hbx.svg"/>
          </extension>
-
-        <ratesource prefix="coinasset" name ="Coinasset.co.th Exchange" >
-            <param name="fiatcurrency" />
-            <cryptocurrency>HBX</cryptocurrency>
-        </ratesource>
-        <ratesource prefix="365Stream" name ="365.stream Exchange" >
-            <param name="fiatcurrency" />
-            <cryptocurrency>Voltz</cryptocurrency>
-            <cryptocurrency>365</cryptocurrency>
-        </ratesource>
-              <!-- ADD your ERC20 tokens here. And don't forget to add cryptologos. -->
-        <exchange prefix="coinasset" name="Coinasset.co.th Exchange">
-            <param name="accountId" />
-            <param name="apikey" />
-            <param name="apisecret" />
-            <param name="fiatcurrency" />
-            <cryptocurrency>HBX</cryptocurrency>
-        </exchange>
-        <exchange prefix="365Stream" name="365.stream Exchange">
-            <param name="userId" />
-            <param name="accountId" />
-            <param name="apikey" />
-            <param name="apisecret" />
-            <param name="fiatcurrency" />
-            <cryptocurrency>Voltz</cryptocurrency>
-            <cryptocurrency>365</cryptocurrency>
-            <cryptocurrency>HBX</cryptocurrency>
-        </exchange>
+              <!-- ADD your ERC20 tokens here. And don't forget to add cryptologos. --
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.TransactionExtension" />-->
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.rest.RESTExampleExtension" />-->
     <extension class="com.generalbytes.batm.server.extensions.extra.examples.chat.ChatBotExtensionExample" />
