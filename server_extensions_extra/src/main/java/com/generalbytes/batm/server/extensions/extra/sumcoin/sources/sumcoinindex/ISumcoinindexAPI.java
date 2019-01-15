@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2018 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2016 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -15,19 +15,19 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap;
+package com.generalbytes.batm.server.extensions.extra.sumcoin.sources.sumcoinindex;
 
-import javax.ws.rs.*;
+import com.generalbytes.batm.server.extensions.extra.sumcoin.sources.sumcoinindex.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.io.IOException;
 
-// https://pro-api.coinmarketcap.com/v1/
-// https://coinmarketcap.com/api/documentation/v1
-// replaces legacy "v2" API
-@Path("/v1")
+@Path("/")
 @Produces(MediaType.APPLICATION_JSON)
-public interface ICoinmarketcapAPI {
+public interface ISumcoinindexAPI {
     @GET
-    @Path("/cryptocurrency/quotes/latest")
-    CmcTickerResponse getTicker(@HeaderParam("X-CMC_PRO_API_KEY") String apikey, @QueryParam("symbol") String symbol, @QueryParam("convert") String fiatCurrency) throws IOException;
+    @Path("rates/price2.json")
+    SumcoinindexResponse getTicker();
 }

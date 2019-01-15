@@ -81,10 +81,14 @@ public class LiskExtension extends AbstractExtension{
             }
             else if ("binanceRateSource".equalsIgnoreCase(exchangeType)) {
                 String preferedFiatCurrency = Currencies.USD;
+                String coinmarketcapApiKey = null;
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
-                return new BinanceRateSource(preferedFiatCurrency);
+                if (st.hasMoreTokens()) {
+                    coinmarketcapApiKey = st.nextToken();
+                }
+                return new BinanceRateSource(preferedFiatCurrency, coinmarketcapApiKey);
             }
         }
         return null;

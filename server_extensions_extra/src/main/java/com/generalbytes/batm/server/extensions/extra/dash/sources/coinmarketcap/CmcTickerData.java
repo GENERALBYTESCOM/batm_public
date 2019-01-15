@@ -20,20 +20,20 @@ package com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap
 import java.util.Map;
 
 public class CmcTickerData {
-    private Map<String, CmcTickerQuote> quotes;
+    private Map<String, CmcTickerQuote> quote;
 
-    public Map<String, CmcTickerQuote> getQuotes() {
-        return quotes;
+    public Map<String, CmcTickerQuote> getQuote() {
+        return quote;
     }
 
-    public void setQuotes(Map<String, CmcTickerQuote> quotes) {
-        this.quotes = quotes;
+    public void setQuote(Map<String, CmcTickerQuote> quote) {
+        this.quote = quote;
     }
 
     @Override
     public String toString() {
         return "CmcTickerData{" +
-            "quotes=" + quotes +
+            "quote=" + quote +
             '}';
     }
 }

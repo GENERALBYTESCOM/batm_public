@@ -59,10 +59,14 @@ public class ZcoinExtension extends AbstractExtension {
             String exchangeType = st.nextToken();
             if ("coinmarketcap".equalsIgnoreCase(exchangeType)) {
                 String preferredFiatCurrency = Currencies.USD;
+                String apiKey = null;
                 if (st.hasMoreTokens()) {
                     preferredFiatCurrency = st.nextToken().toUpperCase();
                 }
-                return new CoinmarketcapRateSource(preferredFiatCurrency);
+                if (st.hasMoreTokens()) {
+                    apiKey = st.nextToken();
+                }
+                return new CoinmarketcapRateSource(apiKey, preferredFiatCurrency);
             }else if ("zcoinfix".equalsIgnoreCase(exchangeType)) {
                 BigDecimal rate = BigDecimal.ZERO;
                 if (st.hasMoreTokens()) {

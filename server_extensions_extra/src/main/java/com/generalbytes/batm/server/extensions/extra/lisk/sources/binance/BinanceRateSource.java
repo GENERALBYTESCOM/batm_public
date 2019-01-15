@@ -29,9 +29,11 @@ import java.util.*;
 public class BinanceRateSource implements IRateSource {
 
     private BinanceAPI api;
+    private final String coinmarketcapApiKey;
     private String preferredFiatCurrency = Currencies.USD;
 
-    public BinanceRateSource(String preferedFiatCurrency) {
+    public BinanceRateSource(String preferedFiatCurrency, String coinmarketcapApiKey) {
+        this.coinmarketcapApiKey = coinmarketcapApiKey;
         api = RestProxyFactory.createProxy(BinanceAPI.class, "https://api.binance.com");
         
         if (Currencies.USD.equalsIgnoreCase(preferedFiatCurrency)) {
@@ -74,7 +76,7 @@ public class BinanceRateSource implements IRateSource {
         }
         final BinanceTickerData btcUsdt = api.getTicker("BTCUSDT");
         final BinanceTickerData lskBtc = api.getTicker(cryptoCurrency + "BTC");
-        CoinmarketcapRateSource coinMarketCapSource = new CoinmarketcapRateSource(fiatCurrency);
+        CoinmarketcapRateSource coinMarketCapSource = new CoinmarketcapRateSource(coinmarketcapApiKey, fiatCurrency);
         BigDecimal lastUsdtFiat = coinMarketCapSource.getExchangeRateLast("USDT", fiatCurrency);
         if (lastUsdtFiat != null && btcUsdt.getPrice()!=null && lskBtc.getPrice() !=null ) {
             BigDecimal lastBtcPriceInUsdt = btcUsdt.getPrice();

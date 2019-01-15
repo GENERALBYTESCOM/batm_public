@@ -62,6 +62,7 @@
             </ratesource>
             <ratesource prefix="coinmarketcap" name ="CoinMarketCap.com" >
                 <param name="fiatcurrency" />
+                <param name="api_key" />
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>LINDA</cryptocurrency>
                 <cryptocurrency>SYS</cryptocurrency>
@@ -625,6 +626,9 @@
             <param name="accountname" />
             <cryptocurrency>SUM</cryptocurrency>
         </wallet>
+        <ratesource prefix="sumcoinindex" name="Sumcoinindex" >
+            <cryptocurrency>SUM</cryptocurrency>
+        </ratesource>
         <ratesource prefix="sumfix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>SUM</cryptocurrency>
@@ -835,6 +839,7 @@
         </ratesource>
         <ratesource prefix="binanceRateSource" name ="Binance Rate Source" >
             <param name="fiatCurrency" />
+            <param name="coinmarketcapApiKey"/>
             <cryptocurrency>LSK</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
