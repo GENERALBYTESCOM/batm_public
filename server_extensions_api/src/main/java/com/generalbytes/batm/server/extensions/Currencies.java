@@ -73,6 +73,7 @@ public class Currencies {
     public static final String AMD = "AMD";
     public static final String AUD = "AUD";
     public static final String BGN = "BGN";
+    public static final String BHD = "BHD"; // Bahraini dinar
     public static final String CAD = "CAD";
     public static final String CHF = "CHF";
     public static final String CNY = "CNY";
@@ -184,6 +185,7 @@ public class Currencies {
         fiat.add(AMD);
         fiat.add(AUD);
         fiat.add(BGN);
+        fiat.add(BHD);
         fiat.add(CAD);
         fiat.add(CHF);
         fiat.add(CNY);
