@@ -23,6 +23,7 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitfinex
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import com.generalbytes.batm.server.coinutil.DDOSUtils;
@@ -30,6 +31,7 @@ import com.generalbytes.batm.server.extensions.*;
 import org.knowm.xchange.Exchange;
 import org.knowm.xchange.ExchangeFactory;
 import org.knowm.xchange.ExchangeSpecification;
+import org.knowm.xchange.bitfinex.v1.dto.BitfinexException;
 import org.knowm.xchange.currency.Currency;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.Order;
@@ -57,6 +59,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
     private static final HashMap<String,BigDecimal> rateAmounts = new HashMap<String, BigDecimal>();
     private static HashMap<String,Long> rateTimes = new HashMap<String, Long>();
     private static final long MAXIMUM_ALLOWED_TIME_OFFSET = 30 * 1000;
+    private Set<String> depositCurrenciesSupported = new HashSet<>(Arrays.asList("BTC", "LTC", "ETH")); // FIXME after xchange lib update
 
     public BitfinexExchange(String apiKey, String apiSecret, String preferredFiatCurrency) {
         this.apiKey = apiKey;
@@ -276,15 +279,16 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
     @Override
     public String getDepositAddress(String cryptoCurrency) {
-        if (!getCryptoCurrencies().contains(cryptoCurrency)) {
-            log.error("Bitfinex implementation supports only " + Arrays.toString(getCryptoCurrencies().toArray()));
+        Set<String> supportedCryptoCurrencies = depositCurrenciesSupported; // FIXME getCryptoCurrencies();
+        if (!supportedCryptoCurrencies.contains(cryptoCurrency)) {
+            log.error("Bitfinex implementation supports only " + Arrays.toString(supportedCryptoCurrencies.toArray()) + " for deposit");
             return null;
         }
         AccountService accountService = getExchange().getAccountService();
         try {
             DDOSUtils.waitForPossibleCall(getClass());
             return accountService.requestDepositAddress(Currency.getInstance(cryptoCurrency));
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error("Error", e);
         }
         return null;

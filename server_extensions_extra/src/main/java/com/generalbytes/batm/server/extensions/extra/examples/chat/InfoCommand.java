@@ -31,6 +31,8 @@ import com.generalbytes.batm.server.extensions.chat.AbstractChatCommnad;
 import com.generalbytes.batm.server.extensions.chat.ChatCommand;
 import com.generalbytes.batm.server.extensions.chat.IConversation;
 import com.vdurmont.emoji.EmojiParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
@@ -49,6 +51,8 @@ import static com.generalbytes.batm.server.extensions.ITransactionDetails.*;
 @ChatCommand( names = {"info","i"},
     help = "/info [balances|terminals [serial number]|remoteTransactionId|identityId|phonenumber] - display various information.")
 public class InfoCommand extends AbstractChatCommnad{
+    private static final Logger log = LoggerFactory.getLogger(InfoCommand.class);
+
     //TODO: See status of last 50 transactions.
     public static final String PERMISSION_DENIED = "Permission denied. We are sorry, but you don't have access to this information.";
 
@@ -516,44 +520,49 @@ public class InfoCommand extends AbstractChatCommnad{
             for (int i = 0; i < ccs.size(); i++) {
                 ICryptoConfiguration c = ccs.get(i);
                 sb.append(EmojiParser.parseToUnicode(":money_with_wings:") + c.getName() + ":\n");
-                IWallet wallet = c.getBuyWallet();
-                if (wallet != null) {
-                    BigDecimal cryptoBalance = wallet.getCryptoBalance(c.getCryptoCurrency());
-                    if (cryptoBalance != null) {
-                        sb.append(" Buy Wallet: " + cryptoBalance + " " + c.getCryptoCurrency() + " " + wallet.getCryptoAddress(c.getCryptoCurrency()) + "\n");
+                try {
+                    IWallet wallet = c.getBuyWallet();
+                    if (wallet != null) {
+                        BigDecimal cryptoBalance = wallet.getCryptoBalance(c.getCryptoCurrency());
+                        if (cryptoBalance != null) {
+                            sb.append(" Buy Wallet: " + cryptoBalance + " " + c.getCryptoCurrency() + " " + wallet.getCryptoAddress(c.getCryptoCurrency()) + "\n");
+                        }
                     }
-                }
-                wallet = c.getSellWallet();
-                if (wallet != null) {
-                    BigDecimal cryptoBalance = wallet.getCryptoBalance(c.getCryptoCurrency());
-                    if (cryptoBalance != null) {
-                        sb.append(" Sell Wallet: " + cryptoBalance + " " + c.getCryptoCurrency() + " " + wallet.getCryptoAddress(c.getCryptoCurrency()) + "\n");
+                    wallet = c.getSellWallet();
+                    if (wallet != null) {
+                        BigDecimal cryptoBalance = wallet.getCryptoBalance(c.getCryptoCurrency());
+                        if (cryptoBalance != null) {
+                            sb.append(" Sell Wallet: " + cryptoBalance + " " + c.getCryptoCurrency() + " " + wallet.getCryptoAddress(c.getCryptoCurrency()) + "\n");
+                        }
                     }
-                }
-                IExchange exchange = c.getBuyExchange();
-                if (exchange != null) {
-                    BigDecimal cryptoBalance = exchange.getCryptoBalance(c.getCryptoCurrency());
-                    BigDecimal fiatBalance = exchange.getFiatBalance(exchange.getPreferredFiatCurrency());
-                    if (cryptoBalance != null ) {
-                        sb.append(" Buy Exchange: " + cryptoBalance + " " + c.getCryptoCurrency() + "\n");
+                    IExchange exchange = c.getBuyExchange();
+                    if (exchange != null) {
+                        BigDecimal cryptoBalance = exchange.getCryptoBalance(c.getCryptoCurrency());
+                        BigDecimal fiatBalance = exchange.getFiatBalance(exchange.getPreferredFiatCurrency());
+                        if (cryptoBalance != null) {
+                            sb.append(" Buy Exchange: " + cryptoBalance + " " + c.getCryptoCurrency() + "\n");
+                        }
+                        if (cryptoBalance != null) {
+                            sb.append(" Buy Exchange: " + fiatBalance + " " + exchange.getPreferredFiatCurrency() + "\n");
+                        }
+                        sb.append(" Buy Exchange: " + exchange.getDepositAddress(c.getCryptoCurrency()) + "\n");
                     }
-                    if (cryptoBalance != null ) {
-                        sb.append(" Buy Exchange: " + fiatBalance + " " + exchange.getPreferredFiatCurrency() + "\n");
-                    }
-                    sb.append(" Buy Exchange: " + exchange.getDepositAddress(c.getCryptoCurrency()) + "\n");
-                }
 
-                exchange = c.getSellExchange();
-                if (exchange != null) {
-                    BigDecimal cryptoBalance = exchange.getCryptoBalance(c.getCryptoCurrency());
-                    BigDecimal fiatBalance = exchange.getFiatBalance(exchange.getPreferredFiatCurrency());
-                    if (cryptoBalance != null) {
-                        sb.append(" Sell Exchange: " + cryptoBalance + " " + c.getCryptoCurrency() + "\n");
+                    exchange = c.getSellExchange();
+                    if (exchange != null) {
+                        BigDecimal cryptoBalance = exchange.getCryptoBalance(c.getCryptoCurrency());
+                        BigDecimal fiatBalance = exchange.getFiatBalance(exchange.getPreferredFiatCurrency());
+                        if (cryptoBalance != null) {
+                            sb.append(" Sell Exchange: " + cryptoBalance + " " + c.getCryptoCurrency() + "\n");
+                        }
+                        if (fiatBalance != null) {
+                            sb.append(" Sell Exchange: " + fiatBalance + " " + exchange.getPreferredFiatCurrency() + "\n");
+                        }
+                        sb.append(" Sell Exchange: " + exchange.getDepositAddress(c.getCryptoCurrency()) + "\n");
                     }
-                    if (fiatBalance != null) {
-                        sb.append(" Sell Exchange: " + fiatBalance + " " + exchange.getPreferredFiatCurrency() + "\n");
-                    }
-                    sb.append(" Sell Exchange: " + exchange.getDepositAddress(c.getCryptoCurrency()) + "\n");
+                } catch (Exception e) {
+                    sb.append(" "+EmojiParser.parseToUnicode(":no_entry:")+" failed to retrieve\n");
+                    log.error("", e);
                 }
             }
             conversation.sendText(sb.toString());
