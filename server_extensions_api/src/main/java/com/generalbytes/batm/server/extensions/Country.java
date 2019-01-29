@@ -293,14 +293,14 @@ public enum Country {
     }
 
     /**
-     * ISO 3166-1 alpha-2 code of the country (2 digits).
+     * ISO 3166-1 alpha-2 code of the country (2 letters).
      */
     public String getIso2() {
         return iso2;
     }
 
     /**
-     * ISO 3166-1 alpha-3 code of the country (3 digits).
+     * ISO 3166-1 alpha-3 code of the country (3 letters).
      */
     public String getIso3() {
         return iso3;
