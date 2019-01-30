@@ -18,6 +18,8 @@
 package com.generalbytes.batm.server.extensions;
 
 import com.generalbytes.batm.server.extensions.exceptions.SellException;
+import com.generalbytes.batm.server.extensions.watchlist.WatchListQuery;
+import com.generalbytes.batm.server.extensions.watchlist.WatchListResult;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -54,6 +56,13 @@ public interface IExtensionContext {
      * @return
      */
     ITransactionDetails findTransactionByTransactionId(String remoteOrLocalTransactionId);
+
+    /**
+     * Finds and returns transactions performed by identity
+     * @param publicIdentityId
+     * @return
+     */
+    List<ITransactionDetails> findAllTransactionsByIdentityId(String publicIdentityId);
 
     /**
      * Finds person by chat user id
@@ -93,6 +102,15 @@ public interface IExtensionContext {
      * @return
      */
     IIdentity findIdentityByPhoneNumber(String phoneNumber);
+
+
+    /**
+     * Finds and returns all identities of given state)
+     * @param state @see IIdentity
+     * @return
+     */
+    List<IIdentity> findAllIdentitiesByState(int state);
+
 
     /**
      * Finds and returns identity based on provided phone number this number. If you don't specify country then number has to be in international format (leading +countrycode is required)
@@ -288,4 +306,11 @@ public interface IExtensionContext {
      * @return
      */
     List<ICryptoConfiguration> findCryptoConfigurationsByTerminalSerialNumbers(List<String> serialNumbers);
+
+    /**
+     * Check presence of person or entity on watch lists
+     * @param query
+     * @return
+     */
+    WatchListResult searchWatchList(WatchListQuery query);
 }
