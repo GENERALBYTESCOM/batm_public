@@ -1,8 +1,5 @@
 package com.generalbytes.batm.server.extensions;
 
-import com.generalbytes.batm.server.extensions.Currencies;
-import com.generalbytes.batm.server.extensions.IRateSource;
-
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,13 +13,13 @@ import static com.generalbytes.batm.server.extensions.Currencies.FIAT_CURRENCIES
 public class FixPriceRateSource implements IRateSource {
     private BigDecimal rate = BigDecimal.ZERO;
 
-    private String preferedFiatCurrency = Currencies.USD;
+    private String preferredFiatCurrency = Currencies.USD;
 
-    public FixPriceRateSource(BigDecimal rate, String preferedFiatCurrency) {
+    public FixPriceRateSource(BigDecimal rate, String preferredFiatCurrency) {
         this.rate = rate;
 
-        if (FIAT_CURRENCIES.contains(preferedFiatCurrency.toUpperCase())) {
-            this.preferedFiatCurrency = preferedFiatCurrency.toUpperCase();
+        if (FIAT_CURRENCIES.contains(preferredFiatCurrency.toUpperCase())) {
+            this.preferredFiatCurrency = preferredFiatCurrency.toUpperCase();
         }
     }
 
@@ -35,7 +32,7 @@ public class FixPriceRateSource implements IRateSource {
 
     @Override
     public BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency) {
-        if (CRYPTO_CURRENCIES.contains(cryptoCurrency.toUpperCase()) && fiatCurrency.equals(preferedFiatCurrency)) {
+        if (CRYPTO_CURRENCIES.contains(cryptoCurrency.toUpperCase()) && fiatCurrency.equalsIgnoreCase(preferredFiatCurrency)) {
             return rate;
         }
         return null;
@@ -49,7 +46,7 @@ public class FixPriceRateSource implements IRateSource {
     }
     @Override
     public String getPreferredFiatCurrency() {
-        return preferedFiatCurrency;
+        return preferredFiatCurrency;
     }
 
 }
