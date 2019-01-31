@@ -25,6 +25,7 @@ import java.util.List;
 @SuppressWarnings("WeakerAccess")
 public class Currencies {
 
+    public static final String ANT      = "ANT";    // Aragon Network Token
     public static final String ANON     = "ANON";   // ANON (formerly Anonymous Bitcoin)
     public static final String BAT      = "BAT";    // Basic Attention Token
     public static final String BCH      = "BCH";    // Bitcoin Cash
@@ -141,6 +142,7 @@ public class Currencies {
     static {
         List<String> crypto = new ArrayList<>();
         crypto.add(ANON);
+        crypto.add(ANT);
         crypto.add(BAT);
         crypto.add(BCH);
         crypto.add(BSD);
