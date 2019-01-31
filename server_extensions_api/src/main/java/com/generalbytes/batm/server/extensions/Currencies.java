@@ -25,6 +25,7 @@ import java.util.List;
 @SuppressWarnings("WeakerAccess")
 public class Currencies {
 
+    public static final String ANT = "ANT"; //Aragon Network Token
     public static final String BTC = "BTC";
     public static final String BCH = "BCH"; //Bitcoin Cash
     public static final String BTCP = "BTCP"; //Bitcoin Private

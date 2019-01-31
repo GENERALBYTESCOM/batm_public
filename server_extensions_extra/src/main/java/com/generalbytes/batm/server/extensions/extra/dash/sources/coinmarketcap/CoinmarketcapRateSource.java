@@ -64,6 +64,7 @@ public class CoinmarketcapRateSource implements IRateSource {
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
+        result.add(Currencies.ANT);
         result.add(Currencies.BTC);
         result.add(Currencies.SYS);
         result.add(Currencies.BCH);

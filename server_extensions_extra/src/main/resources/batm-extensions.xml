@@ -73,6 +73,7 @@
                 <cryptocurrency>MKR</cryptocurrency>
                 <cryptocurrency>BAT</cryptocurrency>
                 <cryptocurrency>REP</cryptocurrency>
+                <cryptocurrency>ANT</cryptocurrency>
                 <cryptocurrency>DASH</cryptocurrency>
                 <cryptocurrency>XMR</cryptocurrency>
                 <cryptocurrency>$PAC</cryptocurrency>
@@ -888,6 +889,14 @@
         </wallet>
         <cryptologo cryptocurrency="REP" file="rep.png"/>
         <cryptologo cryptocurrency="REP" file="rep.svg"/>
+        <wallet prefix="infuraERC20_ANT_18_0x960b236A07cf122663c4303350609A66A7B288C0" name="Infura.io wallet - ANT">
+            <param name="apiKey" />
+            <param name="mnemonic" />
+            <help>Mnemonic should be 24 words delimited by spaces</help>
+            <cryptocurrency>ANT</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="ANT" file="ant.png"/>
+        <cryptologo cryptocurrency="ANT" file="ant.svg"/>
         <!-- ADD your ERC20 tokens here. And don't forget to add cryptologos. -->
     </extension>
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.TransactionExtension" />-->
