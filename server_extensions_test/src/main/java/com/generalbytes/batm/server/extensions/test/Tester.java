@@ -405,7 +405,7 @@ public class Tester {
 				for (String selectedCryptoCurrency : cryptoCurrencies) {
 					System.out.println("Crypto Currency:");
 					System.out.println("  " + selectedCryptoCurrency);
-                
+
 					final BigDecimal exchangeRateLast = rs.getExchangeRateLast(selectedCryptoCurrency, preferredFiatCurrency);
 					if (exchangeRateLast != null) {
 						System.out.println("Exchange Rate Last: 1 " + selectedCryptoCurrency + " = " + exchangeRateLast.stripTrailingZeros().toPlainString() + " " + preferredFiatCurrency);
@@ -473,6 +473,7 @@ public class Tester {
     }
 
     private void getExchangeBalance(String name, String params) {
+        System.out.println(name);
 		for (int i = 0; i < extensions.size(); i++) {
 			IExtension extension = extensions.get(i);
 			final IExchange e = extension.createExchange(name + ":" + params);
