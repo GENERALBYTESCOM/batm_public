@@ -335,7 +335,7 @@ public class InfoCommand extends AbstractChatCommnad{
                     error = "PAYMENT WAIT TIMED OUT";
                     break;
                 case SELL_ERROR_NOT_ENOUGH_COINS_ON_EXCHANGE:
-                    error = "NOT ENOUGH COINS ON EXCHANGE";
+                    error = "COINS UNCONFIRMED ON EXCHANGE";
                     break;
                 case SELL_ERROR_EXCHANGE_SELL:
                     error = "EXCHANGE SELL";
