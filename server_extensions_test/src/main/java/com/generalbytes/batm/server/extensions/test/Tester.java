@@ -405,7 +405,7 @@ public class Tester {
 				for (String selectedCryptoCurrency : cryptoCurrencies) {
 					System.out.println("Crypto Currency:");
 					System.out.println("  " + selectedCryptoCurrency);
-                
+
 					final BigDecimal exchangeRateLast = rs.getExchangeRateLast(selectedCryptoCurrency, preferredFiatCurrency);
 					if (exchangeRateLast != null) {
 						System.out.println("Exchange Rate Last: 1 " + selectedCryptoCurrency + " = " + exchangeRateLast.stripTrailingZeros().toPlainString() + " " + preferredFiatCurrency);
