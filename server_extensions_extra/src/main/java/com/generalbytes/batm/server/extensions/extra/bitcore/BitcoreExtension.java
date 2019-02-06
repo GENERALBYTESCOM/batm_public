@@ -57,6 +57,18 @@ public class BitcoreExtension extends AbstractExtension{
                     return new BitcoredRPCWallet(rpcURL,accountName);
                 }
             }
+            if ("btxdemo".equalsIgnoreCase(walletType)) {
+
+                String fiatCurrency = st.nextToken();
+                String walletAddress = "";
+                if (st.hasMoreTokens()) {
+                    walletAddress = st.nextToken();
+                }
+
+                if (fiatCurrency != null && walletAddress != null) {
+                    return new DummyExchangeAndWalletAndSource(fiatCurrency, Currencies.BTX, walletAddress);
+                }
+            }
         }
         return null;
     }

@@ -60,6 +60,18 @@ public class ANONExtension extends AbstractExtension {
                     return new ANONRPCWallet(rpcURL, accountName);
                 }
             }
+            if ("anondemo".equalsIgnoreCase(walletType)) {
+
+                String fiatCurrency = st.nextToken();
+                String walletAddress = "";
+                if (st.hasMoreTokens()) {
+                    walletAddress = st.nextToken();
+                }
+
+                if (fiatCurrency != null && walletAddress != null) {
+                    return new DummyExchangeAndWalletAndSource(fiatCurrency, Currencies.ANON, walletAddress);
+                }
+            }
 
         }
         return null;

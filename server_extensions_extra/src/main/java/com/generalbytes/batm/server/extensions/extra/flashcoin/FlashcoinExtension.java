@@ -57,6 +57,18 @@ public class FlashcoinExtension extends AbstractExtension{
                     return new FlashcoinRPCWallet(rpcURL,accountName);
                 }
             }
+            if ("flashdemo".equalsIgnoreCase(walletType)) {
+
+                String fiatCurrency = st.nextToken();
+                String walletAddress = "";
+                if (st.hasMoreTokens()) {
+                    walletAddress = st.nextToken();
+                }
+
+                if (fiatCurrency != null && walletAddress != null) {
+                    return new DummyExchangeAndWalletAndSource(fiatCurrency, Currencies.FLASH, walletAddress);
+                }
+            }
         }
         return null;
     }

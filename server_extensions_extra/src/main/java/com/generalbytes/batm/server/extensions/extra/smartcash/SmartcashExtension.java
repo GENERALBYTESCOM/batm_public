@@ -58,6 +58,18 @@ public class SmartcashExtension extends AbstractExtension{
                     return new SmartcashRPCWallet(rpcURL,accountName);
                 }
             }
+            if ("smartdemo".equalsIgnoreCase(walletType)) {
+
+                String fiatCurrency = st.nextToken();
+                String walletAddress = "";
+                if (st.hasMoreTokens()) {
+                    walletAddress = st.nextToken();
+                }
+
+                if (fiatCurrency != null && walletAddress != null) {
+                    return new DummyExchangeAndWalletAndSource(fiatCurrency, Currencies.SMART, walletAddress);
+                }
+            }
         }
         return null;
     }

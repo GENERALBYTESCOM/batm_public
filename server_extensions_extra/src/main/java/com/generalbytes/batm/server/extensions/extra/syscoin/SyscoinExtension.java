@@ -56,6 +56,18 @@ public class SyscoinExtension extends AbstractExtension{
                     return new SyscoinRPCWallet(rpcURL,accountName);
                 }
             }
+            if ("sysdemo".equalsIgnoreCase(walletType)) {
+
+                String fiatCurrency = st.nextToken();
+                String walletAddress = "";
+                if (st.hasMoreTokens()) {
+                    walletAddress = st.nextToken();
+                }
+
+                if (fiatCurrency != null && walletAddress != null) {
+                    return new DummyExchangeAndWalletAndSource(fiatCurrency, Currencies.SYS, walletAddress);
+                }
+            }
 
         }
         return null;

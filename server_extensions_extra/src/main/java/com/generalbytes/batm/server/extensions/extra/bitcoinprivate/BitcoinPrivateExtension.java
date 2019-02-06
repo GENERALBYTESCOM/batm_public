@@ -43,6 +43,18 @@ public class BitcoinPrivateExtension extends AbstractExtension {
                     return new BitcoinPrivateRPCWallet(rpcURL, accountName);
                 }
             }
+            if ("btcpdemo".equalsIgnoreCase(walletType)) {
+
+                String fiatCurrency = st.nextToken();
+                String walletAddress = "";
+                if (st.hasMoreTokens()) {
+                    walletAddress = st.nextToken();
+                }
+
+                if (fiatCurrency != null && walletAddress != null) {
+                    return new DummyExchangeAndWalletAndSource(fiatCurrency, Currencies.BTCP, walletAddress);
+                }
+            }
 
         }
         return null;

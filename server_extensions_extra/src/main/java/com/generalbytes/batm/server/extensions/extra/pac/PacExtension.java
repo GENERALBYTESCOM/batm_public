@@ -59,6 +59,18 @@ public class PacExtension extends AbstractExtension{
                     return new PacRPCWallet(rpcURL,accountName);
                 }
             }
+            if ("pacdemo".equalsIgnoreCase(walletType)) {
+
+                String fiatCurrency = st.nextToken();
+                String walletAddress = "";
+                if (st.hasMoreTokens()) {
+                    walletAddress = st.nextToken();
+                }
+
+                if (fiatCurrency != null && walletAddress != null) {
+                    return new DummyExchangeAndWalletAndSource(fiatCurrency, Currencies.PAC, walletAddress);
+                }
+            }
         }
         return null;
     }
