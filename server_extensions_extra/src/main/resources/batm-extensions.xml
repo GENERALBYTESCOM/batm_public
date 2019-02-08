@@ -848,6 +848,27 @@
         <cryptologo cryptocurrency="LSK" file="lisk.png"/>
         <cryptologo cryptocurrency="LSK" file="lisk.svg"/>
     </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.anker.AnkerExtension" >
+        <wallet prefix="ankerd" name="Ankerd">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>ANK</cryptocurrency>
+        </wallet>
+        <ratesource prefix="ankFix" name ="Fix Anker Price" >
+            <param name="price" />
+            <cryptocurrency>ANK</cryptocurrency>
+        </ratesource>
+        <ratesource prefix="lunoRateSource" name ="Luno Rate Source" >
+            <param name="fiatCurrency" />
+            <cryptocurrency>BTC</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="ANK" file="anker.png"/>
+        <cryptologo cryptocurrency="ANK" file="anker.svg"/>
+    </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.ethereum.EthereumExtension" >
         <wallet prefix="infura" name="infura.io wallet">
             <param name="apiKey" />
