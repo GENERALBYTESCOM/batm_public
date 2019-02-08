@@ -51,7 +51,7 @@ public class AnkerExtension extends AbstractExtension{
 
                 if (protocol != null && username != null && password != null && hostname != null && port != null && accountName != null) {
                     String rpcURL = protocol + "://" + username + ":" + password + "@" + hostname + ":" + port;
-                    return new ANONRPCWallet(rpcURL, accountName);
+                    return new AnkerRPCWallet(rpcURL, accountName);
                 }
             }
 
