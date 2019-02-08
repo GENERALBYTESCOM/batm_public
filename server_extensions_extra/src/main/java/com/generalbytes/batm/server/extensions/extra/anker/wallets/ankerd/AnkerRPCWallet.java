@@ -15,7 +15,7 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.lisk.wallets.liskd;
+package com.generalbytes.batm.server.extensions.extra.anker.wallets.ankerd;
 
 import wf.bitcoin.javabitcoindrpcclient.BitcoinRPCException;
 import wf.bitcoin.javabitcoindrpcclient.BitcoinJSONRPCClient;
@@ -30,11 +30,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class LiskRPCWallet implements IWallet{
-    private static final Logger log = LoggerFactory.getLogger(LiskRPCWallet.class);
-    private static final String CRYPTO_CURRENCY = Currencies.LSK;
+public class AnkerRPCWallet implements IWallet{
+    private static final Logger log = LoggerFactory.getLogger(AnkerRPCWallet.class);
+    private static final String CRYPTO_CURRENCY = Currencies.ANK;
 
-    public LiskRPCWallet(String rpcURL, String accountName) {
+    public AnkerRPCWallet(String rpcURL, String accountName) {
         this.rpcURL = rpcURL;
         this.accountName = accountName;
     }
@@ -58,11 +58,11 @@ public class LiskRPCWallet implements IWallet{
     @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
         if (!CRYPTO_CURRENCY.equalsIgnoreCase(cryptoCurrency)) {
-            log.error("Liskd wallet error: unknown cryptocurrency.");
+            log.error("Ankerd wallet error: unknown cryptocurrency.");
             return null;
         }
 
-        log.info("Liskd sending coins from " + accountName + " to: " + destinationAddress + " " + amount);
+        log.info("Ankerd sending coins from " + accountName + " to: " + destinationAddress + " " + amount);
         try {
             String result = getClient(rpcURL).sendFrom(accountName, destinationAddress, amount);
             log.debug("result = " + result);
@@ -76,7 +76,7 @@ public class LiskRPCWallet implements IWallet{
     @Override
     public String getCryptoAddress(String cryptoCurrency) {
         if (!CRYPTO_CURRENCY.equalsIgnoreCase(cryptoCurrency)) {
-            log.error("Liskd wallet error: unknown cryptocurrency.");
+            log.error("Ankerd wallet error: unknown cryptocurrency.");
             return null;
         }
 
@@ -96,7 +96,7 @@ public class LiskRPCWallet implements IWallet{
     @Override
     public BigDecimal getCryptoBalance(String cryptoCurrency) {
         if (!CRYPTO_CURRENCY.equalsIgnoreCase(cryptoCurrency)) {
-            log.error("Liskd wallet error: unknown cryptocurrency: " + cryptoCurrency);
+            log.error("Ankerd wallet error: unknown cryptocurrency: " + cryptoCurrency);
             return null;
         }
         try {
