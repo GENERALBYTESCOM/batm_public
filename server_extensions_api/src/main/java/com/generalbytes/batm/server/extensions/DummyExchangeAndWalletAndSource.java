@@ -36,7 +36,7 @@ public class DummyExchangeAndWalletAndSource implements IExchange, IWallet, IRat
             || cryptoCurrency.equals(Currencies.XMR)
             || cryptoCurrency.equals(Currencies.LTC)) {
             if (walletAddress != null) {
-                throw new IllegalArgumentException("Build in wallet is used for BTC, LTC, ETH, DASH, XMR crypto currencies.");
+                throw new IllegalArgumentException("Built-in wallet is used for BTC, LTC, ETH, DASH, XMR crypto currencies.");
             }
         } else {
             if (walletAddress == null || "".equals(walletAddress)) {
