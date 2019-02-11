@@ -57,6 +57,18 @@ public class EguldenExtension extends AbstractExtension{
                     return new EguldendRPCWallet(rpcURL,accountName);
                 }
             }
+            if ("efldemo".equalsIgnoreCase(walletType)) {
+
+                String fiatCurrency = st.nextToken();
+                String walletAddress = "";
+                if (st.hasMoreTokens()) {
+                    walletAddress = st.nextToken();
+                }
+
+                if (fiatCurrency != null && walletAddress != null) {
+                    return new DummyExchangeAndWalletAndSource(fiatCurrency, Currencies.EFL, walletAddress);
+                }
+            }
         }
         return null;
     }

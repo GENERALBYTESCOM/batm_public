@@ -57,6 +57,18 @@ public class FuturocoinExtension extends AbstractExtension{
                     return new FuturocoinRPCWallet(rpcURL,accountName);
                 }
             }
+            if ("ftodemo".equalsIgnoreCase(walletType)) {
+
+                String fiatCurrency = st.nextToken();
+                String walletAddress = "";
+                if (st.hasMoreTokens()) {
+                    walletAddress = st.nextToken();
+                }
+
+                if (fiatCurrency != null && walletAddress != null) {
+                    return new DummyExchangeAndWalletAndSource(fiatCurrency, Currencies.FTO, walletAddress);
+                }
+            }
 
         }
         return null;

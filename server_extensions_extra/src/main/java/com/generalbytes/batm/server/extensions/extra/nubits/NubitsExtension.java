@@ -41,6 +41,19 @@ public class NubitsExtension extends AbstractExtension{
                     return new NubitsRPCWallet(rpcURL,accountName);
                 }
             }
+            if ("nbtdemo".equalsIgnoreCase(walletType)) {
+
+                String fiatCurrency = st.nextToken();
+                String walletAddress = "";
+                if (st.hasMoreTokens()) {
+                    walletAddress = st.nextToken();
+                }
+
+                if (fiatCurrency != null && walletAddress != null) {
+                    return new DummyExchangeAndWalletAndSource(fiatCurrency, Currencies.NBT, walletAddress);
+                }
+            }
+
         }
         return null;
     }

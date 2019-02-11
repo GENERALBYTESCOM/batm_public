@@ -40,6 +40,18 @@ public class CloakcoinExtension extends AbstractExtension {
                         + "@" + hostname + ":" + port;
                 }
             }
+            if ("cloakdemo".equalsIgnoreCase(walletType)) {
+
+                String fiatCurrency = st.nextToken();
+                String walletAddress = "";
+                if (st.hasMoreTokens()) {
+                    walletAddress = st.nextToken();
+                }
+
+                if (fiatCurrency != null && walletAddress != null) {
+                    return new DummyExchangeAndWalletAndSource(fiatCurrency, Currencies.CLOAK, walletAddress);
+                }
+            }
         }
         return  null;
     }

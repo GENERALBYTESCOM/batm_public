@@ -52,6 +52,18 @@ public class TKNExtension extends AbstractExtension{
                     return new TokenWallet(host, port, accountid);
                 }
             }
+            if ("tkndemo".equalsIgnoreCase(walletType)) {
+
+                String fiatCurrency = st.nextToken();
+                String walletAddress = "";
+                if (st.hasMoreTokens()) {
+                    walletAddress = st.nextToken();
+                }
+
+                if (fiatCurrency != null && walletAddress != null) {
+                    return new DummyExchangeAndWalletAndSource(fiatCurrency, Currencies.TKN, walletAddress);
+                }
+            }
         }
         return null;
     }

@@ -67,6 +67,18 @@ public class DogecoinExtension extends AbstractExtension{
                     return new DogecoindRPCWallet(rpcURL,accountName);
                 }
             }
+            if ("dogedemo".equalsIgnoreCase(walletType)) {
+
+                String fiatCurrency = st.nextToken();
+                String walletAddress = "";
+                if (st.hasMoreTokens()) {
+                    walletAddress = st.nextToken();
+                }
+
+                if (fiatCurrency != null && walletAddress != null) {
+                    return new DummyExchangeAndWalletAndSource(fiatCurrency, Currencies.DOGE, walletAddress);
+                }
+            }
 
         }
         return null;

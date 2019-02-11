@@ -48,6 +48,18 @@ public class LiskExtension extends AbstractExtension{
                     return new LskWallet(address,binanceApiKey,binanceApiSecret);
                 }
             }
+            if ("lskdemo".equalsIgnoreCase(walletType)) {
+
+                String fiatCurrency = st.nextToken();
+                String walletAddress = "";
+                if (st.hasMoreTokens()) {
+                    walletAddress = st.nextToken();
+                }
+
+                if (fiatCurrency != null && walletAddress != null) {
+                    return new DummyExchangeAndWalletAndSource(fiatCurrency, Currencies.LSK, walletAddress);
+                }
+            }
         }
         return null;
     }

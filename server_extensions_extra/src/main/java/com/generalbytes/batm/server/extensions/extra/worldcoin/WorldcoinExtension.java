@@ -56,6 +56,18 @@ public class WorldcoinExtension extends AbstractExtension{
                     return new WorldcoindRPCWallet(rpcURL,accountName);
                 }
             }
+            if ("wdcdemo".equalsIgnoreCase(walletType)) {
+
+                String fiatCurrency = st.nextToken();
+                String walletAddress = "";
+                if (st.hasMoreTokens()) {
+                    walletAddress = st.nextToken();
+                }
+
+                if (fiatCurrency != null && walletAddress != null) {
+                    return new DummyExchangeAndWalletAndSource(fiatCurrency, Currencies.WDC, walletAddress);
+                }
+            }
 
         }
         return null;
