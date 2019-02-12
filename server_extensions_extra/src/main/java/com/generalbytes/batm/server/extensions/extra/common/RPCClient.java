@@ -15,7 +15,7 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.bitcoincash;
+package com.generalbytes.batm.server.extensions.extra.common;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,12 +24,14 @@ import wf.bitcoin.javabitcoindrpcclient.BitcoinRPCException;
 import wf.bitcoin.javabitcoindrpcclient.BitcoinJSONRPCClient;
 
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.AbstractList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -37,8 +39,12 @@ import javax.net.ssl.X509TrustManager;
 
 public class RPCClient extends BitcoinJSONRPCClient {
     private static final Logger log = LoggerFactory.getLogger("batm.master.extensions.RPCClient");
+    private String rpcURL;
+
+
     public RPCClient(String rpcUrl) throws MalformedURLException {
         super(rpcUrl);
+        this.rpcURL = rpcUrl;
         setHostnameVerifier((s, sslSession) -> true);
         try {
             SSLContext sslcontext = SSLContext.getInstance("TLS");
@@ -127,5 +133,16 @@ public class RPCClient extends BitcoinJSONRPCClient {
         return address;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RPCClient rpcClient = (RPCClient) o;
+        return Objects.equals(rpcURL, rpcClient.rpcURL);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(rpcURL);
+    }
 }

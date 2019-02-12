@@ -15,11 +15,11 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.bitcoincash;
+package com.generalbytes.batm.server.extensions.extra.common;
 
 import wf.bitcoin.javabitcoindrpcclient.BitcoindRpcClient;
 import wf.bitcoin.javabitcoindrpcclient.BitcoinRPCException;
-import com.generalbytes.batm.server.extensions.Currencies;
+
 import com.generalbytes.batm.server.extensions.payment.IBlockchainWatcher;
 import com.generalbytes.batm.server.extensions.payment.IBlockchainWatcherAddressListener;
 import com.generalbytes.batm.server.extensions.payment.IBlockchainWatcherTransactionListener;
@@ -27,15 +27,14 @@ import com.generalbytes.batm.server.extensions.payment.IBlockchainWatcherTransac
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class BitcoinCashBlockchainWatcher implements IBlockchainWatcher{
+public class RPCBlockchainWatcher implements IBlockchainWatcher{
 
-    private static final Logger log = LoggerFactory.getLogger("batm.master.BitcoinCashBlockchainWatcher");
+    private static final Logger log = LoggerFactory.getLogger("batm.master.RPCBlockchainWatcher");
 
     private static final long WATCH_PERIOD_MILLIS = TimeUnit.SECONDS.toMillis(10);
     private static final long PERIOD_BETWEEN_CALLS_MILLIS = TimeUnit.SECONDS.toMillis(2);
@@ -112,19 +111,39 @@ public class BitcoinCashBlockchainWatcher implements IBlockchainWatcher{
         }
     }
 
-    public BitcoinCashBlockchainWatcher(RPCClient rpcClient) {
+    public RPCBlockchainWatcher(RPCClient rpcClient) {
         this.rpcClient = rpcClient;
     }
 
     @SuppressWarnings("WeakerAccess")
     public void addTransaction(String cryptoCurrency, String txId, IBlockchainWatcherTransactionListener l, Object tag) {
         synchronized (trecords) {
-            try {
-                BitcoindRpcClient.Transaction transaction = rpcClient.getTransaction(txId);
-                TransactionWatchRecord t = new TransactionWatchRecord(cryptoCurrency, txId, l, tag,transaction.confirmations());
+            BitcoindRpcClient.Transaction transaction = null;
+            for (int i=0;i<60;i++) {
+                try {
+                    transaction = rpcClient.getTransaction(txId);
+                    log.debug("Transaction " + txId + " recognized by wallet.");
+                } catch (BitcoinRPCException e) {
+                    if (i == 59) {
+                        log.error("Error", e);
+                    }else{
+                        log.warn("Transaction " + txId + " is not recognized by wallet.");
+                    }
+                    try {
+                        Thread.sleep(1000); //wait one second - sometimes it takes few seconds for wallet to find its transaction
+                    } catch (InterruptedException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+                if (transaction != null) {
+                    break;
+                }
+            }
+            if (transaction != null) {
+                TransactionWatchRecord t = new TransactionWatchRecord(cryptoCurrency, txId, l, tag, transaction.confirmations());
                 trecords.add(t);
-            } catch (BitcoinRPCException e) {
-                log.error("Error", e);
+            }else{
+                log.error("Error: For some reason transaction " + txId + " was not recognized by wallet.");
             }
         }
     }
@@ -182,7 +201,7 @@ public class BitcoinCashBlockchainWatcher implements IBlockchainWatcher{
                 doWork();
             }
         });
-        workerThread.setName("BitcoinCashBlockchainWatcher");
+        workerThread.setName("RPCBlockchainWatcher");
         workerThread.setDaemon(true);
         workerThread.start();
     }
@@ -190,7 +209,7 @@ public class BitcoinCashBlockchainWatcher implements IBlockchainWatcher{
     private void doWork() {
         long lastBlockChainHeight = -1;
 
-        log.debug("doWork - Starting BitcoinCashBlockchainWatcher...");
+        log.debug("doWork - Starting RPCBlockchainWatcher...");
         try {
             long currentBlockChainHeight;
             while (workerThread != null) {
@@ -273,7 +292,9 @@ public class BitcoinCashBlockchainWatcher implements IBlockchainWatcher{
         long transactionHeight = -1;
         if (t != null) {
             String blockHash = t.blockHash();
-            transactionHeight = rpcClient.getBlock(blockHash).height();
+            if (blockHash != null) {
+                transactionHeight = rpcClient.getBlock(blockHash).height();
+            }
         }
         boolean numberOfConfirmationsChanged = false;
         if (transactionHeight > 0) {
@@ -295,7 +316,7 @@ public class BitcoinCashBlockchainWatcher implements IBlockchainWatcher{
 
     @SuppressWarnings("all")
     public void stop() {
-        log.debug("stop - Stopping BitcoinCashBlockchainWatcher...");
+        log.debug("stop - Stopping RPCBlockchainWatcher...");
         if (workerThread != null) {
             workerThread.interrupt();
             workerThread = null;
@@ -305,7 +326,7 @@ public class BitcoinCashBlockchainWatcher implements IBlockchainWatcher{
 //    public static void main(String[] args) {
 //        try {
 //            RPCClient rpcClient = new RPCClient(BitcoinCashPaymentSupport.RPC_URL);
-//            final BitcoinCashBlockchainWatcher w = new BitcoinCashBlockchainWatcher(rpcClient);
+//            final RPCBlockchainWatcher w = new RPCBlockchainWatcher(rpcClient);
 //            IBlockchainWatcherTransactionListener tlistener = new IBlockchainWatcherTransactionListener() {
 //                @Override
 //                public void removedFromWatch(String cryptoCurrency, String transactionHash, Object tag) {

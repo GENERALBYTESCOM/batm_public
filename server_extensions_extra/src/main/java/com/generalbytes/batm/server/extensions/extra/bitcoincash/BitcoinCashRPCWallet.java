@@ -17,19 +17,13 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.bitcoincash;
 
-import com.generalbytes.batm.server.extensions.CryptoCurrencyDefinition;
 import com.generalbytes.batm.server.extensions.Currencies;
-import com.generalbytes.batm.server.extensions.payment.IPaymentSupport;
+import com.generalbytes.batm.server.extensions.extra.common.RPCWallet;
 
-public class BitcoinCashDefinition extends CryptoCurrencyDefinition{
-    private IPaymentSupport paymentSupport = new BitcoinCashPaymentSupport();
+//You need to have node running: i.e.:  bitcoind -rpcuser=rpcuser -rpcpassword=rpcpassword -rpcport=8332
 
-    public BitcoinCashDefinition() {
-        super(Currencies.BCH, "BitcoinCash", "https://en.wikipedia.org/wiki/Bitcoin_Cash");
-    }
-
-    @Override
-    public IPaymentSupport getPaymentSupport() {
-        return paymentSupport;
+public class BitcoinCashRPCWallet extends RPCWallet {
+    public BitcoinCashRPCWallet(String rpcURL, String accountName) {
+        super(rpcURL, accountName, Currencies.BCH);
     }
 }

@@ -18,18 +18,19 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoincash;
 
 import com.generalbytes.batm.server.extensions.AbstractExtension;
+import com.generalbytes.batm.server.extensions.CryptoCurrencyDefinition;
 import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
+import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
 import com.generalbytes.batm.server.extensions.IPaperWalletGenerator;
 import com.generalbytes.batm.server.extensions.IWallet;
-import com.generalbytes.batm.server.extensions.extra.bitcoincash.wallets.BATMBitcoinCashdRPCWallet;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
 public class BitcoinCashExtension extends AbstractExtension {
-//    private static final CryptoCurrencyDefinition DEFINITION = new BitcoinCashDefinition();
+    private static final CryptoCurrencyDefinition DEFINITION = new BitcoinCashDefinition();
     public static final String CURRENCY = Currencies.BCH;
 
     @Override
@@ -58,7 +59,7 @@ public class BitcoinCashExtension extends AbstractExtension {
 
                 if (protocol != null && username != null && password != null && hostname != null && port != null && accountName != null) {
                     String rpcURL = protocol + "://" + username + ":" + password + "@" + hostname + ":" + port;
-                    return new BATMBitcoinCashdRPCWallet(rpcURL, accountName, Currencies.BCH);
+                    return new BitcoinCashRPCWallet(rpcURL, accountName);
                 }
             }
         }
@@ -73,12 +74,12 @@ public class BitcoinCashExtension extends AbstractExtension {
     }
 
     //Disable for now
-//    @Override
-//    public Set<ICryptoCurrencyDefinition> getCryptoCurrencyDefinitions() {
-//        Set<ICryptoCurrencyDefinition> result = new HashSet<>();
-//        result.add(DEFINITION);
-//        return result;
-//    }
+    @Override
+    public Set<ICryptoCurrencyDefinition> getCryptoCurrencyDefinitions() {
+        Set<ICryptoCurrencyDefinition> result = new HashSet<>();
+        result.add(DEFINITION);
+        return result;
+    }
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {

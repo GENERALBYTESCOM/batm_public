@@ -15,21 +15,8 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.bitcoincash;
+package com.generalbytes.batm.server.extensions.extra.common;
 
-import com.generalbytes.batm.server.extensions.CryptoCurrencyDefinition;
-import com.generalbytes.batm.server.extensions.Currencies;
-import com.generalbytes.batm.server.extensions.payment.IPaymentSupport;
-
-public class BitcoinCashDefinition extends CryptoCurrencyDefinition{
-    private IPaymentSupport paymentSupport = new BitcoinCashPaymentSupport();
-
-    public BitcoinCashDefinition() {
-        super(Currencies.BCH, "BitcoinCash", "https://en.wikipedia.org/wiki/Bitcoin_Cash");
-    }
-
-    @Override
-    public IPaymentSupport getPaymentSupport() {
-        return paymentSupport;
-    }
+public interface IRPCWallet {
+    RPCClient getClient();
 }
