@@ -17,6 +17,9 @@ public class LunoExchange extends XChangeExchange {
         super(getSpecification(clientKey, clientSecret), preferredFiatCurrency);
     }
 
+    private static ExchangeSpecification getDefaultSpecification() {
+        return new org.knowm.xchange.hitbtc.v2.HitbtcExchange().getDefaultExchangeSpecification();
+    }
 
     private static ExchangeSpecification getSpecification(String clientKey, String clientSecret) {
         ExchangeSpecification spec = getDefaultSpecification();
