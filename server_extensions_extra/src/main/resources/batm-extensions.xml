@@ -866,6 +866,12 @@
             <param name="fiatCurrency" />
             <cryptocurrency>BTC</cryptocurrency>
         </ratesource>
+        <exchange prefix="luno" name="Luno.com Exchange">
+            <param name="apikey" />
+            <param name="apisecret" />
+            <param name="fiatcurrency" />
+            <cryptocurrency>ANK</cryptocurrency>
+        </exchange>
         <cryptologo cryptocurrency="ANK" file="anker.png"/>
         <cryptologo cryptocurrency="ANK" file="anker.svg"/>
     </extension>

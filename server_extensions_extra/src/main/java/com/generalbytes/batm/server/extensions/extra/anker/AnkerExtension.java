@@ -21,6 +21,7 @@ import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.anker.sources.luno.LunoRateSource;
 import com.generalbytes.batm.server.extensions.extra.anker.wallets.ankerd.AnkerRPCWallet;
+import com.generalbytes.batm.server.extensions.extra.anker.exchanges.luno.LunoExchange;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -59,6 +60,24 @@ public class AnkerExtension extends AbstractExtension{
         return null;
     }
 
+    @Override
+    public IExchange createExchange(String paramString) //(Bitstamp is in built-in extension)
+    {
+        if ((paramString != null) && (!paramString.trim().isEmpty()))
+        {
+            StringTokenizer paramTokenizer = new StringTokenizer(paramString, ":");
+            String prefix = paramTokenizer.nextToken();
+            if ("luno".equalsIgnoreCase(prefix)) {
+                String apiKey = paramTokenizer.nextToken();
+                String apiSecret = paramTokenizer.nextToken();
+                String preferredFiatCurrency = Currencies.ZAR;
+                if (paramTokenizer.hasMoreTokens()) {
+                    preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase();
+                }
+                return new LunoExchange(apiKey, apiSecret, preferredFiatCurrency);
+        }
+        return null;
+    }
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
