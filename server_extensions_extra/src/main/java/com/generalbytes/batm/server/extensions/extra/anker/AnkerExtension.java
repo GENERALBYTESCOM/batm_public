@@ -75,6 +75,7 @@ public class AnkerExtension extends AbstractExtension{
                     preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase();
                 }
                 return new LunoExchange(apiKey, apiSecret, preferredFiatCurrency);
+            }
         }
         return null;
     }
