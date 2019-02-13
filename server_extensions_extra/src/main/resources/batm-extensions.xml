@@ -870,7 +870,7 @@
             <param name="apikey" />
             <param name="apisecret" />
             <param name="fiatcurrency" />
-            <cryptocurrency>ANK</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
         </exchange>
         <cryptologo cryptocurrency="ANK" file="anker.png"/>
         <cryptologo cryptocurrency="ANK" file="anker.svg"/>
