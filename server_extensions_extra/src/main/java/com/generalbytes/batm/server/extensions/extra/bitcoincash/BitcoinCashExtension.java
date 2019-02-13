@@ -73,7 +73,6 @@ public class BitcoinCashExtension extends AbstractExtension {
         return result;
     }
 
-    //Disable for now
     @Override
     public Set<ICryptoCurrencyDefinition> getCryptoCurrencyDefinitions() {
         Set<ICryptoCurrencyDefinition> result = new HashSet<>();

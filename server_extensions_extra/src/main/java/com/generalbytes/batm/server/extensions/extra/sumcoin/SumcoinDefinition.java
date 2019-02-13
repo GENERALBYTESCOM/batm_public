@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2016 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2018 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -15,14 +15,21 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.sumcoin.sumcored;
+package com.generalbytes.batm.server.extensions.extra.sumcoin;
 
+import com.generalbytes.batm.server.extensions.CryptoCurrencyDefinition;
 import com.generalbytes.batm.server.extensions.Currencies;
-import com.generalbytes.batm.server.extensions.extra.common.RPCWallet;
+import com.generalbytes.batm.server.extensions.payment.IPaymentSupport;
 
+public class SumcoinDefinition extends CryptoCurrencyDefinition{
+    private IPaymentSupport paymentSupport = new SumcoinPaymentSupport();
 
-public class SumcoinRPCWallet extends RPCWallet {
-    public SumcoinRPCWallet(String rpcURL, String accountName) {
-        super(rpcURL, accountName, Currencies.SUM);
+    public SumcoinDefinition() {
+        super(Currencies.SUM, "Sumcoin", "sumcoin","https://github.com/sumcoinlabs/sumcoin");
+    }
+
+    @Override
+    public IPaymentSupport getPaymentSupport() {
+        return paymentSupport;
     }
 }
