@@ -21,11 +21,15 @@ import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.extra.bitcoincash.test.PRS;
 import com.generalbytes.batm.server.extensions.extra.common.AbstractRPCPaymentSupport;
+import com.generalbytes.batm.server.extensions.extra.common.RPCClient;
 import com.generalbytes.batm.server.extensions.payment.IPaymentRequestListener;
 import com.generalbytes.batm.server.extensions.payment.PaymentRequest;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.concurrent.TimeUnit;
+
+import wf.bitcoin.javabitcoindrpcclient.BitcoinRPCException;
 
 public class BitcoinCashPaymentSupport extends AbstractRPCPaymentSupport {
     private BitcoinCashAddressValidator addressValidator = new BitcoinCashAddressValidator();
@@ -63,6 +67,22 @@ public class BitcoinCashPaymentSupport extends AbstractRPCPaymentSupport {
     @Override
     public ICryptoAddressValidator getAddressValidator() {
         return addressValidator;
+    }
+
+    @Override
+    public int calculateTransactionSize(int numberOfInputs, int numberOfOutputs) {
+        return (numberOfInputs * 149) + (numberOfOutputs * 34) + 10;
+    }
+
+    @Override
+    public BigDecimal calculateTxFee(int numberOfInputs, int numberOfOutputs, RPCClient client) {
+        final int transactionSize = calculateTransactionSize(numberOfInputs, numberOfOutputs);
+        try {
+            return new BigDecimal(client.getEstimateFee(2)).divide(new BigDecimal("1000"), RoundingMode.UP).multiply(new BigDecimal(transactionSize));
+        } catch (BitcoinRPCException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static void main(String[] args) {

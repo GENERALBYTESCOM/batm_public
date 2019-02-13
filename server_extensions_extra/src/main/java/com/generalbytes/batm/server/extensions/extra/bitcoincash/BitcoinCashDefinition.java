@@ -25,7 +25,7 @@ public class BitcoinCashDefinition extends CryptoCurrencyDefinition{
     private IPaymentSupport paymentSupport = new BitcoinCashPaymentSupport();
 
     public BitcoinCashDefinition() {
-        super(Currencies.BCH, "BitcoinCash", "https://en.wikipedia.org/wiki/Bitcoin_Cash");
+        super(Currencies.BCH, "BitcoinCash", "bitcoincash","https://en.wikipedia.org/wiki/Bitcoin_Cash");
     }
 
     @Override

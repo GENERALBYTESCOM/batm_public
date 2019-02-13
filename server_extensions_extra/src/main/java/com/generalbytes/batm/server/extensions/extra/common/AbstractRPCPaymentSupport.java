@@ -513,19 +513,9 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
 
     public abstract BigDecimal getTolerance();
 
-    private static int calculateTransactionSize(int numberOfInputs, int numberOfOutputs) {
-        return (numberOfInputs * 149) + (numberOfOutputs * 34) + 10;
-    }
+    protected abstract int calculateTransactionSize(int numberOfInputs, int numberOfOutputs);
 
-    private BigDecimal calculateTxFee(int numberOfInputs, int numberOfOutputs, RPCClient client) {
-        final int transactionSize = calculateTransactionSize(numberOfInputs, numberOfOutputs);
-        try {
-            return new BigDecimal(client.getEstimateFee(1)).multiply(new BigDecimal(transactionSize));
-        } catch (BitcoinRPCException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+    protected abstract BigDecimal calculateTxFee(int numberOfInputs, int numberOfOutputs, RPCClient client);
 
     class TX {
         List<BitcoindRpcClient.TxInput> inputs = new ArrayList<>();
@@ -538,6 +528,14 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
         public void addInput(BitcoindRpcClient.RawTransaction.Out sourceOutput) {
             inputs.add(new BitcoindRpcClient.BasicTxInput(sourceOutput.transaction().txId(),sourceOutput.n()));
         }
+
+        @Override
+        public String toString() {
+            return "TX{" +
+                "inputs=" + inputs +
+                ", outputs=" + outputs +
+                '}';
+        }
     }
 
     class TXForBroadcast {
@@ -548,14 +546,19 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
             this.rawTx = rawTx;
             this.hex = hex;
         }
+
+        @Override
+        public String toString() {
+            return "TXForBroadcast{" +
+                "rawTx=" + rawTx +
+                ", hex='" + hex + '\'' +
+                '}';
+        }
     }
 
     private TXForBroadcast createTransaction(BitcoindRpcClient.RawTransaction sourceTransaction, PaymentRequest request, IPaymentRequestSpecification spec, BigDecimal remain) {
         TX tx = new TX();
-
-
-        log_warn("createTransaction - Create new transaction for " + sourceTransaction + " " + request + " " + spec);
-
+        log_debug("createTransaction - Create new transaction for " + sourceTransaction + " " + request + " " + spec + " " + remain);
         try {
             boolean resolvedRemain = remain.compareTo(BigDecimal.ZERO) == 0;
 
@@ -576,7 +579,6 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
                             resolvedRemain = true;
                         }
                     }
-
                 }
                 tx.addOutput(outputAmount, paymentOutput.getAddress());
             }
