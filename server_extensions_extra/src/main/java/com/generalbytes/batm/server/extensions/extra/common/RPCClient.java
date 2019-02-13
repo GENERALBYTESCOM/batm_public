@@ -40,11 +40,13 @@ import javax.net.ssl.X509TrustManager;
 public class RPCClient extends BitcoinJSONRPCClient {
     private static final Logger log = LoggerFactory.getLogger("batm.master.extensions.RPCClient");
     private String rpcURL;
+    private String cryptoCurrency;
 
 
-    public RPCClient(String rpcUrl) throws MalformedURLException {
+    public RPCClient(String cryptoCurrency, String rpcUrl) throws MalformedURLException {
         super(rpcUrl);
         this.rpcURL = rpcUrl;
+        this.cryptoCurrency = cryptoCurrency;
         setHostnameVerifier((s, sslSession) -> true);
         try {
             SSLContext sslcontext = SSLContext.getInstance("TLS");
@@ -138,11 +140,12 @@ public class RPCClient extends BitcoinJSONRPCClient {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RPCClient rpcClient = (RPCClient) o;
-        return Objects.equals(rpcURL, rpcClient.rpcURL);
+        return Objects.equals(rpcURL, rpcClient.rpcURL) &&
+            Objects.equals(cryptoCurrency, rpcClient.cryptoCurrency);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(rpcURL);
+        return Objects.hash(rpcURL, cryptoCurrency);
     }
 }

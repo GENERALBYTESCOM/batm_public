@@ -40,7 +40,7 @@ public class RPCWallet implements IWallet, IRPCWallet{
     public RPCWallet(String rpcURL, String accountName, String cryptoCurrency) {
         this.accountName = accountName;
         this.cryptoCurrency = cryptoCurrency;
-        client = createClient(rpcURL);
+        client = createClient(cryptoCurrency, rpcURL);
     }
 
     @Override
@@ -107,9 +107,9 @@ public class RPCWallet implements IWallet, IRPCWallet{
         }
     }
 
-    private static RPCClient createClient(String rpcURL) {
+    private static RPCClient createClient(String cryptoCurrency, String rpcURL) {
         try {
-            return new RPCClient(rpcURL);
+            return new RPCClient(cryptoCurrency, rpcURL);
         } catch (MalformedURLException e) {
             log.error("Error", e);
         }
