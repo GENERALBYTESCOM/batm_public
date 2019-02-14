@@ -56,7 +56,7 @@
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
             </ratesource>
-            <ratesource prefix="itbit" name ="itBit88.com Exchange" >
+            <ratesource prefix="itbit" name ="itBit.com Exchange" >
                 <param name="fiatcurrency" />
                 <cryptocurrency>BTC</cryptocurrency>
             </ratesource>
@@ -166,14 +166,6 @@
                 <cryptocurrency>LTC</cryptocurrency>
             </exchange>
             <exchange prefix="itbit" name="itBit.com Exchange">
-                <param name="userId" />
-                <param name="accountId" />
-                <param name="apikey" />
-                <param name="apisecret" />
-                <param name="fiatcurrency" />
-                <cryptocurrency>BTC</cryptocurrency>
-            </exchange>
-            <exchange prefix="itbit12" name="itBit22.com Exchange">
                 <param name="userId" />
                 <param name="accountId" />
                 <param name="apikey" />
