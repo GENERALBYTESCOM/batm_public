@@ -15,37 +15,40 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.anker.sources.luno;
+package com.generalbytes.batm.server.extensions.extra.anker.exchanges.luno;
 
-import java.math.BigDecimal; 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class LunoTickerData {
+import java.util.List;
+import java.math.BigDecimal; 
+
+public class LunoBalances {
+
+    @JsonProperty("account_id")
+    private String account_id;
+
+    @JsonProperty("asset")
+    private String asset;
+
+    @JsonProperty("balance")
+    private BigDecimal balance;
+
+    @JsonProperty("reserved")
+    private BigDecimal reserved;
+
+    @JsonProperty("unconfirmed")
+    private BigDecimal unconfirmed;
+
+    @JsonProperty("name")
+    private String name;
+
+    public BigDecimal getBalance() {
+        BigDecimal avaiableBalance = balance - reserved - unconfirmed;
+        return avaiableBalance;
+    }
     
-    @JsonProperty("pair")
-    private String pair;
-    
-    @JsonProperty("timestamp")
-    private BigDecimal timestamp;
-
-    @JsonProperty("bid")
-    private BigDecimal bid;
-
-    @JsonProperty("ask")
-    private BigDecimal ask;
-
-    @JsonProperty("last_trade")
-    private BigDecimal last_trade;
-
-    @JsonProperty("rolling_24_hour_volume")
-    private BigDecimal rolling_24_hour_volume;
-
-
-    public BigDecimal getPrice() {
-        return bid;
+    public String getCurrency() {
+        return asset;
     }
 
-    public void setPrice(BigDecimal bid) {
-        this.bid = bid;
-    }
 }

@@ -15,37 +15,19 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.anker.sources.luno;
+package com.generalbytes.batm.server.extensions.extra.anker.exchanges.luno;
 
-import java.math.BigDecimal; 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class LunoTickerData {
-    
-    @JsonProperty("pair")
-    private String pair;
-    
-    @JsonProperty("timestamp")
-    private BigDecimal timestamp;
+import java.util.List;
+import java.math.BigDecimal; 
 
-    @JsonProperty("bid")
-    private BigDecimal bid;
+public class LunoOrderData {
 
-    @JsonProperty("ask")
-    private BigDecimal ask;
+    @JsonProperty("order_id")
+    private String order_id;
 
-    @JsonProperty("last_trade")
-    private BigDecimal last_trade;
-
-    @JsonProperty("rolling_24_hour_volume")
-    private BigDecimal rolling_24_hour_volume;
-
-
-    public BigDecimal getPrice() {
-        return bid;
-    }
-
-    public void setPrice(BigDecimal bid) {
-        this.bid = bid;
+    public String getResult() {
+        return order_id;
     }
 }

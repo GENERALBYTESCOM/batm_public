@@ -15,11 +15,15 @@ public class LunoExchange implements IExchange {
     private String preferredFiatCurrency = Currencies.ZAR;
     private String clientKey;
     private String clientSecret;
+    private LunoExchangeAPI api;
 
     public LunoExchange(String clientKey, String clientSecret, String preferredFiatCurrency) {
         this.preferredFiatCurrency = Currencies.ZAR;
         this.clientKey = clientKey;
         this.clientSecret = clientSecret;
+        final ClientConfig config = new ClientConfig();
+        ClientConfigUtil.addBasicAuthCredentials(config, clientKey, clientSecret);
+        api = RestProxyFactory.createProxy(LunoExchangeAPI.class, "https://api.mybitx.com", config)
     }
 
 
@@ -39,41 +43,51 @@ public class LunoExchange implements IExchange {
 
     @Override
     public BigDecimal getCryptoBalance(String cryptoCurrency) {
-        return new BigDecimal("0.3");
+        final LunoBalanceData balance = api.getBalance();
+        return balance.getBalance(cryptoCurrency);
     }
 
     @Override
     public String getDepositAddress(String cryptoCurrency) {
-        return "";
+        final LunoAddressData address = api.getAddress(cryptoCurrency);
+        return address.getAddress();
     }
 
     @Override
     public String getPreferredFiatCurrency() {
-        return "";
+        return this.preferredFiatCurrency;
     }
     
     
     @Override
     public BigDecimal getFiatBalance(String fiatCurrency) {
-        return new BigDecimal("0.3");
+        final LunoBalanceData balance = api.getBalance();
+        return balance.getBalance(fiatCurrency);
     }
     
     
     @Override
     public String purchaseCoins(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
-        return "";
+        String type = "BUY";
+        String pair = "XBTZAR";
+        final LunoOrderData result = api.createBuyOrder(pair, type, amount);
+        return result.getResult();
     }
     
     
     @Override
     public String sellCoins(BigDecimal cryptoAmount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
-        return "";
+        String type = "SELL";
+        String pair = "XBTZAR";
+        final LunoOrderData result = api.createSellOrder(pair, type, cryptoAmount);
+        return result.getResult();
     }
     
     
     @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
-        return "";
+        final LunoRequestData result = api.getAddress(destinationAddress, amount, cryptoCurrency, description);
+        return result.getResult();
     }
     
 
