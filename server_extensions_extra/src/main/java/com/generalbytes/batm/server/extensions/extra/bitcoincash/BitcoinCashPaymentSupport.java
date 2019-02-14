@@ -60,7 +60,7 @@ public class BitcoinCashPaymentSupport extends AbstractRPCPaymentSupport {
 
     @Override
     public BigDecimal getMinimumNetworkFee(RPCClient client) {
-        return client.getInfo().relayFee();
+        return client.getNetworkInfo().relayFee();
     }
 
     @Override

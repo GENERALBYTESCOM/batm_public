@@ -63,7 +63,7 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
         IBlockchainWatcher watcher = watchers.get(client);
         if (watcher == null) {
             try {
-                if (client.getInfo().connections() > 0) {
+                if (client.getNetworkInfo().connections() > 0) {
                     watcher = new RPCBlockchainWatcher(client);
                     watchers.put(client, watcher);
                     watcher.start();
@@ -271,13 +271,6 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
 
         @Override
         public void newTransactionSeen(String cryptoCurrency, String address, String transactionId, int confirmations, Object tag) {
-//            if (address.equals(request.getAddress())) {
-//                //it is inbound transaction
-//                inboundTxId = transactionId;
-//                watcher.addTransaction(cryptoCurrency, transactionId, this, tag);
-//                fireNumberOfConfirmationsChanged(request, confirmations, IPaymentRequestListener.Direction.INCOMING);
-//            }
-
             boolean performRefund = false;
             BitcoindRpcClient.Transaction tx = null;
             try {
