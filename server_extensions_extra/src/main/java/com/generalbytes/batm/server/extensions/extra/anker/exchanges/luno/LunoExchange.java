@@ -10,7 +10,7 @@ import java.util.Set;
 import si.mazi.rescu.RestProxyFactory;
 
 
-public class LunoExchange implements IExchange {
+public class LunoExchange implements IRateSourceAdvanced, IExchangeAdvanced {
 
     private String preferredFiatCurrency = Currencies.ZAR;
     private String clientKey;
