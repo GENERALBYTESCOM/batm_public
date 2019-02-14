@@ -39,7 +39,7 @@ public class LunoExchange implements IExchange {
 
     @Override
     public BigDecimal getCryptoBalance(String cryptoCurrency) {
-        return 1;
+        return 1.0;
     }
 
     @Override
@@ -55,7 +55,7 @@ public class LunoExchange implements IExchange {
     
     @Override
     public BigDecimal getFiatBalance(String fiatCurrency) {
-        return 1;
+        return 1.0;
     }
     
     
