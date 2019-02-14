@@ -23,7 +23,7 @@ public class LunoExchange implements IExchange {
         this.clientSecret = clientSecret;
         final ClientConfig config = new ClientConfig();
         ClientConfigUtil.addBasicAuthCredentials(config, clientKey, clientSecret);
-        api = RestProxyFactory.createProxy(LunoExchangeAPI.class, "https://api.mybitx.com", config)
+        api = RestProxyFactory.createProxy(LunoExchangeAPI.class, "https://api.mybitx.com", config);
     }
 
 
