@@ -78,7 +78,6 @@ public enum CryptoCurrency {
     public String getCode() {
         return code;
     }
-// TODO tests BTC, $PAC
 
     /**
      * @throws IllegalArgumentException
