@@ -38,13 +38,13 @@ public class LunoExchange implements IExchange {
     }
 
     @Override
-    protected boolean isWithdrawSuccessful(String result) {
-        return true;
+    public BigDecimal getCryptoBalance(String cryptoCurrency) {
+        return 1;
     }
 
     @Override
-    protected double getAllowedCallsPerSecond() {
-        return 1;
+    public String getDepositAddress(String cryptoCurrency) {
+        return "";
     }
 
 
