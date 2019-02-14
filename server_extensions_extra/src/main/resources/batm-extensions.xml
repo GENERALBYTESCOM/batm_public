@@ -56,7 +56,7 @@
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
             </ratesource>
-            <ratesource prefix="itbit" name ="itBit.com Exchange" >
+            <ratesource prefix="itbit" name ="itBit88.com Exchange" >
                 <param name="fiatcurrency" />
                 <cryptocurrency>BTC</cryptocurrency>
             </ratesource>
