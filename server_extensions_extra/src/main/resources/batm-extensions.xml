@@ -94,6 +94,7 @@
             </ratesource>
             <ratesource prefix="fixprice" name ="Fix Price Universal" >
                 <param name="price"/>
+                <param name="fiatcurrency"/>
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>BCH</cryptocurrency>
                 <cryptocurrency>BTCP</cryptocurrency>

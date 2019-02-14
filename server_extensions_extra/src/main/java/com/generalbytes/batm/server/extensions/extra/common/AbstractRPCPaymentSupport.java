@@ -354,7 +354,7 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
                                 incomingTransactions.add(tx.raw());
                                 int previousState = request.getState();
                                 request.setState(PaymentRequest.STATE_SEEN_TRANSACTION);
-                                startWatchingTransaction(getClient(request.getWallet()), request.getCryptoCurrency(), tx.txId(), this, tx);
+                                startWatchingTransaction(getClient(request.getWallet()), request.getCryptoCurrency(), tx.txId(), this, tx.raw());
 
                                 fireStateChanged(request, previousState);
                                 fireNumberOfConfirmationsChanged(request, 0, IPaymentRequestListener.Direction.INCOMING);
@@ -365,7 +365,7 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
                                 log_info("Amounts matched " + (exactMatch ? "exactly" : "") + (matchInTolerance ? "in tolerance" : "") + " " + request.getAddress() + ". Creating forwarding transaction. " + request.getLogInfoWatchingFor() + "\ntx = " + tx);
                                 TXForBroadcast newTx = createTransaction(tx.raw(), request, spec, toleranceRemain);
                                 if (newTx != null) {
-                                    BigDecimal txValue = totalCoinsReceived.subtract(getMinimumNetworkFee());
+                                    BigDecimal txValue = totalCoinsReceived.subtract(getMinimumNetworkFee(getClient(request.getWallet())));
                                     request.setTxValue(txValue);
                                     request.setIncomingTransactionHash(tx.txId());
                                     incomingTransactions.add(tx.raw());
@@ -375,7 +375,7 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
                                     log_debug("PaymentTransactionListener.onTransaction - Serialized transaction: " + newTx.hex);
                                     log_debug("PaymentTransactionListener.onTransaction - Broadcast transaction = " + newTx.rawTx);
 
-                                    startWatchingTransaction(getClient(request.getWallet()), request.getCryptoCurrency(), tx.txId(), this, tx);
+                                    startWatchingTransaction(getClient(request.getWallet()), request.getCryptoCurrency(), tx.txId(), this, tx.raw());
                                     getClient(request.getWallet()).sendRawTransaction(newTx.hex);
                                     startWatchingTransaction(getClient(request.getWallet()), request.getCryptoCurrency(), newTx.rawTx.txId(), this, newTx.rawTx);
 
@@ -456,7 +456,7 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
         getWatcher(client).addAddress(cryptoCurrency,address,l,tag);
     }
 
-    public abstract BigDecimal getMinimumNetworkFee();
+    public abstract BigDecimal getMinimumNetworkFee(RPCClient client);
 
     public abstract long getMaximumWaitForPossibleRefundInMillis();
 
@@ -665,7 +665,7 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
                         }
                     }
                 }
-                BigDecimal toSendBack = totalCoinsReceived.subtract(getMinimumNetworkFee());
+                BigDecimal toSendBack = totalCoinsReceived.subtract(getMinimumNetworkFee(getClient(request.getWallet())));
                 if (toSendBack.compareTo(BigDecimal.ZERO) > 0) {
                     tx.addOutput(toSendBack, timeoutAddress);
                     //add inputs

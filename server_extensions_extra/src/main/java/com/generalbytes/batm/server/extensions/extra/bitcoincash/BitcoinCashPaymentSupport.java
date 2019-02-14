@@ -37,7 +37,6 @@ public class BitcoinCashPaymentSupport extends AbstractRPCPaymentSupport {
     private static final long MAXIMUM_WAIT_FOR_POSSIBLE_REFUND_MILLIS = TimeUnit.DAYS.toMillis(3); // 3 days
     private static final long MAXIMUM_WATCHING_TIME_MILLIS = TimeUnit.DAYS.toMillis(3); // 3 days (exactly plus Sell Offer Expiration 5-120 minutes)
     private static final BigDecimal TOLERANCE = new BigDecimal("0.0002"); // Received amount should be  cryptoTotalToSend +- tolerance
-    private static final BigDecimal MINIMUM_NETWORK_FEE = new BigDecimal("0.0002");
 
     @Override
     public String getCurrency() {
@@ -60,8 +59,8 @@ public class BitcoinCashPaymentSupport extends AbstractRPCPaymentSupport {
     }
 
     @Override
-    public BigDecimal getMinimumNetworkFee() {
-        return MINIMUM_NETWORK_FEE;
+    public BigDecimal getMinimumNetworkFee(RPCClient client) {
+        return client.getInfo().relayFee();
     }
 
     @Override
@@ -78,7 +77,12 @@ public class BitcoinCashPaymentSupport extends AbstractRPCPaymentSupport {
     public BigDecimal calculateTxFee(int numberOfInputs, int numberOfOutputs, RPCClient client) {
         final int transactionSize = calculateTransactionSize(numberOfInputs, numberOfOutputs);
         try {
-            return new BigDecimal(client.getEstimateFee(2)).divide(new BigDecimal("1000"), RoundingMode.UP).multiply(new BigDecimal(transactionSize));
+            BigDecimal estimate = new BigDecimal(client.getEstimateFee(2));
+            if (BigDecimal.ZERO.compareTo(estimate) == 0 || estimate.compareTo(new BigDecimal("-1")) == 0 ) {
+                //bitcoind is clueless
+                return getMinimumNetworkFee(client);
+            }
+            return estimate.divide(new BigDecimal("1000"), RoundingMode.UP).multiply(new BigDecimal(transactionSize));
         } catch (BitcoinRPCException e) {
             e.printStackTrace();
         }
