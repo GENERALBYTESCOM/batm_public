@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
-public class LunoExchange extends XChangeExchange {
+public class LunoExchange extends XChangeExchange implements IExchange {
 
     public LunoExchange(String clientKey, String clientSecret, String preferredFiatCurrency) {
         super(getSpecification(clientKey, clientSecret), preferredFiatCurrency);

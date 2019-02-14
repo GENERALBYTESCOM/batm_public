@@ -866,7 +866,7 @@
             <param name="fiatCurrency" />
             <cryptocurrency>BTC</cryptocurrency>
         </ratesource>
-        <exchange prefix="luno" name="Luno.com Exchange">
+        <exchange prefix="lunoexchange" name="Luno.com Exchange">
             <param name="apikey" />
             <param name="apisecret" />
             <param name="fiatcurrency" />

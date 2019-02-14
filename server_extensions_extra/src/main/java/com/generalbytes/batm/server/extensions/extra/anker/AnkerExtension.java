@@ -26,7 +26,7 @@ import com.generalbytes.batm.server.extensions.extra.anker.exchanges.luno.LunoEx
 import java.math.BigDecimal;
 import java.util.*;
 
-public class AnkerExtension extends AbstractExtension{
+public class AnkerExtension extends AbstractExtension {
     @Override
     public String getName() {
         return "BATM Anker extra extension";
@@ -61,18 +61,16 @@ public class AnkerExtension extends AbstractExtension{
     }
 
     @Override
-    public IExchange createExchange(String paramString) //(Bitstamp is in built-in extension)
-    {
-        if ((paramString != null) && (!paramString.trim().isEmpty()))
-        {
-            StringTokenizer paramTokenizer = new StringTokenizer(paramString, ":");
-            String prefix = paramTokenizer.nextToken();
-            if ("luno".equalsIgnoreCase(prefix)) {
-                String apiKey = paramTokenizer.nextToken();
-                String apiSecret = paramTokenizer.nextToken();
+    public IExchange createExchange(String sourceLogin) {
+        if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
+            StringTokenizer st = new StringTokenizer(sourceLogin, ":");
+            String exchangeType = st.nextToken();
+            if ("lunoexchange".equalsIgnoreCase(exchangeType)) {
+                String apiKey = st.nextToken();
+                String apiSecret = st.nextToken();
                 String preferredFiatCurrency = Currencies.ZAR;
-                if (paramTokenizer.hasMoreTokens()) {
-                    preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase();
+                if (st.hasMoreTokens()) {
+                    preferredFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new LunoExchange(apiKey, apiSecret, preferredFiatCurrency);
             }
