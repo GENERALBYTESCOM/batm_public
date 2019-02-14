@@ -6,11 +6,6 @@ apply plugin: 'maven-publish'
 group = projectGroup
 version = projectVersion
 
-jar {
-    baseName 'batm_server_extensions_api'
-    archiveName "${baseName}.${extension}"
-}
-
 distributions {
     main {
         contents {
@@ -22,9 +17,6 @@ distributions {
 
 dependencies {
     compile(group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25')
-    compile(group: 'com.sun.mail', name: 'javax.mail', version: '1.4.7')
-    compile(group: 'com.vdurmont', name: 'emoji-java', version: '3.1.3') //for chat emojis
-    compile project(':currencies')
 }
 
 if (hasGbUploadArtifactory) {

@@ -18,12 +18,16 @@
 
 package com.generalbytes.batm.server.extensions;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
+/**
+ * @deprecated Use FiatCurrency and CryptoCurrency instead
+ */
 @SuppressWarnings("WeakerAccess")
+@Deprecated
 public class Currencies {
+
+    //
+    // DO NOT ADD NEW CURRENCIES HERE !!!
+    //
 
     public static final String ANT      = "ANT";    // Aragon Network Token
     public static final String ANON     = "ANON";   // ANON (formerly Anonymous Bitcoin)
@@ -135,116 +139,4 @@ public class Currencies {
     public static final String TETH     = "TETH";   // test ETH
 
     public static final String NONE     = "";
-
-    public static final List<String> FIAT_CURRENCIES;
-    public static final List<String> CRYPTO_CURRENCIES;
-
-    static {
-        List<String> crypto = new ArrayList<>();
-        crypto.add(ANON);
-        crypto.add(ANT);
-        crypto.add(BAT);
-        crypto.add(BCH);
-        crypto.add(BSD);
-        crypto.add(BTC);
-        crypto.add(BTCP);
-        crypto.add(BTDX);
-        crypto.add(BTX);
-        crypto.add(BURST);
-        crypto.add(CLOAK);
-        crypto.add(DAI);
-        crypto.add(DASH);
-        crypto.add(DEX);
-        crypto.add(DGB);
-        crypto.add(DOGE);
-        crypto.add(ECA);
-        crypto.add(EFL);
-        crypto.add(ETH);
-        crypto.add(FLASH);
-        crypto.add(FTO);
-        crypto.add(GRS);
-        crypto.add(LEO);
-        crypto.add(LINDA);
-        crypto.add(LTC);
-        crypto.add(LSK);
-        crypto.add(MAX);
-        crypto.add(MEC);
-        crypto.add(MKR);
-        crypto.add(NBT);
-        crypto.add(NLG);
-        crypto.add(NXT);
-        crypto.add(PAC);
-        crypto.add(POT);
-        crypto.add(REP);
-        crypto.add(SMART);
-        crypto.add(START);
-        crypto.add(SUM);
-        crypto.add(SYS);
-        crypto.add(TKN);
-        crypto.add(USDT);
-        crypto.add(VIA);
-        crypto.add(WDC);
-        crypto.add(XMR);
-        crypto.add(XZC);
-
-        CRYPTO_CURRENCIES = Collections.unmodifiableList(crypto);
-
-        List<String> fiat = new ArrayList<>();
-        fiat.add(AED);
-        fiat.add(AMD);
-        fiat.add(AUD);
-        fiat.add(BGN);
-        fiat.add(BHD);
-        fiat.add(CAD);
-        fiat.add(CHF);
-        fiat.add(CNY);
-        fiat.add(COP);
-        fiat.add(CRC);
-        fiat.add(CZK);
-        fiat.add(DKK);
-        fiat.add(DOP);
-        fiat.add(EUR);
-        fiat.add(GEL);
-        fiat.add(GBP);
-        fiat.add(GIP);
-        fiat.add(GTQ);
-        fiat.add(HKD);
-        fiat.add(HRK);
-        fiat.add(HUF);
-        fiat.add(ILS);
-        fiat.add(ISK);
-        fiat.add(INR);
-        fiat.add(JEP);
-        fiat.add(JPY);
-        fiat.add(KES);
-        fiat.add(KRW);
-        fiat.add(KWD);
-        fiat.add(KZT);
-        fiat.add(MKD);
-        fiat.add(MXN);
-        fiat.add(MYR);
-        fiat.add(NOK);
-        fiat.add(NZD);
-        fiat.add(PEN);
-        fiat.add(PHP);
-        fiat.add(PLN);
-        fiat.add(RON);
-        fiat.add(RSD);
-        fiat.add(RUB);
-        fiat.add(SAR);
-        fiat.add(SGD);
-        fiat.add(THB);
-        fiat.add(TWD);
-        fiat.add(TRY);
-        fiat.add(UAH);
-        fiat.add(USD);
-        fiat.add(UYU);
-        fiat.add(VND);
-        fiat.add(XAF);
-        fiat.add(ZAR);
-
-        fiat.add(XAU);
-
-        FIAT_CURRENCIES = Collections.unmodifiableList(fiat);
-    }
 }

@@ -2,16 +2,16 @@ package com.generalbytes.batm.server.extensions;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-
-import static com.generalbytes.batm.server.extensions.Currencies.CRYPTO_CURRENCIES;
-import static com.generalbytes.batm.server.extensions.Currencies.FIAT_CURRENCIES;
 
 /**
  * Created by b00lean on 7/31/14.
  */
 public class FixPriceRateSource implements IRateSource {
-    private BigDecimal rate = BigDecimal.ZERO;
+    private static final List<String> FIAT_CURRENCIES = FiatCurrency.names();
+    private static final List<String> CRYPTO_CURRENCIES = CryptoCurrency.names();
+    private final BigDecimal rate;
 
     private String preferredFiatCurrency = Currencies.USD;
 
