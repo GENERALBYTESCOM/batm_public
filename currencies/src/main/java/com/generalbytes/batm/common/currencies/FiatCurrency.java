@@ -1,4 +1,4 @@
-package com.generalbytes.batm.server.extensions;
+package com.generalbytes.batm.common.currencies;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +57,10 @@ public enum FiatCurrency {
     UYU("Uruguayan peso"),
     VND("Vietnamese dong"),
     XAF("Central African CFA franc"),
-    ZAR("South African rand");
+    ZAR("South African rand"),
+
+    XAU("Gold"),
+    ;
 
     private final String currencyName;
 
@@ -73,11 +76,11 @@ public enum FiatCurrency {
         return name();
     }
 
-    public static List<String> names() {
+    public static List<String> getCodes() {
         FiatCurrency[] values = values();
         List<String> res = new ArrayList<>(values.length);
         for(FiatCurrency c : values){
-            res.add(c.name());
+            res.add(c.getCode());
         }
         return res;
     }

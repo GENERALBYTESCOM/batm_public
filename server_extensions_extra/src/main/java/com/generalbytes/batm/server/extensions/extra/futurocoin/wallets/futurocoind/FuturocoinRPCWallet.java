@@ -2,7 +2,7 @@ package com.generalbytes.batm.server.extensions.extra.futurocoin.wallets.futuroc
 
 import wf.bitcoin.javabitcoindrpcclient.BitcoinRPCException;
 import wf.bitcoin.javabitcoindrpcclient.BitcoinJSONRPCClient;
-import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.IWallet;
 
 import org.slf4j.Logger;
@@ -17,7 +17,7 @@ import java.util.Set;
 public class FuturocoinRPCWallet implements IWallet {
 
     private static final Logger log = LoggerFactory.getLogger(FuturocoinRPCWallet.class);
-    private static final String CRYPTO_CURRENCY = Currencies.FTO;
+    private static final String CRYPTO_CURRENCY = CryptoCurrency.FTO.getCode();
 
     public FuturocoinRPCWallet(String rpcURL, String accountName) {
         this.rpcURL = rpcURL;

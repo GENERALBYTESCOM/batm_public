@@ -17,7 +17,7 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.lisk.wallets.liskbinancewallet;
 
-import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.IWallet;
 
 import org.slf4j.Logger;
@@ -56,13 +56,13 @@ public class LskWallet implements IWallet {
 
     @Override
     public String getPreferredCryptoCurrency() {
-        return Currencies.LSK;
+        return CryptoCurrency.LSK.getCode();
     }
 
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(Currencies.LSK);
+        result.add(CryptoCurrency.LSK.getCode());
         return result;
     }
 

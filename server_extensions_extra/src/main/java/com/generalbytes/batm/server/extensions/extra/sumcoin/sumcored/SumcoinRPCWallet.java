@@ -17,12 +17,12 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.sumcoin.sumcored;
 
-import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.extra.common.RPCWallet;
 
 
 public class SumcoinRPCWallet extends RPCWallet {
     public SumcoinRPCWallet(String rpcURL, String accountName) {
-        super(rpcURL, accountName, Currencies.SUM);
+        super(rpcURL, accountName, CryptoCurrency.SUM.getCode());
     }
 }

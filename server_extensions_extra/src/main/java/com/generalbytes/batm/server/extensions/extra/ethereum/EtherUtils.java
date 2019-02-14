@@ -20,7 +20,7 @@ package com.generalbytes.batm.server.extensions.extra.ethereum;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.bitrafael.api.wallet.IWalletTools;
 import com.generalbytes.bitrafael.api.wallet.eth.MasterPrivateKeyETH;
 import com.generalbytes.bitrafael.api.wallet.eth.WalletToolsETH;
@@ -68,8 +68,8 @@ public class EtherUtils {
 
     public static Credentials loadBip44Credentials(String mnemonic, String password) {
         WalletToolsETH wt = new WalletToolsETH();
-        MasterPrivateKeyETH m = wt.getMasterPrivateKey(mnemonic, password, Currencies.ETH, IWalletTools.STANDARD_BIP44);
-        String walletPrivateKey = wt.getWalletPrivateKey(m, Currencies.ETH, 0, 0, 0);
+        MasterPrivateKeyETH m = wt.getMasterPrivateKey(mnemonic, password, CryptoCurrency.ETH.getCode(), IWalletTools.STANDARD_BIP44);
+        String walletPrivateKey = wt.getWalletPrivateKey(m, CryptoCurrency.ETH.getCode(), 0, 0, 0);
         return Credentials.create(walletPrivateKey);
     }
 
