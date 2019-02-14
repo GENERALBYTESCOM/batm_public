@@ -47,5 +47,34 @@ public class LunoExchange implements IExchange {
         return "";
     }
 
+    @Override
+    public String getPreferredFiatCurrency() {
+        return "";
+    }
+    
+    
+    @Override
+    public BigDecimal getFiatBalance(String fiatCurrency) {
+        return 1;
+    }
+    
+    
+    @Override
+    public String purchaseCoins(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
+        return "";
+    }
+    
+    
+    @Override
+    public String sellCoins(BigDecimal cryptoAmount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
+        return "";
+    }
+    
+    
+    @Override
+    public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
+        return "";
+    }
+    
 
 }
