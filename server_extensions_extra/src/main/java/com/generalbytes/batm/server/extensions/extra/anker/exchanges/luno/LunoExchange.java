@@ -2,31 +2,26 @@ package com.generalbytes.batm.server.extensions.extra.anker.exchanges.luno;
 
 import com.generalbytes.batm.server.extensions.Currencies;
 import com.generalbytes.batm.server.extensions.*;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.XChangeExchange;
-import org.knowm.xchange.ExchangeSpecification;
-import org.knowm.xchange.dto.account.AccountInfo;
-import org.knowm.xchange.dto.account.Wallet;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
-public class LunoExchange extends XChangeExchange implements IExchange {
+import si.mazi.rescu.RestProxyFactory;
+
+
+public class LunoExchange extends AbstractExtension implements IExchange {
+
+    private String preferredFiatCurrency = Currencies.ZAR;
+    private String clientKey;
+    private String clientSecret;
 
     public LunoExchange(String clientKey, String clientSecret, String preferredFiatCurrency) {
-        super(getSpecification(clientKey, clientSecret), preferredFiatCurrency);
+        this.preferredFiatCurrency = Currencies.ZAR;
+        this.clientKey = clientKey;
+        this.clientSecret = clientSecret;
     }
 
-    private static ExchangeSpecification getDefaultSpecification() {
-        return new org.knowm.xchange.hitbtc.v2.HitbtcExchange().getDefaultExchangeSpecification();
-    }
-
-    private static ExchangeSpecification getSpecification(String clientKey, String clientSecret) {
-        ExchangeSpecification spec = getDefaultSpecification();
-        spec.setApiKey(clientKey);
-        spec.setSecretKey(clientSecret);
-        return spec;
-    }
 
     @Override
     public Set<String> getCryptoCurrencies() {
@@ -50,11 +45,6 @@ public class LunoExchange extends XChangeExchange implements IExchange {
     @Override
     protected double getAllowedCallsPerSecond() {
         return 1;
-    }
-
-    @Override
-    public Wallet getWallet(AccountInfo accountInfo, String fiatCurrency) {
-        return accountInfo.getWallet(null); 
     }
 
 

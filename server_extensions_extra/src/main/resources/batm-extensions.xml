@@ -173,6 +173,14 @@
                 <param name="fiatcurrency" />
                 <cryptocurrency>BTC</cryptocurrency>
             </exchange>
+            <exchange prefix="itbit12" name="itBit22.com Exchange">
+                <param name="userId" />
+                <param name="accountId" />
+                <param name="apikey" />
+                <param name="apisecret" />
+                <param name="fiatcurrency" />
+                <cryptocurrency>BTC</cryptocurrency>
+            </exchange>
         <exchange prefix="hitbtc" name="HitBTC Exchange">
             <param name="apikey" />
             <param name="apisecret" />
