@@ -1,19 +1,10 @@
 apply plugin: "java"
-apply plugin: "distribution"
 apply plugin: "com.generalbytes.gradle.main"
 apply plugin: 'maven-publish'
 
 group = projectGroup
 version = projectVersion
 
-distributions {
-    main {
-        contents {
-            from jar
-            from configurations.runtime
-        }
-    }
-}
 
 dependencies {
     compile(group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25')
