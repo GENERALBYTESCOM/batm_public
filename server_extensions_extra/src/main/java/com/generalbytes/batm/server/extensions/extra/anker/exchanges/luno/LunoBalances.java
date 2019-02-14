@@ -43,8 +43,9 @@ public class LunoBalances {
     private String name;
 
     public BigDecimal getBalance() {
-        BigDecimal avaiableBalance = balance - reserved;
-        avaiableBalance = avaiableBalance - unconfirmed;
+        BigDecimal avaiableBalance = balance;
+        avaiableBalance = avaiableBalance.subtract(reserved);
+        avaiableBalance = avaiableBalance.subtract(unconfirmed);
         return avaiableBalance;
     }
     
