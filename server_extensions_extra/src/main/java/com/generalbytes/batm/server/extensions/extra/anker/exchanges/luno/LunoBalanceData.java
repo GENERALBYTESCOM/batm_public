@@ -33,7 +33,7 @@ public class LunoBalanceData {
     }
 
     public BigDecimal getBalance(String symbol) {
-        for (Iterator<String> i = balance.iterator(); i.hasNext();) {
+        for (Iterator<LunoBalances> i = balance.iterator(); i.hasNext();) {
             LunoBalances item = i.next();
             if (item.getCurrency() == symbol) {
                 return item.getBalance();
