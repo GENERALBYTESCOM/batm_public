@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import si.mazi.rescu.RestProxyFactory;
+import si.mazi.rescu;
 
 
 public class LunoExchange implements IExchange {

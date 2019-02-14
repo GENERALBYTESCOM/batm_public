@@ -17,6 +17,8 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.anker.exchanges.luno;
 
+import java.math.BigDecimal;
+
 import javax.ws.rs.*; 
 import javax.ws.rs.core.MediaType; 
 @Path("api/1") 
