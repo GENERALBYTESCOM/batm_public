@@ -82,6 +82,18 @@ public class BurstExtension extends AbstractExtension{
                     return new BurstWallet(masterPassword, accountId, nodeAddress);
                 }
             }
+            if ("burstdemo".equalsIgnoreCase(walletType)) {
+
+                String fiatCurrency = st.nextToken();
+                String walletAddress = "";
+                if (st.hasMoreTokens()) {
+                    walletAddress = st.nextToken();
+                }
+
+                if (fiatCurrency != null && walletAddress != null) {
+                    return new DummyExchangeAndWalletAndSource(fiatCurrency, Currencies.BURST, walletAddress);
+                }
+            }
         }
         return null;
     }

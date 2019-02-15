@@ -57,6 +57,18 @@ public class LeocoinExtension extends AbstractExtension{
                     return new LeocoindRPCWallet(rpcURL,accountName);
                 }
             }
+            if ("leodemo".equalsIgnoreCase(walletType)) {
+
+                String fiatCurrency = st.nextToken();
+                String walletAddress = "";
+                if (st.hasMoreTokens()) {
+                    walletAddress = st.nextToken();
+                }
+
+                if (fiatCurrency != null && walletAddress != null) {
+                    return new DummyExchangeAndWalletAndSource(fiatCurrency, Currencies.LEO, walletAddress);
+                }
+            }
         }
         return null;
     }

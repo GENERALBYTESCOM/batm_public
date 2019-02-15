@@ -93,7 +93,8 @@
                 <cryptocurrency>FLASH</cryptocurrency>
             </ratesource>
             <ratesource prefix="fixprice" name ="Fix Price Universal" >
-                <param name="fiatcurrency" />
+                <param name="price"/>
+                <param name="fiatcurrency"/>
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>BCH</cryptocurrency>
                 <cryptocurrency>BTCP</cryptocurrency>
@@ -135,6 +136,7 @@
                 <cryptocurrency>ANON</cryptocurrency>
                 <cryptocurrency>USDT</cryptocurrency>
                 <cryptocurrency>XZC</cryptocurrency>
+                <help>USD is default fiat currency.</help>
             </ratesource>
             <paymentprocessor prefix="bitcoinpay" name="BitcoinPay.com" >
                 <param name="apikey" />
@@ -212,6 +214,11 @@
             <cryptocurrency>LTC</cryptocurrency>
             <help>You can specify optional parameter priority to increase the network fee paid in the given transaction. Options are low, medium, high and will pay 1x, 2x, and 3x the minimum network fees possible on the network, respectively. If not specified, low will be used.</help>
         </wallet>
+        <wallet prefix="dogedemo" name="Dogecoin Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
+            <cryptocurrency>DOGE</cryptocurrency>
+        </wallet>
         <wallet prefix="dogecoind" name="Dogecoind">
             <param name="protocol" />
             <param name="user" />
@@ -240,6 +247,11 @@
             <param name="host" />
             <param name="port" />
             <param name="accountname" />
+            <cryptocurrency>FLASH</cryptocurrency>
+        </wallet>
+        <wallet prefix="flashdemo" name="Flashcoin Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
             <cryptocurrency>FLASH</cryptocurrency>
         </wallet>
         <ratesource prefix="flashfix" name ="Fix Price" >
@@ -277,6 +289,11 @@
             <param name="accountname" />
             <cryptocurrency>VIA</cryptocurrency>
         </wallet>
+        <wallet prefix="viademo" name="Viacoin Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
+            <cryptocurrency>VIA</cryptocurrency>
+        </wallet>
         <ratesource prefix="viafix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>VIA</cryptocurrency>
@@ -296,6 +313,11 @@
             <param name="host" />
             <param name="port" />
             <param name="accountname" />
+            <cryptocurrency>WDC</cryptocurrency>
+        </wallet>
+        <wallet prefix="wdcdemo" name="Worldcoin Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
             <cryptocurrency>WDC</cryptocurrency>
         </wallet>
         <ratesource prefix="cd" name="Cryptodiggers" >
@@ -339,6 +361,11 @@
       <param name="accountname" />
       <cryptocurrency>SYS</cryptocurrency>
     </wallet>
+    <wallet prefix="sysdemo" name="Syscoin Demo Wallet">
+        <param name="fiatCurrency" />
+        <param name="walletAddress" />
+        <cryptocurrency>SYS</cryptocurrency>
+    </wallet>
     <ratesource prefix="syscoinfix" name ="Fix Price" >
       <param name="price" />
       <cryptocurrency>SYS</cryptocurrency>
@@ -353,6 +380,11 @@
             <param name="host" />
             <param name="port" />
             <param name="accountname" />
+            <cryptocurrency>DGB</cryptocurrency>
+        </wallet>
+        <wallet prefix="dgbdemo" name="Digibyte Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
             <cryptocurrency>DGB</cryptocurrency>
         </wallet>
         <ratesource prefix="digibytefix" name ="Fix Price" >
@@ -376,6 +408,11 @@
             <param name="accountname" />
             <cryptocurrency>MAX</cryptocurrency>
         </wallet>
+        <wallet prefix="maxdemo" name="Maxcoin Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
+            <cryptocurrency>MAX</cryptocurrency>
+        </wallet>
         <ratesource prefix="maxcointicker" name="Maxcointicker.com" >
             <cryptocurrency>MAX</cryptocurrency>
         </ratesource>
@@ -396,6 +433,11 @@
             <param name="accountname" />
             <cryptocurrency>LEO</cryptocurrency>
         </wallet>
+        <wallet prefix="leodemo" name="Leocoin Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
+            <cryptocurrency>LEO</cryptocurrency>
+        </wallet>
         <ratesource prefix="leofix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>LEO</cryptocurrency>
@@ -408,6 +450,11 @@
             <param name="host" />
             <param name="port" />
             <param name="accountid" />
+            <cryptocurrency>TKN</cryptocurrency>
+        </wallet>
+        <wallet prefix="tkndemo" name="Tokencoin Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
             <cryptocurrency>TKN</cryptocurrency>
         </wallet>
         <ratesource prefix="tknfix" name ="Fix Price" >
@@ -425,6 +472,11 @@
             <param name="host" />
             <param name="port" />
             <param name="accountname" />
+            <cryptocurrency>NLG</cryptocurrency>
+        </wallet>
+        <wallet prefix="nlgdemo" name="Gulden Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
             <cryptocurrency>NLG</cryptocurrency>
         </wallet>
         <ratesource prefix="nlgfix" name ="Fix Price" >
@@ -447,6 +499,11 @@
             <param name="accountname" />
             <cryptocurrency>GRS</cryptocurrency>
         </wallet>
+        <wallet prefix="grsdemo" name="Groestlcoin Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
+            <cryptocurrency>GRS</cryptocurrency>
+        </wallet>
         <ratesource prefix="grsfix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>GRS</cryptocurrency>
@@ -465,6 +522,11 @@
             <param name="host" />
             <param name="port" />
             <param name="accountname" />
+            <cryptocurrency>SMART</cryptocurrency>
+        </wallet>
+        <wallet prefix="smartdemo" name="Smartcash Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
             <cryptocurrency>SMART</cryptocurrency>
         </wallet>
         <ratesource prefix="smartfix" name ="Fix Price" >
@@ -488,6 +550,11 @@
             <param name="accountname" />
             <cryptocurrency>START</cryptocurrency>
         </wallet>
+        <wallet prefix="startdemo" name="Startcoin Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
+            <cryptocurrency>START</cryptocurrency>
+        </wallet>
         <ratesource prefix="startfix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>START</cryptocurrency>
@@ -505,6 +572,11 @@
             <param name="accountname" />
             <cryptocurrency>NBT</cryptocurrency>
         </wallet>
+        <wallet prefix="nbtdemo" name="Nubits Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
+            <cryptocurrency>NBT</cryptocurrency>
+        </wallet>
         <ratesource prefix="nbtfix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>NBT</cryptocurrency>
@@ -518,6 +590,11 @@
             <param name="password" />
             <param name="masterPassword" />
             <param name="accountRS" />
+            <cryptocurrency>NXT</cryptocurrency>
+        </wallet>
+        <wallet prefix="nxtdemo" name="NXT Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
             <cryptocurrency>NXT</cryptocurrency>
         </wallet>
         <ratesource prefix="nxtfix" name ="Fix Price" >
@@ -538,6 +615,11 @@
             <param name="nodeAddress" />
             <param name="useSSL" />
             <param name="nodePort" />
+            <cryptocurrency>BURST</cryptocurrency>
+        </wallet>
+        <wallet prefix="burstdemo" name="Burst Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
             <cryptocurrency>BURST</cryptocurrency>
         </wallet>
         <ratesource prefix="burstfix" name ="Fix Price" >
@@ -561,6 +643,11 @@
             <param name="accountname" />
             <cryptocurrency>$PAC</cryptocurrency>
         </wallet>
+         <wallet prefix="pacdemo" name="Pac Demo Wallet">
+             <param name="fiatCurrency" />
+             <param name="walletAddress" />
+             <cryptocurrency>$PAC</cryptocurrency>
+         </wallet>
         <ratesource prefix="paccoinfix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>$PAC</cryptocurrency>
@@ -573,6 +660,11 @@
             <param name="publicKey" />
             <param name="privateKey" />
             <param name="walletId" />
+            <cryptocurrency>POT</cryptocurrency>
+        </wallet>
+        <wallet prefix="potdemo" name="Potcoin Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
             <cryptocurrency>POT</cryptocurrency>
         </wallet>
         <ratesource prefix="potfix" name ="Fix Price" >
@@ -609,6 +701,11 @@
             <param name="accountname" />
             <cryptocurrency>BTX</cryptocurrency>
         </wallet>
+        <wallet prefix="btxdemo" name="Bitcore Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
+            <cryptocurrency>BTX</cryptocurrency>
+        </wallet>
         <ratesource prefix="btxfix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>BTX</cryptocurrency>
@@ -624,6 +721,11 @@
             <param name="host" />
             <param name="port" />
             <param name="accountname" />
+            <cryptocurrency>SUM</cryptocurrency>
+        </wallet>
+        <wallet prefix="sumdemo" name="Sumcoin Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
             <cryptocurrency>SUM</cryptocurrency>
         </wallet>
         <ratesource prefix="sumcoinindex" name="Sumcoinindex" >
@@ -646,6 +748,11 @@
             <param name="accountname" />
             <cryptocurrency>BSD</cryptocurrency>
         </wallet>
+        <wallet prefix="bsddemo" name="Bitsend Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
+            <cryptocurrency>BSD</cryptocurrency>
+        </wallet>
         <ratesource prefix="bsdfix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>BSD</cryptocurrency>
@@ -660,6 +767,11 @@
             <param name="host" />
             <param name="port" />
             <param name="accountname" />
+            <cryptocurrency>BTDX</cryptocurrency>
+        </wallet>
+        <wallet prefix="btdxdemo" name="Bitcloud Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
             <cryptocurrency>BTDX</cryptocurrency>
         </wallet>
         <ratesource prefix="btdxfix" name ="Fix Price" >
@@ -678,6 +790,11 @@
             <param name="accountname" />
             <cryptocurrency>MEC</cryptocurrency>
         </wallet>
+        <wallet prefix="mecdemo" name="Megacoin Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
+            <cryptocurrency>MEC</cryptocurrency>
+        </wallet>
         <ratesource prefix="mecfix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>MEC</cryptocurrency>
@@ -693,6 +810,11 @@
             <param name="host" />
             <param name="port" />
             <param name="accountname" />
+            <cryptocurrency>FTO</cryptocurrency>
+        </wallet>
+        <wallet prefix="ftodemo" name="Futurocoin Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
             <cryptocurrency>FTO</cryptocurrency>
         </wallet>
         <ratesource prefix="yobit" name="Yobit">
@@ -725,6 +847,11 @@
             <param name="accountname" />
             <cryptocurrency>EFL</cryptocurrency>
         </wallet>
+        <wallet prefix="efldemo" name="Egulden Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
+            <cryptocurrency>EFL</cryptocurrency>
+        </wallet>
         <cryptologo cryptocurrency="EFL" file="efl.png"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.bitcoinprivate.BitcoinPrivateExtension" >
@@ -737,6 +864,11 @@
             <param name="accountname" />
             <cryptocurrency>BTCP</cryptocurrency>
         </wallet>
+        <wallet prefix="btcpdemo" name="BitcoinPrivate Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
+            <cryptocurrency>BTCP</cryptocurrency>
+        </wallet>
         <ratesource prefix="btcpfix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>BTCP</cryptocurrency>
@@ -744,13 +876,18 @@
         <cryptologo cryptocurrency="BTCP" file="btcp.png"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.electra.ElectraExtension" >
-        <wallet prefix="electra" name="Electracoin">
+        <wallet prefix="electrad" name="Electracoin">
             <param name="protocol" />
             <param name="user" />
             <param name="password" />
             <param name="host" />
             <param name="port" />
             <param name="accountname" />
+            <cryptocurrency>ECA</cryptocurrency>
+        </wallet>
+        <wallet prefix="ecademo" name="Electra Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
             <cryptocurrency>ECA</cryptocurrency>
         </wallet>
         <ratesource prefix="electrafix" name ="Fix Price" >
@@ -769,6 +906,11 @@
             <param name="accountname" />
             <cryptocurrency>LINDA</cryptocurrency>
         </wallet>
+        <wallet prefix="lindademo" name="Linda Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
+            <cryptocurrency>LINDA</cryptocurrency>
+        </wallet>
         <ratesource prefix="lindafix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>LINDA</cryptocurrency>
@@ -783,6 +925,11 @@
             <param name="host" />
             <param name="port" />
             <param name="accountname" />
+            <cryptocurrency>XZC</cryptocurrency>
+        </wallet>
+        <wallet prefix="xzcdemo" name="Zcoin Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
             <cryptocurrency>XZC</cryptocurrency>
         </wallet>
         <ratesource prefix="zcoinfix" name ="Fix Price" >
@@ -802,6 +949,11 @@
             <param name="accountname" />
             <cryptocurrency>ANON</cryptocurrency>
         </wallet>
+        <wallet prefix="anondemo" name="ANON Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
+            <cryptocurrency>ANON</cryptocurrency>
+        </wallet>
         <ratesource prefix="anonfix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>ANON</cryptocurrency>
@@ -819,6 +971,11 @@
             <param name="accountname" />
             <cryptocurrency>CLOAK</cryptocurrency>
         </wallet>
+        <wallet prefix="cloakdemo" name="Cloakcoin Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
+            <cryptocurrency>CLOAK</cryptocurrency>
+        </wallet>
         <ratesource prefix="cloakcoinfix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>CLOAK</cryptocurrency>
@@ -831,6 +988,11 @@
             <param name="address" />
             <param name="binanceApiKey" />
             <param name="binanceApiSecret" />
+            <cryptocurrency>LSK</cryptocurrency>
+        </wallet>
+        <wallet prefix="lskdemo" name="Lisk Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
             <cryptocurrency>LSK</cryptocurrency>
         </wallet>
         <ratesource prefix="lskFix" name ="Fix Price" >

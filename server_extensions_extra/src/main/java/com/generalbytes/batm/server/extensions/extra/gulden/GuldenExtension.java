@@ -58,6 +58,18 @@ public class GuldenExtension extends AbstractExtension{
                     return new GuldendRPCWallet(rpcURL,accountName);
                 }
             }
+            if ("nlgdemo".equalsIgnoreCase(walletType)) {
+
+                String fiatCurrency = st.nextToken();
+                String walletAddress = "";
+                if (st.hasMoreTokens()) {
+                    walletAddress = st.nextToken();
+                }
+
+                if (fiatCurrency != null && walletAddress != null) {
+                    return new DummyExchangeAndWalletAndSource(fiatCurrency, Currencies.NLG, walletAddress);
+                }
+            }
         }
         return null;
     }

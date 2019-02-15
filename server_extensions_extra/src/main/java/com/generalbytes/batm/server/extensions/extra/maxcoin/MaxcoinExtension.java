@@ -58,6 +58,18 @@ public class MaxcoinExtension extends AbstractExtension{
                     return new MaxcoindRPCWallet(rpcURL,accountName);
                 }
             }
+            if ("maxdemo".equalsIgnoreCase(walletType)) {
+
+                String fiatCurrency = st.nextToken();
+                String walletAddress = "";
+                if (st.hasMoreTokens()) {
+                    walletAddress = st.nextToken();
+                }
+
+                if (fiatCurrency != null && walletAddress != null) {
+                    return new DummyExchangeAndWalletAndSource(fiatCurrency, Currencies.MAX, walletAddress);
+                }
+            }
         }
         return null;
     }

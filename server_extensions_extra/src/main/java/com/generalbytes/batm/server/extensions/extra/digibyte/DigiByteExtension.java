@@ -19,6 +19,7 @@ package com.generalbytes.batm.server.extensions.extra.digibyte;
 
 import com.generalbytes.batm.server.extensions.AbstractExtension;
 import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.server.extensions.DummyExchangeAndWalletAndSource;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.IWallet;
@@ -63,6 +64,18 @@ public class DigiByteExtension extends AbstractExtension {
           return new DigiByteRPCWallet(rpcURL, accountName);
         }
       }
+        if ("dgbdemo".equalsIgnoreCase(walletType)) {
+
+            String fiatCurrency = st.nextToken();
+            String walletAddress = "";
+            if (st.hasMoreTokens()) {
+                walletAddress = st.nextToken();
+            }
+
+            if (fiatCurrency != null && walletAddress != null) {
+                return new DummyExchangeAndWalletAndSource(fiatCurrency, Currencies.DGB, walletAddress);
+            }
+        }
     }
     return null;
   }

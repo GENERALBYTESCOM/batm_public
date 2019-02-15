@@ -25,11 +25,13 @@ import com.generalbytes.batm.server.extensions.payment.IPaymentSupport;
 public class CryptoCurrencyDefinition implements ICryptoCurrencyDefinition {
     private String symbol;
     private String name;
-    private  String authorWebsiteURL;
+    private String protocol;
+    private String authorWebsiteURL;
 
-    public CryptoCurrencyDefinition(String symbol, String name, String authorWebsiteURL) {
+    public CryptoCurrencyDefinition(String symbol, String name, String protocol, String authorWebsiteURL) {
         this.symbol = symbol;
         this.name = name;
+        this.protocol = protocol;
         this.authorWebsiteURL = authorWebsiteURL;
     }
 
@@ -51,5 +53,10 @@ public class CryptoCurrencyDefinition implements ICryptoCurrencyDefinition {
     @Override
     public IPaymentSupport getPaymentSupport() {
         return null;
+    }
+
+    @Override
+    public String getProtocol() {
+        return protocol;
     }
 }

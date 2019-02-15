@@ -18,8 +18,11 @@
 package com.generalbytes.batm.server.extensions.extra.sumcoin;
 
 import com.generalbytes.batm.server.extensions.AbstractExtension;
+import com.generalbytes.batm.server.extensions.CryptoCurrencyDefinition;
 import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.server.extensions.DummyExchangeAndWalletAndSource;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
+import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
@@ -31,14 +34,12 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-public class SumcoinExtension extends AbstractExtension{
-    public static String getCoinSymbol (){
-        return Currencies.SUM;
-    }
+public class SumcoinExtension extends AbstractExtension {
+    private static final CryptoCurrencyDefinition DEFINITION = new SumcoinDefinition();
 
     @Override
     public String getName() {
-        return "BATM SumCoin extension";
+        return "BATM Sumcoin extension";
     }
 
     @Override
@@ -66,6 +67,18 @@ public class SumcoinExtension extends AbstractExtension{
                     return new SumcoinRPCWallet(rpcURL,accountName);
                 }
             }
+            if ("sumdemo".equalsIgnoreCase(walletType)) {
+
+                String fiatCurrency = st.nextToken();
+                String walletAddress = "";
+                if (st.hasMoreTokens()) {
+                    walletAddress = st.nextToken();
+                }
+
+                if (fiatCurrency != null && walletAddress != null) {
+                    return new DummyExchangeAndWalletAndSource(fiatCurrency, Currencies.SUM, walletAddress);
+                }
+            }
         }
         return null;
     }
@@ -83,7 +96,7 @@ public class SumcoinExtension extends AbstractExtension{
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(sourceLogin,":");
             String exchangeType = st.nextToken();
-            
+
             if ("sumcoinindex".equalsIgnoreCase(exchangeType)) {
                 if (st.hasMoreTokens()) {
                     return new SumcoinindexRateSource(st.nextToken().toUpperCase());
@@ -115,4 +128,12 @@ public class SumcoinExtension extends AbstractExtension{
         result.add(Currencies.SUM);
         return result;
     }
+
+    @Override
+    public Set<ICryptoCurrencyDefinition> getCryptoCurrencyDefinitions() {
+        Set<ICryptoCurrencyDefinition> result = new HashSet<>();
+        result.add(DEFINITION);
+        return result;
+    }
+
 }
