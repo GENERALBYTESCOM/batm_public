@@ -135,6 +135,7 @@
                 <cryptocurrency>ANON</cryptocurrency>
                 <cryptocurrency>USDT</cryptocurrency>
                 <cryptocurrency>XZC</cryptocurrency>
+                <cryptocurrency>ANK</cryptocurrency>
             </ratesource>
             <paymentprocessor prefix="bitcoinpay" name="BitcoinPay.com" >
                 <param name="apikey" />
