@@ -70,6 +70,7 @@ public class Currencies {
     public static final String WDC      = "WDC";    // WorldCoin
     public static final String XMR      = "XMR";    // Monero
     public static final String XZC      = "XZC";    // Zcoin
+    public static final String NULS      = "NULS";    // NULS
 
     public static final String AED      = "AED";    // United Arab Emirates dirham
     public static final String AMD      = "AMD";    // Armenian dram
@@ -186,6 +187,7 @@ public class Currencies {
         crypto.add(WDC);
         crypto.add(XMR);
         crypto.add(XZC);
+        crypto.add(NULS);
 
         CRYPTO_CURRENCIES = Collections.unmodifiableList(crypto);
 

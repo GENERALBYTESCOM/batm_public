@@ -1063,4 +1063,31 @@
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.TransactionExtension" />-->
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.rest.RESTExampleExtension" />-->
     <extension class="com.generalbytes.batm.server.extensions.extra.examples.chat.ChatBotExtensionExample" />
+    <extension class="com.generalbytes.batm.server.extensions.extra.nuls.NulsExtension" >
+        <wallet prefix="nulsBinance" name="NULS">
+            <param name="address" />
+            <param name="binanceApiKey" />
+            <param name="binanceApiSecret" />
+            <cryptocurrency>NULS</cryptocurrency>
+        </wallet>
+        <wallet prefix="nulsDemo" name="NULS Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
+            <cryptocurrency>NULS</cryptocurrency>
+        </wallet>
+        <ratesource prefix="nulsFix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>NULS</cryptocurrency>
+        </ratesource>
+        <ratesource prefix="binanceRateSource" name ="Binance Rate Source for Nuls" >
+            <param name="fiatCurrency" />
+            <param name="coinmarketcapApiKey"/>
+            <cryptocurrency>NULS</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="NULS" file="nuls.png"/>
+        <cryptologo cryptocurrency="NULS" file="nuls.svg"/>
+    </extension>
 </extensions>
