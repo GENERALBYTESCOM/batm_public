@@ -1,4 +1,5 @@
-/*************************************************************************************
+/*
+ *
  * Copyright (C) 2014-2018 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
@@ -14,7 +15,7 @@
  * GENERAL BYTES s.r.o.
  * Web      :  http://www.generalbytes.com
  *
- ************************************************************************************/
+ */
 package com.generalbytes.batm.server.extensions.extra.nuls.source.binance;
 
 import javax.ws.rs.GET;
