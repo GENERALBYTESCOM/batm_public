@@ -46,10 +46,49 @@ import wf.bitcoin.javabitcoindrpcclient.BitcoindRpcClient;
 public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
     private static final Logger log = LoggerFactory.getLogger("batm.master.RPCPaymentSupport");
 
-
-    private final Map<PaymentRequest, PaymentTracker> requests = new HashMap<>();
     private IExtensionContext ctx;
+    private final Map<PaymentRequest, PaymentTracker> requests = new HashMap<>();
     private final Map<RPCClient, IBlockchainWatcher> watchers = new HashMap<>();
+
+
+    @Override
+    public boolean init(IExtensionContext ctx) {
+        this.ctx = ctx;
+        if (ctx != null) {
+            ctx.addTask("PaymentRequestTimeoutInvalidator-" + getCurrency(), new PaymentRequestTimeoutInvalidatorTask(), null);
+        }
+        log_info("Payment support initialized.");
+        log_debug("Debug mode enabled.");
+        return true;
+    }
+
+    public abstract String getCurrency();
+    public abstract BigDecimal getMinimumNetworkFee(RPCClient client);
+    public abstract BigDecimal getTolerance();
+    public abstract long getMaximumWatchingTimeMillis();
+    public abstract long getMaximumWaitForPossibleRefundInMillis();
+    public abstract int calculateTransactionSize(int numberOfInputs, int numberOfOutputs);
+    public abstract BigDecimal calculateTxFee(int numberOfInputs, int numberOfOutputs, RPCClient client);
+    public abstract ICryptoAddressValidator getAddressValidator();
+
+    private void log_info(String message) {
+        log.info(getCurrency() + ": " + message);
+    }
+    private void log_debug(String message) {
+        log.debug(getCurrency() + ": " + message);
+    }
+    private void log_warn(String message) {
+        log.warn(getCurrency() + ": " + message);
+    }
+    private void log_error(String message, Throwable e) {
+        log.error(getCurrency() + ": " + message, e);
+    }
+
+    public String getSigHashType() {
+        return "ALL";
+    }
+
+
 
 
     private RPCClient getClient(IWallet wallet) {
@@ -78,20 +117,18 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
         return watcher;
     }
 
-
-
-    @Override
-    public boolean init(IExtensionContext ctx) {
-        this.ctx = ctx;
-        if (ctx != null) {
-            ctx.addTask("PaymentRequestTimeoutInvalidator-" + getCurrency(), new PaymentRequestTimeoutInvalidatorTask(), null);
+    private static boolean hasHashOfOne(BitcoindRpcClient.RawTransaction transaction, List<BitcoindRpcClient.RawTransaction> transactions) {
+        if (transaction == null || transactions == null || transactions.isEmpty()) {
+            return false;
         }
-        log_info("Payment support initialized.");
-        log_debug("Debug mode enabled.");
-        return true;
+        for (BitcoindRpcClient.RawTransaction tx : transactions) {
+            if (tx.txId().equals(transaction.txId())) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    public abstract String getCurrency();
 
 
     class PaymentRequestTimeoutInvalidatorTask implements ITask {
@@ -169,16 +206,16 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
         }
     }
 
-    public abstract long getMaximumWatchingTimeMillis();
+
 
     class PaymentTracker implements IBlockchainWatcherAddressListener, IBlockchainWatcherTransactionListener {
-        private boolean performForward;
-        private PaymentRequest request;
-        private IPaymentRequestSpecification spec;
-        private List<BitcoindRpcClient.RawTransaction> incomingTransactions = new ArrayList<>();
-        private List<BitcoindRpcClient.RawTransaction> outgoingTransactions = new ArrayList<>();
         private long createdAt;
         private boolean seenInBlockChain = false;
+        private boolean performForward;
+        private IPaymentRequestSpecification spec;
+        private PaymentRequest request;
+        private List<BitcoindRpcClient.RawTransaction> incomingTransactions = new ArrayList<>();
+        private List<BitcoindRpcClient.RawTransaction> outgoingTransactions = new ArrayList<>();
 
         public PaymentTracker(boolean performForward, PaymentRequest request, IPaymentRequestSpecification spec) {
             this.performForward = performForward;
@@ -202,21 +239,9 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
                 fireStateChanged(request, previousState);
                 previousState = request.getState();
                 request.setState(PaymentRequest.STATE_REMOVED);
-                fireStateChanged(request,previousState);
+                fireStateChanged(request, previousState);
                 stopListening();
             }  // ELSE make it possible to receive payment (and send it as refund)
-        }
-
-        private boolean hasHashOfOne(BitcoindRpcClient.RawTransaction transaction, List<BitcoindRpcClient.RawTransaction> transactions) {
-            if (transaction == null || transactions == null || transactions.isEmpty()) {
-                return false;
-            }
-            for (BitcoindRpcClient.RawTransaction tx : transactions) {
-                if (tx.txId().equals(transaction.txId())) {
-                    return true;
-                }
-            }
-            return false;
         }
 
         @Override
@@ -247,7 +272,7 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
                         if (hasHashOfOne(transaction, outgoingTransactions)) {
                             direction = IPaymentRequestListener.Direction.OUTGOING;
                         }
-                        fireNumberOfConfirmationsChanged(request,numberOfConfirmations,direction);
+                        fireNumberOfConfirmationsChanged(request, numberOfConfirmations,direction);
                         //transaction is waiting to be removed
                         if (direction == IPaymentRequestListener.Direction.INCOMING) {
                             if (numberOfConfirmations >= request.getRemoveAfterNumberOfConfirmationsOfIncomingTransaction()) {
@@ -297,7 +322,6 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
                     }
 
                     if (addressMatched) {
-
                         if (request.getState() == PaymentRequest.STATE_TRANSACTION_TIMED_OUT || (createdAt + (spec.getValidInSeconds() * 1000)) < System.currentTimeMillis()) {
                             log_warn("PaymentTransactionListener.onTransaction - Transaction ignored, it came too late.");
 
@@ -337,9 +361,7 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
 
                         if (exactMatch || matchInTolerance) {
                             if (!performForward) {
-
                                 // It is not forwarding transaction
-
                                 log_info("PaymentTransactionListener.onTransaction - Amounts matched " + (exactMatch ? "exactly" : "") + (matchInTolerance ? "in tolerance" : "") + " " + request.getAddress()
                                     + ". NOT Creating forwarding transaction. " + request.getLogInfoWatchingFor());
                                 request.setTxValue(totalCoinsReceived);
@@ -352,9 +374,7 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
                                 fireStateChanged(request, previousState);
                                 fireNumberOfConfirmationsChanged(request, 0, IPaymentRequestListener.Direction.INCOMING);
                             }else{
-
                                 // It is forwarding transaction
-
                                 log_info("Amounts matched " + (exactMatch ? "exactly" : "") + (matchInTolerance ? "in tolerance" : "") + " " + request.getAddress() + ". Creating forwarding transaction. " + request.getLogInfoWatchingFor() + "\ntx = " + tx);
                                 TXForBroadcast newTx = createTransaction(tx.raw(), request, spec, toleranceRemain);
                                 if (newTx != null) {
@@ -365,11 +385,11 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
                                     int previousState = request.getState();
                                     request.setState(PaymentRequest.STATE_SEEN_TRANSACTION);
                                     outgoingTransactions.add(newTx.rawTx);
-                                    log_debug("PaymentTransactionListener.onTransaction - Serialized transaction: " + newTx.hex);
-                                    log_debug("PaymentTransactionListener.onTransaction - Broadcast transaction = " + newTx.rawTx);
+                                    log_debug("PaymentTransactionListener.onTransaction - Serialized transaction: " + newTx.rawTxSerializedHex);
+                                    log_debug("PaymentTransactionListener.onTransaction - Broadcast transaction: " + newTx.rawTx);
 
                                     startWatchingTransaction(getClient(request.getWallet()), request.getCryptoCurrency(), tx.txId(), this, tx.raw());
-                                    getClient(request.getWallet()).sendRawTransaction(newTx.hex);
+                                    getClient(request.getWallet()).sendRawTransaction(newTx.rawTxSerializedHex);
                                     startWatchingTransaction(getClient(request.getWallet()), request.getCryptoCurrency(), newTx.rawTx.txId(), this, newTx.rawTx);
 
                                     fireStateChanged(request, previousState);
@@ -413,10 +433,10 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
                         request.setAsAlreadyRefunded();
                         TXForBroadcast newTx = createRefundTransaction(tx.raw(), request, spec);
                         if (newTx != null) {
-                            log_debug("PaymentTransactionListener.onTransaction - Serialized refund transaction: " + newTx.hex);
+                            log_debug("PaymentTransactionListener.onTransaction - Serialized refund transaction: " + newTx.rawTxSerializedHex);
                             log_debug("PaymentTransactionListener.onTransaction - Broadcast refund transaction = " + newTx.rawTx);
                             try {
-                                getClient(request.getWallet()).sendRawTransaction(newTx.hex);
+                                getClient(request.getWallet()).sendRawTransaction(newTx.rawTxSerializedHex);
                             } catch (BitcoinRPCException e) {
                                 e.printStackTrace();
                             }
@@ -442,16 +462,12 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
     }
 
     private void startWatchingTransaction(RPCClient client, String cryptoCurrency, String txId, IBlockchainWatcherTransactionListener l, Object tag) {
-        getWatcher(client).addTransaction(cryptoCurrency,txId,l,tag);
+        getWatcher(client).addTransaction(cryptoCurrency, txId, l, tag);
     }
 
     private void startWatchingAddress(RPCClient client, String cryptoCurrency, String address, IBlockchainWatcherAddressListener l, Object tag) {
-        getWatcher(client).addAddress(cryptoCurrency,address,l,tag);
+        getWatcher(client).addAddress(cryptoCurrency, address, l, tag);
     }
-
-    public abstract BigDecimal getMinimumNetworkFee(RPCClient client);
-
-    public abstract long getMaximumWaitForPossibleRefundInMillis();
 
     @Override
     public PaymentRequest createPaymentRequest(IPaymentRequestSpecification spec) {
@@ -504,12 +520,6 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
         return null;
     }
 
-    public abstract BigDecimal getTolerance();
-
-    protected abstract int calculateTransactionSize(int numberOfInputs, int numberOfOutputs);
-
-    protected abstract BigDecimal calculateTxFee(int numberOfInputs, int numberOfOutputs, RPCClient client);
-
     class TX {
         List<BitcoindRpcClient.TxInput> inputs = new ArrayList<>();
         List<BitcoindRpcClient.TxOutput> outputs = new ArrayList<>();
@@ -533,18 +543,18 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
 
     class TXForBroadcast {
         BitcoindRpcClient.RawTransaction rawTx;
-        String hex;
+        String rawTxSerializedHex;
 
-        public TXForBroadcast(BitcoindRpcClient.RawTransaction rawTx, String hex) {
+        public TXForBroadcast(BitcoindRpcClient.RawTransaction rawTx, String rawTxSerializedHex) {
             this.rawTx = rawTx;
-            this.hex = hex;
+            this.rawTxSerializedHex = rawTxSerializedHex;
         }
 
         @Override
         public String toString() {
             return "TXForBroadcast{" +
                 "rawTx=" + rawTx +
-                ", hex='" + hex + '\'' +
+                ", rawTxSerializedHex='" + rawTxSerializedHex + '\'' +
                 '}';
         }
     }
@@ -602,25 +612,6 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
         return null;
     }
 
-    private void log_info(String message) {
-        log.info(getCurrency() + ": " + message);
-    }
-
-    private void log_debug(String message) {
-        log.debug(getCurrency() + ": " + message);
-    }
-
-    private void log_warn(String message) {
-        log.warn(getCurrency() + ": " + message);
-    }
-
-    private void log_error(String message, Throwable e) {
-        log.error(getCurrency() + ": " + message, e);
-    }
-
-    public String getSigHashType() {
-        return "ALL";
-    }
 
     @SuppressWarnings("Duplicates")
     private TXForBroadcast createRefundTransaction(BitcoindRpcClient.RawTransaction sourceTransaction, PaymentRequest request, IPaymentRequestSpecification spec) {
@@ -685,9 +676,6 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
         }
         return null;
     }
-
-    public abstract ICryptoAddressValidator getAddressValidator();
-
 
     public boolean isPaymentReceived(String paymentAddress){
         synchronized (requests) {

@@ -299,6 +299,9 @@ public class InfoCommand extends AbstractChatCommnad{
                 case BUY_ERROR_PUBLIC_ID_UNKNOWN:
                     error = "PUBLIC ID UNKNOWN";
                     break;
+                case BUY_ERROR_NOT_APPROVED:
+                    error = "NOT APPROVED";
+                    break;
                 default:
                     error = "UNKNOWN";
                     break;
@@ -343,6 +346,9 @@ public class InfoCommand extends AbstractChatCommnad{
                 case SELL_ERROR_PAYMENT_INVALID:
                     error = "INVALID PAYMENT";
                     break;
+                case SELL_ERROR_NOT_APPROVED:
+                    error = "NOT APPROVED";
+                    break;
                 default:
                     error = "UNKNOWN";
                     break;
@@ -371,6 +377,9 @@ public class InfoCommand extends AbstractChatCommnad{
                     break;
                 case WITHDRAW_ERROR_PHONE_NUMBER_UNKNOWN:
                     error = "PHONE NUMBER UNKNOWN";
+                    break;
+                case WITHDRAW_ERROR_NOT_APPROVED:
+                    error = "NOT APPROVED";
                     break;
                 default:
                     error = "UNKNOWN";
