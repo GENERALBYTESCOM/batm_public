@@ -19,7 +19,7 @@ package com.generalbytes.batm.server.extensions.extra.bitsend.wallets.bitsendd;
 
 import wf.bitcoin.javabitcoindrpcclient.BitcoinRPCException;
 import wf.bitcoin.javabitcoindrpcclient.BitcoinJSONRPCClient;
-import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.IWallet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +32,7 @@ import java.util.Set;
 
 public class BitsenddRPCWallet implements IWallet{
     private static final Logger log = LoggerFactory.getLogger(BitsenddRPCWallet.class);
-    private static final String CRYPTO_CURRENCY = Currencies.BSD;
+    private static final String CRYPTO_CURRENCY = CryptoCurrency.BSD.getCode();
 
     public BitsenddRPCWallet(String rpcURL, String accountName) {
         this.rpcURL = rpcURL;

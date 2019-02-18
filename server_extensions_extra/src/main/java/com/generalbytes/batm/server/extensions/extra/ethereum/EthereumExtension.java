@@ -18,7 +18,7 @@
 package com.generalbytes.batm.server.extensions.extra.ethereum;
 
 import com.generalbytes.batm.server.extensions.AbstractExtension;
-import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.ethereum.erc20.ERC20Wallet;
@@ -36,8 +36,8 @@ public class EthereumExtension extends AbstractExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         HashSet<String> result = new HashSet<>();
-        result.add(Currencies.ETH);
-        result.add(Currencies.DAI);
+        result.add(CryptoCurrency.ETH.getCode());
+        result.add(CryptoCurrency.DAI.getCode());
         return result;
     }
 

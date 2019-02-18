@@ -1,7 +1,6 @@
 package com.generalbytes.batm.server.extensions.extra.potcoin.wallets.potwallet;
 
-import com.generalbytes.batm.server.extensions.Currencies;
-import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.IWallet;
 
 import org.slf4j.Logger;
@@ -46,13 +45,13 @@ public class Potwallet implements IWallet {
 
     @Override
     public String getPreferredCryptoCurrency() {
-        return Currencies.POT;
+        return CryptoCurrency.POT.getCode();
     }
 
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(Currencies.POT);
+        result.add(CryptoCurrency.POT.getCode());
         return result;
     }
 

@@ -1,7 +1,7 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2;
 
 import com.generalbytes.batm.server.extensions.Converters;
-import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.BitGoCoinRequest;
@@ -100,15 +100,26 @@ public class BitgoWallet implements IWallet {
     }
 
     private int toSatoshis(BigDecimal amount, String cryptoCurrency) {
-        switch(cryptoCurrency) {
-            case Currencies.BTC: return amount.multiply(Converters.BTC).intValue();
-            case Currencies.LTC: return amount.multiply(Converters.LTC).intValue();
-            case Currencies.BCH: return amount.multiply(Converters.BCH).intValue();
+        try {
+            switch (CryptoCurrency.valueOfCode(cryptoCurrency)) {
+                case BTC:
+                    return amount.multiply(Converters.BTC).intValue();
+                case LTC:
+                    return amount.multiply(Converters.LTC).intValue();
+                case BCH:
+                    return amount.multiply(Converters.BCH).intValue();
 
-            case Currencies.TBTC: return amount.multiply(Converters.TBTC).intValue();
-            case Currencies.TLTC: return amount.multiply(Converters.TLTC).intValue();
-            case Currencies.TBCH: return amount.multiply(Converters.TBCH).intValue();
-            default: return amount.multiply(new BigDecimal(1)).intValue();
+                case TBTC:
+                    return amount.multiply(Converters.TBTC).intValue();
+                case TLTC:
+                    return amount.multiply(Converters.TLTC).intValue();
+                case TBCH:
+                    return amount.multiply(Converters.TBCH).intValue();
+                default:
+                    return amount.intValue();
+            }
+        } catch (IllegalArgumentException e) {
+            return amount.intValue();
         }
     }
 
@@ -146,23 +157,23 @@ public class BitgoWallet implements IWallet {
 
     @Override
     public Set<String> getCryptoCurrencies() {
-        HashSet<String> s = new HashSet<String>();
-        s.add(Currencies.BCH);
-        s.add(Currencies.BTC);
-        s.add(Currencies.LTC);
+        HashSet<String> s = new HashSet<>();
+        s.add(CryptoCurrency.BCH.getCode());
+        s.add(CryptoCurrency.BTC.getCode());
+        s.add(CryptoCurrency.LTC.getCode());
 
-        s.add(Currencies.TBCH);
-        s.add(Currencies.TBTC);
-        s.add(Currencies.TRMG);
-        s.add(Currencies.TLTC);
-        s.add(Currencies.TXRP);
-        s.add(Currencies.TETH);
+        s.add(CryptoCurrency.TBCH.getCode());
+        s.add(CryptoCurrency.TBTC.getCode());
+        s.add(CryptoCurrency.TRMG.getCode());
+        s.add(CryptoCurrency.TLTC.getCode());
+        s.add(CryptoCurrency.TXRP.getCode());
+        s.add(CryptoCurrency.TETH.getCode());
         return s;
     }
 
     @Override
     public String getPreferredCryptoCurrency() {
-        return Currencies.BTC;
+        return CryptoCurrency.BTC.getCode();
     }
 
     @Override
@@ -186,16 +197,20 @@ public class BitgoWallet implements IWallet {
             }
 
             Integer balance = (Integer)balanceObject;
-            switch(cryptoCurrency.toUpperCase()) {
-                case Currencies.BTC: return BigDecimal.valueOf(balance.intValue()).divide(Converters.BTC);
-                case Currencies.LTC: return BigDecimal.valueOf(balance.intValue()).divide(Converters.LTC);
-                case Currencies.BCH: return BigDecimal.valueOf(balance.intValue()).divide(Converters.BCH);
-
-                case Currencies.TBTC: return BigDecimal.valueOf(balance.intValue()).divide(Converters.TBTC);
-                case Currencies.TLTC: return BigDecimal.valueOf(balance.intValue()).divide(Converters.TLTC);
-                case Currencies.TBCH: return BigDecimal.valueOf(balance.intValue()).divide(Converters.TBCH);
-                default: return BigDecimal.valueOf(balance.intValue()).divide(new BigDecimal(1));
+            if (CryptoCurrency.BTC.getCode().equals(cryptoCurrency.toUpperCase())) {
+                return BigDecimal.valueOf(balance.intValue()).divide(Converters.BTC);
+            } else if (CryptoCurrency.LTC.getCode().equals(cryptoCurrency.toUpperCase())) {
+                return BigDecimal.valueOf(balance.intValue()).divide(Converters.LTC);
+            } else if (CryptoCurrency.BCH.getCode().equals(cryptoCurrency.toUpperCase())) {
+                return BigDecimal.valueOf(balance.intValue()).divide(Converters.BCH);
+            } else if (CryptoCurrency.TBTC.getCode().equals(cryptoCurrency.toUpperCase())) {
+                return BigDecimal.valueOf(balance.intValue()).divide(Converters.TBTC);
+            } else if (CryptoCurrency.TLTC.getCode().equals(cryptoCurrency.toUpperCase())) {
+                return BigDecimal.valueOf(balance.intValue()).divide(Converters.TLTC);
+            } else if (CryptoCurrency.TBCH.getCode().equals(cryptoCurrency.toUpperCase())) {
+                return BigDecimal.valueOf(balance.intValue()).divide(Converters.TBCH);
             }
+            return BigDecimal.valueOf(balance.intValue()).divide(new BigDecimal(1));
         }catch (Exception e) {
             log.error("", e);
         }

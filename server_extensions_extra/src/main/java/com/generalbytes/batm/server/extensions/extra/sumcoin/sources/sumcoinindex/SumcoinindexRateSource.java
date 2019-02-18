@@ -17,14 +17,11 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.sumcoin.sources.sumcoinindex;
 
-import com.generalbytes.batm.server.extensions.Currencies;
-import com.generalbytes.batm.server.extensions.extra.sumcoin.sources.sumcoinindex.*;
-import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.security.NoSuchAlgorithmException;
-import java.security.KeyManagementException;
 import si.mazi.rescu.RestProxyFactory;
 
 import java.math.BigDecimal;
@@ -37,16 +34,16 @@ public class SumcoinindexRateSource implements IRateSource{
     private static HashMap<String,Long> rateTimes = new HashMap<String, Long>();
     private static final long MAXIMUM_ALLOWED_TIME_OFFSET = 30 * 1000; //30sec
 
-    private String preferedFiatCurrency = Currencies.USD;
+    private String preferedFiatCurrency = FiatCurrency.USD.getCode();
     private ISumcoinindexAPI api;
 
     public SumcoinindexRateSource(String preferedFiatCurrency) {
         this();
-        if (Currencies.EUR.equalsIgnoreCase(preferedFiatCurrency)) {
-            this.preferedFiatCurrency = Currencies.EUR;
+        if (FiatCurrency.EUR.getCode().equalsIgnoreCase(preferedFiatCurrency)) {
+            this.preferedFiatCurrency = FiatCurrency.EUR.getCode();
         }
-        if (Currencies.USD.equalsIgnoreCase(preferedFiatCurrency)) {
-            this.preferedFiatCurrency = Currencies.USD;
+        if (FiatCurrency.USD.getCode().equalsIgnoreCase(preferedFiatCurrency)) {
+            this.preferedFiatCurrency = FiatCurrency.USD.getCode();
         }
     }
 
@@ -56,10 +53,10 @@ public class SumcoinindexRateSource implements IRateSource{
 
     @Override
     public BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency) {
-        if (!(Currencies.SUM.equalsIgnoreCase(cryptoCurrency))) {
+        if (!(CryptoCurrency.SUM.getCode().equalsIgnoreCase(cryptoCurrency))) {
             return null;
         }
-        if (!(Currencies.USD.equalsIgnoreCase(fiatCurrency))) {
+        if (!(FiatCurrency.USD.getCode().equalsIgnoreCase(fiatCurrency))) {
             return null;
         }
 
@@ -94,16 +91,16 @@ public class SumcoinindexRateSource implements IRateSource{
     private BigDecimal getExchangeRateLastSync(String cryptoCurrency, String fiatCurrency) {
 	//String cd_fiatCurrency;
         /*cd_fiatCurrency="2";
-        if(Currencies.USD.equalsIgnoreCase(fiatCurrency)){
+        if(FiatCurrency.USD.getCode().equalsIgnoreCase(fiatCurrency)){
             cd_fiatCurrency="2";
         } */
-        /*if(Currencies.EUR.equalsIgnoreCase(fiatCurrency)){
+        /*if(FiatCurrency.EUR.getCode().equalsIgnoreCase(fiatCurrency)){
             cd_fiatCurrency="1";
         } */
-        if (!(Currencies.SUM.equalsIgnoreCase(cryptoCurrency))) {
+        if (!(CryptoCurrency.SUM.getCode().equalsIgnoreCase(cryptoCurrency))) {
             return null;
         }
-        if (!(Currencies.USD.equalsIgnoreCase(fiatCurrency))) {
+        if (!(FiatCurrency.USD.getCode().equalsIgnoreCase(fiatCurrency))) {
             return null;
         }
         SumcoinindexResponse ticker = api.getTicker();
@@ -121,16 +118,16 @@ public class SumcoinindexRateSource implements IRateSource{
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        //result.add(Currencies.BTC);
-	result.add(Currencies.SUM);
+        //result.add(CryptoCurrency.BTC.getCode());
+	result.add(CryptoCurrency.SUM.getCode());
         return result;
     }
 
     @Override
     public Set<String> getFiatCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(Currencies.USD);
-        //result.add(Currencies.EUR);
+        result.add(FiatCurrency.USD.getCode());
+        //result.add(FiatCurrency.EUR.getCode());
         return result;
     }
 

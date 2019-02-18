@@ -2,7 +2,7 @@ package com.generalbytes.batm.server.extensions.extra.cloakcoin.wallets.cloakcoi
 
 import wf.bitcoin.javabitcoindrpcclient.BitcoinRPCException;
 import wf.bitcoin.javabitcoindrpcclient.BitcoinJSONRPCClient;
-import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.IWallet;
 
 import org.slf4j.Logger;
@@ -16,7 +16,7 @@ import java.util.Set;
 
 public class CloakcoinRPCWallet implements IWallet {
     private static final Logger log = LoggerFactory.getLogger(CloakcoinRPCWallet.class);
-    private static final String CRYPTO_CURRENCY = Currencies.CLOAK;
+    private static final String CRYPTO_CURRENCY = CryptoCurrency.CLOAK.getCode();
 
     public CloakcoinRPCWallet(String rpcURL, String accountName) {
         this.rpcURL = rpcURL;

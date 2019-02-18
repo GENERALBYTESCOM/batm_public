@@ -1,19 +1,22 @@
 package com.generalbytes.batm.server.extensions;
 
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.common.currencies.FiatCurrency;
+
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-
-import static com.generalbytes.batm.server.extensions.Currencies.CRYPTO_CURRENCIES;
-import static com.generalbytes.batm.server.extensions.Currencies.FIAT_CURRENCIES;
 
 /**
  * Created by b00lean on 7/31/14.
  */
 public class FixPriceRateSource implements IRateSource {
-    private BigDecimal rate = BigDecimal.ZERO;
+    private static final List<String> FIAT_CURRENCIES = FiatCurrency.getCodes();
+    private static final List<String> CRYPTO_CURRENCIES = CryptoCurrency.getCodes();
+    private final BigDecimal rate;
 
-    private String preferredFiatCurrency = Currencies.USD;
+    private String preferredFiatCurrency = FiatCurrency.USD.getCode();
 
     public FixPriceRateSource(BigDecimal rate, String preferredFiatCurrency) {
         this.rate = rate;

@@ -33,6 +33,7 @@ artifacts {
 
 dependencies {
     compile project(':server_extensions_api')
+    compile project(':currencies')
     compile(group: 'com.github.Polve', name: 'JavaBitcoindRpcClient', version:javaBitcoindRpcVersion)
     compile(group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25')
     compile(group: 'com.github.mmazi', name: 'rescu', version: '2.0.2')

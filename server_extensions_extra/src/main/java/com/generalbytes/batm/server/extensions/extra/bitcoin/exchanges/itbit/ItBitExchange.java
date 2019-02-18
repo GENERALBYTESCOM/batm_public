@@ -20,8 +20,8 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.itbit;
 
-import com.generalbytes.batm.server.extensions.Currencies;
-import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.XChangeExchange;
 import org.knowm.xchange.ExchangeSpecification;
 import org.knowm.xchange.dto.account.AccountInfo;
@@ -60,16 +60,16 @@ public class ItBitExchange extends XChangeExchange {
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> cryptoCurrencies = new HashSet<>();
-        cryptoCurrencies.add(Currencies.BTC);
+        cryptoCurrencies.add(CryptoCurrency.BTC.getCode());
         return cryptoCurrencies;
     }
 
     @Override
     public Set<String> getFiatCurrencies() {
         Set<String> fiatCurrencies = new HashSet<>();
-        fiatCurrencies.add(Currencies.USD);
-        fiatCurrencies.add(Currencies.EUR);
-        fiatCurrencies.add(Currencies.SGD);
+        fiatCurrencies.add(FiatCurrency.USD.getCode());
+        fiatCurrencies.add(FiatCurrency.EUR.getCode());
+        fiatCurrencies.add(FiatCurrency.SGD.getCode());
         return fiatCurrencies;
     }
 
@@ -90,7 +90,7 @@ public class ItBitExchange extends XChangeExchange {
 
     @Override
     protected String translateCryptoCurrencySymbolToExchangeSpecificSymbol(String from) {
-        if (Currencies.BTC.equalsIgnoreCase(from)) {
+        if (CryptoCurrency.BTC.getCode().equalsIgnoreCase(from)) {
             return "XBT";
         }
         return from;

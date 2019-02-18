@@ -18,6 +18,8 @@
 
 package com.generalbytes.batm.server.extensions.extra.burstcoin;
 
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.burstcoin.sources.poloniex.PoloniexRateSource;
@@ -91,7 +93,7 @@ public class BurstExtension extends AbstractExtension{
                 }
 
                 if (fiatCurrency != null && walletAddress != null) {
-                    return new DummyExchangeAndWalletAndSource(fiatCurrency, Currencies.BURST, walletAddress);
+                    return new DummyExchangeAndWalletAndSource(fiatCurrency, CryptoCurrency.BURST.getCode(), walletAddress);
                 }
             }
         }
@@ -100,7 +102,7 @@ public class BurstExtension extends AbstractExtension{
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (Currencies.BURST.equalsIgnoreCase(cryptoCurrency)) {
+        if (CryptoCurrency.BURST.getCode().equalsIgnoreCase(cryptoCurrency)) {
             return new BurstAddressValidator();
         }
         return null;
@@ -119,7 +121,7 @@ public class BurstExtension extends AbstractExtension{
                         rate = new BigDecimal(st.nextToken());
                     } catch (Throwable ignored) {}
                 }
-                String preferedFiatCurrency = Currencies.USD;
+                String preferedFiatCurrency = FiatCurrency.USD.getCode();
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
@@ -134,7 +136,7 @@ public class BurstExtension extends AbstractExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<>();
-        result.add(Currencies.BURST);
+        result.add(CryptoCurrency.BURST.getCode());
         return result;
     }
 }
