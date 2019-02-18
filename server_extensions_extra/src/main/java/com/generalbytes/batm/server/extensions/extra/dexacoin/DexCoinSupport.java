@@ -17,6 +17,8 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.dexacoin;
 
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 
@@ -26,7 +28,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 public class DexCoinSupport extends AbstractExtension implements IExchange, IWallet, ICryptoAddressValidator {
-    private static final String CRYPTO_CURRENCY = Currencies.DEX;
+    private static final String CRYPTO_CURRENCY = CryptoCurrency.DEX.getCode();
     private static final BigDecimal WALLET_BALANCE = new BigDecimal("1000000");
     private static final BigDecimal EXCHANGE_BALANCE = new BigDecimal("2000000");
     private static final String WALLET_ADDRESS = CRYPTO_CURRENCY.substring(1) + "GnubsaWBQf6J2TTvNLF5xLkMydhTjWsQi";
@@ -40,11 +42,11 @@ public class DexCoinSupport extends AbstractExtension implements IExchange, IWal
     public DexCoinSupport(String preferredFiatCurrency, BigDecimal rate) {
         this.rate = rate;
         this.preferredFiatCurrency = preferredFiatCurrency;
-        if (Currencies.EUR.equalsIgnoreCase(preferredFiatCurrency)) {
-            this.preferredFiatCurrency = Currencies.EUR;
+        if (FiatCurrency.EUR.getCode().equalsIgnoreCase(preferredFiatCurrency)) {
+            this.preferredFiatCurrency = FiatCurrency.EUR.getCode();
         }
-        if (Currencies.USD.equalsIgnoreCase(preferredFiatCurrency)) {
-            this.preferredFiatCurrency = Currencies.USD;
+        if (FiatCurrency.USD.getCode().equalsIgnoreCase(preferredFiatCurrency)) {
+            this.preferredFiatCurrency = FiatCurrency.USD.getCode();
         }
     }
 
@@ -145,7 +147,7 @@ public class DexCoinSupport extends AbstractExtension implements IExchange, IWal
                     } catch (Throwable e) {
                     }
                 }
-                String preferredFiatCurrency = Currencies.USD;
+                String preferredFiatCurrency = FiatCurrency.USD.getCode();
                 if (st.hasMoreTokens()) {
                     preferredFiatCurrency = st.nextToken().toUpperCase();
                 }
@@ -182,7 +184,7 @@ public class DexCoinSupport extends AbstractExtension implements IExchange, IWal
                     } catch (Throwable e) {
                     }
                 }
-                String preferedFiatCurrency = Currencies.USD;
+                String preferedFiatCurrency = FiatCurrency.USD.getCode();
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }

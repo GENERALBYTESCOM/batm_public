@@ -17,7 +17,8 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.lisk.sources.binance;
 
-import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.CoinmarketcapRateSource;
 
@@ -30,28 +31,28 @@ public class BinanceRateSource implements IRateSource {
 
     private BinanceAPI api;
     private final String coinmarketcapApiKey;
-    private String preferredFiatCurrency = Currencies.USD;
+    private String preferredFiatCurrency = FiatCurrency.USD.getCode();
 
     public BinanceRateSource(String preferedFiatCurrency, String coinmarketcapApiKey) {
         this.coinmarketcapApiKey = coinmarketcapApiKey;
         api = RestProxyFactory.createProxy(BinanceAPI.class, "https://api.binance.com");
         
-        if (Currencies.USD.equalsIgnoreCase(preferedFiatCurrency)) {
-            this.preferredFiatCurrency = Currencies.USD;
+        if (FiatCurrency.USD.getCode().equalsIgnoreCase(preferedFiatCurrency)) {
+            this.preferredFiatCurrency = FiatCurrency.USD.getCode();
         }
 
-        if (Currencies.HKD.equalsIgnoreCase(preferedFiatCurrency)) {
-            this.preferredFiatCurrency = Currencies.HKD;
+        if (FiatCurrency.HKD.getCode().equalsIgnoreCase(preferedFiatCurrency)) {
+            this.preferredFiatCurrency = FiatCurrency.HKD.getCode();
         }
     }
 
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(Currencies.BTC);
-        result.add(Currencies.LTC);
-        result.add(Currencies.ETH);
-        result.add(Currencies.LSK);
+        result.add(CryptoCurrency.BTC.getCode());
+        result.add(CryptoCurrency.LTC.getCode());
+        result.add(CryptoCurrency.ETH.getCode());
+        result.add(CryptoCurrency.LSK.getCode());
 
         return result;
     }
@@ -59,8 +60,8 @@ public class BinanceRateSource implements IRateSource {
     @Override
     public Set<String> getFiatCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(Currencies.USD);
-        result.add(Currencies.HKD);
+        result.add(FiatCurrency.USD.getCode());
+        result.add(FiatCurrency.HKD.getCode());
         return result;
     }
 

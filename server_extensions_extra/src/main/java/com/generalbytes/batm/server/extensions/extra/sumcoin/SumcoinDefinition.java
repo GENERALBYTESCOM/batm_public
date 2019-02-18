@@ -18,14 +18,14 @@
 package com.generalbytes.batm.server.extensions.extra.sumcoin;
 
 import com.generalbytes.batm.server.extensions.CryptoCurrencyDefinition;
-import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.payment.IPaymentSupport;
 
 public class SumcoinDefinition extends CryptoCurrencyDefinition{
     private IPaymentSupport paymentSupport = new SumcoinPaymentSupport();
 
     public SumcoinDefinition() {
-        super(Currencies.SUM, "Sumcoin", "sumcoin","https://github.com/sumcoinlabs/sumcoin");
+        super(CryptoCurrency.SUM.getCode(), "Sumcoin", "sumcoin","https://github.com/sumcoinlabs/sumcoin");
     }
 
     @Override

@@ -17,6 +17,8 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.megacoin;
 
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.megacoin.wallets.megacoind.MegacoindRPCWallet;
@@ -66,7 +68,7 @@ public class MegacoinExtension extends AbstractExtension{
                 }
 
                 if (fiatCurrency != null && walletAddress != null) {
-                    return new DummyExchangeAndWalletAndSource(fiatCurrency, Currencies.MEC, walletAddress);
+                    return new DummyExchangeAndWalletAndSource(fiatCurrency, CryptoCurrency.MEC.getCode(), walletAddress);
                 }
             }
         }
@@ -75,7 +77,7 @@ public class MegacoinExtension extends AbstractExtension{
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (Currencies.MEC.equalsIgnoreCase(cryptoCurrency)) {
+        if (CryptoCurrency.MEC.getCode().equalsIgnoreCase(cryptoCurrency)) {
             return new MegacoinAddressValidator();
         }
         return null;
@@ -95,7 +97,7 @@ public class MegacoinExtension extends AbstractExtension{
                     } catch (Throwable e) {
                     }
                 }
-                String preferedFiatCurrency = Currencies.USD;
+                String preferedFiatCurrency = FiatCurrency.USD.getCode();
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
@@ -109,7 +111,7 @@ public class MegacoinExtension extends AbstractExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(Currencies.MEC);
+        result.add(CryptoCurrency.MEC.getCode());
         return result;
     }
 }

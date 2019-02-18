@@ -343,7 +343,7 @@ public class RPCBlockchainWatcher implements IBlockchainWatcher{
 //
 //                }
 //            };
-//            w.addAddress(Currencies.BCH, "qzezfqhxej3nyz3t5pq3vzmhazgkgns5qcvyul5cqj", new IBlockchainWatcherAddressListener() {
+//            w.addAddress(CryptoCurrency.BCH.getCode(), "qzezfqhxej3nyz3t5pq3vzmhazgkgns5qcvyul5cqj", new IBlockchainWatcherAddressListener() {
 //                @Override
 //                public void newTransactionSeen(String cryptoCurrency, String address, String transactionId, int confirmations, Object tag) {
 //                    log.info("New transaction " + transactionId + " seen on address " + address + " confirmations: " + confirmations + " tag:" + tag);

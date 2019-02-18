@@ -17,6 +17,8 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.leocoin;
 
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.leocoin.wallets.leocoind.LeocoindRPCWallet;
@@ -66,7 +68,7 @@ public class LeocoinExtension extends AbstractExtension{
                 }
 
                 if (fiatCurrency != null && walletAddress != null) {
-                    return new DummyExchangeAndWalletAndSource(fiatCurrency, Currencies.LEO, walletAddress);
+                    return new DummyExchangeAndWalletAndSource(fiatCurrency, CryptoCurrency.LEO.getCode(), walletAddress);
                 }
             }
         }
@@ -75,7 +77,7 @@ public class LeocoinExtension extends AbstractExtension{
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (Currencies.LEO.equalsIgnoreCase(cryptoCurrency)) {
+        if (CryptoCurrency.LEO.getCode().equalsIgnoreCase(cryptoCurrency)) {
             return new LeocoinAddressValidator();
         }
         return null;
@@ -95,7 +97,7 @@ public class LeocoinExtension extends AbstractExtension{
                     } catch (Throwable e) {
                     }
                 }
-                String preferedFiatCurrency = Currencies.USD;
+                String preferedFiatCurrency = FiatCurrency.USD.getCode();
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
@@ -109,7 +111,7 @@ public class LeocoinExtension extends AbstractExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(Currencies.LEO);
+        result.add(CryptoCurrency.LEO.getCode());
         return result;
     }
 }

@@ -1,13 +1,12 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.hitbtc;
 
-import com.generalbytes.batm.server.extensions.Currencies;
-import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.XChangeExchange;
 import org.knowm.xchange.ExchangeSpecification;
 import org.knowm.xchange.dto.account.AccountInfo;
 import org.knowm.xchange.dto.account.Wallet;
 
-import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -36,22 +35,22 @@ public class HitbtcExchange extends XChangeExchange {
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> cryptoCurrencies = new HashSet<>();
-        cryptoCurrencies.add(Currencies.BTC);
-        cryptoCurrencies.add(Currencies.ETH);
-        cryptoCurrencies.add(Currencies.LTC);
-        cryptoCurrencies.add(Currencies.SMART);
-        cryptoCurrencies.add(Currencies.BCH);
-        cryptoCurrencies.add(Currencies.DOGE);
-        cryptoCurrencies.add(Currencies.XMR);
-        cryptoCurrencies.add(Currencies.DASH);
-        cryptoCurrencies.add(Currencies.NXT);
+        cryptoCurrencies.add(CryptoCurrency.BTC.getCode());
+        cryptoCurrencies.add(CryptoCurrency.ETH.getCode());
+        cryptoCurrencies.add(CryptoCurrency.LTC.getCode());
+        cryptoCurrencies.add(CryptoCurrency.SMART.getCode());
+        cryptoCurrencies.add(CryptoCurrency.BCH.getCode());
+        cryptoCurrencies.add(CryptoCurrency.DOGE.getCode());
+        cryptoCurrencies.add(CryptoCurrency.XMR.getCode());
+        cryptoCurrencies.add(CryptoCurrency.DASH.getCode());
+        cryptoCurrencies.add(CryptoCurrency.NXT.getCode());
         return cryptoCurrencies;
     }
 
     @Override
     public Set<String> getFiatCurrencies() {
         Set<String> fiatCurrencies = new HashSet<>();
-        fiatCurrencies.add(Currencies.USD);
+        fiatCurrencies.add(FiatCurrency.USD.getCode());
         return fiatCurrencies;
     }
 

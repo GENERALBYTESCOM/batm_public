@@ -18,7 +18,8 @@
 package com.generalbytes.batm.server.extensions.extra.digibyte;
 
 import com.generalbytes.batm.server.extensions.AbstractExtension;
-import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.DummyExchangeAndWalletAndSource;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.IRateSource;
@@ -73,7 +74,7 @@ public class DigiByteExtension extends AbstractExtension {
             }
 
             if (fiatCurrency != null && walletAddress != null) {
-                return new DummyExchangeAndWalletAndSource(fiatCurrency, Currencies.DGB, walletAddress);
+                return new DummyExchangeAndWalletAndSource(fiatCurrency, CryptoCurrency.DGB.getCode(), walletAddress);
             }
         }
     }
@@ -82,7 +83,7 @@ public class DigiByteExtension extends AbstractExtension {
 
   @Override
   public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-    if (Currencies.DGB.equalsIgnoreCase(cryptoCurrency)) {
+    if (CryptoCurrency.DGB.getCode().equalsIgnoreCase(cryptoCurrency)) {
       return new DigiByteAddressValidator();
     }
     return null;
@@ -101,13 +102,13 @@ public class DigiByteExtension extends AbstractExtension {
           } catch (Throwable e) {
           }
         }
-        String preferedFiatCurrency = Currencies.USD;
+        String preferedFiatCurrency = FiatCurrency.USD.getCode();
         if (st.hasMoreTokens()) {
           preferedFiatCurrency = st.nextToken().toUpperCase();
         }
         return new FixPriceRateSource(rate, preferedFiatCurrency);
       } else if ("livecoin".equalsIgnoreCase(exchangeType)) {
-        String preferedFiatCurrency = Currencies.USD;
+        String preferedFiatCurrency = FiatCurrency.USD.getCode();
         if (st.hasMoreTokens()) {
           preferedFiatCurrency = st.nextToken().toUpperCase();
         }
@@ -120,7 +121,7 @@ public class DigiByteExtension extends AbstractExtension {
   @Override
   public Set<String> getSupportedCryptoCurrencies() {
     Set<String> result = new HashSet<String>();
-    result.add(Currencies.DGB);
+    result.add(CryptoCurrency.DGB.getCode());
     return result;
   }
 }

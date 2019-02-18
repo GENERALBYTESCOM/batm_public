@@ -1,7 +1,8 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bittrex;
 
 import com.generalbytes.batm.server.coinutil.DDOSUtils;
-import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.IExchangeAdvanced;
 import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
 import com.generalbytes.batm.server.extensions.ITask;
@@ -46,7 +47,7 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
     }
 
     private static void initConstants() {
-        FIAT_CURRENCIES.add(Currencies.USD);
+        FIAT_CURRENCIES.add(FiatCurrency.USD.getCode());
     }
 
     private synchronized Exchange getExchange() {
@@ -62,10 +63,10 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> cryptoCurrencies = new HashSet<String>();
-        cryptoCurrencies.add(Currencies.BTC);
-        cryptoCurrencies.add(Currencies.BCH);
-        cryptoCurrencies.add(Currencies.ETH);
-        cryptoCurrencies.add(Currencies.LTC);
+        cryptoCurrencies.add(CryptoCurrency.BTC.getCode());
+        cryptoCurrencies.add(CryptoCurrency.BCH.getCode());
+        cryptoCurrencies.add(CryptoCurrency.ETH.getCode());
+        cryptoCurrencies.add(CryptoCurrency.LTC.getCode());
         return cryptoCurrencies;
     }
 
@@ -98,7 +99,7 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
 
     @Override
     public String getPreferredFiatCurrency() {
-        return Currencies.USD;
+        return FiatCurrency.USD.getCode();
     }
 
     @Override
@@ -133,7 +134,7 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
 
     @Override
     public BigDecimal getFiatBalance(String fiatCurrency) {
-        if (!Currencies.USD.equalsIgnoreCase(fiatCurrency)) {
+        if (!FiatCurrency.USD.getCode().equalsIgnoreCase(fiatCurrency)) {
             return BigDecimal.ZERO;
         }
         log.debug("Calling Bittrex exchange (getbalance)");
@@ -154,8 +155,8 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
             log.error("Bittrex implementation supports only " + Arrays.toString(getCryptoCurrencies().toArray()));
             return null;
         }
-        if (!Currencies.USD.equalsIgnoreCase(fiatCurrencyToUse)) {
-            log.error("Bittrex supports only " + Currencies.USD );
+        if (!FiatCurrency.USD.getCode().equalsIgnoreCase(fiatCurrencyToUse)) {
+            log.error("Bittrex supports only " + FiatCurrency.USD.getCode() );
             return null;
         }
 
@@ -197,8 +198,8 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
             log.error("Bittrex implementation supports only " + Arrays.toString(getCryptoCurrencies().toArray()));
             return null;
         }
-        if (!Currencies.USD.equalsIgnoreCase(fiatCurrencyToUse)) {
-            log.error("Bittrex supports only " + Currencies.USD );
+        if (!FiatCurrency.USD.getCode().equalsIgnoreCase(fiatCurrencyToUse)) {
+            log.error("Bittrex supports only " + FiatCurrency.USD.getCode() );
             return null;
         }
 
@@ -411,8 +412,8 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
             log.error("Bittrex implementation supports only " + Arrays.toString(getCryptoCurrencies().toArray()));
             return null;
         }
-        if (!Currencies.USD.equalsIgnoreCase(fiatCurrencyToUse)) {
-            log.error("Bittrex supports only " + Currencies.USD );
+        if (!FiatCurrency.USD.getCode().equalsIgnoreCase(fiatCurrencyToUse)) {
+            log.error("Bittrex supports only " + FiatCurrency.USD.getCode() );
             return null;
         }
         return new BittrexExchange.PurchaseCoinsTask(amount,cryptoCurrency,fiatCurrencyToUse,description);
@@ -424,8 +425,8 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
             log.error("Bittrex implementation supports only " + Arrays.toString(getCryptoCurrencies().toArray()));
             return null;
         }
-        if (!Currencies.USD.equalsIgnoreCase(fiatCurrencyToUse)) {
-            log.error("Bittrex supports only " + Currencies.USD );
+        if (!FiatCurrency.USD.getCode().equalsIgnoreCase(fiatCurrencyToUse)) {
+            log.error("Bittrex supports only " + FiatCurrency.USD.getCode() );
             return null;
         }
         return new BittrexExchange.SellCoinsTask(amount,cryptoCurrency,fiatCurrencyToUse,description);

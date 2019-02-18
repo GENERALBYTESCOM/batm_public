@@ -19,7 +19,8 @@ package com.generalbytes.batm.server.extensions.extra.sumcoin;
 
 import com.generalbytes.batm.server.extensions.AbstractExtension;
 import com.generalbytes.batm.server.extensions.CryptoCurrencyDefinition;
-import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.DummyExchangeAndWalletAndSource;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
@@ -76,7 +77,7 @@ public class SumcoinExtension extends AbstractExtension {
                 }
 
                 if (fiatCurrency != null && walletAddress != null) {
-                    return new DummyExchangeAndWalletAndSource(fiatCurrency, Currencies.SUM, walletAddress);
+                    return new DummyExchangeAndWalletAndSource(fiatCurrency, CryptoCurrency.SUM.getCode(), walletAddress);
                 }
             }
         }
@@ -85,7 +86,7 @@ public class SumcoinExtension extends AbstractExtension {
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (Currencies.SUM.equalsIgnoreCase(cryptoCurrency)) {
+        if (CryptoCurrency.SUM.getCode().equalsIgnoreCase(cryptoCurrency)) {
             return new SumcoinAddressValidator();
         }
         return null;
@@ -101,7 +102,7 @@ public class SumcoinExtension extends AbstractExtension {
                 if (st.hasMoreTokens()) {
                     return new SumcoinindexRateSource(st.nextToken().toUpperCase());
                 }
-                return new SumcoinindexRateSource(Currencies.USD);
+                return new SumcoinindexRateSource(FiatCurrency.USD.getCode());
             }
             else if ("sumfix".equalsIgnoreCase(exchangeType)) {
                 BigDecimal rate = BigDecimal.ZERO;
@@ -111,7 +112,7 @@ public class SumcoinExtension extends AbstractExtension {
                     } catch (Throwable e) {
                     }
                 }
-                String preferedFiatCurrency = Currencies.USD;
+                String preferedFiatCurrency = FiatCurrency.USD.getCode();
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
@@ -125,7 +126,7 @@ public class SumcoinExtension extends AbstractExtension {
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(Currencies.SUM);
+        result.add(CryptoCurrency.SUM.getCode());
         return result;
     }
 
