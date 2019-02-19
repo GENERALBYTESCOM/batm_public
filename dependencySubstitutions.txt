@@ -23,3 +23,4 @@ substitute from: 'com.google.guava:guava:27.0.1-jre', toVersion: '27.0.1-android
 substitute from: 'org.json:json:20080701', toVersion: '20180130'
 substitute from: 'org.json:json:20140107', toVersion: '20180130'
 substitute from: 'org.json:json:20160810', toVersion: '20180130'
+substitute from: 'com.google.j2objc:j2objc-annotations:1.1', toVersion: '1.3' // 1.1 is used by guava but has different checksums on central and jcenter

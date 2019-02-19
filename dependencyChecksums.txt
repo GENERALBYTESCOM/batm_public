@@ -23,7 +23,7 @@ verifyModule 'com.google.errorprone:error_prone_annotations:2.2.0:6ebd22ca1b9d8e
 verifyModule 'com.google.guava:failureaccess:1.0.1:a171ee4c734dd2da837e4b16be9df4661afab72a41adaf31eb84dfdaf936ca26'
 verifyModule 'com.google.guava:guava:27.0.1-android:caf0955aed29a1e6d149f85cfb625a89161b5cf88e0e246552b7ffa358204e28'
 verifyModule 'com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava:b372a037d4230aa57fbeffdef30fd6123f9c0c2db85d0aced00c91b974f33f99'
-verifyModule 'com.google.j2objc:j2objc-annotations:1.1:2994a7eb78f2710bd3d3bfb639b2c94e219cedac0d4d084d516e78c16dddecf6'
+verifyModule 'com.google.j2objc:j2objc-annotations:1.3:21af30c92267bd6122c0e0b4d20cccb6641a37eaf956c6540ec471d584e64a7b'
 verifyModule 'com.google.protobuf:protobuf-java:2.6.1:55aa554843983f431df5616112cf688d38aa17c132357afd1c109435bfdac4e6'
 verifyModule 'com.google.zxing:core:2.3.0:d02eec73f8a247d4bfbf94b6f922090179140330e252f4bad424fc769217ba12'
 verifyModule 'com.lambdaworks:scrypt:1.4.0:9a82d218099fb14c10c0e86e7eefeebd8c104de920acdc47b8b4b7a686fb73b4'
