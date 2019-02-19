@@ -90,6 +90,9 @@ public class BitcoinCashExtension extends AbstractExtension {
 
     @Override
     public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency) {
-        return new BitcoinCashWalletGenerator("qqqq", ctx);
+        if (CryptoCurrency.BCH.getCode().equalsIgnoreCase(cryptoCurrency)) {
+            return new BitcoinCashWalletGenerator("qqqq", ctx);
+        }
+        return null;
     }
 }
