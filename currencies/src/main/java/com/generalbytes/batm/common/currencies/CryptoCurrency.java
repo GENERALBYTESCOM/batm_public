@@ -1,19 +1,47 @@
+/*************************************************************************************
+ * Copyright (C) 2014-2019 GENERAL BYTES s.r.o. All rights reserved.
+ *
+ * This software may be distributed and modified under the terms of the GNU
+ * General Public License version 2 (GPL2) as published by the Free Software
+ * Foundation and appearing in the file GPL2.TXT included in the packaging of
+ * this file. Please note that GPL2 Section 2[b] requires that all works based
+ * on this software must also be made publicly available under the terms of
+ * the GPL2 ("Copyleft").
+ *
+ * Contact information
+ * -------------------
+ *
+ * GENERAL BYTES s.r.o.
+ * Web      :  http://www.generalbytes.com
+ *
+ ************************************************************************************/
 package com.generalbytes.batm.common.currencies;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 
+/**
+ * Crypto Currences
+ *
+ * Usage e.g.:
+ *      CryptoCurrency.USD.getCurrencyName()
+ *      CryptoCurrency.valueOf("USD").getCurrencyName()
+ *      CryptoCurrency.valueOfCode("USD").getCurrencyName()
+ */
 public enum CryptoCurrency {
-    ANT("Aragon Network Token"),
-    ANON("ANON (formerly Anonymous Bitcoin)"),
+
+    ANON("ANON"),
+    ANT("Aragon"),
     BAT("Basic Attention Token"),
     BCH("Bitcoin Cash"),
     BSD("BitSend"),
+    BURST("Burst"),
     BTC("Bitcoin"),
     BTCP("Bitcoin Private"),
     BTDX("Bitcloud"),
     BTX("Bitcore"),
-    BURST("Burst"),
     CLOAK("CloakCoin"),
     DAI("Dai"),
     DASH("Dash"),
@@ -23,13 +51,13 @@ public enum CryptoCurrency {
     ECA("Electra"),
     EFL("e-Gulden"),
     ETH("Ethereum"),
-    FLASH("FLASH Coin"),
+    FLASH("Flash"),
     FTO("FuturoCoin"),
     GRS("Groestlcoin"),
     LEO("LEOcoin"),
     LINDA("Linda"),
-    LTC("Litecoin"),
     LSK("Lisk"),
+    LTC("Litecoin"),
     MAX("Maxcoin"),
     MEC("Megacoin"),
     MKR("Maker"),
@@ -50,16 +78,25 @@ public enum CryptoCurrency {
     XMR("Monero"),
     XZC("Zcoin"),
 
-    TBTC("test BTC"),
-    TXRP("test XRP"),
     TBCH("test BCH"),
-    TRMG("test RMG"),
-    TLTC("test LTC"),
+    TBTC("test BTC"),
     TETH("test ETH"),
+    TLTC("test LTC"),
+    TRMG("test RMG"),
+    TXRP("test XRP"),
     ;
 
-    public final String currencyName;
+    private static Map<String, CryptoCurrency> cryptoCurrencies = new LinkedHashMap<>();
+
+    static {
+        for (CryptoCurrency cc : CryptoCurrency.values()) {
+            cryptoCurrencies.put(cc.code, cc);
+        }
+        cryptoCurrencies = Collections.unmodifiableMap(cryptoCurrencies);
+    }
+
     public final String code;
+    public final String currencyName;
 
     CryptoCurrency(String code, String currencyName) {
         this.currencyName = currencyName;
@@ -68,7 +105,6 @@ public enum CryptoCurrency {
 
     CryptoCurrency(String currencyName) {
         this(null, currencyName);
-
     }
 
     public String getCurrencyName() {
@@ -80,25 +116,13 @@ public enum CryptoCurrency {
     }
 
     /**
-     * @throws IllegalArgumentException
-     * @param cryptoCurrency
-     * @return
+     * Method Enum.valueOf returns same value, but instead of null throws IllegalArgumentException
      */
-    public static CryptoCurrency valueOfCode(String cryptoCurrency) {
-        for (CryptoCurrency c : values()) {
-            if (c.getCode().equalsIgnoreCase(cryptoCurrency)) {
-                return c;
-            }
-        }
-        throw new IllegalArgumentException(cryptoCurrency + " not found");
+    public static CryptoCurrency valueOfCode(String code) {
+        return cryptoCurrencies.get(code);
     }
 
-    public static List<String> getCodes() {
-        CryptoCurrency[] values = values();
-        List<String> res = new ArrayList<>(values.length);
-        for (CryptoCurrency c : values) {
-            res.add(c.getCode());
-        }
-        return res;
+    public static Set<String> getCodes() {
+        return cryptoCurrencies.keySet();
     }
 }

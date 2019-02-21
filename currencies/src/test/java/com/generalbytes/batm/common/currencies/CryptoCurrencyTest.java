@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class CryptoCurrencyTest {
@@ -25,8 +26,8 @@ public class CryptoCurrencyTest {
         assertEquals("$PAC", CryptoCurrency.PAC.getCode());
         for (CryptoCurrency c : CryptoCurrency.values()) {
             assertTrue(c.name() + " code", c.getCode() != null && c.getCurrencyName().length() > 1);
-            assertTrue(c.name() + " code should be uppercase", c.getCode().equals(c.getCode().toUpperCase()));
-            assertTrue(c.name() + " enum should be uppercase", c.name().equals(c.name().toUpperCase()));
+            assertEquals(c.name() + " code should be uppercase", c.getCode(), c.getCode().toUpperCase());
+            assertEquals(c.name() + " enum should be uppercase", c.name(), c.name().toUpperCase());
         }
     }
 
@@ -38,14 +39,19 @@ public class CryptoCurrencyTest {
 
     @Test
     public void valueOfCode() {
-        assertEquals(CryptoCurrency.BTC, CryptoCurrency.valueOfCode("btc"));
-        assertEquals(CryptoCurrency.PAC, CryptoCurrency.valueOfCode("$pAC"));
-        assertEquals(CryptoCurrency.LTC, CryptoCurrency.valueOfCode("LTC"));
+        assertEquals(CryptoCurrency.BTC, CryptoCurrency.valueOfCode("BTC"));
+        assertNull(CryptoCurrency.valueOfCode("btc"));
+        assertEquals(CryptoCurrency.PAC, CryptoCurrency.valueOfCode("$PAC"));
+        assertNull(CryptoCurrency.valueOfCode("PAC"));
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void valueOfCodeException() {
-        CryptoCurrency.valueOfCode("---");
+    public void valueOfException() {
+        CryptoCurrency.valueOf("---");
     }
 
+    @Test
+    public void valueOfCodeException() {
+        assertNull(CryptoCurrency.valueOfCode("---"));
+    }
 }
