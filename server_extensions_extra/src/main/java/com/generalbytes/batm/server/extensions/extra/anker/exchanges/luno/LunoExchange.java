@@ -81,10 +81,11 @@ public class LunoExchange implements IExchange {
             BigDecimal price     = pricebid.add(one).setScale(0, BigDecimal.ROUND_CEILING);
             BigDecimal amountbtc = amount.divide(price, 4, BigDecimal.ROUND_CEILING);
             final LunoOrderData result = api.createLimitBuyOrder(pair, "BID", amountbtc, price);
+            return result.getResult();
         } else {
             final LunoOrderData result = api.createBuyOrder(pair, type, amount);
+            return result.getResult();
         }
-        return result.getResult();
     }
     
     
@@ -98,10 +99,11 @@ public class LunoExchange implements IExchange {
             BigDecimal one       = new BigDecimal(1);
             BigDecimal price     = priceask.subtract(one).setScale(0, BigDecimal.ROUND_CEILING);
             final LunoOrderData result = api.createLimitSellOrder(pair, "ASK", cryptoAmount, price);
+            return result.getResult();
         } else {
             final LunoOrderData result = api.createSellOrder(pair, type, cryptoAmount);
+            return result.getResult();
         }
-        return result.getResult();
     }
     
     
