@@ -76,8 +76,10 @@ public class LunoExchange implements IExchange {
         String pair = "XBTZAR";
         if (this.typeorder == "limit") {
             final LunoTickerData btcZar = api.getTicker("XBTZAR");
-            BigDecimal price     = btcZar.getBid()+1;
-            BigDecimal amountbtc = amount / price;
+            BigDecimal pricebid  = btcZar.getBid();
+            BigDecimal one       = new BigDecimal(1);
+            BigDecimal price     = pricebid.add(one).setScale(0, BigDecimal.ROUND_CEILING);
+            BigDecimal amountbtc = amount.divide(price, 4, BigDecimal.ROUND_CEILING);
             final LunoOrderData result = api.createLimitBuyOrder(pair, "BID", amountbtc, price);
         } else {
             final LunoOrderData result = api.createBuyOrder(pair, type, amount);
@@ -92,7 +94,9 @@ public class LunoExchange implements IExchange {
         String pair = "XBTZAR";
         if (this.typeorder == "limit") {
             final LunoTickerData btcZar = api.getTicker("XBTZAR");
-            BigDecimal price = btcZar.getAsk()-1;
+            BigDecimal priceask  = btcZar.getAsk();
+            BigDecimal one       = new BigDecimal(1);
+            BigDecimal price     = priceask.subtract(one).setScale(0, BigDecimal.ROUND_CEILING);
             final LunoOrderData result = api.createLimitSellOrder(pair, "ASK", cryptoAmount, price);
         } else {
             final LunoOrderData result = api.createSellOrder(pair, type, cryptoAmount);
