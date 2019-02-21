@@ -68,11 +68,12 @@ public class AnkerExtension extends AbstractExtension {
             if ("lunoexchange".equalsIgnoreCase(exchangeType)) {
                 String apiKey = st.nextToken();
                 String apiSecret = st.nextToken();
+                String typeorder = st.nextToken();
                 String preferredFiatCurrency = Currencies.ZAR;
                 if (st.hasMoreTokens()) {
                     preferredFiatCurrency = st.nextToken().toUpperCase();
                 }
-                return new LunoExchange(apiKey, apiSecret, preferredFiatCurrency);
+                return new LunoExchange(apiKey, apiSecret, preferredFiatCurrency, typeorder);
             }
         }
         return null;

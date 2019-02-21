@@ -870,7 +870,9 @@
         <exchange prefix="lunoexchange" name="Luno.com Exchange">
             <param name="apikey" />
             <param name="apisecret" />
+            <param name="typeorders" />
             <param name="fiatcurrency" />
+            <help>Typeorders can be limit or market</help>
             <cryptocurrency>BTC</cryptocurrency>
         </exchange>
         <cryptologo cryptocurrency="ANK" file="anker.png"/>

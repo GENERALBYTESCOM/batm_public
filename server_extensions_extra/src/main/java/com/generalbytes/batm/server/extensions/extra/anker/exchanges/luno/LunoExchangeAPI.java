@@ -44,4 +44,16 @@ public interface LunoExchangeAPI {
     @Path("/marketorder")
     LunoOrderData createSellOrder(@QueryParam("pair") String pair, @QueryParam("type") String type, @QueryParam("base_volume") BigDecimal volume);
 
+    @POST
+    @Path("/postorder")
+    LunoOrderData createLimitBuyOrder(@QueryParam("pair") String pair, @QueryParam("type") String type, @QueryParam("volume") BigDecimal volume, @QueryParam("price") BigDecimal price);
+
+    @POST
+    @Path("/postorder")
+    LunoOrderData createLimitSellOrder(@QueryParam("pair") String pair, @QueryParam("type") String type, @QueryParam("volume") BigDecimal volume, @QueryParam("price") BigDecimal price);
+
+    @GET
+    @Path("/ticker")
+    LunoTickerData getTicker(@QueryParam("pair") String symbol);
+
 }
