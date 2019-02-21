@@ -40,18 +40,11 @@ public class CryptoCurrencyTest {
     @Test
     public void valueOfCode() {
         assertEquals(CryptoCurrency.BTC, CryptoCurrency.valueOfCode("BTC"));
-        assertNull(CryptoCurrency.valueOfCode("btc"));
         assertEquals(CryptoCurrency.PAC, CryptoCurrency.valueOfCode("$PAC"));
-        assertNull(CryptoCurrency.valueOfCode("PAC"));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void valueOfException() {
-        CryptoCurrency.valueOf("---");
-    }
-
-    @Test
-    public void valueOfCodeException() {
-        assertNull(CryptoCurrency.valueOfCode("---"));
+        CryptoCurrency.valueOf("$PAC");
     }
 }

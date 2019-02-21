@@ -27,8 +27,10 @@ import java.util.Set;
  *
  * Usage e.g.:
  *      CryptoCurrency.USD.getCurrencyName()
- *      CryptoCurrency.valueOf("USD").getCurrencyName()
  *      CryptoCurrency.valueOfCode("USD").getCurrencyName()
+ *
+ * Important note:
+ *      CryptoCurrency.valueOf("$PAC") returns IllegalArgumentException.
  */
 public enum CryptoCurrency {
 
@@ -116,10 +118,14 @@ public enum CryptoCurrency {
     }
 
     /**
-     * Method Enum.valueOf returns same value, but instead of null throws IllegalArgumentException
+     * Use this method instead of Enum.valueOf.
      */
     public static CryptoCurrency valueOfCode(String code) {
-        return cryptoCurrencies.get(code);
+        CryptoCurrency cc = cryptoCurrencies.get(code);
+        if (cc == null) {
+            throw new IllegalArgumentException(code + " not found");
+        }
+        return cc;
     }
 
     public static Set<String> getCodes() {
