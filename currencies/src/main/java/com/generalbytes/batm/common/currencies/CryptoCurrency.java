@@ -18,6 +18,7 @@
 package com.generalbytes.batm.common.currencies;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -88,10 +89,12 @@ public enum CryptoCurrency {
     TXRP("test XRP"),
     ;
 
+    private static Map<String, CryptoCurrency> cryptoCurrenciesUpperCase = new HashMap<>();
     private static Map<String, CryptoCurrency> cryptoCurrencies = new LinkedHashMap<>();
 
     static {
         for (CryptoCurrency cc : CryptoCurrency.values()) {
+            cryptoCurrenciesUpperCase.put(cc.code.toUpperCase(), cc);
             cryptoCurrencies.put(cc.code, cc);
         }
         cryptoCurrencies = Collections.unmodifiableMap(cryptoCurrencies);
@@ -102,7 +105,7 @@ public enum CryptoCurrency {
 
     CryptoCurrency(String code, String currencyName) {
         this.currencyName = currencyName;
-        this.code = code == null ? name() : code;
+        this.code = (code == null) ? name() : code;
     }
 
     CryptoCurrency(String currencyName) {
@@ -121,7 +124,7 @@ public enum CryptoCurrency {
      * Use this method instead of Enum.valueOf.
      */
     public static CryptoCurrency valueOfCode(String code) {
-        CryptoCurrency cc = cryptoCurrencies.get(code);
+        CryptoCurrency cc = cryptoCurrenciesUpperCase.get(code.toUpperCase());
         if (cc == null) {
             throw new IllegalArgumentException(code + " not found");
         }
