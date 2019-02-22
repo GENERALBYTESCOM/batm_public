@@ -88,13 +88,14 @@ public enum FiatCurrency {
     XAU("Gold"),
     ;
 
-    private static Set<String> codes = new HashSet<>();
+    private static final Set<String> codes;
 
     static {
+        final Set<String> tmp = new HashSet<>();
         for (FiatCurrency fc : FiatCurrency.values()) {
-            codes.add(fc.name());
+            tmp.add(fc.name());
         }
-        codes = Collections.unmodifiableSet(codes);
+        codes = Collections.unmodifiableSet(tmp);
     }
 
     private final String currencyName;
