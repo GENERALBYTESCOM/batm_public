@@ -20,9 +20,9 @@ public class FiatCurrencyTest {
     public void getCode() {
         assertEquals("CZK", FiatCurrency.CZK.getCode());
         for (FiatCurrency c : FiatCurrency.values()) {
-            assertTrue(c.name() + " code", c.getCode() != null && c.getCurrencyName().length() > 1);
-            assertTrue(c.name() + " code should be uppercase", c.getCode().equals(c.getCode().toUpperCase()));
-            assertTrue(c.name() + " enum should be uppercase", c.name().equals(c.name().toUpperCase()));
+            assertTrue(c.name() + " code", c.getCurrencyName().length() > 1);
+            assertEquals(c.name() + " code should be uppercase", c.getCode(), c.getCode().toUpperCase());
+            assertEquals(c.name() + " enum should be uppercase", c.name(), c.name().toUpperCase());
         }
     }
 
