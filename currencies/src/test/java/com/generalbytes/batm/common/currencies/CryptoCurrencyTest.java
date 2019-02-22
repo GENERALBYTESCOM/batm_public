@@ -39,7 +39,9 @@ public class CryptoCurrencyTest {
 
     @Test
     public void valueOfCode() {
+        assertEquals(CryptoCurrency.BTC, CryptoCurrency.valueOfCode("btc"));
         assertEquals(CryptoCurrency.BTC, CryptoCurrency.valueOfCode("BTC"));
+        assertEquals(CryptoCurrency.PAC, CryptoCurrency.valueOfCode("$pAC"));
         assertEquals(CryptoCurrency.PAC, CryptoCurrency.valueOfCode("$PAC"));
     }
 
