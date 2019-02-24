@@ -11,6 +11,9 @@ import si.mazi.rescu.RestProxyFactory;
 import si.mazi.rescu.ClientConfig;
 import si.mazi.rescu.ClientConfigUtil;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 public class LunoExchange implements IExchange {
 
@@ -19,12 +22,14 @@ public class LunoExchange implements IExchange {
     private String clientSecret;
     private String typeorder;
     private LunoExchangeAPI api;
+    private final Logger log;
 
     public LunoExchange(String clientKey, String clientSecret, String preferredFiatCurrency, String typeorder) {
         this.preferredFiatCurrency = Currencies.ZAR;
         this.clientKey = clientKey;
         this.clientSecret = clientSecret;
         this.typeorder = typeorder;
+        log = LoggerFactory.getLogger("batm.master.exchange.luno");
         final ClientConfig config = new ClientConfig();
         ClientConfigUtil.addBasicAuthCredentials(config, clientKey, clientSecret);
         api = RestProxyFactory.createProxy(LunoExchangeAPI.class, "https://api.mybitx.com", config);
