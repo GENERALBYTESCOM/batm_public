@@ -54,7 +54,7 @@ public class LunoExchange implements IExchange {
     public BigDecimal getCryptoBalance(String cryptoCurrency) {
         final LunoBalanceData balance = api.getBalance();
         final BigDecimal cryptoballance = balance.getBalance(cryptoCurrency);
-        log.debug("strbalance = {}", cryptoballance);
+        log.debug("{} balance = {}", cryptoCurrency, cryptoballance);
         return cryptoballance;
     }
 
@@ -74,7 +74,7 @@ public class LunoExchange implements IExchange {
     public BigDecimal getFiatBalance(String fiatCurrency) {
         final LunoBalanceData balance = api.getBalance();
         final BigDecimal fiatballance = balance.getBalance(fiatCurrency);
-        log.debug("strbalance = {}", fiatballance);
+        log.debug("{} balance = {}", fiatCurrency, fiatballance);
         return fiatballance;
     }
     
