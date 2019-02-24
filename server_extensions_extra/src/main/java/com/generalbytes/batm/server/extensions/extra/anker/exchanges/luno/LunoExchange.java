@@ -62,10 +62,11 @@ public class LunoExchange implements IExchange {
     public String getDepositAddress(String cryptoCurrency) {
         if (cryptoCurrency.equals("BTC")) {
             final LunoAddressData address = api.getAddress("XBT");
+            return address.getAddress();
         } else {
             final LunoAddressData address = api.getAddress(cryptoCurrency);
+            return address.getAddress();
         }
-        return address.getAddress();
     }
 
     @Override
@@ -124,10 +125,11 @@ public class LunoExchange implements IExchange {
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
         if (cryptoCurrency.equals("BTC")) {
             final LunoRequestData result = api.sendMoney(destinationAddress, amount, "XBT", description);
+            return result.getResult();
         } else {
             final LunoRequestData result = api.sendMoney(destinationAddress, amount, cryptoCurrency, description);
+            return result.getResult();
         }
-        return result.getResult();
     }
     
 
