@@ -38,7 +38,7 @@ public class LunoBalanceData {
         final Logger log = LoggerFactory.getLogger("batm.master.exchange.luno");
         for (Iterator<LunoBalances> i = balance.iterator(); i.hasNext();) {
             LunoBalances item = i.next();
-            if (item.getCurrency() == symbol) {
+            if (item.getCurrency().equals(symbol)) {
                 log.debug("{} balance = {}", item.getCurrency(), item.getBalance());
                 return item.getBalance();
             }
