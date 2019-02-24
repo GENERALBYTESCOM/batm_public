@@ -1079,7 +1079,7 @@
             <param name="price" />
             <cryptocurrency>NULS</cryptocurrency>
         </ratesource>
-        <ratesource prefix="binanceRateSource" name ="Binance Rate Source for Nuls" >
+        <ratesource prefix="nulsBinanceRateSource" name ="Binance Rate Source for Nuls" >
             <param name="fiatCurrency" />
             <param name="coinmarketcapApiKey"/>
             <cryptocurrency>NULS</cryptocurrency>

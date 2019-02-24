@@ -93,7 +93,7 @@ public class NulsExtension extends AbstractExtension {
                 }
                 return new FixPriceRateSource(rate, preferredFiatCurrency);
             }
-            else if ("binanceRateSource".equalsIgnoreCase(exchangeType)) {
+            else if ("nulsBinanceRateSource".equalsIgnoreCase(exchangeType)) {
                 String preferredFiatCurrency = Currencies.USD;
                 String coinMarketCapApiKey = null;
                 if (st.hasMoreTokens()) {
