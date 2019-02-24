@@ -22,6 +22,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.Iterator;
 import java.math.BigDecimal; 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LunoBalanceData {
 
@@ -33,8 +35,10 @@ public class LunoBalanceData {
     }
 
     public BigDecimal getBalance(String symbol) {
+        final Logger log = LoggerFactory.getLogger("batm.master.exchange.luno");
         for (Iterator<LunoBalances> i = balance.iterator(); i.hasNext();) {
             LunoBalances item = i.next();
+            log.debug("{} balance = {}", item.getCurrency(), item.getBalance());
             if (item.getCurrency() == symbol) {
                 return item.getBalance();
             }
