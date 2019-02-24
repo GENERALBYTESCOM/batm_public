@@ -18,7 +18,8 @@
 */
 package com.generalbytes.batm.server.extensions.extra.nuls.source.binance;
 
-import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.CoinmarketcapRateSource;
 import com.generalbytes.batm.server.extensions.extra.nuls.NulsConstants;
@@ -35,12 +36,12 @@ public class BinanceRateSource implements IRateSource {
 
     private BinanceRateApi api;
     private final String coinMarketCapApiKey;
-    private String preferredFiatCurrency = Currencies.USD;
+    private String preferredFiatCurrency = FiatCurrency.USD.getCode();
 
     public BinanceRateSource(String preferredFiatCurrency, String cmcApiKey) {
         this.coinMarketCapApiKey = cmcApiKey;
         api = RestProxyFactory.createProxy(BinanceRateApi.class, NulsConstants.BINANCE_API_BASE_URL);
-        if(Currencies.FIAT_CURRENCIES.contains(preferredFiatCurrency)){
+        if(FiatCurrency.getCodes().contains(preferredFiatCurrency)){
             this.preferredFiatCurrency = preferredFiatCurrency;
         }
     }
@@ -48,10 +49,10 @@ public class BinanceRateSource implements IRateSource {
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<>();
-        result.add(Currencies.BTC);
-        result.add(Currencies.LTC);
-        result.add(Currencies.ETH);
-        result.add(Currencies.NULS);
+        result.add(CryptoCurrency.BTC.getCode());
+        result.add(CryptoCurrency.LTC.getCode());
+        result.add(CryptoCurrency.ETH.getCode());
+        result.add(CryptoCurrency.NULS.getCode());
 
         return result;
     }
@@ -59,8 +60,8 @@ public class BinanceRateSource implements IRateSource {
     @Override
     public Set<String> getFiatCurrencies() {
         Set<String> result = new HashSet<>();
-        result.add(Currencies.USD);
-        result.add(Currencies.CNY);
+        result.add(FiatCurrency.USD.getCode());
+        result.add(FiatCurrency.CNY.getCode());
         return result;
     }
 
