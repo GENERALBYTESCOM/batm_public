@@ -18,6 +18,8 @@
  */
 package com.generalbytes.batm.server.extensions.extra.nuls;
 
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.extra.nuls.source.binance.BinanceRateSource;
 import com.generalbytes.batm.server.extensions.extra.nuls.wallet.binance.NulsWallet;
@@ -58,7 +60,7 @@ public class NulsExtension extends AbstractExtension {
                     walletAddress = st.nextToken();
                 }
                 if (fiatCurrency != null && walletAddress != null) {
-                    return new DummyExchangeAndWalletAndSource(fiatCurrency, Currencies.NULS, walletAddress);
+                    return new DummyExchangeAndWalletAndSource(fiatCurrency, CryptoCurrency.NULS.getCode(), walletAddress);
                 }
             }
         }
@@ -67,7 +69,7 @@ public class NulsExtension extends AbstractExtension {
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (Currencies.NULS.equalsIgnoreCase(cryptoCurrency)) {
+        if (CryptoCurrency.NULS.getCode().equalsIgnoreCase(cryptoCurrency)) {
             return new NulsAddressValidator();
         }
         return null;
@@ -87,14 +89,14 @@ public class NulsExtension extends AbstractExtension {
                         e.printStackTrace();
                     }
                 }
-                String preferredFiatCurrency = Currencies.USD;
+                String preferredFiatCurrency = FiatCurrency.USD.getCode();
                 if (st.hasMoreTokens()) {
                     preferredFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new FixPriceRateSource(rate, preferredFiatCurrency);
             }
             else if ("nulsBinanceRateSource".equalsIgnoreCase(exchangeType)) {
-                String preferredFiatCurrency = Currencies.USD;
+                String preferredFiatCurrency = FiatCurrency.USD.getCode();
                 String coinMarketCapApiKey = null;
                 if (st.hasMoreTokens()) {
                     preferredFiatCurrency = st.nextToken().toUpperCase();
@@ -111,7 +113,7 @@ public class NulsExtension extends AbstractExtension {
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<>();
-        result.add(Currencies.NULS);
+        result.add(CryptoCurrency.NULS.getCode());
         return result;
     }
 }

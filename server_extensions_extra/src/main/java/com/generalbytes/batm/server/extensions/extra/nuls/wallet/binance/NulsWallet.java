@@ -18,7 +18,7 @@
  */
 package com.generalbytes.batm.server.extensions.extra.nuls.wallet.binance;
 
-import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.nuls.NulsConstants;
 import org.slf4j.Logger;
@@ -89,13 +89,13 @@ public class NulsWallet implements IWallet {
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<>();
-        result.add(Currencies.NULS);
+        result.add(CryptoCurrency.NULS.getCode());
         return result;
     }
 
     @Override
     public String getPreferredCryptoCurrency() {
-        return Currencies.NULS;
+        return CryptoCurrency.NULS.getCode();
     }
 
     @Override
