@@ -17,7 +17,7 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.bitcoincash;
 
-import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.extra.bitcoincash.test.PRS;
 import com.generalbytes.batm.server.extensions.extra.common.AbstractRPCPaymentSupport;
@@ -40,7 +40,7 @@ public class BitcoinCashPaymentSupport extends AbstractRPCPaymentSupport {
 
     @Override
     public String getCurrency() {
-        return Currencies.BCH;
+        return CryptoCurrency.BCH.getCode();
     }
 
     @Override

@@ -18,8 +18,7 @@
 
 package com.generalbytes.batm.server.extensions.extra.nxt.wallets.mynxt;
 
-import com.generalbytes.batm.server.extensions.Currencies;
-import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.nxt.NXTAddressValidator;
 import com.generalbytes.batm.server.extensions.extra.nxt.wallets.mynxt.dto.*;
@@ -54,13 +53,13 @@ public class MynxtWallet implements IWallet{
 
     @Override
     public String getPreferredCryptoCurrency() {
-        return Currencies.NXT;
+        return CryptoCurrency.NXT.getCode();
     }
 
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(Currencies.NXT);
+        result.add(CryptoCurrency.NXT.getCode());
         return result;
     }
 

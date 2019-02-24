@@ -1,6 +1,7 @@
 package com.generalbytes.batm.server.extensions.extra.futurocoin.sources.coindeal;
 
-import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -18,14 +19,14 @@ public class CoindealRateSource implements IRateSource {
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(Currencies.FTO);
+        result.add(CryptoCurrency.FTO.getCode());
         return result;
     }
 
     @Override
     public Set<String> getFiatCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(Currencies.EUR);
+        result.add(FiatCurrency.EUR.getCode());
         return result;
     }
 
@@ -38,7 +39,7 @@ public class CoindealRateSource implements IRateSource {
 
     @Override
     public String getPreferredFiatCurrency() {
-        return Currencies.EUR;
+        return FiatCurrency.EUR.getCode();
     }
 
     private boolean isCurrencySupported(String cryptoCurrency, String fiatCurrency) {

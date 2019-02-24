@@ -19,7 +19,7 @@ package com.generalbytes.batm.server.extensions.extra.bitcoincash;
 
 import com.generalbytes.batm.server.extensions.AbstractExtension;
 import com.generalbytes.batm.server.extensions.CryptoCurrencyDefinition;
-import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
 import com.generalbytes.batm.server.extensions.IPaperWalletGenerator;
@@ -31,7 +31,7 @@ import java.util.StringTokenizer;
 
 public class BitcoinCashExtension extends AbstractExtension {
     private static final CryptoCurrencyDefinition DEFINITION = new BitcoinCashDefinition();
-    public static final String CURRENCY = Currencies.BCH;
+    public static final String CURRENCY = CryptoCurrency.BCH.getCode();
 
     @Override
     public String getName() {
@@ -90,6 +90,9 @@ public class BitcoinCashExtension extends AbstractExtension {
 
     @Override
     public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency) {
-        return new BitcoinCashWalletGenerator("qqqq", ctx);
+        if (CryptoCurrency.BCH.getCode().equalsIgnoreCase(cryptoCurrency)) {
+            return new BitcoinCashWalletGenerator("qqqq", ctx);
+        }
+        return null;
     }
 }

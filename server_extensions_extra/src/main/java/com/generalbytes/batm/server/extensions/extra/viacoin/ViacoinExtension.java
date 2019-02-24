@@ -17,6 +17,8 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.viacoin;
 
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.viacoin.sources.poloniex.PoloniexRateSource;
@@ -65,7 +67,7 @@ public class ViacoinExtension extends AbstractExtension{
                 }
 
                 if (fiatCurrency != null && walletAddress != null) {
-                    return new DummyExchangeAndWalletAndSource(fiatCurrency, Currencies.VIA, walletAddress);
+                    return new DummyExchangeAndWalletAndSource(fiatCurrency, CryptoCurrency.VIA.getCode(), walletAddress);
                 }
             }
         }
@@ -74,7 +76,7 @@ public class ViacoinExtension extends AbstractExtension{
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency){
-        if(Currencies.VIA.equalsIgnoreCase(cryptoCurrency)){
+        if(CryptoCurrency.VIA.getCode().equalsIgnoreCase(cryptoCurrency)){
             return new ViacoinAddressValidator();
         }
         return null;
@@ -94,13 +96,13 @@ public class ViacoinExtension extends AbstractExtension{
                     } catch (Throwable e) {
                     }
                 }
-                String preferedFiatCurrency = Currencies.USD;
+                String preferedFiatCurrency = FiatCurrency.USD.getCode();
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new FixPriceRateSource(rate,preferedFiatCurrency);
             }else if ("poloniexrs".equalsIgnoreCase(rsType)) {
-                String preferredFiatCurrency = Currencies.USD;
+                String preferredFiatCurrency = FiatCurrency.USD.getCode();
                 if (st.hasMoreTokens()) {
                     preferredFiatCurrency = st.nextToken();
                 }
@@ -114,7 +116,7 @@ public class ViacoinExtension extends AbstractExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies(){
         Set<String> result = new HashSet<String>();
-        result.add(Currencies.VIA);
+        result.add(CryptoCurrency.VIA.getCode());
         return result;
     }
 }

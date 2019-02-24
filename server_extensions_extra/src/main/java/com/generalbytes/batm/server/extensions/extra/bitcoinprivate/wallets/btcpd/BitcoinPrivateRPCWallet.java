@@ -2,7 +2,7 @@ package com.generalbytes.batm.server.extensions.extra.bitcoinprivate.wallets.btc
 
 import wf.bitcoin.javabitcoindrpcclient.BitcoinRPCException;
 import wf.bitcoin.javabitcoindrpcclient.BitcoinJSONRPCClient;
-import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.IWallet;
 
 import org.slf4j.Logger;
@@ -19,7 +19,7 @@ import java.util.Set;
  */
 public class BitcoinPrivateRPCWallet implements IWallet {
     private static final Logger log = LoggerFactory.getLogger(BitcoinPrivateRPCWallet.class);
-    private static final String CRYPTO_CURRENCY = Currencies.BTCP;
+    private static final String CRYPTO_CURRENCY = CryptoCurrency.BTCP.getCode();
 
     public BitcoinPrivateRPCWallet(String rpcURL, String accountName) {
         this.rpcURL = rpcURL;

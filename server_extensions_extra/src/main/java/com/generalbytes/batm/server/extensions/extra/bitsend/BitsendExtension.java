@@ -17,6 +17,8 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.bitsend;
 
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitsend.wallets.bitsendd.BitsenddRPCWallet;
@@ -66,7 +68,7 @@ public class BitsendExtension extends AbstractExtension{
                 }
 
                 if (fiatCurrency != null && walletAddress != null) {
-                    return new DummyExchangeAndWalletAndSource(fiatCurrency, Currencies.BSD, walletAddress);
+                    return new DummyExchangeAndWalletAndSource(fiatCurrency, CryptoCurrency.BSD.getCode(), walletAddress);
                 }
             }
         }
@@ -75,7 +77,7 @@ public class BitsendExtension extends AbstractExtension{
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (Currencies.BSD.equalsIgnoreCase(cryptoCurrency)) {
+        if (CryptoCurrency.BSD.getCode().equalsIgnoreCase(cryptoCurrency)) {
             return new BitsendAddressValidator();
         }
         return null;
@@ -95,7 +97,7 @@ public class BitsendExtension extends AbstractExtension{
                     } catch (Throwable e) {
                     }
                 }
-                String preferedFiatCurrency = Currencies.USD;
+                String preferedFiatCurrency = FiatCurrency.USD.getCode();
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
@@ -109,7 +111,7 @@ public class BitsendExtension extends AbstractExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(Currencies.BSD);
+        result.add(CryptoCurrency.BSD.getCode());
         return result;
     }
 }

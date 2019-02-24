@@ -17,7 +17,7 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.sumcoin;
 
-import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.extra.common.AbstractRPCPaymentSupport;
 import com.generalbytes.batm.server.extensions.extra.common.RPCClient;
@@ -38,7 +38,7 @@ public class SumcoinPaymentSupport extends AbstractRPCPaymentSupport {
 
     @Override
     public String getCurrency() {
-        return Currencies.SUM;
+        return CryptoCurrency.SUM.getCode();
     }
 
     @Override

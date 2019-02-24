@@ -1,5 +1,6 @@
 package com.generalbytes.batm.server.extensions;
 
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,11 +31,11 @@ public class DummyExchangeAndWalletAndSource implements IExchange, IWallet, IRat
             throw new NullPointerException("Fiat and crypto currency has to be specified.");
         }
 
-        if (cryptoCurrency.equals(Currencies.BTC)
-            || cryptoCurrency.equals(Currencies.ETH)
-            || cryptoCurrency.equals(Currencies.DASH)
-            || cryptoCurrency.equals(Currencies.XMR)
-            || cryptoCurrency.equals(Currencies.LTC)) {
+        if (cryptoCurrency.equals(CryptoCurrency.BTC.getCode())
+            || cryptoCurrency.equals(CryptoCurrency.ETH.getCode())
+            || cryptoCurrency.equals(CryptoCurrency.DASH.getCode())
+            || cryptoCurrency.equals(CryptoCurrency.XMR.getCode())
+            || cryptoCurrency.equals(CryptoCurrency.LTC.getCode())) {
             if (walletAddress != null) {
                 throw new IllegalArgumentException("Built-in wallet is used for BTC, LTC, ETH, DASH, XMR crypto currencies.");
             }
@@ -111,15 +112,15 @@ public class DummyExchangeAndWalletAndSource implements IExchange, IWallet, IRat
 
     private String getAddress(String cryptoCurrency) {
         if (this.cryptoCurrency.equals(cryptoCurrency)) {
-            if (Currencies.BTC.equals(cryptoCurrency)) {
+            if (CryptoCurrency.BTC.getCode().equals(cryptoCurrency)) {
                 return BTC_WALLET_ADDRESS;
-            } else if (Currencies.ETH.equals(cryptoCurrency)) {
+            } else if (CryptoCurrency.ETH.getCode().equals(cryptoCurrency)) {
                 return ETH_WALLET_ADDRESS;
-            } else if (Currencies.LTC.equals(cryptoCurrency)) {
+            } else if (CryptoCurrency.LTC.getCode().equals(cryptoCurrency)) {
                 return LTC_WALLET_ADDRESS;
-            } else if (Currencies.DASH.equals(cryptoCurrency)) {
+            } else if (CryptoCurrency.DASH.getCode().equals(cryptoCurrency)) {
                 return DASH_WALLET_ADDRESS;
-            } else if (Currencies.XMR.equals(cryptoCurrency)) {
+            } else if (CryptoCurrency.XMR.getCode().equals(cryptoCurrency)) {
                 return XMR_WALLET_ADDRESS;
             } else {
                 return walletAddress;

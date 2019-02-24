@@ -19,7 +19,7 @@ package com.generalbytes.batm.server.extensions.extra.maxcoin.wallets.maxcoind;
 
 import wf.bitcoin.javabitcoindrpcclient.BitcoinRPCException;
 import wf.bitcoin.javabitcoindrpcclient.BitcoinJSONRPCClient;
-import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.IWallet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +32,7 @@ import java.util.Set;
 
 public class MaxcoindRPCWallet implements IWallet{
     private static final Logger log = LoggerFactory.getLogger(MaxcoindRPCWallet.class);
-    private static final String CRYPTO_CURRENCY = Currencies.MAX;
+    private static final String CRYPTO_CURRENCY = CryptoCurrency.MAX.getCode();
 
     public MaxcoindRPCWallet(String rpcURL, String accountName) {
         this.rpcURL = rpcURL;
