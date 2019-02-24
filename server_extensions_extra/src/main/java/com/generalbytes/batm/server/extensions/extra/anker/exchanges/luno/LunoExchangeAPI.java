@@ -38,7 +38,7 @@ public interface LunoExchangeAPI {
 
     @POST
     @Path("/send")
-    LunoRequestData getAddress(@QueryParam("address") String destinationAddress, @QueryParam("amount") BigDecimal amount, @QueryParam("currency") String cryptoCurrency, @QueryParam("description") String description);
+    LunoRequestData sendMoney(@QueryParam("address") String destinationAddress, @QueryParam("amount") BigDecimal amount, @QueryParam("currency") String cryptoCurrency, @QueryParam("description") String description);
 
     @POST
     @Path("/marketorder")
