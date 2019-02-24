@@ -29,6 +29,10 @@ public interface LunoExchangeAPI {
     LunoBalanceData getBalance();
 
     @GET
+    @Path("/balance")
+    String getBalanceTest();
+
+    @GET
     @Path("/funding_address")
     LunoAddressData getAddress(@QueryParam("asset") String symbol);
 
