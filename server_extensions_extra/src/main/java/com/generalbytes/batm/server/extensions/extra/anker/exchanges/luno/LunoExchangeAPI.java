@@ -38,23 +38,23 @@ public interface LunoExchangeAPI {
 
     @POST
     @Path("/send")
-    LunoRequestData sendMoney(@QueryParam("address") String destinationAddress, @QueryParam("amount") BigDecimal amount, @QueryParam("currency") String cryptoCurrency, @QueryParam("description") String description);
+    LunoRequestData sendMoney(@QueryParam("address") String destinationAddress, @QueryParam("amount") String amount, @QueryParam("currency") String cryptoCurrency, @QueryParam("description") String description);
 
     @POST
     @Path("/marketorder")
-    LunoOrderData createBuyOrder(@QueryParam("pair") String pair, @QueryParam("type") String type, @QueryParam("counter_volume") BigDecimal volume);
+    LunoOrderData createBuyOrder(@QueryParam("pair") String pair, @QueryParam("type") String type, @QueryParam("counter_volume") String volume);
 
     @POST
     @Path("/marketorder")
-    LunoOrderData createSellOrder(@QueryParam("pair") String pair, @QueryParam("type") String type, @QueryParam("base_volume") BigDecimal volume);
+    LunoOrderData createSellOrder(@QueryParam("pair") String pair, @QueryParam("type") String type, @QueryParam("base_volume") String volume);
 
     @POST
     @Path("/postorder")
-    LunoOrderData createLimitBuyOrder(@QueryParam("pair") String pair, @QueryParam("type") String type, @QueryParam("volume") BigDecimal volume, @QueryParam("price") BigDecimal price);
+    LunoOrderData createLimitBuyOrder(@QueryParam("pair") String pair, @QueryParam("type") String type, @QueryParam("volume") String volume, @QueryParam("price") String price);
 
     @POST
     @Path("/postorder")
-    LunoOrderData createLimitSellOrder(@QueryParam("pair") String pair, @QueryParam("type") String type, @QueryParam("volume") BigDecimal volume, @QueryParam("price") BigDecimal price);
+    LunoOrderData createLimitSellOrder(@QueryParam("pair") String pair, @QueryParam("type") String type, @QueryParam("volume") String volume, @QueryParam("price") String price);
 
     @GET
     @Path("/ticker")
