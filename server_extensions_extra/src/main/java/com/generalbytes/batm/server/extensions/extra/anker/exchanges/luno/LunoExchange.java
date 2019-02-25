@@ -88,18 +88,18 @@ public class LunoExchange implements IExchange {
     public String purchaseCoins(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
         String type = "BUY";
         String pair = "XBTZAR";
+        final LunoTickerData btcZar = api.getTicker("XBTZAR");
+        BigDecimal pricebid  = btcZar.getBid();
+        BigDecimal one       = new BigDecimal(1);
+        BigDecimal price     = pricebid.add(one).setScale(0, BigDecimal.ROUND_CEILING);
+        BigDecimal amountbtc = amount.divide(price, 4, BigDecimal.ROUND_CEILING);
         if (this.typeorder.equals("limit")) {
-            final LunoTickerData btcZar = api.getTicker("XBTZAR");
-            BigDecimal pricebid  = btcZar.getBid();
-            BigDecimal one       = new BigDecimal(1);
-            BigDecimal price     = pricebid.add(one).setScale(0, BigDecimal.ROUND_CEILING);
-            BigDecimal amountbtc = amount.divide(price, 4, BigDecimal.ROUND_CEILING);
             log.debug("limit pair {} type {} amount {} price {}", pair, "BID", amountbtc.toString(), price.toString());
             final LunoOrderData result = api.createLimitBuyOrder(pair, "BID", amountbtc.toString(), price.toString());
             return result.getResult();
         } else {
-            log.debug("market pair {} type {} amount   {}  ", pair, type, amount.toString());
-            final LunoOrderData result = api.createBuyOrder(pair, type, amount.toString());
+            log.debug("market pair {} type {} amount   {}  ", pair, type, amountbtc.toString());
+            final LunoOrderData result = api.createBuyOrder(pair, type, amountbtc.toString());
             return result.getResult();
         }
     }
