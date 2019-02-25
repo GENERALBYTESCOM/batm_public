@@ -22,17 +22,7 @@ import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 public class AnkerAddressValidator implements ICryptoAddressValidator {
     @Override
     public boolean isAddressValid(String address) {
-        if (address.endsWith("P")) {
-            String addressWithoutL = address.substring(0, address.length() - 1);
-            for (char addressCharacter : addressWithoutL.toCharArray()) {
-                if (!Character.isDigit(addressCharacter)) { 
-                    return false;
-                }
-             } 
-            return true;
-        }else{
-            return false;
-        }
+        return true;
     }
     
     @Override
