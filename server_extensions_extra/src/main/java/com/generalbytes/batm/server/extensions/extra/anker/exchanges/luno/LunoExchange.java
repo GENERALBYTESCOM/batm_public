@@ -98,7 +98,7 @@ public class LunoExchange implements IExchange {
             final LunoOrderData result = api.createLimitBuyOrder(pair, "BID", amountbtc.toString(), price.toString());
             return result.getResult();
         } else {
-            log.debug("market pair {} type {} amount     ", pair, type, amount.toString());
+            log.debug("market pair {} type {} amount   {}  ", pair, type, amount.toString());
             final LunoOrderData result = api.createBuyOrder(pair, type, amount.toString());
             return result.getResult();
         }
