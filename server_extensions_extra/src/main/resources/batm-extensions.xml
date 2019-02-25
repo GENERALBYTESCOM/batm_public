@@ -175,6 +175,14 @@
                 <param name="fiatcurrency" />
                 <cryptocurrency>BTC</cryptocurrency>
             </exchange>
+            <exchange prefix="dvchain" name="DV Chain Exchange">
+                <param name="secretKey" />
+                <cryptocurrency>BTC</cryptocurrency>
+                <cryptocurrency>ETH</cryptocurrency>
+                <cryptocurrency>LTC</cryptocurrency>
+                <cryptocurrency>BCH</cryptocurrency>
+                <cryptocurrency>XMR</cryptocurrency>
+            </exchange>
         <exchange prefix="hitbtc" name="HitBTC Exchange">
             <param name="apikey" />
             <param name="apisecret" />

@@ -49,6 +49,7 @@ dependencies {
     compile(group: 'org.knowm.xchange', name: 'xchange-itbit', version: '4.3.15')
     compile(group: 'org.knowm.xchange', name: 'xchange-bittrex', version: '4.3.15')
     compile(group: 'org.knowm.xchange', name: 'xchange-hitbtc', version: '4.3.15')
+    compile(group: 'org.knowm.xchange', name: 'xchange-dvchain', version: '4.3.15')
     compile(group: 'org.web3j', name: 'core', version: '3.6.0')
     compile(group: 'org.web3j', name: 'crypto', version: '3.6.0')
     compile(group: 'org.web3j', name: 'utils', version: '3.6.0')
