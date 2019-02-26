@@ -92,7 +92,7 @@ public class LunoExchange implements IExchange {
         BigDecimal pricebid  = btcZar.getBid();
         BigDecimal one       = new BigDecimal(1);
         BigDecimal price     = pricebid.add(one).setScale(0, BigDecimal.ROUND_CEILING);
-        BigDecimal amountbtc = amount.divide(price, 4, BigDecimal.ROUND_CEILING);
+        BigDecimal amountbtc = price.divide(amount, 4, BigDecimal.ROUND_CEILING);
         if (this.typeorder.equals("limit")) {
             log.debug("limit pair {} type {} amount {} price {}", pair, "BID", amountbtc.toString(), price.toString());
             final LunoOrderData result = api.createLimitBuyOrder(pair, "BID", amountbtc.toString(), price.toString());
