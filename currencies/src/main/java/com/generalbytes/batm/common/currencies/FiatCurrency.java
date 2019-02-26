@@ -30,8 +30,6 @@ import java.util.Set;
  */
 public enum FiatCurrency {
 
-    // see also com.generalbytes.batm.server.extensions.Currencies
-
     AED("United Arab Emirates dirham"),
     ALL("Albanian lek"),
     AMD("Armenian dram"),
