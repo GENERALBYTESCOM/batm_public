@@ -12,8 +12,9 @@ import java.util.Set;
  * Created by b00lean on 7/31/14.
  */
 public class FixPriceRateSource implements IRateSource {
-    private static final List<String> FIAT_CURRENCIES = FiatCurrency.getCodes();
-    private static final List<String> CRYPTO_CURRENCIES = CryptoCurrency.getCodes();
+
+    private static final Set<String> FIAT_CURRENCIES = FiatCurrency.getCodes();
+    private static final Set<String> CRYPTO_CURRENCIES = CryptoCurrency.getCodes();
     private final BigDecimal rate;
 
     private String preferredFiatCurrency = FiatCurrency.USD.getCode();
@@ -28,9 +29,7 @@ public class FixPriceRateSource implements IRateSource {
 
     @Override
     public Set<String> getCryptoCurrencies() {
-        Set<String> result = new HashSet<String>();
-        result.addAll(CRYPTO_CURRENCIES);
-        return result;
+        return CRYPTO_CURRENCIES;
     }
 
     @Override
@@ -43,9 +42,7 @@ public class FixPriceRateSource implements IRateSource {
 
     @Override
     public Set<String> getFiatCurrencies() {
-        Set<String> result = new HashSet<String>();
-        result.addAll(FIAT_CURRENCIES);
-        return result;
+        return FIAT_CURRENCIES;
     }
     @Override
     public String getPreferredFiatCurrency() {
