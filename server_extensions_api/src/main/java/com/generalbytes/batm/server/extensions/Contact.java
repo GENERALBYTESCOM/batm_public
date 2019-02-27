@@ -20,7 +20,8 @@ package com.generalbytes.batm.server.extensions;
 /**
  * An object that describes data associated with the contact specified in the request.
  */
-public class Contact implements java.io.Serializable{
+public class Contact implements java.io.Serializable {
+
     private boolean exists;
     private String error;
     private String firstName;
@@ -33,6 +34,7 @@ public class Contact implements java.io.Serializable{
     private String stateProvince;
     private String country;
     private String zipCode;
+    private PhoneLineType phoneType;
 
     /**
      * True if exists contact data, else false.
@@ -167,6 +169,14 @@ public class Contact implements java.io.Serializable{
         this.zipCode = zipCode;
     }
 
+    public PhoneLineType getPhoneType() {
+        return phoneType;
+    }
+
+    public void setPhoneType(PhoneLineType phoneType) {
+        this.phoneType = phoneType;
+    }
+
     @Override
     public String toString() {
         return "Contact{" +
@@ -182,6 +192,7 @@ public class Contact implements java.io.Serializable{
                 ", stateProvince='" + stateProvince + '\'' +
                 ", country='" + country + '\'' +
                 ", zipCode='" + zipCode + '\'' +
+                ", phoneType=" + phoneType +
                 '}';
     }
 }
