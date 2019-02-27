@@ -8,7 +8,7 @@ import com.generalbytes.batm.server.extensions.Contact;
 public interface IAMLProvider {
 
     /**
-     * @return List of country codes supported by provider. Codes are in ISO 3166-1 alpha-2 format (2 digits).
+     * @return List of country codes supported by provider. Codes are in ISO 3166-1 alpha-2 format (2 letters).
      */
     String[] getSupportedCountries();
 
