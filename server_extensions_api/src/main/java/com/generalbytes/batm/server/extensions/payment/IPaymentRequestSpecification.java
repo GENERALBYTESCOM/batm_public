@@ -17,6 +17,8 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.payment;
 
+import com.generalbytes.batm.server.extensions.IWallet;
+
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -42,4 +44,6 @@ public interface IPaymentRequestSpecification {
     boolean isDoNotForward();
     boolean isZeroFixedFee();
     void optimize();
+
+    IWallet getWallet();
 }

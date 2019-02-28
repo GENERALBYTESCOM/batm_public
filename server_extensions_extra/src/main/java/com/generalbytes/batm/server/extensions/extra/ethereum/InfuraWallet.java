@@ -17,7 +17,7 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.ethereum;
 
-import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.IWallet;
 
 import org.slf4j.Logger;
@@ -44,7 +44,7 @@ import java.util.concurrent.TimeoutException;
 import static org.web3j.utils.Convert.Unit.ETHER;
 
 public class InfuraWallet implements IWallet{
-    private String cryptoCurrency = Currencies.ETH;
+    private String cryptoCurrency = CryptoCurrency.ETH.getCode();
     private Credentials credentials;
     private String apiKey;
     private Web3j w;

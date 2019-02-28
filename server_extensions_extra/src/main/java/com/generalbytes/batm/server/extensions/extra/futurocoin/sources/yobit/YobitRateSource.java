@@ -1,6 +1,7 @@
 package com.generalbytes.batm.server.extensions.extra.futurocoin.sources.yobit;
 
-import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
 
 import java.math.BigDecimal;
@@ -21,21 +22,21 @@ public class YobitRateSource implements IRateSourceAdvanced {
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(Currencies.FTO);
-        result.add(Currencies.BTC);
-        result.add(Currencies.LTC);
-        result.add(Currencies.MAX);
-        result.add(Currencies.DASH);
-        result.add(Currencies.ETH);
-        result.add(Currencies.LSK);
-        result.add(Currencies.DOGE);
+        result.add(CryptoCurrency.FTO.getCode());
+        result.add(CryptoCurrency.BTC.getCode());
+        result.add(CryptoCurrency.LTC.getCode());
+        result.add(CryptoCurrency.MAX.getCode());
+        result.add(CryptoCurrency.DASH.getCode());
+        result.add(CryptoCurrency.ETH.getCode());
+        result.add(CryptoCurrency.LSK.getCode());
+        result.add(CryptoCurrency.DOGE.getCode());
         return result;
     }
 
     @Override
     public Set<String> getFiatCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(Currencies.USD);
+        result.add(FiatCurrency.USD.getCode());
         return result;
     }
 
@@ -56,7 +57,7 @@ public class YobitRateSource implements IRateSourceAdvanced {
 
     @Override
     public String getPreferredFiatCurrency() {
-        return Currencies.USD;
+        return FiatCurrency.USD.getCode();
     }
 
     @Override

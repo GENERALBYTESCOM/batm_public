@@ -21,6 +21,15 @@ import java.util.Map;
 
 public interface ITransactionListener {
     /**
+     * Callback method that is called by server before transaction is executed.
+     * If your method returns false than transaction will not take place and will fail with error ERROR_NOT_APPROVED.
+     * Try to return from this method in less then 10 seconds.
+     * @param transactionRequest
+     * @return
+     */
+    boolean isTransactionApproved(ITransactionRequest transactionRequest);
+
+    /**
      * Callback method that is called by server when transaction is created on server
      * Returned value is a map of keys and values that will be stored in the database and available for later use in ticket template
      * @param transactionDetails

@@ -15,12 +15,10 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.bitcoincash.wallets;
+package com.generalbytes.batm.server.extensions.extra.common;
 
 import wf.bitcoin.javabitcoindrpcclient.BitcoinRPCException;
-import wf.bitcoin.javabitcoindrpcclient.BitcoinJSONRPCClient;
 import com.generalbytes.batm.server.extensions.IWallet;
-import com.generalbytes.batm.server.extensions.extra.bitcoincash.RPCClient;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,18 +29,18 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class BATMBitcoinCashdRPCWallet implements IWallet{
-    private static final Logger log = LoggerFactory.getLogger(BATMBitcoinCashdRPCWallet.class);
+public class RPCWallet implements IWallet, IRPCWallet{
+    private static final Logger log = LoggerFactory.getLogger(RPCWallet.class);
     private String cryptoCurrency;
 
     private String accountName;
-    private BitcoinJSONRPCClient client;
+    private RPCClient client;
 
 
-    public BATMBitcoinCashdRPCWallet(String rpcURL, String accountName, String cryptoCurrency) {
+    public RPCWallet(String rpcURL, String accountName, String cryptoCurrency) {
         this.accountName = accountName;
         this.cryptoCurrency = cryptoCurrency;
-        client = createClient(rpcURL);
+        client = createClient(cryptoCurrency, rpcURL);
     }
 
     @Override
@@ -60,11 +58,11 @@ public class BATMBitcoinCashdRPCWallet implements IWallet{
     @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
         if (!this.cryptoCurrency.equalsIgnoreCase(cryptoCurrency)) {
-            log.error("BitcoinCashd wallet error: unknown cryptocurrency.");
+            log.error("RPCWallet wallet error: unknown cryptocurrency.");
             return null;
         }
 
-        log.info("BitcoinCashd sending coins from " + accountName + " to: " + destinationAddress + " " + amount);
+        log.info("RPCWallet sending coins from " + accountName + " to: " + destinationAddress + " " + amount);
         try {
             String result = client.sendFrom(accountName, destinationAddress, amount);
             log.debug("result = " + result);
@@ -78,7 +76,7 @@ public class BATMBitcoinCashdRPCWallet implements IWallet{
     @Override
     public String getCryptoAddress(String cryptoCurrency) {
         if (!this.cryptoCurrency.equalsIgnoreCase(cryptoCurrency)) {
-            log.error("BitcoinCashd wallet error: unknown cryptocurrency.");
+            log.error("RPCWallet wallet error: unknown cryptocurrency.");
             return null;
         }
 
@@ -98,7 +96,7 @@ public class BATMBitcoinCashdRPCWallet implements IWallet{
     @Override
     public BigDecimal getCryptoBalance(String cryptoCurrency) {
         if (!this.cryptoCurrency.equalsIgnoreCase(cryptoCurrency)) {
-            log.error("BitcoinCashd wallet error: unknown cryptocurrency: " + cryptoCurrency);
+            log.error("RPCWallet wallet error: unknown cryptocurrency: " + cryptoCurrency);
             return null;
         }
         try {
@@ -109,12 +107,16 @@ public class BATMBitcoinCashdRPCWallet implements IWallet{
         }
     }
 
-    private static RPCClient createClient(String rpcURL) {
+    private static RPCClient createClient(String cryptoCurrency, String rpcURL) {
         try {
-            return new RPCClient(rpcURL);
+            return new RPCClient(cryptoCurrency, rpcURL);
         } catch (MalformedURLException e) {
             log.error("Error", e);
         }
         return null;
+    }
+
+    public RPCClient getClient() {
+        return client;
     }
 }

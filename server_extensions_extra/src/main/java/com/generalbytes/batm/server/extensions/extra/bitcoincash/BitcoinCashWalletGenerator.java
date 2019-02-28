@@ -17,7 +17,7 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.bitcoincash;
 
-import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.IExtensionContext;
 import com.generalbytes.batm.server.extensions.IPaperWallet;
 import com.generalbytes.batm.server.extensions.IPaperWalletGenerator;
@@ -45,8 +45,8 @@ public class BitcoinCashWalletGenerator implements IPaperWalletGenerator {
     @Override
     public IPaperWallet generateWallet(String cryptoCurrency, String oneTimePassword, String userLanguage) {
         WalletToolsBCH wt = new WalletToolsBCH();
-        String privateKey = wt.generateWalletPrivateKeyWithPrefix(prefix, Currencies.BCH);
-        String address = wt.getWalletAddressFromPrivateKey(privateKey, Currencies.BCH);
+        String privateKey = wt.generateWalletPrivateKeyWithPrefix(prefix, CryptoCurrency.BCH.getCode());
+        String address = wt.getWalletAddressFromPrivateKey(privateKey, CryptoCurrency.BCH.getCode());
 
         byte[] content = ctx.createPaperWallet7ZIP(privateKey, address, oneTimePassword, cryptoCurrency);
 

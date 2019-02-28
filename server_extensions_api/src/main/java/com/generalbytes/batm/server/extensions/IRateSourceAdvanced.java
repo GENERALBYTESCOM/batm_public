@@ -21,9 +21,9 @@ package com.generalbytes.batm.server.extensions;
 import java.math.BigDecimal;
 
 public interface IRateSourceAdvanced extends IRateSource {
-    public BigDecimal getExchangeRateForBuy(String cryptoCurrency, String fiatCurrency);
-    public BigDecimal getExchangeRateForSell(String cryptoCurrency, String fiatCurrency);
+    BigDecimal getExchangeRateForBuy(String cryptoCurrency, String fiatCurrency);
+    BigDecimal getExchangeRateForSell(String cryptoCurrency, String fiatCurrency);
 
-    public BigDecimal calculateBuyPrice(String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount);
-    public BigDecimal calculateSellPrice(String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount);
+    BigDecimal calculateBuyPrice(String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount);
+    BigDecimal calculateSellPrice(String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount);
 }

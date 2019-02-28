@@ -13,7 +13,7 @@ import java.io.*;
 import java.util.Hashtable;
 import java.util.Random;
 
-import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.IPaperWallet;
 import com.generalbytes.batm.server.extensions.IPaperWalletGenerator;
 import com.google.zxing.BarcodeFormat;
@@ -51,7 +51,7 @@ public class TokencoinPaperWalletGenerator implements IPaperWalletGenerator {
         TokencoinPaperWallet paperwallet = new TokencoinPaperWallet();
         byte[] image = generateQR(newtkn, imagesize);
 
-        paperwallet.setCryptoCurrency(Currencies.TKN);
+        paperwallet.setCryptoCurrency(CryptoCurrency.TKN.getCode());
         paperwallet.setMessage(MESSAGE + newtkn);
         paperwallet.setFileExtension("png");
         paperwallet.setAddress(newtkn);

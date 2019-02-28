@@ -18,7 +18,7 @@
 
 package com.generalbytes.batm.server.extensions.extra.burstcoin.wallets.burstwallet;
 
-import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.burstcoin.BurstAddressValidator;
 import com.generalbytes.batm.server.extensions.extra.burstcoin.sources.crypto.client.BurstCryptoUtils;
@@ -57,13 +57,13 @@ public class BurstWallet implements IWallet {
 
     @Override
     public String getPreferredCryptoCurrency() {
-        return Currencies.BURST;
+        return CryptoCurrency.BURST.getCode();
     }
 
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<>();
-        result.add(Currencies.BURST);
+        result.add(CryptoCurrency.BURST.getCode());
         return result;
     }
 

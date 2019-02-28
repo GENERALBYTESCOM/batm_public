@@ -17,6 +17,8 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.egulden;
 
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.egulden.wallets.eguldend.EguldendRPCWallet;
@@ -57,13 +59,25 @@ public class EguldenExtension extends AbstractExtension{
                     return new EguldendRPCWallet(rpcURL,accountName);
                 }
             }
+            if ("efldemo".equalsIgnoreCase(walletType)) {
+
+                String fiatCurrency = st.nextToken();
+                String walletAddress = "";
+                if (st.hasMoreTokens()) {
+                    walletAddress = st.nextToken();
+                }
+
+                if (fiatCurrency != null && walletAddress != null) {
+                    return new DummyExchangeAndWalletAndSource(fiatCurrency, CryptoCurrency.EFL.getCode(), walletAddress);
+                }
+            }
         }
         return null;
     }
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (Currencies.EFL.equalsIgnoreCase(cryptoCurrency)) {
+        if (CryptoCurrency.EFL.getCode().equalsIgnoreCase(cryptoCurrency)) {
             return new EguldenAddressValidator();
         }
         return null;
@@ -83,7 +97,7 @@ public class EguldenExtension extends AbstractExtension{
                     } catch (Throwable e) {
                     }
                 }
-                String preferedFiatCurrency = Currencies.USD;
+                String preferedFiatCurrency = FiatCurrency.USD.getCode();
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
@@ -96,7 +110,7 @@ public class EguldenExtension extends AbstractExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(Currencies.EFL);
+        result.add(CryptoCurrency.EFL.getCode());
         return result;
     }
 }

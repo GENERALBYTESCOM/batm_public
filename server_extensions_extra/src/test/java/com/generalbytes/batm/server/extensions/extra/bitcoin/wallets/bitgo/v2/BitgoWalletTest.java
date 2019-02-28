@@ -3,7 +3,7 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.LoggerContext;
 import com.generalbytes.batm.server.extensions.Converters;
-import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -59,7 +59,7 @@ public class BitgoWalletTest {
     @Test
     @Ignore
     public void getCryptAddressTest() {
-        String coin = Currencies.TBTC;
+        String coin = CryptoCurrency.TBTC.getCode();
         String host = "https://test.bitgo.com";
         String port = null;
         String token = "v2x8d5e9e46379dc328b2039a400a12b04ea986689b38107fd84cd339bc89e3fb21";
@@ -75,7 +75,7 @@ public class BitgoWalletTest {
     @Test
     @Ignore
     public void getCryptBalanceTest() {
-        String coin = Currencies.TBTC;
+        String coin = CryptoCurrency.TBTC.getCode();
         String host = "https://test.bitgo.com";
         String port = null;
         String token = "v2x8d5e9e46379dc328b2039a400a12b04ea986689b38107fd84cd339bc89e3fb21";
@@ -92,7 +92,7 @@ public class BitgoWalletTest {
     @Ignore("Local instance of bitgo-express is required to run")
     public void sendCoinsTest() {
         String destinationAddress = "2N5q4MwNSUxbAtaidhRgkiDrbwVR4yCZDhi";
-        String coin = Currencies.TBTC;
+        String coin = CryptoCurrency.TBTC.getCode();
         Integer amountInt = 10000;
         BigDecimal amount = BigDecimal.valueOf(amountInt).divide(Converters.TBTC);
         String description = null;

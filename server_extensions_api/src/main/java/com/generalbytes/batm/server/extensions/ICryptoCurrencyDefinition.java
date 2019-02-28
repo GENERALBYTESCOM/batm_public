@@ -28,6 +28,12 @@ public interface ICryptoCurrencyDefinition {
     String getName();
 
     /**
+     * Returns protocol of the crytocurrency. Used on redeem tickets for example "bitcoin:address?amount=1". For example: bitcoin
+     * @return
+     */
+    String getProtocol();
+
+    /**
      * Link to the currency author website. For example https://en.wikipedia.org/wiki/Satoshi_Nakamoto
      * @return
      */

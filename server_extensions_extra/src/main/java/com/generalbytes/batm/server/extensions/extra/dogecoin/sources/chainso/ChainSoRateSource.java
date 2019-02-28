@@ -1,7 +1,7 @@
 package com.generalbytes.batm.server.extensions.extra.dogecoin.sources.chainso;
 
-import com.generalbytes.batm.server.extensions.Currencies;
-import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,10 +31,10 @@ public class ChainSoRateSource implements IRateSource{
 
     @Override
     public BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency) {
-        if (!Currencies.DOGE.equalsIgnoreCase(cryptoCurrency)) {
+        if (!CryptoCurrency.DOGE.getCode().equalsIgnoreCase(cryptoCurrency)) {
             return null;
         }
-        if (!Currencies.USD.equalsIgnoreCase(fiatCurrency)) {
+        if (!FiatCurrency.USD.getCode().equalsIgnoreCase(fiatCurrency)) {
             return null;
         }
 
@@ -66,10 +66,10 @@ public class ChainSoRateSource implements IRateSource{
     }
 
     private BigDecimal getExchangeRateLastSync(String cryptoCurrency, String fiatCurrency) {
-        if (!Currencies.DOGE.equalsIgnoreCase(cryptoCurrency)) {
+        if (!CryptoCurrency.DOGE.getCode().equalsIgnoreCase(cryptoCurrency)) {
             return null;
         }
-        if (!Currencies.USD.equalsIgnoreCase(fiatCurrency)) {
+        if (!FiatCurrency.USD.getCode().equalsIgnoreCase(fiatCurrency)) {
             return null;
         }
 
@@ -89,19 +89,19 @@ public class ChainSoRateSource implements IRateSource{
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(Currencies.DOGE);
+        result.add(CryptoCurrency.DOGE.getCode());
         return result;
     }
 
     @Override
     public Set<String> getFiatCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(Currencies.USD);
+        result.add(FiatCurrency.USD.getCode());
         return result;
     }
 
     @Override
     public String getPreferredFiatCurrency() {
-        return Currencies.USD;
+        return FiatCurrency.USD.getCode();
     }
 }

@@ -17,6 +17,8 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.dogecoin;
 
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.dogecoin.sources.chainso.ChainSoRateSource;
@@ -67,6 +69,18 @@ public class DogecoinExtension extends AbstractExtension{
                     return new DogecoindRPCWallet(rpcURL,accountName);
                 }
             }
+            if ("dogedemo".equalsIgnoreCase(walletType)) {
+
+                String fiatCurrency = st.nextToken();
+                String walletAddress = "";
+                if (st.hasMoreTokens()) {
+                    walletAddress = st.nextToken();
+                }
+
+                if (fiatCurrency != null && walletAddress != null) {
+                    return new DummyExchangeAndWalletAndSource(fiatCurrency, CryptoCurrency.DOGE.getCode(), walletAddress);
+                }
+            }
 
         }
         return null;
@@ -74,7 +88,7 @@ public class DogecoinExtension extends AbstractExtension{
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (Currencies.DOGE.equalsIgnoreCase(cryptoCurrency)) {
+        if (CryptoCurrency.DOGE.getCode().equalsIgnoreCase(cryptoCurrency)) {
             return new DogecoinAddressValidator();
         }
         return null;
@@ -96,7 +110,7 @@ public class DogecoinExtension extends AbstractExtension{
                     } catch (Throwable e) {
                     }
                 }
-                String preferedFiatCurrency = Currencies.USD;
+                String preferedFiatCurrency = FiatCurrency.USD.getCode();
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
@@ -109,7 +123,7 @@ public class DogecoinExtension extends AbstractExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(Currencies.DOGE);
+        result.add(CryptoCurrency.DOGE.getCode());
         return result;
     }
 

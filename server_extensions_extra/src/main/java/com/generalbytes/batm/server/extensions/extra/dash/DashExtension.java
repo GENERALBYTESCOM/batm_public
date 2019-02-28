@@ -17,6 +17,8 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.dash;
 
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.dash.sources.cddash.CryptodiggersRateSource;
@@ -64,7 +66,7 @@ public class DashExtension extends AbstractExtension{
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (Currencies.DASH.equalsIgnoreCase(cryptoCurrency)) {
+        if (CryptoCurrency.DASH.getCode().equalsIgnoreCase(cryptoCurrency)) {
             return new DashAddressValidator();
         }
         return null;
@@ -79,7 +81,7 @@ public class DashExtension extends AbstractExtension{
                 if (st.hasMoreTokens()) {
                     return new CryptodiggersRateSource(st.nextToken().toUpperCase());
                 }
-                return new CryptodiggersRateSource(Currencies.USD);
+                return new CryptodiggersRateSource(FiatCurrency.USD.getCode());
             } else if ("dashfix".equalsIgnoreCase(exchangeType)) {
                 BigDecimal rate = BigDecimal.ZERO;
                 if (st.hasMoreTokens()) {
@@ -88,13 +90,13 @@ public class DashExtension extends AbstractExtension{
                     } catch (Throwable e) {
                     }
                 }
-                String preferedFiatCurrency = Currencies.USD;
+                String preferedFiatCurrency = FiatCurrency.USD.getCode();
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new FixPriceRateSource(rate, preferedFiatCurrency);
             } else if ("coinmarketcap".equalsIgnoreCase(exchangeType)) {
-                String preferredFiatCurrency = Currencies.USD;
+                String preferredFiatCurrency = FiatCurrency.USD.getCode();
                 String apiKey = null;
                 if (st.hasMoreTokens()) {
                     preferredFiatCurrency = st.nextToken().toUpperCase();
@@ -111,13 +113,13 @@ public class DashExtension extends AbstractExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(Currencies.BTC);
-        result.add(Currencies.BTX);
-        result.add(Currencies.BCH);
-        result.add(Currencies.LTC);
-        result.add(Currencies.XMR);
-        result.add(Currencies.DASH);
-        result.add(Currencies.POT);
+        result.add(CryptoCurrency.BTC.getCode());
+        result.add(CryptoCurrency.BTX.getCode());
+        result.add(CryptoCurrency.BCH.getCode());
+        result.add(CryptoCurrency.LTC.getCode());
+        result.add(CryptoCurrency.XMR.getCode());
+        result.add(CryptoCurrency.DASH.getCode());
+        result.add(CryptoCurrency.POT.getCode());
         return result;
     }
 }

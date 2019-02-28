@@ -243,7 +243,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
 
             LimitOrder order = new LimitOrder.Builder(Order.OrderType.BID, currencyPair)
                     .limitPrice(ticker.getAsk())
-                    .tradableAmount(amount)
+                    .originalAmount(amount)
                     .build();
             log.debug("limitOrder = {}", order);
 
@@ -456,7 +456,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
 //            log.debug("Selected asks:");
             for (LimitOrder ask : asks) {
 //                log.debug("ask = " + ask);
-                asksTotal = asksTotal.add(ask.getTradableAmount());
+                asksTotal = asksTotal.add(ask.getOriginalAmount());
                 if (targetAmount.compareTo(asksTotal) <= 0) {
                     tradableLimit = ask.getLimitPrice();
                     break;
@@ -505,7 +505,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
             });
 
             for (LimitOrder bid : bids) {
-                bidsTotal = bidsTotal.add(bid.getTradableAmount());
+                bidsTotal = bidsTotal.add(bid.getOriginalAmount());
                 if (targetAmount.compareTo(bidsTotal) <= 0) {
                     tradableLimit = bid.getLimitPrice();
                     break;
@@ -557,7 +557,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
                 Ticker ticker = marketService.getTicker(currencyPair);
                 LimitOrder order = new LimitOrder.Builder(Order.OrderType.BID, currencyPair)
                         .limitPrice(ticker.getAsk())
-                        .tradableAmount(amount)
+                        .originalAmount(amount)
                         .build();
 
                 log.debug("limitOrder = {}", order);
