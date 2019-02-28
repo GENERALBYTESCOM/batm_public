@@ -17,7 +17,8 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.anker.sources.luno;
 
-import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.IRateSource;
 
 import si.mazi.rescu.RestProxyFactory;
@@ -28,13 +29,13 @@ import java.util.*;
 public class LunoRateSource implements IRateSource {
 
     private LunoAPI api;
-    private String preferredFiatCurrency = Currencies.ZAR;
+    private String preferredFiatCurrency = FiatCurrency.ZAR.getCode();
 
     public LunoRateSource(String preferedFiatCurrency) {
         api = RestProxyFactory.createProxy(LunoAPI.class, "https://api.mybitx.com");
         
-        if (Currencies.ZAR.equalsIgnoreCase(preferedFiatCurrency)) {
-            this.preferredFiatCurrency = Currencies.ZAR;
+        if (FiatCurrency.ZAR.getCode().equalsIgnoreCase(preferedFiatCurrency)) {
+            this.preferredFiatCurrency = FiatCurrency.ZAR.getCode();
         }
 
     }
@@ -42,14 +43,14 @@ public class LunoRateSource implements IRateSource {
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(Currencies.BTC);
+        result.add(CryptoCurrency.BTC.getCode());
         return result;
     }
 
     @Override
     public Set<String> getFiatCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(Currencies.ZAR);
+        result.add(FiatCurrency.ZAR.getCode());
         return result;
     }
 
@@ -63,7 +64,7 @@ public class LunoRateSource implements IRateSource {
         if (!getFiatCurrencies().contains(fiatCurrency)) {
             return null;
         }
-        if (Currencies.BTC.equalsIgnoreCase(cryptoCurrency)) {
+        if (CryptoCurrency.BTC.getCode().equalsIgnoreCase(cryptoCurrency)) {
             final LunoTickerData btcZar = api.getTicker("XBTZAR");
             BigDecimal lastBtcPriceInZar = btcZar.getPrice();
             return lastBtcPriceInZar;

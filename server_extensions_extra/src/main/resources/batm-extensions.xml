@@ -136,11 +136,8 @@
                 <cryptocurrency>ANON</cryptocurrency>
                 <cryptocurrency>USDT</cryptocurrency>
                 <cryptocurrency>XZC</cryptocurrency>
-<<<<<<< HEAD
                 <cryptocurrency>ANK</cryptocurrency>
-=======
                 <help>USD is default fiat currency.</help>
->>>>>>> e41467db2b6c4c699974242af436f720c2f4d21d
             </ratesource>
             <paymentprocessor prefix="bitcoinpay" name="BitcoinPay.com" >
                 <param name="apikey" />
@@ -1022,6 +1019,11 @@
             <param name="host" />
             <param name="port" />
             <param name="accountname" />
+            <cryptocurrency>ANK</cryptocurrency>
+        </wallet>
+        <wallet prefix="ankerdemo" name="Anker Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
             <cryptocurrency>ANK</cryptocurrency>
         </wallet>
         <ratesource prefix="ankFix" name ="Fix Anker Price" >

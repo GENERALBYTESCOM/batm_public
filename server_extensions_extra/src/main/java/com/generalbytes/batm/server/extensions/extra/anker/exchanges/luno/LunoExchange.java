@@ -1,6 +1,7 @@
 package com.generalbytes.batm.server.extensions.extra.anker.exchanges.luno;
 
-import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 
 import java.math.BigDecimal;
@@ -17,7 +18,7 @@ import org.slf4j.LoggerFactory;
 
 public class LunoExchange implements IExchange {
 
-    private String preferredFiatCurrency = Currencies.ZAR;
+    private String preferredFiatCurrency = FiatCurrency.ZAR.getCode();
     private String clientKey;
     private String clientSecret;
     private String typeorder;
@@ -25,7 +26,7 @@ public class LunoExchange implements IExchange {
     private final Logger log;
 
     public LunoExchange(String clientKey, String clientSecret, String preferredFiatCurrency, String typeorder) {
-        this.preferredFiatCurrency = Currencies.ZAR;
+        this.preferredFiatCurrency = FiatCurrency.ZAR.getCode();
         this.clientKey = clientKey;
         this.clientSecret = clientSecret;
         this.typeorder = typeorder;
@@ -39,14 +40,14 @@ public class LunoExchange implements IExchange {
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> cryptoCurrencies = new HashSet<>();
-        cryptoCurrencies.add(Currencies.BTC);
+        cryptoCurrencies.add(CryptoCurrency.BTC.getCode());
         return cryptoCurrencies;
     }
 
     @Override
     public Set<String> getFiatCurrencies() {
         Set<String> fiatCurrencies = new HashSet<>();
-        fiatCurrencies.add(Currencies.ZAR);
+        fiatCurrencies.add(FiatCurrency.ZAR.getCode());
         return fiatCurrencies;
     }
 
@@ -91,11 +92,15 @@ public class LunoExchange implements IExchange {
         final LunoTickerData btcZar = api.getTicker("XBTZAR");
         BigDecimal pricebid  = btcZar.getBid();
         BigDecimal one       = new BigDecimal(1);
+        BigDecimal onepr     = new BigDecimal(1.01);
+        BigDecimal btcfee    = new BigDecimal(0.000052);
+        amount               = amount.multiply(onepr);
+        amount               = amount.add(btcfee).setScale(6, BigDecimal.ROUND_CEILING);
         BigDecimal price     = pricebid.add(one).setScale(0, BigDecimal.ROUND_CEILING);
         BigDecimal amountbtc = price.multiply(amount).setScale(2, BigDecimal.ROUND_CEILING);
         if (this.typeorder.equals("limit")) {
-            log.debug("limit pair {} type {} amount {} price {}", pair, "BID", amountbtc.toString(), price.toString());
-            final LunoOrderData result = api.createLimitBuyOrder(pair, "BID", amountbtc.toString(), price.toString());
+            log.debug("limit pair {} type {} amount {} price {}", pair, "BID", amount.toString(), price.toString());
+            final LunoOrderData result = api.createLimitBuyOrder(pair, "BID", amount.toString(), price.toString());
             return result.getResult();
         } else {
             log.debug("market pair {} type {} amount   {}  ", pair, type, amountbtc.toString());

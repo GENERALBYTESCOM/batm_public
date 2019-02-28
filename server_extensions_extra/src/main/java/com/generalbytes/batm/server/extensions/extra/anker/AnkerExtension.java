@@ -17,6 +17,8 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.anker;
 
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.anker.sources.luno.LunoRateSource;
@@ -55,7 +57,18 @@ public class AnkerExtension extends AbstractExtension {
                     return new AnkerRPCWallet(rpcURL, accountName);
                 }
             }
+            if ("ankerdemo".equalsIgnoreCase(walletType)) {
 
+                String fiatCurrency = st.nextToken();
+                String walletAddress = "";
+                if (st.hasMoreTokens()) {
+                    walletAddress = st.nextToken();
+                }
+
+                if (fiatCurrency != null && walletAddress != null) {
+                    return new DummyExchangeAndWalletAndSource(fiatCurrency, CryptoCurrency.ANK.getCode(), walletAddress);
+                }
+            }
         }
         return null;
     }
@@ -69,7 +82,7 @@ public class AnkerExtension extends AbstractExtension {
                 String apiKey = st.nextToken();
                 String apiSecret = st.nextToken();
                 String typeorder = st.nextToken();
-                String preferredFiatCurrency = Currencies.ZAR;
+                String preferredFiatCurrency = FiatCurrency.ZAR.getCode();
                 if (st.hasMoreTokens()) {
                     preferredFiatCurrency = st.nextToken().toUpperCase();
                 }
@@ -81,7 +94,7 @@ public class AnkerExtension extends AbstractExtension {
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (Currencies.ANK.equalsIgnoreCase(cryptoCurrency)) {
+        if (CryptoCurrency.ANK.getCode().equalsIgnoreCase(cryptoCurrency)) {
             return new AnkerAddressValidator();
         }
         return null;
@@ -100,14 +113,14 @@ public class AnkerExtension extends AbstractExtension {
                     } catch (Throwable e) {
                     }
                 }
-                String preferedFiatCurrency = Currencies.ZAR;
+                String preferedFiatCurrency = FiatCurrency.ZAR.getCode();
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new FixPriceRateSource(rate, preferedFiatCurrency);
             }
             else if ("lunoRateSource".equalsIgnoreCase(exchangeType)) {
-                String preferedFiatCurrency = Currencies.ZAR;
+                String preferedFiatCurrency = FiatCurrency.ZAR.getCode();
                 return new LunoRateSource(preferedFiatCurrency);
             }
         }
@@ -117,7 +130,7 @@ public class AnkerExtension extends AbstractExtension {
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(Currencies.ANK);
+        result.add(CryptoCurrency.ANK.getCode());
         return result;
     }
 
