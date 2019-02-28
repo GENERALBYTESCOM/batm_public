@@ -30,13 +30,13 @@ public interface IRateSource {
      * This method returns list of supported crypto currencies
      * @return
      */
-    public Set<String> getCryptoCurrencies();
+    Set<String> getCryptoCurrencies();
 
     /**
      * This method returns list of supported fiat currencies
      * @return
      */
-    public Set<String> getFiatCurrencies();
+    Set<String> getFiatCurrencies();
 
     /**
      * Returns current price of cryptocurrency in specified fiat currency
@@ -44,12 +44,12 @@ public interface IRateSource {
      * @param fiatCurrency
      * @return
      */
-    public BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency);
+    BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency);
 
     /**
      * Returns fiat currency that is used for actual purchases of cryptocurrency by server
      * @return
      */
-    public String getPreferredFiatCurrency();
+    String getPreferredFiatCurrency();
 
 }

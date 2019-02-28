@@ -1,19 +1,23 @@
 package com.generalbytes.batm.server.extensions;
 
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.common.currencies.FiatCurrency;
+
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-
-import static com.generalbytes.batm.server.extensions.Currencies.CRYPTO_CURRENCIES;
-import static com.generalbytes.batm.server.extensions.Currencies.FIAT_CURRENCIES;
 
 /**
  * Created by b00lean on 7/31/14.
  */
 public class FixPriceRateSource implements IRateSource {
-    private BigDecimal rate = BigDecimal.ZERO;
 
-    private String preferredFiatCurrency = Currencies.USD;
+    private static final Set<String> FIAT_CURRENCIES = FiatCurrency.getCodes();
+    private static final Set<String> CRYPTO_CURRENCIES = CryptoCurrency.getCodes();
+    private final BigDecimal rate;
+
+    private String preferredFiatCurrency = FiatCurrency.USD.getCode();
 
     public FixPriceRateSource(BigDecimal rate, String preferredFiatCurrency) {
         this.rate = rate;
@@ -25,9 +29,7 @@ public class FixPriceRateSource implements IRateSource {
 
     @Override
     public Set<String> getCryptoCurrencies() {
-        Set<String> result = new HashSet<String>();
-        result.addAll(CRYPTO_CURRENCIES);
-        return result;
+        return CRYPTO_CURRENCIES;
     }
 
     @Override
@@ -40,9 +42,7 @@ public class FixPriceRateSource implements IRateSource {
 
     @Override
     public Set<String> getFiatCurrencies() {
-        Set<String> result = new HashSet<String>();
-        result.addAll(FIAT_CURRENCIES);
-        return result;
+        return FIAT_CURRENCIES;
     }
     @Override
     public String getPreferredFiatCurrency() {

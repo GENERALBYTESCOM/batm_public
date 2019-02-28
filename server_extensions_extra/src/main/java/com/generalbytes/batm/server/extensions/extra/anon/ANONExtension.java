@@ -17,6 +17,8 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.anon;
 
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.anon.wallets.anond.ANONRPCWallet;
@@ -60,6 +62,18 @@ public class ANONExtension extends AbstractExtension {
                     return new ANONRPCWallet(rpcURL, accountName);
                 }
             }
+            if ("anondemo".equalsIgnoreCase(walletType)) {
+
+                String fiatCurrency = st.nextToken();
+                String walletAddress = "";
+                if (st.hasMoreTokens()) {
+                    walletAddress = st.nextToken();
+                }
+
+                if (fiatCurrency != null && walletAddress != null) {
+                    return new DummyExchangeAndWalletAndSource(fiatCurrency, CryptoCurrency.ANON.getCode(), walletAddress);
+                }
+            }
 
         }
         return null;
@@ -67,7 +81,7 @@ public class ANONExtension extends AbstractExtension {
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (Currencies.ANON.equalsIgnoreCase(cryptoCurrency)) {
+        if (CryptoCurrency.ANON.getCode().equalsIgnoreCase(cryptoCurrency)) {
             return new ANONAddressValidator();
         }
         return null;
@@ -79,7 +93,7 @@ public class ANONExtension extends AbstractExtension {
             StringTokenizer st = new StringTokenizer(sourceLogin, ":");
             String exchangeType = st.nextToken();
             if ("coinmarketcap".equalsIgnoreCase(exchangeType)) {
-                String preferredFiatCurrency = Currencies.USD;
+                String preferredFiatCurrency = FiatCurrency.USD.getCode();
                 String apiKey = null;
                 if (st.hasMoreTokens()) {
                     preferredFiatCurrency = st.nextToken().toUpperCase();
@@ -96,7 +110,7 @@ public class ANONExtension extends AbstractExtension {
                     } catch (Throwable e) {
                     }
                 }
-                String preferedFiatCurrency = Currencies.USD;
+                String preferedFiatCurrency = FiatCurrency.USD.getCode();
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
@@ -109,7 +123,7 @@ public class ANONExtension extends AbstractExtension {
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<>();
-        result.add(Currencies.ANON);
+        result.add(CryptoCurrency.ANON.getCode());
         return result;
     }
 

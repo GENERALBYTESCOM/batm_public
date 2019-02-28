@@ -1,5 +1,7 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoinprivate;
 
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoinprivate.wallets.btcpd.BitcoinPrivateRPCWallet;
@@ -43,6 +45,18 @@ public class BitcoinPrivateExtension extends AbstractExtension {
                     return new BitcoinPrivateRPCWallet(rpcURL, accountName);
                 }
             }
+            if ("btcpdemo".equalsIgnoreCase(walletType)) {
+
+                String fiatCurrency = st.nextToken();
+                String walletAddress = "";
+                if (st.hasMoreTokens()) {
+                    walletAddress = st.nextToken();
+                }
+
+                if (fiatCurrency != null && walletAddress != null) {
+                    return new DummyExchangeAndWalletAndSource(fiatCurrency, CryptoCurrency.BTCP.getCode(), walletAddress);
+                }
+            }
 
         }
         return null;
@@ -50,7 +64,7 @@ public class BitcoinPrivateExtension extends AbstractExtension {
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (Currencies.BTCP.equalsIgnoreCase(cryptoCurrency)) {
+        if (CryptoCurrency.BTCP.getCode().equalsIgnoreCase(cryptoCurrency)) {
             return new BitcoinPrivateAddressValidator();
         }
         return null;
@@ -62,7 +76,7 @@ public class BitcoinPrivateExtension extends AbstractExtension {
             StringTokenizer st = new StringTokenizer(sourceLogin, ":");
             String exchangeType = st.nextToken();
             if ("coinmarketcap".equalsIgnoreCase(exchangeType)) {
-                String preferredFiatCurrency = Currencies.USD;
+                String preferredFiatCurrency = FiatCurrency.USD.getCode();
                 String apiKey = null;
                 if (st.hasMoreTokens()) {
                     preferredFiatCurrency = st.nextToken().toUpperCase();
@@ -79,7 +93,7 @@ public class BitcoinPrivateExtension extends AbstractExtension {
                     } catch (Throwable e) {
                     }
                 }
-                String preferedFiatCurrency = Currencies.USD;
+                String preferedFiatCurrency = FiatCurrency.USD.getCode();
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
@@ -92,7 +106,7 @@ public class BitcoinPrivateExtension extends AbstractExtension {
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<>();
-        result.add(Currencies.BTCP);
+        result.add(CryptoCurrency.BTCP.getCode());
         return result;
     }
 

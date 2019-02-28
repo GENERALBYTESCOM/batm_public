@@ -17,6 +17,8 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.lisk;
 
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.lisk.sources.binance.BinanceRateSource;
@@ -48,13 +50,25 @@ public class LiskExtension extends AbstractExtension{
                     return new LskWallet(address,binanceApiKey,binanceApiSecret);
                 }
             }
+            if ("lskdemo".equalsIgnoreCase(walletType)) {
+
+                String fiatCurrency = st.nextToken();
+                String walletAddress = "";
+                if (st.hasMoreTokens()) {
+                    walletAddress = st.nextToken();
+                }
+
+                if (fiatCurrency != null && walletAddress != null) {
+                    return new DummyExchangeAndWalletAndSource(fiatCurrency, CryptoCurrency.LSK.getCode(), walletAddress);
+                }
+            }
         }
         return null;
     }
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (Currencies.LSK.equalsIgnoreCase(cryptoCurrency)) {
+        if (CryptoCurrency.LSK.getCode().equalsIgnoreCase(cryptoCurrency)) {
             return new LiskAddressValidator();
         }
         return null;
@@ -73,14 +87,14 @@ public class LiskExtension extends AbstractExtension{
                     } catch (Throwable e) {
                     }
                 }
-                String preferedFiatCurrency = Currencies.USD;
+                String preferedFiatCurrency = FiatCurrency.USD.getCode();
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new FixPriceRateSource(rate, preferedFiatCurrency);
             }
             else if ("binanceRateSource".equalsIgnoreCase(exchangeType)) {
-                String preferedFiatCurrency = Currencies.USD;
+                String preferedFiatCurrency = FiatCurrency.USD.getCode();
                 String coinmarketcapApiKey = null;
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
@@ -97,7 +111,7 @@ public class LiskExtension extends AbstractExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(Currencies.LSK);
+        result.add(CryptoCurrency.LSK.getCode());
         return result;
     }
 

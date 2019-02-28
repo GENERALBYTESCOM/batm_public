@@ -18,7 +18,9 @@
 package com.generalbytes.batm.server.extensions.extra.digibyte;
 
 import com.generalbytes.batm.server.extensions.AbstractExtension;
-import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.common.currencies.FiatCurrency;
+import com.generalbytes.batm.server.extensions.DummyExchangeAndWalletAndSource;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.IWallet;
@@ -63,13 +65,25 @@ public class DigiByteExtension extends AbstractExtension {
           return new DigiByteRPCWallet(rpcURL, accountName);
         }
       }
+        if ("dgbdemo".equalsIgnoreCase(walletType)) {
+
+            String fiatCurrency = st.nextToken();
+            String walletAddress = "";
+            if (st.hasMoreTokens()) {
+                walletAddress = st.nextToken();
+            }
+
+            if (fiatCurrency != null && walletAddress != null) {
+                return new DummyExchangeAndWalletAndSource(fiatCurrency, CryptoCurrency.DGB.getCode(), walletAddress);
+            }
+        }
     }
     return null;
   }
 
   @Override
   public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-    if (Currencies.DGB.equalsIgnoreCase(cryptoCurrency)) {
+    if (CryptoCurrency.DGB.getCode().equalsIgnoreCase(cryptoCurrency)) {
       return new DigiByteAddressValidator();
     }
     return null;
@@ -88,13 +102,13 @@ public class DigiByteExtension extends AbstractExtension {
           } catch (Throwable e) {
           }
         }
-        String preferedFiatCurrency = Currencies.USD;
+        String preferedFiatCurrency = FiatCurrency.USD.getCode();
         if (st.hasMoreTokens()) {
           preferedFiatCurrency = st.nextToken().toUpperCase();
         }
         return new FixPriceRateSource(rate, preferedFiatCurrency);
       } else if ("livecoin".equalsIgnoreCase(exchangeType)) {
-        String preferedFiatCurrency = Currencies.USD;
+        String preferedFiatCurrency = FiatCurrency.USD.getCode();
         if (st.hasMoreTokens()) {
           preferedFiatCurrency = st.nextToken().toUpperCase();
         }
@@ -107,7 +121,7 @@ public class DigiByteExtension extends AbstractExtension {
   @Override
   public Set<String> getSupportedCryptoCurrencies() {
     Set<String> result = new HashSet<String>();
-    result.add(Currencies.DGB);
+    result.add(CryptoCurrency.DGB.getCode());
     return result;
   }
 }

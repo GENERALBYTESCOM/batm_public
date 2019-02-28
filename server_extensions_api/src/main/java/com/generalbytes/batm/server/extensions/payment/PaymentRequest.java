@@ -17,6 +17,8 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.payment;
 
+import com.generalbytes.batm.server.extensions.IWallet;
+
 import java.math.BigDecimal;
 
 /**
@@ -74,7 +76,9 @@ public class PaymentRequest {
 
     private boolean alreadyRefunded;
 
-    public PaymentRequest(String cryptoCurrency, String description, long validTill, String address, BigDecimal amount, BigDecimal tolerance, int removeAfterNumberOfConfirmationsOfIncomingTransaction, int removeAfterNumberOfConfirmationsOfOutgoingTransaction) {
+    private IWallet wallet;
+
+    public PaymentRequest(String cryptoCurrency, String description, long validTill, String address, BigDecimal amount, BigDecimal tolerance, int removeAfterNumberOfConfirmationsOfIncomingTransaction, int removeAfterNumberOfConfirmationsOfOutgoingTransaction, IWallet wallet) {
         this.cryptoCurrency = cryptoCurrency;
         this.description = description;
         this.validTill = validTill;
@@ -84,6 +88,7 @@ public class PaymentRequest {
         this.removeAfterNumberOfConfirmationsOfOutgoingTransaction = removeAfterNumberOfConfirmationsOfOutgoingTransaction;
         this.tolerance = tolerance;
         txValue = BigDecimal.ZERO;
+        this.wallet = wallet;
     }
 
     /**
@@ -261,5 +266,13 @@ public class PaymentRequest {
         } else {
             return "Watching for " + info + ".";
         }
+    }
+
+    /**
+     * Wallet used from used crypto configuration
+     * @return
+     */
+    public IWallet getWallet() {
+        return wallet;
     }
 }

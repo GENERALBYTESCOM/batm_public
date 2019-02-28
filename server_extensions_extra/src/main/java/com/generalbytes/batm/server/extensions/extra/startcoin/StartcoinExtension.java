@@ -17,6 +17,8 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.startcoin;
 
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.startcoin.wallets.startcoind.StartcoindRPCWallet;
@@ -57,13 +59,25 @@ public class StartcoinExtension extends AbstractExtension{
                     return new StartcoindRPCWallet(rpcURL,accountName);
                 }
             }
+            if ("startdemo".equalsIgnoreCase(walletType)) {
+
+                String fiatCurrency = st.nextToken();
+                String walletAddress = "";
+                if (st.hasMoreTokens()) {
+                    walletAddress = st.nextToken();
+                }
+
+                if (fiatCurrency != null && walletAddress != null) {
+                    return new DummyExchangeAndWalletAndSource(fiatCurrency, CryptoCurrency.START.getCode(), walletAddress);
+                }
+            }
         }
         return null;
     }
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (Currencies.START.equalsIgnoreCase(cryptoCurrency)) {
+        if (CryptoCurrency.START.getCode().equalsIgnoreCase(cryptoCurrency)) {
             return new StartcoinAddressValidator();
         }
         return null;
@@ -83,7 +97,7 @@ public class StartcoinExtension extends AbstractExtension{
                     } catch (Throwable e) {
                     }
                 }
-                String preferedFiatCurrency = Currencies.USD;
+                String preferedFiatCurrency = FiatCurrency.USD.getCode();
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
@@ -97,7 +111,7 @@ public class StartcoinExtension extends AbstractExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(Currencies.START);
+        result.add(CryptoCurrency.START.getCode());
         return result;
     }
 }

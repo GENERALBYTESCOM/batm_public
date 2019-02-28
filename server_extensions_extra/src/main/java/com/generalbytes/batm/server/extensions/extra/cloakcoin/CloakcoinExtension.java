@@ -1,5 +1,7 @@
 package com.generalbytes.batm.server.extensions.extra.cloakcoin;
 
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.CoinmarketcapRateSource;
@@ -40,13 +42,25 @@ public class CloakcoinExtension extends AbstractExtension {
                         + "@" + hostname + ":" + port;
                 }
             }
+            if ("cloakdemo".equalsIgnoreCase(walletType)) {
+
+                String fiatCurrency = st.nextToken();
+                String walletAddress = "";
+                if (st.hasMoreTokens()) {
+                    walletAddress = st.nextToken();
+                }
+
+                if (fiatCurrency != null && walletAddress != null) {
+                    return new DummyExchangeAndWalletAndSource(fiatCurrency, CryptoCurrency.CLOAK.getCode(), walletAddress);
+                }
+            }
         }
         return  null;
     }
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (Currencies.CLOAK.equalsIgnoreCase(cryptoCurrency)) {
+        if (CryptoCurrency.CLOAK.getCode().equalsIgnoreCase(cryptoCurrency)) {
             return new CloakcoinAddressValidator();
         }
         return null;
@@ -58,7 +72,7 @@ public class CloakcoinExtension extends AbstractExtension {
             StringTokenizer st = new StringTokenizer(sourceLogin, ":");
             String exchangeType = st.nextToken();
             if ("coinmarketcap".equalsIgnoreCase(exchangeType)) {
-                String preferredFiatCurrency = Currencies.USD;
+                String preferredFiatCurrency = FiatCurrency.USD.getCode();
                 String apiKey = null;
                 if (st.hasMoreTokens()) {
                     preferredFiatCurrency = st.nextToken().toUpperCase();
@@ -76,7 +90,7 @@ public class CloakcoinExtension extends AbstractExtension {
 
                     }
                 }
-                String preferredFiatCurrency = Currencies.USD;
+                String preferredFiatCurrency = FiatCurrency.USD.getCode();
                 if (st.hasMoreTokens()) {
                     preferredFiatCurrency = st.nextToken().toUpperCase();
                 }
@@ -89,7 +103,7 @@ public class CloakcoinExtension extends AbstractExtension {
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<>();
-        result.add(Currencies.CLOAK);
+        result.add(CryptoCurrency.CLOAK.getCode());
         return result;
     }
 }

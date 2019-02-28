@@ -17,6 +17,8 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.bitcloud;
 
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcloud.wallets.bitcloudd.BitclouddRPCWallet;
@@ -57,13 +59,25 @@ public class BitcloudExtension extends AbstractExtension{
                     return new BitclouddRPCWallet(rpcURL,accountName);
                 }
             }
+            if ("btdxdemo".equalsIgnoreCase(walletType)) {
+
+                String fiatCurrency = st.nextToken();
+                String walletAddress = "";
+                if (st.hasMoreTokens()) {
+                    walletAddress = st.nextToken();
+                }
+
+                if (fiatCurrency != null && walletAddress != null) {
+                    return new DummyExchangeAndWalletAndSource(fiatCurrency, CryptoCurrency.BTDX.getCode(), walletAddress);
+                }
+            }
         }
         return null;
     }
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (Currencies.BTDX.equalsIgnoreCase(cryptoCurrency)) {
+        if (CryptoCurrency.BTDX.getCode().equalsIgnoreCase(cryptoCurrency)) {
             return new BitcloudAddressValidator();
         }
         return null;
@@ -83,7 +97,7 @@ public class BitcloudExtension extends AbstractExtension{
                     } catch (Throwable e) {
                     }
                 }
-                String preferedFiatCurrency = Currencies.USD;
+                String preferedFiatCurrency = FiatCurrency.USD.getCode();
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
@@ -97,7 +111,7 @@ public class BitcloudExtension extends AbstractExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(Currencies.BTDX);
+        result.add(CryptoCurrency.BTDX.getCode());
         return result;
     }
 }

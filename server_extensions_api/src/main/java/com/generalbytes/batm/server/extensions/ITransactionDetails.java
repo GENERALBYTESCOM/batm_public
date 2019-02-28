@@ -61,6 +61,7 @@ public interface ITransactionDetails {
     int BUY_ERROR_FINGERPRINT_UNKNOWN = 12;
     int BUY_ERROR_FEE_GREATER_THAN_AMOUNT = 13;
     int BUY_ERROR_PUBLIC_ID_UNKNOWN = 19;
+    int BUY_ERROR_NOT_APPROVED = 20;
 
     int SELL_ERROR_NO_ERROR = 0;
     int SELL_ERROR_INVALID_PARAMETERS = 1;
@@ -74,6 +75,8 @@ public interface ITransactionDetails {
     int SELL_ERROR_NOT_ENOUGH_COINS_ON_EXCHANGE = 15;
     int SELL_ERROR_EXCHANGE_SELL = 16;
     int SELL_ERROR_PAYMENT_INVALID = 17;
+    int SELL_ERROR_DISABLED_SELL = 20;
+    int SELL_ERROR_NOT_APPROVED = 21;
 
     int WITHDRAW_ERROR_NO_ERROR = 0;
     int WITHDRAW_ERROR_INVALID_PARAMETERS = 1;
@@ -82,6 +85,7 @@ public interface ITransactionDetails {
     int WITHDRAW_ERROR_FINGERPRINT_UNKNOWN = 12;
     int WITHDRAW_ERROR_NOT_ENOUGH_CASH = 13;
     int WITHDRAW_ERROR_PHONE_NUMBER_UNKNOWN = 18;
+    int WITHDRAW_ERROR_NOT_APPROVED = 19;
 
     /**
      * Server time of the transaction

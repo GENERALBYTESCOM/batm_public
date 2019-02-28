@@ -15,19 +15,14 @@
 
 package com.generalbytes.batm.server.extensions.extra.smartcash.sources.smartcash;
 
-import com.generalbytes.batm.server.extensions.Currencies;
-import com.generalbytes.batm.server.extensions.Currencies;
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.IRateSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import si.mazi.rescu.ClientConfig;
 import si.mazi.rescu.RestProxyFactory;
-import si.mazi.rescu.serialization.jackson.DefaultJacksonObjectMapperFactory;
-import si.mazi.rescu.serialization.jackson.JacksonObjectMapperFactory;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -48,7 +43,7 @@ public class SmartCashRateSource implements IRateSource{
     public SmartCashRateSource(String preferedFiatCurrency) {
 
         if (!getFiatCurrencies().contains(preferedFiatCurrency)) {
-            preferedFiatCurrency = Currencies.USD;
+            preferedFiatCurrency = FiatCurrency.USD.getCode();
         }
 
         this.preferedFiatCurrency = preferedFiatCurrency;
@@ -77,7 +72,7 @@ public class SmartCashRateSource implements IRateSource{
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(Currencies.SMART);
+        result.add(CryptoCurrency.SMART.getCode());
         return result;
     }
 
@@ -112,7 +107,7 @@ public class SmartCashRateSource implements IRateSource{
     }
 
     private BigDecimal getExchangeRateLastSync(String cryptoCurrency, String fiatCurrency) {
-        if (!Currencies.SMART.equalsIgnoreCase(cryptoCurrency)) {
+        if (!CryptoCurrency.SMART.getCode().equalsIgnoreCase(cryptoCurrency)) {
             return null; //unsupported currency
         }
         APIResponse response = api.returnResponse();
