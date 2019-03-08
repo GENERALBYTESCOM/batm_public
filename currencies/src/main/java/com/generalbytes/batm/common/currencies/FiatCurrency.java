@@ -31,6 +31,7 @@ import java.util.Set;
 public enum FiatCurrency {
 
     AED("United Arab Emirates dirham"),
+    ALL("Albanian lek"),
     AMD("Armenian dram"),
     AUD("Australian dollar"),
     BGN("Bulgarian lev"),

@@ -15,15 +15,13 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-
 package com.generalbytes.batm.server.extensions;
 
-import java.math.BigDecimal;
-
-public interface IRateSourceAdvanced extends IRateSource {
-    BigDecimal getExchangeRateForBuy(String cryptoCurrency, String fiatCurrency);
-    BigDecimal getExchangeRateForSell(String cryptoCurrency, String fiatCurrency);
-
-    BigDecimal calculateBuyPrice(String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount);
-    BigDecimal calculateSellPrice(String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount);
+/**
+ * Filter can modify rate source results by providing different rate source instance
+ */
+public interface IRateSourceFilter {
+    String getName();
+    IRateSource filter(String rateSourceId, IRateSource rateSource);
+    IRateSourceAdvanced filter(String rateSourceId, IRateSourceAdvanced rateSource);
 }
