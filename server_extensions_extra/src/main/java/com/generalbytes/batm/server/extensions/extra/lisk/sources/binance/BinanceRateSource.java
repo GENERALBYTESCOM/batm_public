@@ -49,12 +49,8 @@ public class BinanceRateSource implements IRateSource {
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(CryptoCurrency.BTC.getCode());
-        result.add(CryptoCurrency.LTC.getCode());
-        result.add(CryptoCurrency.ETH.getCode());
         result.add(CryptoCurrency.LSK.getCode());
         result.add(CryptoCurrency.NULS.getCode());
-
         return result;
     }
 
