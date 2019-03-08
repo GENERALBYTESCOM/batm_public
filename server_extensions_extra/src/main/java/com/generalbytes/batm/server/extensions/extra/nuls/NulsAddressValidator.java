@@ -61,11 +61,4 @@ public class NulsAddressValidator implements ICryptoAddressValidator {
         }*/
         return true;
     }
-
-    public static void main(String args[]){
-        NulsAddressValidator validator = new NulsAddressValidator();
-        if(validator.validAddress("Nsdzrffyqoq3RaiBZRvaXHwhu9HuK5cT")){
-            System.out.println("address is valid");
-        }
-    }
 }

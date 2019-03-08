@@ -1083,9 +1083,6 @@
             <param name="fiatCurrency" />
             <param name="coinmarketcapApiKey"/>
             <cryptocurrency>NULS</cryptocurrency>
-            <cryptocurrency>BTC</cryptocurrency>
-            <cryptocurrency>LTC</cryptocurrency>
-            <cryptocurrency>ETH</cryptocurrency>
         </ratesource>
         <cryptologo cryptocurrency="NULS" file="nuls.png"/>
         <cryptologo cryptocurrency="NULS" file="nuls.svg"/>
