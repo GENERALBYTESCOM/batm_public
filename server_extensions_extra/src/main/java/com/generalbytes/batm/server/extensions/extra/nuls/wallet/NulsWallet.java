@@ -8,7 +8,6 @@ import java.util.Set;
 
 public class NulsWallet extends LskWallet {
 
-
     public NulsWallet(String address, String binanceApiKey, String binanceApiSecret) {
         super(address,binanceApiKey,binanceApiSecret);
     }

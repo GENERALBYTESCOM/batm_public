@@ -27,6 +27,7 @@ import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
  */
 public class NulsAddressValidator implements ICryptoAddressValidator {
 
+    private static final int ADDRESS_LENGTH = 32;
 
     @Override
     public boolean isAddressValid(String address) {
@@ -50,15 +51,9 @@ public class NulsAddressValidator implements ICryptoAddressValidator {
         if(!address.toLowerCase().startsWith("ns")){
             return false;
         }
-        if(address.length() != 32){
+        if(address.length() != ADDRESS_LENGTH){
             return false;
         }
-        /*try {
-            Base58.decodeToBigInteger(address);
-            Base58.decodeChecked(address);
-        }catch (AddressFormatException e) {
-            return false;
-        }*/
         return true;
     }
 }
