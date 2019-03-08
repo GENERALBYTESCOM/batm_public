@@ -63,6 +63,7 @@ public class LskWallet implements IWallet {
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
         result.add(CryptoCurrency.LSK.getCode());
+        result.add(CryptoCurrency.NULS.getCode());
         return result;
     }
 
