@@ -1058,6 +1058,20 @@
         </wallet>
         <cryptologo cryptocurrency="ANT" file="ant.png"/>
         <cryptologo cryptocurrency="ANT" file="ant.svg"/>
+        <wallet prefix="infuraERC20_HBX_18_0x6fe355c62c6faf6946ce888ffaba9fd12355ae27" name="Infura.io wallet - HBX">
+            <param name="apiKey" />
+            <param name="mnemonic" />
+            <help>Mnemonic should be 24 words delimited by spaces</help>
+            <cryptocurrency>HBX</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="HBX" file="hbx.svg"/>
+        <wallet prefix="infuraERC20_VOLTZ_18_0x60715e436c37444e29772c0d26a98ae1e8e1a989" name="Infura.io wallet - VOLTZ">
+            <param name="apiKey" />
+            <param name="mnemonic" />
+            <help>Mnemonic should be 24 words delimited by spaces</help>
+            <cryptocurrency>VOLTZ</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="VOLTZ" file="voltz.svg"/>
         <!-- ADD your ERC20 tokens here. And don't forget to add cryptologos. -->
     </extension>
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.TransactionExtension" />-->
