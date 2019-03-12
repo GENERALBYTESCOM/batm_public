@@ -22,8 +22,7 @@ import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.extra.lisk.sources.binance.BinanceRateSource;
-import com.generalbytes.batm.server.extensions.extra.lisk.wallets.liskbinancewallet.LskWallet;
-import com.generalbytes.batm.server.extensions.extra.nuls.wallet.NulsWallet;
+import com.generalbytes.batm.server.extensions.extra.lisk.wallets.liskbinancewallet.BinanceWallet;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -51,7 +50,7 @@ public class NulsExtension extends AbstractExtension {
                 String binanceApiKey = st.nextToken();
                 String binanceApiSecret = st.nextToken();
                 if (address != null && binanceApiKey !=null && binanceApiSecret != null ) {
-                    return new NulsWallet(address,binanceApiKey,binanceApiSecret);
+                    return new BinanceWallet(address,binanceApiKey,binanceApiSecret,CryptoCurrency.NULS.getCode());
                 }
             }
             if ("nulsDemo".equalsIgnoreCase(walletType)) {

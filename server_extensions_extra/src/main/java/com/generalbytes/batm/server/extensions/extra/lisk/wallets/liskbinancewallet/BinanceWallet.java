@@ -23,27 +23,29 @@ public class BinanceWallet implements IWallet {
     private String address;
     private String binanceApiKey;
     private String binanceApiSecret;
+    private final String cryptoCurrency;
 
     private BinanceWalletAPI apiBinance;
 
-    public BinanceWallet(String address, String binanceApiKey, String binanceApiSecret) {
+    public BinanceWallet(String address, String binanceApiKey, String binanceApiSecret,String cryptoCurrency) {
 
         this.address = address;
         this.binanceApiKey = binanceApiKey;
         this.binanceApiSecret = binanceApiSecret;
+        this.cryptoCurrency = cryptoCurrency;
 
         apiBinance = RestProxyFactory.createProxy(BinanceWalletAPI.class, "https://api.binance.com");
     }
 
     @Override
     public String getPreferredCryptoCurrency() {
-        return CryptoCurrency.LSK.getCode();
+        return this.cryptoCurrency;
     }
 
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(CryptoCurrency.LSK.getCode());
+        result.add(this.cryptoCurrency);
         return result;
     }
 
