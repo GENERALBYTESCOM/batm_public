@@ -95,46 +95,51 @@
             <ratesource prefix="fixprice" name ="Fix Price Universal" >
                 <param name="price"/>
                 <param name="fiatcurrency"/>
-                <cryptocurrency>BTC</cryptocurrency>
+                <cryptocurrency>$PAC</cryptocurrency>
+                <cryptocurrency>ANON</cryptocurrency>
+                <cryptocurrency>ANT</cryptocurrency>
+                <cryptocurrency>BAT</cryptocurrency>
                 <cryptocurrency>BCH</cryptocurrency>
-                <cryptocurrency>BTCP</cryptocurrency>
-                <cryptocurrency>BTX</cryptocurrency>
                 <cryptocurrency>BSD</cryptocurrency>
+                <cryptocurrency>BTC</cryptocurrency>
+                <cryptocurrency>BTCP</cryptocurrency>
                 <cryptocurrency>BTDX</cryptocurrency>
+                <cryptocurrency>BTX</cryptocurrency>
                 <cryptocurrency>BURST</cryptocurrency>
                 <cryptocurrency>CLOAK</cryptocurrency>
-                <cryptocurrency>ECA</cryptocurrency>
-                <cryptocurrency>ETH</cryptocurrency>
-                <cryptocurrency>EFL</cryptocurrency>
-                <cryptocurrency>LTC</cryptocurrency>
-                <cryptocurrency>LSK</cryptocurrency>
-                <cryptocurrency>VIA</cryptocurrency>
-                <cryptocurrency>DEX</cryptocurrency>
+                <cryptocurrency>DAI</cryptocurrency>
                 <cryptocurrency>DAI</cryptocurrency>
                 <cryptocurrency>DASH</cryptocurrency>
+                <cryptocurrency>DEX</cryptocurrency>
                 <cryptocurrency>DGB</cryptocurrency>
                 <cryptocurrency>DOGE</cryptocurrency>
+                <cryptocurrency>ECA</cryptocurrency>
+                <cryptocurrency>EFL</cryptocurrency>
+                <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>FLASH</cryptocurrency>
                 <cryptocurrency>FTO</cryptocurrency>
-                <cryptocurrency>MAX</cryptocurrency>
-                <cryptocurrency>MEC</cryptocurrency>
+                <cryptocurrency>GRS</cryptocurrency>
                 <cryptocurrency>LEO</cryptocurrency>
                 <cryptocurrency>LINDA</cryptocurrency>
-                <cryptocurrency>NLG</cryptocurrency>
-                <cryptocurrency>GRS</cryptocurrency>
+                <cryptocurrency>LSK</cryptocurrency>
+                <cryptocurrency>LTC</cryptocurrency>
+                <cryptocurrency>MAX</cryptocurrency>
+                <cryptocurrency>MEC</cryptocurrency>
+                <cryptocurrency>MKR</cryptocurrency>
                 <cryptocurrency>NBT</cryptocurrency>
+                <cryptocurrency>NLG</cryptocurrency>
                 <cryptocurrency>NXT</cryptocurrency>
-                <cryptocurrency>$PAC</cryptocurrency>
                 <cryptocurrency>POT</cryptocurrency>
+                <cryptocurrency>REP</cryptocurrency>
                 <cryptocurrency>SMART</cryptocurrency>
                 <cryptocurrency>START</cryptocurrency>
                 <cryptocurrency>SUM</cryptocurrency>
                 <cryptocurrency>SYS</cryptocurrency>
                 <cryptocurrency>TKN</cryptocurrency>
+                <cryptocurrency>USDT</cryptocurrency>
+                <cryptocurrency>VIA</cryptocurrency>
                 <cryptocurrency>WDC</cryptocurrency>
                 <cryptocurrency>XMR</cryptocurrency>
-                <cryptocurrency>ANON</cryptocurrency>
-                <cryptocurrency>USDT</cryptocurrency>
                 <cryptocurrency>XZC</cryptocurrency>
                 <help>USD is default fiat currency.</help>
             </ratesource>
@@ -1058,6 +1063,20 @@
         </wallet>
         <cryptologo cryptocurrency="ANT" file="ant.png"/>
         <cryptologo cryptocurrency="ANT" file="ant.svg"/>
+        <wallet prefix="infuraERC20_HBX_18_0x6fe355c62c6faf6946ce888ffaba9fd12355ae27" name="Infura.io wallet - HBX">
+            <param name="apiKey" />
+            <param name="mnemonic" />
+            <help>Mnemonic should be 24 words delimited by spaces</help>
+            <cryptocurrency>HBX</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="HBX" file="hbx.svg"/>
+        <wallet prefix="infuraERC20_VOLTZ_18_0x60715e436c37444e29772c0d26a98ae1e8e1a989" name="Infura.io wallet - VOLTZ">
+            <param name="apiKey" />
+            <param name="mnemonic" />
+            <help>Mnemonic should be 24 words delimited by spaces</help>
+            <cryptocurrency>VOLTZ</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="VOLTZ" file="voltz.svg"/>
         <!-- ADD your ERC20 tokens here. And don't forget to add cryptologos. -->
     </extension>
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.TransactionExtension" />-->
