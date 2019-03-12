@@ -65,32 +65,35 @@ public class CoinmarketcapRateSource implements IRateSource {
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(CryptoCurrency.ANT.getCode());
-        result.add(CryptoCurrency.BTC.getCode());
-        result.add(CryptoCurrency.SYS.getCode());
-        result.add(CryptoCurrency.BCH.getCode());
-        result.add(CryptoCurrency.BTX.getCode());
-        result.add(CryptoCurrency.LTC.getCode());
-        result.add(CryptoCurrency.ETH.getCode());
-        result.add(CryptoCurrency.DASH.getCode());
-        result.add(CryptoCurrency.XMR.getCode());
-        result.add(CryptoCurrency.PAC.getCode());
-        result.add(CryptoCurrency.POT.getCode());
-        result.add(CryptoCurrency.FLASH.getCode());
-        result.add(CryptoCurrency.BTCP.getCode());
-        result.add(CryptoCurrency.EFL.getCode());
-        result.add(CryptoCurrency.BSD.getCode());
-        result.add(CryptoCurrency.BTDX.getCode());
-        result.add(CryptoCurrency.MEC.getCode());
-        result.add(CryptoCurrency.BURST.getCode());
-        result.add(CryptoCurrency.DOGE.getCode());
-        result.add(CryptoCurrency.ECA.getCode());
         result.add(CryptoCurrency.ANON.getCode());
-        result.add(CryptoCurrency.LSK.getCode());
-        result.add(CryptoCurrency.USDT.getCode());
-        result.add(CryptoCurrency.XZC.getCode());
+        result.add(CryptoCurrency.ANT.getCode());
+        result.add(CryptoCurrency.BAT.getCode());
+        result.add(CryptoCurrency.BCH.getCode());
+        result.add(CryptoCurrency.BSD.getCode());
+        result.add(CryptoCurrency.BTC.getCode());
+        result.add(CryptoCurrency.BTCP.getCode());
+        result.add(CryptoCurrency.BTDX.getCode());
+        result.add(CryptoCurrency.BTX.getCode());
+        result.add(CryptoCurrency.BURST.getCode());
         result.add(CryptoCurrency.CLOAK.getCode());
         result.add(CryptoCurrency.DAI.getCode());
+        result.add(CryptoCurrency.DASH.getCode());
+        result.add(CryptoCurrency.DOGE.getCode());
+        result.add(CryptoCurrency.ECA.getCode());
+        result.add(CryptoCurrency.EFL.getCode());
+        result.add(CryptoCurrency.ETH.getCode());
+        result.add(CryptoCurrency.FLASH.getCode());
+        result.add(CryptoCurrency.LSK.getCode());
+        result.add(CryptoCurrency.LTC.getCode());
+        result.add(CryptoCurrency.MEC.getCode());
+        result.add(CryptoCurrency.MKR.getCode());
+        result.add(CryptoCurrency.PAC.getCode());
+        result.add(CryptoCurrency.POT.getCode());
+        result.add(CryptoCurrency.REP.getCode());
+        result.add(CryptoCurrency.SYS.getCode());
+        result.add(CryptoCurrency.USDT.getCode());
+        result.add(CryptoCurrency.XMR.getCode());
+        result.add(CryptoCurrency.XZC.getCode());
 
         return result;
     }
@@ -98,10 +101,10 @@ public class CoinmarketcapRateSource implements IRateSource {
     @Override
     public Set<String> getFiatCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(FiatCurrency.USD.getCode());
         result.add(FiatCurrency.CAD.getCode());
         result.add(FiatCurrency.EUR.getCode());
         result.add(FiatCurrency.HKD.getCode());
+        result.add(FiatCurrency.USD.getCode());
         return result;
     }
 

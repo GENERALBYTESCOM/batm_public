@@ -184,7 +184,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
             BigDecimal balance = wallet.getBalance(Currency.getInstance(fiatCurrency)).getAvailable();
             log.debug("{} exchange balance request: {} = {}", name, fiatCurrency, balance);
             return balance;
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error("Error", e);
             log.error("{} exchange balance request: {}", name, fiatCurrency, e);
         }
