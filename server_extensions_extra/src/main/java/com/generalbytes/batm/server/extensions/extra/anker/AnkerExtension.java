@@ -80,6 +80,31 @@ public class AnkerExtension extends AbstractExtension {
     }
 
     @Override
+    public IRateSource createRateSource(String sourceLogin) {
+        if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
+            StringTokenizer st = new StringTokenizer(sourceLogin,":");
+            String exchangeType = st.nextToken();
+
+            if ("ankfix".equalsIgnoreCase(exchangeType)) {
+                BigDecimal rate = BigDecimal.ZERO;
+                if (st.hasMoreTokens()) {
+                    try {
+                        rate = new BigDecimal(st.nextToken());
+                    } catch (Throwable e) {
+                    }
+                }
+                String preferedFiatCurrency = FiatCurrency.ZAR.getCode();
+                if (st.hasMoreTokens()) {
+                    preferedFiatCurrency = st.nextToken().toUpperCase();
+                }
+                return new FixPriceRateSource(rate, preferedFiatCurrency);
+            }
+
+        }
+        return null;
+    }
+
+    @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
         result.add(CryptoCurrency.ANK.getCode());

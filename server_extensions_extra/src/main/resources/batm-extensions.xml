@@ -1046,6 +1046,10 @@
             <param name="walletAddress" />
             <cryptocurrency>ANK</cryptocurrency>
         </wallet>
+        <ratesource prefix="ankfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>ANK</cryptocurrency>
+        </ratesource>
         <cryptologo cryptocurrency="ANK" file="anker.png"/>
         <cryptologo cryptocurrency="ANK" file="anker.svg"/>
     </extension>
