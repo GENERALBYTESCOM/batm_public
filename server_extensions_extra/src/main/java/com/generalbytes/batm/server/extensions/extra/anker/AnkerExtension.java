@@ -21,9 +21,7 @@ import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
-import com.generalbytes.batm.server.extensions.extra.anker.sources.luno.LunoRateSource;
 import com.generalbytes.batm.server.extensions.extra.anker.wallets.ankerd.AnkerRPCWallet;
-import com.generalbytes.batm.server.extensions.extra.anker.exchanges.luno.LunoExchange;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -74,55 +72,9 @@ public class AnkerExtension extends AbstractExtension {
     }
 
     @Override
-    public IExchange createExchange(String sourceLogin) {
-        if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
-            StringTokenizer st = new StringTokenizer(sourceLogin, ":");
-            String exchangeType = st.nextToken();
-            if ("lunoexchange".equalsIgnoreCase(exchangeType)) {
-                String apiKey = st.nextToken();
-                String apiSecret = st.nextToken();
-                String typeorder = st.nextToken();
-                String preferredFiatCurrency = FiatCurrency.ZAR.getCode();
-                if (st.hasMoreTokens()) {
-                    preferredFiatCurrency = st.nextToken().toUpperCase();
-                }
-                return new LunoExchange(apiKey, apiSecret, preferredFiatCurrency, typeorder);
-            }
-        }
-        return null;
-    }
-
-    @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
         if (CryptoCurrency.ANK.getCode().equalsIgnoreCase(cryptoCurrency)) {
             return new AnkerAddressValidator();
-        }
-        return null;
-    }
-
-    @Override
-    public IRateSource createRateSource(String sourceLogin) {
-        if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
-            StringTokenizer st = new StringTokenizer(sourceLogin, ":");
-            String exchangeType = st.nextToken();
-            if ("ankFix".equalsIgnoreCase(exchangeType)) {
-                BigDecimal rate = BigDecimal.ZERO;
-                if (st.hasMoreTokens()) {
-                    try {
-                        rate = new BigDecimal(st.nextToken());
-                    } catch (Throwable e) {
-                    }
-                }
-                String preferedFiatCurrency = FiatCurrency.ZAR.getCode();
-                if (st.hasMoreTokens()) {
-                    preferedFiatCurrency = st.nextToken().toUpperCase();
-                }
-                return new FixPriceRateSource(rate, preferedFiatCurrency);
-            }
-            else if ("lunoRateSource".equalsIgnoreCase(exchangeType)) {
-                String preferedFiatCurrency = FiatCurrency.ZAR.getCode();
-                return new LunoRateSource(preferedFiatCurrency);
-            }
         }
         return null;
     }
