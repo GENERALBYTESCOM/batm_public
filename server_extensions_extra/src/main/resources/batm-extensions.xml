@@ -148,6 +148,10 @@
                 <cryptocurrency>ANK</cryptocurrency>
                 <help>USD is default fiat currency.</help>
             </ratesource>
+            <ratesource prefix="lunoRateSource" name ="Luno Rate Source" >
+                <param name="fiatCurrency" />
+                <cryptocurrency>BTC</cryptocurrency>
+            </ratesource>
             <paymentprocessor prefix="bitcoinpay" name="BitcoinPay.com" >
                 <param name="apikey" />
                 <cryptocurrency>BTC</cryptocurrency>
@@ -157,6 +161,14 @@
                 <param name="pin" />
                 <cryptocurrency>BTC</cryptocurrency>
             </paymentprocessor>
+            <exchange prefix="lunoexchange" name="Luno.com Exchange">
+                <param name="apikey" />
+                <param name="apisecret" />
+                <param name="typeorders" />
+                <param name="fiatcurrency" />
+                <help>Typeorders can be limit or market</help>
+                <cryptocurrency>BTC</cryptocurrency>
+            </exchange>
             <exchange prefix="bitfinex" name="Bitfinex.com Exchange">
                 <param name="apikey" />
                 <param name="apisecret" />
@@ -1035,22 +1047,6 @@
             <param name="walletAddress" />
             <cryptocurrency>ANK</cryptocurrency>
         </wallet>
-        <ratesource prefix="ankFix" name ="Fix Anker Price" >
-            <param name="price" />
-            <cryptocurrency>ANK</cryptocurrency>
-        </ratesource>
-        <ratesource prefix="lunoRateSource" name ="Luno Rate Source" >
-            <param name="fiatCurrency" />
-            <cryptocurrency>BTC</cryptocurrency>
-        </ratesource>
-        <exchange prefix="lunoexchange" name="Luno.com Exchange">
-            <param name="apikey" />
-            <param name="apisecret" />
-            <param name="typeorders" />
-            <param name="fiatcurrency" />
-            <help>Typeorders can be limit or market</help>
-            <cryptocurrency>BTC</cryptocurrency>
-        </exchange>
         <cryptologo cryptocurrency="ANK" file="anker.png"/>
         <cryptologo cryptocurrency="ANK" file="anker.svg"/>
     </extension>
