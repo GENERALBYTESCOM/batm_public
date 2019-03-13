@@ -22,8 +22,10 @@ import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.CryptoCurrencyDefinition;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
+import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.ethereum.erc20.ERC20Wallet;
+import com.generalbytes.batm.server.extensions.extra.ethereum.stream365.Stream365;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -75,6 +77,14 @@ public class EthereumExtension extends AbstractExtension{
                     return new ERC20Wallet(apiKey, passwordOrMnemonic, tokenSymbol, tokenDecimalPlaces, contractAddress);
                 }
             }
+        }
+        return null;
+    }
+
+    @Override
+    public IRateSource createRateSource(String sourceLogin) {
+        if ("stream365".equalsIgnoreCase(sourceLogin)) {
+            return new Stream365();
         }
         return null;
     }
