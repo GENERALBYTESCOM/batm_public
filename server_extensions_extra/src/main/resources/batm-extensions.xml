@@ -145,7 +145,6 @@
                 <cryptocurrency>WDC</cryptocurrency>
                 <cryptocurrency>XMR</cryptocurrency>
                 <cryptocurrency>XZC</cryptocurrency>
-                <cryptocurrency>ANK</cryptocurrency>
                 <help>USD is default fiat currency.</help>
             </ratesource>
             <ratesource prefix="lunoRateSource" name ="Luno Rate Source" >
