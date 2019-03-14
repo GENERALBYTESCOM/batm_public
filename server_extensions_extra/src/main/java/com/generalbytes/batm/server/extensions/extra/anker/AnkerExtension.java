@@ -54,7 +54,7 @@ public class AnkerExtension extends AbstractExtension {
                     String rpcURL = protocol + "://" + username + ":" + password + "@" + hostname + ":" + port;
                     return new AnkerRPCWallet(rpcURL, accountName);
                 }
-            }
+            } else
             if ("ankerdemo".equalsIgnoreCase(walletType)) {
 
                 String fiatCurrency = st.nextToken();
