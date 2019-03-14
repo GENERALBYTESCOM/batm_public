@@ -44,6 +44,8 @@ public class Stream365 implements IRateSource{
         Set<String> currencies = new HashSet<>();
         currencies.add(CryptoCurrency.HBX.getCode());
         currencies.add(CryptoCurrency.VOLTZ.getCode());
+        currencies.add(CryptoCurrency.THBX.getCode());
+        currencies.add(CryptoCurrency.MUSD.getCode());
         return currencies;
     }
 
@@ -65,6 +67,10 @@ public class Stream365 implements IRateSource{
             pair = "TUSD_VOLTZ";
         }else if (cryptoCurrency.equalsIgnoreCase(CryptoCurrency.HBX.getCode()) && fiatCurrency.equalsIgnoreCase(FiatCurrency.USD.getCode())){
             pair = "TUSD_HBX";
+        }else if (cryptoCurrency.equalsIgnoreCase(CryptoCurrency.THBX.getCode()) && fiatCurrency.equalsIgnoreCase(FiatCurrency.USD.getCode())){
+            pair = "TUSD_THB";
+        }else if (cryptoCurrency.equalsIgnoreCase(CryptoCurrency.MUSD.getCode()) && fiatCurrency.equalsIgnoreCase(FiatCurrency.USD.getCode())){
+            return BigDecimal.ONE;
         }
         if (pair != null) {
             MarketData marketData = api.getMarketData(pair);

@@ -95,6 +95,8 @@
             <ratesource prefix="stream365" name ="365.stream" >
                 <cryptocurrency>HBX</cryptocurrency>
                 <cryptocurrency>VOLTZ</cryptocurrency>
+                <cryptocurrency>THBX</cryptocurrency>
+                <cryptocurrency>MUSD</cryptocurrency>
             </ratesource>
             <ratesource prefix="fixprice" name ="Fix Price Universal" >
                 <param name="price"/>
@@ -1081,6 +1083,20 @@
             <cryptocurrency>VOLTZ</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="VOLTZ" file="voltz.svg"/>
+        <wallet prefix="infuraERC20_THBX_18_0xa3091381eb7e7c3c2cee5cb1578adebd3b7645ef" name="Infura.io wallet - THBX">
+            <param name="apiKey" />
+            <param name="mnemonic" />
+            <help>Mnemonic should be 24 words delimited by spaces</help>
+            <cryptocurrency>THBX</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="THBX" file="thbx.svg"/>
+        <wallet prefix="infuraERC20_MOVEX_18_0x052fe7e1b9c0eae5a4f55f307c77f31c391803e8" name="Infura.io wallet - MOVEX-MUSD">
+            <param name="apiKey" />
+            <param name="mnemonic" />
+            <help>Mnemonic should be 24 words delimited by spaces</help>
+            <cryptocurrency>MUSD</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="MUSD" file="musd.svg"/>
         <!-- ADD your ERC20 tokens here. And don't forget to add cryptologos. -->
     </extension>
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.TransactionExtension" />-->
