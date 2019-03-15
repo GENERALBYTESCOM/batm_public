@@ -19,15 +19,21 @@ package com.generalbytes.batm.server.extensions.extra.ethereum;
 
 import com.generalbytes.batm.server.extensions.AbstractExtension;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.server.extensions.CryptoCurrencyDefinition;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
+import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
+import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.ethereum.erc20.ERC20Wallet;
+import com.generalbytes.batm.server.extensions.extra.ethereum.stream365.Stream365;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
 public class EthereumExtension extends AbstractExtension{
+//    private static final CryptoCurrencyDefinition DEFINITION = new EthereumDefinition();
+
     @Override
     public String getName() {
         return "BATM Ethereum extension";
@@ -37,7 +43,15 @@ public class EthereumExtension extends AbstractExtension{
     public Set<String> getSupportedCryptoCurrencies() {
         HashSet<String> result = new HashSet<>();
         result.add(CryptoCurrency.ETH.getCode());
+        result.add(CryptoCurrency.ANT.getCode());
+        result.add(CryptoCurrency.BAT.getCode());
+        result.add(CryptoCurrency.REP.getCode());
+        result.add(CryptoCurrency.MKR.getCode());
         result.add(CryptoCurrency.DAI.getCode());
+        result.add(CryptoCurrency.HBX.getCode());
+        result.add(CryptoCurrency.VOLTZ.getCode());
+        result.add(CryptoCurrency.THBX.getCode());
+        result.add(CryptoCurrency.MUSD.getCode());
         return result;
     }
 
@@ -70,6 +84,14 @@ public class EthereumExtension extends AbstractExtension{
     }
 
     @Override
+    public IRateSource createRateSource(String sourceLogin) {
+        if (sourceLogin.startsWith("stream365")) {
+            return new Stream365();
+        }
+        return null;
+    }
+
+    @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
         if (!getSupportedCryptoCurrencies().contains(cryptoCurrency)) {
             return null;
@@ -94,4 +116,13 @@ public class EthereumExtension extends AbstractExtension{
 
         };
     }
+
+
+    @Override
+    public Set<ICryptoCurrencyDefinition> getCryptoCurrencyDefinitions() {
+        Set<ICryptoCurrencyDefinition> result = new HashSet<>();
+//        result.add(DEFINITION);
+        return result;
+    }
+
 }

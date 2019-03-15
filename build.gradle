@@ -43,9 +43,7 @@ allprojects {
         options.encoding = 'UTF-8'
         options.incremental = true
     }
-}
-
-allprojects {
+    
     afterEvaluate {
         if (pluginManager.hasPlugin('com.generalbytes.gradle.dependency.verification')) {
             dependencyChecksums {
@@ -61,5 +59,9 @@ allprojects {
 //                conflictFail false // turns off failure on version conflict
             }
         }
+    }
+
+    wrapper {
+        distributionType = Wrapper.DistributionType.ALL
     }
 }
