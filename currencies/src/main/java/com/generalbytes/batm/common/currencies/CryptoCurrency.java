@@ -87,6 +87,7 @@ public enum CryptoCurrency {
     WDC("WorldCoin"),
     XMR("Monero"),
     XZC("Zcoin"),
+    BAY("BitBayCoin"),
 
     TBCH("test BCH"),
     TBTC("test BTC"),
