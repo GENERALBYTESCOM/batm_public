@@ -49,11 +49,8 @@ public class BinanceRateSource implements IRateSource {
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(CryptoCurrency.BTC.getCode());
-        result.add(CryptoCurrency.LTC.getCode());
-        result.add(CryptoCurrency.ETH.getCode());
         result.add(CryptoCurrency.LSK.getCode());
-
+        result.add(CryptoCurrency.NULS.getCode());
         return result;
     }
 
@@ -76,15 +73,15 @@ public class BinanceRateSource implements IRateSource {
             return null;
         }
         final BinanceTickerData btcUsdt = api.getTicker("BTCUSDT");
-        final BinanceTickerData lskBtc = api.getTicker(cryptoCurrency + "BTC");
+        final BinanceTickerData selectedCryptoInBtc = api.getTicker(cryptoCurrency + "BTC");
         CoinmarketcapRateSource coinMarketCapSource = new CoinmarketcapRateSource(coinmarketcapApiKey, fiatCurrency);
         BigDecimal lastUsdtFiat = coinMarketCapSource.getExchangeRateLast("USDT", fiatCurrency);
-        if (lastUsdtFiat != null && btcUsdt.getPrice()!=null && lskBtc.getPrice() !=null ) {
+        if (lastUsdtFiat != null && btcUsdt.getPrice()!=null && selectedCryptoInBtc.getPrice() !=null ) {
             BigDecimal lastBtcPriceInUsdt = btcUsdt.getPrice();
-            BigDecimal lastLskPriceInBtc = lskBtc.getPrice();
-            BigDecimal lastLskPriceInUsdt = lastLskPriceInBtc.multiply(lastBtcPriceInUsdt);
-            BigDecimal lastLskPriceInFiat = lastLskPriceInUsdt.multiply(lastUsdtFiat);
-            return lastLskPriceInFiat;
+            BigDecimal lastSelectedCryptoPriceInBtc = selectedCryptoInBtc.getPrice();
+            BigDecimal lastSelectedCryptoPriceInUsdt = lastSelectedCryptoPriceInBtc.multiply(lastBtcPriceInUsdt);
+            BigDecimal lastSelectedCryptoPriceInFiat = lastSelectedCryptoPriceInUsdt.multiply(lastUsdtFiat);
+            return lastSelectedCryptoPriceInFiat;
         }
         return null;
     }

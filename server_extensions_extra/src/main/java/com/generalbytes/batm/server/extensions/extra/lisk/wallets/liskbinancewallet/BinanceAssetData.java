@@ -17,22 +17,25 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.lisk.wallets.liskbinancewallet;
 
-public class LskSendCoinResponse {
-    private Boolean success; 
-    private String msg;
-    public Boolean getSuccess() {
-        return success;
+import java.math.BigDecimal;
+
+public class BinanceAssetData {
+    private String asset;
+    private BigDecimal free;
+
+    public String getAsset() {
+        return asset;
     }
 
-    public void setSuccess(Boolean success) {
-        this.success = success;
-    }
-    
-    public String getMsg() {
-        return msg;
+    public void setAsset(String asset) {
+        this.asset = asset;
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
+    public BigDecimal getFree() {
+        return free;
+    }
+
+    public void setFree(BigDecimal free) {
+        this.free = free;
     }
 }
