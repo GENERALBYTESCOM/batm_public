@@ -55,14 +55,16 @@ public class ERC20Wallet implements IWallet{
     private Credentials credentials;
     private String apiKey;
     private Web3j w;
+    private BigInteger gasLimit;
 
     private static final Logger log = LoggerFactory.getLogger(ERC20Wallet.class);
 
-    public ERC20Wallet(String apiKey, String mnemonicOrPassword, String tokenSymbol, int tokenDecimalPlaces, String contractAddress) {
+    public ERC20Wallet(String apiKey, String mnemonicOrPassword, String tokenSymbol, int tokenDecimalPlaces, String contractAddress, BigInteger gasLimit) {
         this.apiKey = apiKey;
 
         this.tokenSymbol = tokenSymbol;
         this.tokenDecimalPlaces = tokenDecimalPlaces;
+        this.gasLimit = gasLimit;
 
         credentials = initCredentials(mnemonicOrPassword);
         w = Web3j.build(new HttpService("https://mainnet.infura.io/v3/" + apiKey));
@@ -83,12 +85,17 @@ public class ERC20Wallet implements IWallet{
                 @Override
                 public BigInteger getGasLimit(String contractFunc) {
                     if (ERC20Interface.FUNC_TRANSFER.equals(contractFunc)) {
-                        //get gas estimate for the transaction
-                        BigInteger transferGasEstimate = getTransferGasEstimate(credentials.getAddress(), new BigDecimal("1"));
-                        //Make gas limit 10% higher than estimate just to be safe
-                        BigInteger gasLimit = new BigDecimal(transferGasEstimate).multiply(new BigDecimal("1.1")).setScale(0, RoundingMode.UP).toBigInteger();
-                        log.debug("Calculated gasLimit is: " + gasLimit);
-                        return gasLimit;
+                        if (gasLimit == null) {
+                            //get gas estimate for the transaction
+                            BigInteger transferGasEstimate = getTransferGasEstimate(credentials.getAddress(), new BigDecimal("1"));
+                            //Make gas limit 10% higher than estimate just to be safe
+                            BigInteger gasLimit = new BigDecimal(transferGasEstimate).multiply(new BigDecimal("1.1")).setScale(0, RoundingMode.UP).toBigInteger();
+                            log.debug("Calculated gasLimit is: " + gasLimit);
+                            return gasLimit;
+                        }else{
+                            log.debug("Using fixed gasLimit: " + gasLimit);
+                            return gasLimit;
+                        }
                     }else{
                         return null;
                     }
@@ -96,7 +103,7 @@ public class ERC20Wallet implements IWallet{
 
                 @Override
                 public BigInteger getGasLimit() {
-                    return null;
+                    return null; //deprecated
                 }
             };
             contract = ERC20Interface.load(contractAddress, w, credentials, gasProvider);

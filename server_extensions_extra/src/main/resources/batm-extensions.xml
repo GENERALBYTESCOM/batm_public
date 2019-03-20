@@ -1041,6 +1041,8 @@
             <param name="apiKey" />
             <param name="mnemonic" />
             <help>Mnemonic should be 24 words delimited by spaces</help>
+            <param name="gaslimit" />
+            <help>Optional parameter to set gas limit</help>
             <cryptocurrency>DAI</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="DAI" file="dai.png"/>
@@ -1049,6 +1051,8 @@
             <param name="apiKey" />
             <param name="mnemonic" />
             <help>Mnemonic should be 24 words delimited by spaces</help>
+            <param name="gaslimit" />
+            <help>Optional parameter to set gas limit</help>
             <cryptocurrency>MKR</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="MKR" file="mkr.png"/>
@@ -1057,6 +1061,8 @@
             <param name="apiKey" />
             <param name="mnemonic" />
             <help>Mnemonic should be 24 words delimited by spaces</help>
+            <param name="gaslimit" />
+            <help>Optional parameter to set gas limit</help>
             <cryptocurrency>BAT</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="BAT" file="bat.png"/>
@@ -1065,6 +1071,8 @@
             <param name="apiKey" />
             <param name="mnemonic" />
             <help>Mnemonic should be 24 words delimited by spaces</help>
+            <param name="gaslimit" />
+            <help>Optional parameter to set gas limit</help>
             <cryptocurrency>REP</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="REP" file="rep.png"/>
@@ -1073,6 +1081,8 @@
             <param name="apiKey" />
             <param name="mnemonic" />
             <help>Mnemonic should be 24 words delimited by spaces</help>
+            <param name="gaslimit" />
+            <help>Optional parameter to set gas limit</help>
             <cryptocurrency>ANT</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="ANT" file="ant.png"/>
@@ -1081,6 +1091,8 @@
             <param name="apiKey" />
             <param name="mnemonic" />
             <help>Mnemonic should be 24 words delimited by spaces</help>
+            <param name="gaslimit" />
+            <help>Optional parameter to set gas limit</help>
             <cryptocurrency>HBX</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="HBX" file="hbx.svg"/>
@@ -1088,6 +1100,8 @@
             <param name="apiKey" />
             <param name="mnemonic" />
             <help>Mnemonic should be 24 words delimited by spaces</help>
+            <param name="gaslimit" />
+            <help>Optional parameter to set gas limit</help>
             <cryptocurrency>VOLTZ</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="VOLTZ" file="voltz.svg"/>
@@ -1095,6 +1109,8 @@
             <param name="apiKey" />
             <param name="mnemonic" />
             <help>Mnemonic should be 24 words delimited by spaces</help>
+            <param name="gaslimit" />
+            <help>Optional parameter to set gas limit</help>
             <cryptocurrency>THBX</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="THBX" file="thbx.svg"/>
@@ -1102,6 +1118,8 @@
             <param name="apiKey" />
             <param name="mnemonic" />
             <help>Mnemonic should be 24 words delimited by spaces</help>
+            <param name="gaslimit" />
+            <help>Optional parameter to set gas limit</help>
             <cryptocurrency>MUSD</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="MUSD" file="musd.svg"/>
