@@ -27,6 +27,7 @@ import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.ethereum.erc20.ERC20Wallet;
 import com.generalbytes.batm.server.extensions.extra.ethereum.stream365.Stream365;
 
+import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -68,15 +69,20 @@ public class EthereumExtension extends AbstractExtension{
                     return new InfuraWallet(apiKey, passwordOrMnemonic);
                 }
             }else if (walletType.startsWith("infuraERC20_")) {
-                StringTokenizer st2 = new StringTokenizer(walletType,"_");
-                st2.nextToken();//no use for this one
-                String tokenSymbol = st2.nextToken();
-                int tokenDecimalPlaces = Integer.parseInt(st2.nextToken());
-                String contractAddress = st2.nextToken();
+                StringTokenizer wt = new StringTokenizer(walletType,"_");
+                wt.nextToken();//no use for this one
+                String tokenSymbol = wt.nextToken();
+                int tokenDecimalPlaces = Integer.parseInt(wt.nextToken());
+                String contractAddress = wt.nextToken();
+
                 String apiKey = st.nextToken();
                 String passwordOrMnemonic = st.nextToken();
+                BigInteger gasLimit = null;
+                if (st.hasMoreTokens()) {
+                    gasLimit = new BigInteger(st.nextToken());
+                }
                 if (apiKey != null && passwordOrMnemonic != null) {
-                    return new ERC20Wallet(apiKey, passwordOrMnemonic, tokenSymbol, tokenDecimalPlaces, contractAddress);
+                    return new ERC20Wallet(apiKey, passwordOrMnemonic, tokenSymbol, tokenDecimalPlaces, contractAddress, gasLimit);
                 }
             }
         }
