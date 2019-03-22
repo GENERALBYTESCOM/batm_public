@@ -53,21 +53,16 @@ public class ERC20Wallet implements IWallet{
     private ERC20Interface contract;
 
     private Credentials credentials;
-    private String apiKey;
     private Web3j w;
-    private BigInteger gasLimit;
 
     private static final Logger log = LoggerFactory.getLogger(ERC20Wallet.class);
 
-    public ERC20Wallet(String apiKey, String mnemonicOrPassword, String tokenSymbol, int tokenDecimalPlaces, String contractAddress, BigInteger gasLimit) {
-        this.apiKey = apiKey;
-
+    public ERC20Wallet(String projectId, String mnemonicOrPassword, String tokenSymbol, int tokenDecimalPlaces, String contractAddress, BigInteger gasLimit) {
         this.tokenSymbol = tokenSymbol;
         this.tokenDecimalPlaces = tokenDecimalPlaces;
-        this.gasLimit = gasLimit;
 
         credentials = initCredentials(mnemonicOrPassword);
-        w = Web3j.build(new HttpService("https://mainnet.infura.io/v3/" + apiKey));
+        w = Web3j.build(new HttpService("https://mainnet.infura.io/v3/" + projectId));
         try {
             final BigInteger gasPrice = w.ethGasPrice().send().getGasPrice();
 

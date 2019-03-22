@@ -63,10 +63,10 @@ public class EthereumExtension extends AbstractExtension{
             String walletType = st.nextToken();
 
             if ("infura".equalsIgnoreCase(walletType)) {
-                String apiKey = st.nextToken();
+                String projectId = st.nextToken();
                 String passwordOrMnemonic = st.nextToken();
-                if (apiKey != null && passwordOrMnemonic != null) {
-                    return new InfuraWallet(apiKey, passwordOrMnemonic);
+                if (projectId != null && passwordOrMnemonic != null) {
+                    return new InfuraWallet(projectId, passwordOrMnemonic);
                 }
             }else if (walletType.startsWith("infuraERC20_")) {
                 StringTokenizer wt = new StringTokenizer(walletType,"_");
@@ -75,14 +75,14 @@ public class EthereumExtension extends AbstractExtension{
                 int tokenDecimalPlaces = Integer.parseInt(wt.nextToken());
                 String contractAddress = wt.nextToken();
 
-                String apiKey = st.nextToken();
+                String projectId = st.nextToken();
                 String passwordOrMnemonic = st.nextToken();
                 BigInteger gasLimit = null;
                 if (st.hasMoreTokens()) {
                     gasLimit = new BigInteger(st.nextToken());
                 }
-                if (apiKey != null && passwordOrMnemonic != null) {
-                    return new ERC20Wallet(apiKey, passwordOrMnemonic, tokenSymbol, tokenDecimalPlaces, contractAddress, gasLimit);
+                if (projectId != null && passwordOrMnemonic != null) {
+                    return new ERC20Wallet(projectId, passwordOrMnemonic, tokenSymbol, tokenDecimalPlaces, contractAddress, gasLimit);
                 }
             }
         }
