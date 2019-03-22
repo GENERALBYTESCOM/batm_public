@@ -91,8 +91,10 @@ public class EthereumExtension extends AbstractExtension{
 
     @Override
     public IRateSource createRateSource(String sourceLogin) {
-        if (sourceLogin.startsWith("stream365")) {
-            return new Stream365();
+        if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
+            if (sourceLogin.startsWith("stream365")) {
+                return new Stream365();
+            }
         }
         return null;
     }
