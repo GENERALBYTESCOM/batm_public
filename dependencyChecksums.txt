@@ -62,6 +62,7 @@ verifyModule 'org.knowm.xchange:xchange-core:4.3.15:7e7d7b3542102b618dfe2bcdcf45
 verifyModule 'org.knowm.xchange:xchange-hitbtc:4.3.15:b3495ed5068529c80a6da0cb935b9b5025a784c7724531806243ca71e6f9c1f6'
 verifyModule 'org.knowm.xchange:xchange-itbit:4.3.15:98f90ec53188d4839e6329d3db993d7db375690011debe747d14126eb11b691f'
 verifyModule 'org.litecoinj:litecoinj-core:0.15.20190219:fa552893d87a4321cfdd97ec3681d32627b4825689509a153201eed7e48cec4c'
+verifyModule 'org.knowm.xchange:xchange-coinbasepro:4.3.15:f0ed6a10f03830144fb45bd3137c345e2168d291c9708da6b65c8dc5ac70ed59'
 verifyModule 'org.knowm.xchange:xchange-dvchain:4.3.15:d2eed75c3e0e66f68bae13fe1506c558299fead5e87597b7dbe22521ccf9d977'
 verifyModule 'org.ow2.asm:asm-analysis:5.0.3:e8fa2a63462c96557dcd36c25525e1264b77366ff851cf0b94eb7592b290849d'
 verifyModule 'org.ow2.asm:asm-commons:5.0.3:18c1e092230233c9d29e46f21943d769bdb48130cc279e4b0e663f423948c2da'

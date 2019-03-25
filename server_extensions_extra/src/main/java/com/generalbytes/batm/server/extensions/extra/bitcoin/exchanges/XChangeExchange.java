@@ -284,6 +284,12 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
             }
             if (orderProcessed) {
                 return orderId;
+            } else {
+                try {
+                    tradeService.cancelOrder(orderId);
+                } catch (Exception e) {
+                    log.warn("cancelling order failed", e);
+                }
             }
         } catch (IOException e) {
             log.error(String.format("%s exchange purchase coins failed", name), e);
@@ -379,13 +385,19 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
                     } catch (InterruptedException e) {
                         log.error("Error", e);
                     }
-                }else{
+                } else {
                     orderProcessed = true;
                 }
                 numberOfChecks++;
             }
             if (orderProcessed) {
                 return orderId;
+            } else {
+                try {
+                    tradeService.cancelOrder(orderId);
+                } catch (Exception e) {
+                    log.warn("cancelling order failed", e);
+                }
             }
         } catch (IOException e) {
             log.error("{} exchange sell coins failed", name, e);
