@@ -52,10 +52,10 @@
                 <cryptocurrency>XMR</cryptocurrency>
             </ratesource>
             <ratesource prefix="bittrex" name ="Bittrex.com Exchange" >
+                <cryptocurrency>BAY</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
-                <cryptocurrency>BAY</cryptocurrency>
             </ratesource>
             <ratesource prefix="itbit" name ="itBit.com Exchange" >
                 <param name="fiatcurrency" />
