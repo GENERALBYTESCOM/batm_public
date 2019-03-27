@@ -209,6 +209,21 @@
         </exchange>
         <cryptologo cryptocurrency="BTC" file="btc.png"/>
         <cryptologo cryptocurrency="BTC" file="btc.svg"/>
+        <exchange prefix="coinbasepro" name="Coinbase Pro">
+            <param name="key"/>
+            <param name="secret"/>
+            <param name="passphrase"/>
+            <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+        </exchange>
+        <ratesource prefix="coinbasepro" name="Coinbase Pro">
+            <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+        </ratesource>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.bitcoincash.BitcoinCashExtension">
         <wallet prefix="bitcoincashd" name="BitcoinABC/BitcoinClassic Cash Core - bitcoind" >

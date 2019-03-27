@@ -23,6 +23,7 @@ import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitfinex.BitfinexExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bittrex.BittrexExchange;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbasepro.CoinbaseProExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.dvchain.DVChainExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.hitbtc.HitbtcExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.itbit.ItBitExchange;
@@ -54,8 +55,7 @@ public class BitcoinExtension extends AbstractExtension{
     @Override
     public IExchange createExchange(String paramString) //(Bitstamp is in built-in extension)
     {
-        if ((paramString != null) && (!paramString.trim().isEmpty()))
-        {
+        if ((paramString != null) && (!paramString.trim().isEmpty())) {
             StringTokenizer paramTokenizer = new StringTokenizer(paramString, ":");
             String prefix = paramTokenizer.nextToken();
             if ("bitfinex".equalsIgnoreCase(prefix)) {
@@ -66,11 +66,11 @@ public class BitcoinExtension extends AbstractExtension{
                     preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase();
                 }
                 return new BitfinexExchange(apiKey, apiSecret, preferredFiatCurrency);
-            }else if ("bittrex".equalsIgnoreCase(prefix)) {
+            } else if ("bittrex".equalsIgnoreCase(prefix)) {
                 String apiKey = paramTokenizer.nextToken();
                 String apiSecret = paramTokenizer.nextToken();
                 return new BittrexExchange(apiKey, apiSecret);
-            }else if ("itbit".equalsIgnoreCase(prefix)) {
+            } else if ("itbit".equalsIgnoreCase(prefix)) {
                 String preferredFiatCurrency = FiatCurrency.USD.getCode();
                 String userId = paramTokenizer.nextToken();
                 String accountId = paramTokenizer.nextToken();
@@ -80,15 +80,24 @@ public class BitcoinExtension extends AbstractExtension{
                     preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase();
                 }
                 return new ItBitExchange(userId, accountId, clientKey, clientSecret, preferredFiatCurrency);
-            }else if("hitbtc".equalsIgnoreCase(prefix)) {
+            } else if ("hitbtc".equalsIgnoreCase(prefix)) {
                 String preferredFiatCurrency = FiatCurrency.USD.getCode();
                 String apiKey = paramTokenizer.nextToken();
                 String apiSecret = paramTokenizer.nextToken();
-                return new HitbtcExchange(apiKey, apiSecret,preferredFiatCurrency);
-            }else if("dvchain".equalsIgnoreCase(prefix)) {
+                return new HitbtcExchange(apiKey, apiSecret, preferredFiatCurrency);
+            } else if ("coinbasepro".equalsIgnoreCase(prefix)) {
+                String preferredFiatCurrency = FiatCurrency.USD.getCode();
+                String key = paramTokenizer.nextToken();
+                String secret = paramTokenizer.nextToken();
+                String passphrase = paramTokenizer.nextToken();
+                if (paramTokenizer.hasMoreTokens()) {
+                    preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase();
+                }
+                return new CoinbaseProExchange(key, secret, passphrase, preferredFiatCurrency, false);
+            } else if ("dvchain".equalsIgnoreCase(prefix)) {
                 String preferredFiatCurrency = FiatCurrency.USD.getCode();
                 String apiSecret = paramTokenizer.nextToken();
-                return new DVChainExchange(apiSecret,preferredFiatCurrency);
+                return new DVChainExchange(apiSecret, preferredFiatCurrency);
             }
         }
         return null;
@@ -187,7 +196,7 @@ public class BitcoinExtension extends AbstractExtension{
     public IRateSource createRateSource(String sourceLogin) {
         //NOTE: (Bitstamp is in built-in extension)
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
-            StringTokenizer st = new StringTokenizer(sourceLogin,":");
+            StringTokenizer st = new StringTokenizer(sourceLogin, ":");
             String rsType = st.nextToken();
 
             if ("btcfix".equalsIgnoreCase(rsType)) {
@@ -202,7 +211,7 @@ public class BitcoinExtension extends AbstractExtension{
                 if (st.hasMoreTokens()) {
                     preferredFiatCurrency = st.nextToken().toUpperCase();
                 }
-                return new FixPriceRateSource(rate,preferredFiatCurrency);
+                return new FixPriceRateSource(rate, preferredFiatCurrency);
             } else if ("fixprice".equalsIgnoreCase(rsType)) {
                 BigDecimal rate = BigDecimal.ZERO;
                 String preferredFiatCurrency = FiatCurrency.USD.getCode();
@@ -215,29 +224,35 @@ public class BitcoinExtension extends AbstractExtension{
                 if (st.hasMoreTokens()) {
                     preferredFiatCurrency = st.nextToken().toUpperCase();
                 }
-                return new FixPriceRateSource(rate,preferredFiatCurrency);
-            }else if ("bitfinex".equalsIgnoreCase(rsType)) {
+                return new FixPriceRateSource(rate, preferredFiatCurrency);
+            } else if ("bitfinex".equalsIgnoreCase(rsType)) {
                 String preferredFiatCurrency = FiatCurrency.USD.getCode();
                 if (st.hasMoreTokens()) {
                     preferredFiatCurrency = st.nextToken().toUpperCase();
                 }
-               return new BitfinexExchange("**","**", preferredFiatCurrency);
-            }else if ("bittrex".equalsIgnoreCase(rsType)) {
-                return new BittrexExchange("**","**");
-            }else if ("bity".equalsIgnoreCase(rsType)) {
+                return new BitfinexExchange("**", "**", preferredFiatCurrency);
+            } else if ("bittrex".equalsIgnoreCase(rsType)) {
+                return new BittrexExchange("**", "**");
+            } else if ("bity".equalsIgnoreCase(rsType)) {
                 String preferredFiatCurrency = FiatCurrency.CHF.getCode();
                 if (st.hasMoreTokens()) {
                     preferredFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new BityRateSource(preferredFiatCurrency);
-            }else if ("mrcoin".equalsIgnoreCase(rsType)) {
+            } else if ("mrcoin".equalsIgnoreCase(rsType)) {
                 return new MrCoinRateSource();
-            }else if ("itbit".equalsIgnoreCase(rsType)) {
+            } else if ("itbit".equalsIgnoreCase(rsType)) {
                 String preferredFiatCurrency = FiatCurrency.USD.getCode();
                 if (st.hasMoreTokens()) {
                     preferredFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new ItBitExchange(preferredFiatCurrency);
+            } else if ("coinbasepro".equalsIgnoreCase(rsType)) {
+                String preferredFiatCurrency = FiatCurrency.USD.getCode();
+                if (st.hasMoreTokens()) {
+                    preferredFiatCurrency = st.nextToken().toUpperCase();
+                }
+                return new CoinbaseProExchange(preferredFiatCurrency);
             }
         }
         return null;
