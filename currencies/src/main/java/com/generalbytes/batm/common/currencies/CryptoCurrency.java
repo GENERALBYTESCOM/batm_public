@@ -88,6 +88,7 @@ public enum CryptoCurrency {
     XMR("Monero"),
     XZC("Zcoin"),
     BAY("BitBayCoin"),
+    NULS("NULS"),
 
     TBCH("test BCH"),
     TBTC("test BTC"),

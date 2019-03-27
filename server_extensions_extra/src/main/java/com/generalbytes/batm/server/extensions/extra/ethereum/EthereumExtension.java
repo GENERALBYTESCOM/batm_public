@@ -27,6 +27,7 @@ import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.ethereum.erc20.ERC20Wallet;
 import com.generalbytes.batm.server.extensions.extra.ethereum.stream365.Stream365;
 
+import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -62,21 +63,26 @@ public class EthereumExtension extends AbstractExtension{
             String walletType = st.nextToken();
 
             if ("infura".equalsIgnoreCase(walletType)) {
-                String apiKey = st.nextToken();
+                String projectId = st.nextToken();
                 String passwordOrMnemonic = st.nextToken();
-                if (apiKey != null && passwordOrMnemonic != null) {
-                    return new InfuraWallet(apiKey, passwordOrMnemonic);
+                if (projectId != null && passwordOrMnemonic != null) {
+                    return new InfuraWallet(projectId, passwordOrMnemonic);
                 }
             }else if (walletType.startsWith("infuraERC20_")) {
-                StringTokenizer st2 = new StringTokenizer(walletType,"_");
-                st2.nextToken();//no use for this one
-                String tokenSymbol = st2.nextToken();
-                int tokenDecimalPlaces = Integer.parseInt(st2.nextToken());
-                String contractAddress = st2.nextToken();
-                String apiKey = st.nextToken();
+                StringTokenizer wt = new StringTokenizer(walletType,"_");
+                wt.nextToken();//no use for this one
+                String tokenSymbol = wt.nextToken();
+                int tokenDecimalPlaces = Integer.parseInt(wt.nextToken());
+                String contractAddress = wt.nextToken();
+
+                String projectId = st.nextToken();
                 String passwordOrMnemonic = st.nextToken();
-                if (apiKey != null && passwordOrMnemonic != null) {
-                    return new ERC20Wallet(apiKey, passwordOrMnemonic, tokenSymbol, tokenDecimalPlaces, contractAddress);
+                BigInteger gasLimit = null;
+                if (st.hasMoreTokens()) {
+                    gasLimit = new BigInteger(st.nextToken());
+                }
+                if (projectId != null && passwordOrMnemonic != null) {
+                    return new ERC20Wallet(projectId, passwordOrMnemonic, tokenSymbol, tokenDecimalPlaces, contractAddress, gasLimit);
                 }
             }
         }
@@ -85,8 +91,10 @@ public class EthereumExtension extends AbstractExtension{
 
     @Override
     public IRateSource createRateSource(String sourceLogin) {
-        if (sourceLogin.startsWith("stream365")) {
-            return new Stream365();
+        if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
+            if (sourceLogin.startsWith("stream365")) {
+                return new Stream365();
+            }
         }
         return null;
     }

@@ -19,15 +19,15 @@ package com.generalbytes.batm.server.extensions.extra.lisk.wallets.liskbinancewa
 
 import java.util.List;
 
-public class LskBinanceResponse {
-    private List<LskBinanceAssetData> balances;
+public class BinanceResponse {
+    private List<BinanceAssetData> balances;
     private int makerCommission;
 
-    public List<LskBinanceAssetData> getBalance() {
+    public List<BinanceAssetData> getBalance() {
         return balances;
     }
 
-    public void setBalances(List<LskBinanceAssetData> balances) {
+    public void setBalances(List<BinanceAssetData> balances) {
 
         this.balances = balances;
     }
