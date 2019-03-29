@@ -219,6 +219,7 @@
             <cryptocurrency>LTC</cryptocurrency>
         </exchange>
         <ratesource prefix="coinbasepro" name="Coinbase Pro">
+            <param name="fiatcurrency" />
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
