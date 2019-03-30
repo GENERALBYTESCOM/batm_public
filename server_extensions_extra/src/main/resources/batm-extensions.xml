@@ -9,7 +9,6 @@
                 <param name="port" />
                 <param name="accountname" />
                 <cryptocurrency>BTC</cryptocurrency>
-                <cryptocurrency>BTC</cryptocurrency>
             </wallet>
             <wallet prefix="bitcore" name="BitCore Wallet">
                 <param name="apikey" />
@@ -53,7 +52,6 @@
                 <cryptocurrency>XMR</cryptocurrency>
             </ratesource>
             <ratesource prefix="bittrex" name ="Bittrex.com Exchange" >
-                <cryptocurrency>BAY</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
@@ -310,7 +308,7 @@
             <param name="accountname" />
             <cryptocurrency>BAY</cryptocurrency>
         </wallet>
-        <ratesource prefix="bayfix" name ="Fix Price" >
+        <ratesource prefix="bitbayfix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>BAY</cryptocurrency>
             <help>USD is default fiat currency.</help>
