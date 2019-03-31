@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2015 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2018 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -15,38 +15,21 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions;
+package com.generalbytes.batm.server.extensions.aml;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-
-public interface IIdentity {
-
+public interface IExternalIdentity {
     int STATE_NOT_REGISTERED = 0;
     int STATE_REGISTERED = 1;
     int STATE_TO_BE_REGISTERED = 2;
     int STATE_PROHIBITED = 3;
     int STATE_ANONYMOUS = 4;
 
-    int TYPE_INTERNAL   = 0; //must not be instantiated by extension
-    int TYPE_EXTERNAL   = 1; //this identity was created externally
-
-
-    boolean isNew();
-    String getPublicId();
-    String getExternalId();
+    String getId();
     int getState();
-    int getType();
-    Date getCreated();
-    Date getRegistered();
-    String getCreatedByTerminalSerialNumber();
-    IPerson getRegisteredBy();
-    BigDecimal getVipBuyDiscount();
-    BigDecimal getVipSellDiscount();
-    Date getLastUpdatedAt();
-    Date getWatchListLastScanAt();
-    boolean isWatchListBanned();
-    String getNote();
-    List<IIdentityPiece> getIdentityPieces();
+
+    //Optional attributes - may return null
+    String getPhoneNumber();
+    String getEmail();
+    String getFirstname();
+    String getLastname();
 }

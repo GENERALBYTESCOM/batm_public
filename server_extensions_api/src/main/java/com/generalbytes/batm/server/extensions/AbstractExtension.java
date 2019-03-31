@@ -17,7 +17,7 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions;
 
-import com.generalbytes.batm.server.extensions.chat.IChatCommand;
+import com.generalbytes.batm.server.extensions.aml.IExternalIdentityProvider;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.util.Set;
@@ -92,5 +92,10 @@ public abstract class AbstractExtension implements IExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         return null; // no need to define supported cryptocurrencies
+    }
+
+    @Override
+    public Set<IExternalIdentityProvider> getIdentityProviders() {
+        return null;
     }
 }

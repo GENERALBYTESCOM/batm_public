@@ -18,7 +18,7 @@
 
 package com.generalbytes.batm.server.extensions;
 
-import com.generalbytes.batm.server.extensions.chat.IChatCommand;
+import com.generalbytes.batm.server.extensions.aml.IExternalIdentityProvider;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.util.Set;
@@ -133,4 +133,10 @@ public interface IExtension {
      * @return
      */
     Set<Class> getChatCommands();
+
+    /**
+     * Optionally returns external identity providers that can be used by server to look up identities.
+     * @return
+     */
+    Set<IExternalIdentityProvider> getIdentityProviders();
 }
