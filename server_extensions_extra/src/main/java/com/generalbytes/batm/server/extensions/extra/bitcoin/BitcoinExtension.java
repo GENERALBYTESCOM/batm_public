@@ -230,7 +230,7 @@ public class BitcoinExtension extends AbstractExtension{
                 if (st.hasMoreTokens()) {
                     preferredFiatCurrency = st.nextToken().toUpperCase();
                 }
-                return new BitfinexExchange("**", "**", preferredFiatCurrency);
+                return new BitfinexExchange(preferredFiatCurrency);
             } else if ("bittrex".equalsIgnoreCase(rsType)) {
                 return new BittrexExchange("**", "**");
             } else if ("bity".equalsIgnoreCase(rsType)) {

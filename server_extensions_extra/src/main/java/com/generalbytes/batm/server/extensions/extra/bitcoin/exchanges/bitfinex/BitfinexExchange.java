@@ -60,10 +60,24 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
     private static final long MAXIMUM_ALLOWED_TIME_OFFSET = 30 * 1000;
     private Set<String> depositCurrenciesSupported = new HashSet<>(Arrays.asList("BTC", "LTC", "ETH")); // FIXME after xchange lib update
 
+    /**
+     * exchange
+     * @param apiKey
+     * @param apiSecret
+     * @param preferredFiatCurrency
+     */
     public BitfinexExchange(String apiKey, String apiSecret, String preferredFiatCurrency) {
         this.apiKey = apiKey;
         this.apiSecret = apiSecret;
         this.preferredFiatCurrency = preferredFiatCurrency;
+    }
+
+    /**
+     * ratesource
+     * @param preferredFiatCurrency
+     */
+    public BitfinexExchange(String preferredFiatCurrency) {
+        this(null, null, preferredFiatCurrency);
     }
 
     private synchronized Exchange getExchange() {
