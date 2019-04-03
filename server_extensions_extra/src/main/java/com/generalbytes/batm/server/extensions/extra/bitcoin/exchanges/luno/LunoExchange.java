@@ -133,7 +133,7 @@ public class LunoExchange implements IExchange {
     
     @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
-        TimeUnit.SECONDS.sleep(10);
+        Thread.sleep(10000);
         if (cryptoCurrency.equals("BTC")) {
             final LunoRequestData result = api.sendMoney(destinationAddress, amount.toString(), "XBT", description);
             return result.getResult();
