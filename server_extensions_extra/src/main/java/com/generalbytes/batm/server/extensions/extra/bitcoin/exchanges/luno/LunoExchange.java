@@ -7,7 +7,6 @@ import com.generalbytes.batm.server.extensions.*;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 import si.mazi.rescu.RestProxyFactory;
 import si.mazi.rescu.ClientConfig;
@@ -133,7 +132,11 @@ public class LunoExchange implements IExchange {
     
     @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
-        Thread.sleep(10000);
+        try {
+            Thread.sleep(2000); //give exchange 2 seconds to reflect open order in order book
+        } catch (InterruptedException e) {
+            log.error("Error", e);
+        }
         if (cryptoCurrency.equals("BTC")) {
             final LunoRequestData result = api.sendMoney(destinationAddress, amount.toString(), "XBT", description);
             return result.getResult();
