@@ -27,6 +27,9 @@ import java.math.BigDecimal;
 import java.util.*;
 
 public class AnkerExtension extends AbstractExtension {
+    private static final CryptoCurrencyDefinition DEFINITION = new AnkerDefinition();
+
+
     @Override
     public String getName() {
         return "BATM Anker extra extension";
@@ -110,5 +113,21 @@ public class AnkerExtension extends AbstractExtension {
         result.add(CryptoCurrency.ANK.getCode());
         return result;
     }
+
+    @Override
+    public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency) {
+        if (CryptoCurrency.ANK.getCode().equalsIgnoreCase(cryptoCurrency)) {
+            return new AnkerWalletGenerator("qqqq", ctx);
+        }
+        return null;
+    }
+
+    @Override
+    public Set<ICryptoCurrencyDefinition> getCryptoCurrencyDefinitions() {
+        Set<ICryptoCurrencyDefinition> result = new HashSet<>();
+        result.add(DEFINITION);
+        return result;
+    }
+
 
 }
