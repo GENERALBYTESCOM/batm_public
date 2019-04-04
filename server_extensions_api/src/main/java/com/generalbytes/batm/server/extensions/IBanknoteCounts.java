@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2018 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2019 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -24,6 +24,10 @@ public interface IBanknoteCounts {
     String CN_ACCEPTOR_CASHBOX = "acceptor_cashbox";
     String CN_DISPENSER_CASSETTE_1 = "dispenser_cassette_1";
     String CN_DISPENSER_CASSETTE_2 = "dispenser_cassette_2";
+    String CN_DISPENSER_CASSETTE_3 = "dispenser_cassette_3";
+    String CN_DISPENSER_CASSETTE_4 = "dispenser_cassette_4";
+    String CN_DISPENSER_CASSETTE_5 = "dispenser_cassette_5";
+    String CN_DISPENSER_CASSETTE_6 = "dispenser_cassette_6";
     String CN_DISPENSER_REJECT = "dispenser_reject";
     String CN_RECYCLER_DRUMS = "recycler_drums";
     String CN_RECYCLER_MISSING = "recycler_missing";

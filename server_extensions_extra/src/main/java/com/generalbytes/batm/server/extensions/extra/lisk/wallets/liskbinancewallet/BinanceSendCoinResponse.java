@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2018 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2019 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -17,25 +17,22 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.lisk.wallets.liskbinancewallet;
 
-import java.math.BigDecimal;
-
-public class LskBinanceAssetData {
-    private String asset;
-    private BigDecimal free;
-
-    public String getAsset() {
-        return asset;
+public class BinanceSendCoinResponse {
+    private Boolean success;
+    private String msg;
+    public Boolean getSuccess() {
+        return success;
     }
 
-    public void setAsset(String asset) {
-        this.asset = asset;
+    public void setSuccess(Boolean success) {
+        this.success = success;
     }
 
-    public BigDecimal getFree() {
-        return free;
+    public String getMsg() {
+        return msg;
     }
 
-    public void setFree(BigDecimal free) {
-        this.free = free;
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 }
