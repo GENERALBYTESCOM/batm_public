@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2016 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2019 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -25,16 +25,16 @@ public class LiskAddressValidator implements ICryptoAddressValidator {
         if (address.endsWith("L")) {
             String addressWithoutL = address.substring(0, address.length() - 1);
             for (char addressCharacter : addressWithoutL.toCharArray()) {
-                if (!Character.isDigit(addressCharacter)) { 
+                if (!Character.isDigit(addressCharacter)) {
                     return false;
                 }
-             } 
+             }
             return true;
         }else{
             return false;
         }
     }
-    
+
     @Override
     public boolean isPaperWalletSupported() {
         return false;

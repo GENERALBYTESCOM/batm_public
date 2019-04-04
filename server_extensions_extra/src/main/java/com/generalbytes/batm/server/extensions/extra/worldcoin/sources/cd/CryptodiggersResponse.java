@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2016 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2019 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -21,13 +21,13 @@ import com.generalbytes.batm.server.extensions.extra.worldcoin.sources.cd.*;
 import java.math.BigDecimal;
 
 public class CryptodiggersResponse {
-    
+
     private BigDecimal exch_rate;
     private BigDecimal exch_rate_sell;
     private BigDecimal exch_rate_buy;
     private int error;
     String error_msg;
-    
+
     public BigDecimal getexch_rate() {
         return exch_rate;
     }
@@ -35,7 +35,7 @@ public class CryptodiggersResponse {
     public void setexch_rate(BigDecimal exch_rate) {
         this.exch_rate = exch_rate;
     }
-    
+
     public BigDecimal getexch_rate_sell() {
         return exch_rate_sell;
     }
@@ -43,7 +43,7 @@ public class CryptodiggersResponse {
     public void setexch_rate_sell(BigDecimal exch_rate_sell) {
         this.exch_rate_sell = exch_rate_sell;
     }
-    
+
     public BigDecimal getexch_rate_buy() {
         return exch_rate_buy;
     }
@@ -51,7 +51,7 @@ public class CryptodiggersResponse {
     public void setexch_rate_buy(BigDecimal exch_rate_buy) {
         this.exch_rate_buy = exch_rate_buy;
     }
-    
+
     public int geterror() {
         return error;
     }
@@ -59,7 +59,7 @@ public class CryptodiggersResponse {
     public void seterror(int error) {
         this.error = error;
     }
-    
+
     public String geterror_msg() {
         return error_msg;
     }

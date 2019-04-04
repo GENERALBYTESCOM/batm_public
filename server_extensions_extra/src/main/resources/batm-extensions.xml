@@ -198,6 +198,14 @@
                 <param name="fiatcurrency" />
                 <cryptocurrency>BTC</cryptocurrency>
             </exchange>
+            <exchange prefix="dvchain" name="DV Chain Exchange">
+                <param name="secretKey" />
+                <cryptocurrency>BTC</cryptocurrency>
+                <cryptocurrency>ETH</cryptocurrency>
+                <cryptocurrency>LTC</cryptocurrency>
+                <cryptocurrency>BCH</cryptocurrency>
+                <cryptocurrency>XMR</cryptocurrency>
+            </exchange>
         <exchange prefix="hitbtc" name="HitBTC Exchange">
             <param name="apikey" />
             <param name="apisecret" />
@@ -213,6 +221,22 @@
         </exchange>
         <cryptologo cryptocurrency="BTC" file="btc.png"/>
         <cryptologo cryptocurrency="BTC" file="btc.svg"/>
+        <exchange prefix="coinbasepro" name="Coinbase Pro">
+            <param name="key"/>
+            <param name="secret"/>
+            <param name="passphrase"/>
+            <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+        </exchange>
+        <ratesource prefix="coinbasepro" name="Coinbase Pro">
+            <param name="fiatcurrency" />
+            <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+        </ratesource>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.bitcoincash.BitcoinCashExtension">
         <wallet prefix="bitcoincashd" name="BitcoinABC/BitcoinClassic Cash Core - bitcoind" >
@@ -1057,77 +1081,86 @@
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.ethereum.EthereumExtension" >
         <wallet prefix="infura" name="infura.io wallet">
-            <param name="apiKey" />
+            <param name="projectId" />
             <param name="mnemonic" />
             <help>Mnemonic should be 24 words delimited by spaces</help>
             <cryptocurrency>ETH</cryptocurrency>
         </wallet>
         <wallet prefix="infuraERC20_DAI_18_0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359" name="Infura.io wallet - DAI">
             <!-- Hint: infuraERC20_TOKENSYMBOL_DECIMALPLACES_CONTRACTADDRESS -->
-            <param name="apiKey" />
+            <param name="projectId" />
             <param name="mnemonic" />
-            <help>Mnemonic should be 24 words delimited by spaces</help>
+            <param name="gaslimit" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
             <cryptocurrency>DAI</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="DAI" file="dai.png"/>
         <cryptologo cryptocurrency="DAI" file="dai.svg"/>
         <wallet prefix="infuraERC20_MKR_18_0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2" name="Infura.io wallet - MKR">
-            <param name="apiKey" />
+            <param name="projectId" />
             <param name="mnemonic" />
-            <help>Mnemonic should be 24 words delimited by spaces</help>
+            <param name="gaslimit" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
             <cryptocurrency>MKR</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="MKR" file="mkr.png"/>
         <cryptologo cryptocurrency="MKR" file="mkr.svg"/>
         <wallet prefix="infuraERC20_BAT_18_0x0d8775f648430679a709e98d2b0cb6250d2887ef" name="Infura.io wallet - BAT">
-            <param name="apiKey" />
+            <param name="projectId" />
             <param name="mnemonic" />
-            <help>Mnemonic should be 24 words delimited by spaces</help>
+            <param name="gaslimit" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
             <cryptocurrency>BAT</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="BAT" file="bat.png"/>
         <cryptologo cryptocurrency="BAT" file="bat.svg"/>
         <wallet prefix="infuraERC20_REP_18_0x1985365e9f78359a9B6AD760e32412f4a445E862" name="Infura.io wallet - REP">
-            <param name="apiKey" />
+            <param name="projectId" />
             <param name="mnemonic" />
-            <help>Mnemonic should be 24 words delimited by spaces</help>
+            <param name="gaslimit" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
             <cryptocurrency>REP</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="REP" file="rep.png"/>
         <cryptologo cryptocurrency="REP" file="rep.svg"/>
         <wallet prefix="infuraERC20_ANT_18_0x960b236A07cf122663c4303350609A66A7B288C0" name="Infura.io wallet - ANT">
-            <param name="apiKey" />
+            <param name="projectId" />
             <param name="mnemonic" />
-            <help>Mnemonic should be 24 words delimited by spaces</help>
+            <param name="gaslimit" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
             <cryptocurrency>ANT</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="ANT" file="ant.png"/>
         <cryptologo cryptocurrency="ANT" file="ant.svg"/>
         <wallet prefix="infuraERC20_HBX_18_0x6fe355c62c6faf6946ce888ffaba9fd12355ae27" name="Infura.io wallet - HBX">
-            <param name="apiKey" />
+            <param name="projectId" />
             <param name="mnemonic" />
-            <help>Mnemonic should be 24 words delimited by spaces</help>
+            <param name="gaslimit" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
             <cryptocurrency>HBX</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="HBX" file="hbx.svg"/>
         <wallet prefix="infuraERC20_VOLTZ_18_0x60715e436c37444e29772c0d26a98ae1e8e1a989" name="Infura.io wallet - VOLTZ">
-            <param name="apiKey" />
+            <param name="projectId" />
             <param name="mnemonic" />
-            <help>Mnemonic should be 24 words delimited by spaces</help>
+            <param name="gaslimit" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
             <cryptocurrency>VOLTZ</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="VOLTZ" file="voltz.svg"/>
         <wallet prefix="infuraERC20_THBX_18_0xa3091381eb7e7c3c2cee5cb1578adebd3b7645ef" name="Infura.io wallet - THBX">
-            <param name="apiKey" />
+            <param name="projectId" />
             <param name="mnemonic" />
-            <help>Mnemonic should be 24 words delimited by spaces</help>
+            <param name="gaslimit" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
             <cryptocurrency>THBX</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="THBX" file="thbx.svg"/>
         <wallet prefix="infuraERC20_MOVEX_18_0x052fe7e1b9c0eae5a4f55f307c77f31c391803e8" name="Infura.io wallet - MOVEX-MUSD">
-            <param name="apiKey" />
+            <param name="projectId" />
             <param name="mnemonic" />
-            <help>Mnemonic should be 24 words delimited by spaces</help>
+            <param name="gaslimit" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
             <cryptocurrency>MUSD</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="MUSD" file="musd.svg"/>
@@ -1136,4 +1169,28 @@
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.TransactionExtension" />-->
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.rest.RESTExampleExtension" />-->
     <extension class="com.generalbytes.batm.server.extensions.extra.examples.chat.ChatBotExtensionExample" />
+    <extension class="com.generalbytes.batm.server.extensions.extra.nuls.NulsExtension" >
+        <wallet prefix="nulsBinance" name="NULS">
+            <param name="address" />
+            <param name="binanceApiKey" />
+            <param name="binanceApiSecret" />
+            <cryptocurrency>NULS</cryptocurrency>
+        </wallet>
+        <wallet prefix="nulsDemo" name="NULS Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
+            <cryptocurrency>NULS</cryptocurrency>
+        </wallet>
+        <ratesource prefix="nulsFix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>NULS</cryptocurrency>
+        </ratesource>
+        <ratesource prefix="nulsBinanceRateSource" name ="Binance Rate Source for Nuls" >
+            <param name="fiatCurrency" />
+            <param name="coinmarketcapApiKey"/>
+            <cryptocurrency>NULS</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="NULS" file="nuls.png"/>
+        <cryptologo cryptocurrency="NULS" file="nuls.svg"/>
+    </extension>
 </extensions>
