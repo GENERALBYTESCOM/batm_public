@@ -27,8 +27,10 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbasep
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.dvchain.DVChainExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.hitbtc.HitbtcExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.itbit.ItBitExchange;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.luno.LunoExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.bitcoinpay.BitcoinPayPP;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.coinofsale.CoinOfSalePP;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.luno.LunoRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.bity.BityRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.mrcoin.MrCoinRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitcoind.BATMBitcoindRPCWallet;
@@ -98,6 +100,15 @@ public class BitcoinExtension extends AbstractExtension{
                 String preferredFiatCurrency = FiatCurrency.USD.getCode();
                 String apiSecret = paramTokenizer.nextToken();
                 return new DVChainExchange(apiSecret, preferredFiatCurrency);
+            }else if ("lunoexchange".equalsIgnoreCase(prefix)) {
+                String apiKey = paramTokenizer.nextToken();
+                String apiSecret = paramTokenizer.nextToken();
+                String typeorder = paramTokenizer.nextToken();
+                String preferredFiatCurrency = FiatCurrency.ZAR.getCode();
+                if (paramTokenizer.hasMoreTokens()) {
+                    preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase();
+                }
+                return new LunoExchange(apiKey, apiSecret, preferredFiatCurrency, typeorder);
             }
         }
         return null;
@@ -253,6 +264,9 @@ public class BitcoinExtension extends AbstractExtension{
                     preferredFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new CoinbaseProExchange(preferredFiatCurrency);
+            }else if ("lunoRateSource".equalsIgnoreCase(rsType)) {
+                String preferedFiatCurrency = FiatCurrency.ZAR.getCode();
+                return new LunoRateSource(preferedFiatCurrency);
             }
         }
         return null;
