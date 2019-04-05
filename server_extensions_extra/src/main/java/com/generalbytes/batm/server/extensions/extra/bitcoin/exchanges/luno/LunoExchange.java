@@ -93,7 +93,7 @@ public class LunoExchange implements IExchange {
         BigDecimal pricebid  = btcZar.getBid();
         BigDecimal one       = new BigDecimal(1);
         BigDecimal onepr     = new BigDecimal(1.01);
-        BigDecimal btcfee    = new BigDecimal(0.000052);
+        BigDecimal btcfee    = new BigDecimal(0.00033);
         amount               = amount.multiply(onepr);
         amount               = amount.add(btcfee).setScale(6, BigDecimal.ROUND_CEILING);
         BigDecimal price     = pricebid.add(one).setScale(0, BigDecimal.ROUND_CEILING);
