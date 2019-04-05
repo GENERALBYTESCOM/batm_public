@@ -23,5 +23,4 @@ package com.generalbytes.batm.server.extensions;
 public interface IRateSourceFilter {
     String getName();
     IRateSource filter(String rateSourceId, IRateSource rateSource);
-    IRateSourceAdvanced filter(String rateSourceId, IRateSourceAdvanced rateSource);
 }
