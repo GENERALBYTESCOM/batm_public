@@ -193,9 +193,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
     private Wallet getWallet(AccountInfo accountInfo) {
         Map<String, Wallet> wallets = accountInfo.getWallets();
-        if (wallets.size() == 1) {
-            return accountInfo.getWallet();
-        } else if (wallets.containsKey("exchange")) {
+        if (wallets.containsKey("exchange")) {
             return wallets.get("exchange");
         }
         throw new UnsupportedOperationException("Wallets in account: " + wallets.keySet());
