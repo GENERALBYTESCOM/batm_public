@@ -1,7 +1,9 @@
 package com.generalbytes.batm.server.extensions;
 
+import java.io.Serializable;
+
 @SuppressWarnings("WeakerAccess")
-public class PhoneLineType {
+public class PhoneLineType implements Serializable {
 
     public static final int LEVEL_LOW           = 0;
     public static final int LEVEL_MEDIUM_LOW    = 1;
