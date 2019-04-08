@@ -75,7 +75,7 @@ dependencies {
 }
 
 dependencySubstitutions {
-    substitute file(batmDependencySubstitutionConfig)
+    substitute file(batmDependencySubstitutionConfigPublic)
 }
 
 if (hasGbUploadArtifactory) {
@@ -99,7 +99,7 @@ if (hasGbUploadArtifactory) {
 }
 
 dependencyVerifications {
-    checksums batmDependencyChecksumsConfig
+    checksums batmDependencyChecksumsConfigPublic
     printUnusedAssertions false
 
     // additional configurations
