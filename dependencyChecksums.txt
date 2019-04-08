@@ -59,6 +59,7 @@ verifyModule 'org.json:json:20180130:3eddf6d9d50e770650e62abe62885f4393aa911430e
 verifyModule 'org.knowm.xchange:xchange-bitfinex:4.3.15:7afb3ba7c2468a7a4d523c38ea3b87664cfd7f5e3a74c64792f756aab0181430'
 verifyModule 'org.knowm.xchange:xchange-bittrex:4.3.15:964e01f74c6af4630f8123e4434c3d3ca7a6d71881fba461b70f395821015c69'
 verifyModule 'org.knowm.xchange:xchange-core:4.3.15:7e7d7b3542102b618dfe2bcdcf45a5bfecc9f890b97ba0deb075e3da2467937d'
+verifyModule 'org.knowm.xchange:xchange-coingi:4.3.17:0b8945fd953e21654a43e56936b37e55c04b53092dfe9f789c3c9bd2cd1a733f'
 verifyModule 'org.knowm.xchange:xchange-hitbtc:4.3.15:b3495ed5068529c80a6da0cb935b9b5025a784c7724531806243ca71e6f9c1f6'
 verifyModule 'org.knowm.xchange:xchange-itbit:4.3.15:98f90ec53188d4839e6329d3db993d7db375690011debe747d14126eb11b691f'
 verifyModule 'org.litecoinj:litecoinj-core:0.15.20190219:fa552893d87a4321cfdd97ec3681d32627b4825689509a153201eed7e48cec4c'
