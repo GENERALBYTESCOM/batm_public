@@ -48,7 +48,7 @@ if (hasGbUploadArtifactory) {
 }
 
 dependencySubstitutions {
-    substitute file(batmDependencySubstitutionConfig)
+    substitute file(batmDependencySubstitutionConfigPublic)
 }
 
 dependencyVerifications {
