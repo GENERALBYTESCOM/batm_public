@@ -89,6 +89,11 @@ public class AnkerPaymentSupport extends AbstractRPCPaymentSupport {
         return null;
     }
 
+    @Override
+    public String getSigHashType() {
+        return "ALL";
+    }
+
 //    public static void main(String[] args) {
 //        //You need to have node running: i.e.:  bitcoind -rpcuser=rpcuser -rpcpassword=rpcpassword -rpcport=8332
 //

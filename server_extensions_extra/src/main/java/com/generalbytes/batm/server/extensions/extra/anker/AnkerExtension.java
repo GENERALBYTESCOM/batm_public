@@ -114,13 +114,13 @@ public class AnkerExtension extends AbstractExtension {
         return result;
     }
 
-    @Override
-    public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency) {
-        if (CryptoCurrency.ANK.getCode().equalsIgnoreCase(cryptoCurrency)) {
-            return new AnkerWalletGenerator("qqqq", ctx);
-        }
-        return null;
-    }
+//    @Override
+//    public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency) {
+//        if (CryptoCurrency.ANK.getCode().equalsIgnoreCase(cryptoCurrency)) {
+//            return new AnkerWalletGenerator("P", ctx);
+//        }
+//        return null;
+//    }
 
     @Override
     public Set<ICryptoCurrencyDefinition> getCryptoCurrencyDefinitions() {
