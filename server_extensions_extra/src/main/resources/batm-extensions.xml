@@ -91,6 +91,7 @@
                 <cryptocurrency>XZC</cryptocurrency>
                 <cryptocurrency>CLOAK</cryptocurrency>
                 <cryptocurrency>FLASH</cryptocurrency>
+                <cryptocurrency>XSG</cryptocurrency>
             </ratesource>
             <ratesource prefix="stream365" name ="365.stream" >
                 <cryptocurrency>HBX</cryptocurrency>
@@ -146,6 +147,7 @@
                 <cryptocurrency>VIA</cryptocurrency>
                 <cryptocurrency>WDC</cryptocurrency>
                 <cryptocurrency>XMR</cryptocurrency>
+                <cryptocurrency>XSG</cryptocurrency>
                 <cryptocurrency>XZC</cryptocurrency>
                 <help>USD is default fiat currency.</help>
             </ratesource>
@@ -1158,5 +1160,26 @@
         </ratesource>
         <cryptologo cryptocurrency="NULS" file="nuls.png"/>
         <cryptologo cryptocurrency="NULS" file="nuls.svg"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.snowgem.SnowgemExtension" >
+        <wallet prefix="snowgemd" name="snowgemd">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <cryptocurrency>XSG</cryptocurrency>
+        </wallet>
+        <wallet prefix="snowgemdemo" name="Snowgem Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
+            <cryptocurrency>XSG</cryptocurrency>
+        </wallet>
+        <ratesource prefix="xsgfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>XSG</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="XSG" file="xsg.png"/>
+        <cryptologo cryptocurrency="XSG" file="xsg.svg"/>
     </extension>
 </extensions>
