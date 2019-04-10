@@ -20,6 +20,7 @@ package com.generalbytes.batm.server.extensions.extra.bitbay;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
+import com.generalbytes.batm.server.extensions.extra.bitbay.bitbaypaper.BitBayWalletGenerator;
 import com.generalbytes.batm.server.extensions.extra.bitbay.wallets.bitbaycoind.BitbayCoinRPCWallet;
 
 import java.math.BigDecimal;
@@ -30,7 +31,7 @@ import java.util.StringTokenizer;
 public class BitbayCoinExtension extends AbstractExtension{
     @Override
     public String getName() {
-        return "BATM Litecoin extension";
+        return "BATM Bitbaycoin extension";
     }
 
     @Override
@@ -99,5 +100,13 @@ public class BitbayCoinExtension extends AbstractExtension{
         Set<String> result = new HashSet<String>();
         result.add(CryptoCurrency.BAY.getCode());
         return result;
+    }
+
+    @Override
+    public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency) {
+        if (CryptoCurrency.BAY.getCode().equalsIgnoreCase(cryptoCurrency)) {
+            return new BitBayWalletGenerator("qqqq", ctx);
+        }
+        return null;
     }
 }
