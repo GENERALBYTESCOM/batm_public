@@ -34,6 +34,8 @@ import org.knowm.xchange.ExchangeSpecification;
 import org.knowm.xchange.currency.Currency;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.Order;
+import org.knowm.xchange.dto.account.AccountInfo;
+import org.knowm.xchange.dto.account.Wallet;
 import org.knowm.xchange.dto.marketdata.OrderBook;
 import org.knowm.xchange.dto.marketdata.Ticker;
 import org.knowm.xchange.dto.trade.LimitOrder;
@@ -156,7 +158,6 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
     }
 
     public BigDecimal getCryptoBalance(String cryptoCurrency) {
-        // [TODO] Can be extended to support LTC and DRK (and other currencies supported by BFX)
         if (!getCryptoCurrencies().contains(cryptoCurrency)) {
             return BigDecimal.ZERO;
         }
@@ -164,7 +165,8 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
         try {
             DDOSUtils.waitForPossibleCall(getClass());
-            return getExchange().getAccountService().getAccountInfo().getWallet().getBalance(Currency.getInstance(cryptoCurrency)).getAvailable();
+            AccountInfo accountInfo = getExchange().getAccountService().getAccountInfo();
+            return getWallet(accountInfo).getBalance(Currency.getInstance(cryptoCurrency)).getAvailable();
         } catch (IOException e) {
             log.error("Error", e);
             log.error("Bitfinex exchange (getBalance) failed with message: " + e.getMessage());
@@ -180,12 +182,21 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
         try {
             DDOSUtils.waitForPossibleCall(getClass());
-            return getExchange().getAccountService().getAccountInfo().getWallet().getBalance(Currency.getInstance(fiatCurrency)).getAvailable();
+            AccountInfo accountInfo = getExchange().getAccountService().getAccountInfo();
+            return getWallet(accountInfo).getBalance(Currency.getInstance(fiatCurrency)).getAvailable();
         } catch (IOException e) {
             log.error("Error", e);
             log.error("Bitfinex exchange (getBalance) failed with message: " + e.getMessage());
         }
         return null;
+    }
+
+    private Wallet getWallet(AccountInfo accountInfo) {
+        Map<String, Wallet> wallets = accountInfo.getWallets();
+        if (wallets.containsKey("exchange")) {
+            return wallets.get("exchange");
+        }
+        throw new UnsupportedOperationException("Wallets in account: " + wallets.keySet());
     }
 
     public final String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {

@@ -18,12 +18,14 @@
 package com.generalbytes.batm.server.extensions.aml;
 
 public interface IExternalIdentity {
-    int STATE_NOT_REGISTERED = 0;
-    int STATE_REGISTERED = 1;
-    int STATE_TO_BE_REGISTERED = 2;
-    int STATE_PROHIBITED = 3;
-    int STATE_ANONYMOUS = 4;
 
+    int STATE_NOT_REGISTERED                = 0;
+    int STATE_REGISTERED                    = 1;
+    int STATE_TO_BE_REGISTERED              = 2;
+    int STATE_PROHIBITED                    = 3;
+    int STATE_ANONYMOUS                     = 4;
+    int STATE_PROHIBITED_TO_BE_REGISTERED   = 5;
+    
     String getId();
     int getState();
 

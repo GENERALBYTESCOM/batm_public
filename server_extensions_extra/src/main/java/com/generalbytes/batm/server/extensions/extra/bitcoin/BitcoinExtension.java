@@ -24,6 +24,7 @@ import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitfinex.BitfinexExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bittrex.BittrexExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbasepro.CoinbaseProExchange;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coingi.CoingiExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.dvchain.DVChainExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.hitbtc.HitbtcExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.itbit.ItBitExchange;
@@ -96,6 +97,14 @@ public class BitcoinExtension extends AbstractExtension{
                     preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase();
                 }
                 return new CoinbaseProExchange(key, secret, passphrase, preferredFiatCurrency, false);
+            } else if ("coingi".equalsIgnoreCase(prefix)) {
+                String preferredFiatCurrency = FiatCurrency.USD.getCode();
+                String key = paramTokenizer.nextToken();
+                String privateKey = paramTokenizer.nextToken();
+                if (paramTokenizer.hasMoreTokens()) {
+                    preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase();
+                }
+                return new CoingiExchange(key, privateKey, preferredFiatCurrency);
             } else if ("dvchain".equalsIgnoreCase(prefix)) {
                 String preferredFiatCurrency = FiatCurrency.USD.getCode();
                 String apiSecret = paramTokenizer.nextToken();
@@ -264,6 +273,12 @@ public class BitcoinExtension extends AbstractExtension{
                     preferredFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new CoinbaseProExchange(preferredFiatCurrency);
+            } else if ("coingi".equalsIgnoreCase(rsType)) {
+                String preferredFiatCurrency = FiatCurrency.USD.getCode();
+                if (st.hasMoreTokens()) {
+                    preferredFiatCurrency = st.nextToken().toUpperCase();
+                }
+                return new CoingiExchange(preferredFiatCurrency);
             }else if ("lunoRateSource".equalsIgnoreCase(rsType)) {
                 String preferedFiatCurrency = FiatCurrency.ZAR.getCode();
                 return new LunoRateSource(preferedFiatCurrency);
