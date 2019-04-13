@@ -149,6 +149,10 @@
                 <cryptocurrency>XZC</cryptocurrency>
                 <help>USD is default fiat currency.</help>
             </ratesource>
+            <ratesource prefix="lunoRateSource" name ="Luno Rate Source" >
+                <param name="fiatCurrency" />
+                <cryptocurrency>BTC</cryptocurrency>
+            </ratesource>
             <paymentprocessor prefix="bitcoinpay" name="BitcoinPay.com" >
                 <param name="apikey" />
                 <cryptocurrency>BTC</cryptocurrency>
@@ -158,6 +162,14 @@
                 <param name="pin" />
                 <cryptocurrency>BTC</cryptocurrency>
             </paymentprocessor>
+            <exchange prefix="lunoexchange" name="Luno.com Exchange">
+                <param name="apikey" />
+                <param name="apisecret" />
+                <param name="typeorders" />
+                <param name="fiatcurrency" />
+                <help>Typeorders can be limit or market</help>
+                <cryptocurrency>BTC</cryptocurrency>
+            </exchange>
             <exchange prefix="bitfinex" name="Bitfinex.com Exchange">
                 <param name="apikey" />
                 <param name="apisecret" />
