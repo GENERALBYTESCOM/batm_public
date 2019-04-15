@@ -49,4 +49,10 @@ public interface IIdentity {
     boolean isWatchListBanned();
     String getNote();
     List<IIdentityPiece> getIdentityPieces();
+
+    //Individual limits set on identity
+    List<ILimit> getLimitCashPerTransaction();
+    List<ILimit> getLimitCashPerHour();
+    List<ILimit> getLimitCashPerDay();
+    List<ILimit> getLimitCashPerMonth();
 }
