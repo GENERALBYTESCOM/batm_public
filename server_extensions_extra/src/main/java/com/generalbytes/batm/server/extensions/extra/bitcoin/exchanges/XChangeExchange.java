@@ -441,18 +441,20 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
 
     @Override
     public BigDecimal getExchangeRateForBuy(String cryptoCurrency, String fiatCurrency) {
-        BigDecimal result = calculateBuyPrice(cryptoCurrency, fiatCurrency, BigDecimal.TEN);
+        BigDecimal rateSourceCryptoVolume = getRateSourceCryptoVolume(cryptoCurrency);
+        BigDecimal result = calculateBuyPrice(cryptoCurrency, fiatCurrency, rateSourceCryptoVolume);
         if (result != null) {
-            return result.divide(BigDecimal.TEN, 2, BigDecimal.ROUND_UP);
+            return result.divide(rateSourceCryptoVolume, 2, BigDecimal.ROUND_UP);
         }
         return null;
     }
 
     @Override
     public BigDecimal getExchangeRateForSell(String cryptoCurrency, String fiatCurrency) {
-        BigDecimal result = calculateSellPrice(cryptoCurrency, fiatCurrency, BigDecimal.TEN);
+        BigDecimal rateSourceCryptoVolume = getRateSourceCryptoVolume(cryptoCurrency);
+        BigDecimal result = calculateSellPrice(cryptoCurrency, fiatCurrency, rateSourceCryptoVolume);
         if (result != null) {
-            return result.divide(BigDecimal.TEN, 2, BigDecimal.ROUND_DOWN);
+            return result.divide(rateSourceCryptoVolume, 2, BigDecimal.ROUND_DOWN);
         }
         return null;
     }
