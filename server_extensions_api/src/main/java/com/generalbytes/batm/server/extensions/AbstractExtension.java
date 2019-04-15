@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2018 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2019 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -17,7 +17,7 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions;
 
-import com.generalbytes.batm.server.extensions.chat.IChatCommand;
+import com.generalbytes.batm.server.extensions.aml.IExternalIdentityProvider;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.util.Set;
@@ -92,5 +92,10 @@ public abstract class AbstractExtension implements IExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         return null; // no need to define supported cryptocurrencies
+    }
+
+    @Override
+    public Set<IExternalIdentityProvider> getIdentityProviders() {
+        return null;
     }
 }

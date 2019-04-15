@@ -16,10 +16,10 @@ dependencies {
 }
 
 dependencySubstitutions {
-    substitute file(batmDependencySubstitutionConfig)
+    substitute file(batmDependencySubstitutionConfigPublic)
 }
 
 dependencyVerifications {
-    checksums batmDependencyChecksumsConfig
+    checksums batmDependencyChecksumsConfigPublic
     printUnusedAssertions false
 }

@@ -15,31 +15,28 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
+package com.generalbytes.batm.server.extensions.aml;
 
-package com.generalbytes.batm.server.extensions;
-
-/**
- * Classes that implement this interface are used by server to validate user crypto address entry
- */
-public interface ICryptoAddressValidator {
-    /**
-     * This method checks if provided address is valid for specified cryptocurrency
-     * @param address
-     * @return
-     */
-    public boolean isAddressValid(String address);
+public interface IExternalIdentityProvider {
 
     /**
-     * returns true if cryproaddress of this cryptocurrency must be BASE58 checked when read by QR code scanner.
+     * Called by server to retrieve existing identity information from external system.
+     * @param identityExternalId - ide defined by external system.
      * @return
      */
-    public boolean mustBeBase58Address();
+    IExternalIdentity findIdentityByExternalId(String identityExternalId);
 
     /**
-     * returns true if cryptoaddress can be email address later used for issuing paper wallets
-     * Please note that Paper wallet for specified cryptocurrency must exist
+     * Called by server to find identity by cell phone number.
+     * @param cellPhoneNumber - cell phone number always contains +country code and spaces between digits.
      * @return
      */
-    public boolean isPaperWalletSupported();
+    IExternalIdentity findIdentityByPhoneNumber(String cellPhoneNumber);
 
+    /**
+     * Called by server to find identity by email address
+     * @param emailAddress
+     * @return
+     */
+    IExternalIdentity findIdentityByEmail(String emailAddress);
 }

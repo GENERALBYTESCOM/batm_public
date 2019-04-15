@@ -15,18 +15,23 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap;
+package com.generalbytes.batm.server.extensions.aml;
 
-import java.util.Map;
+public interface IExternalIdentity {
 
-public class CmcTickerResponse {
-    private Map<String, CmcTickerData> data;
+    int STATE_NOT_REGISTERED                = 0;
+    int STATE_REGISTERED                    = 1;
+    int STATE_TO_BE_REGISTERED              = 2;
+    int STATE_PROHIBITED                    = 3;
+    int STATE_ANONYMOUS                     = 4;
+    int STATE_PROHIBITED_TO_BE_REGISTERED   = 5;
+    
+    String getId();
+    int getState();
 
-    public Map<String, CmcTickerData> getData() {
-        return data;
-    }
-
-    public void setData(Map<String, CmcTickerData> data) {
-        this.data = data;
-    }
+    //Optional attributes - may return null
+    String getPhoneNumber();
+    String getEmail();
+    String getFirstname();
+    String getLastname();
 }

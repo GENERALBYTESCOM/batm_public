@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2018 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2019 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -18,7 +18,7 @@
 package com.generalbytes.batm.server.extensions.extra.lisk.wallets.liskbinancewallet;
 
 public class BinanceSendCoinResponse {
-    private Boolean success; 
+    private Boolean success;
     private String msg;
     public Boolean getSuccess() {
         return success;
@@ -27,7 +27,7 @@ public class BinanceSendCoinResponse {
     public void setSuccess(Boolean success) {
         this.success = success;
     }
-    
+
     public String getMsg() {
         return msg;
     }

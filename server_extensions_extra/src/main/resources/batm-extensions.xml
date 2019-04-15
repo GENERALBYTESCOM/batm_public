@@ -219,9 +219,23 @@
             <cryptocurrency>LTC</cryptocurrency>
         </exchange>
         <ratesource prefix="coinbasepro" name="Coinbase Pro">
+            <param name="fiatcurrency" />
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+        </ratesource>
+        <exchange prefix="coingi" name="Coingi.com">
+            <param name="key"/>
+            <param name="privatekey"/>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>DOGE</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+        </exchange>
+        <ratesource prefix="coingi" name="Coingi.com">
+            <param name="fiatcurrency" />
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
         </ratesource>
     </extension>
