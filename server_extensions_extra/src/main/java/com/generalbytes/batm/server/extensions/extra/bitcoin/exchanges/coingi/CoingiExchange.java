@@ -6,6 +6,8 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.XChangeEx
 import org.knowm.xchange.ExchangeSpecification;
 import org.knowm.xchange.dto.account.AccountInfo;
 import org.knowm.xchange.dto.account.Wallet;
+
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -61,6 +63,11 @@ public class CoingiExchange extends XChangeExchange {
     @Override
     public Wallet getWallet(AccountInfo accountInfo, String currency) {
         return accountInfo.getWallet();
+    }
+
+    @Override
+    protected BigDecimal getRateSourceCryptoVolume(String cryptoCurrency) {
+        return BigDecimal.ONE;
     }
 
     public static void main(String[] args) {
