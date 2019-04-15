@@ -647,7 +647,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
     @Override
     public BigDecimal getExchangeRateForBuy(String cryptoCurrency, String fiatCurrency) {
-        BigDecimal result = calculateBuyPrice(getExchangeSpecificSymbol(cryptoCurrency), fiatCurrency, getMeasureCryptoAmount());
+        BigDecimal result = calculateBuyPrice(cryptoCurrency, fiatCurrency, getMeasureCryptoAmount());
         if (result != null) {
             return result.divide(getMeasureCryptoAmount(), 2, BigDecimal.ROUND_UP);
         }
@@ -656,7 +656,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
     @Override
     public BigDecimal getExchangeRateForSell(String cryptoCurrency, String fiatCurrency) {
-        BigDecimal result = calculateSellPrice(getExchangeSpecificSymbol(cryptoCurrency), fiatCurrency, getMeasureCryptoAmount());
+        BigDecimal result = calculateSellPrice(cryptoCurrency, fiatCurrency, getMeasureCryptoAmount());
         if (result != null) {
             return result.divide(getMeasureCryptoAmount(), 2, BigDecimal.ROUND_DOWN);
         }
