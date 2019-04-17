@@ -12,11 +12,10 @@ substitute from: 'com.fasterxml.jackson.core:jackson-databind:2.8.2', toVersion:
 substitute from: 'com.fasterxml.jackson.core:jackson-databind:2.8.5', toVersion: '2.9.1'
 substitute from: 'com.fasterxml.jackson.core:jackson-core:2.8.10', toVersion: '2.9.1'
 substitute from: 'com.google.code.findbugs:jsr305:2.0.1', toVersion: '3.0.2'
-substitute from: 'com.squareup.okio:okio:1.6.0', toVersion: '1.11.0'
+substitute from: 'com.squareup.okio:okio:1.6.0', toVersion: '1.15.0'
 substitute from: 'com.madgag.spongycastle:core:1.51.0.0', toVersion: '1.52.0.0'
-substitute from: 'com.squareup.okhttp3:okhttp:3.6.0', toVersion: '3.8.1'
-substitute from: 'com.squareup.okio:okio:1.11.0', toVersion: '1.13.0'
-substitute from: 'com.squareup.okio:okio:1.6.0', toVersion: '1.13.0'
+substitute from: 'com.squareup.okhttp3:okhttp:3.6.0', toVersion: '3.12.1'
+substitute from: 'com.squareup.okhttp3:okhttp:3.8.1', toVersion: '3.12.1'
 substitute from: 'com.github.jnr:jnr-ffi:2.1.1', toVersion: '2.1.2'
 substitute from: 'org.bouncycastle:bcprov-jdk15on:1.54', toVersion: '1.60'
 substitute from: 'com.google.guava:guava:18.0', toVersion: '27.0.1-android'
@@ -25,4 +24,6 @@ substitute from: 'org.json:json:20080701', toVersion: '20180130'
 substitute from: 'org.json:json:20140107', toVersion: '20180130'
 substitute from: 'org.json:json:20160810', toVersion: '20180130'
 substitute from: 'com.google.j2objc:j2objc-annotations:1.1', toVersion: '1.3' // 1.1 is used by guava but has different checksums on central and jcenter
+
+substitute from: 'com.google.protobuf:protobuf-java:2.6.1', toVersion: '3.6.1' // remove after dashj update
 substitute from: 'org.knowm.xchange:xchange-core:4.3.17', toVersion: '4.3.15'
