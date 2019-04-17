@@ -48,7 +48,7 @@ verifyModule 'oauth.signpost:signpost-core:1.2.1.2:a1d69c5346ebf086b0f63c382b450
 verifyModule 'org.apache.commons:commons-lang3:3.8.1:dac807f65b07698ff39b1b07bfef3d87ae3fd46d91bbf8a2bc02b2a831616f68'
 verifyModule 'org.bitcoinj:bitcoinj-core:0.14.1.20190220:e18a0f80c35592dd3afe59fcf343749984358e564b17e4899bb2a059c69dd543'
 verifyModule 'org.bitcoinj:orchid:1.2.1:f836325cfa0466a011cb755c9b0fee6368487a2352eb45f4306ad9e4c18de080'
-verifyModule 'org.bouncycastle:bcprov-jdk15on:1.60:7f1a0e6badab38666f8467a9a0ee96656b2f8ec8623867ed34f3cdc173b7ee07'
+verifyModule 'org.bouncycastle:bcprov-jdk15on:1.61:dba6e408f205215ad1a89b70b37353d3cdae4ec61037e1feee885704e2413458'
 verifyModule 'org.checkerframework:checker-compat-qual:2.5.2:d7291cebf5e158d169807ae49d4b16ff672986f0c6d803e5f207c40cb61ef982'
 verifyModule 'org.codehaus.mojo:animal-sniffer-annotations:1.17:92654f493ecfec52082e76354f0ebf87648dc3d5cec2e3c3cdb947c016747a53'
 verifyModule 'org.dashj:dashj-bls:0.15.20190305:42994eaac0704dfbbdb3740e7aab29cc9a5e93480962f41fcd9c53f9c7e1fb55'
