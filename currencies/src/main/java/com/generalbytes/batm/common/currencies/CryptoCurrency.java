@@ -76,7 +76,7 @@ public enum CryptoCurrency {
     REP("Augur"),
     SMART("SmartCash"),
     START("Startcoin"),
-    SUM("SumCoin"),
+    SUM("Sumcoin"),
     SYS("Syscoin"),
     THBX("DigitalThaiBaht"),
     TKN("TokenCard"),
