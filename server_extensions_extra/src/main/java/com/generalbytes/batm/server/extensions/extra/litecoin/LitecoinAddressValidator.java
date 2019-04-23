@@ -47,7 +47,7 @@ public class LitecoinAddressValidator implements ICryptoAddressValidator {
 
     @Override
     public boolean isPaperWalletSupported() {
-        return false;
+        return true;
     }
 
     @Override
