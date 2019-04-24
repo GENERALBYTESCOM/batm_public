@@ -45,7 +45,7 @@ public class DashAddressValidator implements ICryptoAddressValidator {
 
     @Override
     public boolean isPaperWalletSupported() {
-        return false;
+        return true;
     }
 
     @Override
