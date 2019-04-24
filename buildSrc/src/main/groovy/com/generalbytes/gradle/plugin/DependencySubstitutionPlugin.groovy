@@ -1,15 +1,18 @@
 package com.generalbytes.gradle.plugin
 
-import com.generalbytes.gradle.model.SimpleModuleVersionIdentifier
+import com.generalbytes.gradle.model.DependencySubstitution
+import com.generalbytes.gradle.model.SimpleModuleIdentifier
+import com.generalbytes.gradle.model.VersionNumberEntry
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.DependencyResolveDetails
+import org.gradle.api.artifacts.ResolvableDependencies
+import org.gradle.api.artifacts.result.DependencyResult
+import org.gradle.api.artifacts.result.ResolvedDependencyResult
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-import java.util.regex.Matcher
-import java.util.regex.Pattern
 
 class DependencySubstitutionPlugin implements Plugin<Project> {
     private DependencySubstitutionPluginExtension extension
@@ -24,20 +27,33 @@ class DependencySubstitutionPlugin implements Plugin<Project> {
     }
 
     private installDependencySubstitutions(Project project) {
-        project.configurations.all { Configuration it ->
-            if (!shouldSkip(it)) {
+        project.configurations.all { Configuration configuration ->
+            if (!shouldSkip(configuration)) {
                 resolutionStrategy {
                     eachDependency { DependencyResolveDetails details ->
-                        final SimpleModuleVersionIdentifier from = new SimpleModuleVersionIdentifier(
-                            details.requested.group, details.requested.name, details.requested.version)
-                        final String toVersion = extension.substitutions.get(from)
-                        if (toVersion != null && toVersion.length() > 0) {
-                            details.useVersion(toVersion)
+                        final SimpleModuleIdentifier from = new SimpleModuleIdentifier(details.requested.group,
+                            details.requested.name)
+                        final DependencySubstitution substitution = extension.substitutions.get(from)
+                        if (substitution != null
+                            && substitution.versions.contains(VersionNumberEntry.parse(details.requested.version))
+                        ) {
+                            details.useVersion(substitution.toVersion.string)
+                            details.because("${this.getClass().simpleName}: ${substitution.definition}")
                         }
                     }
-                    logger.debug("Resolution strategy substitutions set for configuration ${it}.")
+                    logger.debug("Resolution strategy substitutions set for configuration ${configuration}.")
+                }
+                configuration.incoming.afterResolve { ResolvableDependencies resolvableDependencies ->
+                    checkModuleResolution(resolvableDependencies)
                 }
             }
+        }
+    }
+
+    private void checkModuleResolution(ResolvableDependencies resolvableDependencies) {
+        resolvableDependencies.resolutionResult.allDependencies.each {
+            DependencyResult result ->
+
         }
     }
 
