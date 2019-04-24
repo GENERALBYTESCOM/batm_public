@@ -228,6 +228,7 @@
         <exchange prefix="coingi" name="Coingi.com">
             <param name="key"/>
             <param name="privatekey"/>
+            <param name="fiatcurrency"/>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
