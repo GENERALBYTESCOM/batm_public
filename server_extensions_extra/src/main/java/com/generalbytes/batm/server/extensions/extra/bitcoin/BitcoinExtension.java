@@ -106,7 +106,8 @@ public class BitcoinExtension extends AbstractExtension{
             } else if ("dvchain".equalsIgnoreCase(prefix)) {
                 String preferredFiatCurrency = FiatCurrency.USD.getCode();
                 String apiSecret = paramTokenizer.nextToken();
-                return new DVChainExchange(apiSecret, preferredFiatCurrency);
+                boolean useSandbox = Boolean.parseBoolean(paramTokenizer.nextToken());
+                return new DVChainExchange(apiSecret, useSandbox, preferredFiatCurrency);
             }
         }
         return null;

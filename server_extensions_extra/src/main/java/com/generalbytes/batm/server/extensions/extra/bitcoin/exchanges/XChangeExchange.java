@@ -509,6 +509,11 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
         return null;
     }
 
+
+    public Exchange getExchange() {
+        return exchange;
+    }
+
     @Override
     public BigDecimal calculateSellPrice(String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount) {
         if (cryptoCurrency == null || fiatCurrency == null) {

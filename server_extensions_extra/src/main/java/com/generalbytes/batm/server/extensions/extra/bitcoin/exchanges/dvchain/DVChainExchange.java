@@ -25,26 +25,39 @@ import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.XChangeExchange;
 import org.knowm.xchange.ExchangeSpecification;
 import org.knowm.xchange.exceptions.NotYetImplementedForExchangeException;
+import org.knowm.xchange.currency.CurrencyPair;
+import org.knowm.xchange.dto.Order;
+import org.knowm.xchange.dto.trade.MarketOrder;
+import org.knowm.xchange.service.trade.TradeService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.math.BigDecimal;
 
 public class DVChainExchange extends XChangeExchange {
+    private final Logger log;
 
-
-    public DVChainExchange(String apiSecret, String preferredFiatCurrency) {
-        super(getSpecification(apiSecret), preferredFiatCurrency);
+    public DVChainExchange(String apiSecret, boolean useSandbox, String preferredFiatCurrency) {
+        super(getSpecification(apiSecret, useSandbox), preferredFiatCurrency);
+        log = LoggerFactory.getLogger("batm.master.exchange.dvchain");
     }
-
 
     private static ExchangeSpecification getDefaultSpecification() {
         return new org.knowm.xchange.dvchain.DVChainExchange().getDefaultExchangeSpecification();
     }
 
-    private static ExchangeSpecification getSpecification(String apiSecret) {
+    private static ExchangeSpecification getSpecification(String apiSecret, boolean useSandbox) {
         ExchangeSpecification spec = getDefaultSpecification();
         spec.setSecretKey(apiSecret);
+        if( useSandbox ) {
+            System.out.println("Using Sandbox");
+            spec.setSslUri("https://sandbox.trade.dvchain.co");
+            spec.setHost("sandbox.trade.dvchain.co");
+        }
         return spec;
     }
 
@@ -83,7 +96,36 @@ public class DVChainExchange extends XChangeExchange {
     }
 
     @Override
+    public BigDecimal getFiatBalance(String fiatCurrency){
+        return BigDecimal.valueOf(10000000);
+    }
+
+    @Override
     public String getDepositAddress(String cryptoCurrency){
+        return null;
+    }
+
+    @Override
+    public String purchaseCoins(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
+
+        TradeService tradeService = super.getExchange().getTradeService();
+
+        try {
+            CurrencyPair currencyPair = new CurrencyPair(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency), fiatCurrencyToUse);
+
+            MarketOrder order = new MarketOrder(
+                Order.OrderType.BID,
+                amount,
+                currencyPair,
+                "",
+                null);
+            log.debug("marketOrder = {}", order);
+            String orderId = tradeService.placeMarketOrder(order);
+
+            return orderId;
+        } catch (IOException e) {
+            log.error(String.format("%s exchange purchase coins failed dvchain"), e);
+        }
         return null;
     }
 }
