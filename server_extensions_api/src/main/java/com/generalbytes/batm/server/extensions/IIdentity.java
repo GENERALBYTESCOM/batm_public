@@ -28,10 +28,16 @@ public interface IIdentity {
     int STATE_TO_BE_REGISTERED = 2;
     int STATE_PROHIBITED = 3;
     int STATE_ANONYMOUS = 4;
+    int STATE_PROHIBITED_TO_BE_REGISTERED   = 5;
+
+    int TYPE_INTERNAL   = 0; //must not be instantiated by extension
+    int TYPE_EXTERNAL   = 1; //this identity was created externally
 
     boolean isNew();
     String getPublicId();
+    String getExternalId();
     int getState();
+    int getType();
     Date getCreated();
     Date getRegistered();
     String getCreatedByTerminalSerialNumber();
@@ -43,4 +49,10 @@ public interface IIdentity {
     boolean isWatchListBanned();
     String getNote();
     List<IIdentityPiece> getIdentityPieces();
+
+    //Individual limits set on identity
+    List<ILimit> getLimitCashPerTransaction();
+    List<ILimit> getLimitCashPerHour();
+    List<ILimit> getLimitCashPerDay();
+    List<ILimit> getLimitCashPerMonth();
 }

@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2018 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2019 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -17,27 +17,22 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.lisk.wallets.liskbinancewallet;
 
-import java.util.List;
-
-public class LskBinanceResponse {
-    private List<LskBinanceAssetData> balances;
-    private int makerCommission;
-
-    public List<LskBinanceAssetData> getBalance() {
-        return balances;
+public class BinanceSendCoinResponse {
+    private Boolean success;
+    private String msg;
+    public Boolean getSuccess() {
+        return success;
     }
 
-    public void setBalances(List<LskBinanceAssetData> balances) {
+    public void setSuccess(Boolean success) {
+        this.success = success;
+    }
 
-        this.balances = balances;
+    public String getMsg() {
+        return msg;
     }
-    
-    public int getMakerCommission() {
-    	return makerCommission;
+
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
-    
-    public void setMakerCommission(int makerCommission) {
-    	this.makerCommission = makerCommission;
-    }
-    
 }

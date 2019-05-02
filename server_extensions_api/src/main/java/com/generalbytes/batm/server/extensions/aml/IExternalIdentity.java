@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2018 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2019 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -15,27 +15,23 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.lisk.wallets.liskbinancewallet;
+package com.generalbytes.batm.server.extensions.aml;
 
-import java.math.BigDecimal;
+public interface IExternalIdentity {
 
-public class LskBinanceAssetData {
-    private String asset;
-    private BigDecimal free;
+    int STATE_NOT_REGISTERED                = 0;
+    int STATE_REGISTERED                    = 1;
+    int STATE_TO_BE_REGISTERED              = 2;
+    int STATE_PROHIBITED                    = 3;
+    int STATE_ANONYMOUS                     = 4;
+    int STATE_PROHIBITED_TO_BE_REGISTERED   = 5;
+    
+    String getId();
+    int getState();
 
-    public String getAsset() {
-        return asset;
-    }
-
-    public void setAsset(String asset) {
-        this.asset = asset;
-    }
-
-    public BigDecimal getFree() {
-        return free;
-    }
-
-    public void setFree(BigDecimal free) {
-        this.free = free;
-    }
+    //Optional attributes - may return null
+    String getPhoneNumber();
+    String getEmail();
+    String getFirstname();
+    String getLastname();
 }

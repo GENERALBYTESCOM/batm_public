@@ -76,7 +76,7 @@ public enum CryptoCurrency {
     REP("Augur"),
     SMART("SmartCash"),
     START("Startcoin"),
-    SUM("SumCoin"),
+    SUM("Sumcoin"),
     SYS("Syscoin"),
     THBX("DigitalThaiBaht"),
     TKN("TokenCard"),
@@ -86,7 +86,9 @@ public enum CryptoCurrency {
     VOLTZ("VOLTZ"),
     WDC("WorldCoin"),
     XMR("Monero"),
+    XSG("SnowGem"),
     XZC("Zcoin"),
+    NULS("NULS"),
 
     TBCH("test BCH"),
     TBTC("test BTC"),

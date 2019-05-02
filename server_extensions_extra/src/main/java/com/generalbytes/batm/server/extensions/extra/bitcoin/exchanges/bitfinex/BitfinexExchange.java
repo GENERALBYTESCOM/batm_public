@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2016 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2019 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -26,6 +26,7 @@ import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.coinutil.DDOSUtils;
 import com.generalbytes.batm.server.extensions.*;
 import org.knowm.xchange.Exchange;
@@ -34,6 +35,8 @@ import org.knowm.xchange.ExchangeSpecification;
 import org.knowm.xchange.currency.Currency;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.Order;
+import org.knowm.xchange.dto.account.AccountInfo;
+import org.knowm.xchange.dto.account.Wallet;
 import org.knowm.xchange.dto.marketdata.OrderBook;
 import org.knowm.xchange.dto.marketdata.Ticker;
 import org.knowm.xchange.dto.trade.LimitOrder;
@@ -60,10 +63,24 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
     private static final long MAXIMUM_ALLOWED_TIME_OFFSET = 30 * 1000;
     private Set<String> depositCurrenciesSupported = new HashSet<>(Arrays.asList("BTC", "LTC", "ETH")); // FIXME after xchange lib update
 
+    /**
+     * exchange
+     * @param apiKey
+     * @param apiSecret
+     * @param preferredFiatCurrency
+     */
     public BitfinexExchange(String apiKey, String apiSecret, String preferredFiatCurrency) {
         this.apiKey = apiKey;
         this.apiSecret = apiSecret;
         this.preferredFiatCurrency = preferredFiatCurrency;
+    }
+
+    /**
+     * ratesource
+     * @param preferredFiatCurrency
+     */
+    public BitfinexExchange(String preferredFiatCurrency) {
+        this(null, null, preferredFiatCurrency);
     }
 
     private synchronized Exchange getExchange() {
@@ -133,7 +150,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
         MarketDataService marketDataService = getExchange().getMarketDataService();
         try {
             DDOSUtils.waitForPossibleCall(getClass());
-            Ticker ticker = marketDataService.getTicker(new CurrencyPair(cryptoCurrency,cashCurrency));
+            Ticker ticker = marketDataService.getTicker(new CurrencyPair(getExchangeSpecificSymbol(cryptoCurrency),cashCurrency));
             return ticker.getLast();
         } catch (IOException e) {
             log.error("Error", e);
@@ -142,7 +159,6 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
     }
 
     public BigDecimal getCryptoBalance(String cryptoCurrency) {
-        // [TODO] Can be extended to support LTC and DRK (and other currencies supported by BFX)
         if (!getCryptoCurrencies().contains(cryptoCurrency)) {
             return BigDecimal.ZERO;
         }
@@ -150,7 +166,8 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
         try {
             DDOSUtils.waitForPossibleCall(getClass());
-            return getExchange().getAccountService().getAccountInfo().getWallet().getBalance(Currency.getInstance(cryptoCurrency)).getAvailable();
+            AccountInfo accountInfo = getExchange().getAccountService().getAccountInfo();
+            return getWallet(accountInfo).getBalance(Currency.getInstance(getExchangeSpecificSymbol(cryptoCurrency))).getAvailable();
         } catch (IOException e) {
             log.error("Error", e);
             log.error("Bitfinex exchange (getBalance) failed with message: " + e.getMessage());
@@ -166,12 +183,21 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
         try {
             DDOSUtils.waitForPossibleCall(getClass());
-            return getExchange().getAccountService().getAccountInfo().getWallet().getBalance(Currency.getInstance(fiatCurrency)).getAvailable();
+            AccountInfo accountInfo = getExchange().getAccountService().getAccountInfo();
+            return getWallet(accountInfo).getBalance(Currency.getInstance(fiatCurrency)).getAvailable();
         } catch (IOException e) {
             log.error("Error", e);
             log.error("Bitfinex exchange (getBalance) failed with message: " + e.getMessage());
         }
         return null;
+    }
+
+    private Wallet getWallet(AccountInfo accountInfo) {
+        Map<String, Wallet> wallets = accountInfo.getWallets();
+        if (wallets.containsKey("exchange")) {
+            return wallets.get("exchange");
+        }
+        throw new UnsupportedOperationException("Wallets in account: " + wallets.keySet());
     }
 
     public final String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
@@ -185,7 +211,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
         AccountService accountService = getExchange().getAccountService();
         try {
             DDOSUtils.waitForPossibleCall(getClass());
-            String result = accountService.withdrawFunds(Currency.getInstance(cryptoCurrency), amount, destinationAddress);
+            String result = accountService.withdrawFunds(Currency.getInstance(getExchangeSpecificSymbol(cryptoCurrency)), amount, destinationAddress);
             if (result == null) {
                 log.warn("Bitfinex exchange (withdrawFunds) failed with null");
                 return null;
@@ -204,7 +230,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
     }
 
     public String purchaseCoins(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
-        CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrencyToUse);
+        CurrencyPair currencyPair = new CurrencyPair(getExchangeSpecificSymbol(cryptoCurrency), fiatCurrencyToUse);
 
         if(!isCurrencyPairSupported(currencyPair)) {
             return null;
@@ -268,7 +294,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
     @Override
     public ITask createPurchaseCoinsTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
-        CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrencyToUse);
+        CurrencyPair currencyPair = new CurrencyPair(getExchangeSpecificSymbol(cryptoCurrency), fiatCurrencyToUse);
 
         if(!isCurrencyPairSupported(currencyPair)) {
             return null;
@@ -286,7 +312,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
         AccountService accountService = getExchange().getAccountService();
         try {
             DDOSUtils.waitForPossibleCall(getClass());
-            return accountService.requestDepositAddress(Currency.getInstance(cryptoCurrency));
+            return accountService.requestDepositAddress(Currency.getInstance(getExchangeSpecificSymbol(cryptoCurrency)));
         } catch (Exception e) {
             log.error("Error", e);
         }
@@ -295,7 +321,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
     @Override
     public String sellCoins(BigDecimal cryptoAmount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
-        CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrencyToUse);
+        CurrencyPair currencyPair = new CurrencyPair(getExchangeSpecificSymbol(cryptoCurrency), fiatCurrencyToUse);
 
         if(!isCurrencyPairSupported(currencyPair)) {
             return null;
@@ -359,7 +385,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
     @Override
     public ITask createSellCoinsTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
-        CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrencyToUse);
+        CurrencyPair currencyPair = new CurrencyPair(getExchangeSpecificSymbol(cryptoCurrency), fiatCurrencyToUse);
         if(!isCurrencyPairSupported(currencyPair)) {
             return null;
         }
@@ -394,7 +420,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
             try {
                 log.debug("AccountInfo as String: " + accountService.getAccountInfo().toString());
 
-                CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrencyToUse);
+                CurrencyPair currencyPair = new CurrencyPair(getExchangeSpecificSymbol(cryptoCurrency), fiatCurrencyToUse);
 
                 MarketOrder order = new MarketOrder(Order.OrderType.BID, amount, currencyPair);
                 log.debug("marketOrder = " + order);
@@ -518,7 +544,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
             try {
                 log.debug("AccountInfo as String: " + accountService.getAccountInfo().toString());
 
-                CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrencyToUse);
+                CurrencyPair currencyPair = new CurrencyPair(getExchangeSpecificSymbol(cryptoCurrency), fiatCurrencyToUse);
 
                 MarketOrder order = new MarketOrder(Order.OrderType.ASK, cryptoAmount, currencyPair);
                 log.debug("marketOrder = " + order);
@@ -639,7 +665,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
     @Override
     public BigDecimal calculateBuyPrice(String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount) {
-        CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrency);
+        CurrencyPair currencyPair = new CurrencyPair(getExchangeSpecificSymbol(cryptoCurrency), fiatCurrency);
 
         if(!isCurrencyPairSupported(currencyPair)) {
             return null;
@@ -687,7 +713,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
     @Override
     public BigDecimal calculateSellPrice(String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount) {
-        CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrency);
+        CurrencyPair currencyPair = new CurrencyPair(getExchangeSpecificSymbol(cryptoCurrency), fiatCurrency);
 
         if(!isCurrencyPairSupported(currencyPair)) {
             return null;
@@ -732,5 +758,12 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
         }
         return null;
 
+    }
+
+    private String getExchangeSpecificSymbol(String cryptoCurrency) {
+        if (CryptoCurrency.DASH.getCode().equals(cryptoCurrency)) {
+            return "DSH";
+        }
+        return cryptoCurrency;
     }
 }

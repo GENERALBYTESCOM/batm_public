@@ -20,6 +20,7 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges;
 
+import com.generalbytes.batm.server.coinutil.DDOSUtils;
 import com.generalbytes.batm.server.extensions.IExchangeAdvanced;
 import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
 import com.generalbytes.batm.server.extensions.ITask;
@@ -35,9 +36,7 @@ import org.knowm.xchange.dto.Order;
 import org.knowm.xchange.dto.account.AccountInfo;
 import org.knowm.xchange.dto.account.Wallet;
 import org.knowm.xchange.dto.marketdata.OrderBook;
-import org.knowm.xchange.dto.marketdata.Ticker;
 import org.knowm.xchange.dto.trade.LimitOrder;
-import org.knowm.xchange.dto.trade.MarketOrder;
 import org.knowm.xchange.dto.trade.OpenOrders;
 import org.knowm.xchange.exceptions.ExchangeException;
 import org.knowm.xchange.exceptions.NotAvailableFromExchangeException;
@@ -60,6 +59,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceAdvanced {
+    private static final Comparator<LimitOrder> asksComparator = Comparator.comparing(LimitOrder::getLimitPrice);
+    private static final Comparator<LimitOrder> bidsComparator = Comparator.comparing(LimitOrder::getLimitPrice).reversed();
 
     private String preferredFiatCurrency;
     private static final long cacheRefreshSeconds = 30;
@@ -231,7 +232,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
         }
 
         AccountService accountService = exchange.getAccountService();
-        MarketDataService marketService = exchange.getMarketDataService();
+        MarketDataService marketDataService = exchange.getMarketDataService();
         TradeService tradeService = exchange.getTradeService();
 
         try {
@@ -239,14 +240,14 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
 
             CurrencyPair currencyPair = new CurrencyPair(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency), fiatCurrencyToUse);
 
-            Ticker ticker = marketService.getTicker(currencyPair);
+            OrderBook orderBook = marketDataService.getOrderBook(currencyPair);
+            List<LimitOrder> asks = orderBook.getAsks();
 
-            LimitOrder order = new LimitOrder.Builder(Order.OrderType.BID, currencyPair)
-                    .limitPrice(ticker.getAsk())
-                    .originalAmount(amount)
-                    .build();
-            log.debug("limitOrder = {}", order);
+            Collections.sort(asks, asksComparator);
 
+            LimitOrder order = new LimitOrder(Order.OrderType.BID, amount, currencyPair, "", null, getTradablePrice(amount, asks));
+            log.debug("order = {}", order);
+            DDOSUtils.waitForPossibleCall(getClass());
             String orderId = tradeService.placeLimitOrder(order);
             log.debug("orderId = {} {}", orderId, order);
 
@@ -305,6 +306,26 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
         return new PurchaseCoinsTask(amount, cryptoCurrency, fiatCurrencyToUse, description);
     }
 
+    /**
+     *
+     * @param cryptoAmount
+     * @param bidsOrAsksSorted bids: highest first, asks: lowest first
+     * @return
+     * @throws IOException when tradable price not found, e.g orderbook not received or too small.
+     */
+    private BigDecimal getTradablePrice(BigDecimal cryptoAmount, List<LimitOrder> bidsOrAsksSorted) throws IOException {
+        BigDecimal total = BigDecimal.ZERO;
+
+        for (LimitOrder order : bidsOrAsksSorted) {
+            total = total.add(order.getOriginalAmount());
+            if (cryptoAmount.compareTo(total) <= 0) {
+                log.debug("tradablePrice: {}", order.getLimitPrice());
+                return order.getLimitPrice();
+            }
+        }
+        throw new IOException("tradable price not available");
+    }
+
     @Override
     public String getDepositAddress(String cryptoCurrency) {
         if (cryptoCurrency == null) {
@@ -339,6 +360,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
 
         log.info("Calling {} exchange (sell {} {})", name, cryptoAmount, cryptoCurrency);
         AccountService accountService = exchange.getAccountService();
+        MarketDataService marketDataService = exchange.getMarketDataService();
         TradeService tradeService = exchange.getTradeService();
 
         try {
@@ -346,10 +368,18 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
 
             CurrencyPair currencyPair = new CurrencyPair(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency), fiatCurrencyToUse);
 
-            MarketOrder order = new MarketOrder(Order.OrderType.ASK, cryptoAmount, currencyPair);
-            log.debug("marketOrder = {}", order);
+            OrderBook orderBook = marketDataService.getOrderBook(currencyPair);
+            List<LimitOrder> bids = orderBook.getBids();
+            log.debug("bids.size(): {}", bids.size());
 
-            String orderId = tradeService.placeMarketOrder(order);
+            Collections.sort(bids, bidsComparator);
+
+            LimitOrder order = new LimitOrder(Order.OrderType.ASK, cryptoAmount, currencyPair,
+                "", null, getTradablePrice(cryptoAmount, bids));
+
+            log.debug("order: {}", order);
+            DDOSUtils.waitForPossibleCall(getClass());
+            String orderId = tradeService.placeLimitOrder(order);
             log.debug("orderId = {} {}", orderId, order);
 
             try {
@@ -407,20 +437,26 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
         return new SellCoinsTask(amount, cryptoCurrency, fiatCurrencyToUse, description);
     }
 
+    protected BigDecimal getRateSourceCryptoVolume(String cryptoCurrency) {
+        return BigDecimal.TEN;
+    }
+
     @Override
     public BigDecimal getExchangeRateForBuy(String cryptoCurrency, String fiatCurrency) {
-        BigDecimal result = calculateBuyPrice(cryptoCurrency, fiatCurrency, BigDecimal.TEN);
+        BigDecimal rateSourceCryptoVolume = getRateSourceCryptoVolume(cryptoCurrency);
+        BigDecimal result = calculateBuyPrice(cryptoCurrency, fiatCurrency, rateSourceCryptoVolume);
         if (result != null) {
-            return result.divide(BigDecimal.TEN, 2, BigDecimal.ROUND_UP);
+            return result.divide(rateSourceCryptoVolume, 2, BigDecimal.ROUND_UP);
         }
         return null;
     }
 
     @Override
     public BigDecimal getExchangeRateForSell(String cryptoCurrency, String fiatCurrency) {
-        BigDecimal result = calculateSellPrice(cryptoCurrency, fiatCurrency, BigDecimal.TEN);
+        BigDecimal rateSourceCryptoVolume = getRateSourceCryptoVolume(cryptoCurrency);
+        BigDecimal result = calculateSellPrice(cryptoCurrency, fiatCurrency, rateSourceCryptoVolume);
         if (result != null) {
-            return result.divide(BigDecimal.TEN, 2, BigDecimal.ROUND_DOWN);
+            return result.divide(rateSourceCryptoVolume, 2, BigDecimal.ROUND_DOWN);
         }
         return null;
     }
@@ -546,7 +582,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
         public boolean onCreate() {
             log.debug("{} exchange purchase {} {}", name, amount, cryptoCurrency);
             AccountService accountService = exchange.getAccountService();
-            MarketDataService marketService = exchange.getMarketDataService();
+            MarketDataService marketDataService = exchange.getMarketDataService();
             TradeService tradeService = exchange.getTradeService();
 
             try {
@@ -554,11 +590,13 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
 
                 CurrencyPair currencyPair = new CurrencyPair(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency), fiatCurrencyToUse);
 
-                Ticker ticker = marketService.getTicker(currencyPair);
-                LimitOrder order = new LimitOrder.Builder(Order.OrderType.BID, currencyPair)
-                        .limitPrice(ticker.getAsk())
-                        .originalAmount(amount)
-                        .build();
+                OrderBook orderBook = marketDataService.getOrderBook(currencyPair);
+                List<LimitOrder> asks = orderBook.getAsks();
+
+                Collections.sort(asks, asksComparator);
+
+                LimitOrder order = new LimitOrder(Order.OrderType.BID, amount, currencyPair, "", null,
+                    getTradablePrice(amount, asks));
 
                 log.debug("limitOrder = {}", order);
 
@@ -673,6 +711,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
         public boolean onCreate() {
             log.info("Calling {} exchange (sell {} {})", name, cryptoAmount, cryptoCurrency);
             AccountService accountService = exchange.getAccountService();
+            MarketDataService marketDataService = exchange.getMarketDataService();
             TradeService tradeService = exchange.getTradeService();
 
             try {
@@ -680,10 +719,18 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
 
                 CurrencyPair currencyPair = new CurrencyPair(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency), fiatCurrencyToUse);
 
-                MarketOrder order = new MarketOrder(Order.OrderType.ASK, cryptoAmount, currencyPair);
-                log.debug("marketOrder = {}", order);
+                OrderBook orderBook = marketDataService.getOrderBook(currencyPair);
+                List<LimitOrder> bids = orderBook.getBids();
+                log.debug("bids.size(): {}", bids.size());
 
-                orderId = tradeService.placeMarketOrder(order);
+                Collections.sort(bids, bidsComparator);
+
+                LimitOrder order = new LimitOrder(Order.OrderType.ASK, cryptoAmount, currencyPair,
+                    "", null, getTradablePrice(cryptoAmount, bids));
+                log.debug("order = {}", order);
+
+                DDOSUtils.waitForPossibleCall(getClass());
+                orderId = tradeService.placeLimitOrder(order);
                 log.debug("orderId = {} {}", orderId, order);
 
                 try {

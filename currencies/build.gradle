@@ -30,8 +30,10 @@ if (hasGbUploadArtifactory) {
         }
     }
 }
-
+dependencySubstitutions {
+    substitute file(batmDependencySubstitutionConfigPublic)
+}
 dependencyVerifications {
-    checksums batmDependencyChecksumsConfig
+    checksums batmDependencyChecksumsConfigPublic
     printUnusedAssertions false
 }
