@@ -215,6 +215,7 @@
             <param name="key"/>
             <param name="secret"/>
             <param name="passphrase"/>
+            <param name="fiatcurrency" />
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
