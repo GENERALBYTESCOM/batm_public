@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.List;
 
 public interface ITerminal {
+
     int TYPE_PHYSICAL = 0;
     int TYPE_VIRTUAL = 1;
 
@@ -28,6 +29,8 @@ public interface ITerminal {
     String getSerialNumber();
     String getName();
     boolean isActive();
+    boolean isLocked();
+    boolean isDeleted();
     ILocation getLocation();
     Date getConnectedAt();
     Date getLastPingAt();
