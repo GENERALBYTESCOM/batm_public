@@ -57,6 +57,7 @@ public enum CryptoCurrency {
     ETH("Ethereum"),
     FLASH("FLASH"),
     FTO("FuturoCoin"),
+    GLC("GoldCoin")
     GRS("Groestlcoin"),
     HBX("HBX"),
     KMD("Komodo"),
