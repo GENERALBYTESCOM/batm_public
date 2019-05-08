@@ -66,6 +66,7 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
         cryptoCurrencies.add(CryptoCurrency.BTC.getCode());
         cryptoCurrencies.add(CryptoCurrency.BCH.getCode());
         cryptoCurrencies.add(CryptoCurrency.ETH.getCode());
+        cryptoCurrencies.add(CryptoCurrency.GLC.getCode());
         cryptoCurrencies.add(CryptoCurrency.LTC.getCode());
         return cryptoCurrencies;
     }
