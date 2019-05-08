@@ -178,6 +178,7 @@
                 <cryptocurrency>BCH</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
+                <cryptocurrency>BAY</cryptocurrency>
             </exchange>
             <exchange prefix="itbit" name="itBit.com Exchange">
                 <param name="userId" />
