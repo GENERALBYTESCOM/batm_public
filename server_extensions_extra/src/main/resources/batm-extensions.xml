@@ -55,6 +55,7 @@
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
+                <cryptocurrency>BAY</cryptocurrency>
             </ratesource>
             <ratesource prefix="itbit" name ="itBit.com Exchange" >
                 <param name="fiatcurrency" />
@@ -179,6 +180,7 @@
                 <cryptocurrency>BCH</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
+                <cryptocurrency>BAY</cryptocurrency>
             </exchange>
             <exchange prefix="itbit" name="itBit.com Exchange">
                 <param name="userId" />
@@ -215,6 +217,7 @@
             <param name="key"/>
             <param name="secret"/>
             <param name="passphrase"/>
+            <param name="fiatcurrency" />
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
@@ -328,6 +331,24 @@
         </ratesource>
         <cryptologo cryptocurrency="LTC" file="ltc.png"/>
         <cryptologo cryptocurrency="LTC" file="ltc.svg"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.bitbay.BitbayCoinExtension" >
+        <wallet prefix="bitbayd" name="bitbayd">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>BAY</cryptocurrency>
+        </wallet>
+        <ratesource prefix="bitbayfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>BAY</cryptocurrency>
+            <help>USD is default fiat currency.</help>
+        </ratesource>
+        <cryptologo cryptocurrency="BAY" file="bay.png"/>
+        <cryptologo cryptocurrency="BAY" file="bay.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.viacoin.ViacoinExtension" >
         <wallet prefix="viacoind" name="Viacoind">
