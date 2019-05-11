@@ -27,8 +27,8 @@ dependencies {
     compile(group: 'com.vdurmont', name: 'emoji-java', version: '3.1.3') //for chat emojis
 }
 
-if (hasGbUploadArtifactory) {
-    publishing {
+publishing {
+    if (hasGbUploadArtifactory) {
         repositories {
             maven {
                 credentials {
@@ -38,11 +38,10 @@ if (hasGbUploadArtifactory) {
                 url gbArtifactoryUploadUrl
             }
         }
-
-        publications {
-            mavenJava(MavenPublication) {
-                from components.java
-            }
+    }
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
         }
     }
 }

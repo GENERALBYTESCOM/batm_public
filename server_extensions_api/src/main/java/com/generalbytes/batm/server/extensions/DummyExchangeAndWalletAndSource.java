@@ -15,7 +15,7 @@ public class DummyExchangeAndWalletAndSource implements IExchange, IWallet, IRat
     private static final BigDecimal EXCHANGE_BALANCE = new BigDecimal(1000);
     private static final String ETH_WALLET_ADDRESS = "0xB009BE55782FD3aDE5fc00624FaBdbba3094F6D2";
     private static final String DASH_WALLET_ADDRESS = "XrAwEffseCKgQPQhYqXuscBaoUnHqkKxQz"; //safe
-    protected static final String BTC_WALLET_ADDRESS = "18nB5x3zxF26MuA89yNcnkS9qs33KNwLFu";
+    private static final String BTC_WALLET_ADDRESS = "18nB5x3zxF26MuA89yNcnkS9qs33KNwLFu";
     private static final String XMR_WALLET_ADDRESS = "dc3c48b1577d25eb4ce56b266bcf7aab6b27c28a0ba305d8dfebff52e6f6f757";
     private static final String LTC_WALLET_ADDRESS = "LZRi2YvS3cR4Pc3hQkAxqYLKRXEjjxZdd5"; //safe
     private static final String TX_SELL_ID = "tx_sell_id";
@@ -52,14 +52,14 @@ public class DummyExchangeAndWalletAndSource implements IExchange, IWallet, IRat
 
     @Override
     public Set<String> getCryptoCurrencies() {
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         result.add(cryptoCurrency);
         return result;
     }
 
     @Override
     public Set<String> getFiatCurrencies() {
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         result.add(fiatCurrency);
         return result;
     }
@@ -86,10 +86,10 @@ public class DummyExchangeAndWalletAndSource implements IExchange, IWallet, IRat
     @Override
     public String purchaseCoins(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
         if (cryptoCurrency.equalsIgnoreCase(this.cryptoCurrency) && fiatCurrencyToUse.equalsIgnoreCase(this.fiatCurrency)) {
-            log.info("S1%s-DummyExchangeWallet: purchasing coins S2%s", this.cryptoCurrency, amount);
+            log.info(String.format("S1%s-DummyExchangeWallet: purchasing coins S2%s", this.cryptoCurrency, amount));
             return "true";
-        }else{
-            log.error("S1%s-DummyExchangeWallet: S2$s unsupported currency", this.cryptoCurrency, cryptoCurrency);
+        } else {
+            log.error(String.format("S1%s-DummyExchangeWallet: S2%s unsupported currency", this.cryptoCurrency, cryptoCurrency));
             return null;
         }
     }
@@ -101,7 +101,7 @@ public class DummyExchangeAndWalletAndSource implements IExchange, IWallet, IRat
 
     @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
-        log.info("S1%s-DummyExchangeWallet: sending coins to S2%s S3%s", this.cryptoCurrency, destinationAddress, amount);
+        log.info(String.format("S1%s-DummyExchangeWallet: sending coins to S2%s S3%s", this.cryptoCurrency, destinationAddress, amount));
         return TXT_ID;
     }
 
@@ -131,7 +131,7 @@ public class DummyExchangeAndWalletAndSource implements IExchange, IWallet, IRat
 
     @Override
     public BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency) {
-        log.debug("S1%s-DummyExchangeWallet: exchange rate is S2%s", this.cryptoCurrency, EXCHANGE_RATE);
+        log.debug(String.format("S1%s-DummyExchangeWallet: exchange rate is S2%s", this.cryptoCurrency, EXCHANGE_RATE));
         return EXCHANGE_RATE;
     }
 

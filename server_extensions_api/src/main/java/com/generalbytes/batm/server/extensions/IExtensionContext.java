@@ -24,10 +24,12 @@ import com.generalbytes.batm.server.extensions.watchlist.WatchListResult;
 import java.io.File;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 public interface IExtensionContext {
+
     int DIRECTION_NONE          = 1;
     int DIRECTION_BUY_CRYPTO    = 2; //from customer view
     int DIRECTION_SELL_CRYPTO   = 4; //from customer view
@@ -313,4 +315,22 @@ public interface IExtensionContext {
      * @return
      */
     WatchListResult searchWatchList(WatchListQuery query);
+
+    /**
+     * Returns Cash Collections ordered by sequence ID (primary key).
+     * @param terminalSerialNumber
+     * @param dateFrom
+     * @param dateTo
+     * @return
+     */
+    List<ITerminalCashCollectionRecord> getCashCollections(String terminalSerialNumber, Date dateFrom, Date dateTo);
+
+    /**
+     * Returns Event Logs ordered by ordered by sequence ID (primary key).
+     * @param terminalSerialNumber
+     * @param dateFrom
+     * @param dateTo
+     * @return
+     */
+    List<IEventRecord> getEvents(String terminalSerialNumber, Date dateFrom, Date dateTo);
 }
