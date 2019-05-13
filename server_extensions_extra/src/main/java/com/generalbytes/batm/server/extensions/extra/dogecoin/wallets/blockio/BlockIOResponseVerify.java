@@ -15,35 +15,41 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions;
 
-import java.util.Date;
-import java.util.List;
+package com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio;
 
-public interface ITerminal {
+public class BlockIOResponseVerify {
+    private String status;
+    private BlockIOData data;
 
-    int TYPE_PHYSICAL = 0;
-    int TYPE_VIRTUAL = 1;
+    public BlockIOResponseVerify() {
+    }
 
-    Integer getType();
-    String getSerialNumber();
-    String getName();
-    boolean isActive();
-    boolean isLocked();
-    boolean isDeleted();
-    ILocation getLocation();
-    Date getConnectedAt();
-    Date getLastPingAt();
-    long getLastPingDuration();
+    public class BlockIOData {
+        private boolean is_valid;
 
-    Date getExchangeRateUpdatedAt();
-    String getExchangeRatesBuy();
-    String getExchangeRatesSell();
+        public boolean isIs_valid() {
+            return is_valid;
+        }
 
-    long getErrors();
-    int getOperationalMode();
-    int getRejectedReason();
+        public void setIs_valid(boolean is_valid) {
+            this.is_valid = is_valid;
+        }
+    }
 
-    List<String> getAllowedCashCurrencies();
-    List<String> getAllowedCryptoCurrencies();
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public BlockIOData getData() {
+        return data;
+    }
+
+    public void setData(BlockIOData data) {
+        this.data = data;
+    }
 }
