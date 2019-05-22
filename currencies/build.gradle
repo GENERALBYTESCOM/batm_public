@@ -11,8 +11,8 @@ dependencies {
     testCompile (group: 'junit', name: 'junit', version: '4.10')
 }
 
-if (hasGbUploadArtifactory) {
-    publishing {
+publishing {
+    if (hasGbUploadArtifactory) {
         repositories {
             maven {
                 credentials {
@@ -22,14 +22,15 @@ if (hasGbUploadArtifactory) {
                 url gbArtifactoryUploadUrl
             }
         }
+    }
 
-        publications {
-            mavenJava(MavenPublication) {
-                from components.java
-            }
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
         }
     }
 }
+
 dependencySubstitutions {
     substitute file(batmDependencySubstitutionConfigPublic)
 }

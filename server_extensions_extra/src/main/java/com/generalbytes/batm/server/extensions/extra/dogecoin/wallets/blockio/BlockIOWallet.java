@@ -1,3 +1,21 @@
+/*************************************************************************************
+ * Copyright (C) 2014-2019 GENERAL BYTES s.r.o. All rights reserved.
+ *
+ * This software may be distributed and modified under the terms of the GNU
+ * General Public License version 2 (GPL2) as published by the Free Software
+ * Foundation and appearing in the file GPL2.TXT included in the packaging of
+ * this file. Please note that GPL2 Section 2[b] requires that all works based
+ * on this software must also be made publicly available under the terms of
+ * the GPL2 ("Copyleft").
+ *
+ * Contact information
+ * -------------------
+ *
+ * GENERAL BYTES s.r.o.
+ * Web      :  http://www.generalbytes.com
+ *
+ ************************************************************************************/
+
 package com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
@@ -15,9 +33,6 @@ import static com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blo
 import static com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.IBlockIO.PRIORITY_LOW;
 import static com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.IBlockIO.PRIORITY_MEDIUM;
 
-/**
- * Created by b00lean on 8/11/14.
- */
 public class BlockIOWallet implements IWallet {
     private static final Logger log = LoggerFactory.getLogger("batm.master.extensions.BlockIOWallet");
     private String apiKey;
@@ -110,5 +125,15 @@ public class BlockIOWallet implements IWallet {
 
         return null;
     }
+
+//    public static void main(String[] args) {
+//        final BlockIOWallet blockIOWallet = new BlockIOWallet("xxxx", "xxxx", "medium");
+//        final BigDecimal ltc = blockIOWallet.getCryptoBalance("LTC");
+//        System.out.println("ltc = " + ltc);
+//        String address = blockIOWallet.getCryptoAddress("LTC");
+//        System.out.println("address = " + address);
+//        String s = blockIOWallet.sendCoins("LSYi8VQjbR3LAAdqkd4jSzj3Ci5B9Pryvk", new BigDecimal("0.01"), "LTC", "blabla");
+//        System.out.println("s = " + s);
+//    }
 
 }

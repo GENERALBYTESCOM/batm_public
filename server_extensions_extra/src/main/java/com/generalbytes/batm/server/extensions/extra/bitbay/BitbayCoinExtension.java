@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2019 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2016 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -15,25 +15,23 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.dogecoin;
+package com.generalbytes.batm.server.extensions.extra.bitbay;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
-import com.generalbytes.batm.server.extensions.FixPriceRateSource;
-import com.generalbytes.batm.server.extensions.extra.dogecoin.sources.chainso.ChainSoRateSource;
-import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.BlockIOWallet;
-import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.BlockIOWalletWithClientSideSigning;
-import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.dogecoind.DogecoindRPCWallet;
+import com.generalbytes.batm.server.extensions.extra.bitbay.bitbaypaper.BitBayWalletGenerator;
+import com.generalbytes.batm.server.extensions.extra.bitbay.wallets.bitbaycoind.BitbayCoinRPCWallet;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.StringTokenizer;
 
-public class DogecoinExtension extends AbstractExtension{
-
+public class BitbayCoinExtension extends AbstractExtension{
     @Override
     public String getName() {
-        return "BATM Dogecoin extra extension";
+        return "BATM Bitbaycoin extension";
     }
 
     @Override
@@ -42,17 +40,8 @@ public class DogecoinExtension extends AbstractExtension{
             StringTokenizer st = new StringTokenizer(walletLogin,":");
             String walletType = st.nextToken();
 
-            if ("blockio".equalsIgnoreCase(walletType)) {
-                String apikey = st.nextToken();
-                String pin = st.nextToken();
-                String priority = null;
-                if (st.hasMoreTokens()) {
-                    priority = st.nextToken();
-                }
-                return new BlockIOWalletWithClientSideSigning(apikey,pin, priority);
-
-            }else if ("dogecoind".equalsIgnoreCase(walletType)) {
-                //"dogecoind:protocol:user:password:ip:port:accountname"
+            if ("bitbayd".equalsIgnoreCase(walletType)) {
+                //"bitbaycoind:protocol:user:password:ip:port:accountname"
 
                 String protocol = st.nextToken();
                 String username = st.nextToken();
@@ -67,30 +56,17 @@ public class DogecoinExtension extends AbstractExtension{
 
                 if (protocol != null && username != null && password != null && hostname !=null && port != null && accountName != null) {
                     String rpcURL = protocol +"://" + username +":" + password + "@" + hostname +":" + port;
-                    return new DogecoindRPCWallet(rpcURL,accountName);
+                    return new BitbayCoinRPCWallet(rpcURL,accountName);
                 }
             }
-            if ("dogedemo".equalsIgnoreCase(walletType)) {
-
-                String fiatCurrency = st.nextToken();
-                String walletAddress = "";
-                if (st.hasMoreTokens()) {
-                    walletAddress = st.nextToken();
-                }
-
-                if (fiatCurrency != null && walletAddress != null) {
-                    return new DummyExchangeAndWalletAndSource(fiatCurrency, CryptoCurrency.DOGE.getCode(), walletAddress);
-                }
-            }
-
         }
         return null;
     }
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (CryptoCurrency.DOGE.getCode().equalsIgnoreCase(cryptoCurrency)) {
-            return new DogecoinAddressValidator();
+        if (CryptoCurrency.BAY.getCode().equalsIgnoreCase(cryptoCurrency)) {
+            return new com.generalbytes.batm.server.extensions.extra.bitbay.BitbayAddressValidator();
         }
         return null;
     }
@@ -101,9 +77,7 @@ public class DogecoinExtension extends AbstractExtension{
             StringTokenizer st = new StringTokenizer(sourceLogin,":");
             String exchangeType = st.nextToken();
 
-            if ("chainso".equalsIgnoreCase(exchangeType)) {
-                return new ChainSoRateSource();
-            }else if ("dogefix".equalsIgnoreCase(exchangeType)) {
+            if ("bitbayfix".equalsIgnoreCase(exchangeType)) {
                 BigDecimal rate = BigDecimal.ZERO;
                 if (st.hasMoreTokens()) {
                     try {
@@ -117,15 +91,22 @@ public class DogecoinExtension extends AbstractExtension{
                 }
                 return new FixPriceRateSource(rate,preferedFiatCurrency);
             }
+
         }
         return null;
     }
-
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(CryptoCurrency.DOGE.getCode());
+        result.add(CryptoCurrency.BAY.getCode());
         return result;
     }
 
+    @Override
+    public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency) {
+        if (CryptoCurrency.BAY.getCode().equalsIgnoreCase(cryptoCurrency)) {
+            return new BitBayWalletGenerator("qqqq", ctx);
+        }
+        return null;
+    }
 }
