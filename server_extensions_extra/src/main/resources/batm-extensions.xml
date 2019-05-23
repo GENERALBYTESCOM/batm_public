@@ -244,6 +244,58 @@
             <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
         </ratesource>
+        <ratesource prefix="coingecko" name ="CoinGecko.com" >
+            <param name="fiatcurrency" />
+            <cryptocurrency>ANON</cryptocurrency>
+            <cryptocurrency>ANT</cryptocurrency>
+            <cryptocurrency>BAT</cryptocurrency>
+            <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>BNB</cryptocurrency>
+            <cryptocurrency>BSD</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>BTCP</cryptocurrency>
+            <cryptocurrency>BTDX</cryptocurrency>
+            <cryptocurrency>BTX</cryptocurrency>
+            <cryptocurrency>BURST</cryptocurrency>
+            <cryptocurrency>CLOAK</cryptocurrency>
+            <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency>DASH</cryptocurrency>
+            <cryptocurrency>DEX</cryptocurrency>
+            <cryptocurrency>DGB</cryptocurrency>
+            <cryptocurrency>DOGE</cryptocurrency>
+            <cryptocurrency>ECA</cryptocurrency>
+            <cryptocurrency>EFL</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>FLASH</cryptocurrency>
+            <cryptocurrency>FTO</cryptocurrency>
+            <cryptocurrency>GRS</cryptocurrency>
+            <cryptocurrency>KMD</cryptocurrency>
+            <cryptocurrency>LEO</cryptocurrency>
+            <cryptocurrency>LINDA</cryptocurrency>
+            <cryptocurrency>LSK</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>MAX</cryptocurrency>
+            <cryptocurrency>MEC</cryptocurrency>
+            <cryptocurrency>MKR</cryptocurrency>
+            <cryptocurrency>NBT</cryptocurrency>
+            <cryptocurrency>NLG</cryptocurrency>
+            <cryptocurrency>NULS</cryptocurrency>
+            <cryptocurrency>NXT</cryptocurrency>
+            <cryptocurrency>POT</cryptocurrency>
+            <cryptocurrency>REP</cryptocurrency>
+            <cryptocurrency>SMART</cryptocurrency>
+            <cryptocurrency>START</cryptocurrency>
+            <cryptocurrency>SYS</cryptocurrency>
+            <cryptocurrency>TKN</cryptocurrency>
+            <cryptocurrency>TRX</cryptocurrency>
+            <cryptocurrency>USDT</cryptocurrency>
+            <cryptocurrency>VIA</cryptocurrency>
+            <cryptocurrency>VOLTZ</cryptocurrency>
+            <cryptocurrency>WDC</cryptocurrency>
+            <cryptocurrency>XMR</cryptocurrency>
+            <cryptocurrency>XSG</cryptocurrency>
+            <cryptocurrency>XZC</cryptocurrency>
+        </ratesource>
         <ratesource prefix="coinpaprika" name="CoinPaprika.com">
             <param name="fiatcurrency"/>
             <cryptocurrency>ANON</cryptocurrency>
