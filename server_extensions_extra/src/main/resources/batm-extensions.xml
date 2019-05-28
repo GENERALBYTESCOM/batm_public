@@ -55,6 +55,7 @@
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
+                <cryptocurrency>BAY</cryptocurrency>
             </ratesource>
             <ratesource prefix="itbit" name ="itBit.com Exchange" >
                 <param name="fiatcurrency" />
@@ -179,6 +180,7 @@
                 <cryptocurrency>BCH</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
+                <cryptocurrency>BAY</cryptocurrency>
             </exchange>
             <exchange prefix="itbit" name="itBit.com Exchange">
                 <param name="userId" />
@@ -215,6 +217,7 @@
             <param name="key"/>
             <param name="secret"/>
             <param name="passphrase"/>
+            <param name="fiatcurrency" />
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
@@ -230,6 +233,7 @@
         <exchange prefix="coingi" name="Coingi.com">
             <param name="key"/>
             <param name="privatekey"/>
+            <param name="fiatcurrency"/>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
@@ -239,6 +243,113 @@
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
+        </ratesource>
+        <ratesource prefix="coingecko" name ="CoinGecko.com" >
+            <param name="fiatcurrency" />
+            <cryptocurrency>ANON</cryptocurrency>
+            <cryptocurrency>ANT</cryptocurrency>
+            <cryptocurrency>BAT</cryptocurrency>
+            <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>BNB</cryptocurrency>
+            <cryptocurrency>BSD</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>BTCP</cryptocurrency>
+            <cryptocurrency>BTDX</cryptocurrency>
+            <cryptocurrency>BTX</cryptocurrency>
+            <cryptocurrency>BURST</cryptocurrency>
+            <cryptocurrency>CLOAK</cryptocurrency>
+            <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency>DASH</cryptocurrency>
+            <cryptocurrency>DEX</cryptocurrency>
+            <cryptocurrency>DGB</cryptocurrency>
+            <cryptocurrency>DOGE</cryptocurrency>
+            <cryptocurrency>ECA</cryptocurrency>
+            <cryptocurrency>EFL</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>FLASH</cryptocurrency>
+            <cryptocurrency>FTO</cryptocurrency>
+            <cryptocurrency>GRS</cryptocurrency>
+            <cryptocurrency>KMD</cryptocurrency>
+            <cryptocurrency>LEO</cryptocurrency>
+            <cryptocurrency>LINDA</cryptocurrency>
+            <cryptocurrency>LSK</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>MAX</cryptocurrency>
+            <cryptocurrency>MEC</cryptocurrency>
+            <cryptocurrency>MKR</cryptocurrency>
+            <cryptocurrency>NBT</cryptocurrency>
+            <cryptocurrency>NLG</cryptocurrency>
+            <cryptocurrency>NULS</cryptocurrency>
+            <cryptocurrency>NXT</cryptocurrency>
+            <cryptocurrency>POT</cryptocurrency>
+            <cryptocurrency>REP</cryptocurrency>
+            <cryptocurrency>SMART</cryptocurrency>
+            <cryptocurrency>START</cryptocurrency>
+            <cryptocurrency>SYS</cryptocurrency>
+            <cryptocurrency>TKN</cryptocurrency>
+            <cryptocurrency>TRX</cryptocurrency>
+            <cryptocurrency>USDT</cryptocurrency>
+            <cryptocurrency>VIA</cryptocurrency>
+            <cryptocurrency>VOLTZ</cryptocurrency>
+            <cryptocurrency>WDC</cryptocurrency>
+            <cryptocurrency>XMR</cryptocurrency>
+            <cryptocurrency>XSG</cryptocurrency>
+            <cryptocurrency>XZC</cryptocurrency>
+        </ratesource>
+        <ratesource prefix="coinpaprika" name="CoinPaprika.com">
+            <param name="fiatcurrency"/>
+            <cryptocurrency>ANON</cryptocurrency>
+            <cryptocurrency>ANON</cryptocurrency>
+            <cryptocurrency>ANT</cryptocurrency>
+            <cryptocurrency>BAT</cryptocurrency>
+            <cryptocurrency>BAY</cryptocurrency>
+            <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>BNB</cryptocurrency>
+            <cryptocurrency>BSD</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>BTCP</cryptocurrency>
+            <cryptocurrency>BTDX</cryptocurrency>
+            <cryptocurrency>BTX</cryptocurrency>
+            <cryptocurrency>BURST</cryptocurrency>
+            <cryptocurrency>CLOAK</cryptocurrency>
+            <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency>DASH</cryptocurrency>
+            <cryptocurrency>DEX</cryptocurrency>
+            <cryptocurrency>DGB</cryptocurrency>
+            <cryptocurrency>DOGE</cryptocurrency>
+            <cryptocurrency>ECA</cryptocurrency>
+            <cryptocurrency>EFL</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>FLASH</cryptocurrency>
+            <cryptocurrency>FTO</cryptocurrency>
+            <cryptocurrency>GRS</cryptocurrency>
+            <cryptocurrency>HBX</cryptocurrency>
+            <cryptocurrency>KMD</cryptocurrency>
+            <cryptocurrency>LEO</cryptocurrency>
+            <cryptocurrency>LINDA</cryptocurrency>
+            <cryptocurrency>LSK</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>MAX</cryptocurrency>
+            <cryptocurrency>MEC</cryptocurrency>
+            <cryptocurrency>MKR</cryptocurrency>
+            <cryptocurrency>NLG</cryptocurrency>
+            <cryptocurrency>NULS</cryptocurrency>
+            <cryptocurrency>NXT</cryptocurrency>
+            <cryptocurrency>POT</cryptocurrency>
+            <cryptocurrency>REP</cryptocurrency>
+            <cryptocurrency>SMART</cryptocurrency>
+            <cryptocurrency>START</cryptocurrency>
+            <cryptocurrency>SYS</cryptocurrency>
+            <cryptocurrency>TBTC</cryptocurrency>
+            <cryptocurrency>TKN</cryptocurrency>
+            <cryptocurrency>TRX</cryptocurrency>
+            <cryptocurrency>USDT</cryptocurrency>
+            <cryptocurrency>VIA</cryptocurrency>
+            <cryptocurrency>VOLTZ</cryptocurrency>
+            <cryptocurrency>WDC</cryptocurrency>
+            <cryptocurrency>XMR</cryptocurrency>
+            <cryptocurrency>XSG</cryptocurrency>
+            <cryptocurrency>XZC</cryptocurrency>
         </ratesource>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.bitcoincash.BitcoinCashExtension">
@@ -328,6 +439,24 @@
         </ratesource>
         <cryptologo cryptocurrency="LTC" file="ltc.png"/>
         <cryptologo cryptocurrency="LTC" file="ltc.svg"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.bitbay.BitbayCoinExtension" >
+        <wallet prefix="bitbayd" name="bitbayd">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>BAY</cryptocurrency>
+        </wallet>
+        <ratesource prefix="bitbayfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>BAY</cryptocurrency>
+            <help>USD is default fiat currency.</help>
+        </ratesource>
+        <cryptologo cryptocurrency="BAY" file="bay.png"/>
+        <cryptologo cryptocurrency="BAY" file="bay.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.viacoin.ViacoinExtension" >
         <wallet prefix="viacoind" name="Viacoind">
