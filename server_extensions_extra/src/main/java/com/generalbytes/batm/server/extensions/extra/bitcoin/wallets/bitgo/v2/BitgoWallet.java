@@ -87,10 +87,8 @@ public class BitgoWallet implements IWallet {
             status = result.get("status");
         } catch (UndeclaredThrowableException ute) {
             HttpStatusIOException hse = (HttpStatusIOException)ute.getUndeclaredThrowable();
-            String body = hse.getHttpBody();
             status = "ERROR";
-            String errorMessage = ExtensionsUtil.getErrorMessage(body);
-            log.debug("send coins error message = [" + errorMessage +"] ");
+            log.debug("send coins error message: {}", hse.getHttpBody());
         } catch (Exception e) {
             log.error("Error", e);
         }

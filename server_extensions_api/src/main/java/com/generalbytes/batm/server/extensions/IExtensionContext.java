@@ -17,6 +17,7 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions;
 
+import com.generalbytes.batm.server.extensions.exceptions.CashbackException;
 import com.generalbytes.batm.server.extensions.exceptions.SellException;
 import com.generalbytes.batm.server.extensions.watchlist.WatchListQuery;
 import com.generalbytes.batm.server.extensions.watchlist.WatchListResult;
@@ -227,6 +228,15 @@ public interface IExtensionContext {
      * @return - read ITransactionSellInfo.getTransactionUUID() to find out what should be filled in sell QR code.
      */
     ITransactionSellInfo sellCrypto(String terminalSerialNumber, BigDecimal fiatAmount, String fiatCurrency, BigDecimal cryptoAmount, String cryptoCurrency, String identityPublicId, String discountCode) throws SellException;
+
+    /**
+     * Call this transaction to create a cash back transaction. After this call server will allocate cash for the customer that can visit machine and withdraw cash.
+     * @param fiatAmount
+     * @param fiatCurrency
+     * @param identityPublicId
+     * @return - read ITransactionSellInfo.getTransactionUUID() to find out what should be filled in sell QR code.
+     */
+    ITransactionCashbackInfo cashback(String terminalSerialNumber, BigDecimal fiatAmount, String fiatCurrency, String identityPublicId) throws CashbackException;
 
 
     /**
