@@ -144,15 +144,13 @@ public class BitcoinExtension extends AbstractExtension{
                 String password = st.nextToken();
                 String hostname = st.nextToken();
                 String port = st.nextToken();
-                String accountName = "";
                 if (st.hasMoreTokens()) {
-                    accountName = st.nextToken();
+                    st.nextToken(); // accountName - support removed in v0.18, parameter not used
                 }
 
-
-                if (protocol != null && username != null && password != null && hostname != null && port != null && accountName != null) {
+                if (protocol != null && username != null && password != null && hostname != null && port != null) {
                     String rpcURL = protocol + "://" + username + ":" + password + "@" + hostname + ":" + port;
-                    return new BATMBitcoindRPCWallet(rpcURL, accountName, CryptoCurrency.BTC.getCode());
+                    return new BATMBitcoindRPCWallet(rpcURL, CryptoCurrency.BTC.getCode());
                 }
             }else if ("bitcore".equalsIgnoreCase(walletType)) { //bitcore:apiKey:proxyUrl
                 String apiKey = st.nextToken();

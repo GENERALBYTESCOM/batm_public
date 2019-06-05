@@ -7,7 +7,7 @@
                 <param name="password" />
                 <param name="host" />
                 <param name="port" />
-                <param name="accountname" />
+                <!--<param name="accountname" /> removed in v0.18, parameter ignored -->
                 <cryptocurrency>BTC</cryptocurrency>
             </wallet>
             <wallet prefix="bitcore" name="BitCore Wallet">
