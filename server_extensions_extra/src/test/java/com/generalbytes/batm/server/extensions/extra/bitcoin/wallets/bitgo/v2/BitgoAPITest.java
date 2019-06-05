@@ -71,6 +71,7 @@ public class BitgoAPITest {
     }
 
     @Test
+    @Ignore
     public void getWalletsTest() {
         final String accessToken = "Bearer v2x8d5e9e46379dc328b2039a400a12b04ea986689b38107fd84cd339bc89e3fb21";
 
@@ -122,6 +123,7 @@ public class BitgoAPITest {
     }
 
     @Test
+    @Ignore
     public void getBalancesTest() {
         final String accessToken = "Bearer v2x8d5e9e46379dc328b2039a400a12b04ea986689b38107fd84cd339bc89e3fb21";
         final Map<String, Object> result = api.getTotalBalances(accessToken, "tbtc");
@@ -153,6 +155,7 @@ public class BitgoAPITest {
     }
 
     @Test
+    @Ignore
     public void getWalletByLabelTest() {
         final String accessToken = "Bearer v2x8d5e9e46379dc328b2039a400a12b04ea986689b38107fd84cd339bc89e3fb21";
         final String walletLabel = "TBTCWallet";
@@ -175,6 +178,7 @@ public class BitgoAPITest {
         Assert.assertTrue(walletFound);
     }
 
+    @Ignore
     @Test
     public void getWalletTest() {
         final String accessToken = "Bearer v2x8d5e9e46379dc328b2039a400a12b04ea986689b38107fd84cd339bc89e3fb21";
@@ -194,6 +198,7 @@ public class BitgoAPITest {
         Assert.assertEquals("TBTCWallet", label);
     }
 
+    @Ignore
     @Test
     public void getWalletByAIdTest() {
         final String accessToken = "Bearer v2x8d5e9e46379dc328b2039a400a12b04ea986689b38107fd84cd339bc89e3fb21";

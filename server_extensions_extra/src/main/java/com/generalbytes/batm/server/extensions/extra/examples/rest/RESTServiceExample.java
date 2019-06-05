@@ -18,10 +18,12 @@
 package com.generalbytes.batm.server.extensions.extra.examples.rest;
 
 import com.generalbytes.batm.server.extensions.IExtensionContext;
+import com.generalbytes.batm.server.extensions.ITransactionCashbackInfo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.Arrays;
 
@@ -152,6 +154,32 @@ public class RESTServiceExample {
         }
         try {
             return RESTExampleExtension.getExtensionContext().sellCrypto(serialNumber, fiatAmount, fiatCurrency, cryptoAmount, cryptoCurrency, identityPublicId, discountCode);
+        } catch (Throwable e) {
+            log.error("Error", e);
+        }
+        return "ERROR";
+    }
+
+    @GET
+    @Path("/cashback")
+    @Produces(MediaType.APPLICATION_JSON)
+    /**
+     * Creates a cashback transaction on a given terminal. After this call you can visit terminal and withdraw cash
+     */
+    public Object cashback(@QueryParam("serial_number") String serialNumber, @QueryParam("fiat_amount") BigDecimal fiatAmount, @QueryParam("fiat_currency") String fiatCurrency, @QueryParam("identity_public_id") String identityPublicId) {
+        if (serialNumber == null || fiatAmount == null || fiatCurrency == null) {
+            return "missing parameters";
+        }
+        if (!new File("cashback.example").exists()) {
+            return "For security reasons you need to create file cashback.example in master service working directory and change the code in this example. In order to have this example working.";
+        }
+        if (true) { // For security reasons you need to change this line to make it this work - You have to know what you are doing. By removing this line you understand that the risk.
+            return "For security reasons you need to modify the code to get further.";
+        }
+        try {
+            ITransactionCashbackInfo cashback = RESTExampleExtension.getExtensionContext().cashback(serialNumber, fiatAmount, fiatCurrency, identityPublicId);
+            cashback.getCustomData().put("qrcode","cashback:jackpot?amount=" + cashback.getCashAmount().toPlainString() +"&" + "label=" + cashback.getRemoteTransactionId() + "&uuid=" + cashback.getTransactionUUID());
+            return cashback;
         } catch (Throwable e) {
             log.error("Error", e);
         }
