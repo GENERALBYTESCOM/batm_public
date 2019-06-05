@@ -48,7 +48,6 @@ publishing {
 
 dependencySubstitutions {
     substitute file(batmDependencySubstitutionConfigPublic)
-    shared true
 }
 
 dependencyVerifications {

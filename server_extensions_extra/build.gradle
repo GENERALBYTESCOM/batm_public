@@ -85,7 +85,6 @@ dependencies {
 
 dependencySubstitutions {
     substitute file(batmDependencySubstitutionConfigPublic)
-    shared true
 }
 
 if (hasGbUploadArtifactory) {
