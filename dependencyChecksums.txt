@@ -62,7 +62,7 @@ verifyModule 'org.dashj:dashj-core:0.15.20190305:a9bfc55744496c72f94b04a871f0c6d
 verifyModule 'org.java-websocket:Java-WebSocket:1.3.8:64d38c6b4d6c9e830be6820d408caa02d1217e59e8bf34198cc22bd23429fa48'
 verifyModule 'org.json:json:20140107:8e5aa0a368bee60347b5a4ad861d9f68c7793f60deeea89efd449eb70d5ae622'
 verifyModule 'org.json:json:20180130:3eddf6d9d50e770650e62abe62885f4393aa911430ecde73ebafb1ffd2cfad16'
-verifyModule 'org.knowm.xchange:xchange-bitfinex:4.3.15:7afb3ba7c2468a7a4d523c38ea3b87664cfd7f5e3a74c64792f756aab0181430'
+verifyModule 'org.knowm.xchange:xchange-bitfinex:4.3.19:ad2277011bfddd897731a848c559d11740082b4837188b16b801959660b9f1dc'
 verifyModule 'org.knowm.xchange:xchange-bittrex:4.3.15:964e01f74c6af4630f8123e4434c3d3ca7a6d71881fba461b70f395821015c69'
 verifyModule 'org.knowm.xchange:xchange-core:4.3.15:7e7d7b3542102b618dfe2bcdcf45a5bfecc9f890b97ba0deb075e3da2467937d'
 verifyModule 'org.knowm.xchange:xchange-coingi:4.3.18:9e88748f1855bb85ac3415967bb9c867d673e93e0acefdc021bb6bf4cbb45d74'
