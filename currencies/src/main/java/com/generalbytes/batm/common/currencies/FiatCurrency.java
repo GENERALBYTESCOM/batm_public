@@ -49,6 +49,7 @@ public enum FiatCurrency {
     EUR("Euro"),
     GBP("British pound"),
     GEL("Georgian lari"),
+    GHS("Ghanaian Cedi"),
     GIP("Gibraltar pound"),
     GTQ("Guatemalan quetzal"),
     HKD("Hong Kong dollar"),
