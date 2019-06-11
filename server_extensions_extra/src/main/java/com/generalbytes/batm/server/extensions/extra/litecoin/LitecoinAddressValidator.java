@@ -19,9 +19,7 @@ package com.generalbytes.batm.server.extensions.extra.litecoin;
 
 import com.generalbytes.batm.server.coinutil.AddressFormatException;
 import com.generalbytes.batm.server.coinutil.Base58;
-import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
-import com.generalbytes.batm.server.extensions.extra.groestlcoin.wallets.groestlcoind.GroestlcoindRPCWallet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,12 +33,20 @@ public class LitecoinAddressValidator implements ICryptoAddressValidator {
             try {
                 Base58.decodeToBigInteger(address);
                 Base58.decodeChecked(address);
+                return true;
             } catch (AddressFormatException e) {
-                log.debug("Address ["+address+"] is not recognized.", e);
+                log.debug("Address [" + address + "] is not recognized.", e);
                 return false;
             }
-            return true;
-        }else{
+        } else if (address.startsWith("ltc1")) {
+            try {
+                Bech32.decode(address);
+                return true;
+            } catch (Exception e) {
+                log.debug("Address [" + address + "] is not recognized.", e);
+                return false;
+            }
+        } else {
             return false;
         }
     }
@@ -52,6 +58,6 @@ public class LitecoinAddressValidator implements ICryptoAddressValidator {
 
     @Override
     public boolean mustBeBase58Address() {
-        return true;
+        return false;
     }
 }
