@@ -55,6 +55,7 @@ public enum CryptoCurrency {
     ECA("Electra"),
     EFL("e-Gulden"),
     ETH("Ethereum"),
+    EURS("STASIS EURO"),
     FLASH("FLASH"),
     FTO("FuturoCoin"),
     GRS("Groestlcoin"),
