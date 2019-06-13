@@ -31,6 +31,7 @@ public interface ITerminal {
     int MODE_REJECTED_REASON_EXCHANGE_RATE_NOT_AVAILABLE      = 3;
     int MODE_REJECTED_REASON_IP_WHITELIST                     = 4;
     int MODE_REJECTED_REASON_CLIENT_CERT_FINGERPRINT_MISMATCH = 5;
+    int MODE_REJECTED_REASON_OUTSIDE_OF_OPENING_HOURS         = 6;
 
     int MODE_OPERATIONAL_ALL_OK              = 0;
     int MODE_REJECTED_BY_SERVER              = 1;
