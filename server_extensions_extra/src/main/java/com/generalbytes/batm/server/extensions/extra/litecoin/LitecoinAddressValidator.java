@@ -38,7 +38,7 @@ public class LitecoinAddressValidator implements ICryptoAddressValidator {
                 log.debug("Address [" + address + "] is not recognized.", e);
                 return false;
             }
-        } else if (address.startsWith("ltc1")) {
+        } else if (address.toLowerCase().startsWith("ltc1")) {
             try {
                 Bech32.decode(address);
                 return true;
