@@ -30,7 +30,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 public class BitcoinCashExtension extends AbstractExtension {
-    private static final CryptoCurrencyDefinition DEFINITION = new BitcoinCashDefinition();
+    private static final ICryptoCurrencyDefinition DEFINITION = new BitcoinCashDefinition();
     public static final String CURRENCY = CryptoCurrency.BCH.getCode();
 
     @Override

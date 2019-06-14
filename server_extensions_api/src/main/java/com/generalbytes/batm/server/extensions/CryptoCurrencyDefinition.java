@@ -41,6 +41,11 @@ public class CryptoCurrencyDefinition implements ICryptoCurrencyDefinition {
     }
 
     @Override
+    public String getRateSourceSymbol() {
+        return getSymbol();
+    }
+
+    @Override
     public String getName() {
         return name;
     }
