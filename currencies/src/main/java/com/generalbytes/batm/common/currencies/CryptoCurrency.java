@@ -61,6 +61,7 @@ public enum CryptoCurrency {
     GRS("Groestlcoin"),
     HBX("HBX"),
     KMD("Komodo"),
+    LBTC("Lightning Network Bitcoin"),
     LEO("LEOcoin"),
     LINDA("Linda"),
     LSK("Lisk"),

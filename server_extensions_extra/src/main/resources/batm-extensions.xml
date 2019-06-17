@@ -441,6 +441,17 @@
         <cryptologo cryptocurrency="LTC" file="ltc.png"/>
         <cryptologo cryptocurrency="LTC" file="ltc.svg"/>
     </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.lightningbitcoin.LightningBitcoinExtension" >
+        <wallet prefix="eclair" name="eclair">
+            <param name="scheme" />
+            <param name="host" />
+            <param name="port" />
+            <param name="password" />
+            <cryptocurrency>LBTC</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="LBTC" file="lbtc.png"/>
+        <cryptologo cryptocurrency="LBTC" file="lbtc.svg"/>
+    </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.bitbay.BitbayCoinExtension" >
         <wallet prefix="bitbayd" name="bitbayd">
             <param name="protocol" />
