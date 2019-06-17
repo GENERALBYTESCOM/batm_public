@@ -25,6 +25,7 @@ import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.ethereum.erc20.ERC20Wallet;
+import com.generalbytes.batm.server.extensions.extra.ethereum.sources.stasis.StasisTickerRateSource;
 import com.generalbytes.batm.server.extensions.extra.ethereum.stream365.Stream365;
 
 import java.math.BigInteger;
@@ -53,6 +54,7 @@ public class EthereumExtension extends AbstractExtension{
         result.add(CryptoCurrency.VOLTZ.getCode());
         result.add(CryptoCurrency.THBX.getCode());
         result.add(CryptoCurrency.MUSD.getCode());
+        result.add(CryptoCurrency.EURS.getCode());
         return result;
     }
 
@@ -94,6 +96,8 @@ public class EthereumExtension extends AbstractExtension{
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
             if (sourceLogin.startsWith("stream365")) {
                 return new Stream365();
+            } else if (sourceLogin.startsWith("stasis")) {
+                return new StasisTickerRateSource();
             }
         }
         return null;

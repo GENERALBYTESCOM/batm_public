@@ -46,6 +46,11 @@ public interface ICryptoCurrencyDefinition {
     String getSymbol();
 
     /**
+     * Some of the currencies have different symbol for for itself and for its price - i.e. bitcoin lightning (LBTC + BTC)
+     */
+    String getRateSourceSymbol();
+
+    /**
      * Optional implementation of support for Payment manager. IPaymentSupport is used for example in two way support for ATMs.
      * @return
      */

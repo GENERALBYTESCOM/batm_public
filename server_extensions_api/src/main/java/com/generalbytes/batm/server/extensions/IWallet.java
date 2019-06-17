@@ -21,10 +21,45 @@ package com.generalbytes.batm.server.extensions;
 import java.math.BigDecimal;
 import java.util.Set;
 
+/**
+ * IWallet is accessed by server to manipulate with funds (typically crypto currency)
+ */
 public interface IWallet {
-    public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description); //returns txid
-    public String getCryptoAddress(String cryptoCurrency);
-    public Set<String> getCryptoCurrencies();
-    public String getPreferredCryptoCurrency();
-    public BigDecimal getCryptoBalance(String cryptoCurrency);
+    /**
+     * Returns crypto address of a wallet
+     * @param cryptoCurrency
+     * @return
+     */
+    String getCryptoAddress(String cryptoCurrency);
+
+    /**
+     * Returns list of crypto-currency symbols that wallet supports
+     * @return
+     */
+    Set<String> getCryptoCurrencies();
+
+    /**
+     * Returns main/preferred crypto-currency of a wallet
+     * @return
+     */
+    String getPreferredCryptoCurrency();
+
+    /**
+     * Returns current balance of given crypto-currency (usually confirmed+unconfirmed)
+     * @param cryptoCurrency
+     * @return
+     */
+    BigDecimal getCryptoBalance(String cryptoCurrency);
+
+    /**
+     * Commands wallet to send coins from wallet to a different address. Description contains remote transaction id
+     * @param destinationAddress
+     * @param amount
+     * @param cryptoCurrency
+     * @param description
+     * @return - method must return non-null string. If it returns null it will be considered as error. Usually txid is returned and stored in server's database.
+     */
+    String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description); //returns txid
+
+
 }

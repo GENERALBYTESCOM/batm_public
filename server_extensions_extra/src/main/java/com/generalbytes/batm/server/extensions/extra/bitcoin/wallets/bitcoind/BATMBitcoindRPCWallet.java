@@ -17,7 +17,6 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitcoind;
 
-import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.IWallet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,21 +32,16 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class BATMBitcoindRPCWallet implements IWallet{
     private static final Logger log = LoggerFactory.getLogger(BATMBitcoindRPCWallet.class);
-    private String cryptoCurrency = CryptoCurrency.BTC.getCode();
+    private final String cryptoCurrency;
+    private final BitcoinJSONRPCClient client;
 
-    private String accountName;
-    private BitcoinJSONRPCClient client;
-
-
-    public BATMBitcoindRPCWallet(String rpcURL, String accountName, String cryptoCurrency) {
-        this.accountName = accountName;
+    public BATMBitcoindRPCWallet(String rpcURL, String cryptoCurrency) {
         this.cryptoCurrency = cryptoCurrency;
-        client = createClient(rpcURL);
+        this.client = createClient(rpcURL);
     }
 
     @Override
@@ -71,13 +65,8 @@ public class BATMBitcoindRPCWallet implements IWallet{
 
         try {
             String result;
-            if (accountName.isEmpty()) {
-                log.info("Bitcoind sending coins to: " + destinationAddress + " " + amount);
-                result = client.sendToAddress(destinationAddress, amount, description);
-            } else {
-                log.info("Bitcoind sending coins from " + accountName + " to: " + destinationAddress + " " + amount);
-                result = client.sendFrom(accountName, destinationAddress, amount);
-            }
+            log.info("Bitcoind sending coins to: " + destinationAddress + " " + amount);
+            result = client.sendToAddress(destinationAddress, amount, description);
             log.debug("result = " + result);
             return result;
         } catch (BitcoinRPCException e) {
@@ -94,16 +83,7 @@ public class BATMBitcoindRPCWallet implements IWallet{
         }
 
         try {
-            if (accountName.isEmpty()) {
-                return client.getNewAddress();
-            } else {
-                List<String> addressesByAccount = client.getAddressesByAccount(accountName);
-                if (addressesByAccount == null || addressesByAccount.isEmpty()) {
-                    return null;
-                } else {
-                    return addressesByAccount.get(0);
-                }
-            }
+            return client.getNewAddress();
         } catch (BitcoinRPCException e) {
             log.error("Error in getCryptoAddress", e);
             return null;
@@ -117,11 +97,7 @@ public class BATMBitcoindRPCWallet implements IWallet{
             return null;
         }
         try {
-            if (accountName.isEmpty()) {
-                return client.getBalance();
-            } else {
-                return client.getBalance(accountName);
-            }
+            return client.getBalance();
         } catch (BitcoinRPCException e) {
             log.error("Error in getCryptoBalance", e);
             return null;
