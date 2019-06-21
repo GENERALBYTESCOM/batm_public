@@ -1,7 +1,5 @@
 package com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.dto;
 
-import java.math.BigInteger;
-
 public class Channel {
     public String nodeId;
     public String channelId;
@@ -18,8 +16,16 @@ public class Channel {
                 public Spec spec;
 
                 public class Spec {
-                    public BigInteger toLocalMsat;
+                    public Long toLocalMsat;
+                    public Long toRemoteMsat;
                 }
+            }
+
+            public CommitInput commitInput;
+
+            public class CommitInput {
+                public String outPoint;
+                public Long amountSatoshis;
             }
         }
     }

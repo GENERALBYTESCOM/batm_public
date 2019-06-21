@@ -21,6 +21,8 @@ public class EclairWalletTest {
     @Ignore
     @Test
     public void getCryptoAddress() {
+        String a = w.getCryptoAddress("LBTC");
+        System.out.println(a);
     }
 
     @Ignore
