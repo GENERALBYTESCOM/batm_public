@@ -174,21 +174,11 @@ class DependencySubstitutionPlugin implements Plugin<Project> {
                 final Map<SimpleModuleIdentifier, DependencySubstitution> pluginSubstitutions =
                     extension.substitutions.get()
 
-                boolean substitutionsMissing = !context.unknownSubstitutions.isEmpty()
-                if (!substitutionsMissing) {
-                    for (SimpleModuleVersionIdentifier usedSubstitutionFrom : context.usedSubstitutions.keySet()) {
-                        final DependencySubstitution pluginSubstitution =
-                            pluginSubstitutions.get(usedSubstitutionFrom.moduleIdentifier)
-                        if (!pluginSubstitution.versions.contains(
-                            VersionNumberEntry.parse(usedSubstitutionFrom.version)
-                        )) {
-                            substitutionsMissing = true
-                            break
-                        }
 
-                    }
-                }
-                if (substitutionsMissing) {
+                if (
+                    hasMissing(pluginSubstitutions, context.usedSubstitutions, context.unknownSubstitutions)
+                    || hasRedundant(pluginSubstitutions, context.usedSubstitutions)
+                ) {
                     for (Project projectToResolve : projects) {
                         if (projectToResolve.pluginManager.hasPlugin(ID)) {
                             if (false) {//TODO: fix resolve errors?
@@ -208,6 +198,48 @@ class DependencySubstitutionPlugin implements Plugin<Project> {
                 }
             }
         }
+    }
+
+    boolean hasRedundant(
+        Map<SimpleModuleIdentifier, DependencySubstitution> pluginSubstitutions,
+        Map<SimpleModuleVersionIdentifier, VersionNumberEntry> usedSubstitutions
+    ) {
+        boolean substitutionRedundant = false
+outer:          for (DependencySubstitution pluginSubstitution : pluginSubstitutions.values()) {
+            for (VersionNumberEntry psVersion : pluginSubstitution.versions) {
+                final SimpleModuleVersionIdentifier singlePluginSubstitution = new SimpleModuleVersionIdentifier(
+                    pluginSubstitution.fromIdentifier,
+                    psVersion.string
+                )
+                if (!usedSubstitutions.containsKey(singlePluginSubstitution)) {
+                    substitutionRedundant = true
+                    break outer
+                }
+            }
+        }
+        return substitutionRedundant
+    }
+
+    boolean hasMissing(
+        Map<SimpleModuleIdentifier, DependencySubstitution> pluginSubstitutions,
+        Map<SimpleModuleVersionIdentifier, VersionNumberEntry> usedSubstitutions,
+        Map<SimpleModuleVersionIdentifier, VersionNumberEntry> unknownSubstitutions
+    ) {
+        boolean substitutionsMissing = !unknownSubstitutions.isEmpty()
+        if (!substitutionsMissing) {
+            for (SimpleModuleVersionIdentifier usedSubstitutionFrom : usedSubstitutions.keySet()) {
+                final DependencySubstitution pluginSubstitution =
+                    pluginSubstitutions.get(usedSubstitutionFrom.moduleIdentifier)
+                if (!pluginSubstitution.versions.contains(
+                    VersionNumberEntry.parse(usedSubstitutionFrom.version)
+                )) {
+                    substitutionsMissing = true
+                    break
+                }
+
+            }
+        }
+        return substitutionsMissing
     }
 
     private void reportSuggestedConfigurationChanges(
