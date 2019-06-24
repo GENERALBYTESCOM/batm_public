@@ -1,40 +1,67 @@
 package com.generalbytes.gradle.model
 
+import groovy.transform.EqualsAndHashCode
+
 import java.util.stream.Collectors
 
-class DependencySubstitution {
+@EqualsAndHashCode
+class DependencySubstitution implements Comparable<DependencySubstitution> {
     final SimpleModuleIdentifier fromIdentifier
     final Set<VersionNumberEntry> versions
     final VersionNumberEntry toVersion
 
-    DependencySubstitution(String group, String name, Set<VersionNumberEntry> versions, VersionNumberEntry toVersion) {
-        if (group == null) {
-            throw new IllegalArgumentException("Group can't be null.")
+    DependencySubstitution(
+        SimpleModuleIdentifier fromIdentifier,
+        Set<VersionNumberEntry> versions,
+        VersionNumberEntry toVersion
+    ) {
+        if (fromIdentifier == null) {
+            throw new IllegalArgumentException("fromIdentifier can't be null.")
         }
-        if (name == null) {
-            throw new IllegalArgumentException("Name can't be null.")
+        if (fromIdentifier.group == null) {
+            throw new IllegalArgumentException("fromIdentifier group can't be null.")
         }
-        if (versions == null) {
-            throw new IllegalArgumentException("Versions can't be null.")
+        if (fromIdentifier.name == null) {
+            throw new IllegalArgumentException("fromIdentifier name can't be null.")
         }
         if (toVersion == null) {
-            throw new IllegalArgumentException("ToVersion can't be null.")
+            throw new IllegalArgumentException("toVersion can't be null.")
         }
 
-        this.fromIdentifier = new SimpleModuleIdentifier(group, name)
-        this.versions = versions
+        this.fromIdentifier = fromIdentifier
         this.toVersion = toVersion
+        this.versions = versions.asImmutable()
+
+        if (this.versions == null) {
+            throw new IllegalArgumentException("Versions can't be null.")
+        }
+        if (this.versions.isEmpty()) {
+            throw new IllegalArgumentException("Versions can't be empty.")
+        }
+    }
+
+
+    DependencySubstitution(String group, String name, Set<VersionNumberEntry> versions, VersionNumberEntry toVersion) {
+        this(new SimpleModuleIdentifier(group, name), versions, toVersion)
+    }
+
+    boolean isNewestWins() {
+        return versionsMax() <= toVersion
+    }
+
+    VersionNumberEntry versionsMax() {
+        versions.stream().max(Comparator.naturalOrder()).get()
+    }
+
+    String displayName() {
+        "dependency substitution: $this"
     }
 
     @Override
     String toString() {
-        "dependency substitution: ${parameters()}"
-    }
-
-    private String parameters() {
         final String versionsString = versions
             .stream()
-            .sorted(Comparator.comparing({ it.number }))
+            .sorted(Comparator.naturalOrder())
             .map({ "'${it.string}'" })
             .collect(Collectors.toList())
             .join(', ')
@@ -42,6 +69,11 @@ class DependencySubstitution {
     }
 
     String getDefinition() {
-        "substitute ${parameters()}"
+        "substitute $this"
+    }
+
+    @Override
+    int compareTo(DependencySubstitution o) {
+        toString().compareTo(o.toString())
     }
 }

@@ -8,7 +8,7 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 @EqualsAndHashCode
-class SimpleModuleIdentifier implements ModuleIdentifier {
+final class SimpleModuleIdentifier implements ModuleIdentifier {
     final String group
     final String name
     final String classifier

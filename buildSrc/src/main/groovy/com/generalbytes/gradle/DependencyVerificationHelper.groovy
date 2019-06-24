@@ -29,7 +29,6 @@ class DependencyVerificationHelper {
         Collections.<Gradle, ConcurrentMap<String, String>> synchronizedMap(new WeakHashMap<>())
 
     static ConcurrentMap<String, String> getCache(Gradle gradle) {
-        CACHES_BY_GRADLE_INVOCATION.entrySet()
         CACHES_BY_GRADLE_INVOCATION.computeIfAbsent(gradle, { new ConcurrentHashMap<>() })
     }
 
@@ -150,16 +149,9 @@ class DependencyVerificationHelper {
     }
 
     static ArtifactCollection getIncomingArtifactCollection(Project project, Configuration configuration) {
-        if (Util.isAndroidProject(project)) {
-            configuration.incoming.artifactView { config ->
-                config.attributes { container ->
-//                    container.attribute(Attribute.of("artifactType", String.class), "android-classes")
-                    container.attribute(Attribute.of("artifactType", String.class), "jar")
-                }
-            }.artifacts
-        } else {
-            configuration.incoming.artifacts
-        }
+        configuration.incoming.artifactView { config ->
+            config.attributes.attribute(Attribute.of("artifactType", String.class), "jar")
+        }.artifacts
     }
 
     static Set<Configuration> toConfigurations(Project project, Set<Object> configurationObjects) {

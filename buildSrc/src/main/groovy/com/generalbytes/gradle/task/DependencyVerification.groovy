@@ -82,8 +82,13 @@ class DependencyVerification extends DefaultTask {
         )
     }
 
-    static void verifyChecksums(Project project, Set<Object> configurations, Set<ChecksumAssertion> assertions,
-                                boolean failOnChecksumError, boolean printUnusedAssertions) {
+    static void verifyChecksums(
+        Project project,
+        Set<Object> configurations,
+        Set<ChecksumAssertion> assertions,
+        boolean failOnChecksumError,
+        boolean printUnusedAssertions
+    ) {
         final List<Configuration> configurationsToCheck =
             DependencyVerificationHelper.toConfigurations(project, configurations).sort {
                 Configuration a, Configuration b ->
@@ -116,7 +121,8 @@ class DependencyVerification extends DefaultTask {
         Project project,
         Configuration configuration,
         Map<ModuleComponentIdentifier, ChecksumAssertion> assertionsByModule,
-        boolean failOnChecksumError) {
+        boolean failOnChecksumError
+    ) {
 
         final Set<ChecksumAssertion> usedAssertions = new HashSet<>()
         final Set<ChecksumAssertion> missingAssertions = new HashSet<>()
@@ -221,8 +227,7 @@ class DependencyVerification extends DefaultTask {
             .append('Consider verifying the following assertions:').append('\n')
 
         mismatchedChecksumsByAssertion.sort().each { ChecksumAssertion assertion, String actualChecksum ->
-            sb.append('    ').append(assertion.displayName).append(", actual checksum: '$actualChecksum'")
-                .append('\n')
+            sb.append('    ').append(assertion.displayName).append(", actual checksum: '$actualChecksum'").append('\n')
         }
         if (failOnChecksumError) {
             throw new MismatchedChecksumsException(sb.toString(), mismatchedChecksumsByAssertion)
