@@ -63,7 +63,6 @@ class SuggestedSubstitutionChanges {
         Map<SimpleModuleVersionIdentifier, VersionNumberEntry> unknownSubstitutions
     ) {
 
-        //TODO: usedSubstitutions should go to unmodifie
         final Map<SimpleModuleIdentifier, DependencySubstitution> mergedUsedSubstitutionsByModule = new HashMap<>()
         usedSubstitutions.each { from, toVersion ->
             final DependencySubstitution originalSubstitution = originalSubstitutions.get(from.moduleIdentifier)
@@ -97,23 +96,10 @@ class SuggestedSubstitutionChanges {
 
         }
 
-
         unknownSubstitutions.each { from, toVersion ->
             final DependencySubstitution originalSubstitution = originalSubstitutions.get(from.moduleIdentifier)
-            final DependencySubstitution mergedUsedSubstitution = mergedUsedSubstitutionsByModule.get(from.moduleIdentifier)
 
             if (originalSubstitution != null) {
-                if (!originalSubstitution.toVersion.equals(toVersion)) {
-                    throw new IllegalArgumentException(
-                        "Original substitution target version doesn't match substitution."
-                    )
-                }
-
-                if (mergedUsedSubstitution != null && !mergedUsedSubstitution.toVersion.equals(toVersion)) {
-                    throw new IllegalArgumentException(
-                        "Modification suggestion target version doesn't match substitution."
-                    )
-                }
                 mergedUsedSubstitutionsByModule.compute(
                     from.moduleIdentifier,
                     { key, baseSubstitution ->
@@ -122,13 +108,11 @@ class SuggestedSubstitutionChanges {
                             // if we got here, the module has no USED substitutions, but still has a substitution
                             // specified
                             return stripPluginSubstitution(originalSubstitution, fromVersion)
-                        } else if (baseSubstitution.versions.contains(fromVersion)) {
-                            throw new IllegalArgumentException("Substitution shouldn't be unknown.")
                         } else {
-                            return new DependencySubstitution(
-                                baseSubstitution.fromIdentifier,
-                                baseSubstitution.versions + fromVersion,
-                                baseSubstitution.toVersion
+                            return substitutionForConflict(
+                                from,
+                                new SimpleModuleVersionIdentifier(from.moduleIdentifier, toVersion.string),
+                                baseSubstitution
                             )
                         }
                     }
