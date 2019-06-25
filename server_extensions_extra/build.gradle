@@ -65,12 +65,6 @@ dependencies {
 
     runtime(group: 'com.google.protobuf',  name: 'protobuf-java', version: '2.6.1')
 
-//    runtime(group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25')
-//    runtime(group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3')
-//    runtime(group: 'ch.qos.logback', name: 'logback-core', version: '1.2.3')
-//    runtime(group: 'org.slf4j', name: 'slf4j-simple' , version: '1.7.25')
-//
-
     generalBytesCompile(group: 'com.generalbytes.bitrafael.public', name: 'bitrafael-client', version: bitrafaelVersion) {
         exclude group: 'org.slf4j', module: 'slf4j-simple'
     }
@@ -84,7 +78,7 @@ dependencies {
 }
 
 dependencySubstitutions {
-    substitute file(batmDependencySubstitutionConfigPublic)
+    substitute file(batmDependencySubstitutionConfig)
 }
 
 if (hasGbUploadArtifactory) {
@@ -108,7 +102,7 @@ if (hasGbUploadArtifactory) {
 }
 
 dependencyVerifications {
-    checksums batmDependencyChecksumsConfigPublic
+    checksums batmDependencyChecksumsConfig
     printUnusedAssertions false
 
     // additional configurations
