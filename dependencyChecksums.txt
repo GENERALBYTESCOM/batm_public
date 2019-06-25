@@ -1,4 +1,4 @@
-// generated at 2019-06-17T15:53:13
+// generated at 2019-06-24T18:22:36
 verifyModule 'com.fasterxml.jackson.core:jackson-annotations:2.9.1:029834aefc1649b08d32ab0fdc333142075001e842260beed40f0e5f4714c5e8'
 verifyModule 'com.fasterxml.jackson.core:jackson-core:2.9.1:782e7efa27452f76f7e1191c166613bfbec785ac73ffb5504d323f07f3b1700e'
 verifyModule 'com.fasterxml.jackson.core:jackson-databind:2.9.1:17b28ec21ae487bb9a0570b6c0ec66b2277d47546d4089c3a5a2b3e60054134c'
@@ -33,7 +33,7 @@ verifyModule 'com.squareup.okhttp3:logging-interceptor:3.8.1:1e84fce63c46ce41fb7
 verifyModule 'com.squareup.okhttp3:okhttp:3.12.1:07c3d82ca7eaf4722f00b2da807dc7860f6169ae60cfedcf5d40218f90880a46'
 verifyModule 'com.squareup.okhttp:okhttp:2.7.2:b4c943138fcef2bcc9d2006b2250c4aabbedeafc5947ed7c0af7fd103ceb2707'
 verifyModule 'com.squareup.okio:okio:1.15.0:693fa319a7e8843300602b204023b7674f106ebcb577f2dd5807212b66118bd2'
-verifyModule 'com.sun.mail:javax.mail:1.4.7:f56957fcc9a91d011acec066100f6acfe3c130e325db552b8ea26118e1d07029'
+verifyModule 'com.sun.mail:javax.mail:1.6.2:45b515e7104944c09e45b9c7bb1ce5dff640486374852dd2b2e80cc3752dfa11'
 verifyModule 'com.vdurmont:emoji-java:3.1.3:366820d95aeaed4c6ff2570dd2f5bc03af8dd157b773733a82717ca07df25205'
 verifyModule 'commons-codec:commons-codec:1.10:4241dfa94e711d435f29a4604a3e2de5c4aa3c165e23bd066be6fc1fc4309569'
 verifyModule 'commons-io:commons-io:2.6:f877d304660ac2a142f3865badfc971dec7ed73c747c7f8d5d2f5139ca736513'
