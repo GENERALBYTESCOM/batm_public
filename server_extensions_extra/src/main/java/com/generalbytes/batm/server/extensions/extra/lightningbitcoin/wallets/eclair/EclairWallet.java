@@ -104,7 +104,8 @@ public class EclairWallet implements ILightningWallet {
 
     @Override
     public String getInvoice(BigDecimal cryptoAmount, String cryptoCurrency, Long paymentValidityInSec) {
-        return callChecked(cryptoCurrency, () -> api.createInvoice(bitcoinToMSat(cryptoAmount), "BATM Sell", paymentValidityInSec).serialized);
+        String description = "BATM Sell " + cryptoAmount.toPlainString() + " " + cryptoCurrency;
+        return callChecked(cryptoCurrency, () -> api.createInvoice(bitcoinToMSat(cryptoAmount), description, paymentValidityInSec).serialized);
     }
 
 
