@@ -95,6 +95,7 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
         if (wallet != null && (wallet instanceof IRPCWallet)) {
             return ((IRPCWallet) wallet).getClient();
         }
+        log.info("Wallet not supported: {}. Must be an instance of {}.", wallet == null ? null : wallet.getClass().getSimpleName(), IRPCWallet.class.getSimpleName());
         return null;
     }
 

@@ -363,6 +363,7 @@
             <param name="port" />
             <param name="accountname" />
             <cryptocurrency>BCH</cryptocurrency>
+            <help>For BCH SELL this is the only supported wallet</help>
         </wallet>
         <cryptologo cryptocurrency="BCH" file="bch.png"/>
         <cryptologo cryptocurrency="BCH" file="bch.svg"/>
