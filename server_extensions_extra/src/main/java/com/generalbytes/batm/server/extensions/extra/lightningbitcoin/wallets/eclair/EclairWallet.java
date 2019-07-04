@@ -26,7 +26,8 @@ public class EclairWallet implements ILightningWallet {
 
     private static final Logger log = LoggerFactory.getLogger(EclairWallet.class);
     private static final int API_POLL_MAX = 20000;
-    private static final int API_POLL_INTERVAL = 500;
+    private static final int API_POLL_INTERVAL = 1000;
+    private static final long API_CALL_DELAY = 100;
 
     private final ILightningWalletInformation walletInformation;
 
@@ -51,41 +52,40 @@ public class EclairWallet implements ILightningWallet {
      */
     @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
-        return callChecked(cryptoCurrency, () -> {
-            Invoice invoice = api.parseInvoice(destinationAddress);
-            log.info("Paying {} to invoice {}", amount, invoice);
 
-            if (invoice.amount != null) {
-                log.info("Invoices with amount not supported");
-                return null;
-            }
+        Invoice invoice = callChecked(cryptoCurrency, () -> api.parseInvoice(destinationAddress));
 
-            List<SentInfo> sentInfo = api.getSentInfoByPaymentHash(invoice.paymentHash);
+        log.info("Paying {} to invoice {}", amount, invoice);
 
-            if (sentInfo.stream().filter(i -> i.status == SentInfo.Status.SUCCEEDED).findAny().isPresent()) {
-                log.info("Invoice already paid");
-                return null;
-            }
-            Long amountMsat = bitcoinToMSat(amount);
-
-            String id = api.payInvoice(destinationAddress, amountMsat);
-
-            for (int millis = 0; millis < API_POLL_MAX; millis += API_POLL_INTERVAL) {
-                sleep(API_POLL_INTERVAL);
-
-                SentInfo sentInfo2 = api.getSentInfoById(id).get(0);
-
-                switch (sentInfo2.status) {
-                    case FAILED:
-                        log.error("Payment failed: id={}, paymentHash={}", sentInfo2.id, sentInfo2.paymentHash);
-                        return null;
-                    case SUCCEEDED:
-                        return sentInfo2.paymentHash;
-                }
-            }
+        if (invoice.amount != null) {
+            log.info("Invoices with amount not supported");
             return null;
-        });
+        }
 
+        List<SentInfo> sentInfo = callChecked(() -> api.getSentInfoByPaymentHash(invoice.paymentHash));
+
+        if (sentInfo.stream().filter(i -> i.status == SentInfo.Status.SUCCEEDED).findAny().isPresent()) {
+            log.info("Invoice already paid");
+            return null;
+        }
+        Long amountMsat = bitcoinToMSat(amount);
+        String paymentId = callChecked(() -> api.payInvoice(destinationAddress, amountMsat));
+
+        for (int millis = 0; millis < API_POLL_MAX; millis += API_POLL_INTERVAL) {
+            sleep(API_POLL_INTERVAL);
+
+            SentInfo sentInfo2 = callChecked(() -> api.getSentInfoById(paymentId).get(0));
+
+            switch (sentInfo2.status) {
+                case FAILED:
+                    log.error("Payment failed: id={}, paymentHash={}", sentInfo2.id, sentInfo2.paymentHash);
+                    return null;
+                case SUCCEEDED:
+                    return sentInfo2.paymentHash;
+            }
+        }
+        log.error("Payment result unknown; paymentId={}", paymentId);
+        return null;
     }
 
     @Override
@@ -185,10 +185,22 @@ public class EclairWallet implements ILightningWallet {
      * @return null in case of exceptions
      */
     private <T> T callChecked(EclairApiSupplier<T> supplier) {
+        return callChecked(supplier, 3);
+    }
+
+    private <T> T callChecked(EclairApiSupplier<T> supplier, int retries) {
         try {
+            sleep(API_CALL_DELAY);
             return supplier.get();
         } catch (ErrorResponseException e) {
             log.error("Error response: {}", e.error);
+
+            // workaround https://github.com/ACINQ/eclair/pull/1032
+            if (e.error.endsWith("was malformed:\nSubstream Source cannot be materialized more than once") && retries > 0) {
+                log.info("retrying {}", retries);
+                return callChecked(supplier, retries - 1);
+            }
+
         } catch (HttpStatusIOException e) {
             log.error(e.getHttpBody(), e);
         } catch (ConnectException e) {
