@@ -46,6 +46,7 @@ public class BitBayWalletGenerator implements IPaperWalletGenerator {
         WalletToolsBCH wt = new WalletToolsBCH();
         String privateKey = wt.generateWalletPrivateKeyWithPrefix(prefix, CryptoCurrency.BAY.getCode());
         String address = wt.getWalletAddressFromPrivateKey(privateKey, CryptoCurrency.BAY.getCode());
+        privateKey = "bitbay:" + privateKey;
 
         byte[] content = ctx.createPaperWallet7ZIP(privateKey, address, oneTimePassword, cryptoCurrency);
 
