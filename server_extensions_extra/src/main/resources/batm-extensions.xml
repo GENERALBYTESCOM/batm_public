@@ -24,6 +24,7 @@
                 <cryptocurrency>BCH</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
+                <cryptocurrency>ETH</cryptocurrency><!--BitGo’s Ethereum wallets are only available to BitGo Enterprise customers-->
                 <help>Host should start with http:// or https://</help>
             </wallet>
             <ratesource prefix="btcfix" name ="Fix Price" >
@@ -362,6 +363,7 @@
             <param name="port" />
             <param name="accountname" />
             <cryptocurrency>BCH</cryptocurrency>
+            <help>For BCH SELL this is the only supported wallet</help>
         </wallet>
         <cryptologo cryptocurrency="BCH" file="bch.png"/>
         <cryptologo cryptocurrency="BCH" file="bch.svg"/>
@@ -440,6 +442,17 @@
         </ratesource>
         <cryptologo cryptocurrency="LTC" file="ltc.png"/>
         <cryptologo cryptocurrency="LTC" file="ltc.svg"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.lightningbitcoin.LightningBitcoinExtension" >
+        <wallet prefix="eclair" name="eclair">
+            <param name="scheme" />
+            <param name="host" />
+            <param name="port" />
+            <param name="password" />
+            <cryptocurrency>LBTC</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="LBTC" file="lbtc.png"/>
+        <cryptologo cryptocurrency="LBTC" file="lbtc.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.bitbay.BitbayCoinExtension" >
         <wallet prefix="bitbayd" name="bitbayd">
