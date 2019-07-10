@@ -83,6 +83,7 @@ public enum CryptoCurrency {
     THBX("DigitalThaiBaht"),
     TKN("TokenCard"),
     TRX("Tron"),
+    USDS("StableUSD"),
     USDT("Tether"),
     VIA("Viacoin"),
     VOLTZ("VOLTZ"),
