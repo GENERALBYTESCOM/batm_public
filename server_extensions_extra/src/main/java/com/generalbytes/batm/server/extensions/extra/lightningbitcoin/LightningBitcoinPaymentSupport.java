@@ -1,5 +1,6 @@
 package com.generalbytes.batm.server.extensions.extra.lightningbitcoin;
 
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.IExtensionContext;
 import com.generalbytes.batm.server.extensions.ILightningWallet;
 import com.generalbytes.batm.server.extensions.payment.IPaymentRequestListener;
@@ -11,6 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -18,6 +21,7 @@ import java.util.concurrent.TimeUnit;
 
 public class LightningBitcoinPaymentSupport implements IPaymentSupport {
     private static final Logger log = LoggerFactory.getLogger(LightningBitcoinPaymentSupport.class);
+    private final Map<String, PaymentRequest> requests = new ConcurrentHashMap<>();
 
     private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
@@ -61,6 +65,7 @@ public class LightningBitcoinPaymentSupport implements IPaymentSupport {
                     }
 
                     log.info("Amounts matches");
+                    setState(request, PaymentRequest.STATE_SEEN_TRANSACTION); // go through both states so the listener can react to both of them
                     setState(request, PaymentRequest.STATE_SEEN_IN_BLOCK_CHAIN);
                     fireNumberOfConfirmationsChanged(request, 999);
                 }
@@ -83,18 +88,29 @@ public class LightningBitcoinPaymentSupport implements IPaymentSupport {
             }
         }, spec.getValidInSeconds(), TimeUnit.SECONDS);
 
+        requests.entrySet().removeIf(e -> e.getValue().getValidTill() <  System.currentTimeMillis());
+        requests.put(invoice, request);
         return request;
     }
 
 
     @Override
     public boolean isPaymentReceived(String paymentAddress) {
-        return false;
+        PaymentRequest paymentRequest = requests.get(paymentAddress);
+        return paymentRequest != null && paymentRequest.getState() == PaymentRequest.STATE_SEEN_IN_BLOCK_CHAIN;
     }
 
     @Override
     public PaymentReceipt getPaymentReceipt(String paymentAddress) {
-        return null;
+        PaymentReceipt result = new PaymentReceipt(CryptoCurrency.LBTC.getCode(), paymentAddress);
+        PaymentRequest paymentRequest = requests.get(paymentAddress);
+        if (paymentRequest != null && paymentRequest.getState() == PaymentRequest.STATE_SEEN_IN_BLOCK_CHAIN) {
+            result.setStatus(PaymentReceipt.STATUS_PAID);
+            result.setConfidence(PaymentReceipt.CONFIDENCE_SURE);
+            result.setAmount(paymentRequest.getAmount());
+            result.setTransactionId(paymentRequest.getIncomingTransactionHash());
+        }
+        return result;
     }
 
     private void fireNumberOfConfirmationsChanged(PaymentRequest request, int numberOfConfirmations) {
