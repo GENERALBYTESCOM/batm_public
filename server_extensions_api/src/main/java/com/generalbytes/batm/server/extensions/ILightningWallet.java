@@ -20,21 +20,23 @@ package com.generalbytes.batm.server.extensions;
 
 import java.math.BigDecimal;
 
-public interface IWalletAdvanced extends IWallet{
-    /**
-     * Commands wallet to send coins from wallet to a different address. Description contains remote transaction id
-     * @param destinationAddress
-     * @param amount
-     * @param fee
-     * @param cryptoCurrency
-     * @param description
-     * @return - method must return non-null string. If it returns null it will be considered as error. Usually txid is returned and stored in server's database.
-     */
-    String sendCoins(String destinationAddress, BigDecimal amount, BigDecimal fee ,String cryptoCurrency, String description); //returns txid
+public interface ILightningWallet extends IWalletAdvanced {
 
     /**
-     * Returns optional additional information about wallet.
-     * @return - may return null
+     * @param invoice
+     * @param cryptoCurrency
+     * @return Lightning Bitcoins received to this invoice
      */
-    IWalletInformation getWalletInformation();
+    BigDecimal getReceivedAmount(String invoice, String cryptoCurrency);
+
+    /**
+     *
+     *
+     * @param cryptoAmount
+     * @param cryptoCurrency
+     * @param paymentValidityInSec expiry of generated invoice in seconds
+     * @param description
+     * @return
+     */
+    String getInvoice(BigDecimal cryptoAmount, String cryptoCurrency, Long paymentValidityInSec, String description);
 }

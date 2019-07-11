@@ -36,7 +36,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 public class SumcoinExtension extends AbstractExtension {
-    private static final CryptoCurrencyDefinition DEFINITION = new SumcoinDefinition();
+    private static final ICryptoCurrencyDefinition DEFINITION = new SumcoinDefinition();
 
     @Override
     public String getName() {

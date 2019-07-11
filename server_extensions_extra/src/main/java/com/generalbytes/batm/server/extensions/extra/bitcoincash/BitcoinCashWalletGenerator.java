@@ -47,6 +47,7 @@ public class BitcoinCashWalletGenerator implements IPaperWalletGenerator {
         WalletToolsBCH wt = new WalletToolsBCH();
         String privateKey = wt.generateWalletPrivateKeyWithPrefix(prefix, CryptoCurrency.BCH.getCode());
         String address = wt.getWalletAddressFromPrivateKey(privateKey, CryptoCurrency.BCH.getCode());
+        privateKey = "bitcoincash:" + privateKey;
 
         byte[] content = ctx.createPaperWallet7ZIP(privateKey, address, oneTimePassword, cryptoCurrency);
 

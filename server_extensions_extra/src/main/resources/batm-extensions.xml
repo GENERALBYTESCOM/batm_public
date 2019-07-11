@@ -7,7 +7,7 @@
                 <param name="password" />
                 <param name="host" />
                 <param name="port" />
-                <param name="accountname" />
+                <!--<param name="accountname" /> removed in v0.18, parameter ignored -->
                 <cryptocurrency>BTC</cryptocurrency>
             </wallet>
             <wallet prefix="bitcore" name="BitCore Wallet">
@@ -24,6 +24,7 @@
                 <cryptocurrency>BCH</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
+                <cryptocurrency>ETH</cryptocurrency><!--BitGo’s Ethereum wallets are only available to BitGo Enterprise customers-->
                 <help>Host should start with http:// or https://</help>
             </wallet>
             <ratesource prefix="btcfix" name ="Fix Price" >
@@ -71,6 +72,7 @@
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>DAI</cryptocurrency>
+                <cryptocurrency>EURS</cryptocurrency>
                 <cryptocurrency>MKR</cryptocurrency>
                 <cryptocurrency>BAT</cryptocurrency>
                 <cryptocurrency>REP</cryptocurrency>
@@ -361,6 +363,7 @@
             <param name="port" />
             <param name="accountname" />
             <cryptocurrency>BCH</cryptocurrency>
+            <help>For BCH SELL this is the only supported wallet</help>
         </wallet>
         <cryptologo cryptocurrency="BCH" file="bch.png"/>
         <cryptologo cryptocurrency="BCH" file="bch.svg"/>
@@ -439,6 +442,17 @@
         </ratesource>
         <cryptologo cryptocurrency="LTC" file="ltc.png"/>
         <cryptologo cryptocurrency="LTC" file="ltc.svg"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.lightningbitcoin.LightningBitcoinExtension" >
+        <wallet prefix="eclair" name="eclair">
+            <param name="scheme" />
+            <param name="host" />
+            <param name="port" />
+            <param name="password" />
+            <cryptocurrency>LBTC</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="LBTC" file="lbtc.png"/>
+        <cryptologo cryptocurrency="LBTC" file="lbtc.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.bitbay.BitbayCoinExtension" >
         <wallet prefix="bitbayd" name="bitbayd">
@@ -1274,6 +1288,18 @@
             <cryptocurrency>MUSD</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="MUSD" file="musd.svg"/>
+        <wallet prefix="infuraERC20_EURS_2_0xdB25f211AB05b1c97D595516F45794528a807ad8" name="Infura.io wallet - STASIS EURO">
+            <param name="projectId" />
+            <param name="mnemonic" />
+            <param name="gaslimit" />
+            <help>Mnemonic should be 12 words delimited by spaces. gaslimit is optional</help>
+            <cryptocurrency>EURS</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="EURS" file="eurs.png"/>
+        <cryptologo cryptocurrency="EURS" file="eurs.svg"/>
+        <ratesource prefix="stasis" name="STASIS exchange (EURS)">
+            <cryptocurrency>EURS</cryptocurrency>
+        </ratesource>
         <!-- ADD your ERC20 tokens here. And don't forget to add cryptologos. -->
     </extension>
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.TransactionExtension" />-->
