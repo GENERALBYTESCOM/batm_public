@@ -45,7 +45,8 @@ class SuggestedSubstitutionChanges {
         final Map<SimpleModuleIdentifier, DependencySubstitution> removalSuggestionsByModule =
             computeRemovalSuggestions(
                 originalSubstitutions,
-                usedSubstitutions
+                usedSubstitutions,
+                modifySuggestionsByModule
             )
 
         return new SuggestedSubstitutionChanges(
@@ -80,7 +81,7 @@ class SuggestedSubstitutionChanges {
                 { key, baseSubstitution ->
                     final VersionNumberEntry fromVersion = VersionNumberEntry.parse(from.version)
                     if (baseSubstitution == null) {
-                        return stripPluginSubstitution(originalSubstitution, fromVersion)
+                        return originalSubstitution.createSimilar(fromVersion, true)
                     } else if (baseSubstitution.versions.contains(fromVersion)) {
                         return baseSubstitution
                     } else {
@@ -107,7 +108,7 @@ class SuggestedSubstitutionChanges {
                         if (baseSubstitution == null) {
                             // if we got here, the module has no USED substitutions, but still has a substitution
                             // specified
-                            return stripPluginSubstitution(originalSubstitution, fromVersion)
+                            return originalSubstitution.createSimilar(fromVersion, true)
                         } else {
                             return substitutionForConflict(
                                 from,
@@ -149,17 +150,20 @@ class SuggestedSubstitutionChanges {
 
     static Map<SimpleModuleIdentifier, DependencySubstitution> computeRemovalSuggestions(
         Map<SimpleModuleIdentifier, DependencySubstitution> originalSubstitutions,
-        Map<SimpleModuleVersionIdentifier, VersionNumberEntry> usedSubstitutions
+        Map<SimpleModuleVersionIdentifier, VersionNumberEntry> usedSubstitutions,
+        Map<SimpleModuleIdentifier, DependencySubstitution> modifySuggestionsByModule
     ) {
         final Map<SimpleModuleIdentifier, DependencySubstitution> removalSuggestionsByModule = new HashMap<>()
 
         originalSubstitutions.each { from, originalSubstitution ->
-            boolean shouldRemove =
-                originalSubstitution.versions
+            boolean shouldRemove = (
+                !modifySuggestionsByModule.containsKey(from)
+                && originalSubstitution.versions
                     .stream()
                     .noneMatch({
                         usedSubstitutions.containsKey(new SimpleModuleVersionIdentifier(from, it.string))
                     })
+            )
 
             if (shouldRemove) {
                 removalSuggestionsByModule.put(from, originalSubstitution)
@@ -231,20 +235,4 @@ class SuggestedSubstitutionChanges {
             VersionNumberEntry.parse(to.version)
         )
     }
-
-    static DependencySubstitution stripPluginSubstitution(
-        DependencySubstitution pluginSubstitution,
-        VersionNumberEntry requestedVersion
-    ) {
-        final Set<VersionNumberEntry> versions = [requestedVersion]
-        if (!pluginSubstitution.isNewestWins()) {
-            versions.add(pluginSubstitution.versionsMax())
-        }
-        return new DependencySubstitution(
-            pluginSubstitution.fromIdentifier,
-            versions,
-            pluginSubstitution.toVersion
-        )
-    }
-
 }

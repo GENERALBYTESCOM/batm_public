@@ -14,6 +14,7 @@ import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.DependencyResolveDetails
 import org.gradle.api.artifacts.ResolvableDependencies
 import org.gradle.api.artifacts.component.ModuleComponentSelector
+import org.gradle.api.artifacts.result.ComponentSelectionCause
 import org.gradle.api.artifacts.result.DependencyResult
 import org.gradle.api.artifacts.result.ResolvedDependencyResult
 import org.gradle.api.attributes.Attribute
@@ -91,11 +92,11 @@ class DependencySubstitutionPlugin implements Plugin<Project> {
     ) {
         project.configurations.all { Configuration configuration ->
             if (!shouldSkip(extension, configuration)) {
-                installDependencySubstitutions(configuration, substitutionsByModule)
+                final DependencySubstitutionContext context = getContext(project)
+                installDependencySubstitutions(configuration, substitutionsByModule, context)
                 MissingSubstitutionAction action = extension.missingSubstitutionAction.get()
                 if (action == MissingSubstitutionAction.REPORT || action == MissingSubstitutionAction.FAIL) {
 
-                    final DependencySubstitutionContext context = getContext(project)
                     installMissingSubstitutionGenerator(configuration, substitutionsByModule, context)
 
                     final Set<Project> projects =
@@ -112,7 +113,8 @@ class DependencySubstitutionPlugin implements Plugin<Project> {
 
     private void installDependencySubstitutions(
         Configuration configuration,
-        Map<SimpleModuleIdentifier, DependencySubstitution> substitutionsByModule
+        Map<SimpleModuleIdentifier, DependencySubstitution> substitutionsByModule,
+        DependencySubstitutionContext context
     ) {
 
         configuration.resolutionStrategy {
@@ -124,11 +126,19 @@ class DependencySubstitutionPlugin implements Plugin<Project> {
                     && substitution.versions.contains(VersionNumberEntry.parse(details.requested.version))
                 ) {
                     details.useVersion(substitution.toVersion.string)
-                    details.because("${this.getClass().simpleName}: ${substitution.definition}")
+                    final DependencySubstitution singleSubstitution =
+                        substitution.createSimilar(VersionNumberEntry.parse(details.requested.version), false)
+
+                    details.because("${selectionCausePrefix()} ${singleSubstitution.definition}")
+                    context.usedSubstitutions.put(new SimpleModuleVersionIdentifier(details.requested), substitution.toVersion)
                 }
             }
             logger.debug("Resolution strategy substitutions set for configuration ${configuration}.")
         }
+    }
+
+    private String selectionCausePrefix() {
+        "${this.getClass().simpleName}:"
     }
 
     private installMissingSubstitutionGenerator(
@@ -337,9 +347,8 @@ outer:          for (DependencySubstitution pluginSubstitution : pluginSubstitut
                     }
 
                     final DependencySubstitution pluginSubstitution = pluginSubstitutions.get(requested.moduleIdentifier)
-                    if (isSelectedByPluginRule(result, pluginSubstitution)) {
-                        usedSubstitutions.put(requested, VersionNumberEntry.parse(selected.version))
-                    } else if (result.selected.selectionReason.isConflictResolution()
+                    if (!isSelectedByPluginRule(result, pluginSubstitution)
+                        && result.selected.selectionReason.isConflictResolution()
                         && requested.version != selected.version
                     ) {
                         unknownSubstitutions.put(requested, VersionNumberEntry.parse(selected.version))
@@ -371,6 +380,41 @@ outer:          for (DependencySubstitution pluginSubstitution : pluginSubstitut
         return false
     }
 
+    static boolean isSelectedByPluginRuleOnly(ResolvedDependencyResult result) {
+        final SimpleModuleVersionIdentifier requested = (result.requested as ModuleComponentSelector).with {
+            new SimpleModuleVersionIdentifier(it.group, it.module, it.version)
+        }
+        final SimpleModuleVersionIdentifier selected = result.selected.moduleVersion.with {
+            new SimpleModuleVersionIdentifier(it.group, it.name, it.version)
+        }
+
+        // check modules match (we only support module version substitutions, not module-for-module substitutions)
+        if (requested.moduleIdentifier == selected.moduleIdentifier) {
+
+            if (result.selected.selectionReason.isSelectedByRule()) {
+                final Set<DependencySubstitution> substitutionReasons =
+                    result.selected.selectionReason.descriptions
+                    .stream()
+                    .filter({(
+                        it.cause == ComponentSelectionCause.SELECTED_BY_RULE
+                        && iterator().toString().startsWith(selectionCausePrefix())
+                    )})
+                    .map({ DependencySubstitution.from(it.toString() - selectionCausePrefix()) })
+                    .collect(Collectors.toSet())
+
+                return substitutionReasons.stream().anyMatch( {
+                        it.matches(
+                            VersionNumberEntry.parse(requested.version),
+                            VersionNumberEntry.parse(selected.version)
+                        )
+                    })
+
+            }
+        }
+
+        return false
+    }
+
     private static DependencySubstitutionPluginExtension getExtensionFromProject(Project project) {
         (project.extensions.getByName(DependencySubstitutionPluginExtension.BLOCK_NAME)
             as DependencySubstitutionPluginExtension)
@@ -397,7 +441,7 @@ outer:          for (DependencySubstitution pluginSubstitution : pluginSubstitut
             final SortedSet<DependencySubstitution> substitutions = new TreeSet<>()
             substitutions.addAll(suggestedSubstitutionChanges.addSuggestionsByModule.values())
             substitutions.addAll(suggestedSubstitutionChanges.modifySuggestionsByModule.values())
-            final Set<DependencySubstitution> unchangedSunstitutions =
+            final Set<DependencySubstitution> unchangedSubstitutions =
                 suggestedSubstitutionChanges
                     .originalSubstitutions
                     .values()
@@ -407,7 +451,7 @@ outer:          for (DependencySubstitution pluginSubstitution : pluginSubstitut
                             && !suggestedSubstitutionChanges.modifySuggestionsByModule.containsKey(it.fromIdentifier)
                     )})
                     .collect(Collectors.toSet())
-            substitutions.addAll(unchangedSunstitutions)
+            substitutions.addAll(unchangedSubstitutions)
             if (!substitutions.isEmpty()) {
                 substitutions.each {
                     printStream.println it.definition

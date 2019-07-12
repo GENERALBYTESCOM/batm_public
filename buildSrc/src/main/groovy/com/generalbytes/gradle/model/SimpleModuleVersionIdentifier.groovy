@@ -1,6 +1,7 @@
 package com.generalbytes.gradle.model
 
 import groovy.transform.EqualsAndHashCode
+import org.gradle.api.artifacts.ModuleVersionSelector
 import org.gradle.api.artifacts.component.ModuleComponentIdentifier
 
 import java.util.regex.Matcher
@@ -50,6 +51,9 @@ final class SimpleModuleVersionIdentifier implements ModuleComponentIdentifier {
 
     SimpleModuleVersionIdentifier(ModuleComponentIdentifier moduleComponentIdentifier) {
         this(moduleComponentIdentifier.group, moduleComponentIdentifier.module, moduleComponentIdentifier.version)
+    }
+    SimpleModuleVersionIdentifier(ModuleVersionSelector moduleVersionSelector) {
+        this(moduleVersionSelector.group, moduleVersionSelector.name, moduleVersionSelector.version)
     }
 
 //    SimpleModuleVersionIdentifier(ModuleComponentIdentifier moduleComponentIdentifier) {
