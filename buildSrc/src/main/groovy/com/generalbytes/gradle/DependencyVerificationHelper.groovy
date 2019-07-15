@@ -149,11 +149,14 @@ class DependencyVerificationHelper {
     }
 
     static ArtifactCollection getIncomingArtifactCollection(Project project, Configuration configuration) {
-        configuration.incoming.artifactView { config ->
-            config.attributes.attribute(Attribute.of("artifactType", String.class), "jar")
-        }.artifacts
+        if (Util.isAndroidProject(project)) {
+            configuration.incoming.artifactView { config ->
+                config.attributes.attribute(Attribute.of("artifactType", String.class), "jar")
+            }.artifacts
+        } else {
+            configuration.incoming.artifacts
+        }
     }
-
     static Set<Configuration> toConfigurations(Project project, Set<Object> configurationObjects) {
         final Set<Configuration> ret = new HashSet<>()
         for (Object cfg : configurationObjects) {
