@@ -28,7 +28,6 @@ public class MonetaryUnitAddressValidator implements ICryptoAddressValidator {
 
         @Override
         public boolean isAddressValid(String address) {
-            //For whatever reason this may occur, cover the case
             if (address.startsWith("7")) {
                 try {
                     if(address.length() == 34) {
