@@ -87,6 +87,7 @@
                 <cryptocurrency>BSD</cryptocurrency>
                 <cryptocurrency>BTDX</cryptocurrency>
                 <cryptocurrency>MEC</cryptocurrency>
+                <cryptocurrency>MUE</cryptocurrency>
                 <cryptocurrency>BURST</cryptocurrency>
                 <cryptocurrency>ECA</cryptocurrency>
                 <cryptocurrency>DOGE</cryptocurrency>
@@ -136,6 +137,7 @@
                 <cryptocurrency>MAX</cryptocurrency>
                 <cryptocurrency>MEC</cryptocurrency>
                 <cryptocurrency>MKR</cryptocurrency>
+                <cryptocurrency>MUE</cryptocurrency>
                 <cryptocurrency>NBT</cryptocurrency>
                 <cryptocurrency>NLG</cryptocurrency>
                 <cryptocurrency>NXT</cryptocurrency>
@@ -847,6 +849,28 @@
         </ratesource>
         <cryptologo cryptocurrency="$PAC" file="pac.png"/>
         <cryptologo cryptocurrency="$PAC" file="pac.svg"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.monetaryunit.MonetaryUnitExtension" >
+        <wallet prefix="monetaryunitd" name="MonetaryUnit">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>MUE</cryptocurrency>
+        </wallet>
+         <wallet prefix="monetaryunitdemo" name="MonetaryUnit Demo Wallet">
+             <param name="fiatCurrency" />
+             <param name="walletAddress" />
+             <cryptocurrency>MUE</cryptocurrency>
+         </wallet>
+        <ratesource prefix="monetaryunitfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>MUE</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="MUE" file="mue.png"/>
+        <cryptologo cryptocurrency="MUE" file="mue.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.potcoin.PotcoinExtension" >
         <wallet prefix="potwallet" name="PotCoin">
