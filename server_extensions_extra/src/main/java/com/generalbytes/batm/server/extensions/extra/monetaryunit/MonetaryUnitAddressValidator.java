@@ -16,10 +16,8 @@
  *
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.monetaryunit;
-
 import com.generalbytes.batm.server.coinutil.AddressFormatException;
 import com.generalbytes.batm.server.coinutil.Base58;
-import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 
 import org.slf4j.Logger;
@@ -27,30 +25,33 @@ import org.slf4j.LoggerFactory;
 
 public class MonetaryUnitAddressValidator implements ICryptoAddressValidator {
     private static final Logger log = LoggerFactory.getLogger("batm.master.extensions.MonetaryUnitAddressValidator");
-    @Override
-    public boolean isAddressValid(String address) {
-        if (address.startsWith("7")) {
-            try {
-                Base58.decodeToBigInteger(address);
-                Base58.decodeChecked(address);
-            } catch (AddressFormatException e) {
-                log.error("Error", e);
+
+        @Override
+        public boolean isAddressValid(String address) {
+            //For whatever reason this may occur, cover the case
+            if (address.startsWith("7")) {
+                try {
+                    if(address.length() == 34) {
+                        Base58.decodeToBigInteger(address);
+                        Base58.decodeChecked(address);
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } catch (AddressFormatException e) {
+                    log.error("Error", e);
+                    return false;
+                }
+            } else {
                 return false;
             }
-            return true;
-        }else{
+        }
+        @Override
+        public boolean isPaperWalletSupported() {
             return false;
         }
+        @Override
+        public boolean mustBeBase58Address() {
+            return true;
+        }
     }
-
-    @Override
-    public boolean isPaperWalletSupported() {
-        return false;
-    }
-
-    @Override
-    public boolean mustBeBase58Address() {
-        return true;
-    }
-
-}
