@@ -27,7 +27,7 @@ public class LightningBitcoinPaymentSupport implements IPaymentSupport {
 
     @Override
     public boolean init(IExtensionContext context) {
-        return false;
+        return true;
     }
 
     @Override
