@@ -15,7 +15,7 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.lightning;
+package com.generalbytes.batm.server.extensions.extra.lightningbitcoin;
 
 import com.generalbytes.batm.server.extensions.IWalletInformation;
 

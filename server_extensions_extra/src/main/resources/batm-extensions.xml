@@ -344,6 +344,7 @@
             <cryptocurrency>SYS</cryptocurrency>
             <cryptocurrency>TBTC</cryptocurrency>
             <cryptocurrency>TKN</cryptocurrency>
+            <cryptocurrency>TRTL</cryptocurrency>
             <cryptocurrency>TRX</cryptocurrency>
             <cryptocurrency>USDT</cryptocurrency>
             <cryptocurrency>VIA</cryptocurrency>
@@ -449,6 +450,14 @@
             <param name="host" />
             <param name="port" />
             <param name="password" />
+            <cryptocurrency>LBTC</cryptocurrency>
+        </wallet>
+        <wallet prefix="lnd" name="lnd">
+            <param name="host" />
+            <param name="port" />
+            <param name="macaroon" />
+            <param name="cert" />
+            <help>macaroon and cert are base64 encoded files admin.macaroon and tls.cert</help><!--  Configuration can be obtained for example with this command: echo 127.0.0.1:8080:`xxd -ps -u -c10000 ~/.lnd/data/chain/bitcoin/mainnet/admin.macaroon`:`xxd -ps -u -c10000 ~/.lnd/tls.cert` -->
             <cryptocurrency>LBTC</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="LBTC" file="lbtc.png"/>
