@@ -36,16 +36,16 @@ class DependencyVerificationHelper {
         private final ConcurrentMap<String, String> checksumCache
         private static final boolean PARALLEL = true
 
-        private final Map<ModuleComponentIdentifier, File> jobList
+        private final Map<SimpleModuleVersionIdentifier, File> jobList
 
-        ChecksumComputationTask(ModuleComponentIdentifier module,
+        ChecksumComputationTask(SimpleModuleVersionIdentifier module,
                                 File file,
                                 ConcurrentMap<String, String> checksumCache) {
             this.checksumCache = checksumCache
             jobList = [(module): file]
         }
 
-        ChecksumComputationTask(Map<ModuleComponentIdentifier, File> jobList,
+        ChecksumComputationTask(Map<SimpleModuleVersionIdentifier, File> jobList,
                                 ConcurrentMap<String, String> checksumCache) {
             if (jobList == null) {
                 throw new IllegalArgumentException("Job list can't be null.")
@@ -58,7 +58,7 @@ class DependencyVerificationHelper {
         protected Set<ChecksumAssertion> compute() {
             if (PARALLEL) {
                 if (jobList.size() == 1) {
-                    final Map.Entry<ModuleComponentIdentifier, File> entry = jobList.entrySet().iterator().next()
+                    final Map.Entry<SimpleModuleVersionIdentifier, File> entry = jobList.entrySet().iterator().next()
                     return [computeChecksum(entry.key, entry.value, checksumCache)] as Set
                 } else {
                     return invokeAll(createSubtasks())
@@ -68,7 +68,7 @@ class DependencyVerificationHelper {
                 }
             } else {
                 final Set<ChecksumAssertion> ret = new HashSet<>()
-                for (Map.Entry<ModuleComponentIdentifier, File> entry : jobList.entrySet()) {
+                for (Map.Entry<SimpleModuleVersionIdentifier, File> entry : jobList.entrySet()) {
                     ret.add(computeChecksum(entry.key, entry.value, checksumCache))
                 }
                 return ret
@@ -77,21 +77,15 @@ class DependencyVerificationHelper {
 
         Collection<ChecksumComputationTask> createSubtasks() {
             final Collection<ChecksumComputationTask> ret = new HashSet<>()
-            for (Map.Entry<ModuleComponentIdentifier, File> job : jobList.entrySet()) {
+            for (Map.Entry<SimpleModuleVersionIdentifier, File> job : jobList.entrySet()) {
                 ret.add(new ChecksumComputationTask(job.key, job.value, checksumCache))
             }
             return ret
         }
 
-        static ChecksumAssertion computeChecksum(ModuleComponentIdentifier module,
+        static ChecksumAssertion computeChecksum(SimpleModuleVersionIdentifier moduleId,
                                                  File file,
                                                  Map<String, String> checksumCache) {
-            /**
-             * toString() serialization and following deserialization is inefficient, but no Gradle-internal objects
-             * (eg. MavenUniqueSnapshotComponentIdentifier) have to be used
-             */
-            final SimpleModuleVersionIdentifier moduleId =
-                SimpleModuleVersionIdentifier.createWithClassifierHeuristics(module.toString(), file.name)
 
             final String sha256 = (checksumCache != null
                 ? checksumCache.computeIfAbsent(file.canonicalPath, { calculateSha256(file) })
@@ -125,11 +119,20 @@ class DependencyVerificationHelper {
 
     static Set<ChecksumAssertion> assertionsForConfiguration(Project project,
                                                              Configuration configuration) {
-        final Map<ModuleComponentIdentifier, File> jobList = new HashMap()
+        final Map<SimpleModuleVersionIdentifier, File> jobList = new HashMap()
         getIncomingArtifactCollection(project, configuration).each { ResolvedArtifactResult artifact ->
             final ComponentIdentifier identifier = artifact.id.componentIdentifier
             if (identifier instanceof ModuleComponentIdentifier) {
-                jobList.put(identifier, artifact.file)
+                /**
+                 * toString() serialization and following deserialization is inefficient, but no Gradle-internal objects
+                 * (eg. MavenUniqueSnapshotComponentIdentifier) have to be used
+                 */
+                final SimpleModuleVersionIdentifier jobIdentifier =
+                    SimpleModuleVersionIdentifier.createWithClassifierHeuristics(
+                        identifier.toString(),
+                        artifact.file.name
+                    )
+                jobList.put(jobIdentifier, artifact.file)
             } else if (identifier instanceof ProjectComponentIdentifier) {
                 project.logger.info("Skipped processing assertion for project-local dependency $identifier.")
             } else if (identifier instanceof ComponentArtifactIdentifier) {
@@ -157,6 +160,7 @@ class DependencyVerificationHelper {
             configuration.incoming.artifacts
         }
     }
+
     static Set<Configuration> toConfigurations(Project project, Set<Object> configurationObjects) {
         final Set<Configuration> ret = new HashSet<>()
         for (Object cfg : configurationObjects) {
