@@ -18,6 +18,7 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitcoind;
 
 import com.generalbytes.batm.server.extensions.IWallet;
+import com.generalbytes.batm.server.extensions.HasUniqueReceivingCryptoAddresses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import wf.bitcoin.javabitcoindrpcclient.BitcoinJSONRPCClient;
@@ -34,7 +35,7 @@ import java.security.cert.X509Certificate;
 import java.util.HashSet;
 import java.util.Set;
 
-public class BATMBitcoindRPCWallet implements IWallet{
+public class BATMBitcoindRPCWallet implements IWallet, HasUniqueReceivingCryptoAddresses {
     private static final Logger log = LoggerFactory.getLogger(BATMBitcoindRPCWallet.class);
     private final String cryptoCurrency;
     private final BitcoinJSONRPCClient client;
@@ -77,12 +78,18 @@ public class BATMBitcoindRPCWallet implements IWallet{
 
     @Override
     public String getCryptoAddress(String cryptoCurrency) {
+        return getUniqueReceivingCryptoAddress(cryptoCurrency, null);
+    }
+
+    @Override
+    public String getUniqueReceivingCryptoAddress(String cryptoCurrency, String label) {
         if (!this.cryptoCurrency.equalsIgnoreCase(cryptoCurrency)) {
             log.error("Bitcoind wallet error: unknown cryptocurrency.");
             return null;
         }
 
         try {
+            // new bitcoind api supports label parameter but old versions uses the same(?) parameter for account name.
             return client.getNewAddress();
         } catch (BitcoinRPCException e) {
             log.error("Error in getCryptoAddress", e);

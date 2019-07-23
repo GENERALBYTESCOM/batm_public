@@ -2,9 +2,12 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2;
 
 import com.generalbytes.batm.server.extensions.Converters;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
-import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.IWallet;
+import com.generalbytes.batm.server.extensions.HasUniqueReceivingCryptoAddresses;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.BitGoCoinRequest;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.BitGoCreateAddressRequest;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.BitGoCreateAddressResponse;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.ErrorResponseException;
 import com.generalbytes.batm.server.extensions.extra.worldcoin.sources.cd.CompatSSLSocketFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +16,7 @@ import si.mazi.rescu.HttpStatusIOException;
 import si.mazi.rescu.RestProxyFactory;
 
 import javax.net.ssl.SSLContext;
-import java.lang.reflect.UndeclaredThrowableException;
+import javax.ws.rs.HeaderParam;
 import java.math.BigDecimal;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -21,28 +24,26 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class BitgoWallet implements IWallet {
+public class BitgoWallet implements IWallet, HasUniqueReceivingCryptoAddresses {
 
     private static final Logger log = LoggerFactory.getLogger(BitgoWallet.class);
 
     private final IBitgoAPI api;
 
-    private String apiKey;
-    private String accessToken;
     private String walletId;
     private String walletPassphrase;
     private String url;
     private static final Integer readTimeout = 90 * 1000; //90 seconds
 
     public BitgoWallet(String host, String port, String token, String walletId, String walletPassphrase) {
-        this.apiKey = token;
-        this.accessToken = "Bearer " + token;
         this.walletId = walletId;
         this.walletPassphrase = walletPassphrase;
         this.url = createUrl(host, port);
 
         ClientConfig config = new ClientConfig();
         config.setHttpReadTimeout(readTimeout);
+
+        config.addDefaultParam(HeaderParam.class, "Authorization", "Bearer " + token);
 
         try {
             SSLContext sslcontext = SSLContext.getInstance("TLS");
@@ -78,17 +79,19 @@ public class BitgoWallet implements IWallet {
         String status = null;
         final BitGoCoinRequest request = new BitGoCoinRequest(destinationAddress, toSatoshis(amount, cryptoCurrency), walletPassphrase);
         try {
-            Map<String, String> result = api.sendCoins(accessToken, "application/json", cryptoCurrency.toLowerCase(), this.walletId, request);
+            Map<String, String> result = api.sendCoins(cryptoCurrency.toLowerCase(), this.walletId, request);
             if (result == null) {
                 log.debug("send coins result is null");
                 return null;
             }
 
             status = result.get("status");
-        } catch (UndeclaredThrowableException ute) {
-            HttpStatusIOException hse = (HttpStatusIOException)ute.getUndeclaredThrowable();
+        } catch (HttpStatusIOException hse) {
             status = "ERROR";
             log.debug("send coins error message: {}", hse.getHttpBody());
+        } catch (ErrorResponseException e) {
+            status = "ERROR";
+            log.debug("send coins error message: {}", e.getMessage());
         } catch (Exception e) {
             log.error("Error", e);
         }
@@ -131,7 +134,7 @@ public class BitgoWallet implements IWallet {
         }
         cryptoCurrency = cryptoCurrency.toLowerCase();
         try {
-            final Map<String, Object> response = api.getWalletById(accessToken, cryptoCurrency, walletId);
+            final Map<String, Object> response = api.getWalletById(cryptoCurrency, walletId);
             if(response == null || response.isEmpty()) {
                 return null;
             }
@@ -147,8 +150,45 @@ public class BitgoWallet implements IWallet {
                 return null;
             }
             return (String)addressObj;
-        }catch (Exception e) {
+        } catch (HttpStatusIOException hse) {
+            log.debug("getCryptoAddress error: {}", hse.getHttpBody());
+        } catch (ErrorResponseException e) {
+            log.debug("getCryptoAddress error: {}", e.getMessage());
+        } catch (Exception e) {
             log.error("", e);
+        }
+        return null;
+    }
+
+    @Override
+    public String getUniqueReceivingCryptoAddress(String cryptoCurrency, String label) {
+        if (cryptoCurrency == null) {
+            cryptoCurrency = getPreferredCryptoCurrency();
+        }
+        if (!getCryptoCurrencies().contains(cryptoCurrency)) {
+            return null;
+        }
+        cryptoCurrency = cryptoCurrency.toLowerCase();
+        try {
+
+            final BitGoCreateAddressRequest request = new BitGoCreateAddressRequest();
+            request.setChain(0); // https://github.com/BitGo/unspents/blob/master/src/codes.ts ??? [0, UnspentType.p2sh, Purpose.external],
+            request.setLabel(label);
+            final BitGoCreateAddressResponse response = api.createAddress(cryptoCurrency, walletId, request);
+            if (response == null) {
+                return null;
+            }
+            String address = response.getAddress();
+            if (address == null || address.isEmpty()) {
+                return null;
+            }
+            return address;
+        } catch (HttpStatusIOException hse) {
+            log.debug("create address error: {}", hse.getHttpBody());
+        } catch (ErrorResponseException e) {
+            log.debug("create address error: {}", e.getMessage());
+        } catch (Exception e) {
+            log.error("create address error", e);
         }
         return null;
     }
@@ -184,7 +224,7 @@ public class BitgoWallet implements IWallet {
         }
         cryptoCurrency = cryptoCurrency.toLowerCase();
         try {
-            final Map<String, Object> response = api.getWalletById(accessToken, cryptoCurrency, walletId);
+            final Map<String, Object> response = api.getWalletById(cryptoCurrency, walletId);
             if(response == null || response.isEmpty()) {
                 return null;
             }
@@ -209,8 +249,12 @@ public class BitgoWallet implements IWallet {
                 return BigDecimal.valueOf(balance.intValue()).divide(Converters.TBCH);
             }
             return BigDecimal.valueOf(balance.intValue()).divide(new BigDecimal(1));
-        }catch (Exception e) {
-            log.error("", e);
+        } catch (HttpStatusIOException hse) {
+            log.debug("getCryptoBalance error: {}", hse.getHttpBody());
+        } catch (ErrorResponseException e) {
+            log.debug("getCryptoBalance error: {}", e.getMessage());
+        } catch (Exception e) {
+            log.error("getCryptoBalance error", e);
         }
         return null;
     }
