@@ -369,6 +369,20 @@
         <cryptologo cryptocurrency="BCH" file="bch.png"/>
         <cryptologo cryptocurrency="BCH" file="bch.svg"/>
     </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.aeternity.AeternityExtension">
+    	<wallet prefix="aeternity" name="Aeternity - aeternity">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>AE</cryptocurrency>
+            <help>For AE SELL this is the only supported wallet</help>
+        </wallet>
+        <cryptologo cryptocurrency="AE" file="ae.png"/>
+        <cryptologo cryptocurrency="AE" file="ae.svg"/>
+    </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.dogecoin.DogecoinExtension">
         <wallet prefix="blockio" name="Block.io Wallet">
             <param name="apikey" />

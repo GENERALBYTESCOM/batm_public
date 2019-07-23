@@ -35,6 +35,7 @@ import java.util.Set;
  */
 public enum CryptoCurrency {
 
+	AE("Aeternity"),
     ANON("ANON"),
     ANT("Aragon Network Token"),
     BAT("Basic Attention Token"),
