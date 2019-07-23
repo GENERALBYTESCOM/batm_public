@@ -1,4 +1,4 @@
-// generated at 2019-07-15T13:15:33
+// generated at 2019-07-22T18:20:26
 verifyModule 'com.fasterxml.jackson.core:jackson-annotations:2.9.1:029834aefc1649b08d32ab0fdc333142075001e842260beed40f0e5f4714c5e8'
 verifyModule 'com.fasterxml.jackson.core:jackson-core:2.9.1:782e7efa27452f76f7e1191c166613bfbec785ac73ffb5504d323f07f3b1700e'
 verifyModule 'com.fasterxml.jackson.core:jackson-databind:2.9.1:17b28ec21ae487bb9a0570b6c0ec66b2277d47546d4089c3a5a2b3e60054134c'
@@ -11,6 +11,7 @@ verifyModule 'com.github.GENERALBYTESCOM.dashj:dashj-core:0.15.2.20190416:3d2f53
 verifyModule 'com.github.GENERALBYTESCOM:bitcoinj:0.15.1.20190411:26a7cd059563440e685018f442111931f1c3a104779b67b64497fdaebbe00ae0'
 verifyModule 'com.github.GENERALBYTESCOM:litecoinj:0.15.1.20190418:053019eb1b16f84af044ee6d41974256453ec656dc605d56bd5d6d129db9235e'
 verifyModule 'com.github.Polve:JavaBitcoindRpcClient:860f5d735539ea52838efe3149c98b57f1decd7a:a23da9719712a0de19cf095da8b596cafbe3333ed88724c837256ca3d58cc975'
+verifyModule 'com.github.jnr:jffi:1.2.14:0e1280707bd5a99de9bd6e935c7e3af3049dd7054a3fb56bd94c101149ae05cd'
 verifyModule 'com.github.jnr:jffi:1.2.14:native:eba199df4a5e0b41b95bd87880514bf98df9778618558cb6a55743038d3aaab3'
 verifyModule 'com.github.jnr:jnr-constants:0.9.6:97f939bfb8d3f1cab6f308a391f21a372e8d559639fca3ec17f29bf96194b956'
 verifyModule 'com.github.jnr:jnr-enxio:0.14:1c26367e4fb7f3d6be5fd945a9e7f3c484bc74d1877ed11d889aaf355592959d'

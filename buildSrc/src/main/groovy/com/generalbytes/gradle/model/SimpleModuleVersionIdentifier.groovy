@@ -13,6 +13,7 @@ final class SimpleModuleVersionIdentifier implements ModuleComponentIdentifier {
 
     final SimpleModuleIdentifier moduleIdentifier
     final String version
+    final String classifier
 
     SimpleModuleVersionIdentifier(String id) {
         final Matcher matcher = PATTERN.matcher(id)
@@ -22,23 +23,28 @@ final class SimpleModuleVersionIdentifier implements ModuleComponentIdentifier {
         }
         this.moduleIdentifier = new SimpleModuleIdentifier(
             matcher.group(1),
-            matcher.group(2),
-            matcher.group(4)
+            matcher.group(2)
         )
         this.version = matcher.group(3)
         if (this.version.isEmpty()) {
             def msg = "Module identifier '$id' has incorrect format."
             throw new IllegalArgumentException(msg)
         }
+        this.classifier = matcher.group(4)
     }
 
     SimpleModuleVersionIdentifier(SimpleModuleIdentifier module, String version) {
+        this(module, version, null)
+    }
+
+    SimpleModuleVersionIdentifier(SimpleModuleIdentifier module, String version, String classifier) {
         if (version == null || version.isEmpty()) {
             def msg = "Version can't be null nor empty."
             throw new IllegalArgumentException(msg)
         }
         this.moduleIdentifier = module
         this.version = version
+        this.classifier = classifier
     }
 
     SimpleModuleVersionIdentifier(String group, String name, String version) {
@@ -46,12 +52,13 @@ final class SimpleModuleVersionIdentifier implements ModuleComponentIdentifier {
     }
 
     SimpleModuleVersionIdentifier(String group, String name, String version, String classifier) {
-        this(new SimpleModuleIdentifier(group, name, classifier), version)
+        this(new SimpleModuleIdentifier(group, name), version, classifier)
     }
 
     SimpleModuleVersionIdentifier(ModuleComponentIdentifier moduleComponentIdentifier) {
         this(moduleComponentIdentifier.group, moduleComponentIdentifier.module, moduleComponentIdentifier.version)
     }
+
     SimpleModuleVersionIdentifier(ModuleVersionSelector moduleVersionSelector) {
         this(moduleVersionSelector.group, moduleVersionSelector.name, moduleVersionSelector.version)
     }
@@ -94,7 +101,7 @@ final class SimpleModuleVersionIdentifier implements ModuleComponentIdentifier {
     }
 
     String getClassifier() {
-        return moduleIdentifier.classifier
+        return classifier
     }
 
     static String extractBaseName(String fileName) {
@@ -109,8 +116,8 @@ final class SimpleModuleVersionIdentifier implements ModuleComponentIdentifier {
     @Override
     String toString() {
         final String withoutClassifier = "${moduleIdentifier.group}:${moduleIdentifier.name}:$version"
-        if (moduleIdentifier.classifier != null) {
-            return "$withoutClassifier:${moduleIdentifier.classifier}"
+        if (classifier != null) {
+            return "$withoutClassifier:${classifier}"
         } else {
             return withoutClassifier
         }
