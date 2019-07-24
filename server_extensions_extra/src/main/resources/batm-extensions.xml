@@ -73,6 +73,7 @@
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>DAI</cryptocurrency>
                 <cryptocurrency>EURS</cryptocurrency>
+                <cryptocurrency>USDS</cryptocurrency>
                 <cryptocurrency>MKR</cryptocurrency>
                 <cryptocurrency>BAT</cryptocurrency>
                 <cryptocurrency>REP</cryptocurrency>
@@ -290,6 +291,7 @@
             <cryptocurrency>SYS</cryptocurrency>
             <cryptocurrency>TKN</cryptocurrency>
             <cryptocurrency>TRX</cryptocurrency>
+            <cryptocurrency>USDS</cryptocurrency>
             <cryptocurrency>USDT</cryptocurrency>
             <cryptocurrency>VIA</cryptocurrency>
             <cryptocurrency>VOLTZ</cryptocurrency>
@@ -1309,6 +1311,15 @@
         <ratesource prefix="stasis" name="STASIS exchange (EURS)">
             <cryptocurrency>EURS</cryptocurrency>
         </ratesource>
+        <wallet prefix="infuraERC20_USDS_6_0xa4bdb11dc0a2bec88d24a3aa1e6bb17201112ebe" name="Infura.io wallet - StableUSD">
+          <param name="projectId" />
+          <param name="mnemonic" />
+          <param name="gaslimit" />
+          <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
+          <cryptocurrency>USDS</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="USDS" file="usds.png"/>
+        <cryptologo cryptocurrency="USDS" file="usds.svg"/>
         <!-- ADD your ERC20 tokens here. And don't forget to add cryptologos. -->
     </extension>
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.TransactionExtension" />-->
