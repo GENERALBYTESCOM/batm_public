@@ -388,6 +388,16 @@
             <cryptocurrency>BCH</cryptocurrency>
             <help>For BCH SELL this is the only supported wallet</help>
         </wallet>
+        <wallet prefix="bitcoincashdnoforward" name="BitcoinABC/BitcoinClassic Cash Core - bitcoind (no forward)" >
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>BCH</cryptocurrency>
+            <help>For BCH SELL this is the only supported wallet. This variant generates new addresses for each transaction and does not forward payments from temporary address</help>
+        </wallet>
         <cryptologo cryptocurrency="BCH" file="bch.png"/>
         <cryptologo cryptocurrency="BCH" file="bch.svg"/>
     </extension>
@@ -466,6 +476,16 @@
             <param name="port" />
             <param name="accountname" />
             <cryptocurrency>LTC</cryptocurrency>
+        </wallet>
+        <wallet prefix="litecoindnoforward" name="Litecoind (no forward)">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>LTC</cryptocurrency>
+            <help>This variant generates new addresses for each transaction and does not forward payments from temporary address</help>
         </wallet>
         <ratesource prefix="ltcfix" name ="Fix Price" >
             <param name="price" />
@@ -955,6 +975,16 @@
             <param name="port" />
             <param name="accountname" />
             <cryptocurrency>SUM</cryptocurrency>
+        </wallet>
+        <wallet prefix="sumcoindnoforward" name="Sumcoind (no forward)">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>SUM</cryptocurrency>
+            <help>This variant generates new addresses for each transaction and does not forward payments from temporary address</help>
         </wallet>
         <wallet prefix="sumdemo" name="Sumcoin Demo Wallet">
             <param name="fiatCurrency" />
