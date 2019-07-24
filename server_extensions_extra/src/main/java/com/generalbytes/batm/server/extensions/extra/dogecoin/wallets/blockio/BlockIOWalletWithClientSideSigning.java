@@ -22,7 +22,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.IWallet;
-import com.generalbytes.batm.server.extensions.HasUniqueReceivingCryptoAddresses;
 import org.bouncycastle.asn1.ASN1Integer;
 import org.bouncycastle.asn1.DERSequenceGenerator;
 import org.bouncycastle.crypto.CipherParameters;
@@ -56,7 +55,6 @@ import java.security.Security;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Set;
 
 import static com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.IBlockIO.PRIORITY_HIGH;
@@ -64,13 +62,13 @@ import static com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blo
 import static com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.IBlockIO.PRIORITY_MEDIUM;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public class BlockIOWalletWithClientSideSigning implements IWallet, HasUniqueReceivingCryptoAddresses {
+public class BlockIOWalletWithClientSideSigning implements IWallet {
     private static final Logger log = LoggerFactory.getLogger("batm.master.extensions.BlockIOWallet2");
     private ObjectMapper jsonObjectMapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
     private String pin;
     private String priority;
 
-    private IBlockIO api;
+    protected IBlockIO api;
 
     static {
         Security.addProvider(new BouncyCastleProvider());
@@ -106,29 +104,6 @@ public class BlockIOWalletWithClientSideSigning implements IWallet, HasUniqueRec
     @Override
     public String getPreferredCryptoCurrency() {
         return CryptoCurrency.BTC.getCode();
-    }
-
-    @Override
-    public String getUniqueReceivingCryptoAddress(String cryptoCurrency, String label) {
-        if (!getCryptoCurrencies().contains(cryptoCurrency)) {
-            return null;
-        }
-        try {
-            BlockIOResponseNewAddress response = api.getNewAddress(formatAddressLabel(label));
-            if (response != null && response.getData() != null && response.getData().getAddress() != null && !response.getData().getAddress().isEmpty()) {
-                return response.getData().getAddress();
-            }
-        } catch (HttpStatusIOException e) {
-            log.error("HTTP error in getUniqueCryptoAddress: {}", e.getHttpBody());
-        } catch (Exception e) {
-            log.error("Error", e);
-        }
-        return null;
-    }
-
-    private String formatAddressLabel(String label) {
-        // label has to be unique and can only contain letters, numbers, _, -, @, ., and !.
-        return label.replaceAll(" ", "-").replaceAll("[^-_@.!a-zA-Z0-9]", "") + "-" + new Random().nextInt();
     }
 
     @Override

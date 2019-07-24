@@ -1,12 +1,9 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2;
 
-import com.generalbytes.batm.server.extensions.Converters;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.server.extensions.Converters;
 import com.generalbytes.batm.server.extensions.IWallet;
-import com.generalbytes.batm.server.extensions.HasUniqueReceivingCryptoAddresses;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.BitGoCoinRequest;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.BitGoCreateAddressRequest;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.BitGoCreateAddressResponse;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.ErrorResponseException;
 import com.generalbytes.batm.server.extensions.extra.worldcoin.sources.cd.CompatSSLSocketFactory;
 import org.slf4j.Logger;
@@ -24,16 +21,15 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class BitgoWallet implements IWallet, HasUniqueReceivingCryptoAddresses {
+public class BitgoWallet implements IWallet {
 
     private static final Logger log = LoggerFactory.getLogger(BitgoWallet.class);
 
-    private final IBitgoAPI api;
-
-    private String walletId;
-    private String walletPassphrase;
-    private String url;
-    private static final Integer readTimeout = 90 * 1000; //90 seconds
+    protected final IBitgoAPI api;
+    protected String walletId;
+    protected String walletPassphrase;
+    protected String url;
+    protected static final Integer readTimeout = 90 * 1000; //90 seconds
 
     public BitgoWallet(String host, String port, String token, String walletId, String walletPassphrase) {
         this.walletId = walletId;
@@ -156,39 +152,6 @@ public class BitgoWallet implements IWallet, HasUniqueReceivingCryptoAddresses {
             log.debug("getCryptoAddress error: {}", e.getMessage());
         } catch (Exception e) {
             log.error("", e);
-        }
-        return null;
-    }
-
-    @Override
-    public String getUniqueReceivingCryptoAddress(String cryptoCurrency, String label) {
-        if (cryptoCurrency == null) {
-            cryptoCurrency = getPreferredCryptoCurrency();
-        }
-        if (!getCryptoCurrencies().contains(cryptoCurrency)) {
-            return null;
-        }
-        cryptoCurrency = cryptoCurrency.toLowerCase();
-        try {
-
-            final BitGoCreateAddressRequest request = new BitGoCreateAddressRequest();
-            request.setChain(0); // https://github.com/BitGo/unspents/blob/master/src/codes.ts ??? [0, UnspentType.p2sh, Purpose.external],
-            request.setLabel(label);
-            final BitGoCreateAddressResponse response = api.createAddress(cryptoCurrency, walletId, request);
-            if (response == null) {
-                return null;
-            }
-            String address = response.getAddress();
-            if (address == null || address.isEmpty()) {
-                return null;
-            }
-            return address;
-        } catch (HttpStatusIOException hse) {
-            log.debug("create address error: {}", hse.getHttpBody());
-        } catch (ErrorResponseException e) {
-            log.debug("create address error: {}", e.getMessage());
-        } catch (Exception e) {
-            log.error("create address error", e);
         }
         return null;
     }
