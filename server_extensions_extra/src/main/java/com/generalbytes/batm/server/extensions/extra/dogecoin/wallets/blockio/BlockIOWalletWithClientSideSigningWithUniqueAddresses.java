@@ -1,13 +1,13 @@
 package com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio;
 
-import com.generalbytes.batm.server.extensions.HasUniqueReceivingCryptoAddresses;
+import com.generalbytes.batm.server.extensions.IGeneratesNewDepositCryptoAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import si.mazi.rescu.HttpStatusIOException;
 
 import java.util.Random;
 
-public class BlockIOWalletWithClientSideSigningWithUniqueAddresses extends BlockIOWalletWithClientSideSigning implements HasUniqueReceivingCryptoAddresses {
+public class BlockIOWalletWithClientSideSigningWithUniqueAddresses extends BlockIOWalletWithClientSideSigning implements IGeneratesNewDepositCryptoAddress {
     private static final Logger log = LoggerFactory.getLogger(BlockIOWalletWithClientSideSigningWithUniqueAddresses.class);
 
     public BlockIOWalletWithClientSideSigningWithUniqueAddresses(String apiKey, String pin, String priority) {
@@ -15,7 +15,7 @@ public class BlockIOWalletWithClientSideSigningWithUniqueAddresses extends Block
     }
 
     @Override
-    public String getUniqueReceivingCryptoAddress(String cryptoCurrency, String label) {
+    public String generateNewDepositCryptoAddress(String cryptoCurrency, String label) {
         if (!getCryptoCurrencies().contains(cryptoCurrency)) {
             return null;
         }

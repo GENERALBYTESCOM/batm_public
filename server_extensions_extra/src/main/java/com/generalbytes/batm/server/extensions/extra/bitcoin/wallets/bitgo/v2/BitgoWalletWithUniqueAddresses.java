@@ -1,6 +1,6 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2;
 
-import com.generalbytes.batm.server.extensions.HasUniqueReceivingCryptoAddresses;
+import com.generalbytes.batm.server.extensions.IGeneratesNewDepositCryptoAddress;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.BitGoCreateAddressRequest;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.BitGoCreateAddressResponse;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.ErrorResponseException;
@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import si.mazi.rescu.HttpStatusIOException;
 
-public class BitgoWalletWithUniqueAddresses extends BitgoWallet implements HasUniqueReceivingCryptoAddresses {
+public class BitgoWalletWithUniqueAddresses extends BitgoWallet implements IGeneratesNewDepositCryptoAddress {
     private static final Logger log = LoggerFactory.getLogger(BitgoWalletWithUniqueAddresses.class);
 
     public BitgoWalletWithUniqueAddresses(String host, String port, String token, String walletId, String walletPassphrase) {
@@ -16,7 +16,7 @@ public class BitgoWalletWithUniqueAddresses extends BitgoWallet implements HasUn
     }
 
     @Override
-    public String getUniqueReceivingCryptoAddress(String cryptoCurrency, String label) {
+    public String generateNewDepositCryptoAddress(String cryptoCurrency, String label) {
         if (cryptoCurrency == null) {
             cryptoCurrency = getPreferredCryptoCurrency();
         }

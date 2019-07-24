@@ -22,15 +22,15 @@ package com.generalbytes.batm.server.extensions;
  * An {@link IWallet} or {@link IExchange} that is able to generate unique addresses
  * for receiving that will be used only for one transaction each.
  */
-public interface HasUniqueReceivingCryptoAddresses {
+public interface IGeneratesNewDepositCryptoAddress {
 
     /**
      * Generates a new, unique receiving address and returns it
      *
      * @param cryptoCurrency
-     * @param label          a human-readable label which should be applied to the new address
+     * @param label remote tx id
      * @return the newly generated address
      */
-    String getUniqueReceivingCryptoAddress(String cryptoCurrency, String label);
+    String generateNewDepositCryptoAddress(String cryptoCurrency, String label);
 
 }
