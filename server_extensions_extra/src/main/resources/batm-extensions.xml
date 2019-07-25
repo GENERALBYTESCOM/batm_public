@@ -865,10 +865,6 @@
              <param name="walletAddress" />
              <cryptocurrency>MUE</cryptocurrency>
          </wallet>
-        <ratesource prefix="monetaryunitfix" name ="Fix Price" >
-            <param name="price" />
-            <cryptocurrency>MUE</cryptocurrency>
-        </ratesource>
         <cryptologo cryptocurrency="MUE" file="mue.png"/>
         <cryptologo cryptocurrency="MUE" file="mue.svg"/>
     </extension>
