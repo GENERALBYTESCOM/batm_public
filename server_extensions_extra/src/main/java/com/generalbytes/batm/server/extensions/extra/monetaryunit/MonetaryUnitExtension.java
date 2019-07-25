@@ -86,41 +86,6 @@ public class MonetaryUnitExtension extends AbstractExtension{
     }
 
     @Override
-    public IRateSource createRateSource(String sourceLogin) {
-        if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
-            StringTokenizer st = new StringTokenizer(sourceLogin,":");
-            String rsType = st.nextToken();
-
-            if ("monetaryunitfix".equalsIgnoreCase(rsType)) {
-                BigDecimal rate = BigDecimal.ZERO;
-                if (st.hasMoreTokens()) {
-                    try {
-                        rate = new BigDecimal(st.nextToken());
-                    } catch (Throwable e) {
-                    }
-                }
-                String preferedFiatCurrency = FiatCurrency.USD.getCode();
-                if (st.hasMoreTokens()) {
-                    preferedFiatCurrency = st.nextToken().toUpperCase();
-                }
-                return new FixPriceRateSource(rate,preferedFiatCurrency);
-            }
-            else if ("coinmarketcap".equalsIgnoreCase(rsType)) {
-                String preferredFiatCurrency = FiatCurrency.USD.getCode();
-                String apiKey = null;
-                if (st.hasMoreTokens()) {
-                    preferredFiatCurrency = st.nextToken().toUpperCase();
-                }
-                if (st.hasMoreTokens()) {
-                    apiKey = st.nextToken();
-                }
-                return new CoinmarketcapRateSource(apiKey, preferredFiatCurrency);
-            }
-        }
-        return null;
-    }
-
-    @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
         result.add(CryptoCurrency.MUE.getCode());
