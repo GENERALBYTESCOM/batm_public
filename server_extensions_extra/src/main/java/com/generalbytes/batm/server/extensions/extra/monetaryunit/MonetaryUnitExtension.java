@@ -78,6 +78,33 @@ public class MonetaryUnitExtension extends AbstractExtension{
         }
         return null;
     }
+    
+    @Override
+    public IRateSource createRateSource(String sourceLogin) {
+        if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
+            StringTokenizer st = new StringTokenizer(sourceLogin,":");
+            String rsType = st.nextToken();
+            
+             if ("coinmarketcap".equalsIgnoreCase(rsType)) {
+                String preferredFiatCurrency = FiatCurrency.USD.getCode();
+                String apiKey = null;
+                if (st.hasMoreTokens()) {
+                    preferredFiatCurrency = st.nextToken().toUpperCase();
+                }
+                if (st.hasMoreTokens()) {
+                    apiKey = st.nextToken();
+                }
+                return new CoinmarketcapRateSource(apiKey, preferredFiatCurrency);
+            } else if ("coingecko".equalsIgnoreCase(rsType)) {
+            String preferredFiatCurrency = st.hasMoreTokens() ? st.nextToken().toUpperCase() : FiatCurrency.USD.getCode();
+            return new CoinGeckoRateSource(preferredFiatCurrency);
+        } else if ("coinpaprika".equalsIgnoreCase(rsType)) {
+            String preferredFiatCurrency = st.hasMoreTokens() ? st.nextToken().toUpperCase() : FiatCurrency.USD.getCode();
+            return new CoinPaprikaRateSource(preferredFiatCurrency);
+        }
+        }
+        return null;
+    }
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
