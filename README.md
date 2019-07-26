@@ -1,6 +1,8 @@
 BATM Public Repository - Open Extensions
 ===========
 
+**NOTE: Master branch contains new code for an upcoming server release which is not public yet. Please use commit f0ea00f559cf7c30d384567421f5dadb6447b34b with server release 20190724. Newer commits on master branch may cause compatibility problems with 20190724. This note will be removed once a server release compatible with the latest code on master branch will be made public.**
+
 This repository contains Bitcoin ATM related code used in BATMTwo, BATMThree, BATM Server (CAS) products.
 
 More information about the products can be found here: https://www.generalbytes.com
