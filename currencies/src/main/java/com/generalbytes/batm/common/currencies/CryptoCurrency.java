@@ -82,7 +82,9 @@ public enum CryptoCurrency {
     SYS("Syscoin"),
     THBX("DigitalThaiBaht"),
     TKN("TokenCard"),
+    TRTL("TurtleCoin"),
     TRX("Tron"),
+    USDS("StableUSD"),
     USDT("Tether"),
     VIA("Viacoin"),
     VOLTZ("VOLTZ"),
@@ -92,6 +94,7 @@ public enum CryptoCurrency {
     XZC("Zcoin"),
     BAY("BitBayCoin"),
     NULS("NULS"),
+    MUE("MonetaryUnit"),
 
     TBCH("test BCH"),
     TBTC("test BTC"),

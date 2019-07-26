@@ -21,9 +21,10 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import java.io.IOException;
 
 @Path("/api/v2/")
 @Produces(MediaType.APPLICATION_JSON)
@@ -34,28 +35,27 @@ public interface IBlockIO {
     String PRIORITY_HIGH = "high";
 
     @GET
-    @Path("get_my_addresses/?api_key={apikey}")
-    BlockIOResponseAddresses getAddresses(@PathParam("apikey") String apikey);
+    @Path("get_my_addresses")
+    BlockIOResponseAddresses getAddresses() throws IOException;
 
     @GET
-    @Path("get_balance/?api_key={apikey}")
-    BlockIOResponseBalance getBalance(@PathParam("apikey") String apikey);
+    @Path("get_new_address")
+    BlockIOResponseNewAddress getNewAddress(@QueryParam("label") String label) throws IOException;
 
     @GET
-    @Path("withdraw/?api_key={apikey}&amounts={amount}&to_addresses={payment_address}&pin={pin}&priority={priority}")
-    BlockIOResponseWithdrawal withdraw(@PathParam("apikey") String apikey, @PathParam("pin") String pin, @PathParam("amount") String amount, @PathParam("payment_address") String payment_address, @PathParam("priority") String priority);
+    @Path("get_balance")
+    BlockIOResponseBalance getBalance() throws IOException;
+
+    @GET
+    @Path("withdraw")
+    BlockIOResponseWithdrawal withdraw(@QueryParam("pin") String pin, @QueryParam("amount") String amount, @QueryParam("payment_address") String payment_address, @QueryParam("priority") String priority) throws IOException;
 
     @POST
-    @Path("sign_and_finalize_withdrawal?api_key={apikey}")
-    BlockIOResponseWithdrawal signAndFinalizeWithdrawal(@PathParam("apikey") String apikey, @FormParam("signature_data") String signedDataInJson);
+    @Path("sign_and_finalize_withdrawal")
+    BlockIOResponseWithdrawal signAndFinalizeWithdrawal(@FormParam("signature_data") String signedDataInJson) throws IOException;
 
     @GET
-    @Path("withdraw/?api_key={apikey}&amounts={amount}&to_addresses={payment_address}&priority={priority}")
-    BlockIOResponseWithdrawalToBeSigned withdrawToBeSigned(@PathParam("apikey") String apikey, @PathParam("amount") String amount, @PathParam("payment_address") String payment_address, @PathParam("priority") String priority);
-
-    @GET
-    @Path("verify_signature/?signed_data={signed_data}&signature={signature}&public_key={public_key}")
-    BlockIOResponseVerify verify(@PathParam("signed_data") String signedDataInHex, @PathParam("signature") String signatureInHex, @PathParam("public_key") String public_keyInHex);
-
+    @Path("withdraw")
+    BlockIOResponseWithdrawalToBeSigned withdrawToBeSigned(@QueryParam("amount") String amount, @QueryParam("payment_address") String payment_address, @QueryParam("priority") String priority) throws IOException;
 
 }

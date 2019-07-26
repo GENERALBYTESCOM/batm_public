@@ -1,14 +1,11 @@
 package com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair;
 
-import com.generalbytes.batm.common.currencies.CryptoCurrency;
-import com.generalbytes.batm.server.extensions.ILightningWallet;
-import com.generalbytes.batm.server.extensions.IWalletInformation;
-import com.generalbytes.batm.server.extensions.extra.lightning.ILightningWalletInformation;
+import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.AbstractLightningWallet;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.dto.Channel;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.dto.ErrorResponseException;
-import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.dto.Info;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.dto.Invoice;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.dto.SentInfo;
+import com.generalbytes.batm.server.extensions.ThrowingSupplier;
 import okhttp3.HttpUrl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,16 +17,13 @@ import si.mazi.rescu.RestProxyFactory;
 import java.math.BigDecimal;
 import java.net.ConnectException;
 import java.util.List;
-import java.util.Set;
 
-public class EclairWallet implements ILightningWallet {
+public class EclairWallet extends AbstractLightningWallet {
 
     private static final Logger log = LoggerFactory.getLogger(EclairWallet.class);
     private static final int API_POLL_MAX = 20000;
     private static final int API_POLL_INTERVAL = 1000;
     private static final long API_CALL_DELAY = 100;
-
-    private final ILightningWalletInformation walletInformation;
 
     private final String url;
     private final EclairAPI api;
@@ -39,15 +33,9 @@ public class EclairWallet implements ILightningWallet {
         final ClientConfig config = new ClientConfig();
         ClientConfigUtil.addBasicAuthCredentials(config, "", password);
         api = RestProxyFactory.createProxy(EclairAPI.class, url, config);
-
-        walletInformation = callChecked(() -> new EclairLightningWalletInformation(api.getInfo().nodeId));
     }
 
     /**
-     * @param destinationAddress
-     * @param amount
-     * @param cryptoCurrency
-     * @param description
      * @return paymentHash
      */
     @Override
@@ -89,34 +77,8 @@ public class EclairWallet implements ILightningWallet {
     }
 
     @Override
-    public String sendCoins(String destinationAddress, BigDecimal amount, BigDecimal fee, String cryptoCurrency, String description) {
-        return sendCoins(destinationAddress, amount, cryptoCurrency, description);
-    }
-
-    @Override
-    public String getCryptoAddress(String cryptoCurrency) {
-        return callChecked(cryptoCurrency, () -> {
-            Info info = api.getInfo();
-            log.info("Node ID: {}", info.nodeId);
-            return info.nodeId;
-        });
-    }
-
-    @Override
-    public String getInvoice(BigDecimal cryptoAmount, String cryptoCurrency, Long paymentValidityInSec) {
-        String description = "BATM Sell " + cryptoAmount.toPlainString() + " " + cryptoCurrency;
+    public String getInvoice(BigDecimal cryptoAmount, String cryptoCurrency, Long paymentValidityInSec, String description) {
         return callChecked(cryptoCurrency, () -> api.createInvoice(bitcoinToMSat(cryptoAmount), description, paymentValidityInSec).serialized);
-    }
-
-
-    @Override
-    public Set<String> getCryptoCurrencies() {
-        return null;
-    }
-
-    @Override
-    public String getPreferredCryptoCurrency() {
-        return null;
     }
 
     @Override
@@ -137,8 +99,6 @@ public class EclairWallet implements ILightningWallet {
     }
 
     /**
-     * @param destinationAddress
-     * @param cryptoCurrency
      * @return paymentHash
      */
     public BigDecimal getReceivedAmount(String destinationAddress, String cryptoCurrency) {
@@ -154,41 +114,16 @@ public class EclairWallet implements ILightningWallet {
         });
     }
 
-    private BigDecimal mSatToBitcoin(Long amountMsat) {
-        return new BigDecimal(amountMsat).movePointLeft(8 + 3);
-    }
-
-    private Long bitcoinToMSat(BigDecimal amount) {
-        return amount.movePointRight(8 + 3).longValue();
-    }
-
-    private void sleep(long millis) {
-        try {
-            Thread.sleep(millis);
-        } catch (InterruptedException e) {
-            log.trace("", e);
-        }
-    }
-
-
     @Override
-    public IWalletInformation getWalletInformation() {
-        return walletInformation;
+    public String getPubKey() {
+        return callChecked(() -> api.getInfo().nodeId);
     }
 
-
-    /**
-     * calls the supplier, logs the errors and returns null in case of exceptions
-     *
-     * @param supplier
-     * @param <T>
-     * @return null in case of exceptions
-     */
-    private <T> T callChecked(EclairApiSupplier<T> supplier) {
+    protected <T> T callChecked(ThrowingSupplier<T> supplier) {
         return callChecked(supplier, 3);
     }
 
-    private <T> T callChecked(EclairApiSupplier<T> supplier, int retries) {
+    private <T> T callChecked(ThrowingSupplier<T> supplier, int retries) {
         try {
             sleep(API_CALL_DELAY);
             return supplier.get();
@@ -209,14 +144,5 @@ public class EclairWallet implements ILightningWallet {
             log.error("", e);
         }
         return null;
-    }
-
-    private <T> T callChecked(String cryptoCurrency, EclairApiSupplier<T> supplier) {
-        return callChecked(() -> {
-            if (!CryptoCurrency.LBTC.getCode().equals(cryptoCurrency)) {
-                throw new IllegalArgumentException(cryptoCurrency + " not supported");
-            }
-            return supplier.get();
-        });
     }
 }
