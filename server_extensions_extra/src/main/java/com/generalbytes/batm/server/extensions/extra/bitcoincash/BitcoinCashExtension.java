@@ -43,7 +43,8 @@ public class BitcoinCashExtension extends AbstractExtension {
         if (walletLogin != null && !walletLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(walletLogin, ":");
             String walletType = st.nextToken();
-            if ("bitcoincashd".equalsIgnoreCase(walletType)) {
+            if ("bitcoincashd".equalsIgnoreCase(walletType)
+                || "bitcoincashdnoforward".equalsIgnoreCase(walletType)) {
                 //"bitcoind:protocol:user:password:ip:port:accountname"
 
                 String protocol = st.nextToken();
@@ -59,6 +60,9 @@ public class BitcoinCashExtension extends AbstractExtension {
 
                 if (protocol != null && username != null && password != null && hostname != null && port != null && accountName != null) {
                     String rpcURL = protocol + "://" + username + ":" + password + "@" + hostname + ":" + port;
+                    if ("bitcoincashdnoforward".equalsIgnoreCase(walletType)) {
+                        return new BitcoinCashUniqueAddressRPCWallet(rpcURL, accountName);
+                    }
                     return new BitcoinCashRPCWallet(rpcURL, accountName);
                 }
             }
