@@ -94,6 +94,7 @@ public enum CryptoCurrency {
     XZC("Zcoin"),
     BAY("BitBayCoin"),
     NULS("NULS"),
+    MUE("MonetaryUnit"),
 
     TBCH("test BCH"),
     TBTC("test BTC"),

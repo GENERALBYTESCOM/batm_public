@@ -50,7 +50,7 @@ ExtensionContext may be called from any extension. A reference to ExtensionConte
 Content
 =======
 * **server_extensions_api** - contains the extension API that all extensions use to extend CAS' functionality.
-* **server_extensions_extra** - reference extension implementation that demonstrates BTC, LTC, CLOAK, DGB, DASH, POT, VIA, BTX, SYS, FLASH, DOGE, NLG, ICG, NBT, GRS, MAX, BSD, MEC, BTDX, SUM, BURST, ECA, LINDA, $PAC, DAI, MKR, BAT and REP coin support functionality.
+* **server_extensions_extra** - reference extension implementation that demonstrates BTC, LTC, CLOAK, DGB, DASH, POT, VIA, BTX, SYS, FLASH, DOGE, NLG, ICG, NBT, GRS, MAX, BSD, MEC, BTDX, SUM, BURST, ECA, LINDA, $PAC, DAI, MKR, MUE, BAT and REP coin support functionality.
 * **server_extensions_test** - contains tester for testing the extensions (CAS not required).
 
 Note for developers
