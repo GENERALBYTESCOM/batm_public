@@ -733,6 +733,32 @@
         </ratesource>
         <cryptologo cryptocurrency="SMART" file="smart.png"/>
     </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.aquanow.AquanowExtension" >
+        <wallet prefix="aquanowd" name="Aquanowd">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>SMART</cryptocurrency>
+        </wallet>
+        <wallet prefix="aquanowdemo" name="Aquanow Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
+            <cryptocurrency>SMART</cryptocurrency>
+        </wallet>
+        <ratesource prefix="aquanowfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>SMART</cryptocurrency>
+            <help>USD is default fiat currency.</help>
+        </ratesource>
+        <ratesource prefix="aquanowapi" name ="Aquanow API" >
+            <param name="price" />
+            <cryptocurrency>SMART</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="SMART" file="smart.png"/>
+    </extension>    
     <extension class="com.generalbytes.batm.server.extensions.extra.startcoin.StartcoinExtension" >
         <wallet prefix="startcoind" name="Startcoind">
             <param name="protocol" />
