@@ -19,7 +19,7 @@ public class AquanowExtension extends AbstractExtension{
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (CryptoCurrency.SMART.getCode().equalsIgnoreCase(cryptoCurrency)) {
+        if (CryptoCurrency.BTC.getCode().equalsIgnoreCase(cryptoCurrency)) {
             return new AquanowAddressValidator();
         }
         return null;

@@ -120,9 +120,9 @@ public class AquanowRateSource implements IRateSource{
             String json = api.getPrice(symbol);
             ObjectMapper mapper = new ObjectMapper();
             APIResponse response = mapper.readValue(json, APIResponse.class);
-            BigDecimal testt = response.getBestAsk();
+            BigDecimal bestAsk = response.getBestAsk();
 
-            return testt;
+            return bestAsk;
         } catch (HttpStatusIOException e) {
             log.warn(e.getHttpBody(), e);
         } catch (Exception e) {

@@ -738,7 +738,6 @@
             <param name="price" />
             <cryptocurrency>USD is default fiat currency.</cryptocurrency>
         </ratesource>
-        <cryptologo cryptocurrency="SMART" file="smart.png"/>
     </extension>    
     <extension class="com.generalbytes.batm.server.extensions.extra.startcoin.StartcoinExtension" >
         <wallet prefix="startcoind" name="Startcoind">

@@ -76,7 +76,6 @@ public class CoinPaprikaRateSource implements IRateSource {
         CRYPTOCURRENCIES.put(CryptoCurrency.POT.getCode(), "pot-potcoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.REP.getCode(), "rep-augur");
         CRYPTOCURRENCIES.put(CryptoCurrency.SMART.getCode(), "smart-smartcash");
-        CRYPTOCURRENCIES.put(CryptoCurrency.SMART.getCode(), "smart-aquanow");
         CRYPTOCURRENCIES.put(CryptoCurrency.START.getCode(), "start-startcoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.SYS.getCode(), "sys-syscoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.TBTC.getCode(), "tbtc-tidbit-coin");
