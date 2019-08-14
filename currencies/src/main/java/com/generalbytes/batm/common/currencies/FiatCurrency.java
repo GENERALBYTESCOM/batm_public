@@ -87,6 +87,7 @@ public enum FiatCurrency {
     VND("Vietnamese dong"),
     XAF("Central African CFA franc"),
     ZAR("South African rand"),
+    AZN("Azerbaijani manat"),
 
     XAU("Gold"),
     ;
