@@ -70,6 +70,18 @@ dependencies {
 //    runtime(group: 'ch.qos.logback', name: 'logback-core', version: '1.2.3')
 //    runtime(group: 'org.slf4j', name: 'slf4j-simple' , version: '1.7.25')
 //
+	compile (group: 'org.bitcoinj', name:'bitcoinj-core', version: '0.14.7')
+
+	compile(group: 'io.reactivex.rxjava2', name: 'rxjava', version: '2.2.4')
+	
+	compile(group: 'com.kryptokrauts', name: 'aepp-sdk-java', version: '1.2.0'){
+		exclude group: 'com.fasterxml.jackson.core', module: 'jackson-annotations'
+		exclude group: 'com.fasterxml.jackson.core', module: 'jackson-databind'
+		exclude group: 'com.fasterxml.jackson.core', module: 'jackson-core'
+		exclude group: 'com.github.jnr', module: 'jnr-ffi'
+		exclude group: 'com.github.jnr', module: 'jffi'
+		exclude group: 'commons-codec', module: 'commons-codec'
+	}
 
     generalBytesCompile(group: 'com.generalbytes.bitrafael.public', name: 'bitrafael-client', version: bitrafaelVersion) {
         exclude group: 'org.slf4j', module: 'slf4j-simple'

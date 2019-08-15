@@ -20,6 +20,10 @@ buildscript {
             }
             repositoryHandler.jcenter()
             repositoryHandler.maven { url 'https://jitpack.io' }
+            repositoryHandler.maven { url 'https://oss.jfrog.org/artifactory/oss-snapshot-local' }
+            repositoryHandler.maven { url 'https://dl.bintray.com/tuweni/tuweni' }
+            //repositoryHandler.maven { url 'https://dl.bintray.com/tuweni/tuweni' }
+
         }
         batmDependencySubstitutionConfigPublic = file('dependencySubstitutions.txt')
         batmDependencyChecksumsConfigPublic = file('dependencyChecksums.txt')
