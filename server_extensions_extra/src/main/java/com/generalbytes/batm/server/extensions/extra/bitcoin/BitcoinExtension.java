@@ -28,6 +28,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coingi.Co
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.dvchain.DVChainExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.hitbtc.HitbtcExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.itbit.ItBitExchange;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.enigma.EnigmaExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.bitcoinpay.BitcoinPayPP;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.coinofsale.CoinOfSalePP;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.bity.BityRateSource;
@@ -111,6 +112,14 @@ public class BitcoinExtension extends AbstractExtension{
                 String preferredFiatCurrency = FiatCurrency.USD.getCode();
                 String apiSecret = paramTokenizer.nextToken();
                 return new DVChainExchange(apiSecret, preferredFiatCurrency);
+            } else if ("enigma".equalsIgnoreCase(prefix)) {
+                String preferredFiatCurrency = FiatCurrency.USD.getCode();
+                String username = paramTokenizer.nextToken();
+                String password = paramTokenizer.nextToken();
+                if (paramTokenizer.hasMoreTokens()) {
+                    preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase();
+                }
+                return new EnigmaExchange(username, password, preferredFiatCurrency);
             }
         }
         return null;
@@ -284,6 +293,12 @@ public class BitcoinExtension extends AbstractExtension{
             } else if ("coinpaprika".equalsIgnoreCase(rsType)) {
                 String preferredFiatCurrency = st.hasMoreTokens() ? st.nextToken().toUpperCase() : FiatCurrency.USD.getCode();
                 return new CoinPaprikaRateSource(preferredFiatCurrency);
+            } else if ("enigma".equalsIgnoreCase(rsType)) {
+                String preferredFiatCurrency = FiatCurrency.USD.getCode();
+                if (st.hasMoreTokens()) {
+                    preferredFiatCurrency = st.nextToken().toUpperCase();
+                }
+                return new EnigmaExchange(preferredFiatCurrency);
             }
         }
         return null;

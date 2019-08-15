@@ -14,5 +14,5 @@ substitute module: 'commons-codec:commons-codec', versions: ['1.3'], toVersion: 
 substitute module: 'org.apache.commons:commons-lang3', versions: ['3.8.1'], toVersion: '3.9'
 substitute module: 'org.bouncycastle:bcprov-jdk15on', versions: ['1.54', '1.60'], toVersion: '1.61'
 substitute module: 'org.json:json', versions: ['20140107'], toVersion: '20180130'
-substitute module: 'org.knowm.xchange:xchange-core', versions: ['4.3.18', '4.3.19'], toVersion: '4.3.15'
-substitute module: 'org.slf4j:slf4j-api', versions: ['1.7.20', '1.8.0-beta2', '1.8.0-beta4'], toVersion: '1.7.25'
+substitute module: 'org.knowm.xchange:xchange-core', versions: ['4.3.18', '4.3.19', '4.3.15'], toVersion: '4.3.21'
+substitute module: 'org.slf4j:slf4j-api', versions: ['1.7.20', '1.7.25', '1.8.0-beta2', '1.8.0-beta4'], toVersion: '1.7.28'
