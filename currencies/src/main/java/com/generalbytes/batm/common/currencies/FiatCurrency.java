@@ -102,6 +102,15 @@ public enum FiatCurrency {
         codes = Collections.unmodifiableSet(tmp);
     }
 
+    public static FiatCurrency getFiatCurrency(String code) {
+        for (FiatCurrency currency : FiatCurrency.values()) {
+            if (currency.name().equals(code)) {
+                return currency;
+            }
+        }
+        return null;
+    }
+
     private final String currencyName;
 
     FiatCurrency(String currencyName) {
