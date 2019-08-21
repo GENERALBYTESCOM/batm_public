@@ -119,3 +119,5 @@ verifyModule 'org.apache.tuweni:tuweni-units:0.8.0-20190611234232:53294156d5c787
 verifyModule 'org.bitcoinj:bitcoinj-core:0.14.7:e4f4962df63919194c58c628dec7464f626cd5776157f1e64a7441408eb507d8'
 verifyModule 'org.mvel:mvel2:2.3.1.Final:7666f7d28949b9a78e5de9525eeaf1217b97b67871c784bba3de0f9446ade8ac'
 verifyModule 'org.reactivestreams:reactive-streams:1.0.2:cc09ab0b140e0d0496c2165d4b32ce24f4d6446c0a26c5dc77b06bdf99ee8fae'
+verifyModule 'com.squareup.retrofit2:converter-jackson:2.5.0:c9b3d965c583a153b8fea975f86a1a02cb478086952d222ed7d99dd4e6211fe7'
+verifyModule 'com.squareup.retrofit2:retrofit:2.5.0:b8a4c00d26d996fe023e80c6b33a4d2d52d2c7ba35eef27326cf1d97eda556c5'

@@ -82,6 +82,19 @@ dependencies {
 		exclude group: 'com.github.jnr', module: 'jffi'
 		exclude group: 'commons-codec', module: 'commons-codec'
 	}
+	
+	compile(group: 'com.squareup.retrofit2', name: 'retrofit', version: '2.5.0'){
+		exclude group: 'com.squareup.okhttp3', module: 'okhttp'
+		exclude group: 'com.fasterxml.jackson.core', module: 'jackson-annotations'
+		exclude group: 'com.fasterxml.jackson.core', module: 'jackson-databind'
+		exclude group: 'com.fasterxml.jackson.core', module: 'jackson-core'
+	}
+	compile(group: 'com.squareup.retrofit2', name: 'converter-jackson', version: '2.5.0'){
+		exclude group: 'com.squareup.okhttp3', module: 'okhttp'
+		exclude group: 'com.fasterxml.jackson.core', module: 'jackson-annotations'
+		exclude group: 'com.fasterxml.jackson.core', module: 'jackson-databind'
+		exclude group: 'com.fasterxml.jackson.core', module: 'jackson-core'
+	}
 
     generalBytesCompile(group: 'com.generalbytes.bitrafael.public', name: 'bitrafael-client', version: bitrafaelVersion) {
         exclude group: 'org.slf4j', module: 'slf4j-simple'

@@ -17,24 +17,18 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.aeternity;
 
-import com.generalbytes.batm.server.extensions.AbstractExtension;
-import com.generalbytes.batm.server.extensions.CryptoCurrencyDefinition;
-import com.generalbytes.batm.common.currencies.CryptoCurrency;
-import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
-import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
-import com.generalbytes.batm.server.extensions.IPaperWalletGenerator;
-import com.generalbytes.batm.server.extensions.IRateSource;
-import com.generalbytes.batm.server.extensions.IWallet;
-import com.generalbytes.batm.server.extensions.extra.ethereum.EtherUtils;
-import com.generalbytes.batm.server.extensions.extra.ethereum.InfuraWallet;
-import com.generalbytes.batm.server.extensions.extra.ethereum.erc20.ERC20Wallet;
-import com.generalbytes.batm.server.extensions.extra.ethereum.sources.stasis.StasisTickerRateSource;
-import com.generalbytes.batm.server.extensions.extra.ethereum.stream365.Stream365;
-
-import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
+
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.server.extensions.AbstractExtension;
+import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
+import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
+import com.generalbytes.batm.server.extensions.IRateSource;
+import com.generalbytes.batm.server.extensions.IWallet;
+import com.generalbytes.batm.server.extensions.extra.aeternity.coingecko.CoinGecko;
+import com.kryptokrauts.aeternity.sdk.util.EncodingUtils;
 
 public class AeternityExtension extends AbstractExtension {
     //private static final ICryptoCurrencyDefinition DEFINITION = new AeternityDefinition();
@@ -72,11 +66,10 @@ public class AeternityExtension extends AbstractExtension {
 
     @Override
     public IRateSource createRateSource(String sourceLogin) {
+    	System.out.println("sourceLogin: " + sourceLogin);
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
-            if (sourceLogin.startsWith("stream365")) {
-                return new Stream365();
-            } else if (sourceLogin.startsWith("stasis")) {
-                return new StasisTickerRateSource();
+            if (sourceLogin.contains("coingecko")) {
+                return new CoinGecko();
             }
         }
         return null;
@@ -91,7 +84,7 @@ public class AeternityExtension extends AbstractExtension {
 
             @Override
             public boolean isAddressValid(String address) {
-                return EtherUtils.isEtherAddressValid(address);
+                return EncodingUtils.isAddressValid(address);
             }
 
             @Override
