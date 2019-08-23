@@ -64,6 +64,8 @@
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>BCH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
+                <cryptocurrency>DASH</cryptocurrency>
+                <cryptocurrency>DAI</cryptocurrency>
             </ratesource>
             <ratesource prefix="bitfinex" name ="Bitfinex.com Exchange" >
                 <param name="fiatcurrency" />
