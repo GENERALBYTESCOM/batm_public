@@ -17,39 +17,52 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.aeternity;
 
-import com.generalbytes.batm.common.currencies.CryptoCurrency;
-import com.generalbytes.batm.server.extensions.IExtensionContext;
-import com.generalbytes.batm.server.extensions.IPaperWallet;
-import com.generalbytes.batm.server.extensions.IPaperWalletGenerator;
-import com.generalbytes.bitrafael.api.wallet.bch.WalletToolsBCH;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.generalbytes.batm.server.extensions.IExtensionContext;
+import com.generalbytes.batm.server.extensions.IPaperWallet;
+import com.generalbytes.batm.server.extensions.IPaperWalletGenerator;
+import com.kryptokrauts.aeternity.sdk.domain.secret.impl.BaseKeyPair;
+import com.kryptokrauts.aeternity.sdk.domain.secret.impl.MnemonicKeyPair;
+import com.kryptokrauts.aeternity.sdk.exception.AException;
+import com.kryptokrauts.aeternity.sdk.service.keypair.KeyPairService;
+import com.kryptokrauts.aeternity.sdk.service.keypair.KeyPairServiceFactory;
+import com.kryptokrauts.aeternity.sdk.util.EncodingUtils;
+
 public class AeternityWalletGenerator implements IPaperWalletGenerator {
 
     private static final Logger log = LoggerFactory.getLogger("batm.master.BitcoinWalletGenerator");
-    private String prefix;
+    //private String prefix;
     private IExtensionContext ctx;
 
     public AeternityWalletGenerator(String prefix, IExtensionContext ctx) {
-        this.prefix = prefix;
+        //this.prefix = prefix;
         this.ctx = ctx;
     }
 
     @Override
     public IPaperWallet generateWallet(String cryptoCurrency, String oneTimePassword, String userLanguage) {
-        WalletToolsBCH wt = new WalletToolsBCH();
-        String privateKey = wt.generateWalletPrivateKeyWithPrefix(prefix, CryptoCurrency.BCH.getCode());
-        String address = wt.getWalletAddressFromPrivateKey(privateKey, CryptoCurrency.BCH.getCode());
+    	final KeyPairService keyPairService = new KeyPairServiceFactory().getService();
+    	MnemonicKeyPair master = null;
+    	BaseKeyPair credentials = null;
+		try {
+			master = keyPairService.generateMasterMnemonicKeyPair(oneTimePassword);
+			credentials = EncodingUtils.createBaseKeyPair(
+	                keyPairService.generateDerivedKey(master, true).toRawKeyPair());
+		} catch (AException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	String privateKey = credentials.getPrivateKey();
+        String address = credentials.getPublicKey();
 
         byte[] content = ctx.createPaperWallet7ZIP(privateKey, address, oneTimePassword, cryptoCurrency);
-
         //send wallet to customer
         String messageText = "New wallet " + address + " use your onetime password to open the attachment.";
         String messageTextLang = readTemplate("/batm/config/template_wallet_" + userLanguage + ".txt");
@@ -61,7 +74,6 @@ public class AeternityWalletGenerator implements IPaperWalletGenerator {
                 messageText = messageTextEN;
             }
         }
-
         return new AeternityPaperWallet(cryptoCurrency, content, address, privateKey, messageText,"application/zip", "zip");
     }
 

@@ -89,7 +89,7 @@ public class AeternityExtension extends AbstractExtension {
 
             @Override
             public boolean isPaperWalletSupported() {
-                return false;
+                return true;
             }
 
             @Override
