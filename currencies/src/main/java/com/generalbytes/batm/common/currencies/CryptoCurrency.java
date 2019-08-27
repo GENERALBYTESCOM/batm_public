@@ -90,6 +90,7 @@ public enum CryptoCurrency {
     VOLTZ("VOLTZ"),
     WDC("WorldCoin"),
     XMR("Monero"),
+    XORI("CHFToken"),
     XSG("SnowGem"),
     XZC("Zcoin"),
     BAY("BitBayCoin"),
