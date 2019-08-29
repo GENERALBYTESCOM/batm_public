@@ -19,10 +19,14 @@ package com.generalbytes.batm.server.extensions.extra.aeternity;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.bouncycastle.crypto.CryptoException;
 import org.slf4j.Logger;
@@ -55,6 +59,8 @@ import com.kryptokrauts.aeternity.sdk.util.EncodingUtils;
 public class AeternityWallet implements IWallet{
     private String cryptoCurrency = CryptoCurrency.AE.getCode();
     private BaseKeyPair credentials;
+    private List<String >mnemonicSeedWords = new ArrayList<String>();
+    private String mnemonicPassword = null;
     final static String baseUrl = "https://sdk-mainnet.aepps.com/v2"; // default: https://sdk-testnet.aepps.com/v2
     final Network mainnet = Network.MAINNET;
     private static ServiceConfiguration serviceConf;
@@ -63,7 +69,7 @@ public class AeternityWallet implements IWallet{
     private static TransactionService transactionService;
     private static final Logger log = LoggerFactory.getLogger(AeternityWallet.class);
 
-    public AeternityWallet(String password, String mnemonic)  {
+    public AeternityWallet(String mnemonic)  {
     	serviceConf = ServiceConfiguration.configure().baseUrl(baseUrl).compile();
     	accountService = new AccountServiceFactory().getService(serviceConf);
     	chainService = new ChainServiceFactory().getService(serviceConf);
@@ -73,12 +79,16 @@ public class AeternityWallet implements IWallet{
     	MnemonicKeyPair master = null;
 		try {
 			if (mnemonic == null) {
-				master = keyPairService.generateMasterMnemonicKeyPair(password);
-		    	System.out.println("generating mnemonic words: " + master.getMnemonicSeedWords());
+				mnemonicPassword = PasswordGenerator.generateRandomPassword(12);
+				master = keyPairService.generateMasterMnemonicKeyPair(mnemonicPassword);
+				mnemonicSeedWords.addAll(master.getMnemonicSeedWords());
+				System.out.println("generating mnemonic words: " + getMnemonicSeedWordsSerialized());
+				
 			}
 			else {
-				List<String> mnemonicWords = Arrays.asList(mnemonic.split("\\s*,\\s*"));
-				master = keyPairService.recoverMasterMnemonicKeyPair(mnemonicWords, password);
+				mnemonicSeedWords.addAll(Arrays.asList(mnemonic.split("\\s*,\\s*")));
+				mnemonicPassword = mnemonicSeedWords.remove(mnemonicSeedWords.size() - 1);
+				master = keyPairService.recoverMasterMnemonicKeyPair(mnemonicSeedWords, mnemonicPassword);
 			}
 	    	// derive a key                    
 	    	credentials = EncodingUtils.createBaseKeyPair(
@@ -90,7 +100,14 @@ public class AeternityWallet implements IWallet{
 		}
     }
 
-    @Override
+    public String getMnemonicSeedWordsSerialized() {
+    	List<String> mnemonicWord = new ArrayList<String>();
+    	mnemonicWord.addAll(mnemonicSeedWords);
+    	mnemonicWord.add(mnemonicPassword);
+		return mnemonicWord.toString().replace(" ", "");
+	}
+
+	@Override
     public Set<String> getCryptoCurrencies() {
         Set<String> currencies = new HashSet<>();
         currencies.add(cryptoCurrency);
@@ -105,7 +122,7 @@ public class AeternityWallet implements IWallet{
     @Override
     public String getCryptoAddress(String cryptoCurrency) {
         if (!getCryptoCurrencies().contains(cryptoCurrency)) {
-            log.error("InfuraWallet wallet error: unknown cryptocurrency.");
+            log.error("Aeternity wallet error: unknown cryptocurrency.");
             return null;
         }
         return credentials.getPublicKey();
@@ -117,24 +134,35 @@ public class AeternityWallet implements IWallet{
             log.error("Aeternity wallet error: unknown cryptocurrency.");
             return null;
         }
-        try {
-        	Account account = accountService.getAccount(credentials.getPublicKey()).blockingGet();
-        	BigDecimal returnBalance = new BigDecimal("0");
-        	BigDecimal divider = new BigDecimal("1000000000000000000");
-        	BigInteger balance = account.getBalance();
-        	if (balance.signum() == 1) {
-        		returnBalance = new BigDecimal(balance);
-        		returnBalance = returnBalance.divide(divider);
-        	}
-        	return returnBalance;
+        return getAccountBalance(credentials.getPublicKey());
+    }
+    
+    public BigDecimal getReceivedAmount(String address, String cryptoCurrency) {
+        if (!getCryptoCurrencies().contains(cryptoCurrency)) {
+            log.error("Aeternity wallet error: unknown cryptocurrency.");
+            return null;
         }
-        catch (Exception e) {
-        	if (e.getMessage().contains("Not Found")) return new BigDecimal("0");
-            log.error("Error reading balance.", e);
-        }
-        return null;
+        return getAccountBalance(address);
     }
 
+    private BigDecimal getAccountBalance(String address) {
+    	BigDecimal returnBalance = BigDecimal.ZERO;
+    	try {
+			Account account = accountService.getAccount(address).blockingGet();
+			BigDecimal divider = new BigDecimal("1000000000000000000");
+			BigInteger balance = account.getBalance();
+			if (balance.signum() == 1) {
+				returnBalance = new BigDecimal(balance);
+				returnBalance = returnBalance.divide(divider);
+	    	}
+    	}catch (Exception e) {
+    		if (e.getMessage().contains("Not Found")) return BigDecimal.ZERO;
+            log.error("Error reading balance.", e);
+            return null;
+		}
+    	return returnBalance;
+    }
+    
     @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
         if (!getCryptoCurrencies().contains(cryptoCurrency)) {
@@ -181,5 +209,36 @@ public class AeternityWallet implements IWallet{
 		
         return null;
     }
+    
+    private static class PasswordGenerator {
 
+        private static final String CHAR_LOWER = "abcdefghijklmnopqrstuvwxyz";
+        private static final String CHAR_UPPER = CHAR_LOWER.toUpperCase();
+        private static final String NUMBER = "0123456789";
+        private static final String OTHER_CHAR = "@";
+        private static final String PASSWORD_ALLOW_BASE = CHAR_LOWER + CHAR_UPPER + NUMBER + OTHER_CHAR;
+        // optional, make it more random
+        private static final String PASSWORD_ALLOW_BASE_SHUFFLE = shuffleString(PASSWORD_ALLOW_BASE);
+        private static final String PASSWORD_ALLOW = PASSWORD_ALLOW_BASE_SHUFFLE;
+        private static SecureRandom random = new SecureRandom();
+
+        public static String generateRandomPassword(int length) {
+            if (length < 1) throw new IllegalArgumentException();
+            StringBuilder sb = new StringBuilder(length);
+            for (int i = 0; i < length; i++) {
+                int rndCharAt = random.nextInt(PASSWORD_ALLOW.length());
+                char rndChar = PASSWORD_ALLOW.charAt(rndCharAt);
+                // debug
+                //System.out.format("%d\t:\t%c%n", rndCharAt, rndChar);
+                sb.append(rndChar);
+            }
+            return sb.toString();
+        }
+        // shuffle
+        public static String shuffleString(String string) {
+            List<String> letters = Arrays.asList(string.split(""));
+            Collections.shuffle(letters);
+            return letters.stream().collect(Collectors.joining());
+        }
+    }
 }

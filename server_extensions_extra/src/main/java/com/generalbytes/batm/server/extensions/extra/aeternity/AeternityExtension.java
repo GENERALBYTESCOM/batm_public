@@ -31,8 +31,8 @@ import com.generalbytes.batm.server.extensions.extra.aeternity.coingecko.CoinGec
 import com.kryptokrauts.aeternity.sdk.util.EncodingUtils;
 
 public class AeternityExtension extends AbstractExtension {
-    //private static final ICryptoCurrencyDefinition DEFINITION = new AeternityDefinition();
-    //public static final String CURRENCY = CryptoCurrency.AE.getCode();
+    private static final ICryptoCurrencyDefinition DEFINITION = new AeternityDefinition();
+    public static final String CURRENCY = CryptoCurrency.AE.getCode();
 
     @Override
     public String getName() {
@@ -42,7 +42,7 @@ public class AeternityExtension extends AbstractExtension {
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
     	HashSet<String> result = new HashSet<>();
-        result.add(CryptoCurrency.AE.getCode());
+        result.add(CURRENCY);
         return result;
     }
     
@@ -54,11 +54,8 @@ public class AeternityExtension extends AbstractExtension {
             String walletType = st.nextToken();
             System.out.println("walletType:" + walletType);
             if ("aeternity".equalsIgnoreCase(walletType)) {
-                String password = st.nextToken();
                 String mnemonic = st.hasMoreTokens() ?  st.nextToken() : null;
-                if (password != null) {
-                    return new AeternityWallet(password, mnemonic);
-                }
+            	return new AeternityWallet(mnemonic);
             }
         }
         return null;
@@ -102,7 +99,7 @@ public class AeternityExtension extends AbstractExtension {
     @Override
     public Set<ICryptoCurrencyDefinition> getCryptoCurrencyDefinitions() {
         Set<ICryptoCurrencyDefinition> result = new HashSet<>();
-//        result.add(DEFINITION);
+        result.add(DEFINITION);
         return result;
     }
 }
