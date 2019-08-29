@@ -371,7 +371,6 @@
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.aeternity.AeternityExtension">
     	<wallet prefix="aeternity" name="Aeternity - aeternity">
-            <param name="projectId" />
             <param name="mnemonic" />
             <cryptocurrency>AE</cryptocurrency>
             <help>For AE SELL this is the only supported wallet</help>
