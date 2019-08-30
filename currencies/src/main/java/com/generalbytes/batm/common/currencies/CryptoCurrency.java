@@ -36,6 +36,7 @@ import java.util.Set;
 public enum CryptoCurrency {
 
     ANON("ANON"),
+    AQUA("Aquachain"),
     ANT("Aragon Network Token"),
     BAT("Basic Attention Token"),
     BCH("Bitcoin Cash"),
