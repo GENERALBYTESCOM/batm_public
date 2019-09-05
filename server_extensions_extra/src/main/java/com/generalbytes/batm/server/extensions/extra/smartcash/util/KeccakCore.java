@@ -15,7 +15,7 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.coinutil.SmartCash;
+package com.generalbytes.batm.server.extensions.extra.smartcash.util;
 
 /**
  * This class implements the core operations for the Keccak digest

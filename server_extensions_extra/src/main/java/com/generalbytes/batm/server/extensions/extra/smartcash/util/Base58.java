@@ -15,14 +15,12 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.coinutil.SmartCash;
+package com.generalbytes.batm.server.extensions.extra.smartcash.util;
 
 import com.generalbytes.batm.server.coinutil.AddressFormatException;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 /**
