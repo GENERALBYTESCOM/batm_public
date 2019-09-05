@@ -31,11 +31,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-/**
- * Created by kkyovsky on 11/29/17.
- *
- * Modified by sidhujag on 6/3/2018
- */
 
 public class CoinmarketcapRateSource implements IRateSource {
     private static final Logger log = LoggerFactory.getLogger(CoinmarketcapRateSource.class);
