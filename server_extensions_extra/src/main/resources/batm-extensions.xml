@@ -101,6 +101,7 @@
                 <cryptocurrency>REP</cryptocurrency>
                 <cryptocurrency>ANT</cryptocurrency>
                 <cryptocurrency>DASH</cryptocurrency>
+				<cryptocurrency>HATCH</cryptocurrency>
                 <cryptocurrency>XMR</cryptocurrency>
                 <cryptocurrency>$PAC</cryptocurrency>
                 <cryptocurrency>POT</cryptocurrency>
@@ -153,6 +154,7 @@
                 <cryptocurrency>FLASH</cryptocurrency>
                 <cryptocurrency>FTO</cryptocurrency>
                 <cryptocurrency>GRS</cryptocurrency>
+				<cryptocurrency>HATCH</cryptocurrency>
                 <cryptocurrency>LEO</cryptocurrency>
                 <cryptocurrency>LINDA</cryptocurrency>
                 <cryptocurrency>LSK</cryptocurrency>
@@ -316,6 +318,7 @@
             <cryptocurrency>FLASH</cryptocurrency>
             <cryptocurrency>FTO</cryptocurrency>
             <cryptocurrency>GRS</cryptocurrency>
+			<cryptocurrency>HATCH</cryptocurrency>
             <cryptocurrency>KMD</cryptocurrency>
             <cryptocurrency>LEO</cryptocurrency>
             <cryptocurrency>LINDA</cryptocurrency>
@@ -372,6 +375,7 @@
             <cryptocurrency>FLASH</cryptocurrency>
             <cryptocurrency>FTO</cryptocurrency>
             <cryptocurrency>GRS</cryptocurrency>
+			<cryptocurrency>HATCH</cryptocurrency>
             <cryptocurrency>HBX</cryptocurrency>
             <cryptocurrency>KMD</cryptocurrency>
             <cryptocurrency>LEO</cryptocurrency>
@@ -629,6 +633,27 @@
         </ratesource>
         <cryptologo cryptocurrency="DASH" file="dash.png"/>
         <cryptologo cryptocurrency="DASH" file="dash.svg"/>
+    </extension>
+	<extension class="com.generalbytes.batm.server.extensions.extra.hatch.HatchExtension" >
+        <wallet prefix="hatchd" name="hatchd">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>HATCH</cryptocurrency>
+        </wallet>
+        <ratesource prefix="cdhatch" name="Cryptodiggers" >
+            <cryptocurrency>HATCH</cryptocurrency>
+        </ratesource>
+        <ratesource prefix="hatchfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>HATCH</cryptocurrency>
+            <help>USD is default fiat currency.</help>
+        </ratesource>
+        <cryptologo cryptocurrency="HATCH" file="hatch.png"/>
+        <cryptologo cryptocurrency="HATCH" file="hatch.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.syscoin.SyscoinExtension" >
     <wallet prefix="syscoind" name="syscoind">

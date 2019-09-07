@@ -61,6 +61,7 @@ public class CoinPaprikaRateSource implements IRateSource {
         CRYPTOCURRENCIES.put(CryptoCurrency.FLASH.getCode(), "flash-flash");
         CRYPTOCURRENCIES.put(CryptoCurrency.FTO.getCode(), "fto-futurocoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.GRS.getCode(), "grs-groestlcoin");
+		CRYPTOCURRENCIES.put(CryptoCurrency.HATCH.getCode(), "hatch-hatch");
         CRYPTOCURRENCIES.put(CryptoCurrency.HBX.getCode(), "hbx-hashbx");
         CRYPTOCURRENCIES.put(CryptoCurrency.KMD.getCode(), "kmd-komodo");
         CRYPTOCURRENCIES.put(CryptoCurrency.LEO.getCode(), "leo-leocoin");
