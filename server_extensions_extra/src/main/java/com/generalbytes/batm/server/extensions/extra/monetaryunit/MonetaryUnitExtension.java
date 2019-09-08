@@ -117,6 +117,7 @@ public class MonetaryUnitExtension extends AbstractExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
+        result.add(CryptoCurrency.HATCH.getCode());
         result.add(CryptoCurrency.MUE.getCode());
         return result;
     }

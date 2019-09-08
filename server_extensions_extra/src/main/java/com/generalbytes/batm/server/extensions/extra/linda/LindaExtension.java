@@ -119,6 +119,7 @@ public class LindaExtension extends AbstractExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
+        result.add(CryptoCurrency.HATCH.getCode());
         result.add(CryptoCurrency.LINDA.getCode());
         return result;
     }

@@ -45,17 +45,18 @@ public class EthereumExtension extends AbstractExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         HashSet<String> result = new HashSet<>();
-        result.add(CryptoCurrency.ETH.getCode());
         result.add(CryptoCurrency.ANT.getCode());
         result.add(CryptoCurrency.BAT.getCode());
-        result.add(CryptoCurrency.REP.getCode());
-        result.add(CryptoCurrency.MKR.getCode());
+        result.add(CryptoCurrency.ETH.getCode());
         result.add(CryptoCurrency.DAI.getCode());
-        result.add(CryptoCurrency.HBX.getCode());
-        result.add(CryptoCurrency.VOLTZ.getCode());
-        result.add(CryptoCurrency.THBX.getCode());
-        result.add(CryptoCurrency.MUSD.getCode());
         result.add(CryptoCurrency.EURS.getCode());
+        result.add(CryptoCurrency.HATCH.getCode());
+        result.add(CryptoCurrency.HBX.getCode());
+        result.add(CryptoCurrency.MKR.getCode());
+        result.add(CryptoCurrency.MUSD.getCode());
+        result.add(CryptoCurrency.REP.getCode());
+        result.add(CryptoCurrency.THBX.getCode());
+        result.add(CryptoCurrency.VOLTZ.getCode());
         return result;
     }
 

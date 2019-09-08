@@ -114,6 +114,7 @@ public class GroestlcoinExtension extends AbstractExtension{
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
         result.add(CryptoCurrency.GRS.getCode());
+        result.add(CryptoCurrency.HATCH.getCode());
         return result;
     }
 }

@@ -107,6 +107,7 @@ public class SnowgemExtension extends AbstractExtension {
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<>();
+        result.add(CryptoCurrency.HATCH.getCode());
         result.add(CryptoCurrency.XSG.getCode());
         return result;
     }

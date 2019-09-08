@@ -134,6 +134,7 @@ public class DogecoinExtension extends AbstractExtension{
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
         result.add(CryptoCurrency.DOGE.getCode());
+        result.add(CryptoCurrency.HATCH.getCode());
         return result;
     }
 

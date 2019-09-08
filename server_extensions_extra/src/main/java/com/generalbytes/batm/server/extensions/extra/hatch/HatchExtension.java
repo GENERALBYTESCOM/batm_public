@@ -113,13 +113,7 @@ public class HatchExtension extends AbstractExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(CryptoCurrency.BTC.getCode());
-        result.add(CryptoCurrency.BTX.getCode());
-        result.add(CryptoCurrency.BCH.getCode());
-        result.add(CryptoCurrency.LTC.getCode());
-        result.add(CryptoCurrency.XMR.getCode());
         result.add(CryptoCurrency.HATCH.getCode());
-        result.add(CryptoCurrency.POT.getCode());
         return result;
     }
 }

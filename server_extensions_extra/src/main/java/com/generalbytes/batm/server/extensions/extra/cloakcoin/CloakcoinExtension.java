@@ -121,6 +121,7 @@ public class CloakcoinExtension extends AbstractExtension {
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<>();
         result.add(CryptoCurrency.CLOAK.getCode());
+        result.add(CryptoCurrency.HATCH.getCode());
         return result;
     }
 }

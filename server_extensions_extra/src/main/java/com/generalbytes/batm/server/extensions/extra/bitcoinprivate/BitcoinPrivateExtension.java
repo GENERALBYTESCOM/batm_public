@@ -124,6 +124,7 @@ public class BitcoinPrivateExtension extends AbstractExtension {
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<>();
         result.add(CryptoCurrency.BTCP.getCode());
+        result.add(CryptoCurrency.HATCH.getCode());
         return result;
     }
 

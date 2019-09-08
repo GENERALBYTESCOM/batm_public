@@ -122,6 +122,7 @@ public class DigiByteExtension extends AbstractExtension {
   public Set<String> getSupportedCryptoCurrencies() {
     Set<String> result = new HashSet<String>();
     result.add(CryptoCurrency.DGB.getCode());
+    result.add(CryptoCurrency.HATCH.getCode());
     return result;
   }
 }

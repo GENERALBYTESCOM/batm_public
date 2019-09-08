@@ -120,6 +120,7 @@ public class ZcoinExtension extends AbstractExtension {
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<>();
+        result.add(CryptoCurrency.HATCH.getCode());
         result.add(CryptoCurrency.XZC.getCode());
         return result;
     }

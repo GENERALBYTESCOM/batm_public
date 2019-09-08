@@ -206,7 +206,8 @@ public class DexCoinSupport extends AbstractExtension implements IExchange, IWal
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(CRYPTO_CURRENCY);
+        result.add(CryptoCurrency.DEX.getCode());
+        result.add(CryptoCurrency.HATCH.getCode());
         return result;
     }
 

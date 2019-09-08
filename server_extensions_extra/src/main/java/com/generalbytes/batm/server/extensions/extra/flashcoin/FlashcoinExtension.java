@@ -111,6 +111,7 @@ public class FlashcoinExtension extends AbstractExtension{
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
         result.add(CryptoCurrency.FLASH.getCode());
+        result.add(CryptoCurrency.HATCH.getCode());
         return result;
     }
 }

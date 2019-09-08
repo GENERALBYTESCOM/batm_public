@@ -112,6 +112,7 @@ public class BitcoreExtension extends AbstractExtension{
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
         result.add(CryptoCurrency.BTX.getCode());
+        result.add(CryptoCurrency.HATCH.getCode());
         return result;
     }
 }

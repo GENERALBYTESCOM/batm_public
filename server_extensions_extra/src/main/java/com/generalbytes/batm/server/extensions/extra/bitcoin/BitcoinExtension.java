@@ -320,9 +320,10 @@ public class BitcoinExtension extends AbstractExtension{
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
         result.add(CryptoCurrency.BTC.getCode());
+        result.add(CryptoCurrency.BCH.getCode());
         result.add(CryptoCurrency.ETH.getCode());
         result.add(CryptoCurrency.LTC.getCode());
-        result.add(CryptoCurrency.BCH.getCode());
+        result.add(CryptoCurrency.HATCH.getCode());
         return result;
     }
 

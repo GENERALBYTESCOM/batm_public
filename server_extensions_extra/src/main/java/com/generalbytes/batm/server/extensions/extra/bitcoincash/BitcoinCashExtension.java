@@ -73,7 +73,8 @@ public class BitcoinCashExtension extends AbstractExtension {
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(CURRENCY);
+        result.add(CryptoCurrency.BCH.getCode());
+        result.add(CryptoCurrency.HATCH.getCode());
         return result;
     }
 

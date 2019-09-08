@@ -86,6 +86,7 @@ public class LightningBitcoinExtension extends AbstractExtension {
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<>();
+        result.add(CryptoCurrency.HATCH.getCode());
         result.add(CryptoCurrency.LBTC.getCode());
         return result;
     }
