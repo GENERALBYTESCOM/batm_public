@@ -86,6 +86,7 @@ public class CoinGeckoRateSource implements IRateSource {
         CRYPTOCURRENCIES.put(CryptoCurrency.XMR.getCode(), "monero");
         CRYPTOCURRENCIES.put(CryptoCurrency.XSG.getCode(), "snowgem");
         CRYPTOCURRENCIES.put(CryptoCurrency.XZC.getCode(), "zcoin");
+        CRYPTOCURRENCIES.put(CryptoCurrency.AE.getCode(), "aeternity");
     }
 
     private final CoinGeckoV3API api;

@@ -17,8 +17,16 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.aeternity;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.net.MalformedURLException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,61 +36,56 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.bouncycastle.crypto.CryptoException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.IWallet;
+import com.generalbytes.batm.server.extensions.extra.aeternity.rpc.AeternityRPCClient;
+import com.generalbytes.batm.server.extensions.extra.aeternity.rpc.AeternityRPCClient.RawTransactionImpl;
+import com.generalbytes.batm.server.extensions.extra.common.IRPCWallet;
+import com.generalbytes.batm.server.extensions.extra.common.RPCClient;
+import com.generalbytes.batm.server.extensions.payment.IPaymentOutput;
 import com.kryptokrauts.aeternity.generated.model.Account;
 import com.kryptokrauts.aeternity.generated.model.KeyBlock;
 import com.kryptokrauts.aeternity.generated.model.PostTxResponse;
 import com.kryptokrauts.aeternity.generated.model.Tx;
 import com.kryptokrauts.aeternity.generated.model.UnsignedTx;
-import com.kryptokrauts.aeternity.sdk.constants.Network;
 import com.kryptokrauts.aeternity.sdk.domain.secret.impl.BaseKeyPair;
 import com.kryptokrauts.aeternity.sdk.domain.secret.impl.MnemonicKeyPair;
 import com.kryptokrauts.aeternity.sdk.exception.AException;
-import com.kryptokrauts.aeternity.sdk.service.ServiceConfiguration;
-import com.kryptokrauts.aeternity.sdk.service.account.AccountService;
-import com.kryptokrauts.aeternity.sdk.service.account.AccountServiceFactory;
-import com.kryptokrauts.aeternity.sdk.service.chain.ChainService;
-import com.kryptokrauts.aeternity.sdk.service.chain.ChainServiceFactory;
 import com.kryptokrauts.aeternity.sdk.service.keypair.KeyPairService;
 import com.kryptokrauts.aeternity.sdk.service.keypair.KeyPairServiceFactory;
-import com.kryptokrauts.aeternity.sdk.service.transaction.TransactionService;
-import com.kryptokrauts.aeternity.sdk.service.transaction.TransactionServiceConfiguration;
-import com.kryptokrauts.aeternity.sdk.service.transaction.TransactionServiceFactory;
 import com.kryptokrauts.aeternity.sdk.service.transaction.type.AbstractTransaction;
 import com.kryptokrauts.aeternity.sdk.util.EncodingUtils;
 
-public class AeternityWallet implements IWallet{
+import wf.bitcoin.javabitcoindrpcclient.BitcoindRpcClient;
+import wf.bitcoin.javabitcoindrpcclient.BitcoindRpcClient.Block;
+import wf.bitcoin.javabitcoindrpcclient.BitcoindRpcClient.RawTransaction;
+import wf.bitcoin.javabitcoindrpcclient.BitcoindRpcClient.Transaction;
+
+public class AeternityWallet implements IWallet, IRPCWallet{
     private String cryptoCurrency = CryptoCurrency.AE.getCode();
     private BaseKeyPair credentials;
     private List<String >mnemonicSeedWords = new ArrayList<String>();
     private String mnemonicPassword = null;
-    final static String baseUrl = "https://sdk-mainnet.aepps.com/v2"; // default: https://sdk-testnet.aepps.com/v2
-    final Network mainnet = Network.MAINNET;
-    private static ServiceConfiguration serviceConf;
-    private static AccountService accountService;
-    private static ChainService chainService;
-    private static TransactionService transactionService;
+    private AeternityRPCClient rpcClient;
     private static final Logger log = LoggerFactory.getLogger(AeternityWallet.class);
-
+    private static final String WALLETS_PATH = "/batm/aeternity_wallets/";
+    
     public AeternityWallet(String mnemonic)  {
-    	serviceConf = ServiceConfiguration.configure().baseUrl(baseUrl).compile();
-    	accountService = new AccountServiceFactory().getService(serviceConf);
-    	chainService = new ChainServiceFactory().getService(serviceConf);
-    	transactionService = new TransactionServiceFactory().getService(TransactionServiceConfiguration.configure().baseUrl(baseUrl).network(mainnet).compile());
-
     	final KeyPairService keyPairService = new KeyPairServiceFactory().getService();
     	MnemonicKeyPair master = null;
+    	boolean walletIsNew = false;
+    	
 		try {
-			if (mnemonic == null) {
+			System.out.println("Load wallet with mnemonics: " + mnemonic);
+			rpcClient = new AeternityRPCClient(null);
+			if (mnemonic == null || mnemonic.isEmpty()) {
 				mnemonicPassword = PasswordGenerator.generateRandomPassword(12);
 				master = keyPairService.generateMasterMnemonicKeyPair(mnemonicPassword);
 				mnemonicSeedWords.addAll(master.getMnemonicSeedWords());
-				System.out.println("generating mnemonic words: " + getMnemonicSeedWordsSerialized());
+				walletIsNew = true;
 				
 			}
 			else {
@@ -93,8 +96,11 @@ public class AeternityWallet implements IWallet{
 	    	// derive a key                    
 	    	credentials = EncodingUtils.createBaseKeyPair(
 	    	                                keyPairService.generateDerivedKey(master, true).toRawKeyPair());
-			
+	    	if (walletIsNew) saveAeternityWallet();
 		} catch (AException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -104,7 +110,7 @@ public class AeternityWallet implements IWallet{
     	List<String> mnemonicWord = new ArrayList<String>();
     	mnemonicWord.addAll(mnemonicSeedWords);
     	mnemonicWord.add(mnemonicPassword);
-		return mnemonicWord.toString().replace(" ", "");
+		return mnemonicWord.toString().replace(" ", "").replace("]", "").replace("[", "");
 	}
 
 	@Override
@@ -134,7 +140,7 @@ public class AeternityWallet implements IWallet{
             log.error("Aeternity wallet error: unknown cryptocurrency.");
             return null;
         }
-        return getAccountBalance(credentials.getPublicKey());
+        return rpcClient.getAccountBalance(credentials.getPublicKey());
     }
     
     public BigDecimal getReceivedAmount(String address, String cryptoCurrency) {
@@ -142,26 +148,10 @@ public class AeternityWallet implements IWallet{
             log.error("Aeternity wallet error: unknown cryptocurrency.");
             return null;
         }
-        return getAccountBalance(address);
+        return rpcClient.getAccountBalance(address);
     }
 
-    private BigDecimal getAccountBalance(String address) {
-    	BigDecimal returnBalance = BigDecimal.ZERO;
-    	try {
-			Account account = accountService.getAccount(address).blockingGet();
-			BigDecimal divider = new BigDecimal("1000000000000000000");
-			BigInteger balance = account.getBalance();
-			if (balance.signum() == 1) {
-				returnBalance = new BigDecimal(balance);
-				returnBalance = returnBalance.divide(divider);
-	    	}
-    	}catch (Exception e) {
-    		if (e.getMessage().contains("Not Found")) return BigDecimal.ZERO;
-            log.error("Error reading balance.", e);
-            return null;
-		}
-    	return returnBalance;
-    }
+    
     
     @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
@@ -172,45 +162,61 @@ public class AeternityWallet implements IWallet{
 		
 		try {
 			log.info("AeternityWallet sending coins from " + credentials.getPublicKey() + " to: " + destinationAddress + " " + amount + " " + cryptoCurrency);
-			
-			Account account = accountService.getAccount(credentials.getPublicKey()).blockingGet();
-	        // get block to determine current height for calculation of TTL
-	        KeyBlock block = chainService.getCurrentKeyBlock().blockingGet();
-	        BigDecimal multiplier = new BigDecimal("1000000000000000000");
-	        BigInteger amountToSend = amount.multiply(multiplier).toBigInteger();
-        	log.debug("AeternityWallet amountToSend = " + amountToSend);
-	        // some payload included within tx
-			String payload = "some payload";
-			// tx will be valid for the next ten blocks
-			BigInteger ttl = block.getHeight().add(BigInteger.TEN);
-			// we need to increase the current account nonce by one
-			BigInteger nonce = account.getNonce().add(BigInteger.ONE);
-			
-			AbstractTransaction<?> spendTxWithCalculatedFee =
-			         transactionService
-			                 .getTransactionFactory()
-			                 .createSpendTransaction(
-			                		 credentials.getPublicKey(), destinationAddress, amountToSend, payload, ttl, nonce);
-			
-			// choose one of the spendTx above to create the UnsignedTx-object
-			UnsignedTx unsignedTx =
-			         transactionService.createUnsignedTransaction(spendTxWithCalculatedFee).blockingGet();
-			// sign the tx
-			Tx signedTx = transactionService.signTransaction(unsignedTx, credentials.getPrivateKey());
-			// hopefully you receive a successful txResponse
-			PostTxResponse txResponse = transactionService.postTransaction(signedTx).blockingGet();
-			log.debug("AeternityWallet receipt = " + txResponse);
-			return txResponse.getTxHash();
-	        
-		} catch (CryptoException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			Tx signedTx = ((AeternityRPCClient)rpcClient).createAndSignTransactionAeternity(credentials.getPublicKey(), destinationAddress, amount);
+			String txid = ((AeternityRPCClient)rpcClient).sendSignedTransactionAeternity(signedTx);
+			log.debug("AeternityWallet receipt = " + txid);
+			return txid;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
 		}
 		
         return null;
     }
     
-    private static class PasswordGenerator {
+    public String getWalletPrivateKey () {
+    	return credentials.getPrivateKey();
+    }
+    
+    public static AeternityWallet loadAeternityWallet(String address) {
+    	String mnemonics = null;
+    	try(BufferedReader br = new BufferedReader(new FileReader(WALLETS_PATH + address))) {
+    	    StringBuilder sb = new StringBuilder();
+    	    String line = br.readLine();
+
+    	    while (line != null) {
+    	        sb.append(line);
+    	        line = br.readLine();
+    	    }
+    	    mnemonics = sb.toString();
+    	} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return new AeternityWallet(mnemonics);
+    }
+    
+    //saving mnomonics in file in configured path. later will be used by AeternityRPCClient.createAndSignTransactionAeternity(String, String, BigDecimal) to initialized wallets privKey and sign the transaction.
+    //TODO: change plain text format  with some encryption after tests ? 
+    public void saveAeternityWallet() {
+    	String mnemonics = getMnemonicSeedWordsSerialized();//load them for example from FS by address fileName
+    	try (PrintStream out = new PrintStream(new FileOutputStream(WALLETS_PATH + credentials.getPublicKey()))) {
+		    out.print(mnemonics);
+		}
+    	catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    
+    public RPCClient getClient() {
+		return rpcClient;
+	}
+
+	private static class PasswordGenerator {
 
         private static final String CHAR_LOWER = "abcdefghijklmnopqrstuvwxyz";
         private static final String CHAR_UPPER = CHAR_LOWER.toUpperCase();
@@ -228,7 +234,6 @@ public class AeternityWallet implements IWallet{
             for (int i = 0; i < length; i++) {
                 int rndCharAt = random.nextInt(PASSWORD_ALLOW.length());
                 char rndChar = PASSWORD_ALLOW.charAt(rndCharAt);
-                // debug
                 //System.out.format("%d\t:\t%c%n", rndCharAt, rndChar);
                 sb.append(rndChar);
             }

@@ -74,6 +74,8 @@ dependencies {
 
 	compile(group: 'io.reactivex.rxjava2', name: 'rxjava', version: '2.2.4')
 	
+	compile(group: 'org.json', name: 'json', version: '20180130')
+	
 	compile(group: 'com.kryptokrauts', name: 'aepp-sdk-java', version: '1.2.0'){
 		exclude group: 'com.fasterxml.jackson.core', module: 'jackson-annotations'
 		exclude group: 'com.fasterxml.jackson.core', module: 'jackson-databind'
@@ -83,20 +85,7 @@ dependencies {
 		exclude group: 'commons-codec', module: 'commons-codec'
 	}
 	
-	compile(group: 'com.squareup.retrofit2', name: 'retrofit', version: '2.5.0'){
-		exclude group: 'com.squareup.okhttp3', module: 'okhttp'
-		exclude group: 'com.fasterxml.jackson.core', module: 'jackson-annotations'
-		exclude group: 'com.fasterxml.jackson.core', module: 'jackson-databind'
-		exclude group: 'com.fasterxml.jackson.core', module: 'jackson-core'
-	}
-	compile(group: 'com.squareup.retrofit2', name: 'converter-jackson', version: '2.5.0'){
-		exclude group: 'com.squareup.okhttp3', module: 'okhttp'
-		exclude group: 'com.fasterxml.jackson.core', module: 'jackson-annotations'
-		exclude group: 'com.fasterxml.jackson.core', module: 'jackson-databind'
-		exclude group: 'com.fasterxml.jackson.core', module: 'jackson-core'
-	}
-
-    generalBytesCompile(group: 'com.generalbytes.bitrafael.public', name: 'bitrafael-client', version: bitrafaelVersion) {
+	generalBytesCompile(group: 'com.generalbytes.bitrafael.public', name: 'bitrafael-client', version: bitrafaelVersion) {
         exclude group: 'org.slf4j', module: 'slf4j-simple'
     }
     githubCompile(group: 'com.github.GENERALBYTESCOM.bitrafael_public', name: 'bitrafael-client', version: bitrafaelVersion) {

@@ -248,6 +248,7 @@
         </ratesource>
         <ratesource prefix="coingecko" name ="CoinGecko.com" >
             <param name="fiatcurrency" />
+            <cryptocurrency>AE</cryptocurrency>
             <cryptocurrency>ANON</cryptocurrency>
             <cryptocurrency>ANT</cryptocurrency>
             <cryptocurrency>BAT</cryptocurrency>

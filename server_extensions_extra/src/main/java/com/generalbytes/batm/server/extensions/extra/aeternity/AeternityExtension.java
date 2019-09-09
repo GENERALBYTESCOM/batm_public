@@ -22,12 +22,13 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.AbstractExtension;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.IWallet;
-import com.generalbytes.batm.server.extensions.extra.aeternity.coingecko.CoinGecko;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.coingecko.CoinGeckoRateSource;
 import com.kryptokrauts.aeternity.sdk.util.EncodingUtils;
 
 public class AeternityExtension extends AbstractExtension {
@@ -66,7 +67,7 @@ public class AeternityExtension extends AbstractExtension {
     	System.out.println("sourceLogin: " + sourceLogin);
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
             if (sourceLogin.contains("coingecko")) {
-                return new CoinGecko();
+                return new CoinGeckoRateSource(FiatCurrency.USD.getCode());
             }
         }
         return null;
