@@ -17,30 +17,13 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.aeternity;
 
-import com.generalbytes.batm.server.coinutil.Bech32;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
+import com.kryptokrauts.aeternity.sdk.util.EncodingUtils;
 
 public class AeternityAddressValidator implements ICryptoAddressValidator {
     @Override
     public boolean isAddressValid(String address) {
-        if (address == null) {
-            return false;
-        } else {
-            address = address.trim();
-            if (address.startsWith("xpub")) {
-                return false;
-            } else if (!address.startsWith("p") && !address.startsWith("q")) {
-                return false;
-            } else {
-                try {
-                    byte[] checksumData = Bech32.concatenateByteArrays(Bech32.concatenateByteArrays(Bech32.getPrefixBytes("bitcoincash"), new byte[]{0}), Bech32.decode(address));
-                    byte[] calculateChecksumBytesPolymod = Bech32.calculateChecksumBytesPolymod(checksumData);
-                    return Bech32.bytes2Long(calculateChecksumBytesPolymod) == 0L;
-                } catch (RuntimeException var3) {
-                    return false;
-                }
-            }
-        }
+        return EncodingUtils.isAddressValid(address);
     }
 
     @Override
