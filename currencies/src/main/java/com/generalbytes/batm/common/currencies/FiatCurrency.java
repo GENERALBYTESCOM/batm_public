@@ -87,7 +87,6 @@ public enum FiatCurrency {
     VND("Vietnamese dong"),
     XAF("Central African CFA franc"),
     ZAR("South African rand"),
-    AZN("Azerbaijani manat"),
 
     XAU("Gold"),
     ;
@@ -100,15 +99,6 @@ public enum FiatCurrency {
             tmp.add(fc.name());
         }
         codes = Collections.unmodifiableSet(tmp);
-    }
-
-    public static FiatCurrency getFiatCurrency(String code) {
-        for (FiatCurrency currency : FiatCurrency.values()) {
-            if (currency.name().equals(code)) {
-                return currency;
-            }
-        }
-        return null;
     }
 
     private final String currencyName;

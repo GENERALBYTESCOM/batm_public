@@ -17,6 +17,7 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.worldcoin.sources.cd;
 
+import com.generalbytes.batm.server.extensions.extra.worldcoin.sources.cd.*;
 import java.math.BigDecimal;
 
 public class CryptodiggersResponse {

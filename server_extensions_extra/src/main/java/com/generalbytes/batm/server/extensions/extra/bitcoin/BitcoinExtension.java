@@ -22,7 +22,6 @@ import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitfinex.BitfinexExchange;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitflyer.BitFlyerExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bittrex.BittrexExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbasepro.CoinbaseProExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coingi.CoingiExchange;
@@ -36,17 +35,12 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.coingecko.C
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.coinpaprika.CoinPaprikaRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.mrcoin.MrCoinRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitcoind.BATMBitcoindRPCWallet;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitcoind.BATMBitcoindRPCWalletWithUniqueAddresses;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitcore.BitcoreWallet;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.BitgoWallet;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.BitgoWalletWithUniqueAddresses;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.math.BigDecimal;
 import java.util.*;
-
-import static com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitflyer.BitFlyerExchange.BITFLYER_COM_BASE_URL;
-import static com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitflyer.BitFlyerExchange.BITFLYER_JP_BASE_URL;
 
 public class BitcoinExtension extends AbstractExtension{
     private IExtensionContext ctx;
@@ -115,17 +109,6 @@ public class BitcoinExtension extends AbstractExtension{
                 String preferredFiatCurrency = FiatCurrency.USD.getCode();
                 String apiSecret = paramTokenizer.nextToken();
                 return new DVChainExchange(apiSecret, preferredFiatCurrency);
-            } else if ("bitflyer".equalsIgnoreCase(prefix)) {
-                String preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase();
-                String key = paramTokenizer.nextToken();
-                String secret = paramTokenizer.nextToken();
-                return new BitFlyerExchange(preferredFiatCurrency, key, secret, BITFLYER_JP_BASE_URL);
-            } else if ("bitflyer.com".equalsIgnoreCase(prefix)) {
-                String preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase();
-                String key = paramTokenizer.nextToken();
-                String secret = paramTokenizer.nextToken();
-
-                return new BitFlyerExchange(preferredFiatCurrency, key, secret, BITFLYER_COM_BASE_URL);
             }
         }
         return null;
@@ -155,8 +138,7 @@ public class BitcoinExtension extends AbstractExtension{
         if (walletLogin !=null && !walletLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(walletLogin,":");
             String walletType = st.nextToken();
-            if ("bitcoind".equalsIgnoreCase(walletType)
-                || "bitcoindnoforward".equalsIgnoreCase(walletType)) {
+            if ("bitcoind".equalsIgnoreCase(walletType)) {
                 //"bitcoind:protocol:user:password:ip:port:accountname"
 
                 String protocol = st.nextToken();
@@ -170,9 +152,6 @@ public class BitcoinExtension extends AbstractExtension{
 
                 if (protocol != null && username != null && password != null && hostname != null && port != null) {
                     String rpcURL = protocol + "://" + username + ":" + password + "@" + hostname + ":" + port;
-                    if ("bitcoindnoforward".equalsIgnoreCase(walletType)) {
-                        return new BATMBitcoindRPCWalletWithUniqueAddresses(rpcURL, CryptoCurrency.BTC.getCode());
-                    }
                     return new BATMBitcoindRPCWallet(rpcURL, CryptoCurrency.BTC.getCode());
                 }
             }else if ("bitcore".equalsIgnoreCase(walletType)) { //bitcore:apiKey:proxyUrl
@@ -181,8 +160,7 @@ public class BitcoinExtension extends AbstractExtension{
                 // instead use \n and then remove the leading :
                 String proxyUrl = st.nextToken("\n").replaceFirst(":", "");
                 return new BitcoreWallet(apiKey, proxyUrl);
-            } else if ("bitgo".equalsIgnoreCase(walletType)
-                || "bitgonoforward".equalsIgnoreCase(walletType)) { //bitgo:host:port:token:wallet_address:wallet_passphrase
+            }else if ("bitgo".equalsIgnoreCase(walletType)) { //bitgo:host:port:token:wallet_address:wallet_passphrase
                 String first = st.nextToken();
                 String protocol = "";
                 String host = "";
@@ -207,9 +185,6 @@ public class BitcoinExtension extends AbstractExtension{
                 }
                 String walletAddress = st.nextToken();
                 String walletPassphrase = st.nextToken();
-                if ("bitgonoforward".equalsIgnoreCase(walletType)) {
-                    return new BitgoWalletWithUniqueAddresses(fullHost, port, token, walletAddress, walletPassphrase);
-                }
                 return new BitgoWallet(fullHost, port, token, walletAddress, walletPassphrase);
             }
         }
@@ -299,18 +274,6 @@ public class BitcoinExtension extends AbstractExtension{
             } else if ("coinpaprika".equalsIgnoreCase(rsType)) {
                 String preferredFiatCurrency = st.hasMoreTokens() ? st.nextToken().toUpperCase() : FiatCurrency.USD.getCode();
                 return new CoinPaprikaRateSource(preferredFiatCurrency);
-            }else if ("bitflyer".equalsIgnoreCase(rsType)) {
-                String preferredFiatCurrency = FiatCurrency.JPY.getCode();
-                if (st.hasMoreTokens()) {
-                    preferredFiatCurrency = st.nextToken().toUpperCase();
-                }
-                return new BitFlyerExchange(preferredFiatCurrency, BITFLYER_JP_BASE_URL);
-            }else if ("bitflyer.com".equalsIgnoreCase(rsType)) {
-                String preferredFiatCurrency = FiatCurrency.USD.getCode();
-                if (st.hasMoreTokens()) {
-                    preferredFiatCurrency = st.nextToken().toUpperCase();
-                }
-                return new BitFlyerExchange(preferredFiatCurrency, BITFLYER_COM_BASE_URL);
             }
         }
         return null;

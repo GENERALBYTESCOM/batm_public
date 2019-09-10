@@ -42,15 +42,12 @@ class GBGradlePlugin implements Plugin<Project> {
         ].each {
             project.strictDependencies.nontransitive(it)
         }
-        project.strictDependencies.conflictFail(false)
         logger.debug("Applied plugin 'com.generalbytes.gradle.dependency.strict'.")
     }
 
     private void applyPluginDependencySubstitution(Project project) {
         final PluginManager pluginMgr = project.pluginManager
         pluginMgr.apply(DependencySubstitutionPlugin.class)
-        project.dependencySubstitutions.setMissingSubstitutionAction(MissingSubstitutionAction.FAIL)
-        project.dependencySubstitutions.setShared(true)
         logger.debug("Applied plugin 'com.generalbytes.gradle.dependency.substitution'.")
     }
 

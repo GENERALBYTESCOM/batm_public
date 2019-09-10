@@ -20,16 +20,8 @@ package com.generalbytes.batm.server.extensions;
 import java.util.Map;
 
 public interface ITransactionListener {
-
     /**
-     * Called before the person inserts cash, or sell or withdraw screen is entered but after the moment when identity is established and limits are calculated.
-     * @param preparation
-     * @return when returned false, error message is displayed to user or withdrawal reason
-     */
-    boolean isTransactionPreparationApproved(ITransactionPreparation preparation);
-
-    /**
-     * Callback method that is called by server before transaction is executed - however the cash is already inserted in machine in case of buy transaction.
+     * Callback method that is called by server before transaction is executed.
      * If your method returns false than transaction will not take place and will fail with error ERROR_NOT_APPROVED.
      * Try to return from this method in less then 10 seconds.
      * @param transactionRequest

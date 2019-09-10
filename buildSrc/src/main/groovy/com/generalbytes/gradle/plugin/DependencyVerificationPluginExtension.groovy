@@ -23,10 +23,7 @@ class DependencyVerificationPluginExtension {
     DependencyVerificationPluginExtension(Project project) {
         configurations = project.objects.setProperty(Object)
         assertions = project.objects.setProperty(ChecksumAssertion)
-
         failOnChecksumError = project.objects.property(Boolean)
-        failOnChecksumError.set(false)
-
         printUnusedAssertions = project.objects.property(Boolean)
         printUnusedAssertions.set(true)
     }

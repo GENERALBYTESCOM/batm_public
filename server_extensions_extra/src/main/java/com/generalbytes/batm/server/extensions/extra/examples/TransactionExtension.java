@@ -45,11 +45,6 @@ public class TransactionExtension extends AbstractExtension implements ITransact
     }
 
     @Override
-    public boolean isTransactionPreparationApproved(ITransactionPreparation preparation) {
-        return true; //approve all transactions
-    }
-
-    @Override
     public Map<String, String> onTransactionCreated(ITransactionDetails transactionDetails) {
         boolean incrementTicketId = false;
         if (transactionDetails.getType() == ITransactionDetails.TYPE_BUY_CRYPTO

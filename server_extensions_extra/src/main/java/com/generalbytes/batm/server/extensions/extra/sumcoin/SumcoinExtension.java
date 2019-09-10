@@ -29,7 +29,6 @@ import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.sumcoin.sumcored.SumcoinRPCWallet;
 import com.generalbytes.batm.server.extensions.extra.sumcoin.sources.sumcoinindex.SumcoinindexRateSource;
-import com.generalbytes.batm.server.extensions.extra.sumcoin.sumcored.SumcoinUniqueAddressRPCWallet;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -50,8 +49,7 @@ public class SumcoinExtension extends AbstractExtension {
             StringTokenizer st = new StringTokenizer(walletLogin,":");
             String walletType = st.nextToken();
 
-            if ("sumcoind".equalsIgnoreCase(walletType)
-                || "sumcoindnoforward".equalsIgnoreCase(walletType)) {
+            if ("sumcoind".equalsIgnoreCase(walletType)) {
                 //"sumcoind:protocol:user:password:ip:port:accountname"
 
                 String protocol = st.nextToken();
@@ -67,10 +65,7 @@ public class SumcoinExtension extends AbstractExtension {
 
                 if (protocol != null && username != null && password != null && hostname !=null && port != null && accountName != null) {
                     String rpcURL = protocol +"://" + username +":" + password + "@" + hostname +":" + port;
-                    if ("sumcoindnoforward".equalsIgnoreCase(walletType)) {
-                        return new SumcoinUniqueAddressRPCWallet(rpcURL, accountName);
-                    }
-                    return new SumcoinRPCWallet(rpcURL, accountName);
+                    return new SumcoinRPCWallet(rpcURL,accountName);
                 }
             }
             if ("sumdemo".equalsIgnoreCase(walletType)) {

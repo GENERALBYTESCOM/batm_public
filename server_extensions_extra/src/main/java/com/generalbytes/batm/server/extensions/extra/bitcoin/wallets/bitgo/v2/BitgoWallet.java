@@ -1,27 +1,10 @@
-/*************************************************************************************
- * Copyright (C) 2014-2019 GENERAL BYTES s.r.o. All rights reserved.
- *
- * This software may be distributed and modified under the terms of the GNU
- * General Public License version 2 (GPL2) as published by the Free Software
- * Foundation and appearing in the file GPL2.TXT included in the packaging of
- * this file. Please note that GPL2 Section 2[b] requires that all works based
- * on this software must also be made publicly available under the terms of
- * the GPL2 ("Copyleft").
- *
- * Contact information
- * -------------------
- *
- * GENERAL BYTES s.r.o.
- * Web      :  http://www.generalbytes.com
- *
- ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2;
 
-import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.Converters;
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.BitGoCoinRequest;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.ErrorResponseException;
 import com.generalbytes.batm.server.extensions.extra.worldcoin.sources.cd.CompatSSLSocketFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +13,7 @@ import si.mazi.rescu.HttpStatusIOException;
 import si.mazi.rescu.RestProxyFactory;
 
 import javax.net.ssl.SSLContext;
-import javax.ws.rs.HeaderParam;
+import java.lang.reflect.UndeclaredThrowableException;
 import java.math.BigDecimal;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -42,21 +25,24 @@ public class BitgoWallet implements IWallet {
 
     private static final Logger log = LoggerFactory.getLogger(BitgoWallet.class);
 
-    protected final IBitgoAPI api;
-    protected String walletId;
-    protected String walletPassphrase;
-    protected String url;
-    protected static final Integer readTimeout = 90 * 1000; //90 seconds
+    private final IBitgoAPI api;
+
+    private String apiKey;
+    private String accessToken;
+    private String walletId;
+    private String walletPassphrase;
+    private String url;
+    private static final Integer readTimeout = 90 * 1000; //90 seconds
 
     public BitgoWallet(String host, String port, String token, String walletId, String walletPassphrase) {
+        this.apiKey = token;
+        this.accessToken = "Bearer " + token;
         this.walletId = walletId;
         this.walletPassphrase = walletPassphrase;
         this.url = createUrl(host, port);
 
         ClientConfig config = new ClientConfig();
         config.setHttpReadTimeout(readTimeout);
-
-        config.addDefaultParam(HeaderParam.class, "Authorization", "Bearer " + token);
 
         try {
             SSLContext sslcontext = SSLContext.getInstance("TLS");
@@ -92,19 +78,17 @@ public class BitgoWallet implements IWallet {
         String status = null;
         final BitGoCoinRequest request = new BitGoCoinRequest(destinationAddress, toSatoshis(amount, cryptoCurrency), walletPassphrase);
         try {
-            Map<String, String> result = api.sendCoins(cryptoCurrency.toLowerCase(), this.walletId, request);
+            Map<String, String> result = api.sendCoins(accessToken, "application/json", cryptoCurrency.toLowerCase(), this.walletId, request);
             if (result == null) {
                 log.debug("send coins result is null");
                 return null;
             }
 
             status = result.get("status");
-        } catch (HttpStatusIOException hse) {
+        } catch (UndeclaredThrowableException ute) {
+            HttpStatusIOException hse = (HttpStatusIOException)ute.getUndeclaredThrowable();
             status = "ERROR";
             log.debug("send coins error message: {}", hse.getHttpBody());
-        } catch (ErrorResponseException e) {
-            status = "ERROR";
-            log.debug("send coins error message: {}", e.getMessage());
         } catch (Exception e) {
             log.error("Error", e);
         }
@@ -147,7 +131,7 @@ public class BitgoWallet implements IWallet {
         }
         cryptoCurrency = cryptoCurrency.toLowerCase();
         try {
-            final Map<String, Object> response = api.getWalletById(cryptoCurrency, walletId);
+            final Map<String, Object> response = api.getWalletById(accessToken, cryptoCurrency, walletId);
             if(response == null || response.isEmpty()) {
                 return null;
             }
@@ -163,11 +147,7 @@ public class BitgoWallet implements IWallet {
                 return null;
             }
             return (String)addressObj;
-        } catch (HttpStatusIOException hse) {
-            log.debug("getCryptoAddress error: {}", hse.getHttpBody());
-        } catch (ErrorResponseException e) {
-            log.debug("getCryptoAddress error: {}", e.getMessage());
-        } catch (Exception e) {
+        }catch (Exception e) {
             log.error("", e);
         }
         return null;
@@ -204,7 +184,7 @@ public class BitgoWallet implements IWallet {
         }
         cryptoCurrency = cryptoCurrency.toLowerCase();
         try {
-            final Map<String, Object> response = api.getWalletById(cryptoCurrency, walletId);
+            final Map<String, Object> response = api.getWalletById(accessToken, cryptoCurrency, walletId);
             if(response == null || response.isEmpty()) {
                 return null;
             }
@@ -229,12 +209,8 @@ public class BitgoWallet implements IWallet {
                 return BigDecimal.valueOf(balance.intValue()).divide(Converters.TBCH);
             }
             return BigDecimal.valueOf(balance.intValue()).divide(new BigDecimal(1));
-        } catch (HttpStatusIOException hse) {
-            log.debug("getCryptoBalance error: {}", hse.getHttpBody());
-        } catch (ErrorResponseException e) {
-            log.debug("getCryptoBalance error: {}", e.getMessage());
-        } catch (Exception e) {
-            log.error("getCryptoBalance error", e);
+        }catch (Exception e) {
+            log.error("", e);
         }
         return null;
     }

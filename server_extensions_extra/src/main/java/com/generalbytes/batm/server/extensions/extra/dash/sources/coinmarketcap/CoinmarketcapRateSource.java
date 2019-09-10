@@ -31,6 +31,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+/**
+ * Created by kkyovsky on 11/29/17.
+ *
+ * Modified by sidhujag on 6/3/2018
+ */
 
 public class CoinmarketcapRateSource implements IRateSource {
     private static final Logger log = LoggerFactory.getLogger(CoinmarketcapRateSource.class);
@@ -83,12 +88,10 @@ public class CoinmarketcapRateSource implements IRateSource {
         result.add(CryptoCurrency.LTC.getCode());
         result.add(CryptoCurrency.MEC.getCode());
         result.add(CryptoCurrency.MKR.getCode());
-        result.add(CryptoCurrency.MUE.getCode());
         result.add(CryptoCurrency.PAC.getCode());
         result.add(CryptoCurrency.POT.getCode());
         result.add(CryptoCurrency.REP.getCode());
         result.add(CryptoCurrency.SYS.getCode());
-        result.add(CryptoCurrency.USDS.getCode());
         result.add(CryptoCurrency.USDT.getCode());
         result.add(CryptoCurrency.XMR.getCode());
         result.add(CryptoCurrency.XZC.getCode());

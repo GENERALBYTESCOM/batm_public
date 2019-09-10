@@ -18,6 +18,8 @@
  */
 package com.generalbytes.batm.server.extensions.extra.nuls;
 
+import com.generalbytes.batm.server.coinutil.AddressFormatException;
+import com.generalbytes.batm.server.coinutil.Base58;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 
 /**

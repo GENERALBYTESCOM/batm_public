@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.IWallet;
+
 import org.bouncycastle.asn1.ASN1Integer;
 import org.bouncycastle.asn1.DERSequenceGenerator;
 import org.bouncycastle.crypto.CipherParameters;
@@ -39,23 +40,19 @@ import org.bouncycastle.math.ec.FixedPointCombMultiplier;
 import org.bouncycastle.util.encoders.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import si.mazi.rescu.ClientConfig;
-import si.mazi.rescu.HttpStatusIOException;
+
 import si.mazi.rescu.RestProxyFactory;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
-import javax.ws.rs.QueryParam;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.Security;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.IBlockIO.PRIORITY_HIGH;
 import static com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.IBlockIO.PRIORITY_LOW;
@@ -65,15 +62,17 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class BlockIOWalletWithClientSideSigning implements IWallet {
     private static final Logger log = LoggerFactory.getLogger("batm.master.extensions.BlockIOWallet2");
     private ObjectMapper jsonObjectMapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
+    private String apiKey;
     private String pin;
     private String priority;
 
-    protected IBlockIO api;
+    private IBlockIO api;
 
     static {
         Security.addProvider(new BouncyCastleProvider());
     }
     public BlockIOWalletWithClientSideSigning(String apiKey, String pin, String priority) {
+        this.apiKey = apiKey;
         this.pin = pin;
         if (priority == null) {
             this.priority = PRIORITY_LOW;
@@ -86,10 +85,7 @@ public class BlockIOWalletWithClientSideSigning implements IWallet {
         } else {
             this.priority = PRIORITY_LOW;
         }
-
-        ClientConfig config = new ClientConfig();
-        config.addDefaultParam(QueryParam.class, "api_key", apiKey);
-        api = RestProxyFactory.createProxy(IBlockIO.class, "https://block.io", config);
+        api = RestProxyFactory.createProxy(IBlockIO.class, "https://block.io");
     }
 
     @Override
@@ -112,14 +108,12 @@ public class BlockIOWalletWithClientSideSigning implements IWallet {
             return null;
         }
         try {
-            BlockIOResponseAddresses response = api.getAddresses();
+            BlockIOResponseAddresses response = api.getAddresses(apiKey);
             if (response != null && response.getData() != null && response.getData().getAddresses() != null && response.getData().getAddresses().length > 0) {
                 return response.getData().getAddresses()[0].getAddress();
             }
-        } catch (HttpStatusIOException e) {
-            log.error("HTTP error in getCryptoAddress: {}", e.getHttpBody());
-        } catch (Exception e) {
-            log.error("Error", e);
+        } catch (Throwable t) {
+            log.error("Error", t);
         }
 
         return null;
@@ -132,14 +126,12 @@ public class BlockIOWalletWithClientSideSigning implements IWallet {
             return null;
         }
         try {
-            BlockIOResponseBalance response = api.getBalance();
+            BlockIOResponseBalance response = api.getBalance(apiKey);
             if (response != null && response.getData() != null && response.getData().getAvailable_balance() != null) {
                 return new BigDecimal(response.getData().getAvailable_balance());
             }
-        } catch (HttpStatusIOException e) {
-            log.error("HTTP error in getCryptoBalance: {}", e.getHttpBody());
-        } catch (Exception e) {
-            log.error("Error", e);
+        } catch (Throwable t) {
+            log.error("Error", t);
         }
 
         return null;
@@ -151,7 +143,7 @@ public class BlockIOWalletWithClientSideSigning implements IWallet {
             return null;
         }
         try {
-            BlockIOResponseWithdrawalToBeSigned response = api.withdrawToBeSigned(amount.toPlainString(), destinationAddress, priority);
+            BlockIOResponseWithdrawalToBeSigned response = api.withdrawToBeSigned(apiKey, amount.toPlainString(), destinationAddress, priority);
             if (response != null && response.getStatus() != null && "success".equalsIgnoreCase(response.getStatus()) && response.getData() != null) {
                 log.debug("Block.io reference_id = " + response.getData().getReference_id());
                 BlockIOInput[] inputs = response.getData().getInputs();
@@ -173,17 +165,15 @@ public class BlockIOWalletWithClientSideSigning implements IWallet {
                         signer.signed_data = toHex(transactionSignature);
                     }
                 }
-                BlockIOResponseWithdrawal resp = api.signAndFinalizeWithdrawal(jsonObjectMapper.writeValueAsString(response.getData()));
+                BlockIOResponseWithdrawal resp = api.signAndFinalizeWithdrawal(apiKey, jsonObjectMapper.writeValueAsString(response.getData()));
                 if (resp != null && resp.getStatus() != null && "success".equalsIgnoreCase(resp.getStatus()) && resp.getData() != null) {
                     return resp.getData().getTxid();
                 }
                 return null;
 
             }
-        } catch (HttpStatusIOException e) {
-            log.error("HTTP error in sendCoins: {}", e.getHttpBody());
-        } catch (Exception e) {
-            log.error("Error", e);
+        } catch (Throwable t) {
+            log.error("Error", t);
         }
 
         return null;

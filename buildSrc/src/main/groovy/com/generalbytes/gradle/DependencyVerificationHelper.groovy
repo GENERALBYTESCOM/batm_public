@@ -29,6 +29,7 @@ class DependencyVerificationHelper {
         Collections.<Gradle, ConcurrentMap<String, String>> synchronizedMap(new WeakHashMap<>())
 
     static ConcurrentMap<String, String> getCache(Gradle gradle) {
+        CACHES_BY_GRADLE_INVOCATION.entrySet()
         CACHES_BY_GRADLE_INVOCATION.computeIfAbsent(gradle, { new ConcurrentHashMap<>() })
     }
 
@@ -36,16 +37,16 @@ class DependencyVerificationHelper {
         private final ConcurrentMap<String, String> checksumCache
         private static final boolean PARALLEL = true
 
-        private final Map<SimpleModuleVersionIdentifier, File> jobList
+        private final Map<ModuleComponentIdentifier, File> jobList
 
-        ChecksumComputationTask(SimpleModuleVersionIdentifier module,
+        ChecksumComputationTask(ModuleComponentIdentifier module,
                                 File file,
                                 ConcurrentMap<String, String> checksumCache) {
             this.checksumCache = checksumCache
             jobList = [(module): file]
         }
 
-        ChecksumComputationTask(Map<SimpleModuleVersionIdentifier, File> jobList,
+        ChecksumComputationTask(Map<ModuleComponentIdentifier, File> jobList,
                                 ConcurrentMap<String, String> checksumCache) {
             if (jobList == null) {
                 throw new IllegalArgumentException("Job list can't be null.")
@@ -58,7 +59,7 @@ class DependencyVerificationHelper {
         protected Set<ChecksumAssertion> compute() {
             if (PARALLEL) {
                 if (jobList.size() == 1) {
-                    final Map.Entry<SimpleModuleVersionIdentifier, File> entry = jobList.entrySet().iterator().next()
+                    final Map.Entry<ModuleComponentIdentifier, File> entry = jobList.entrySet().iterator().next()
                     return [computeChecksum(entry.key, entry.value, checksumCache)] as Set
                 } else {
                     return invokeAll(createSubtasks())
@@ -68,7 +69,7 @@ class DependencyVerificationHelper {
                 }
             } else {
                 final Set<ChecksumAssertion> ret = new HashSet<>()
-                for (Map.Entry<SimpleModuleVersionIdentifier, File> entry : jobList.entrySet()) {
+                for (Map.Entry<ModuleComponentIdentifier, File> entry : jobList.entrySet()) {
                     ret.add(computeChecksum(entry.key, entry.value, checksumCache))
                 }
                 return ret
@@ -77,15 +78,21 @@ class DependencyVerificationHelper {
 
         Collection<ChecksumComputationTask> createSubtasks() {
             final Collection<ChecksumComputationTask> ret = new HashSet<>()
-            for (Map.Entry<SimpleModuleVersionIdentifier, File> job : jobList.entrySet()) {
+            for (Map.Entry<ModuleComponentIdentifier, File> job : jobList.entrySet()) {
                 ret.add(new ChecksumComputationTask(job.key, job.value, checksumCache))
             }
             return ret
         }
 
-        static ChecksumAssertion computeChecksum(SimpleModuleVersionIdentifier moduleId,
+        static ChecksumAssertion computeChecksum(ModuleComponentIdentifier module,
                                                  File file,
                                                  Map<String, String> checksumCache) {
+            /**
+             * toString() serialization and following deserialization is inefficient, but no Gradle-internal objects
+             * (eg. MavenUniqueSnapshotComponentIdentifier) have to be used
+             */
+            final SimpleModuleVersionIdentifier moduleId =
+                SimpleModuleVersionIdentifier.createWithClassifierHeuristics(module.toString(), file.name)
 
             final String sha256 = (checksumCache != null
                 ? checksumCache.computeIfAbsent(file.canonicalPath, { calculateSha256(file) })
@@ -119,20 +126,11 @@ class DependencyVerificationHelper {
 
     static Set<ChecksumAssertion> assertionsForConfiguration(Project project,
                                                              Configuration configuration) {
-        final Map<SimpleModuleVersionIdentifier, File> jobList = new HashMap()
+        final Map<ModuleComponentIdentifier, File> jobList = new HashMap()
         getIncomingArtifactCollection(project, configuration).each { ResolvedArtifactResult artifact ->
             final ComponentIdentifier identifier = artifact.id.componentIdentifier
             if (identifier instanceof ModuleComponentIdentifier) {
-                /**
-                 * toString() serialization and following deserialization is inefficient, but no Gradle-internal objects
-                 * (eg. MavenUniqueSnapshotComponentIdentifier) have to be used
-                 */
-                final SimpleModuleVersionIdentifier jobIdentifier =
-                    SimpleModuleVersionIdentifier.createWithClassifierHeuristics(
-                        identifier.toString(),
-                        artifact.file.name
-                    )
-                jobList.put(jobIdentifier, artifact.file)
+                jobList.put(identifier, artifact.file)
             } else if (identifier instanceof ProjectComponentIdentifier) {
                 project.logger.info("Skipped processing assertion for project-local dependency $identifier.")
             } else if (identifier instanceof ComponentArtifactIdentifier) {
@@ -154,7 +152,10 @@ class DependencyVerificationHelper {
     static ArtifactCollection getIncomingArtifactCollection(Project project, Configuration configuration) {
         if (Util.isAndroidProject(project)) {
             configuration.incoming.artifactView { config ->
-                config.attributes.attribute(Attribute.of("artifactType", String.class), "jar")
+                config.attributes { container ->
+//                    container.attribute(Attribute.of("artifactType", String.class), "android-classes")
+                    container.attribute(Attribute.of("artifactType", String.class), "jar")
+                }
             }.artifacts
         } else {
             configuration.incoming.artifacts

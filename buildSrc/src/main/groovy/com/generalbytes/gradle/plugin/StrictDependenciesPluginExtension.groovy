@@ -15,11 +15,11 @@ class StrictDependenciesPluginExtension {
         nontransitiveConfigurations.add(cfg)
     }
 
-    void skipConfiguration(Configuration cfg) {
+    void skip(Configuration cfg) {
         skipConfigurations.add(cfg.name)
     }
 
-    void skipConfiguration(String cfgName) {
+    void skip(String cfgName) {
         skipConfigurations.add(cfgName)
     }
 }
