@@ -17,7 +17,6 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.worldcoin.sources.cd;
 
-import com.generalbytes.batm.server.extensions.extra.worldcoin.sources.cd.*;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;

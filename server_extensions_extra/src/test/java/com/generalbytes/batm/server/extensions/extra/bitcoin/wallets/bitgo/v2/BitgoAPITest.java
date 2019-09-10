@@ -11,11 +11,11 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import si.mazi.rescu.ClientConfig;
-import si.mazi.rescu.HttpStatusIOException;
 import si.mazi.rescu.RestProxyFactory;
 
 import javax.net.ssl.SSLContext;
-import java.lang.reflect.UndeclaredThrowableException;
+import javax.ws.rs.HeaderParam;
+import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -55,6 +55,7 @@ public class BitgoAPITest {
 
         ClientConfig config = new ClientConfig();
         config.setHttpReadTimeout(readTimeout);
+        config.addDefaultParam(HeaderParam.class, "Authorization", "Bearer v2x8d5e9e46379dc328b2039a400a12b04ea986689b38107fd84cd339bc89e3fb21");
 
         try {
             SSLContext sslcontext = SSLContext.getInstance("TLS");
@@ -72,10 +73,9 @@ public class BitgoAPITest {
 
     @Test
     @Ignore
-    public void getWalletsTest() {
-        final String accessToken = "Bearer v2x8d5e9e46379dc328b2039a400a12b04ea986689b38107fd84cd339bc89e3fb21";
+    public void getWalletsTest() throws IOException {
 
-        final Map<String, Object> result = api.getWallets(accessToken, "tbtc");
+        final Map<String, Object> result = api.getWallets("tbtc");
         Assert.assertNotNull(result);
 
         final Object coin = result.get("coin");
@@ -124,9 +124,9 @@ public class BitgoAPITest {
 
     @Test
     @Ignore
-    public void getBalancesTest() {
+    public void getBalancesTest() throws IOException {
         final String accessToken = "Bearer v2x8d5e9e46379dc328b2039a400a12b04ea986689b38107fd84cd339bc89e3fb21";
-        final Map<String, Object> result = api.getTotalBalances(accessToken, "tbtc");
+        final Map<String, Object> result = api.getTotalBalances("tbtc");
         Assert.assertNotNull(result);
         Assert.assertTrue(result instanceof LinkedHashMap);
 
@@ -156,10 +156,10 @@ public class BitgoAPITest {
 
     @Test
     @Ignore
-    public void getWalletByLabelTest() {
+    public void getWalletByLabelTest() throws IOException {
         final String accessToken = "Bearer v2x8d5e9e46379dc328b2039a400a12b04ea986689b38107fd84cd339bc89e3fb21";
         final String walletLabel = "TBTCWallet";
-        final Map<String, Object> result = api.getWallets(accessToken, "tbtc");
+        final Map<String, Object> result = api.getWallets("tbtc");
         Assert.assertNotNull(result);
         List wallets = (List) result.get("wallets");
         Assert.assertNotNull(wallets);
@@ -180,10 +180,10 @@ public class BitgoAPITest {
 
     @Ignore
     @Test
-    public void getWalletTest() {
+    public void getWalletTest() throws IOException {
         final String accessToken = "Bearer v2x8d5e9e46379dc328b2039a400a12b04ea986689b38107fd84cd339bc89e3fb21";
         final String walletId = "5b20e3a9266bbe80095757489d84a6bb";
-        final Map<String, Object> result = api.getWalletById(accessToken, "tbtc", walletId);
+        final Map<String, Object> result = api.getWalletById("tbtc", walletId);
         Assert.assertNotNull(result);
         Assert.assertTrue(result instanceof LinkedHashMap);
 
@@ -200,11 +200,11 @@ public class BitgoAPITest {
 
     @Ignore
     @Test
-    public void getWalletByAIdTest() {
+    public void getWalletByAIdTest() throws IOException {
         final String accessToken = "Bearer v2x8d5e9e46379dc328b2039a400a12b04ea986689b38107fd84cd339bc89e3fb21";
         String address = "5b20e3a9266bbe80095757489d84a6bb";
 
-        final Map<String, Object> result = api.getWalletById(accessToken, "tbtc", address);
+        final Map<String, Object> result = api.getWalletById("tbtc", address);
         Assert.assertNotNull(result);
         Assert.assertTrue(result instanceof LinkedHashMap);
 
@@ -253,7 +253,7 @@ public class BitgoAPITest {
             final BitGoCoinRequest request = new BitGoCoinRequest(address, amount, walletPassphrase);
             String accessToken = "Bearer v2x8d5e9e46379dc328b2039a400a12b04ea986689b38107fd84cd339bc89e3fb21";
             String contentType = "application/json";
-            Map<String, String> result = localapi.sendCoins(accessToken, contentType, coin, id, request);
+            Map<String, String> result = localapi.sendCoins(coin, id, request);
             Assert.assertNotNull(result);
 
             String status = result.get("status");

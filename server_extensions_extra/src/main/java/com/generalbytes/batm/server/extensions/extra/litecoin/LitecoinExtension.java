@@ -22,6 +22,7 @@ import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.litecoin.wallets.litecoind.LitecoindRPCWallet;
+import com.generalbytes.batm.server.extensions.extra.litecoin.wallets.litecoind.LitecoindUniqueAddressRPCWallet;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -38,7 +39,8 @@ public class LitecoinExtension extends AbstractExtension{
             StringTokenizer st = new StringTokenizer(walletLogin,":");
             String walletType = st.nextToken();
 
-            if ("litecoind".equalsIgnoreCase(walletType)) {
+            if ("litecoind".equalsIgnoreCase(walletType)
+                || "litecoindnoforward".equalsIgnoreCase(walletType)) {
                 //"litecoind:protocol:user:password:ip:port:accountname"
 
                 String protocol = st.nextToken();
@@ -54,7 +56,10 @@ public class LitecoinExtension extends AbstractExtension{
 
                 if (protocol != null && username != null && password != null && hostname !=null && port != null && accountName != null) {
                     String rpcURL = protocol +"://" + username +":" + password + "@" + hostname +":" + port;
-                    return new LitecoindRPCWallet(rpcURL,accountName);
+                    if ("litecoindnoforward".equalsIgnoreCase(walletType)) {
+                        return new LitecoindUniqueAddressRPCWallet(rpcURL, accountName);
+                    }
+                    return new LitecoindRPCWallet(rpcURL, accountName);
                 }
             }
         }
