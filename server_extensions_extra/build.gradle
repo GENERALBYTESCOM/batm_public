@@ -71,6 +71,22 @@ dependencies {
     githubCompile(group: 'com.github.GENERALBYTESCOM.bitrafael_public', name: 'bitrafael-client', version: bitrafaelVersion) {
         exclude group: 'org.slf4j', module: 'slf4j-simple'
     }
+	compile (group: 'org.bitcoinj', name:'bitcoinj-core', version: '0.14.7')
+	{
+		exclude group: 'com.google.guava', module: 'guava'
+	}
+	compile(group: 'io.reactivex.rxjava2', name: 'rxjava', version: '2.2.4')	
+	compile(group: 'com.kryptokrauts', name: 'aepp-sdk-java', version: '1.2.0'){
+		exclude group: 'com.fasterxml.jackson.core', module: 'jackson-annotations'
+		exclude group: 'com.fasterxml.jackson.core', module: 'jackson-databind'
+		exclude group: 'com.fasterxml.jackson.core', module: 'jackson-core'
+		exclude group: 'com.github.jnr', module: 'jnr-ffi'
+		exclude group: 'com.github.jnr', module: 'jffi'
+		exclude group: 'commons-codec', module: 'commons-codec'
+		exclude group: 'com.google.guava', module: 'guava'
+	}
+	compile(group: 'org.json', name: 'json', version: '20180130')
+
 
     testCompile(group: 'junit', name: 'junit', version: '4.10')
     testCompile(group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3')

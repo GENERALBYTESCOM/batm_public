@@ -35,6 +35,7 @@ import java.util.Set;
  */
 public enum CryptoCurrency {
 
+	AE("AE"),
     ANON("ANON"),
     AQUA("Aquachain"),
     ANT("Aragon Network Token"),

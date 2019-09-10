@@ -20,6 +20,7 @@ buildscript {
             }
             repositoryHandler.jcenter()
             repositoryHandler.maven { url 'https://jitpack.io' }
+			repositoryHandler.maven { url 'https://dl.bintray.com/tuweni/tuweni' }
         }
         batmDependencySubstitutionConfig = file('dependencySubstitutions.txt')
         batmDependencyChecksumsConfig = file('dependencyChecksums.txt')

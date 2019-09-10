@@ -295,6 +295,7 @@
         </ratesource>
         <ratesource prefix="coingecko" name ="CoinGecko.com" >
             <param name="fiatcurrency" />
+            <cryptocurrency>AE</cryptocurrency>
             <cryptocurrency>ANON</cryptocurrency>
             <cryptocurrency>ANT</cryptocurrency>
             <cryptocurrency>BAT</cryptocurrency>
@@ -428,6 +429,15 @@
         </wallet>
         <cryptologo cryptocurrency="BCH" file="bch.png"/>
         <cryptologo cryptocurrency="BCH" file="bch.svg"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.aeternity.AeternityExtension">
+    	<wallet prefix="aeternity" name="Aeternity - aeternity">
+            <param name="mnemonic" />
+            <cryptocurrency>AE</cryptocurrency>
+            <help>For AE SELL this is the only supported wallet</help>
+        </wallet>
+        <cryptologo cryptocurrency="AE" file="ae.png"/>
+        <cryptologo cryptocurrency="AE" file="ae.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.dogecoin.DogecoinExtension">
         <wallet prefix="blockio" name="Block.io Wallet">
