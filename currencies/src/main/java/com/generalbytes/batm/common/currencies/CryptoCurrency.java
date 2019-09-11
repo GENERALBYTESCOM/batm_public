@@ -60,6 +60,7 @@ public enum CryptoCurrency {
     FLASH("FLASH"),
     FTO("FuturoCoin"),
     GRS("Groestlcoin"),
+    HATCH("Hatch"),
     HBX("HBX"),
     KMD("Komodo"),
     LBTC("Lightning Network Bitcoin"),
