@@ -1498,4 +1498,20 @@
         <cryptologo cryptocurrency="XSG" file="xsg.png"/>
         <cryptologo cryptocurrency="XSG" file="xsg.svg"/>
     </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.dagcoin.DagCoinExtension" >
+        <wallet prefix="dagd" name="Dag Wallet">
+            <param name="walletId" />
+            <cryptocurrency>DAG</cryptocurrency>
+        </wallet>
+        <wallet prefix="dagdemo" name="DagCoin Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
+            <cryptocurrency>DAG</cryptocurrency>
+        </wallet>
+        <ratesource prefix="dagrate" name ="Dag Live Rate" >
+            <param name="fiatcurrency" />
+            <cryptocurrency>DAG</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="DAG" file="dag.svg"/>
+    </extension>
 </extensions>

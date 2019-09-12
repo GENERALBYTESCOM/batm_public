@@ -16,3 +16,6 @@ substitute module: 'org.bouncycastle:bcprov-jdk15on', versions: ['1.54', '1.60']
 substitute module: 'org.json:json', versions: ['20140107'], toVersion: '20180130'
 substitute module: 'org.knowm.xchange:xchange-core', versions: ['4.3.18', '4.3.19'], toVersion: '4.3.15'
 substitute module: 'org.slf4j:slf4j-api', versions: ['1.7.20', '1.8.0-beta2', '1.8.0-beta4'], toVersion: '1.7.25'
+substitute module: 'com.fasterxml.jackson.core:jackson-core', versions: ['2.9.1'], toVersion: '2.9.9'
+substitute module: 'com.fasterxml.jackson.core:jackson-annotations', versions: ['2.9.0', '2.9.1'], toVersion: '2.9.9'
+substitute module: 'com.fasterxml.jackson.core:jackson-databind', versions: ['2.8.5', '2.9.1'], toVersion: '2.9.9'
