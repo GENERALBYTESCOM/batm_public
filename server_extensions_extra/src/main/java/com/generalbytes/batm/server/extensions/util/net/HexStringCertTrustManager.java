@@ -18,6 +18,8 @@
 package com.generalbytes.batm.server.extensions.util.net;
 
 import org.bouncycastle.util.encoders.Hex;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
@@ -30,6 +32,8 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 
 public class HexStringCertTrustManager implements X509TrustManager {
+    private static final Logger log = LoggerFactory.getLogger(HexStringCertTrustManager.class);
+
     private final X509Certificate cert;
 
     public HexStringCertTrustManager(String certHexString) throws CertificateException {
@@ -70,7 +74,7 @@ public class HexStringCertTrustManager implements X509TrustManager {
         try {
             trustedCerts[0] = cert;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("", e);
         }
 
         return trustedCerts;

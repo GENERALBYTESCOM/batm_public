@@ -132,7 +132,7 @@ public class RPCBlockchainWatcher implements IBlockchainWatcher{
                     try {
                         Thread.sleep(1000); //wait one second - sometimes it takes few seconds for wallet to find its transaction
                     } catch (InterruptedException e1) {
-                        e1.printStackTrace();
+                        log.error("", e1);
                     }
                 }
                 if (transaction != null) {
