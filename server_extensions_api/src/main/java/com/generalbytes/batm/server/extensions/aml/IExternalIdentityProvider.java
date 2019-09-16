@@ -39,4 +39,13 @@ public interface IExternalIdentityProvider {
      * @return
      */
     IExternalIdentity findIdentityByEmail(String emailAddress);
+
+    /**
+     * Called by server to check that customer PIN(TPIN) is correct.
+     * Called only when customer is asked for PIN.
+     * @param pinEnteredByCustomer
+     * @return
+     */
+    boolean isPINCorrect(String identityExternalId,  String pinEnteredByCustomer);
+
 }

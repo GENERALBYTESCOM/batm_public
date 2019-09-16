@@ -4,7 +4,7 @@ import groovy.transform.EqualsAndHashCode
 import org.gradle.util.VersionNumber
 
 @EqualsAndHashCode
-final class VersionNumberEntry {
+final class VersionNumberEntry implements Comparable<VersionNumberEntry> {
     final VersionNumber number;
     final String string;
 
@@ -18,5 +18,15 @@ final class VersionNumberEntry {
 
     static VersionNumberEntry parse(String s) {
         return new VersionNumberEntry(s)
+    }
+
+    @Override
+    String toString() {
+        return "$number"
+    }
+
+    @Override
+    int compareTo(VersionNumberEntry o) {
+        return this.number.compareTo(o.number)
     }
 }

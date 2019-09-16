@@ -10,6 +10,16 @@
                 <!--<param name="accountname" /> removed in v0.18, parameter ignored -->
                 <cryptocurrency>BTC</cryptocurrency>
             </wallet>
+            <wallet prefix="bitcoindnoforward" name="Bitcoin Core - bitcoind (no forward)" >
+                <param name="protocol" />
+                <param name="user" />
+                <param name="password" />
+                <param name="host" />
+                <param name="port" />
+                <!--<param name="accountname" /> removed in v0.18, parameter ignored -->
+                <cryptocurrency>BTC</cryptocurrency>
+                <help>This variant of the wallet generates new addresses for each transaction and does not forward payments from temporary address</help>
+            </wallet>
             <wallet prefix="bitcore" name="BitCore Wallet">
                 <param name="apikey" />
                 <param name="proxyurl" />
@@ -27,6 +37,18 @@
                 <cryptocurrency>ETH</cryptocurrency><!--BitGo’s Ethereum wallets are only available to BitGo Enterprise customers-->
                 <help>Host should start with http:// or https://</help>
             </wallet>
+            <wallet prefix="bitgonoforward" name="BitGo Wallet (no forward)">
+                <param name="host" />
+                <param name="port" />
+                <param name="token" />
+                <param name="wallet_id" />
+                <param name="wallet_passphrase" />
+                <cryptocurrency>BCH</cryptocurrency>
+                <cryptocurrency>BTC</cryptocurrency>
+                <cryptocurrency>LTC</cryptocurrency>
+                <cryptocurrency>ETH</cryptocurrency><!--BitGo’s Ethereum wallets are only available to BitGo Enterprise customers-->
+                <help>This variant of the wallet generates new addresses for each transaction and does not forward payments from temporary address. Host should start with http:// or https://</help>
+            </wallet>
             <ratesource prefix="btcfix" name ="Fix Price" >
                 <param name="price" />
                 <cryptocurrency>BTC</cryptocurrency>
@@ -42,6 +64,8 @@
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>BCH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
+                <cryptocurrency>DASH</cryptocurrency>
+                <cryptocurrency>DAI</cryptocurrency>
             </ratesource>
             <ratesource prefix="bitfinex" name ="Bitfinex.com Exchange" >
                 <param name="fiatcurrency" />
@@ -73,11 +97,13 @@
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>DAI</cryptocurrency>
                 <cryptocurrency>EURS</cryptocurrency>
+                <cryptocurrency>USDS</cryptocurrency>
                 <cryptocurrency>MKR</cryptocurrency>
                 <cryptocurrency>BAT</cryptocurrency>
                 <cryptocurrency>REP</cryptocurrency>
                 <cryptocurrency>ANT</cryptocurrency>
                 <cryptocurrency>DASH</cryptocurrency>
+                <cryptocurrency>HATCH</cryptocurrency>
                 <cryptocurrency>XMR</cryptocurrency>
                 <cryptocurrency>$PAC</cryptocurrency>
                 <cryptocurrency>POT</cryptocurrency>
@@ -87,6 +113,7 @@
                 <cryptocurrency>BSD</cryptocurrency>
                 <cryptocurrency>BTDX</cryptocurrency>
                 <cryptocurrency>MEC</cryptocurrency>
+                <cryptocurrency>MUE</cryptocurrency>
                 <cryptocurrency>BURST</cryptocurrency>
                 <cryptocurrency>ECA</cryptocurrency>
                 <cryptocurrency>DOGE</cryptocurrency>
@@ -129,6 +156,7 @@
                 <cryptocurrency>FLASH</cryptocurrency>
                 <cryptocurrency>FTO</cryptocurrency>
                 <cryptocurrency>GRS</cryptocurrency>
+                <cryptocurrency>HATCH</cryptocurrency>
                 <cryptocurrency>LEO</cryptocurrency>
                 <cryptocurrency>LINDA</cryptocurrency>
                 <cryptocurrency>LSK</cryptocurrency>
@@ -136,6 +164,7 @@
                 <cryptocurrency>MAX</cryptocurrency>
                 <cryptocurrency>MEC</cryptocurrency>
                 <cryptocurrency>MKR</cryptocurrency>
+                <cryptocurrency>MUE</cryptocurrency>
                 <cryptocurrency>NBT</cryptocurrency>
                 <cryptocurrency>NLG</cryptocurrency>
                 <cryptocurrency>NXT</cryptocurrency>
@@ -154,6 +183,26 @@
                 <cryptocurrency>XZC</cryptocurrency>
                 <help>USD is default fiat currency.</help>
             </ratesource>
+            <ratesource prefix="bitflyer" name="BitFlyer.jp Rate Source" >
+                <param name="fiatcurrency" />
+                <cryptocurrency>BTC</cryptocurrency>
+            </ratesource>
+            <ratesource prefix="bitflyer.com" name="BitFlyer.com Rate Source" >
+                <param name="fiatcurrency" />
+                <cryptocurrency>BTC</cryptocurrency>
+            </ratesource>
+            <exchange prefix="bitflyer" name="BitFlyer.jp Exchange">
+                <param name="fiatcurrency" />
+                <param name="key" />
+                <param name="secret" />
+                <cryptocurrency>BTC</cryptocurrency>
+            </exchange>
+            <exchange prefix="bitflyer.com" name="BitFlyer.com Exchange">
+                <param name="fiatcurrency" />
+                <param name="key" />
+                <param name="secret" />
+                <cryptocurrency>BTC</cryptocurrency>
+            </exchange>
             <paymentprocessor prefix="bitcoinpay" name="BitcoinPay.com" >
                 <param name="apikey" />
                 <cryptocurrency>BTC</cryptocurrency>
@@ -271,6 +320,7 @@
             <cryptocurrency>FLASH</cryptocurrency>
             <cryptocurrency>FTO</cryptocurrency>
             <cryptocurrency>GRS</cryptocurrency>
+            <cryptocurrency>HATCH</cryptocurrency>
             <cryptocurrency>KMD</cryptocurrency>
             <cryptocurrency>LEO</cryptocurrency>
             <cryptocurrency>LINDA</cryptocurrency>
@@ -279,6 +329,7 @@
             <cryptocurrency>MAX</cryptocurrency>
             <cryptocurrency>MEC</cryptocurrency>
             <cryptocurrency>MKR</cryptocurrency>
+            <cryptocurrency>MUE</cryptocurrency>
             <cryptocurrency>NBT</cryptocurrency>
             <cryptocurrency>NLG</cryptocurrency>
             <cryptocurrency>NULS</cryptocurrency>
@@ -290,6 +341,7 @@
             <cryptocurrency>SYS</cryptocurrency>
             <cryptocurrency>TKN</cryptocurrency>
             <cryptocurrency>TRX</cryptocurrency>
+            <cryptocurrency>USDS</cryptocurrency>
             <cryptocurrency>USDT</cryptocurrency>
             <cryptocurrency>VIA</cryptocurrency>
             <cryptocurrency>VOLTZ</cryptocurrency>
@@ -325,6 +377,7 @@
             <cryptocurrency>FLASH</cryptocurrency>
             <cryptocurrency>FTO</cryptocurrency>
             <cryptocurrency>GRS</cryptocurrency>
+            <cryptocurrency>HATCH</cryptocurrency>
             <cryptocurrency>HBX</cryptocurrency>
             <cryptocurrency>KMD</cryptocurrency>
             <cryptocurrency>LEO</cryptocurrency>
@@ -334,6 +387,7 @@
             <cryptocurrency>MAX</cryptocurrency>
             <cryptocurrency>MEC</cryptocurrency>
             <cryptocurrency>MKR</cryptocurrency>
+            <cryptocurrency>MUE</cryptocurrency>
             <cryptocurrency>NLG</cryptocurrency>
             <cryptocurrency>NULS</cryptocurrency>
             <cryptocurrency>NXT</cryptocurrency>
@@ -344,6 +398,7 @@
             <cryptocurrency>SYS</cryptocurrency>
             <cryptocurrency>TBTC</cryptocurrency>
             <cryptocurrency>TKN</cryptocurrency>
+            <cryptocurrency>TRTL</cryptocurrency>
             <cryptocurrency>TRX</cryptocurrency>
             <cryptocurrency>USDT</cryptocurrency>
             <cryptocurrency>VIA</cryptocurrency>
@@ -365,6 +420,16 @@
             <cryptocurrency>BCH</cryptocurrency>
             <help>For BCH SELL this is the only supported wallet</help>
         </wallet>
+        <wallet prefix="bitcoincashdnoforward" name="BitcoinABC/BitcoinClassic Cash Core - bitcoind (no forward)" >
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>BCH</cryptocurrency>
+            <help>For BCH SELL this is the only supported wallet. This variant generates new addresses for each transaction and does not forward payments from temporary address</help>
+        </wallet>
         <cryptologo cryptocurrency="BCH" file="bch.png"/>
         <cryptologo cryptocurrency="BCH" file="bch.svg"/>
     </extension>
@@ -377,6 +442,15 @@
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <help>You can specify optional parameter priority to increase the network fee paid in the given transaction. Options are low, medium, high and will pay 1x, 2x, and 3x the minimum network fees possible on the network, respectively. If not specified, low will be used.</help>
+        </wallet>
+        <wallet prefix="blockionoforward" name="Block.io Wallet (no forward)">
+            <param name="apikey" />
+            <param name="pin" />
+            <param name="priority" />
+            <cryptocurrency>DOGE</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <help>This variant of the wallet generates new addresses for each transaction and does not forward payments from temporary address. You can specify optional parameter priority to increase the network fee paid in the given transaction. Options are low, medium, high and will pay 1x, 2x, and 3x the minimum network fees possible on the network, respectively. If not specified, low will be used.</help>
         </wallet>
         <wallet prefix="dogedemo" name="Dogecoin Demo Wallet">
             <param name="fiatCurrency" />
@@ -435,6 +509,16 @@
             <param name="accountname" />
             <cryptocurrency>LTC</cryptocurrency>
         </wallet>
+        <wallet prefix="litecoindnoforward" name="Litecoind (no forward)">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>LTC</cryptocurrency>
+            <help>This variant generates new addresses for each transaction and does not forward payments from temporary address</help>
+        </wallet>
         <ratesource prefix="ltcfix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>LTC</cryptocurrency>
@@ -449,6 +533,14 @@
             <param name="host" />
             <param name="port" />
             <param name="password" />
+            <cryptocurrency>LBTC</cryptocurrency>
+        </wallet>
+        <wallet prefix="lnd" name="lnd">
+            <param name="host" />
+            <param name="port" />
+            <param name="macaroon" />
+            <param name="cert" />
+            <help>macaroon and cert are base64 encoded files admin.macaroon and tls.cert</help><!--  Configuration can be obtained for example with this command: echo 127.0.0.1:8080:`xxd -ps -u -c10000 ~/.lnd/data/chain/bitcoin/mainnet/admin.macaroon`:`xxd -ps -u -c10000 ~/.lnd/tls.cert` -->
             <cryptocurrency>LBTC</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="LBTC" file="lbtc.png"/>
@@ -707,6 +799,24 @@
         </ratesource>
         <cryptologo cryptocurrency="GRS" file="groestl.png"/>
     </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.hatch.HatchExtension" >
+        <wallet prefix="hatchd" name="Hatch">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>HATCH</cryptocurrency>
+        </wallet>
+         <wallet prefix="hatchdemo" name="Hatch Demo Wallet">
+             <param name="fiatCurrency" />
+             <param name="walletAddress" />
+             <cryptocurrency>HATCH</cryptocurrency>
+         </wallet>
+        <cryptologo cryptocurrency="HATCH" file="hatch.png"/>
+        <cryptologo cryptocurrency="HATCH" file="hatch.svg"/>
+    </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.smartcash.SmartcashExtension" >
         <wallet prefix="smartcashd" name="Smartcashd">
             <param name="protocol" />
@@ -848,6 +958,24 @@
         <cryptologo cryptocurrency="$PAC" file="pac.png"/>
         <cryptologo cryptocurrency="$PAC" file="pac.svg"/>
     </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.monetaryunit.MonetaryUnitExtension" >
+        <wallet prefix="monetaryunitd" name="MonetaryUnit">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>MUE</cryptocurrency>
+        </wallet>
+         <wallet prefix="monetaryunitdemo" name="MonetaryUnit Demo Wallet">
+             <param name="fiatCurrency" />
+             <param name="walletAddress" />
+             <cryptocurrency>MUE</cryptocurrency>
+         </wallet>
+        <cryptologo cryptocurrency="MUE" file="mue.png"/>
+        <cryptologo cryptocurrency="MUE" file="mue.svg"/>
+    </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.potcoin.PotcoinExtension" >
         <wallet prefix="potwallet" name="PotCoin">
             <param name="publicKey" />
@@ -915,6 +1043,16 @@
             <param name="port" />
             <param name="accountname" />
             <cryptocurrency>SUM</cryptocurrency>
+        </wallet>
+        <wallet prefix="sumcoindnoforward" name="Sumcoind (no forward)">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>SUM</cryptocurrency>
+            <help>This variant generates new addresses for each transaction and does not forward payments from temporary address</help>
         </wallet>
         <wallet prefix="sumdemo" name="Sumcoin Demo Wallet">
             <param name="fiatCurrency" />
@@ -1300,9 +1438,20 @@
         <ratesource prefix="stasis" name="STASIS exchange (EURS)">
             <cryptocurrency>EURS</cryptocurrency>
         </ratesource>
+        <wallet prefix="infuraERC20_USDS_6_0xa4bdb11dc0a2bec88d24a3aa1e6bb17201112ebe" name="Infura.io wallet - StableUSD">
+          <param name="projectId" />
+          <param name="mnemonic" />
+          <param name="gaslimit" />
+          <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
+          <cryptocurrency>USDS</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="USDS" file="usds.png"/>
+        <cryptologo cryptocurrency="USDS" file="usds.svg"/>
         <!-- ADD your ERC20 tokens here. And don't forget to add cryptologos. -->
     </extension>
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.TransactionExtension" />-->
+    <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.identity.IdentityExampleExtension" />-->
+    <!-- <extension class="com.generalbytes.batm.server.extensions.extra.watchlists.WatchlistExtension" />-->
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.rest.RESTExampleExtension" />-->
     <extension class="com.generalbytes.batm.server.extensions.extra.examples.chat.ChatBotExtensionExample" />
     <extension class="com.generalbytes.batm.server.extensions.extra.nuls.NulsExtension" >

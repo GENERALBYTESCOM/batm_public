@@ -1,3 +1,20 @@
+/*************************************************************************************
+ * Copyright (C) 2014-2019 GENERAL BYTES s.r.o. All rights reserved.
+ *
+ * This software may be distributed and modified under the terms of the GNU
+ * General Public License version 2 (GPL2) as published by the Free Software
+ * Foundation and appearing in the file GPL2.TXT included in the packaging of
+ * this file. Please note that GPL2 Section 2[b] requires that all works based
+ * on this software must also be made publicly available under the terms of
+ * the GPL2 ("Copyleft").
+ *
+ * Contact information
+ * -------------------
+ *
+ * GENERAL BYTES s.r.o.
+ * Web      :  http://www.generalbytes.com
+ *
+ ************************************************************************************/
 package com.generalbytes.batm.server.extensions;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
@@ -35,9 +52,10 @@ public class DummyExchangeAndWalletAndSource implements IExchange, IWallet, IRat
             || cryptoCurrency.equals(CryptoCurrency.ETH.getCode())
             || cryptoCurrency.equals(CryptoCurrency.DASH.getCode())
             || cryptoCurrency.equals(CryptoCurrency.XMR.getCode())
-            || cryptoCurrency.equals(CryptoCurrency.LTC.getCode())) {
+            || cryptoCurrency.equals(CryptoCurrency.LTC.getCode())
+            || cryptoCurrency.equals(CryptoCurrency.TRTL.getCode())) {
             if (walletAddress != null) {
-                throw new IllegalArgumentException("Built-in wallet is used for BTC, LTC, ETH, DASH, XMR crypto currencies.");
+                throw new IllegalArgumentException("Built-in wallet is used for BTC, LTC, ETH, DASH, XMR, TRTL crypto currencies.");
             }
         } else {
             if (walletAddress == null || "".equals(walletAddress)) {

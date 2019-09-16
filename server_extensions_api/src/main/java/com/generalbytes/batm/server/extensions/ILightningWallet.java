@@ -35,7 +35,8 @@ public interface ILightningWallet extends IWalletAdvanced {
      * @param cryptoAmount
      * @param cryptoCurrency
      * @param paymentValidityInSec expiry of generated invoice in seconds
+     * @param description
      * @return
      */
-    String getInvoice(BigDecimal cryptoAmount, String cryptoCurrency, Long paymentValidityInSec);
+    String getInvoice(BigDecimal cryptoAmount, String cryptoCurrency, Long paymentValidityInSec, String description);
 }
