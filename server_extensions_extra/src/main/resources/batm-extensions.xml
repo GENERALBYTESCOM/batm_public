@@ -1450,6 +1450,7 @@
         <!-- ADD your ERC20 tokens here. And don't forget to add cryptologos. -->
     </extension>
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.TransactionExtension" />-->
+    <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.identity.IdentityExampleExtension" />-->
     <!-- <extension class="com.generalbytes.batm.server.extensions.extra.watchlists.WatchlistExtension" />-->
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.rest.RESTExampleExtension" />-->
     <extension class="com.generalbytes.batm.server.extensions.extra.examples.chat.ChatBotExtensionExample" />
