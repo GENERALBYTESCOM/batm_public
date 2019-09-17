@@ -230,7 +230,7 @@ public class Base58 {
         return (byte) remainder;
     }
 
-    private static byte[] copyOfRange(byte[] source, int from, int to) {
+    protected static byte[] copyOfRange(byte[] source, int from, int to) {
         byte[] range = new byte[to - from];
         System.arraycopy(source, from, range, 0, range.length);
 
