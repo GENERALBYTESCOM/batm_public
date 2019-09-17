@@ -22,14 +22,12 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
-import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.AbstractExtension;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
-import com.generalbytes.batm.server.extensions.IRateSource;
+import com.generalbytes.batm.server.extensions.IPaperWalletGenerator;
 import com.generalbytes.batm.server.extensions.IWallet;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.coingecko.CoinGeckoRateSource;
-import com.kryptokrauts.aeternity.sdk.util.EncodingUtils;
+
 
 public class AeternityExtension extends AbstractExtension {
     private static final ICryptoCurrencyDefinition DEFINITION = new AeternityDefinition();
@@ -49,54 +47,34 @@ public class AeternityExtension extends AbstractExtension {
     
     @Override
     public IWallet createWallet(String walletLogin) {
-    	System.out.println("wallet login:" + walletLogin);       
         if (walletLogin !=null && !walletLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(walletLogin,":");
             String walletType = st.nextToken();
-            System.out.println("walletType:" + walletType);
             if ("aeternity".equalsIgnoreCase(walletType)) {
-                String mnemonic = st.hasMoreTokens() ?  st.nextToken() : null;
-            	return new AeternityWallet(mnemonic);
+                String mnemonicsOrPrivKey = st.hasMoreTokens() ?  st.nextToken() : null;
+            	return new AeternityWallet(mnemonicsOrPrivKey);
             }
         }
         return null;
     }
 
-    @Override
-    public IRateSource createRateSource(String sourceLogin) {
-    	System.out.println("sourceLogin: " + sourceLogin);
-        if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
-            if (sourceLogin.contains("coingecko")) {
-                return new CoinGeckoRateSource(FiatCurrency.USD.getCode());
-            }
-        }
-        return null;
-    }
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (!getSupportedCryptoCurrencies().contains(cryptoCurrency)) {
-            return null;
+        if (CURRENCY.equalsIgnoreCase(cryptoCurrency)) {
+            return new AeternityAddressValidator();
         }
-        return new ICryptoAddressValidator() {
-
-            @Override
-            public boolean isAddressValid(String address) {
-                return EncodingUtils.isAddressValid(address);
-            }
-
-            @Override
-            public boolean isPaperWalletSupported() {
-                return true;
-            }
-
-            @Override
-            public boolean mustBeBase58Address() {
-                return false;
-            }
-        };
+        return null;
     }
 
+    @Override
+    public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency) {
+        if (CryptoCurrency.AE.getCode().equalsIgnoreCase(cryptoCurrency)) {
+            return new AeternityWalletGenerator("qqqq", ctx);
+        }
+        return null;
+    }
+    
     @Override
     public Set<ICryptoCurrencyDefinition> getCryptoCurrencyDefinitions() {
         Set<ICryptoCurrencyDefinition> result = new HashSet<>();

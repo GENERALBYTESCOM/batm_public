@@ -66,16 +66,14 @@ import com.kryptokrauts.aeternity.sdk.service.transaction.type.impl.SpendTransac
 import si.mazi.rescu.HttpStatusIOException;
 import si.mazi.rescu.RestProxyFactory;
 import wf.bitcoin.javabitcoindrpcclient.GenericRpcException;
-
 import wf.bitcoin.krotjson.HexCoder;
 
-public class AeternityRPCClient extends RPCClient /* extends BitcoinJSONRPCClient */ {
+public class AeternityRPCClient extends RPCClient {
     private static final Logger log = LoggerFactory.getLogger("batm.master.extensions.RPCClient");
-    //private String cryptoCurrency = CryptoCurrency.AE.getCode();
     private final AeternityV2API api;
     
     
-    final static String baseUrl = "https://sdk-mainnet.aepps.com/v2"; // default: https://sdk-mainnet.aepps.com/v2
+    final static String baseUrl = "http://127.0.0.1:3013"; // aleternative https://roma-net.mdw.aepps.com
     final com.kryptokrauts.aeternity.sdk.constants.Network mainnet = com.kryptokrauts.aeternity.sdk.constants.Network.MAINNET; 
     private static ServiceConfiguration serviceConf;
     private static AccountService accountService;
@@ -86,8 +84,9 @@ public class AeternityRPCClient extends RPCClient /* extends BitcoinJSONRPCClien
     public AeternityRPCClient(String rpcUrl) throws MalformedURLException {
     	super(CryptoCurrency.AE.getCode(), baseUrl);
         if (rpcUrl == null) rpcUrl = baseUrl;
-        api = RestProxyFactory.createProxy(AeternityV2API.class, "https://roma-net.mdw.aepps.com");// aeternity official block explorer api, https://explorer.aepps.com
-        serviceConf = ServiceConfiguration.configure().baseUrl(rpcUrl).compile();
+        String sdkUrl = rpcUrl + "/v2";
+        api = RestProxyFactory.createProxy(AeternityV2API.class, rpcUrl);
+        serviceConf = ServiceConfiguration.configure().baseUrl(sdkUrl).compile();
     	accountService = new AccountServiceFactory().getService(serviceConf);
     	chainService = new ChainServiceFactory().getService(serviceConf);
     	transactionService = new TransactionServiceFactory().getService(TransactionServiceConfiguration.configure().baseUrl(rpcUrl).network(mainnet).compile());
@@ -113,9 +112,8 @@ public class AeternityRPCClient extends RPCClient /* extends BitcoinJSONRPCClien
     
 	public List<String> getAddressTxIds(String address) throws GenericRpcException {
 		List<String> txIds = new ArrayList<String>();
-		Object txidsObject;
 		try {
-			txidsObject = api.getAccountTXs(address);
+			Object txidsObject = api.getAccountTXs(address);
 			List<JSONObject> txidsObjectJSONarray = AeternityRPCClient.convertToJsonObjectArray(txidsObject);
 			for (int i=0; i< txidsObjectJSONarray.size(); i++) {
 				JSONObject txidObjectJSON = txidsObjectJSONarray.get(i);
@@ -132,7 +130,7 @@ public class AeternityRPCClient extends RPCClient /* extends BitcoinJSONRPCClien
 		return txIds;
 	}
 	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ "rawtypes" })
 	@Override
 	public NetworkInfo getNetworkInfo() throws GenericRpcException {
 		NetworkInfo networkInfo = null;
@@ -142,12 +140,11 @@ public class AeternityRPCClient extends RPCClient /* extends BitcoinJSONRPCClien
 			JSONObject statusObjectJSON = AeternityRPCClient.convertToJsonObject(statusObject);
 			JSONObject rootJsonObject = new JSONObject();
 			rootJsonObject.put("connections", statusObjectJSON.getInt("peer_count"));
-			HashMap<String,Object> result = new HashMap<String, Object>();
-			result = new ObjectMapper().readValue(rootJsonObject.toString(), HashMap.class);
-			networkInfo = new NetworkInfoWrapper((Map) result);
+			HashMap<String,Object> mapObject = new HashMap<String, Object>();
+			mapObject = convertJsonToHashMap(rootJsonObject);
+			networkInfo = new NetworkInfoWrapper((Map) mapObject);
 			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new GenericRpcException(e);
 		}
@@ -157,25 +154,7 @@ public class AeternityRPCClient extends RPCClient /* extends BitcoinJSONRPCClien
 	}
 
 
-
-	@Override
-	public String getNewAddress() throws GenericRpcException {
-		try {
-		AeternityWallet newWallet = new AeternityWallet(null);
-		newWallet.saveAeternityWallet();
-		return newWallet.getCryptoAddress(CryptoCurrency.AE.getCode());
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			throw new GenericRpcException(e);
-		}
-	}
-
-
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public Transaction getTransaction(String txId) {
+	public AETransaction getAETransaction(String txId) {
 		GenericSignedTx transaction = transactionService.getTransactionByHash(txId).blockingGet();
 		JSONObject rootJsonObject = new JSONObject();
 		rootJsonObject.put("confirmations",getBlockCount() - transaction.getBlockHeight().intValue());
@@ -187,124 +166,57 @@ public class AeternityRPCClient extends RPCClient /* extends BitcoinJSONRPCClien
 			SpendTx spendTx = (SpendTx)tx;
 			BigDecimal amount = new BigDecimal(spendTx.getAmount());
 			BigDecimal fee = new BigDecimal(spendTx.getFee());
-			rootJsonObject.put("amount",amount.divide(divider));
-			rootJsonObject.put("address",spendTx.getRecipientId());
+			rootJsonObject.put("amount", String.valueOf(amount.divide(divider)));
+			rootJsonObject.put("sender_id",spendTx.getSenderId());
+			rootJsonObject.put("recipient_id",spendTx.getRecipientId());
 			rootJsonObject.put("fee",fee.divide(divider));
 		}
 		
-		HashMap<String,Object> result = new HashMap<String, Object>();
+		HashMap<String,Object> mapObject = new HashMap<String, Object>();
 		try {
-			result =
-			        new ObjectMapper().readValue(rootJsonObject.toString(), HashMap.class);
+			mapObject = convertJsonToHashMap(rootJsonObject);
+			        
 		} catch (JsonParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new GenericRpcException(e);
 		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new GenericRpcException(e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new GenericRpcException(e);
 		}
 		
 		@SuppressWarnings("rawtypes")
-		TransactionWrapper res = new TransactionWrapper((Map) result);
+		TransactionWrapper res = new TransactionWrapper((Map) mapObject);
 		return res;
 	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public RawTransaction getRawTransaction(String txId) throws GenericRpcException {
-		GenericSignedTx transaction = transactionService.getTransactionByHash(txId).blockingGet();
-		
-		JSONObject rootJsonObject = new JSONObject();
-		rootJsonObject.put("confirmations",getBlockCount() - transaction.getBlockHeight().intValue());
-		rootJsonObject.put("txid", txId);
-		rootJsonObject.put("blockhash",transaction.getBlockHash());
-		List<JSONObject> vOutJsonObjectArray = new ArrayList<JSONObject>();
-		
-		GenericTx tx = transaction.getTx();
-		if (tx instanceof SpendTx) {
-			JSONObject vOutJsonObject = new JSONObject();
-			List<String> addressesArray = new ArrayList<String>();
-			SpendTx spendTx = (SpendTx)tx;
-			BigDecimal amount = new BigDecimal(spendTx.getAmount());
-			vOutJsonObject.put("amount",amount.divide(divider));
-			JSONObject scriptPubKeyJsonObject = new JSONObject();
-			addressesArray.add(spendTx.getRecipientId());
-			scriptPubKeyJsonObject.put("addresses", addressesArray);
-			vOutJsonObject.put("scriptPubKey", scriptPubKeyJsonObject);
-			vOutJsonObjectArray.add(vOutJsonObject);
-			rootJsonObject.put("vout", vOutJsonObjectArray);
-			rootJsonObject.put("senderAddress", spendTx.getSenderId());
-		}
-		
-		HashMap<String,Object> result = new HashMap<String, Object>();
-		try {
-			result =
-			        new ObjectMapper().readValue(rootJsonObject.toString(), HashMap.class);
-		} catch (JsonParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new GenericRpcException(e);
-		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new GenericRpcException(e);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new GenericRpcException(e);
-		}
-		
-		@SuppressWarnings("rawtypes")
-		RawTransactionImpl res = new RawTransactionImpl((Map) result);
-		return res;
-	}
-
-
-	@SuppressWarnings("unchecked")
-	public RawTransaction createRawTx(String senderAddress, String destinationAddress, BigDecimal amountToSend, Tx signedTx) throws GenericRpcException, CryptoException {
+	
+	public AETransaction createRawTx(String senderAddress, String destinationAddress, BigDecimal amountToSend, Tx signedTx) throws GenericRpcException, CryptoException {
 		JSONObject rootJsonObject = new JSONObject();
 		String txid = transactionService.computeTxHash(signedTx.getTx());
 		rootJsonObject.put("confirmations", 0);
 		rootJsonObject.put("txid", txid);
+		rootJsonObject.put("amount", amountToSend);
+		rootJsonObject.put("sender_id", senderAddress);
+		rootJsonObject.put("recipient_id", destinationAddress);
 		
-		List<JSONObject> vOutJsonObjectArray = new ArrayList<JSONObject>();
-		
-		JSONObject vOutJsonObject = new JSONObject();
-		List<String> addressesArray = new ArrayList<String>();
-		vOutJsonObject.put("amount", amountToSend);
-		JSONObject scriptPubKeyJsonObject = new JSONObject();
-		addressesArray.add(destinationAddress);
-		scriptPubKeyJsonObject.put("addresses", addressesArray);
-		vOutJsonObject.put("scriptPubKey", scriptPubKeyJsonObject);
-		vOutJsonObjectArray.add(vOutJsonObject);
-		rootJsonObject.put("vout", vOutJsonObjectArray);
-		rootJsonObject.put("senderAddress", senderAddress);
-		HashMap<String,Object> result = new HashMap<String, Object>();
+		HashMap<String,Object> mapObject = new HashMap<String, Object>();
 		try {
-			result =
-			        new ObjectMapper().readValue(rootJsonObject.toString(), HashMap.class);
+			mapObject = convertJsonToHashMap(rootJsonObject);
 		} catch (JsonParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new GenericRpcException(e);
 		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new GenericRpcException(e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new GenericRpcException(e);
 		}
 		
 		@SuppressWarnings("rawtypes")
-		RawTransactionImpl res = new RawTransactionImpl((Map) result);
+		TransactionWrapper res = new TransactionWrapper((Map) mapObject);
 		return res;
 	}
 	
@@ -312,8 +224,7 @@ public class AeternityRPCClient extends RPCClient /* extends BitcoinJSONRPCClien
 	private AbstractTransaction createSpendTx(String senderAddress, String destinationAddress, BigDecimal amountToSend) throws GenericRpcException, CryptoException {
 		Account account = accountService.getAccount(senderAddress).blockingGet();
         KeyBlock block = chainService.getCurrentKeyBlock().blockingGet();
-        BigDecimal multiplier = new BigDecimal("1000000000000000000");
-        BigInteger amount = amountToSend.multiply(multiplier).toBigInteger();
+        BigInteger amount = amountToSend.multiply(divider).toBigInteger();
         String payload = "generalbytes tx";
 		// tx will be valid for the next ten blocks
 		BigInteger ttl = block.getHeight().add(BigInteger.TEN);
@@ -343,26 +254,22 @@ public class AeternityRPCClient extends RPCClient /* extends BitcoinJSONRPCClien
     	return fee;
     }
     
-	public Tx createAndSignTransactionAeternity(String senderAddress, String destinationAddress, BigDecimal amountToSend) throws GenericRpcException, CryptoException {
-		AeternityWallet wallet = AeternityWallet.loadAeternityWallet(senderAddress);
+	public Tx createAndSignTransaction(String senderAddress, String destinationAddress, BigDecimal amountToSend, String senderPrivKey) throws GenericRpcException, CryptoException {
 		AbstractTransaction<?> spendTxWithCalculatedFee =
 				createSpendTx(senderAddress, destinationAddress, amountToSend);
 		UnsignedTx unsignedTx =
 				transactionService.createUnsignedTransaction(spendTxWithCalculatedFee).blockingGet();
 		
-		Tx signedTx = transactionService.signTransaction(unsignedTx, ((AeternityWallet)wallet).getWalletPrivateKey());
-		System.out.println("senderAddress: " + senderAddress);
-		System.out.println("pubKey: " + ((AeternityWallet)wallet).getCryptoAddress(CryptoCurrency.AE.getCode()));
-		System.out.println("privKey: " + ((AeternityWallet)wallet).getWalletPrivateKey());
+		Tx signedTx = transactionService.signTransaction(unsignedTx, senderPrivKey);
 		return signedTx;
 	}
 
-	public String sendSignedTransactionAeternity(Tx tx) throws GenericRpcException {
+	public String broadcastTransaction(Tx tx) throws GenericRpcException {
 		PostTxResponse txResponse = transactionService.postTransaction(tx).blockingGet();
 		return txResponse.getTxHash();
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes" })
 	@Override
 	public Block getBlock(String blockHash) throws GenericRpcException {
 		Block block = null;
@@ -375,9 +282,9 @@ public class AeternityRPCClient extends RPCClient /* extends BitcoinJSONRPCClien
 			rootJsonObject.put("height", blockObjectJSON.getInt("height"));
 			rootJsonObject.put("version", blockObjectJSON.getInt("version"));
 			rootJsonObject.put("time", new java.util.Date(blockObjectJSON.getBigInteger("time").longValueExact()));
-			HashMap<String,Object> result = new HashMap<String, Object>();
-			result = new ObjectMapper().readValue(rootJsonObject.toString(), HashMap.class);
-			block = new BlockMapWrapper((Map) result);
+			HashMap<String,Object> mapObject = new HashMap<String, Object>();
+			mapObject = convertJsonToHashMap(rootJsonObject);
+			block = new BlockMapWrapper((Map) mapObject);
 		} 
 		catch (IOException e) {
 			e.printStackTrace();
@@ -422,14 +329,21 @@ public class AeternityRPCClient extends RPCClient /* extends BitcoinJSONRPCClien
 		return balance;
 	}
     
-    public static JSONObject convertToJsonObject(Object objectToConvert) throws JsonProcessingException {
+	@SuppressWarnings("unchecked")
+	private HashMap<String,Object> convertJsonToHashMap(JSONObject json) throws JsonParseException, JsonMappingException, IOException {
+		HashMap<String,Object> result = null;
+		result = new ObjectMapper().readValue(json.toString(), HashMap.class);
+		return result;
+	}
+	
+	private static JSONObject convertToJsonObject(Object objectToConvert) throws JsonProcessingException {
     	ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		String json = ow.writeValueAsString(objectToConvert);
 		JSONObject jsonObject = new JSONObject(json);
     	return jsonObject;
     }
     
-    public static List<JSONObject> convertToJsonObjectArray(Object objectToConvert) throws JsonProcessingException {
+	private static List<JSONObject> convertToJsonObjectArray(Object objectToConvert) throws JsonProcessingException {
     	List<JSONObject> array = new ArrayList<JSONObject>();
     	ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		String json = ow.writeValueAsString(objectToConvert);
@@ -457,7 +371,43 @@ public class AeternityRPCClient extends RPCClient /* extends BitcoinJSONRPCClien
 	 * public int hashCode() { return Objects.hash(rpcURL, cryptoCurrency); }
 	 */
     
+    
+    public static interface AETransaction extends Serializable {
 
+        String account();
+
+        String senderAddress();
+        
+        String recipientAddress();
+
+        String category();
+
+        BigDecimal amount();
+
+        BigDecimal fee();
+
+        int confirmations();
+
+        String blockHash();
+
+        int blockIndex();
+
+        Date blockTime();
+
+        String txId();
+
+        Date time();
+
+        Date timeReceived();
+
+        String comment();
+
+        String commentTo();
+
+        boolean generated();
+
+      }
+    
     private static class MapWrapper {
 
     	  @SuppressWarnings("rawtypes")
@@ -546,7 +496,7 @@ public class AeternityRPCClient extends RPCClient /* extends BitcoinJSONRPCClien
     	}
     
     @SuppressWarnings("serial")
-    private class TransactionWrapper extends MapWrapper implements Transaction, Serializable {
+    private class TransactionWrapper extends MapWrapper implements AETransaction, Serializable {
 
       @SuppressWarnings("rawtypes")
       public TransactionWrapper(Map m) {
@@ -559,8 +509,13 @@ public class AeternityRPCClient extends RPCClient /* extends BitcoinJSONRPCClien
       }
 
       @Override
-      public String address() {
-        return mapStr(m, "address");
+      public String senderAddress() {
+        return mapStr(m, "sender_id");
+      }
+      
+      @Override
+      public String recipientAddress() {
+        return mapStr(m, "recipient_id");
       }
 
       @Override
@@ -628,19 +583,7 @@ public class AeternityRPCClient extends RPCClient /* extends BitcoinJSONRPCClien
         return mapBool(m, "generated");
       }
 
-      private RawTransaction raw = null;
-
-      @Override
-      public RawTransaction raw() {
-        if (raw == null)
-          try {
-            raw = getRawTransaction(txId());
-          } catch (GenericRpcException ex) {
-            //logger.warning(ex.getMessage());
-          }
-        return raw;
-      }
-
+   
       @Override
       public String toString() {
         return m.toString();

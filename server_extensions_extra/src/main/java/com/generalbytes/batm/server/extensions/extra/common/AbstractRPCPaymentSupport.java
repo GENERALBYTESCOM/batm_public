@@ -46,14 +46,12 @@ import wf.bitcoin.javabitcoindrpcclient.BitcoindRpcClient;
 public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
     private static final Logger log = LoggerFactory.getLogger("batm.master.RPCPaymentSupport");
 
-    private IExtensionContext ctx;
     private final Map<PaymentRequest, PaymentTracker> requests = new HashMap<>();
     private final Map<RPCClient, IBlockchainWatcher> watchers = new HashMap<>();
 
 
     @Override
     public boolean init(IExtensionContext ctx) {
-        this.ctx = ctx;
         if (ctx != null) {
             ctx.addTask("PaymentRequestTimeoutInvalidator-" + getCurrency(), new PaymentRequestTimeoutInvalidatorTask(), null);
         }
@@ -614,7 +612,6 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
     }
 
 
-    @SuppressWarnings("Duplicates")
     private TXForBroadcast createRefundTransaction(BitcoindRpcClient.RawTransaction sourceTransaction, PaymentRequest request, IPaymentRequestSpecification spec) {
         TX tx = new TX();
         try {

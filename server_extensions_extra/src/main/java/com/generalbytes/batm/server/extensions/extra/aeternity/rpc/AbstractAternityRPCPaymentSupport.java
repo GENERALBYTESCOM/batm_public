@@ -17,11 +17,13 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.aeternity.rpc;
 
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.IExtensionContext;
 import com.generalbytes.batm.server.extensions.ITask;
 import com.generalbytes.batm.server.extensions.IWallet;
-import com.generalbytes.batm.server.extensions.extra.aeternity.rpc.AeternityRPCClient.RawTransactionImpl;
+import com.generalbytes.batm.server.extensions.extra.aeternity.AeternityWallet;
+import com.generalbytes.batm.server.extensions.extra.aeternity.rpc.AeternityRPCClient.AETransaction;
 import com.generalbytes.batm.server.extensions.extra.common.IRPCWallet;
 import com.generalbytes.batm.server.extensions.extra.common.RPCClient;
 import com.generalbytes.batm.server.extensions.payment.IBlockchainWatcher;
@@ -46,7 +48,6 @@ import java.util.List;
 import java.util.Map;
 
 import wf.bitcoin.javabitcoindrpcclient.BitcoinRPCException;
-import wf.bitcoin.javabitcoindrpcclient.BitcoindRpcClient;
 import wf.bitcoin.javabitcoindrpcclient.GenericRpcException;
 
 public abstract class AbstractAternityRPCPaymentSupport implements IPaymentSupport{
@@ -124,11 +125,11 @@ public abstract class AbstractAternityRPCPaymentSupport implements IPaymentSuppo
         return watcher;
     }
 
-    private static boolean hasHashOfOne(BitcoindRpcClient.RawTransaction transaction, List<BitcoindRpcClient.RawTransaction> transactions) {
+    private static boolean hasHashOfOne(AETransaction transaction, List<AETransaction> transactions) {
         if (transaction == null || transactions == null || transactions.isEmpty()) {
             return false;
         }
-        for (BitcoindRpcClient.RawTransaction tx : transactions) {
+        for (AETransaction tx : transactions) {
             if (tx.txId().equals(transaction.txId())) {
                 return true;
             }
@@ -221,8 +222,8 @@ public abstract class AbstractAternityRPCPaymentSupport implements IPaymentSuppo
         private boolean performForward;
         private IPaymentRequestSpecification spec;
         private PaymentRequest request;
-        private List<BitcoindRpcClient.RawTransaction> incomingTransactions = new ArrayList<>();
-        private List<BitcoindRpcClient.RawTransaction> outgoingTransactions = new ArrayList<>();
+        private List<AETransaction> incomingTransactions = new ArrayList<>();
+        private List<AETransaction> outgoingTransactions = new ArrayList<>();
 
         public PaymentTracker(boolean performForward, PaymentRequest request, IPaymentRequestSpecification spec) {
             this.performForward = performForward;
@@ -257,7 +258,7 @@ public abstract class AbstractAternityRPCPaymentSupport implements IPaymentSuppo
                 if (!seenInBlockChain) {
 
                     boolean performConfirmation = false;
-                    BitcoindRpcClient.RawTransaction transaction = (BitcoindRpcClient.RawTransaction) tag;
+                    AETransaction transaction = (AETransaction) tag;
 
                     if (incomingTransactions.size() > 0 && hasHashOfOne(transaction, incomingTransactions)) {
                         log_debug("PaymentTransactionListener.numberOfConfirmationsChanged - Incoming payment " + request.getAddress() + " appeared in blockchain (" + numberOfConfirmations + "). Confirmed.");
@@ -274,7 +275,7 @@ public abstract class AbstractAternityRPCPaymentSupport implements IPaymentSuppo
 
                 if (request.getState() == PaymentRequest.STATE_SEEN_IN_BLOCK_CHAIN) {
                     if (numberOfConfirmations > 0) {
-                        BitcoindRpcClient.RawTransaction transaction = (BitcoindRpcClient.RawTransaction) tag;
+                    	AETransaction transaction = (AETransaction) tag;
                         IPaymentRequestListener.Direction direction = IPaymentRequestListener.Direction.INCOMING;
                         if (hasHashOfOne(transaction, outgoingTransactions)) {
                             direction = IPaymentRequestListener.Direction.OUTGOING;
@@ -304,28 +305,25 @@ public abstract class AbstractAternityRPCPaymentSupport implements IPaymentSuppo
         @Override
         public void newTransactionSeen(String cryptoCurrency, String address, String transactionId, int confirmations, Object tag) {
             boolean performRefund = false;
-            BitcoindRpcClient.Transaction tx = null;
+            AETransaction tx = null;
             try {
-                tx = getClient(request.getWallet()).getTransaction(transactionId);
+                tx = ((AeternityRPCClient) getClient(request.getWallet())).getAETransaction(transactionId);
             } catch (BitcoinRPCException e) {
                 e.printStackTrace();
             }
 
             try {
                 // Check the transaction
-                if (request.getState() == PaymentRequest.STATE_NEW || request.getState() == PaymentRequest.STATE_SEEN_TRANSACTION || request.getState() == PaymentRequest.STATE_TRANSACTION_TIMED_OUT) {
+            	if (request.getState() == PaymentRequest.STATE_NEW || request.getState() == PaymentRequest.STATE_SEEN_TRANSACTION || request.getState() == PaymentRequest.STATE_TRANSACTION_TIMED_OUT) {
                     BigDecimal totalCoinsReceived = BigDecimal.ZERO;
                     boolean addressMatched = false;
                     
-                    List<BitcoindRpcClient.RawTransaction.Out> outputs = tx.raw().vOut();
-                    for (BitcoindRpcClient.RawTransaction.Out output : outputs) {
-                        String receivingAddress = RPCClient.cleanAddressFromPossiblePrefix(output.scriptPubKey().addresses().get(0));
+                    String receivingAddress = tx.recipientAddress();
 
-                        if (receivingAddress != null) {
-                            if (receivingAddress.equals(request.getAddress())) {
-                                totalCoinsReceived = totalCoinsReceived.add(new BigDecimal(output.value() +""));
-                                addressMatched = true;
-                            }
+                    if (receivingAddress != null) {
+                        if (receivingAddress.equals(request.getAddress())) {
+                            totalCoinsReceived = totalCoinsReceived.add(new BigDecimal(tx.amount() +""));
+                            addressMatched = true;
                         }
                     }
                     
@@ -375,31 +373,30 @@ public abstract class AbstractAternityRPCPaymentSupport implements IPaymentSuppo
                                     + ". NOT Creating forwarding transaction. " + request.getLogInfoWatchingFor());
                                 request.setTxValue(totalCoinsReceived);
                                 request.setIncomingTransactionHash(tx.txId());
-                                incomingTransactions.add(tx.raw());
+                                incomingTransactions.add(tx);
                                 int previousState = request.getState();
                                 request.setState(PaymentRequest.STATE_SEEN_TRANSACTION);
-                                startWatchingTransaction(getClient(request.getWallet()), request.getCryptoCurrency(), tx.txId(), this, tx.raw());
+                                startWatchingTransaction(getClient(request.getWallet()), request.getCryptoCurrency(), tx.txId(), this, tx);
 
                                 fireStateChanged(request, previousState);
                                 fireNumberOfConfirmationsChanged(request, 0, IPaymentRequestListener.Direction.INCOMING);
                             }else{
                                 // It is forwarding transaction
                                 log_info("Amounts matched " + (exactMatch ? "exactly" : "") + (matchInTolerance ? "in tolerance" : "") + " " + request.getAddress() + ". Creating forwarding transaction. " + request.getLogInfoWatchingFor() + "\ntx = " + tx);
-                                TXForBroadcast newTx = createTransaction(tx.raw(), request, spec, toleranceRemain);
+                                TXForBroadcast newTx = createTransaction(request, spec, toleranceRemain);
                                 if (newTx != null) {
                                     BigDecimal txValue = totalCoinsReceived.subtract(getMinimumNetworkFee(getClient(request.getWallet())));
                                     request.setTxValue(txValue);
                                     request.setIncomingTransactionHash(tx.txId());
-                                    incomingTransactions.add(tx.raw());
+                                    incomingTransactions.add(tx);
                                     int previousState = request.getState();
                                     request.setState(PaymentRequest.STATE_SEEN_TRANSACTION);
-                                    outgoingTransactions.add(newTx.getRawTransaction());
+                                    outgoingTransactions.add(newTx.getAETx());
                                     log_debug("PaymentTransactionListener.onTransaction - signedTx transaction: " + newTx.signedTx);
                                     
-                                    startWatchingTransaction(getClient(request.getWallet()), request.getCryptoCurrency(), tx.txId(), this, tx.raw());
-                                    
-                                    //getClient(request.getWallet()).sendRawTransaction(newTx.rawTxSerializedHex);
-                                    startWatchingTransaction(getClient(request.getWallet()), request.getCryptoCurrency(), newTx.getRawTransaction().txId(), this, newTx.getRawTransaction());
+                                    startWatchingTransaction(getClient(request.getWallet()), request.getCryptoCurrency(), tx.txId(), this, tx);
+                                    ((AeternityRPCClient)getClient(request.getWallet())).broadcastTransaction(newTx.signedTx);
+                                    startWatchingTransaction(getClient(request.getWallet()), request.getCryptoCurrency(), newTx.getAETx().txId(), this, newTx.getAETx());
 
                                     fireStateChanged(request, previousState);
                                     fireNumberOfConfirmationsChanged(request, 0, IPaymentRequestListener.Direction.INCOMING);
@@ -440,11 +437,11 @@ public abstract class AbstractAternityRPCPaymentSupport implements IPaymentSuppo
                         log_warn("PaymentTransactionListener.onTransaction - Removing payment request - it timed out or amount didn't match (refunding). " + request);
                         //send refund
                         request.setAsAlreadyRefunded();
-                        TXForBroadcast newTx = createRefundTransaction(tx.raw(), request, spec);
+                        TXForBroadcast newTx = createRefundTransaction(tx, request, spec);
                         if (newTx != null) {
                             log_debug("PaymentTransactionListener.onTransaction - Serialized refund transaction: " + newTx.signedTx);
                             try {
-                            	((AeternityRPCClient)getClient(request.getWallet())).sendSignedTransactionAeternity(newTx.signedTx);
+                            	((AeternityRPCClient)getClient(request.getWallet())).broadcastTransaction(newTx.signedTx);
                             } catch (BitcoinRPCException e) {
                                 e.printStackTrace();
                             }
@@ -481,30 +478,17 @@ public abstract class AbstractAternityRPCPaymentSupport implements IPaymentSuppo
     public PaymentRequest createPaymentRequest(IPaymentRequestSpecification spec) {
         try {
             long validTill = System.currentTimeMillis() + (spec.getValidInSeconds() * 1000);
-            String paymentAddress = null;
+            String paymentAddress = ((AeternityWallet)spec.getWallet()).getCryptoAddress(CryptoCurrency.AE.getCode());
 
             if (spec.getOutputs().size() != 1) {
                 throw new IllegalStateException("Only 1 output supported");
             }
+            if (!paymentAddress.equals(spec.getOutputs().get(0).getAddress())) {
+            	throw new IllegalStateException("getOutputs().get(0).getAddress() must be same as intialized spec.getWallet()");
+            }
             
             BigDecimal cryptoTotalToSend = spec.getTotal();
-            if (spec.isDoNotForward() && spec.getOutputs().size() == 1) { //Sometimes it is inefficient to forward transaction when only one output is defined
-                paymentAddress = spec.getOutputs().get(0).getAddress();
-                //no need to modify cryptoTotalToSend value as we will not be forwarding coins we don't need extra money for forwarding
-            }else{
-                paymentAddress = RPCClient.cleanAddressFromPossiblePrefix(getClient(spec.getWallet()).getNewAddress());//new wallet is generated here
-
-                //add additional fee
-                BigDecimal feeCalculated = calculateTxFee(paymentAddress, paymentAddress, spec.getOutputs().get(0).getAmount(), getClient(spec.getWallet()));
-                
-                if (spec.isZeroFixedFee()) {
-                    cryptoTotalToSend = cryptoTotalToSend.add(feeCalculated);
-                } else {
-                    // correct outputs: remove mining fee from expected total amount that will be I/O difference for creating mining fee
-                    spec.removeTotalAmountFromOutputs(feeCalculated);
-                }
-            }
-
+            
             cryptoTotalToSend = cryptoTotalToSend.setScale(6, BigDecimal.ROUND_HALF_UP); //round to 6 decimal places
             final PaymentRequest paymentRequest = new PaymentRequest(
                 spec.getCryptoCurrency(),
@@ -534,19 +518,19 @@ public abstract class AbstractAternityRPCPaymentSupport implements IPaymentSuppo
     
     class TXForBroadcast {
         Tx signedTx;
-        BitcoindRpcClient.RawTransaction rawTx;
+        AETransaction aeTx;
 
-        public BitcoindRpcClient.RawTransaction getRawTx() {
-			return rawTx;
+        public AETransaction getRawTx() {
+			return aeTx;
 		}
 
-		public TXForBroadcast(Tx signedTx, BitcoindRpcClient.RawTransaction rawTx) {
+		public TXForBroadcast(Tx signedTx, AETransaction aeTx) {
             this.signedTx = signedTx;
-            this.rawTx = rawTx;
+            this.aeTx = aeTx;
         }
         
-        public BitcoindRpcClient.RawTransaction getRawTransaction(){
-        	return rawTx;
+        public AETransaction getAETx(){
+        	return aeTx;
         }
         
         @Override
@@ -558,8 +542,8 @@ public abstract class AbstractAternityRPCPaymentSupport implements IPaymentSuppo
         }
     }
 
-    private TXForBroadcast createTransaction(BitcoindRpcClient.RawTransaction sourceTransaction, PaymentRequest request, IPaymentRequestSpecification spec, BigDecimal remain) {
-        log_debug("createTransaction - Create new transaction for " + sourceTransaction + " " + request + " " + spec + " " + remain);
+    private TXForBroadcast createTransaction(PaymentRequest request, IPaymentRequestSpecification spec, BigDecimal remain) {
+        log_debug("createTransaction - Create new transaction for " + request + " " + spec + " " + remain);
         try {
             boolean resolvedRemain = remain.compareTo(BigDecimal.ZERO) == 0;
 
@@ -590,29 +574,18 @@ public abstract class AbstractAternityRPCPaymentSupport implements IPaymentSuppo
                 return null;
             }
 
-            String senderAddress = null;
-            //add inputs
-            if (sourceTransaction.vOut().size() != 1) {
-                throw new IllegalStateException("Only 1 inputs supported");
-            }
-            
-            List<BitcoindRpcClient.RawTransaction.Out> sourceTransactionOutputs = sourceTransaction.vOut();
-            for (BitcoindRpcClient.RawTransaction.Out sourceOutput : sourceTransactionOutputs) {
-                String outputAddress = sourceOutput.scriptPubKey().addresses().get(0);
-                if (outputAddress != null) {
-                    if (RPCClient.cleanAddressFromPossiblePrefix(outputAddress).equals(request.getAddress())) {
-                        senderAddress = outputAddress;
-                        break;
-                    }
-                }
-            }
+            String recepientAddress = paymentOutput.getAddress();
+            String senderAddress = ((AeternityWallet) request.getWallet()).getCryptoAddress(CryptoCurrency.AE.getCode());
+            String senderPrivKey = ((AeternityWallet) request.getWallet()).getWalletPrivateKey();
             if (senderAddress ==  null) {
                 throw new IllegalStateException("createTransaction - Could not create new transaction for " + request.getAddress() + " senderAddress is null");
             }
-            Tx signedTx = ((AeternityRPCClient)getClient(request.getWallet())).createAndSignTransactionAeternity(senderAddress, paymentOutput.getAddress(), outputAmount);
-            BitcoindRpcClient.RawTransaction rawTx = ((AeternityRPCClient)getClient(request.getWallet())).createRawTx(senderAddress, paymentOutput.getAddress(), outputAmount, signedTx);
+            if (recepientAddress ==  null) {
+                throw new IllegalStateException("createTransaction - Could not create new transaction for " + request.getAddress() + " recepientAddress is null");
+            }
+            Tx signedTx = ((AeternityRPCClient)getClient(request.getWallet())).createAndSignTransaction(senderAddress, recepientAddress, outputAmount, senderPrivKey);
+            AETransaction rawTx = ((AeternityRPCClient)getClient(request.getWallet())).createRawTx(senderAddress, recepientAddress, outputAmount, signedTx);
             log_debug("createTransaction - Created for " + request.getAddress() + " transaction: tx = " + signedTx);
-            
             return new TXForBroadcast(signedTx, rawTx);
 
         } catch (BitcoinRPCException e) {
@@ -628,20 +601,17 @@ public abstract class AbstractAternityRPCPaymentSupport implements IPaymentSuppo
     }
 
 
-    private TXForBroadcast createRefundTransaction(BitcoindRpcClient.RawTransaction sourceTransaction, PaymentRequest request, IPaymentRequestSpecification spec) {
+    private TXForBroadcast createRefundTransaction(AETransaction sourceTransaction, PaymentRequest request, IPaymentRequestSpecification spec) {
         
     	try {
     		BigDecimal totalCoinsReceived = BigDecimal.ZERO;
             boolean addressMatched = false;
 
-            List<BitcoindRpcClient.RawTransaction.Out> outputs = sourceTransaction.vOut();
-            for (BitcoindRpcClient.RawTransaction.Out output : outputs) {
-                String receivingAddress = output.scriptPubKey().addresses().get(0);
-                if (receivingAddress != null) {
-                    if (receivingAddress.equals(request.getAddress())) {
-                        totalCoinsReceived = totalCoinsReceived.add(new BigDecimal(output.value() +""));
-                        addressMatched = true;
-                    }
+            String receivingAddress = sourceTransaction.recipientAddress();
+            if (receivingAddress != null) {
+                if (receivingAddress.equals(request.getAddress())) {
+                    totalCoinsReceived = totalCoinsReceived.add(new BigDecimal(sourceTransaction.amount() +""));
+                    addressMatched = true;
                 }
             }
 
@@ -654,27 +624,25 @@ public abstract class AbstractAternityRPCPaymentSupport implements IPaymentSuppo
                 }
                 if (timeoutAddress == null) {
                     //timeout address wasn't defined, so send the coins back
-                	timeoutAddress = ((RawTransactionImpl)sourceTransaction).senderAddress();
+                	timeoutAddress = sourceTransaction.senderAddress();
                 }
                 BigDecimal toSendBack = totalCoinsReceived.subtract(getMinimumNetworkFee(getClient(request.getWallet())));
                 if (toSendBack.compareTo(BigDecimal.ZERO) > 0) {
                     String senderAddress = null;
-                    List<BitcoindRpcClient.RawTransaction.Out> sourceTransactionOutputs = sourceTransaction.vOut();
-                    for (BitcoindRpcClient.RawTransaction.Out sourceOutput : sourceTransactionOutputs) {
-                        String outputAddress = sourceOutput.scriptPubKey().addresses().get(0);
-                        if (outputAddress != null) {
-                            if (RPCClient.cleanAddressFromPossiblePrefix(outputAddress).equals(request.getAddress())) {
-                            	senderAddress = outputAddress;
-                            	
-                            }
+                    String recipientAddress = sourceTransaction.recipientAddress();
+                    if (recipientAddress != null) {
+                        if (RPCClient.cleanAddressFromPossiblePrefix(recipientAddress).equals(request.getAddress())) {
+                        	senderAddress = recipientAddress;
+                        	
                         }
                     }
                     
+                    String senderPrivkey = ((AeternityWallet) request.getWallet()).getWalletPrivateKey();
                     if (senderAddress ==  null) {
                         throw new IllegalStateException("createRefundTransaction - Could not create refund transaction for " + timeoutAddress + " senderAddress is null");
                     }
-                    Tx signedTx = ((AeternityRPCClient)getClient(request.getWallet())).createAndSignTransactionAeternity(senderAddress, timeoutAddress, toSendBack);
-                    BitcoindRpcClient.RawTransaction rawTx = ((AeternityRPCClient)getClient(request.getWallet())).createRawTx(senderAddress, timeoutAddress, toSendBack, signedTx);
+                    Tx signedTx = ((AeternityRPCClient)getClient(request.getWallet())).createAndSignTransaction(senderAddress, timeoutAddress, toSendBack, senderPrivkey);
+                    AETransaction rawTx = ((AeternityRPCClient)getClient(request.getWallet())).createRawTx(senderAddress, timeoutAddress, toSendBack, signedTx);
                     log_debug("createTransaction - Created for " + request.getAddress() + " transaction: tx = " + signedTx);
                     log_debug("createRefundTransaction - Created for " + request.getAddress() + " refund transaction: tx = " + signedTx);
                     fireRefundSent(request,timeoutAddress,toSendBack);

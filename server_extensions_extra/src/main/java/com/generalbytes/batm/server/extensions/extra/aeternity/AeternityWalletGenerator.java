@@ -21,10 +21,16 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.SecureRandom;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.IExtensionContext;
 import com.generalbytes.batm.server.extensions.IPaperWallet;
 import com.generalbytes.batm.server.extensions.IPaperWalletGenerator;
@@ -49,19 +55,20 @@ public class AeternityWalletGenerator implements IPaperWalletGenerator {
     @Override
     public IPaperWallet generateWallet(String cryptoCurrency, String oneTimePassword, String userLanguage) {
     	final KeyPairService keyPairService = new KeyPairServiceFactory().getService();
-    	MnemonicKeyPair master = null;
-    	BaseKeyPair credentials = null;
+    	String mnemonicPassword = PasswordGenerator.generateRandomPassword(12);
+    	BaseKeyPair keyPair = null;
+		MnemonicKeyPair master = null;
 		try {
-			master = keyPairService.generateMasterMnemonicKeyPair(oneTimePassword);
-			credentials = EncodingUtils.createBaseKeyPair(
+			master = keyPairService.generateMasterMnemonicKeyPair(mnemonicPassword);
+			keyPair = EncodingUtils.createBaseKeyPair(
 	                keyPairService.generateDerivedKey(master, true).toRawKeyPair());
+
 		} catch (AException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    	String privateKey = credentials.getPrivateKey();
-        String address = credentials.getPublicKey();
-
+				
+    	String privateKey = keyPair.getPrivateKey();
+        String address = keyPair.getPublicKey();
         byte[] content = ctx.createPaperWallet7ZIP(privateKey, address, oneTimePassword, cryptoCurrency);
         //send wallet to customer
         String messageText = "New wallet " + address + " use your onetime password to open the attachment.";
@@ -89,5 +96,35 @@ public class AeternityWalletGenerator implements IPaperWalletGenerator {
             }
         }
         return null;
+    }
+    
+    private static class PasswordGenerator {
+
+        private static final String CHAR_LOWER = "abcdefghijklmnopqrstuvwxyz";
+        private static final String CHAR_UPPER = CHAR_LOWER.toUpperCase();
+        private static final String NUMBER = "0123456789";
+        private static final String OTHER_CHAR = "@";
+        private static final String PASSWORD_ALLOW_BASE = CHAR_LOWER + CHAR_UPPER + NUMBER + OTHER_CHAR;
+        // optional, make it more random
+        private static final String PASSWORD_ALLOW_BASE_SHUFFLE = shuffleString(PASSWORD_ALLOW_BASE);
+        private static final String PASSWORD_ALLOW = PASSWORD_ALLOW_BASE_SHUFFLE;
+        private static SecureRandom random = new SecureRandom();
+
+        public static String generateRandomPassword(int length) {
+            if (length < 1) throw new IllegalArgumentException();
+            StringBuilder sb = new StringBuilder(length);
+            for (int i = 0; i < length; i++) {
+                int rndCharAt = random.nextInt(PASSWORD_ALLOW.length());
+                char rndChar = PASSWORD_ALLOW.charAt(rndCharAt);
+                sb.append(rndChar);
+            }
+            return sb.toString();
+        }
+        // shuffle
+        public static String shuffleString(String string) {
+            List<String> letters = Arrays.asList(string.split(""));
+            Collections.shuffle(letters);
+            return letters.stream().collect(Collectors.joining());
+        }
     }
 }

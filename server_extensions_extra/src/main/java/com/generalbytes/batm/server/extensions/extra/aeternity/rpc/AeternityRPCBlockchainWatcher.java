@@ -25,13 +25,13 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.generalbytes.batm.server.extensions.extra.aeternity.rpc.AeternityRPCClient.AETransaction;
 import com.generalbytes.batm.server.extensions.extra.common.RPCClient;
 import com.generalbytes.batm.server.extensions.payment.IBlockchainWatcher;
 import com.generalbytes.batm.server.extensions.payment.IBlockchainWatcherAddressListener;
 import com.generalbytes.batm.server.extensions.payment.IBlockchainWatcherTransactionListener;
 
 import wf.bitcoin.javabitcoindrpcclient.BitcoinRPCException;
-import wf.bitcoin.javabitcoindrpcclient.BitcoindRpcClient;
 
 public class AeternityRPCBlockchainWatcher implements IBlockchainWatcher{
 
@@ -118,10 +118,10 @@ public class AeternityRPCBlockchainWatcher implements IBlockchainWatcher{
     
     public void addTransaction(String cryptoCurrency, String txId, IBlockchainWatcherTransactionListener l, Object tag) {
         synchronized (trecords) {
-            BitcoindRpcClient.Transaction transaction = null;
+            AETransaction transaction = null;
             for (int i=0;i<60;i++) {
                 try {
-                    transaction = rpcClient.getTransaction(txId);
+                    transaction = ((AeternityRPCClient) rpcClient).getAETransaction(txId);
                     log.debug("Transaction " + txId + " recognized by wallet.");
                 } catch (BitcoinRPCException e) {
                     if (i == 59) {
@@ -146,18 +146,6 @@ public class AeternityRPCBlockchainWatcher implements IBlockchainWatcher{
                 log.error("Error: For some reason transaction " + txId + " was not recognized by wallet.");
             }
         }
-    }
-
-    public List<String> getTransactionsInfo() {
-        List<TransactionWatchRecord> records2;
-        synchronized (trecords) {
-            records2 = new ArrayList<>(trecords);
-        }
-        List<String> transactionsInfo = new ArrayList<>(records2.size());
-        for (TransactionWatchRecord r : records2) {
-            transactionsInfo.add(r.tag.toString());
-        }
-        return transactionsInfo;
     }
 
     public Object removeTransaction(String transactionHash) {
@@ -242,7 +230,6 @@ public class AeternityRPCBlockchainWatcher implements IBlockchainWatcher{
                 //Check wallets
                 if (arecords.size() > 0) {
                    for (AddressWatchRecord arecord : arecords) {
-                	   	//rpcClient.listReceivedByAddress2 method analog is not supported in Aeternity, 
                 	   	//we get all incoming transations for arecord.getAddress() and check for new
 						List<String> txids = ((AeternityRPCClient)rpcClient).getAddressTxIds(arecord.getAddress());
 						List<String> newTxIds = new ArrayList<>();
@@ -256,7 +243,7 @@ public class AeternityRPCBlockchainWatcher implements IBlockchainWatcher{
 						for (String newTxId : newTxIds) {
 							IBlockchainWatcherAddressListener listener = arecord.getListener();
 							if (listener != null) {
-								BitcoindRpcClient.Transaction transaction = rpcClient.getTransaction(newTxId);
+								AETransaction transaction = ((AeternityRPCClient) rpcClient).getAETransaction(newTxId);
 								listener.newTransactionSeen(arecord.getCryptoCurrency(), arecord.getAddress(), newTxId,
 										transaction.confirmations(), arecord.tag);
 							}
@@ -283,7 +270,7 @@ public class AeternityRPCBlockchainWatcher implements IBlockchainWatcher{
         if (record.getListener() != null) {
             record.getListener().newBlockMined(record.getCryptoCurrency(), txHash,record.tag, currentBlockChainHeight);
         }
-        BitcoindRpcClient.Transaction t = rpcClient.getTransaction(txHash);
+        AETransaction t = ((AeternityRPCClient) rpcClient).getAETransaction(txHash);
         long transactionHeight = -1;
         if (t != null) {
             String blockHash = t.blockHash();
@@ -317,43 +304,6 @@ public class AeternityRPCBlockchainWatcher implements IBlockchainWatcher{
             workerThread = null;
         }
     }
-
-//    public static void main(String[] args) {
-//        try {
-//            RPCClient rpcClient = new RPCClient(BitcoinCashPaymentSupport.RPC_URL);
-//            final AeternityRPCBlockchainWatcher w = new AeternityRPCBlockchainWatcher(rpcClient);
-//            IBlockchainWatcherTransactionListener tlistener = new IBlockchainWatcherTransactionListener() {
-//                @Override
-//                public void removedFromWatch(String cryptoCurrency, String transactionHash, Object tag) {
-//                    log.info("Removed from Watch");
-//                }
-//
-//                @Override
-//                public void numberOfConfirmationsChanged(String cryptoCurrency, String transactionHash, Object tag, int numberOfConfirmations) {
-//                    log.info("numberOfConfirmationsChanged " + transactionHash + " = " + numberOfConfirmations);
-//                }
-//
-//                @Override
-//                public void newBlockMined(String cryptoCurrency, String transactionHash, Object tag, long blockHeight) {
-//
-//                }
-//            };
-//            w.addAddress(CryptoCurrency.BCH.getCode(), "qzezfqhxej3nyz3t5pq3vzmhazgkgns5qcvyul5cqj", new IBlockchainWatcherAddressListener() {
-//                @Override
-//                public void newTransactionSeen(String cryptoCurrency, String address, String transactionId, int confirmations, Object tag) {
-//                    log.info("New transaction " + transactionId + " seen on address " + address + " confirmations: " + confirmations + " tag:" + tag);
-//                    w.addTransaction(cryptoCurrency,transactionId,tlistener,tag);
-//                }
-//            },null);
-//            w.start();
-//            Thread.sleep(50000000);
-//            w.stop();
-//        } catch (InterruptedException e) {
-//            log.error("Error", e);
-//        } catch (MalformedURLException e) {
-//            log.error("Error", e);
-//        }
-//    }
 
     @Override
     public void addAddress(String cryptoCurrency, String address, IBlockchainWatcherAddressListener listener, Object tag) {
