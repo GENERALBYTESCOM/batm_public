@@ -40,6 +40,12 @@ public interface IIdentityPiece {
     String getContactAddress();
     String getContactCity();
     String getContactCountry();
+
+    /**
+     *
+     * @return e.g. a state in the US
+     */
+    String getContactProvince();
     String getContactZIP();
     String getIdCardNumber();
     IPerson getCreatedBy();

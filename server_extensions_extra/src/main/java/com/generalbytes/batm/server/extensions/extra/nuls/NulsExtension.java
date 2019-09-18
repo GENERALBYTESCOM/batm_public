@@ -23,6 +23,8 @@ import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.extra.lisk.sources.binance.BinanceRateSource;
 import com.generalbytes.batm.server.extensions.extra.lisk.wallets.liskbinancewallet.BinanceWallet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -33,6 +35,7 @@ import java.util.StringTokenizer;
  * @author naveen
  */
 public class NulsExtension extends AbstractExtension {
+    private static final Logger log = LoggerFactory.getLogger(NulsExtension.class);
 
     @Override
     public String getName() {
@@ -86,7 +89,7 @@ public class NulsExtension extends AbstractExtension {
                     try {
                         rate = new BigDecimal(st.nextToken());
                     } catch (Throwable e) {
-                        e.printStackTrace();
+                        log.error("", e);
                     }
                 }
                 String preferredFiatCurrency = FiatCurrency.USD.getCode();

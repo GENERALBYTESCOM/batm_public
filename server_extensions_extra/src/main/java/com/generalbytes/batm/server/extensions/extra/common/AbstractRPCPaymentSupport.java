@@ -112,7 +112,7 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
                     log_warn(getCurrency() + " payment support initialization FAILED. Node is not running or is not connected to network.");
                 }
             } catch (BitcoinRPCException e) {
-                e.printStackTrace();
+                log.error("", e);
             }
         }
         return watcher;
@@ -302,7 +302,7 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
             try {
                 tx = getClient(request.getWallet()).getTransaction(transactionId);
             } catch (BitcoinRPCException e) {
-                e.printStackTrace();
+                log.error("", e);
             }
 
             try {
@@ -422,7 +422,7 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
                     }
                 }
             } catch (BitcoinRPCException e) {
-                e.printStackTrace();
+                log.error("", e);
             } finally {
                 if (performRefund) {
                     if (!performForward) {
@@ -439,7 +439,7 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
                             try {
                                 getClient(request.getWallet()).sendRawTransaction(newTx.rawTxSerializedHex);
                             } catch (BitcoinRPCException e) {
-                                e.printStackTrace();
+                                log.error("", e);
                             }
                         }
                     }
@@ -516,7 +516,7 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
             startWatchingAddress(getClient(spec.getWallet()), getCurrency(), paymentAddress, paymentTracker,paymentRequest); //start watching the address
             return paymentRequest;
         } catch (BitcoinRPCException e) {
-            e.printStackTrace();
+            log.error("", e);
         }
         return null;
     }

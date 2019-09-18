@@ -64,6 +64,8 @@
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>BCH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
+                <cryptocurrency>DASH</cryptocurrency>
+                <cryptocurrency>DAI</cryptocurrency>
             </ratesource>
             <ratesource prefix="bitfinex" name ="Bitfinex.com Exchange" >
                 <param name="fiatcurrency" />
@@ -101,6 +103,7 @@
                 <cryptocurrency>REP</cryptocurrency>
                 <cryptocurrency>ANT</cryptocurrency>
                 <cryptocurrency>DASH</cryptocurrency>
+                <cryptocurrency>HATCH</cryptocurrency>
                 <cryptocurrency>XMR</cryptocurrency>
                 <cryptocurrency>$PAC</cryptocurrency>
                 <cryptocurrency>POT</cryptocurrency>
@@ -153,6 +156,7 @@
                 <cryptocurrency>FLASH</cryptocurrency>
                 <cryptocurrency>FTO</cryptocurrency>
                 <cryptocurrency>GRS</cryptocurrency>
+                <cryptocurrency>HATCH</cryptocurrency>
                 <cryptocurrency>LEO</cryptocurrency>
                 <cryptocurrency>LINDA</cryptocurrency>
                 <cryptocurrency>LSK</cryptocurrency>
@@ -179,6 +183,26 @@
                 <cryptocurrency>XZC</cryptocurrency>
                 <help>USD is default fiat currency.</help>
             </ratesource>
+            <ratesource prefix="bitflyer" name="BitFlyer.jp Rate Source" >
+                <param name="fiatcurrency" />
+                <cryptocurrency>BTC</cryptocurrency>
+            </ratesource>
+            <ratesource prefix="bitflyer.com" name="BitFlyer.com Rate Source" >
+                <param name="fiatcurrency" />
+                <cryptocurrency>BTC</cryptocurrency>
+            </ratesource>
+            <exchange prefix="bitflyer" name="BitFlyer.jp Exchange">
+                <param name="fiatcurrency" />
+                <param name="key" />
+                <param name="secret" />
+                <cryptocurrency>BTC</cryptocurrency>
+            </exchange>
+            <exchange prefix="bitflyer.com" name="BitFlyer.com Exchange">
+                <param name="fiatcurrency" />
+                <param name="key" />
+                <param name="secret" />
+                <cryptocurrency>BTC</cryptocurrency>
+            </exchange>
             <paymentprocessor prefix="bitcoinpay" name="BitcoinPay.com" >
                 <param name="apikey" />
                 <cryptocurrency>BTC</cryptocurrency>
@@ -296,6 +320,7 @@
             <cryptocurrency>FLASH</cryptocurrency>
             <cryptocurrency>FTO</cryptocurrency>
             <cryptocurrency>GRS</cryptocurrency>
+            <cryptocurrency>HATCH</cryptocurrency>
             <cryptocurrency>KMD</cryptocurrency>
             <cryptocurrency>LEO</cryptocurrency>
             <cryptocurrency>LINDA</cryptocurrency>
@@ -352,6 +377,7 @@
             <cryptocurrency>FLASH</cryptocurrency>
             <cryptocurrency>FTO</cryptocurrency>
             <cryptocurrency>GRS</cryptocurrency>
+            <cryptocurrency>HATCH</cryptocurrency>
             <cryptocurrency>HBX</cryptocurrency>
             <cryptocurrency>KMD</cryptocurrency>
             <cryptocurrency>LEO</cryptocurrency>
@@ -772,6 +798,24 @@
             <cryptocurrency>GRS</cryptocurrency>
         </ratesource>
         <cryptologo cryptocurrency="GRS" file="groestl.png"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.hatch.HatchExtension" >
+        <wallet prefix="hatchd" name="Hatch">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>HATCH</cryptocurrency>
+        </wallet>
+         <wallet prefix="hatchdemo" name="Hatch Demo Wallet">
+             <param name="fiatCurrency" />
+             <param name="walletAddress" />
+             <cryptocurrency>HATCH</cryptocurrency>
+         </wallet>
+        <cryptologo cryptocurrency="HATCH" file="hatch.png"/>
+        <cryptologo cryptocurrency="HATCH" file="hatch.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.smartcash.SmartcashExtension" >
         <wallet prefix="smartcashd" name="Smartcashd">
@@ -1406,6 +1450,7 @@
         <!-- ADD your ERC20 tokens here. And don't forget to add cryptologos. -->
     </extension>
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.TransactionExtension" />-->
+    <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.identity.IdentityExampleExtension" />-->
     <!-- <extension class="com.generalbytes.batm.server.extensions.extra.watchlists.WatchlistExtension" />-->
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.rest.RESTExampleExtension" />-->
     <extension class="com.generalbytes.batm.server.extensions.extra.examples.chat.ChatBotExtensionExample" />

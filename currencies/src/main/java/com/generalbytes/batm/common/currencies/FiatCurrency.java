@@ -34,6 +34,7 @@ public enum FiatCurrency {
     ALL("Albanian lek"),
     AMD("Armenian dram"),
     AUD("Australian dollar"),
+    AZN("Azerbaijani manat"),
     BGN("Bulgarian lev"),
     BHD("Bahraini dinar"),
     BRL("Brazilian real"),
@@ -67,6 +68,7 @@ public enum FiatCurrency {
     MKD("Macedonian denar"),
     MXN("Mexican peso"),
     MYR("Malaysian ringgit"),
+    NGN("Nigerian naira"),
     NOK("Norwegian krone"),
     NZD("New Zealand dollar"),
     PEN("Peruvian sol"),
@@ -87,7 +89,6 @@ public enum FiatCurrency {
     VND("Vietnamese dong"),
     XAF("Central African CFA franc"),
     ZAR("South African rand"),
-    AZN("Azerbaijani manat"),
 
     XAU("Gold"),
     ;
