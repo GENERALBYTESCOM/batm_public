@@ -496,21 +496,7 @@ public class InfoCommand extends AbstractChatCommnad{
         }
     }
     private void displayBalanceInformation(IExtensionContext ctx, IConversation conversation) {
-        List<ITerminal> foundTerminals = new ArrayList<>(ctx.findAllTerminals());
-        IPerson person = ctx.findPersonByChatId(conversation.getSenderUserId());
-        List<String> resultingTerminalSerials = new ArrayList<>();
-        for (int i = 0; i < foundTerminals.size(); i++) {
-            ITerminal terminal = foundTerminals.get(i);
-            if (ctx.hasPersonPermissionToObject(IExtensionContext.PERMISSION_READ, person, terminal)) {
-                if (terminal.isActive()) {
-                    if (ctx.isTerminalFromSameOrganizationAsPerson(terminal.getSerialNumber(),person)) {
-                        resultingTerminalSerials.add(terminal.getSerialNumber());
-                    }
-                } else {
-                    //do not show terminals that are not marked as active.
-                }
-            }
-        }
+        List<String> resultingTerminalSerials = ChatUtils.getTerminals(ctx, ctx.findPersonByChatId(conversation.getSenderUserId()));
 
         if (resultingTerminalSerials.isEmpty()) {
             conversation.sendText("I'm sorry but no terminals in your organization were found. So no balance can be shown.");

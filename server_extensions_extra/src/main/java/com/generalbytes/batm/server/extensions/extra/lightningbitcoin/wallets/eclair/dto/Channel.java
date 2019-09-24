@@ -17,14 +17,19 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.dto;
 
-public class Channel {
+import com.generalbytes.batm.server.extensions.ILightningChannel;
+
+public class Channel implements ILightningChannel {
     public String nodeId;
     public String channelId;
     public String state;
     public Data data;
+    private String remoteNodeAlias;
+    private String localNodeAlias;
 
     public class Data {
         public Commitments commitments;
+        public String shortChannelId;
 
         public class Commitments {
             public LocalCommit localCommit;
@@ -44,7 +49,65 @@ public class Channel {
                 public String outPoint;
                 public Long amountSatoshis;
             }
+
+            public LocalParams localParams;
+
+            public class LocalParams {
+                public String nodeId;
+                public boolean isFunder;
+            }
         }
     }
 
+    @Override
+    public String getShortChannelId() {
+        return data.shortChannelId;
+    }
+
+    @Override
+    public boolean isLocalFunder() {
+        return data.commitments.localParams.isFunder;
+    }
+
+    @Override
+    public boolean isOnline() {
+        return "NORMAL".equals(state);
+    }
+
+
+    public String getRemoteNodeId() {
+        return nodeId;
+    }
+
+    public String getLocalNodeId() {
+        return data.commitments.localParams.nodeId;
+    }
+
+    @Override
+    public String getRemoteNodeAlias() {
+        return remoteNodeAlias;
+    }
+
+    @Override
+    public String getLocalNodeAlias() {
+        return localNodeAlias;
+    }
+
+    public long getCapacityMsat() {
+        return data.commitments.commitInput.amountSatoshis * 1000;
+    }
+
+    @Override
+    public long getBalanceMsat() {
+        return data.commitments.localCommit.spec.toLocalMsat;
+    }
+
+
+    public void setRemoteNodeAlias(String remoteNodeAlias) {
+        this.remoteNodeAlias = remoteNodeAlias;
+    }
+
+    public void setLocalNodeAlias(String localNodeAlias) {
+        this.localNodeAlias = localNodeAlias;
+    }
 }
