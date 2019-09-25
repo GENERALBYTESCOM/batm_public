@@ -63,7 +63,7 @@ verifyModule 'org.knowm.xchange:xchange-core:4.3.21:62bf438400f131e6a5e3b76af987
 verifyModule 'org.knowm.xchange:xchange-dvchain:4.3.15:d2eed75c3e0e66f68bae13fe1506c558299fead5e87597b7dbe22521ccf9d977'
 verifyModule 'org.knowm.xchange:xchange-hitbtc:4.3.15:b3495ed5068529c80a6da0cb935b9b5025a784c7724531806243ca71e6f9c1f6'
 verifyModule 'org.knowm.xchange:xchange-itbit:4.3.15:98f90ec53188d4839e6329d3db993d7db375690011debe747d14126eb11b691f'
-verifyModule 'org.knowm.xchange:xchange-enigma:4.3.21:c5fb3a342c2186488972497bcd0851db71d02c904b4b68ca1ca42cbf456389e7'
+verifyModule 'org.knowm.xchange:xchange-enigma:4.4.1:e65085ad5b297341e07cc0b9f8ba6e65bc7f3b6e2ad8f4ac0900209eebaa65c3'
 verifyModule 'org.litecoinj:core:0.15.1.20190418:1eee20226aa76269601f1aa1f22d3980d1833c01b93112504e3c7ed4b972bbbe'
 verifyModule 'org.ow2.asm:asm-analysis:5.0.3:e8fa2a63462c96557dcd36c25525e1264b77366ff851cf0b94eb7592b290849d'
 verifyModule 'org.ow2.asm:asm-commons:5.0.3:18c1e092230233c9d29e46f21943d769bdb48130cc279e4b0e663f423948c2da'
