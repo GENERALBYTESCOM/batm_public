@@ -33,6 +33,7 @@ public class ChatBotExtensionExample extends AbstractExtension {
         Set<Class> result = new HashSet<>();
         result.add(VersionCommand.class);
         result.add(InfoCommand.class);
+        result.add(LightningCommand.class);
         return result;
     }
 }
