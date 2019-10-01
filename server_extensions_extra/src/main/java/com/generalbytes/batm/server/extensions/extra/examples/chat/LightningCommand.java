@@ -72,12 +72,12 @@ public class LightningCommand extends AbstractChatCommnad {
                 .map(ILightningChannel::getCapacityMsat)
                 .reduce(0l, Long::sum));
 
-            Long totalReceiveMsat = channels.values().stream()
+            Long totalSendMsat = channels.values().stream()
                 .filter(ILightningChannel::isOnline)
                 .map(ILightningChannel::getBalanceMsat)
                 .reduce(0l, Long::sum);
 
-            Long totalSendMsat = channels.values().stream()
+            Long totalReceiveMsat = channels.values().stream()
                 .filter(ILightningChannel::isOnline)
                 .map(c -> c.getCapacityMsat() - c.getBalanceMsat())
                 .reduce(0l, Long::sum);
