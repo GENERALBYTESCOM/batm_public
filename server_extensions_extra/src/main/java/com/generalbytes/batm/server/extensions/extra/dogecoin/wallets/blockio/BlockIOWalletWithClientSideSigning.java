@@ -43,6 +43,7 @@ import si.mazi.rescu.ClientConfig;
 import si.mazi.rescu.HttpStatusIOException;
 import si.mazi.rescu.RestProxyFactory;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import javax.ws.rs.QueryParam;
@@ -387,6 +388,8 @@ public class BlockIOWalletWithClientSideSigning implements IWallet {
             cipher.init(Cipher.DECRYPT_MODE, secretKeySpec);
 
             return cipher.doFinal(data);
+        } catch (BadPaddingException e) {
+            throw new IllegalStateException("wrong PIN?", e); // pin is not checked in CAS crypto settings tests
         } catch (Exception e) {
             throw new IllegalStateException("Can't decrypt data.", e);
         }
