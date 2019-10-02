@@ -17,6 +17,7 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.lnd;
 
+import com.generalbytes.batm.server.extensions.ILightningChannel;
 import com.generalbytes.batm.server.extensions.ThrowingSupplier;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.AbstractLightningWallet;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.lnd.dto.ErrorResponseException;
@@ -36,6 +37,8 @@ import javax.ws.rs.HeaderParam;
 import java.math.BigDecimal;
 import java.net.ConnectException;
 import java.security.GeneralSecurityException;
+import java.util.Collections;
+import java.util.List;
 
 public class LndWallet extends AbstractLightningWallet {
 
@@ -117,6 +120,12 @@ public class LndWallet extends AbstractLightningWallet {
             }
             return BigDecimal.ZERO;
         });
+    }
+
+
+    @Override
+    public List<? extends ILightningChannel> getChannels() {
+        return Collections.emptyList(); // TODO!
     }
 
     @Override

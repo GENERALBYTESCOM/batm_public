@@ -18,28 +18,22 @@
 
 package com.generalbytes.batm.server.extensions;
 
-import java.math.BigDecimal;
-import java.util.List;
+public interface ILightningChannel {
 
-public interface ILightningWallet extends IWalletAdvanced {
+    String getShortChannelId();
 
-    /**
-     * @param invoice
-     * @param cryptoCurrency
-     * @return Lightning Bitcoins received to this invoice
-     */
-    BigDecimal getReceivedAmount(String invoice, String cryptoCurrency);
+    boolean isOnline();
 
-    /**
-     *
-     *
-     * @param cryptoAmount
-     * @param cryptoCurrency
-     * @param paymentValidityInSec expiry of generated invoice in seconds
-     * @param description
-     * @return
-     */
-    String getInvoice(BigDecimal cryptoAmount, String cryptoCurrency, Long paymentValidityInSec, String description);
+    String getRemoteNodeId();
+    String getRemoteNodeAlias();
 
-    List<? extends ILightningChannel> getChannels();
+    String getLocalNodeId();
+    String getLocalNodeAlias();
+
+    boolean isLocalFunder();
+
+    long getBalanceMsat();
+
+    long getCapacityMsat();
+
 }

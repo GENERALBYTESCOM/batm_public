@@ -15,31 +15,14 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
+package com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.dto;
 
-package com.generalbytes.batm.server.extensions;
-
-import java.math.BigDecimal;
 import java.util.List;
 
-public interface ILightningWallet extends IWalletAdvanced {
-
-    /**
-     * @param invoice
-     * @param cryptoCurrency
-     * @return Lightning Bitcoins received to this invoice
-     */
-    BigDecimal getReceivedAmount(String invoice, String cryptoCurrency);
-
-    /**
-     *
-     *
-     * @param cryptoAmount
-     * @param cryptoCurrency
-     * @param paymentValidityInSec expiry of generated invoice in seconds
-     * @param description
-     * @return
-     */
-    String getInvoice(BigDecimal cryptoAmount, String cryptoCurrency, Long paymentValidityInSec, String description);
-
-    List<? extends ILightningChannel> getChannels();
+public class NodeInfo {
+    public String nodeId;
+    public String alias;
+    /** #aaaaaa */
+    public String rgbColor;
+    public List<String> addresses;
 }

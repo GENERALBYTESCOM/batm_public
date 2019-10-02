@@ -21,6 +21,7 @@ import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.ec
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.dto.ErrorResponseException;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.dto.Info;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.dto.Invoice;
+import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.dto.NodeInfo;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.dto.ReceivedInfo;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.dto.SentInfo;
 
@@ -128,5 +129,16 @@ public interface EclairAPI {
     @POST
     @Path("/getinfo")
     Info getInfo() throws IOException, ErrorResponseException;
+
+    /**
+     * Returns information about all public nodes on the lightning network, this information is taken from the node_announcement network message.
+     *
+     * @return
+     * @throws IOException
+     * @throws ErrorResponseException
+     */
+    @POST
+    @Path("/allnodes")
+    List<NodeInfo> getAllNodes() throws IOException, ErrorResponseException;
 
 }
