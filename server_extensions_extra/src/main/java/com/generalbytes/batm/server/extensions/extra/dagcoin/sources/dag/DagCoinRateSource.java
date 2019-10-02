@@ -7,6 +7,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dagcoin.domain.DagCoinParameters;
 import com.dagcoin.exception.DagCoinRestClientException;
 import com.dagcoin.service.DagCoinApiClientService;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
@@ -19,8 +20,10 @@ public class DagCoinRateSource implements IRateSource {
 
 	private BigDecimal rate;
 	private String preferredFiatCurrency = FiatCurrency.EUR.getCode();
+	private DagCoinParameters params;
 
-	public DagCoinRateSource(String preferedFiatCurrency) {
+	public DagCoinRateSource(String preferedFiatCurrency, DagCoinParameters params) {
+		this.params = params;
 		if (FiatCurrency.EUR.getCode().equalsIgnoreCase(preferedFiatCurrency)) {
 			this.preferredFiatCurrency = FiatCurrency.EUR.getCode();
 		}
@@ -44,7 +47,7 @@ public class DagCoinRateSource implements IRateSource {
 	public BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency) {
 		log.info("GetExchangeRate - cryptoCurrency : " + cryptoCurrency + " :: fiatCurrency : " + fiatCurrency);
 		try {
-			DagCoinApiClientService service = new DagCoinApiClientService();
+			DagCoinApiClientService service = new DagCoinApiClientService(this.params);
 			this.rate = service.getExchangeRate().getRate();
 		} catch (DagCoinRestClientException e) {
 			log.error("Error occured in getting exchange rate - " + e.getMessage() + " :: " + e.getErrorCode());

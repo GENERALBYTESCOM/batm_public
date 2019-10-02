@@ -7,6 +7,8 @@ import java.util.StringTokenizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dagcoin.domain.DagCoinParameters;
+import com.dagcoin.domain.DagEnvironment;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.AbstractExtension;
@@ -22,7 +24,16 @@ import com.generalbytes.batm.server.extensions.extra.dagcoin.wallets.dag.DagWall
 public class DagCoinExtension extends AbstractExtension {
 
 	private static final Logger log = LoggerFactory.getLogger(DagCoinExtension.class);
-
+	private DagEnvironment env = DagEnvironment.PRODUCTION;
+	
+	public DagCoinExtension() {
+		
+	}
+	
+	public DagCoinExtension(DagEnvironment env) {
+		this.env = DagEnvironment.DEVELOPMENT;
+	}
+	
 	@Override
 	public String getName() {
 		return "BATM DagCoin extension";
@@ -33,13 +44,23 @@ public class DagCoinExtension extends AbstractExtension {
 		log.info("Creating wallet - Wallet login - " + walletLogin);
 
 		if (walletLogin != null && !walletLogin.trim().isEmpty()) {
-			// walletname:walletId
+			// walletname:walletId:apiUrl:encryptionKey:publicKey:privateKey:merchantKey
 			StringTokenizer st = new StringTokenizer(walletLogin, ":");
 			String walletName = st.nextToken();
 			if ("dagd".equals(walletName)) {
 				String walletId = st.nextToken();
+				String apiUrl = st.nextToken();
+				String encryptionKey = st.nextToken();
+				String publicKey = st.nextToken();
+				String privateKey = st.nextToken();
+				String merchantKey = st.nextToken();
+				
+				DagCoinParameters params = 
+						new DagCoinParameters(this.env, 
+								apiUrl, encryptionKey, publicKey, privateKey, merchantKey);
+				
 				if (walletId != null) {
-					return new DagWallet(walletId);
+					return new DagWallet(walletId, params);
 				}
 			}
 
@@ -63,10 +84,13 @@ public class DagCoinExtension extends AbstractExtension {
 
 	@Override
 	public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
+		log.info("Yet to be implemented");
+		/*
 		log.info("Create address validator - " + cryptoCurrency);
 		if (CryptoCurrency.DAG.getCode().equalsIgnoreCase(cryptoCurrency)) {
 			return new DagCoinAddressValidator();
 		}
+		*/
 		return null;
 	}
 
@@ -74,14 +98,21 @@ public class DagCoinExtension extends AbstractExtension {
 		log.info("Create rate source - " + sourceLogin);
 
 		if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
+			// exchangeName:fiatCurrency:apiUrl:publicKey:privateKey:merchantKey
 			StringTokenizer st = new StringTokenizer(sourceLogin, ":");
 			String exchangeType = st.nextToken();
-			if ("dagrate".equalsIgnoreCase(exchangeType)) {
-				String preferredFiatCurrency = FiatCurrency.EUR.getCode();
-				if (st.hasMoreTokens()) {
-					preferredFiatCurrency = st.nextToken().toUpperCase();
-				}
-				return new DagCoinRateSource(preferredFiatCurrency);
+			String preferredFiatCurrency = st.nextToken().toUpperCase();
+			if ("dagrate".equalsIgnoreCase(exchangeType) && FiatCurrency.EUR.getCode().equalsIgnoreCase(preferredFiatCurrency)) {
+				String apiUrl = st.nextToken();
+				String publicKey = st.nextToken();
+				String privateKey = st.nextToken();
+				String merchantKey = "";
+				
+				DagCoinParameters params = 
+						new DagCoinParameters(this.env,
+								apiUrl, "", publicKey, privateKey, merchantKey);
+				
+				return new DagCoinRateSource(preferredFiatCurrency, params);
 			}
 		}
 		return null;
@@ -96,9 +127,12 @@ public class DagCoinExtension extends AbstractExtension {
 
 	@Override
 	public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency) {
+		log.info("Yet to be implemented");
+		/*
 		if (CryptoCurrency.DAG.getCode().equalsIgnoreCase(cryptoCurrency)) {
             return new DagPaperWalletGenerator("dag", ctx);
         }
+        **/
         return null;
 	}
 

@@ -7,6 +7,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dagcoin.domain.DagCoinParameters;
 import com.dagcoin.exception.DagCoinRestClientException;
 import com.dagcoin.service.DagCoinApiClientService;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
@@ -20,10 +21,10 @@ public class DagWallet implements IWallet {
 	private String walletId;
 	private DagCoinApiClientService service;
 
-	public DagWallet(String walletId) {
+	public DagWallet(String walletId, DagCoinParameters params) {
 		this.walletId = walletId;
 		try {
-			this.service = new DagCoinApiClientService();
+			this.service = new DagCoinApiClientService(params);
 		} catch (DagCoinRestClientException e) {
 			log.error("Error in instantiating DagCoinApiService - " + e.getErrorCode() + " :: " + e.getMessage());
 			return;

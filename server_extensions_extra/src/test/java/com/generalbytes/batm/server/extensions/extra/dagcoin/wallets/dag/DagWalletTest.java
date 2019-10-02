@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.dagcoin.domain.DagCoinParameters;
+import com.dagcoin.domain.DagEnvironment;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.extra.dagcoin.DagCoinPropertiesLoader;
 
@@ -18,7 +20,8 @@ public class DagWalletTest {
 	@Before
 	public void setUp() {
 		this.walletID = DagCoinPropertiesLoader.getTestWalletAddress();
-		this.wallet = new DagWallet(this.walletID);
+		this.wallet = new DagWallet(this.walletID, 
+				new DagCoinParameters(DagEnvironment.DEVELOPMENT, "", "", "", "", ""));
 	}
 	
 	@Test

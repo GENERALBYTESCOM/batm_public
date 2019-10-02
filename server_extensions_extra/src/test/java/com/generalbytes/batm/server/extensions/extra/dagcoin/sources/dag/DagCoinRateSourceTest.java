@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.dagcoin.domain.DagCoinParameters;
+import com.dagcoin.domain.DagEnvironment;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 
@@ -16,7 +18,8 @@ public class DagCoinRateSourceTest {
 	
 	@Before
 	public void setUp() {
-		this.rateSource = new DagCoinRateSource(FiatCurrency.EUR.getCode());
+		this.rateSource = new DagCoinRateSource(FiatCurrency.EUR.getCode(),
+				new DagCoinParameters(DagEnvironment.DEVELOPMENT, "", "", "", "", ""));
 	}
 	
 	@Test

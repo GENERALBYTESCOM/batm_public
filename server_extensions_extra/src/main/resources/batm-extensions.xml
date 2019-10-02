@@ -1501,6 +1501,11 @@
     <extension class="com.generalbytes.batm.server.extensions.extra.dagcoin.DagCoinExtension" >
         <wallet prefix="dagd" name="Dag Wallet">
             <param name="walletId" />
+            <param name="apiUrl" />
+            <param name="encryptionKey" />
+            <param name="publicKey" />
+            <param name="privateKey" />
+            <param name="merchantKey" />
             <cryptocurrency>DAG</cryptocurrency>
         </wallet>
         <wallet prefix="dagdemo" name="DagCoin Demo Wallet">
@@ -1510,6 +1515,9 @@
         </wallet>
         <ratesource prefix="dagrate" name ="Dag Live Rate" >
             <param name="fiatcurrency" />
+            <param name="apiUrl" />
+            <param name="publicKey" />
+            <param name="privateKey" />
             <cryptocurrency>DAG</cryptocurrency>
         </ratesource>
         <cryptologo cryptocurrency="DAG" file="dag.svg"/>

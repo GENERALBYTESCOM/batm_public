@@ -3,6 +3,7 @@ package com.generalbytes.batm.server.extensions.extra.dagcoin.dagpaper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dagcoin.domain.DagCoinParameters;
 import com.dagcoin.domain.PaperWalletResponse;
 import com.dagcoin.exception.DagCoinRestClientException;
 import com.dagcoin.service.DagCoinApiClientService;
@@ -19,11 +20,11 @@ public class DagPaperWalletGenerator implements IPaperWalletGenerator {
     private IExtensionContext ctx;
     private DagCoinApiClientService service;
 
-	public DagPaperWalletGenerator(String prefix, IExtensionContext ctx) {
+	public DagPaperWalletGenerator(String prefix, IExtensionContext ctx, DagCoinParameters params) {
 		this.prefix = prefix;
         this.ctx = ctx;
         try {
-			this.service = new DagCoinApiClientService();
+			this.service = new DagCoinApiClientService(params);
 		} catch (DagCoinRestClientException e) {
 			log.error("Error in instantiating DagCoinApiService - " + e.getErrorCode() + " :: " + e.getMessage());
 			return;

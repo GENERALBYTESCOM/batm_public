@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.dagcoin.domain.DagEnvironment;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.IPaperWallet;
@@ -19,29 +20,33 @@ public class DagCoinExtensionTest {
 	
 	@Before
 	public void setUp() {
-		this.extension = new DagCoinExtension();
+		this.extension = new DagCoinExtension(DagEnvironment.DEVELOPMENT);
 		this.walletId = DagCoinPropertiesLoader.getTestWalletAddress();
 	}
 
 	@Test
 	public void testCreateRateSource() {
-		String dagRate = "dagrate";
+		// exchangeName:fiatCurrency:apiUrl:publicKey:privateKey:merchantKey
+		String dagRate = "dagrate:EUR:apiUrl:publicKey:privateKey:merchantKey";
 		DagCoinRateSource rateSource = (DagCoinRateSource) this.extension.createRateSource(dagRate);
 		assertTrue(rateSource.getPreferredFiatCurrency().equals(FiatCurrency.EUR.getCode()));
 	}
 
 	@Test
 	public void testCreateWallet() {
-		String walletParams = "dagd:" + this.walletId;
+		// walletname:walletId:apiUrl:encryptionKey:publicKey:privateKey
+		String walletParams = "dagd:" + this.walletId + ":apiUrl:encryptionKey:publicKey:privateKey:merchantKey";
 		DagWallet wallet = (DagWallet) this.extension.createWallet(walletParams);
 		assertTrue(wallet.getPreferredCryptoCurrency().equals(CryptoCurrency.DAG.code));
 	}
 
+	/*
 	@Test
 	public void testCreateAddressValidator() {
 		DagCoinAddressValidator validator = (DagCoinAddressValidator) this.extension.createAddressValidator(CryptoCurrency.DAG.code);
 		assertTrue(validator.isAddressValid(this.walletId));
 	}
+	*/
 
 	@Test
 	public void testGetSupportedCryptoCurrencies() {
@@ -53,6 +58,7 @@ public class DagCoinExtensionTest {
 		assertTrue(this.extension.getName().equalsIgnoreCase("BATM DagCoin extension"));
 	}
 	
+	/*
 	@Test
 	public void testCreatePaperWalletGenerator() {
 		String cryptoCurrency = "DAG";
@@ -76,8 +82,8 @@ public class DagCoinExtensionTest {
 		assertNotNull(iPaperWallet.getCryptoCurrency()); 	
 		assertNotNull(iPaperWallet.getFileExtension());		
 		assertNotNull(iPaperWallet.getMessage());
-		assertNotNull(iPaperWallet.getPrivateKey());
-		
+		assertNotNull(iPaperWallet.getPrivateKey());	
 	}
+	*/
 
 }
