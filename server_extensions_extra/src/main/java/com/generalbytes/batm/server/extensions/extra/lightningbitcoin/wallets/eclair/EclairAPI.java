@@ -141,4 +141,16 @@ public interface EclairAPI {
     @Path("/allnodes")
     List<NodeInfo> getAllNodes() throws IOException, ErrorResponseException;
 
+    /**
+     * Finds a route to the node specified by the invoice
+     *
+     * @param invoice The invoice containing the destination
+     * @param amountMsat The amount that should go through the route
+     * @return
+     * @throws IOException
+     * @throws ErrorResponseException
+     */
+    @POST
+    @Path("/findroute")
+    List<String> findRoute(@FormParam("invoice") String invoice, @FormParam("amountMsat") Long amountMsat) throws IOException, ErrorResponseException;
 }
