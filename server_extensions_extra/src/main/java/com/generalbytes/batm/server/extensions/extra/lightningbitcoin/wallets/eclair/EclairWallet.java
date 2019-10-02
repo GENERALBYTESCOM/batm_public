@@ -34,6 +34,7 @@ import si.mazi.rescu.RestProxyFactory;
 
 import java.math.BigDecimal;
 import java.net.ConnectException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -106,15 +107,25 @@ public class EclairWallet extends AbstractLightningWallet {
     @Override
     public List<? extends ILightningChannel> getChannels() {
         if (channelAliases == null) {
-            channelAliases = callChecked(api::getAllNodes).stream().collect(Collectors.toMap(o -> o.nodeId, o -> o.alias));
+            channelAliases = callChecked(() -> api.getAllNodes().stream().collect(Collectors.toMap(o -> o.nodeId, o -> o.alias)));
         }
 
         List<Channel> channels = callChecked(api::getChannels);
+        if (channels == null) {
+            return Collections.emptyList();
+        }
         for (Channel channel : channels) {
             channel.setLocalNodeAlias(channelAliases.get(channel.getLocalNodeId()));
             channel.setRemoteNodeAlias(channelAliases.get(channel.getRemoteNodeId()));
         }
         return channels;
+    }
+
+    @Override
+    public boolean canSend(String invoice, BigDecimal amount, String cryptoCurrency) {
+        List<String> route = callChecked(cryptoCurrency, () -> api.findRoute(invoice, bitcoinToMSat(amount)));
+        log.debug("Route for {} {} to {}: {}", amount, cryptoCurrency, invoice, route);
+        return route != null && !route.isEmpty();
     }
 
     @Override

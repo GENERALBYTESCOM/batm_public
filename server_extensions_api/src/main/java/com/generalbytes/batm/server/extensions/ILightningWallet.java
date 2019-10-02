@@ -41,5 +41,19 @@ public interface ILightningWallet extends IWalletAdvanced {
      */
     String getInvoice(BigDecimal cryptoAmount, String cryptoCurrency, Long paymentValidityInSec, String description);
 
+    /**
+     *
+     * @return information about all channels opened by the node or to the node possibly including offline and closed ones
+     */
     List<? extends ILightningChannel> getChannels();
+
+    /**
+     * Checks if sendCoins of the same amount and to the same invoice may be possible.
+     * This is implemented by finding a route which doesn't necessarily mean the payment will be possible later.
+     * @param invoice
+     * @param amount
+     * @param cryptoCurrency
+     * @return true if any route can be found
+     */
+    boolean canSend(String invoice, BigDecimal amount, String cryptoCurrency);
 }
