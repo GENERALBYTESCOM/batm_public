@@ -28,7 +28,7 @@ public class EnigmaExchange extends XChangeExchange {
     private static ExchangeSpecification getSpecification(String username, String password) {
         org.knowm.xchange.enigma.EnigmaExchange enigmaExchange = new org.knowm.xchange.enigma.EnigmaExchange();
         ExchangeSpecification exchangeSpec = enigmaExchange.getDefaultExchangeSpecification();
-        exchangeSpec.setExchangeSpecificParametersItem("infra", "dev");
+        exchangeSpec.setExchangeSpecificParametersItem("infra", "prod");
         exchangeSpec.setUserName(username);
         exchangeSpec.setPassword(password);
         enigmaExchange.applySpecification(exchangeSpec);
@@ -73,8 +73,10 @@ public class EnigmaExchange extends XChangeExchange {
         // System.out.println(xch.getExchangeRateLast("BTC", "USD"));
 
         System.out.println("getExchangeRateForSell" + xch.getExchangeRateForSell("BTC", "USD"));
-        // System.out.println("getExchangeRateLast" + xch.getExchangeRateLast("BTC", "USD"));
+        // System.out.println("getExchangeRateLast" + xch.getExchangeRateLast("BTC",
+        // "USD"));
         // System.out.println("getDepositAddress: " + xch.getDepositAddress("BTC"));
-        // System.out.println("calculateSellPrice: " + xch.calculateSellPrice("BTC", "USD", new BigDecimal(1)).toString());
+        // System.out.println("calculateSellPrice: " + xch.calculateSellPrice("BTC",
+        // "USD", new BigDecimal(1)).toString());
     }
 }
