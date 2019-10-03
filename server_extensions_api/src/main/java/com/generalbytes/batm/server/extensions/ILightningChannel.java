@@ -30,10 +30,23 @@ public interface ILightningChannel {
     String getLocalNodeId();
     String getLocalNodeAlias();
 
+    /**
+     *
+     * @return true if local node funded the channel (locked its bitcoin)
+     */
     boolean isLocalFunder();
 
+    /**
+     *
+     * @return local balance that can be sent on the channel in millisatoshis
+     */
     long getBalanceMsat();
 
+    /**
+     *
+     * @return total channel capacity in millisatoshis.
+     * Amount that can be received = getCapacityMsat() - getBalanceMsat()
+     */
     long getCapacityMsat();
 
 }

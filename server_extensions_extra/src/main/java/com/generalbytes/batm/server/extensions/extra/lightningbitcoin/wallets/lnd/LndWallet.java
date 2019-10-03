@@ -129,6 +129,11 @@ public class LndWallet extends AbstractLightningWallet {
     }
 
     @Override
+    public boolean canSend(String invoice, BigDecimal amount, String cryptoCurrency) {
+        return true; // TODO
+    }
+
+    @Override
     protected <T> T callChecked(ThrowingSupplier<T> supplier) {
         try {
             return supplier.get();
