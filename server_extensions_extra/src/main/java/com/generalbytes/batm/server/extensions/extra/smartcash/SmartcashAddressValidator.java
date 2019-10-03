@@ -18,7 +18,7 @@
 package com.generalbytes.batm.server.extensions.extra.smartcash;
 
 import com.generalbytes.batm.server.coinutil.AddressFormatException;
-import com.generalbytes.batm.server.coinutil.SmartCash.Base58;
+import com.generalbytes.batm.server.extensions.extra.smartcash.util.Base58;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 
 import org.slf4j.Logger;

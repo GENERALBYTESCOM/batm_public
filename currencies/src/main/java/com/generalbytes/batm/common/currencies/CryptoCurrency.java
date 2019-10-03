@@ -36,6 +36,7 @@ import java.util.Set;
 public enum CryptoCurrency {
 
     ANON("ANON"),
+    AQUA("Aquachain"),
     ANT("Aragon Network Token"),
     BAT("Basic Attention Token"),
     BCH("Bitcoin Cash"),
@@ -59,6 +60,7 @@ public enum CryptoCurrency {
     FLASH("FLASH"),
     FTO("FuturoCoin"),
     GRS("Groestlcoin"),
+    HATCH("Hatch"),
     HBX("HBX"),
     KMD("Komodo"),
     LBTC("Lightning Network Bitcoin"),
@@ -90,6 +92,7 @@ public enum CryptoCurrency {
     VOLTZ("VOLTZ"),
     WDC("WorldCoin"),
     XMR("Monero"),
+    XORI("CHFToken"),
     XSG("SnowGem"),
     XZC("Zcoin"),
     BAY("BitBayCoin"),

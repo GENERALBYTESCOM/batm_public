@@ -34,6 +34,7 @@ public enum FiatCurrency {
     ALL("Albanian lek"),
     AMD("Armenian dram"),
     AUD("Australian dollar"),
+    AZN("Azerbaijani manat"),
     BGN("Bulgarian lev"),
     BHD("Bahraini dinar"),
     BRL("Brazilian real"),
@@ -67,6 +68,7 @@ public enum FiatCurrency {
     MKD("Macedonian denar"),
     MXN("Mexican peso"),
     MYR("Malaysian ringgit"),
+    NGN("Nigerian naira"),
     NOK("Norwegian krone"),
     NZD("New Zealand dollar"),
     PEN("Peruvian sol"),
@@ -99,6 +101,15 @@ public enum FiatCurrency {
             tmp.add(fc.name());
         }
         codes = Collections.unmodifiableSet(tmp);
+    }
+
+    public static FiatCurrency getFiatCurrency(String code) {
+        for (FiatCurrency currency : FiatCurrency.values()) {
+            if (currency.name().equals(code)) {
+                return currency;
+            }
+        }
+        return null;
     }
 
     private final String currencyName;

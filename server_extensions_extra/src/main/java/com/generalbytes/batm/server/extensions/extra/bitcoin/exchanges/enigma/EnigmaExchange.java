@@ -4,7 +4,9 @@ import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.XChangeExchange;
 import org.knowm.xchange.ExchangeSpecification;
+import org.knowm.xchange.enigma.service.EnigmaAccountService;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,10 +26,18 @@ public class EnigmaExchange extends XChangeExchange {
     }
 
     private static ExchangeSpecification getSpecification(String username, String password) {
-        ExchangeSpecification spec = getDefaultSpecification();
-        spec.setUserName(username);
-        spec.setPassword(password);
-        return spec;
+        org.knowm.xchange.enigma.EnigmaExchange enigmaExchange = new org.knowm.xchange.enigma.EnigmaExchange();
+        ExchangeSpecification exchangeSpec = enigmaExchange.getDefaultExchangeSpecification();
+        exchangeSpec.setExchangeSpecificParametersItem("infra", "dev");
+        exchangeSpec.setUserName(username);
+        exchangeSpec.setPassword(password);
+        enigmaExchange.applySpecification(exchangeSpec);
+        try {
+            ((EnigmaAccountService) enigmaExchange.getAccountService()).login();
+        } catch (IOException e) {
+            throw new RuntimeException("Login exception", e);
+        }
+        return exchangeSpec;
     }
 
     @Override
@@ -59,12 +69,12 @@ public class EnigmaExchange extends XChangeExchange {
     }
 
     public static void main(String[] args) {
-        EnigmaExchange rs = new EnigmaExchange("EUR");
-        System.out.println(rs.getExchangeRateLast("BTC", "USD"));
+        EnigmaExchange xch = new EnigmaExchange("", "", "EUR");
+        // System.out.println(xch.getExchangeRateLast("BTC", "USD"));
 
-        // EnigmaExchange xch = new EnigmaExchange("", "", "USD");
-        // System.out.println("getExchangeRateForSell" + xch.getExchangeRateLast("BTC", "USD"));
-        // System.out.println("calculateSellPrice: " + xch.calculateSellPrice("BTC", "USD", new BigDecimal(1)).toString());
+        System.out.println("getExchangeRateForSell" + xch.getExchangeRateForSell("BTC", "USD"));
+        // System.out.println("getExchangeRateLast" + xch.getExchangeRateLast("BTC", "USD"));
         // System.out.println("getDepositAddress: " + xch.getDepositAddress("BTC"));
+        // System.out.println("calculateSellPrice: " + xch.calculateSellPrice("BTC", "USD", new BigDecimal(1)).toString());
     }
 }

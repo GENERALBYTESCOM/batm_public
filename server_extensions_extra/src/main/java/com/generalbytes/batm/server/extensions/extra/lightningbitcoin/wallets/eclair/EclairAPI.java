@@ -1,9 +1,27 @@
+/*************************************************************************************
+ * Copyright (C) 2014-2019 GENERAL BYTES s.r.o. All rights reserved.
+ *
+ * This software may be distributed and modified under the terms of the GNU
+ * General Public License version 2 (GPL2) as published by the Free Software
+ * Foundation and appearing in the file GPL2.TXT included in the packaging of
+ * this file. Please note that GPL2 Section 2[b] requires that all works based
+ * on this software must also be made publicly available under the terms of
+ * the GPL2 ("Copyleft").
+ *
+ * Contact information
+ * -------------------
+ *
+ * GENERAL BYTES s.r.o.
+ * Web      :  http://www.generalbytes.com
+ *
+ ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair;
 
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.dto.Channel;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.dto.ErrorResponseException;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.dto.Info;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.dto.Invoice;
+import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.dto.NodeInfo;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.dto.ReceivedInfo;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.dto.SentInfo;
 
@@ -112,4 +130,27 @@ public interface EclairAPI {
     @Path("/getinfo")
     Info getInfo() throws IOException, ErrorResponseException;
 
+    /**
+     * Returns information about all public nodes on the lightning network, this information is taken from the node_announcement network message.
+     *
+     * @return
+     * @throws IOException
+     * @throws ErrorResponseException
+     */
+    @POST
+    @Path("/allnodes")
+    List<NodeInfo> getAllNodes() throws IOException, ErrorResponseException;
+
+    /**
+     * Finds a route to the node specified by the invoice
+     *
+     * @param invoice The invoice containing the destination
+     * @param amountMsat The amount that should go through the route
+     * @return
+     * @throws IOException
+     * @throws ErrorResponseException
+     */
+    @POST
+    @Path("/findroute")
+    List<String> findRoute(@FormParam("invoice") String invoice, @FormParam("amountMsat") Long amountMsat) throws IOException, ErrorResponseException;
 }
