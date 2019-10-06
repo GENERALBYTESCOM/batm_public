@@ -15,25 +15,38 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.examples.chat;
 
-import com.generalbytes.batm.server.extensions.AbstractExtension;
+package com.generalbytes.batm.server.extensions;
 
-import java.util.HashSet;
-import java.util.Set;
+public interface ILightningChannel {
 
-public class ChatBotExtensionExample extends AbstractExtension {
-    @Override
-    public String getName() {
-        return  "BATM Example extension that demonstrates how to write ChatBot commands";
-    }
+    String getShortChannelId();
 
-    @Override
-    public Set<Class> getChatCommands() {
-        Set<Class> result = new HashSet<>();
-        result.add(VersionCommand.class);
-        result.add(InfoCommand.class);
-        result.add(LightningCommand.class);
-        return result;
-    }
+    boolean isOnline();
+
+    String getRemoteNodeId();
+    String getRemoteNodeAlias();
+
+    String getLocalNodeId();
+    String getLocalNodeAlias();
+
+    /**
+     *
+     * @return true if local node funded the channel (locked its bitcoin)
+     */
+    boolean isLocalFunder();
+
+    /**
+     *
+     * @return local balance that can be sent on the channel in millisatoshis
+     */
+    long getBalanceMsat();
+
+    /**
+     *
+     * @return total channel capacity in millisatoshis.
+     * Amount that can be received = getCapacityMsat() - getBalanceMsat()
+     */
+    long getCapacityMsat();
+
 }

@@ -15,25 +15,14 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.examples.chat;
+package com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.dto;
 
-import com.generalbytes.batm.server.extensions.AbstractExtension;
+import java.util.List;
 
-import java.util.HashSet;
-import java.util.Set;
-
-public class ChatBotExtensionExample extends AbstractExtension {
-    @Override
-    public String getName() {
-        return  "BATM Example extension that demonstrates how to write ChatBot commands";
-    }
-
-    @Override
-    public Set<Class> getChatCommands() {
-        Set<Class> result = new HashSet<>();
-        result.add(VersionCommand.class);
-        result.add(InfoCommand.class);
-        result.add(LightningCommand.class);
-        return result;
-    }
+public class NodeInfo {
+    public String nodeId;
+    public String alias;
+    /** #aaaaaa */
+    public String rgbColor;
+    public List<String> addresses;
 }
