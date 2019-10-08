@@ -24,11 +24,26 @@ import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.dash.sources.cddash.CryptodiggersRateSource;
 import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.CoinmarketcapRateSource;
 import com.generalbytes.batm.server.extensions.extra.dash.wallets.dashd.DashRPCWallet;
+import com.generalbytes.batm.server.extensions.extra.dash.wallets.dashd.DashUniqueAddressRPCWallet;
+import com.generalbytes.batm.server.extensions.AbstractExtension;
+import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
+import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
+import com.generalbytes.batm.server.extensions.IPaperWalletGenerator;
+import com.generalbytes.batm.server.extensions.IWallet;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.StringTokenizer;
 
 import java.math.BigDecimal;
+import java.net.MalformedURLException;
 import java.util.*;
 
 public class DashExtension extends AbstractExtension{
+
+    private static final ICryptoCurrencyDefinition DEFINITION = new DashDefinition();
+    public static final String CURRENCY = CryptoCurrency.DASH.getCode();
+
     @Override
     public String getName() {
         return "BATM Dash extra extension";
@@ -36,11 +51,11 @@ public class DashExtension extends AbstractExtension{
 
     @Override
     public IWallet createWallet(String walletLogin) {
-        if (walletLogin !=null && !walletLogin.trim().isEmpty()) {
-            StringTokenizer st = new StringTokenizer(walletLogin,":");
+        if (walletLogin != null && !walletLogin.trim().isEmpty()) {
+            StringTokenizer st = new StringTokenizer(walletLogin, ":");
             String walletType = st.nextToken();
-
-            if ("dashd".equalsIgnoreCase(walletType)) {
+            if ("dashd".equalsIgnoreCase(walletType)
+                || "dashdnoforward".equalsIgnoreCase(walletType)) {
                 //"dashd:protocol:user:password:ip:port:accountname"
 
                 String protocol = st.nextToken();
@@ -48,18 +63,24 @@ public class DashExtension extends AbstractExtension{
                 String password = st.nextToken();
                 String hostname = st.nextToken();
                 String port = st.nextToken();
-                String accountName ="";
+                String accountName = "";
                 if (st.hasMoreTokens()) {
                     accountName = st.nextToken();
                 }
 
 
-                if (protocol != null && username != null && password != null && hostname !=null && port != null && accountName != null) {
-                    String rpcURL = protocol +"://" + username +":" + password + "@" + hostname +":" + port;
-                    return new DashRPCWallet(rpcURL,accountName);
+                try {
+                    if (protocol != null && username != null && password != null && hostname != null && port != null && accountName != null) {
+                        String rpcURL = protocol + "://" + username + ":" + password + "@" + hostname + ":" + port;
+                        if ("dashdnoforward".equalsIgnoreCase(walletType)) {
+                            return new DashUniqueAddressRPCWallet(rpcURL, accountName);
+                        }
+                        return new DashRPCWallet(rpcURL, accountName);
+                    }
+                } catch (MalformedURLException x) {
+                    //swallow
                 }
             }
-
         }
         return null;
     }
@@ -113,13 +134,22 @@ public class DashExtension extends AbstractExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(CryptoCurrency.BTC.getCode());
-        result.add(CryptoCurrency.BTX.getCode());
-        result.add(CryptoCurrency.BCH.getCode());
-        result.add(CryptoCurrency.LTC.getCode());
-        result.add(CryptoCurrency.XMR.getCode());
-        result.add(CryptoCurrency.DASH.getCode());
-        result.add(CryptoCurrency.POT.getCode());
+        result.add(CURRENCY);
         return result;
+    }
+
+    @Override
+    public Set<ICryptoCurrencyDefinition> getCryptoCurrencyDefinitions() {
+        Set<ICryptoCurrencyDefinition> result = new HashSet<>();
+        result.add(DEFINITION);
+        return result;
+    }
+
+    @Override
+    public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency) {
+        if (CryptoCurrency.DASH.getCode().equalsIgnoreCase(cryptoCurrency)) {
+            return new DashWalletGenerator("Xgb", ctx);
+        }
+        return null;
     }
 }
