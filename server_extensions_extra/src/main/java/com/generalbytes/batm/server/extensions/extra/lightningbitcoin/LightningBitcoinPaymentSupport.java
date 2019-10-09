@@ -91,7 +91,7 @@ public class LightningBitcoinPaymentSupport implements IPaymentSupport {
                 log.error("", t);
             }
 
-        }, 10, 10, TimeUnit.SECONDS);
+        }, 3, 1, TimeUnit.SECONDS);
 
         executorService.schedule(() -> {
             try {
