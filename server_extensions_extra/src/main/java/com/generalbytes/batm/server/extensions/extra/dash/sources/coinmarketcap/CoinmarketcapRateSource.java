@@ -41,7 +41,10 @@ public class CoinmarketcapRateSource implements IRateSource {
 
     public CoinmarketcapRateSource(String apiKey, String preferedFiatCurrency) {
         api = RestProxyFactory.createProxy(ICoinmarketcapAPI.class, "https://pro-api.coinmarketcap.com"); // https://sandbox-api.coinmarketcap.com
-        this.apiKey = Objects.requireNonNull(apiKey, "CoinmarketcapRateSource API key must be configured, see https://coinmarketcap.com/api/");
+        this.apiKey = apiKey;
+        if (apiKey == null) {
+            log.warn("CoinmarketcapRateSource API key must be configured, see https://coinmarketcap.com/api/");
+        }
 
         if (FiatCurrency.EUR.getCode().equalsIgnoreCase(preferedFiatCurrency)) {
             this.preferredFiatCurrency = FiatCurrency.EUR.getCode();
@@ -116,6 +119,9 @@ public class CoinmarketcapRateSource implements IRateSource {
     @Override
     public BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency) {
         if (!getFiatCurrencies().contains(fiatCurrency)) {
+            return null;
+        }
+        if(apiKey == null) {
             return null;
         }
 
