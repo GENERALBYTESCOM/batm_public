@@ -13,6 +13,7 @@ import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.extra.dagcoin.domain.DagCoinParameters;
 import com.generalbytes.batm.server.extensions.extra.dagcoin.exception.DagCoinRestClientException;
 import com.generalbytes.batm.server.extensions.extra.dagcoin.service.DagCoinApiClientService;
+import com.generalbytes.batm.server.extensions.extra.dagcoin.util.InMemoryCache;
 
 public class DagCoinRateSource implements IRateSource {
 
@@ -21,6 +22,8 @@ public class DagCoinRateSource implements IRateSource {
 	private BigDecimal rate;
 	private String preferredFiatCurrency = FiatCurrency.EUR.getCode();
 	private DagCoinParameters params;
+	private InMemoryCache cache;
+	private static final long EXPIRYTIME = 900000;	// expiry time for caching in milliseconds (15 min)
 
 	public DagCoinRateSource(String preferedFiatCurrency, DagCoinParameters params) {
 		log.info("DagCoinRateSource: preferedFiatCurrency = " + preferedFiatCurrency + " URL = " + params.getApiUrl());
@@ -28,6 +31,7 @@ public class DagCoinRateSource implements IRateSource {
 		if (FiatCurrency.EUR.getCode().equalsIgnoreCase(preferedFiatCurrency)) {
 			this.preferredFiatCurrency = FiatCurrency.EUR.getCode();
 		}
+		cache = new InMemoryCache();
 	}
 
 	@Override
@@ -48,8 +52,12 @@ public class DagCoinRateSource implements IRateSource {
 	public BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency) {
 		log.info("GetExchangeRate - cryptoCurrency = " + cryptoCurrency + " fiatCurrency = " + fiatCurrency);
 		try {
-			DagCoinApiClientService service = new DagCoinApiClientService(this.params);
-			this.rate = service.getExchangeRate().getRate();
+			if (cache.get("dagRate") == null) {
+				DagCoinApiClientService service = new DagCoinApiClientService(this.params);
+				BigDecimal response = service.getExchangeRate().getRate();
+				cache.add("dagRate", response, EXPIRYTIME);
+			}
+			this.rate =  (BigDecimal) cache.get("dagRate");
 		} catch (DagCoinRestClientException e) {
 			log.error("Error occured in getting exchange rate - " + e.getMessage() + " :: " + e.getErrorCode());
 		}
