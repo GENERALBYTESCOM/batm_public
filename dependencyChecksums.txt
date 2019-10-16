@@ -95,4 +95,8 @@ verifyModule 'org.glassfish.hk2:hk2-locator:2.5.0:7cc550530e48a087acd793743bdc7e
 verifyModule 'org.glassfish.hk2:hk2-utils:2.5.0:56f4ff6384b04184ea301e925af1d700c3abe1ae1403994e012b6747429c3a57'
 verifyModule 'org.glassfish.jersey.inject:jersey-hk2:2.29:86a55b9f021e8525dffb5dec8c157597fa05acdd4744433d11ea7bc6109da548'
 verifyModule 'org.javassist:javassist:3.22.0-CR2:230267ffd7bfe404c1b87faf215dd012f607ba3151bd7099562c305c09de6a7a'
-
+verifyModule 'ch.qos.logback:logback-classic:1.3.0-alpha4:6a8d8f9b9a25a44451363d1e3be1d31765686908f7dd17b1d75be4e3e5337cd0'
+verifyModule 'ch.qos.logback:logback-core:1.3.0-alpha4:2f9d0d9d02e48e5d73b45bc6a2ce4998b136f2f4d58280103912a3bd5f8b4f41'
+verifyModule 'org.dagcoin:dagcoin-rest-client:0.0.3:25fefc40999cfbc72bee8a39f47bfdad53e2929251ce1858aef6440caeb97f64'
+verifyModule 'org.slf4j:slf4j-api:2.0.0-alpha0:cb111794c79ea249e9cfe1608e4c698604553d41b5a179a2786ff9f331cd7a37'
+          

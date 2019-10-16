@@ -3,10 +3,10 @@ package com.generalbytes.batm.server.extensions.extra.dagcoin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dagcoin.domain.DagCoinParameters;
-import com.dagcoin.exception.DagCoinRestClientException;
-import com.dagcoin.service.DagCoinApiClientService;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
+import com.generalbytes.batm.server.extensions.extra.dagcoin.domain.DagCoinParameters;
+import com.generalbytes.batm.server.extensions.extra.dagcoin.exception.DagCoinRestClientException;
+import com.generalbytes.batm.server.extensions.extra.dagcoin.service.DagCoinApiClientService;
 
 public class DagCoinAddressValidator implements ICryptoAddressValidator {
 

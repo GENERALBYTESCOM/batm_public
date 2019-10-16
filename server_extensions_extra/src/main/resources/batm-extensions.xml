@@ -1520,6 +1520,9 @@
             <param name="privateKey" />
             <cryptocurrency>DAG</cryptocurrency>
         </ratesource>
+        <exchange prefix="dagXchange" name="Dag Exchange">
+            <cryptocurrency>DAG</cryptocurrency>
+        </exchange>
         <cryptologo cryptocurrency="DAG" file="dag.svg"/>
     </extension>
 </extensions>

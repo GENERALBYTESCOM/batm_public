@@ -7,12 +7,12 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dagcoin.domain.DagCoinParameters;
-import com.dagcoin.exception.DagCoinRestClientException;
-import com.dagcoin.service.DagCoinApiClientService;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.IRateSource;
+import com.generalbytes.batm.server.extensions.extra.dagcoin.domain.DagCoinParameters;
+import com.generalbytes.batm.server.extensions.extra.dagcoin.exception.DagCoinRestClientException;
+import com.generalbytes.batm.server.extensions.extra.dagcoin.service.DagCoinApiClientService;
 
 public class DagCoinRateSource implements IRateSource {
 
@@ -23,6 +23,7 @@ public class DagCoinRateSource implements IRateSource {
 	private DagCoinParameters params;
 
 	public DagCoinRateSource(String preferedFiatCurrency, DagCoinParameters params) {
+		log.info("DagCoinRateSource: preferedFiatCurrency = " + preferedFiatCurrency + " URL = " + params.getApiUrl());
 		this.params = params;
 		if (FiatCurrency.EUR.getCode().equalsIgnoreCase(preferedFiatCurrency)) {
 			this.preferredFiatCurrency = FiatCurrency.EUR.getCode();
@@ -45,7 +46,7 @@ public class DagCoinRateSource implements IRateSource {
 
 	@Override
 	public BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency) {
-		log.info("GetExchangeRate - cryptoCurrency : " + cryptoCurrency + " :: fiatCurrency : " + fiatCurrency);
+		log.info("GetExchangeRate - cryptoCurrency = " + cryptoCurrency + " fiatCurrency = " + fiatCurrency);
 		try {
 			DagCoinApiClientService service = new DagCoinApiClientService(this.params);
 			this.rate = service.getExchangeRate().getRate();

@@ -3,15 +3,15 @@ package com.generalbytes.batm.server.extensions.extra.dagcoin.dagpaper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dagcoin.domain.DagCoinParameters;
-import com.dagcoin.domain.PaperWalletResponse;
-import com.dagcoin.exception.DagCoinRestClientException;
-import com.dagcoin.service.DagCoinApiClientService;
-import com.generalbytes.batm.common.currencies.CryptoCurrency;
+//import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.IExtensionContext;
 import com.generalbytes.batm.server.extensions.IPaperWallet;
 import com.generalbytes.batm.server.extensions.IPaperWalletGenerator;
-import com.generalbytes.bitrafael.api.wallet.bch.WalletToolsBCH;
+import com.generalbytes.batm.server.extensions.extra.dagcoin.domain.DagCoinParameters;
+import com.generalbytes.batm.server.extensions.extra.dagcoin.domain.PaperWalletResponse;
+import com.generalbytes.batm.server.extensions.extra.dagcoin.exception.DagCoinRestClientException;
+import com.generalbytes.batm.server.extensions.extra.dagcoin.service.DagCoinApiClientService;
+//import com.generalbytes.bitrafael.api.wallet.bch.WalletToolsBCH;
 
 public class DagPaperWalletGenerator implements IPaperWalletGenerator {
 	
@@ -33,6 +33,7 @@ public class DagPaperWalletGenerator implements IPaperWalletGenerator {
 	
 	@Override
 	public IPaperWallet generateWallet(String cryptoCurrency, String onetimePassword, String userLanguage) {
+		log.info("Generating paper wallet for - " + cryptoCurrency);
 		try {
 			// get the cardID, wallet address and PIN from service
 			PaperWalletResponse paperWalletResponse = this.service.generatePaperWallet();

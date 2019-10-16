@@ -7,11 +7,11 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dagcoin.domain.DagCoinParameters;
-import com.dagcoin.exception.DagCoinRestClientException;
-import com.dagcoin.service.DagCoinApiClientService;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.IWallet;
+import com.generalbytes.batm.server.extensions.extra.dagcoin.domain.DagCoinParameters;
+import com.generalbytes.batm.server.extensions.extra.dagcoin.exception.DagCoinRestClientException;
+import com.generalbytes.batm.server.extensions.extra.dagcoin.service.DagCoinApiClientService;
 
 public class DagWallet implements IWallet {
 
@@ -52,7 +52,7 @@ public class DagWallet implements IWallet {
 	public BigDecimal getCryptoBalance(String cryptoCurrency) {
 		log.info("Getting wallet balance for - " + this.walletId);
 		try {
-			return this.service.getBalance(this.walletId).getAmount();
+			return this.service.getCustomerBalance(this.walletId).getBalance();
 		} catch (DagCoinRestClientException e) {
 			log.error("Error in getting wallet balance - " + cryptoCurrency + " ERROR - " + e.getMessage() + " :: "
 					+ e.getErrorCode());
@@ -62,8 +62,8 @@ public class DagWallet implements IWallet {
 
 	@Override
 	public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
-		log.info("Adding money to wallet :: destinationAddress - " + destinationAddress + " :: amount - " + amount.toString()
-				+ " :: crypto - " + cryptoCurrency + " :: description - " + description);
+		log.info("Adding money to wallet - destinationAddress = " + destinationAddress + " amount = " + amount.toString()
+				+ " crypto = " + cryptoCurrency + " description = " + description);
 		try {
 			return this.service.makeTransaction(destinationAddress, amount.toString(), cryptoCurrency).getTransactionId();
 		} catch (DagCoinRestClientException e) {
