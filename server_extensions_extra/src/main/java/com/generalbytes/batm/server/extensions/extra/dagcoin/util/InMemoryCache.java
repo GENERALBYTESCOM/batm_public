@@ -4,6 +4,12 @@ import java.lang.ref.SoftReference;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * In memory cache implementation
+ * 
+ * @author shubhrapahwa
+ *
+ */
 public class InMemoryCache implements Cache {
 	
 	private static final int CLEAN_UP_PERIOD_IN_SEC = 5;

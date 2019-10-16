@@ -28,7 +28,7 @@ public interface Cache {
      * Returns the cached object given the key
      * 
      * @param key
-     * @return
+     * @return Object
      */
     Object get(String key);
  
@@ -41,7 +41,7 @@ public interface Cache {
     /**
      * Returns the size of the cache
      * 
-     * @return
+     * @return size
      */
     long size();
 
