@@ -107,6 +107,7 @@
                 <cryptocurrency>XMR</cryptocurrency>
                 <cryptocurrency>$PAC</cryptocurrency>
                 <cryptocurrency>POT</cryptocurrency>
+                <cryptocurrency>XRP</cryptocurrency>
                 <cryptocurrency>BTX</cryptocurrency>
                 <cryptocurrency>BTCP</cryptocurrency>
                 <cryptocurrency>EFL</cryptocurrency>
@@ -994,6 +995,20 @@
             <help>USD is default fiat currency.</help>
         </ratesource>
         <cryptologo cryptocurrency="POT" file="pot.png"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.ripple.RippleExtension" >
+        <wallet prefix="xrpdemo" name="Ripple Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
+            <cryptocurrency>XRP</cryptocurrency>
+        </wallet>
+        <ratesource prefix="xrpfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>XRP</cryptocurrency>
+            <help>USD is default fiat currency.</help>
+        </ratesource>
+        <cryptologo cryptocurrency="XRP" file="xrp.png"/>
+        <cryptologo cryptocurrency="XRP" file="xrp.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.dexacoin.DexCoinSupport">
         <ratesource prefix="dex_fix" name ="Fix Price" >
