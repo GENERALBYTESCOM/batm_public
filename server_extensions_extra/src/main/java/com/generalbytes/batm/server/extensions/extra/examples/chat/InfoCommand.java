@@ -77,7 +77,7 @@ public class InfoCommand extends AbstractChatCommnad{
                 displayInfoAboutBalances = true;
             }else if ("terminals".equalsIgnoreCase(parameter) || "terminal".equalsIgnoreCase(parameter) || "t".equalsIgnoreCase(parameter)) {
                 displayInfoAboutTerminals = true;
-                serialNumbers = redSerialNumbers(parameters);
+                serialNumbers = readSerialNumbers(parameters);
             }else if ((parameter.startsWith("R") || parameter.startsWith("r") || parameter.startsWith("L") || parameter.startsWith("l")) && parameter.length() == 5+1) {
                 displayTransactionInformation(ctx, conversation, parameter.toUpperCase());
                 return true;
@@ -87,9 +87,9 @@ public class InfoCommand extends AbstractChatCommnad{
             }else if (isPhoneNumber(parameter)) {
                 displayIdentityInformation(ctx, conversation, null, parsePhoneNumber(parameter));
                 return true;
-            } else if ("Cash".equalsIgnoreCase(parameter) || "cash".equalsIgnoreCase(parameter) || "c".equalsIgnoreCase(parameter)) {
+            } else if ("cash".equalsIgnoreCase(parameter) || "c".equalsIgnoreCase(parameter)) {
                 displayInfoAboutCash = true;
-                serialNumbers = redSerialNumbers(parameters);
+                serialNumbers = readSerialNumbers(parameters);
             }
         }
         if (displayInfoAboutTerminals || displayInfoAboutBalances || displayInfoAboutCash) {
@@ -112,7 +112,7 @@ public class InfoCommand extends AbstractChatCommnad{
         return true;
     }
 
-    private List<String> redSerialNumbers(StringTokenizer parameters) {
+    private List<String> readSerialNumbers(StringTokenizer parameters) {
         List<String> serialNumbers = new ArrayList<>();
         while (parameters.hasMoreTokens()) {
             String serialNumber = parameters.nextToken();
@@ -138,7 +138,7 @@ public class InfoCommand extends AbstractChatCommnad{
                 if (cashBoxes != null) {
                     cashBoxes.sort((t1, t2) -> t1.getCashboxName().compareTo(t2.getCashboxName()));
                     Map<String, List<IBanknoteCounts>> sortedCashBoxes = cashBoxes.stream().collect(Collectors.groupingBy(IBanknoteCounts::getCashboxName));
-                    sb.append(serialNumber).append(" ").append(terminal.getName()).append(newLine);
+                    sb.append(serialNumber).append(" (").append(terminal.getName()).append(")").append(newLine);
                     for (String s : sortedCashBoxes.keySet()) {
                         sb.append(cashBoxNameText).append(sortedCashBoxes.get(s).get(0).getCashboxName()).append(newLine);
                         Map<String, BigDecimal> finalTotals = new HashMap<>();
