@@ -14,12 +14,14 @@ public class DagCoinAddressValidator implements ICryptoAddressValidator {
 	private DagCoinParameters params;
 	
 	public DagCoinAddressValidator(DagCoinParameters params) {
+		log.info("Inside DagCoinAddressValidator, with params - " +
+				params.getApiUrl() + params.getEncryptionKey() + params.getPublicKey() + params.getPrivateKey());
 		this.params = params;
 	}
 
 	@Override
 	public boolean isAddressValid(String address) {
-		log.info("Checking if wallet address if valid - " + address);
+		log.info("Inside isAddressValid - Checking if wallet address if valid - " + address);
 		try {
 			DagCoinApiClientService service = new DagCoinApiClientService(this.params);
 			return service.validateWalletAddress(address).getIsValid();
@@ -31,11 +33,13 @@ public class DagCoinAddressValidator implements ICryptoAddressValidator {
 
 	@Override
 	public boolean mustBeBase58Address() {
+		log.info("Inside mustBeBase58Address, returning false");
 		return false;
 	}
 
 	@Override
 	public boolean isPaperWalletSupported() {
+		log.info("Inside isPaperWalletSupported, returning false");
 		return false;
 	}
 

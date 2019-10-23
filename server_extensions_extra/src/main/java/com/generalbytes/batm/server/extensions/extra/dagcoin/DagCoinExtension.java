@@ -76,13 +76,14 @@ public class DagCoinExtension extends AbstractExtension {
 
 	@Override
 	public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-		log.info("AddressValidator - Yet to be implemented");
-		/*
-		log.info("Create address validator - " + cryptoCurrency);
+		log.info("Create address validator for - " + cryptoCurrency);
 		if (CryptoCurrency.DAG.getCode().equalsIgnoreCase(cryptoCurrency)) {
-			return new DagCoinAddressValidator();
+			log.info("Creating parameters");
+			DagCoinParameters params = new DagCoinParameters
+					("", "", "", "", "");
+			
+			return new DagCoinAddressValidator(params);
 		}
-		*/
 		return null;
 	}
 
