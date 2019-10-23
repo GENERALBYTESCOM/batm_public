@@ -93,6 +93,20 @@ public class RPCWallet implements IWallet, IRPCWallet{
         }
     }
 
+    public String generateNewDepositCryptoAddress(String cryptoCurrency, String label) {
+        if (!this.cryptoCurrency.equalsIgnoreCase(cryptoCurrency)) {
+            log.error("RPCWallet wallet error: unknown cryptocurrency.");
+            return null;
+        }
+
+        try {
+            return client.getNewAddress(accountName);
+        } catch (BitcoinRPCException e) {
+            log.error("Error", e);
+            return null;
+        }
+    }
+
     @Override
     public BigDecimal getCryptoBalance(String cryptoCurrency) {
         if (!this.cryptoCurrency.equalsIgnoreCase(cryptoCurrency)) {

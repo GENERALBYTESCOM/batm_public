@@ -96,6 +96,20 @@ public class DashRPCWallet implements IWallet, IRPCWallet {
         }
     }
 
+    public String generateNewDepositCryptoAddress(String cryptoCurrency, String label) {
+        if (!CRYPTO_CURRENCY.equalsIgnoreCase(cryptoCurrency)) {
+            log.error("Dashd wallet error: unknown cryptocurrency.");
+            return null;
+        }
+
+        try {
+            return getClient(rpcURL).getNewAddress(accountName);
+        } catch (BitcoinRPCException e) {
+            log.error("Error", e);
+            return null;
+        }
+    }
+
     @Override
     public BigDecimal getCryptoBalance(String cryptoCurrency) {
         if (!CRYPTO_CURRENCY.equalsIgnoreCase(cryptoCurrency)) {
