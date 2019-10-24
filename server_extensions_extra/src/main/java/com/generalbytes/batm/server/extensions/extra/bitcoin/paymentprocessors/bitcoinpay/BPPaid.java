@@ -15,22 +15,36 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-
 package com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.bitcoinpay;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+import java.math.BigDecimal;
 
-@Path("/api/v3")
-@Produces(MediaType.APPLICATION_JSON)
-public interface IBitcoinPay {
-    @POST
-    @Path("/invoices")
-    @Consumes(MediaType.APPLICATION_JSON)
-    BitcoinPayPaymentResponseDTO createNewPaymentRequest(@HeaderParam("Authorization") String token, BitcoinPayPaymentRequestRequestDTO request);
+public class BPPaid {
+    private BigDecimal amount;
+    private BigDecimal diff;
+    private String currency;
 
+    public BigDecimal getAmount() {
+        return amount;
+    }
 
-    @GET
-    @Path("/invoices/{payment_id}")
-    BitcoinPayPaymentResponseDTO getPaymentStatus(@HeaderParam("Authorization") String token, @PathParam("payment_id") String paymentId);
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public BigDecimal getDiff() {
+        return diff;
+    }
+
+    public void setDiff(BigDecimal diff) {
+        this.diff = diff;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
 }

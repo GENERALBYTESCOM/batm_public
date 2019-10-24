@@ -15,22 +15,34 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-
 package com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.bitcoinpay;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+public class BPFlags {
+    private boolean refundable;
+    private String notRefundableCause;
+    private String resolvableStatus;
 
-@Path("/api/v3")
-@Produces(MediaType.APPLICATION_JSON)
-public interface IBitcoinPay {
-    @POST
-    @Path("/invoices")
-    @Consumes(MediaType.APPLICATION_JSON)
-    BitcoinPayPaymentResponseDTO createNewPaymentRequest(@HeaderParam("Authorization") String token, BitcoinPayPaymentRequestRequestDTO request);
+    public boolean isRefundable() {
+        return refundable;
+    }
 
+    public void setRefundable(boolean refundable) {
+        this.refundable = refundable;
+    }
 
-    @GET
-    @Path("/invoices/{payment_id}")
-    BitcoinPayPaymentResponseDTO getPaymentStatus(@HeaderParam("Authorization") String token, @PathParam("payment_id") String paymentId);
+    public String getNotRefundableCause() {
+        return notRefundableCause;
+    }
+
+    public void setNotRefundableCause(String notRefundableCause) {
+        this.notRefundableCause = notRefundableCause;
+    }
+
+    public String getResolvableStatus() {
+        return resolvableStatus;
+    }
+
+    public void setResolvableStatus(String resolvableStatus) {
+        this.resolvableStatus = resolvableStatus;
+    }
 }

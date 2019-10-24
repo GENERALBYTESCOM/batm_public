@@ -15,22 +15,25 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-
 package com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.bitcoinpay;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+public class BPProduct {
+    private String name;
+    private String description;
 
-@Path("/api/v3")
-@Produces(MediaType.APPLICATION_JSON)
-public interface IBitcoinPay {
-    @POST
-    @Path("/invoices")
-    @Consumes(MediaType.APPLICATION_JSON)
-    BitcoinPayPaymentResponseDTO createNewPaymentRequest(@HeaderParam("Authorization") String token, BitcoinPayPaymentRequestRequestDTO request);
+    public String getName() {
+        return name;
+    }
 
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    @GET
-    @Path("/invoices/{payment_id}")
-    BitcoinPayPaymentResponseDTO getPaymentStatus(@HeaderParam("Authorization") String token, @PathParam("payment_id") String paymentId);
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

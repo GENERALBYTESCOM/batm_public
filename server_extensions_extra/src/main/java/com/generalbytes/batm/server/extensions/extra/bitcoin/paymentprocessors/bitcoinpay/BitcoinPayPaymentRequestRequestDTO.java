@@ -17,26 +17,80 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.bitcoinpay;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import java.math.BigDecimal;
-
 public class BitcoinPayPaymentRequestRequestDTO {
-    @JsonProperty("currency")
-    String currency;
-    @JsonProperty("price")
-    BigDecimal price;
 
-    @JsonProperty("settled_currency")
-    String settled_currency;
+    private BPProduct product;
+    private BPInvoice invoice;
+    private BPSettlement settlement;
 
-    @JsonProperty("reference")
-    String reference;
+    private String notifyEmail;
+    private String notifyUrl;
+    private String returnUrl;
+    private String reference;
 
-    public BitcoinPayPaymentRequestRequestDTO(String currency, BigDecimal price, String settled_currency, String reference) {
-        this.currency = currency;
-        this.price = price;
-        this.settled_currency = settled_currency;
+    public BitcoinPayPaymentRequestRequestDTO(BPProduct product, BPInvoice invoice, BPSettlement settlement, String notifyEmail, String notifyUrl, String returnUrl, String reference) {
+        this.product = product;
+        this.invoice = invoice;
+        this.settlement = settlement;
+        this.notifyEmail = notifyEmail;
+        this.notifyUrl = notifyUrl;
+        this.returnUrl = returnUrl;
+        this.reference = reference;
+    }
+
+    public BPProduct getProduct() {
+        return product;
+    }
+
+    public void setProduct(BPProduct product) {
+        this.product = product;
+    }
+
+    public BPInvoice getInvoice() {
+        return invoice;
+    }
+
+    public void setInvoice(BPInvoice invoice) {
+        this.invoice = invoice;
+    }
+
+    public BPSettlement getSettlement() {
+        return settlement;
+    }
+
+    public void setSettlement(BPSettlement settlement) {
+        this.settlement = settlement;
+    }
+
+    public String getNotifyEmail() {
+        return notifyEmail;
+    }
+
+    public void setNotifyEmail(String notifyEmail) {
+        this.notifyEmail = notifyEmail;
+    }
+
+    public String getNotifyUrl() {
+        return notifyUrl;
+    }
+
+    public void setNotifyUrl(String notifyUrl) {
+        this.notifyUrl = notifyUrl;
+    }
+
+    public String getReturnUrl() {
+        return returnUrl;
+    }
+
+    public void setReturnUrl(String returnUrl) {
+        this.returnUrl = returnUrl;
+    }
+
+    public String getReference() {
+        return reference;
+    }
+
+    public void setReference(String reference) {
         this.reference = reference;
     }
 }
