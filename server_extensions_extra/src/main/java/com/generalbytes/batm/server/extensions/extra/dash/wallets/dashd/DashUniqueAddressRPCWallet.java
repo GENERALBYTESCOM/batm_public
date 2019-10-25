@@ -25,9 +25,4 @@ public class DashUniqueAddressRPCWallet extends DashRPCWallet implements IGenera
     public DashUniqueAddressRPCWallet(String rpcURL, String accountName) throws MalformedURLException {
         super(rpcURL, accountName);
     }
-
-    @Override
-    public String generateNewDepositCryptoAddress(String cryptoCurrency, String label) {
-        return getCryptoAddress(cryptoCurrency);
-    }
 }

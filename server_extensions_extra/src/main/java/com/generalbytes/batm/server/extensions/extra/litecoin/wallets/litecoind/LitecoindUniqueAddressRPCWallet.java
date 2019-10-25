@@ -23,9 +23,4 @@ public class LitecoindUniqueAddressRPCWallet extends LitecoindRPCWallet implemen
     public LitecoindUniqueAddressRPCWallet(String rpcURL, String accountName) {
         super(rpcURL, accountName);
     }
-
-    @Override
-    public String generateNewDepositCryptoAddress(String cryptoCurrency, String label) {
-        return getCryptoAddress(cryptoCurrency);
-    }
 }
