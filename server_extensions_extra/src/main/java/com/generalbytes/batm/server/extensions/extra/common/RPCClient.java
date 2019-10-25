@@ -67,6 +67,16 @@ public class RPCClient extends BitcoinJSONRPCClient {
         }
     }
 
+    /**
+     * bitcoin-abc >= 0.20 needs estimatefee without any params
+     *
+     * @return
+     * @throws BitcoinRPCException
+     */
+    public double getEstimateFee() throws BitcoinRPCException {
+        return ((Number) query("estimatefee")).doubleValue();
+    }
+
     public double getEstimateFee(int numberOfBlocks) throws BitcoinRPCException {
         return ((Number)query("estimatefee",numberOfBlocks)).doubleValue();
     }
