@@ -17,6 +17,7 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.examples.chat;
 
+import com.generalbytes.batm.server.extensions.IBanknoteCounts;
 import com.generalbytes.batm.server.extensions.ICryptoConfiguration;
 import com.generalbytes.batm.server.extensions.IExchange;
 import com.generalbytes.batm.server.extensions.IExtensionContext;
@@ -36,6 +37,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
@@ -43,13 +45,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.stream.Collectors;
 
 import static com.generalbytes.batm.server.extensions.ITransactionDetails.*;
 
 @ChatCommand( names = {"info","i"},
-    help = "/info [balances|terminals [serial number]|remoteTransactionId|identityId|phonenumber] - display various information.")
+    help = "/info [balances|terminals|cash [serial number]|remoteTransactionId|identityId|phonenumber] - display various information.")
 public class InfoCommand extends AbstractChatCommnad{
     private static final Logger log = LoggerFactory.getLogger(InfoCommand.class);
 
@@ -59,6 +64,7 @@ public class InfoCommand extends AbstractChatCommnad{
     public boolean processCommand(IExtensionContext ctx, IConversation conversation, String command, StringTokenizer parameters, String commandLine) {
         boolean displayInfoAboutTerminals = false;
         boolean displayInfoAboutBalances = false;
+        boolean displayInfoAboutCash = false;
         List<String> serialNumbers = new ArrayList<>();
 
         if (!parameters.hasMoreTokens()) {
@@ -71,12 +77,7 @@ public class InfoCommand extends AbstractChatCommnad{
                 displayInfoAboutBalances = true;
             }else if ("terminals".equalsIgnoreCase(parameter) || "terminal".equalsIgnoreCase(parameter) || "t".equalsIgnoreCase(parameter)) {
                 displayInfoAboutTerminals = true;
-                while (parameters.hasMoreTokens()) {
-                    String serialNumber = parameters.nextToken();
-                    if (serialNumber.startsWith("BT") || serialNumber.startsWith("PS") || serialNumber.startsWith("bt") || serialNumber.startsWith("ps")) {
-                        serialNumbers.add(serialNumber);
-                    }
-                }
+                serialNumbers = readSerialNumbers(parameters);
             }else if ((parameter.startsWith("R") || parameter.startsWith("r") || parameter.startsWith("L") || parameter.startsWith("l")) && parameter.length() == 5+1) {
                 displayTransactionInformation(ctx, conversation, parameter.toUpperCase());
                 return true;
@@ -86,9 +87,12 @@ public class InfoCommand extends AbstractChatCommnad{
             }else if (isPhoneNumber(parameter)) {
                 displayIdentityInformation(ctx, conversation, null, parsePhoneNumber(parameter));
                 return true;
+            } else if ("cash".equalsIgnoreCase(parameter) || "c".equalsIgnoreCase(parameter)) {
+                displayInfoAboutCash = true;
+                serialNumbers = readSerialNumbers(parameters);
             }
         }
-        if (displayInfoAboutTerminals || displayInfoAboutBalances) {
+        if (displayInfoAboutTerminals || displayInfoAboutBalances || displayInfoAboutCash) {
             if (displayInfoAboutTerminals) {
                 displayTerminalsInformation(ctx, conversation, serialNumbers);
             }
@@ -96,11 +100,79 @@ public class InfoCommand extends AbstractChatCommnad{
             if (displayInfoAboutBalances) {
                 displayBalanceInformation(ctx, conversation);
             }
+
+            if (displayInfoAboutCash) {
+                displayTerminalCashInformation(ctx, conversation, serialNumbers);
+            }
+
             return true;
         }else {
             conversation.sendText("Invalid parameters. See help for more information.");
         }
         return true;
+    }
+
+    private List<String> readSerialNumbers(StringTokenizer parameters) {
+        List<String> serialNumbers = new ArrayList<>();
+        while (parameters.hasMoreTokens()) {
+            String serialNumber = parameters.nextToken();
+            if (serialNumber.startsWith("BT") || serialNumber.startsWith("PS") || serialNumber.startsWith("bt") || serialNumber.startsWith("ps")) {
+                serialNumbers.add(serialNumber);
+            }
+        }
+        return serialNumbers;
+    }
+
+    private void displayTerminalCashInformation(IExtensionContext ctx, IConversation conversation, List<String> serialNumbers) {
+        StringBuilder sb = new StringBuilder();
+        final String cashBoxNameText = "    Cash Box Name: ";
+        final String totalText = "    Total:                      ";
+        final String currencyText = "      Currency:             ";
+        final String denominationText = "        Denomination: ";
+        final String countText = "        Count:                ";
+        final String newLine = "\n";
+        for (String serialNumber : serialNumbers) {
+            ITerminal terminal = ctx.findTerminalBySerialNumber(serialNumber);
+            if (terminal != null) {
+                List<IBanknoteCounts> cashBoxes = ctx.getCashBoxes(serialNumber);
+                if (cashBoxes != null) {
+                    cashBoxes.sort((t1, t2) -> t1.getCashboxName().compareTo(t2.getCashboxName()));
+                    Map<String, List<IBanknoteCounts>> sortedCashBoxes = cashBoxes.stream().collect(Collectors.groupingBy(IBanknoteCounts::getCashboxName));
+                    sb.append(serialNumber).append(" (").append(terminal.getName()).append(")").append(newLine);
+                    for (String s : sortedCashBoxes.keySet()) {
+                        sb.append(cashBoxNameText).append(sortedCashBoxes.get(s).get(0).getCashboxName()).append(newLine);
+                        Map<String, BigDecimal> finalTotals = new HashMap<>();
+                        for (IBanknoteCounts cashBox : sortedCashBoxes.get(s)) {
+                            if (finalTotals.get(cashBox.getCurrency()) == null) {
+                                sb.append(currencyText).append(cashBox.getCurrency()).append(newLine);
+                            }
+                            sb.append(denominationText);
+                            sb.append(cashBox.getDenomination().setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()).append(newLine);
+                            sb.append(countText).append(cashBox.getCount()).append(newLine);
+                            BigDecimal subTotal = cashBox.getDenomination().multiply(new BigDecimal(String.valueOf(cashBox.getCount())));
+                            BigDecimal finalTotal = finalTotals.get(cashBox.getCurrency());
+                            if (finalTotal == null) {
+                                finalTotals.put(cashBox.getCurrency(), subTotal);
+                            } else {
+                                finalTotal = finalTotal.add(subTotal);
+                                finalTotals.put(cashBox.getCurrency(), finalTotal);
+                            }
+                        }
+                        for (String currency : finalTotals.keySet()) {
+                            sb.append(totalText);
+                            sb.append(finalTotals.get(currency).setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString());
+                            sb.append(" ").append(currency).append(newLine);
+                        }
+                    }
+
+                    for (int i = 0; i < 60; i++) {
+                        sb.append("-");
+                    }
+                    sb.append(newLine);
+                }
+            }
+        }
+        conversation.sendText(sb.toString());
     }
 
     private boolean isPhoneNumber(String text) {
