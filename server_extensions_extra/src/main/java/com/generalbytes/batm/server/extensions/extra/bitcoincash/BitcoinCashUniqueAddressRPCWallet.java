@@ -23,9 +23,4 @@ public class BitcoinCashUniqueAddressRPCWallet extends BitcoinCashRPCWallet impl
     public BitcoinCashUniqueAddressRPCWallet(String rpcURL, String accountName) {
         super(rpcURL, accountName);
     }
-
-    @Override
-    public String generateNewDepositCryptoAddress(String cryptoCurrency, String label) {
-        return getCryptoAddress(cryptoCurrency);
-    }
 }

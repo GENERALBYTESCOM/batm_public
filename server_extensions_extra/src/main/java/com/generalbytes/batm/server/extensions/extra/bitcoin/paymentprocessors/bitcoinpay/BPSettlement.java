@@ -15,12 +15,20 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.sumcoin.sumcored;
+package com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.bitcoinpay;
 
-import com.generalbytes.batm.server.extensions.IGeneratesNewDepositCryptoAddress;
+public class BPSettlement {
+    public BPSettlement(String currency) {
+        this.currency = currency;
+    }
 
-public class SumcoinUniqueAddressRPCWallet extends SumcoinRPCWallet implements IGeneratesNewDepositCryptoAddress {
-    public SumcoinUniqueAddressRPCWallet(String rpcURL, String accountName) {
-        super(rpcURL, accountName);
+    private String currency;
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 }

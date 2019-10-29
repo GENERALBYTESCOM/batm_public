@@ -15,12 +15,14 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.sumcoin.sumcored;
+package com.generalbytes.batm.server.extensions.extra.dash.wallets.dashd;
+
+import java.net.MalformedURLException;
 
 import com.generalbytes.batm.server.extensions.IGeneratesNewDepositCryptoAddress;
 
-public class SumcoinUniqueAddressRPCWallet extends SumcoinRPCWallet implements IGeneratesNewDepositCryptoAddress {
-    public SumcoinUniqueAddressRPCWallet(String rpcURL, String accountName) {
+public class DashUniqueAddressRPCWallet extends DashRPCWallet implements IGeneratesNewDepositCryptoAddress {
+    public DashUniqueAddressRPCWallet(String rpcURL, String accountName) throws MalformedURLException {
         super(rpcURL, accountName);
     }
 }

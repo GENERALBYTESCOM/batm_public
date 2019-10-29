@@ -15,12 +15,21 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.sumcoin.sumcored;
+package com.generalbytes.batm.server.extensions.extra.dash;
 
-import com.generalbytes.batm.server.extensions.IGeneratesNewDepositCryptoAddress;
+import com.generalbytes.batm.server.extensions.CryptoCurrencyDefinition;
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.server.extensions.payment.IPaymentSupport;
 
-public class SumcoinUniqueAddressRPCWallet extends SumcoinRPCWallet implements IGeneratesNewDepositCryptoAddress {
-    public SumcoinUniqueAddressRPCWallet(String rpcURL, String accountName) {
-        super(rpcURL, accountName);
+public class DashDefinition extends CryptoCurrencyDefinition{
+    private IPaymentSupport paymentSupport = new DashPaymentSupport();
+
+    public DashDefinition() {
+        super(CryptoCurrency.DASH.getCode(), "Dash", "dash","https://www.dash.org");
+    }
+
+    @Override
+    public IPaymentSupport getPaymentSupport() {
+        return paymentSupport;
     }
 }

@@ -626,6 +626,16 @@
             <param name="accountname" />
             <cryptocurrency>DASH</cryptocurrency>
         </wallet>
+        <wallet prefix="dashdnoforward" name="Dash Core - dashd (no forward)" >
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>DASH</cryptocurrency>
+            <help>For DASH SELL this is the only supported wallet. This variant generates new addresses for each transaction and does not forward payments from temporary address</help>
+        </wallet>
         <ratesource prefix="cddash" name="Cryptodiggers" >
             <cryptocurrency>DASH</cryptocurrency>
         </ratesource>

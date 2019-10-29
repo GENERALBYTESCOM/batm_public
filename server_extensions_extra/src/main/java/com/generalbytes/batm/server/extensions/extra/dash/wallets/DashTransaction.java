@@ -15,12 +15,11 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.sumcoin.sumcored;
+package com.generalbytes.batm.server.extensions.extra.dash.wallets;
 
-import com.generalbytes.batm.server.extensions.IGeneratesNewDepositCryptoAddress;
+import wf.bitcoin.javabitcoindrpcclient.BitcoindRpcClient.Transaction;
 
-public class SumcoinUniqueAddressRPCWallet extends SumcoinRPCWallet implements IGeneratesNewDepositCryptoAddress {
-    public SumcoinUniqueAddressRPCWallet(String rpcURL, String accountName) {
-        super(rpcURL, accountName);
-    }
+public interface DashTransaction extends Transaction {
+    boolean instantlock();
+    boolean instantlock_internal();
 }

@@ -47,7 +47,7 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
     private static final Logger log = LoggerFactory.getLogger("batm.master.RPCPaymentSupport");
 
     private IExtensionContext ctx;
-    private final Map<PaymentRequest, PaymentTracker> requests = new HashMap<>();
+    protected final Map<PaymentRequest, PaymentTracker> requests = new HashMap<>();
     private final Map<RPCClient, IBlockchainWatcher> watchers = new HashMap<>();
 
 
@@ -91,7 +91,7 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
 
 
 
-    private RPCClient getClient(IWallet wallet) {
+    protected RPCClient getClient(IWallet wallet) {
         if (wallet != null && (wallet instanceof IRPCWallet)) {
             return ((IRPCWallet) wallet).getClient();
         }
