@@ -41,8 +41,11 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitcore.Bit
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.BitgoWallet;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.BitgoWalletWithUniqueAddresses;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.net.InetSocketAddress;
 import java.util.*;
 
 import static com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitflyer.BitFlyerExchange.BITFLYER_COM_BASE_URL;
@@ -50,6 +53,7 @@ import static com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bi
 
 public class BitcoinExtension extends AbstractExtension{
     private IExtensionContext ctx;
+    private static final Logger log = LoggerFactory.getLogger(BitcoinExtension.class);
 
     @Override
     public void init(IExtensionContext ctx) {
@@ -151,7 +155,8 @@ public class BitcoinExtension extends AbstractExtension{
     }
 
     @Override
-    public IWallet createWallet(String walletLogin) {
+    public IWallet createWallet(String walletLogin, String tunnelLogin) {
+        try{
         if (walletLogin !=null && !walletLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(walletLogin,":");
             String walletType = st.nextToken();
@@ -163,12 +168,16 @@ public class BitcoinExtension extends AbstractExtension{
                 String username = st.nextToken();
                 String password = st.nextToken();
                 String hostname = st.nextToken();
-                String port = st.nextToken();
+                int port = Integer.parseInt(st.nextToken());
                 if (st.hasMoreTokens()) {
                     st.nextToken(); // accountName - support removed in v0.18, parameter not used
                 }
 
-                if (protocol != null && username != null && password != null && hostname != null && port != null) {
+                InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(tunnelLogin, InetSocketAddress.createUnresolved(hostname, port));
+                hostname = tunnelAddress.getHostString();
+                port = tunnelAddress.getPort();
+
+                if (protocol != null && username != null && password != null && hostname != null) {
                     String rpcURL = protocol + "://" + username + ":" + password + "@" + hostname + ":" + port;
                     if ("bitcoindnoforward".equalsIgnoreCase(walletType)) {
                         return new BATMBitcoindRPCWalletWithUniqueAddresses(rpcURL, CryptoCurrency.BTC.getCode());
@@ -212,6 +221,9 @@ public class BitcoinExtension extends AbstractExtension{
                 }
                 return new BitgoWallet(fullHost, port, token, walletAddress, walletPassphrase);
             }
+        }
+        } catch (Exception e) {
+            log.warn("createWallet failed", e);
         }
         return null;
     }

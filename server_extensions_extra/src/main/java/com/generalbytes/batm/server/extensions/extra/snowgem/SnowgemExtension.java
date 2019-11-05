@@ -39,7 +39,7 @@ public class SnowgemExtension extends AbstractExtension {
     }
 
     @Override
-    public IWallet createWallet(String walletLogin) {
+    public IWallet createWallet(String walletLogin, String tunnelLogin) {
         if (walletLogin != null && !walletLogin.trim().isEmpty()) {
             //"walletname:protocol:user:password:ip:port"
             StringTokenizer st = new StringTokenizer(walletLogin, ":");

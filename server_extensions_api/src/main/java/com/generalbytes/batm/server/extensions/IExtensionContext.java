@@ -150,6 +150,8 @@ public interface IExtensionContext {
      */
     boolean addIdentityPiece(String identityPublicId, IIdentityPiece iidentityPiece);
 
+    ITunnelManager getTunnelManager();
+
     //Email related stuff
     public static class EmbeddedEmailImage {
         public String contentId;

@@ -18,13 +18,15 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoincash;
 
 import com.generalbytes.batm.server.extensions.AbstractExtension;
-import com.generalbytes.batm.server.extensions.CryptoCurrencyDefinition;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
 import com.generalbytes.batm.server.extensions.IPaperWalletGenerator;
 import com.generalbytes.batm.server.extensions.IWallet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.net.InetSocketAddress;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -32,6 +34,7 @@ import java.util.StringTokenizer;
 public class BitcoinCashExtension extends AbstractExtension {
     private static final ICryptoCurrencyDefinition DEFINITION = new BitcoinCashDefinition();
     public static final String CURRENCY = CryptoCurrency.BCH.getCode();
+    private static final Logger log = LoggerFactory.getLogger(BitcoinCashExtension.class);
 
     @Override
     public String getName() {
@@ -39,7 +42,8 @@ public class BitcoinCashExtension extends AbstractExtension {
     }
 
     @Override
-    public IWallet createWallet(String walletLogin) {
+    public IWallet createWallet(String walletLogin, String tunnelLogin) {
+        try {
         if (walletLogin != null && !walletLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(walletLogin, ":");
             String walletType = st.nextToken();
@@ -51,14 +55,18 @@ public class BitcoinCashExtension extends AbstractExtension {
                 String username = st.nextToken();
                 String password = st.nextToken();
                 String hostname = st.nextToken();
-                String port = st.nextToken();
+                int port = Integer.parseInt(st.nextToken());
                 String accountName = "";
                 if (st.hasMoreTokens()) {
                     accountName = st.nextToken();
                 }
 
+                InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(tunnelLogin, InetSocketAddress.createUnresolved(hostname, port));
+                hostname = tunnelAddress.getHostString();
+                port = tunnelAddress.getPort();
 
-                if (protocol != null && username != null && password != null && hostname != null && port != null && accountName != null) {
+
+                if (protocol != null && username != null && password != null && hostname != null && accountName != null) {
                     String rpcURL = protocol + "://" + username + ":" + password + "@" + hostname + ":" + port;
                     if ("bitcoincashdnoforward".equalsIgnoreCase(walletType)) {
                         return new BitcoinCashUniqueAddressRPCWallet(rpcURL, accountName);
@@ -66,6 +74,9 @@ public class BitcoinCashExtension extends AbstractExtension {
                     return new BitcoinCashRPCWallet(rpcURL, accountName);
                 }
             }
+        }
+        } catch (Exception e) {
+            log.warn("createWallet failed", e);
         }
         return null;
     }

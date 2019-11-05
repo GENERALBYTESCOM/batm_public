@@ -23,18 +23,24 @@ import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.litecoin.wallets.litecoind.LitecoindRPCWallet;
 import com.generalbytes.batm.server.extensions.extra.litecoin.wallets.litecoind.LitecoindUniqueAddressRPCWallet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.net.InetSocketAddress;
 import java.util.*;
 
 public class LitecoinExtension extends AbstractExtension{
+    private static final Logger log = LoggerFactory.getLogger(LitecoinExtension.class);
+
     @Override
     public String getName() {
         return "BATM Litecoin extension";
     }
 
     @Override
-    public IWallet createWallet(String walletLogin) {
+    public IWallet createWallet(String walletLogin, String tunnelLogin) {
+        try {
         if (walletLogin !=null && !walletLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(walletLogin,":");
             String walletType = st.nextToken();
@@ -47,14 +53,17 @@ public class LitecoinExtension extends AbstractExtension{
                 String username = st.nextToken();
                 String password = st.nextToken();
                 String hostname = st.nextToken();
-                String port = st.nextToken();
-                String accountName ="";
+                int port = Integer.parseInt(st.nextToken());
+                String accountName = "";
                 if (st.hasMoreTokens()) {
                     accountName = st.nextToken();
                 }
 
+                InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(tunnelLogin, InetSocketAddress.createUnresolved(hostname, port));
+                hostname = tunnelAddress.getHostString();
+                port = tunnelAddress.getPort();
 
-                if (protocol != null && username != null && password != null && hostname !=null && port != null && accountName != null) {
+                if (protocol != null && username != null && password != null && hostname !=null && accountName != null) {
                     String rpcURL = protocol +"://" + username +":" + password + "@" + hostname +":" + port;
                     if ("litecoindnoforward".equalsIgnoreCase(walletType)) {
                         return new LitecoindUniqueAddressRPCWallet(rpcURL, accountName);
@@ -62,6 +71,9 @@ public class LitecoinExtension extends AbstractExtension{
                     return new LitecoindRPCWallet(rpcURL, accountName);
                 }
             }
+        }
+        } catch (Exception e) {
+            log.error("", e);
         }
         return null;
     }

@@ -446,7 +446,7 @@ public class Tester {
     private void getWalletBalance(String name, String params) {
         for (int i = 0; i < extensions.size(); i++) {
             IExtension extension = extensions.get(i);
-            final IWallet w = extension.createWallet(name + ":" + params);
+            final IWallet w = extension.createWallet(name + ":" + params, null);
             if (w != null) {
                 final String preferredCryptoCurrency = w.getPreferredCryptoCurrency();
                 final Set<String> cryptoCurrencies = w.getCryptoCurrencies();
