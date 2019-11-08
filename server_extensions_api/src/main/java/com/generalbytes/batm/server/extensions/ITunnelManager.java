@@ -24,13 +24,13 @@ import java.net.InetSocketAddress;
 public interface ITunnelManager {
     /**
      *
-     * @param tunnelLogin Colon-separated tunnel parameters, e.g. "ssh:10.0.0.1:22222:password".
-     *                    Can be null or empty when no tunnel is configured. In that case this method does nothing.
+     * @param tunnelPassword ssh tunnel password. Can be null or empty when no tunnel is configured.
+     *                       In that case this method does nothing.
      * @param originalWalletAddress remote host and port where a wallet is listening
      * @return address (with a port) where it will be possible to reach the wallet.
-     * If no tunnel was needed (not configured / the tunnelLogin parameter was empty), {@code originalWalletAddress} is returned.
+     * If no tunnel was needed (not configured / the tunnelPassword parameter was empty), {@code originalWalletAddress} is returned.
      * If the tunnel was established then it returns localhost with a port where the tunnel is listening. This port is tunneled to the original wallet address.
      * @throws IOException if opening a tunnel is needed (configured) but opening it failed.
      */
-    InetSocketAddress connectIfNeeded(String tunnelLogin, InetSocketAddress originalWalletAddress) throws IOException;
+    InetSocketAddress connectIfNeeded(String tunnelPassword, InetSocketAddress originalWalletAddress) throws IOException;
 }

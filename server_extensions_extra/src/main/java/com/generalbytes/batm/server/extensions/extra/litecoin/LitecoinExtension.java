@@ -39,7 +39,7 @@ public class LitecoinExtension extends AbstractExtension{
     }
 
     @Override
-    public IWallet createWallet(String walletLogin, String tunnelLogin) {
+    public IWallet createWallet(String walletLogin, String tunnelPassword) {
         try {
         if (walletLogin !=null && !walletLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(walletLogin,":");
@@ -59,7 +59,7 @@ public class LitecoinExtension extends AbstractExtension{
                     accountName = st.nextToken();
                 }
 
-                InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(tunnelLogin, InetSocketAddress.createUnresolved(hostname, port));
+                InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(tunnelPassword, InetSocketAddress.createUnresolved(hostname, port));
                 hostname = tunnelAddress.getHostString();
                 port = tunnelAddress.getPort();
 

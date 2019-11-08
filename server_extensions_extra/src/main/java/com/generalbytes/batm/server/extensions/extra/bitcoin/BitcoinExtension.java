@@ -155,7 +155,7 @@ public class BitcoinExtension extends AbstractExtension{
     }
 
     @Override
-    public IWallet createWallet(String walletLogin, String tunnelLogin) {
+    public IWallet createWallet(String walletLogin, String tunnelPassword) {
         try{
         if (walletLogin !=null && !walletLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(walletLogin,":");
@@ -173,7 +173,7 @@ public class BitcoinExtension extends AbstractExtension{
                     st.nextToken(); // accountName - support removed in v0.18, parameter not used
                 }
 
-                InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(tunnelLogin, InetSocketAddress.createUnresolved(hostname, port));
+                InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(tunnelPassword, InetSocketAddress.createUnresolved(hostname, port));
                 hostname = tunnelAddress.getHostString();
                 port = tunnelAddress.getPort();
 

@@ -37,7 +37,7 @@ public class DogecoinExtension extends AbstractExtension{
     }
 
     @Override
-    public IWallet createWallet(String walletLogin, String tunnelLogin) {
+    public IWallet createWallet(String walletLogin, String tunnelPassword) {
         if (walletLogin !=null && !walletLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(walletLogin,":");
             String walletType = st.nextToken();
