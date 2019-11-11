@@ -72,13 +72,13 @@ public class Auth {
         byte[] passwdAllBytes = Files.readAllBytes(PASSWD_PATH);
         byte[] salt = Arrays.copyOfRange(passwdAllBytes, 0, SALT_LENGTH);
         byte[] hash = Arrays.copyOfRange(passwdAllBytes, SALT_LENGTH, passwdAllBytes.length);
-        return (username, password, session) -> {
+        return new BruteforceBlockingPasswordAuthenticator(30, (username, password, session) -> {
             try {
                 return Arrays.equals(hash, hash(salt, password));
             } catch (GeneralSecurityException e) {
                 return false;
             }
-        };
+        });
     }
 
     private static byte[] hash(byte[] salt, String password) throws GeneralSecurityException {
