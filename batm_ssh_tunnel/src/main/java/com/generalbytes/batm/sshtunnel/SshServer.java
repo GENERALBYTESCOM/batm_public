@@ -21,7 +21,6 @@ import org.apache.sshd.common.io.nio2.Nio2ServiceFactoryFactory;
 import org.apache.sshd.common.session.SessionHeartbeatController;
 import org.apache.sshd.common.util.security.bouncycastle.BouncyCastleGeneratorHostKeyProvider;
 import org.apache.sshd.server.forward.ForwardingFilter;
-import org.apache.sshd.server.forward.TcpForwardingFilter;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,7 +42,7 @@ public class SshServer {
         sshd.setKeyPairProvider(new BouncyCastleGeneratorHostKeyProvider(new File(configDir, HOST_KEY_FILE).toPath()));
         sshd.setPasswordAuthenticator(new Auth(configDir).getPasswordAuthenticator());
         sshd.setSessionHeartbeat(SessionHeartbeatController.HeartbeatType.IGNORE, TimeUnit.MINUTES, 1);
-        sshd.setForwardingFilter(ForwardingFilter.asForwardingFilter(null, null, TcpForwardingFilter.DEFAULT));
+        sshd.setForwardingFilter(ForwardingFilter.asForwardingFilter(null, null, new WhitelistedTcpForwardingFilter(configDir)));
         sshd.setIoServiceFactoryFactory(new Nio2ServiceFactoryFactory());
         sshd.start();
     }
