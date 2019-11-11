@@ -7,7 +7,6 @@ import org.knowm.xchange.ExchangeSpecification;
 import org.knowm.xchange.enigma.service.EnigmaAccountService;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -66,17 +65,5 @@ public class EnigmaExchange extends XChangeExchange {
     @Override
     protected double getAllowedCallsPerSecond() {
         return 10;
-    }
-
-    public static void main(String[] args) {
-        EnigmaExchange xch = new EnigmaExchange("", "", "EUR");
-        // System.out.println(xch.getExchangeRateLast("BTC", "USD"));
-
-        System.out.println("getExchangeRateForSell" + xch.getExchangeRateForSell("BTC", "USD"));
-        // System.out.println("getExchangeRateLast" + xch.getExchangeRateLast("BTC",
-        // "USD"));
-        // System.out.println("getDepositAddress: " + xch.getDepositAddress("BTC"));
-        // System.out.println("calculateSellPrice: " + xch.calculateSellPrice("BTC",
-        // "USD", new BigDecimal(1)).toString());
     }
 }
