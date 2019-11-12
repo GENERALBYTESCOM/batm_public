@@ -20,7 +20,7 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.sources.coinpaprik
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 
-public class CoinPapricaGlobalResponse {
+public class CoinPaprikaGlobalResponse {
 
     @JsonProperty("market_cap_usd")
     public BigDecimal marketCapUsd;

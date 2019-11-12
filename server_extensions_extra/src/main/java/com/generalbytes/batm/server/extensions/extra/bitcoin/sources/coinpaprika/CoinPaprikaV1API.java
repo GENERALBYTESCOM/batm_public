@@ -78,5 +78,5 @@ public interface CoinPaprikaV1API {
 
     @GET
     @Path("/global")
-    CoinPapricaGlobalResponse getGlobal() throws IOException;
+    CoinPaprikaGlobalResponse getGlobal() throws IOException;
 }
