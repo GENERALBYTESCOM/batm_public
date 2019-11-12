@@ -21,12 +21,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 
 public class CoinPapricaGlobalResponse {
+
     @JsonProperty("market_cap_usd")
     public BigDecimal marketCapUsd;
+
     @JsonProperty("bitcoin_dominance_percentage")
     public BigDecimal bitcoinDominancePercentage;
+
     @JsonProperty("cryptocurrencies_number")
     public BigDecimal cryptocurrenciesNumber;
+
     @JsonProperty("last_updated")
     public BigDecimal lastUpdated;
 }
