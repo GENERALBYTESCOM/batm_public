@@ -62,13 +62,6 @@ echo "Downloading and unpacking to $DIR"
 curl -s "$URL" | sudo -u "$USER" tar -xf -
 
 
-echo -n "Detecting public IP address... "
-ip=`curl -s bot.whatismyipaddress.com`
-IPV4_PATTERN='^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$'
-if [[ ! $ip =~ $IPV4_PATTERN ]]; then echo "FAILED"; exit 1; fi
-echo $ip
-
-
 echo "Generating password"
 pwd=`sudo -iu "$USER" "$DIR/bin/batm_ssh_tunnel" init`
 if [[ -z "$PWD" ]]; then echo >&2 "Cannot generate password"; exit 1; fi
@@ -88,11 +81,12 @@ systemctl is-active "$SERVICE" --quiet || { echo >&2 "Failed to start the servic
 
 
 echo
-echo "Use this Tunnel Configuration in CAS Crypto Settings"
-echo "Make sure the autodetected IP address is correct and accessible from BATM server on port $PORT"
+echo "Please make the port $PORT is accessible from BATM Master Server."
+echo "No other ports need to be open."
+echo "Use this Tunnel Password in CAS Crypto Settings."
 echo "Make sure to keep the password SECRET!"
 echo
-echo "********************************************************"
-echo "ssh:$ip:$PORT:$pwd"
-echo "********************************************************"
+echo "********************************"
+echo "$pwd"
+echo "********************************"
 echo
