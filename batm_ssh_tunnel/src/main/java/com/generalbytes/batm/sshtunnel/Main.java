@@ -24,6 +24,8 @@ import java.security.GeneralSecurityException;
 public class Main {
 
     private static final File CONFIG_DIR = new File(System.getProperty("user.home"), ".batm_ssh_tunnel");
+    private static final String DEFAULT_PORT = "22222";
+    private static final int PORT = Integer.parseInt(System.getProperty("batm_ssh_tunnel_port", DEFAULT_PORT));
 
     public static void main(String[] args) throws IOException, GeneralSecurityException {
 
@@ -37,8 +39,7 @@ public class Main {
             System.out.println(password); // intentionally stdout and not logging. The output is used in the install script
 
         } else {
-            int port = Integer.parseInt(System.getProperty("batmSshTunnelPort", "22222"));
-            new SshServer(CONFIG_DIR, port).start();
+            new SshServer(CONFIG_DIR, PORT).start();
 
             while (true) {
                 try {
