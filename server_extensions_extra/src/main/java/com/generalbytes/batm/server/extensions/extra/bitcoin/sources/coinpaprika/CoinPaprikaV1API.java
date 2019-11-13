@@ -75,4 +75,8 @@ public interface CoinPaprikaV1API {
         @QueryParam("quote") String quote,
         @QueryParam("interval") String interval
     ) throws IOException;
+
+    @GET
+    @Path("/global")
+    CoinPaprikaGlobalResponse getGlobal() throws IOException;
 }
