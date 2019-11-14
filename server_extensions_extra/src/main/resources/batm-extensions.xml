@@ -296,6 +296,20 @@
             <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
         </ratesource>
+        <exchange prefix="enigma" name="Enigma-Securities.com">
+            <param name="username"/>
+            <param name="password"/>
+            <param name="fiatcurrency"/>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>BCH</cryptocurrency>
+        </exchange>
+        <ratesource prefix="enigma" name="Enigma-Securities.com">
+            <param name="fiatcurrency" />
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>BCH</cryptocurrency>
+        </ratesource>
         <ratesource prefix="coingecko" name ="CoinGecko.com" >
             <param name="fiatcurrency" />
             <cryptocurrency>ANON</cryptocurrency>
