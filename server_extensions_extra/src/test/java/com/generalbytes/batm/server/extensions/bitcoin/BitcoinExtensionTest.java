@@ -52,7 +52,7 @@ public class BitcoinExtensionTest {
         Assert.assertEquals("3080", port);
 
         final BitcoinExtension bitcoinExtension = new BitcoinExtension();
-        final IWallet bitgowallet = bitcoinExtension.createWallet(wallet);
+        final IWallet bitgowallet = bitcoinExtension.createWallet(wallet, null);
         Assert.assertTrue(bitgowallet instanceof BitgoWallet);
         final BitgoWallet bitgoWallet = (BitgoWallet)bitgowallet;
         Assert.assertNotNull(bitgoWallet);
@@ -99,7 +99,7 @@ public class BitcoinExtensionTest {
         Assert.assertEquals("", port);
 
         final BitcoinExtension bitcoinExtension = new BitcoinExtension();
-        final IWallet bitgowallet = bitcoinExtension.createWallet(wallet);
+        final IWallet bitgowallet = bitcoinExtension.createWallet(wallet, null);
         Assert.assertTrue(bitgowallet instanceof BitgoWallet);
         final BitgoWallet bitgoWallet = (BitgoWallet)bitgowallet;
         Assert.assertNotNull(bitgoWallet);
@@ -146,7 +146,7 @@ public class BitcoinExtensionTest {
         Assert.assertEquals("3080", port);
 
         final BitcoinExtension bitcoinExtension = new BitcoinExtension();
-        final IWallet bitgowallet = bitcoinExtension.createWallet(wallet);
+        final IWallet bitgowallet = bitcoinExtension.createWallet(wallet, null);
         Assert.assertTrue(bitgowallet instanceof BitgoWallet);
         final BitgoWallet bitgoWallet = (BitgoWallet)bitgowallet;
         Assert.assertNotNull(bitgoWallet);
@@ -193,7 +193,7 @@ public class BitcoinExtensionTest {
         Assert.assertEquals("3080", port);
 
         final BitcoinExtension bitcoinExtension = new BitcoinExtension();
-        final IWallet bitgowallet = bitcoinExtension.createWallet(wallet);
+        final IWallet bitgowallet = bitcoinExtension.createWallet(wallet, null);
         Assert.assertTrue(bitgowallet instanceof BitgoWallet);
         final BitgoWallet bitgoWallet = (BitgoWallet)bitgowallet;
         Assert.assertNotNull(bitgoWallet);
@@ -206,7 +206,7 @@ public class BitcoinExtensionTest {
     public void bitgoWalletTest() {
         String address = "bitgo:http://localhost:3080:v2x8d5e9e46379dc328b2039a400a12b04ea986689b38107fd84cd339bc89e3fb21:5b20e3a9266bbe80095757489d84a6bb:Vranec8586";
         final BitcoinExtension bitcoinExtension = new BitcoinExtension();
-        final IWallet wallet = bitcoinExtension.createWallet(address);
+        final IWallet wallet = bitcoinExtension.createWallet(address, null);
         Assert.assertTrue(wallet instanceof BitgoWallet);
         final BitgoWallet bitgoWallet = (BitgoWallet)wallet;
         Assert.assertNotNull(bitgoWallet);

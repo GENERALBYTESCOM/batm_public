@@ -30,7 +30,10 @@ import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
 import com.generalbytes.batm.server.extensions.IPaperWalletGenerator;
 import com.generalbytes.batm.server.extensions.IWallet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.net.InetSocketAddress;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -40,6 +43,7 @@ import java.net.MalformedURLException;
 import java.util.*;
 
 public class DashExtension extends AbstractExtension{
+    private static final Logger log = LoggerFactory.getLogger(DashExtension.class);
 
     private static final ICryptoCurrencyDefinition DEFINITION = new DashDefinition();
     public static final String CURRENCY = CryptoCurrency.DASH.getCode();
@@ -50,7 +54,8 @@ public class DashExtension extends AbstractExtension{
     }
 
     @Override
-    public IWallet createWallet(String walletLogin) {
+    public IWallet createWallet(String walletLogin, String tunnelPassword) {
+        try {
         if (walletLogin != null && !walletLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(walletLogin, ":");
             String walletType = st.nextToken();
@@ -62,15 +67,18 @@ public class DashExtension extends AbstractExtension{
                 String username = st.nextToken();
                 String password = st.nextToken();
                 String hostname = st.nextToken();
-                String port = st.nextToken();
+                int port = Integer.parseInt(st.nextToken());
                 String accountName = "";
                 if (st.hasMoreTokens()) {
                     accountName = st.nextToken();
                 }
 
+                InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(tunnelPassword, InetSocketAddress.createUnresolved(hostname, port));
+                hostname = tunnelAddress.getHostString();
+                port = tunnelAddress.getPort();
 
                 try {
-                    if (protocol != null && username != null && password != null && hostname != null && port != null && accountName != null) {
+                    if (protocol != null && username != null && password != null && hostname != null && accountName != null) {
                         String rpcURL = protocol + "://" + username + ":" + password + "@" + hostname + ":" + port;
                         if ("dashdnoforward".equalsIgnoreCase(walletType)) {
                             return new DashUniqueAddressRPCWallet(rpcURL, accountName);
@@ -81,6 +89,9 @@ public class DashExtension extends AbstractExtension{
                     //swallow
                 }
             }
+        }
+        } catch (Exception e) {
+            log.error("", e);
         }
         return null;
     }

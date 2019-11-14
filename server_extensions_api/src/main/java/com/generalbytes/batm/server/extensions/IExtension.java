@@ -82,12 +82,17 @@ public interface IExtension {
 
     /**
      * This method is used for creating implementation of cryptocurrency hot wallet used by the server
-     * @param walletLogin
-     * @return
      *
+     * @param walletLogin colon-separated list of parameters for the wallet connection.
+     *                    The first parameter ("prefix") defines which wallet to use.
+     * @param tunnelPassword ssh password to establish an encrypted tunnel to the wallet host.
+     *                    It can be {@null null} or an empty string when no tunnel is required.
+     *                    If the wallet defined by the prefix in {@code walletLogin} is not supporting tunnels
+     *                    {@code tunnelPassword} parameter is ignored.
+     * @return
      * @see com.generalbytes.batm.server.extensions.IWallet
      */
-    IWallet createWallet(String walletLogin);
+    IWallet createWallet(String walletLogin, String tunnelPassword);
 
     /**
      * This method is used for creating implementation cryptocurrency address validator used by the server
