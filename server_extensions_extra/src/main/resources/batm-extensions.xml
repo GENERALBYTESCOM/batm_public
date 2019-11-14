@@ -2,6 +2,7 @@
 <extensions>
     <extension class="com.generalbytes.batm.server.extensions.extra.bitcoin.BitcoinExtension" >
             <wallet prefix="bitcoind" name="Bitcoin Core - bitcoind" >
+                <tunnel supported="true"/>
                 <param name="protocol" />
                 <param name="user" />
                 <param name="password" />
@@ -11,6 +12,7 @@
                 <cryptocurrency>BTC</cryptocurrency>
             </wallet>
             <wallet prefix="bitcoindnoforward" name="Bitcoin Core - bitcoind (no forward)" >
+                <tunnel supported="true"/>
                 <param name="protocol" />
                 <param name="user" />
                 <param name="password" />
@@ -296,6 +298,20 @@
             <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
         </ratesource>
+        <exchange prefix="enigma" name="Enigma-Securities.com">
+            <param name="username"/>
+            <param name="password"/>
+            <param name="fiatcurrency"/>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>BCH</cryptocurrency>
+        </exchange>
+        <ratesource prefix="enigma" name="Enigma-Securities.com">
+            <param name="fiatcurrency" />
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>BCH</cryptocurrency>
+        </ratesource>
         <ratesource prefix="coingecko" name ="CoinGecko.com" >
             <param name="fiatcurrency" />
             <cryptocurrency>ANON</cryptocurrency>
@@ -412,6 +428,7 @@
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.bitcoincash.BitcoinCashExtension">
         <wallet prefix="bitcoincashd" name="BitcoinABC/BitcoinClassic Cash Core - bitcoind" >
+            <tunnel supported="true"/>
             <param name="protocol" />
             <param name="user" />
             <param name="password" />
@@ -422,6 +439,7 @@
             <help>For BCH SELL this is the only supported wallet</help>
         </wallet>
         <wallet prefix="bitcoincashdnoforward" name="BitcoinABC/BitcoinClassic Cash Core - bitcoind (no forward)" >
+            <tunnel supported="true"/>
             <param name="protocol" />
             <param name="user" />
             <param name="password" />
@@ -502,6 +520,7 @@
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.litecoin.LitecoinExtension" >
         <wallet prefix="litecoind" name="Litecoind">
+            <tunnel supported="true"/>
             <param name="protocol" />
             <param name="user" />
             <param name="password" />
@@ -511,6 +530,7 @@
             <cryptocurrency>LTC</cryptocurrency>
         </wallet>
         <wallet prefix="litecoindnoforward" name="Litecoind (no forward)">
+            <tunnel supported="true"/>
             <param name="protocol" />
             <param name="user" />
             <param name="password" />
@@ -618,6 +638,7 @@
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.dash.DashExtension" >
         <wallet prefix="dashd" name="dashd">
+            <tunnel supported="true"/>
             <param name="protocol" />
             <param name="user" />
             <param name="password" />
@@ -627,6 +648,7 @@
             <cryptocurrency>DASH</cryptocurrency>
         </wallet>
         <wallet prefix="dashdnoforward" name="Dash Core - dashd (no forward)" >
+            <tunnel supported="true"/>
             <param name="protocol" />
             <param name="user" />
             <param name="password" />
@@ -1061,6 +1083,7 @@
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.sumcoin.SumcoinExtension" >
         <wallet prefix="sumcoind" name="Sumcoind">
+            <tunnel supported="true"/>
             <param name="protocol" />
             <param name="user" />
             <param name="password" />
@@ -1070,6 +1093,7 @@
             <cryptocurrency>SUM</cryptocurrency>
         </wallet>
         <wallet prefix="sumcoindnoforward" name="Sumcoind (no forward)">
+            <tunnel supported="true"/>
             <param name="protocol" />
             <param name="user" />
             <param name="password" />
