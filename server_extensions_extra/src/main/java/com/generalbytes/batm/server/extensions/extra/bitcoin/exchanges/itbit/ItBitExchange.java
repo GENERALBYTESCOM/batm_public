@@ -45,7 +45,7 @@ public class ItBitExchange extends XChangeExchange {
 
 
     private static ExchangeSpecification getDefaultSpecification() {
-        return new org.knowm.xchange.itbit.v1.ItBitExchange().getDefaultExchangeSpecification();
+        return new org.knowm.xchange.itbit.ItBitExchange().getDefaultExchangeSpecification();
     }
 
     private static ExchangeSpecification getSpecification(String userId, String accountId, String clientKey, String clientSecret) {

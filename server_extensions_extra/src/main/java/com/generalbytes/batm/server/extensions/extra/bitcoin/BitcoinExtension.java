@@ -29,6 +29,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coingi.Co
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.dvchain.DVChainExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.hitbtc.HitbtcExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.itbit.ItBitExchange;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.enigma.EnigmaExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.bitcoinpay.BitcoinPayPP;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.coinofsale.CoinOfSalePP;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.bity.BityRateSource;
@@ -48,7 +49,7 @@ import java.util.*;
 import static com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitflyer.BitFlyerExchange.BITFLYER_COM_BASE_URL;
 import static com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitflyer.BitFlyerExchange.BITFLYER_JP_BASE_URL;
 
-public class BitcoinExtension extends AbstractExtension{
+public class BitcoinExtension extends AbstractExtension {
     private IExtensionContext ctx;
 
     @Override
@@ -62,7 +63,7 @@ public class BitcoinExtension extends AbstractExtension{
     }
 
     @Override
-    public IExchange createExchange(String paramString) //(Bitstamp is in built-in extension)
+    public IExchange createExchange(String paramString) // (Bitstamp is in built-in extension)
     {
         if ((paramString != null) && (!paramString.trim().isEmpty())) {
             StringTokenizer paramTokenizer = new StringTokenizer(paramString, ":");
@@ -126,6 +127,14 @@ public class BitcoinExtension extends AbstractExtension{
                 String secret = paramTokenizer.nextToken();
 
                 return new BitFlyerExchange(preferredFiatCurrency, key, secret, BITFLYER_COM_BASE_URL);
+            } else if ("enigma".equalsIgnoreCase(prefix)) {
+                String preferredFiatCurrency = FiatCurrency.USD.getCode();
+                String username = paramTokenizer.nextToken();
+                String password = paramTokenizer.nextToken();
+                if (paramTokenizer.hasMoreTokens()) {
+                    preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase();
+                }
+                return new EnigmaExchange(username, password, preferredFiatCurrency);
             }
         }
         return null;
@@ -133,18 +142,18 @@ public class BitcoinExtension extends AbstractExtension{
 
     @Override
     public IPaymentProcessor createPaymentProcessor(String paymentProcessorLogin) {
-        if (paymentProcessorLogin !=null && !paymentProcessorLogin.trim().isEmpty()) {
-            StringTokenizer st = new StringTokenizer(paymentProcessorLogin,":");
+        if (paymentProcessorLogin != null && !paymentProcessorLogin.trim().isEmpty()) {
+            StringTokenizer st = new StringTokenizer(paymentProcessorLogin, ":");
             String processorType = st.nextToken();
-            if ("bitcoinpay".equalsIgnoreCase(processorType)) { //bitcoinpay:msciu823jes
+            if ("bitcoinpay".equalsIgnoreCase(processorType)) { // bitcoinpay:msciu823jes
                 if (st.hasMoreTokens()) {
                     String apiKey = st.nextToken();
                     return new BitcoinPayPP(apiKey);
                 }
-            }else if ("coinofsale".equalsIgnoreCase(processorType)) { //coinofsale:token:pin
+            } else if ("coinofsale".equalsIgnoreCase(processorType)) { // coinofsale:token:pin
                 String token = st.nextToken();
                 String pin = st.nextToken();
-                return new CoinOfSalePP(token,pin);
+                return new CoinOfSalePP(token, pin);
             }
         }
         return null;
@@ -152,12 +161,11 @@ public class BitcoinExtension extends AbstractExtension{
 
     @Override
     public IWallet createWallet(String walletLogin) {
-        if (walletLogin !=null && !walletLogin.trim().isEmpty()) {
-            StringTokenizer st = new StringTokenizer(walletLogin,":");
+        if (walletLogin != null && !walletLogin.trim().isEmpty()) {
+            StringTokenizer st = new StringTokenizer(walletLogin, ":");
             String walletType = st.nextToken();
-            if ("bitcoind".equalsIgnoreCase(walletType)
-                || "bitcoindnoforward".equalsIgnoreCase(walletType)) {
-                //"bitcoind:protocol:user:password:ip:port:accountname"
+            if ("bitcoind".equalsIgnoreCase(walletType) || "bitcoindnoforward".equalsIgnoreCase(walletType)) {
+                // "bitcoind:protocol:user:password:ip:port:accountname"
 
                 String protocol = st.nextToken();
                 String username = st.nextToken();
@@ -175,20 +183,19 @@ public class BitcoinExtension extends AbstractExtension{
                     }
                     return new BATMBitcoindRPCWallet(rpcURL, CryptoCurrency.BTC.getCode());
                 }
-            }else if ("bitcore".equalsIgnoreCase(walletType)) { //bitcore:apiKey:proxyUrl
+            } else if ("bitcore".equalsIgnoreCase(walletType)) { // bitcore:apiKey:proxyUrl
                 String apiKey = st.nextToken();
                 // the next token is a URL, so we can't use : as a delimiter
                 // instead use \n and then remove the leading :
                 String proxyUrl = st.nextToken("\n").replaceFirst(":", "");
                 return new BitcoreWallet(apiKey, proxyUrl);
-            } else if ("bitgo".equalsIgnoreCase(walletType)
-                || "bitgonoforward".equalsIgnoreCase(walletType)) { //bitgo:host:port:token:wallet_address:wallet_passphrase
+            } else if ("bitgo".equalsIgnoreCase(walletType) || "bitgonoforward".equalsIgnoreCase(walletType)) { // bitgo:host:port:token:wallet_address:wallet_passphrase
                 String first = st.nextToken();
                 String protocol = "";
                 String host = "";
                 String fullHost = "";
-                if(first != null && first.startsWith("http")) {
-                    protocol = first ;
+                if (first != null && first.startsWith("http")) {
+                    protocol = first;
                     host = st.nextToken();
                     fullHost = protocol + ":" + host;
                 } else {
@@ -199,7 +206,7 @@ public class BitcoinExtension extends AbstractExtension{
                 String port = "";
                 String token = "";
                 String next = st.nextToken();
-                if(next != null && next.length() > 6) {
+                if (next != null && next.length() > 6) {
                     token = next;
                 } else {
                     port = next;
@@ -218,12 +225,14 @@ public class BitcoinExtension extends AbstractExtension{
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        return null; //no BTC address validator in open source version so far (It is present in built-in extension)
+        return null; // no BTC address validator in open source version so far (It is present in
+                     // built-in extension)
     }
 
     @Override
     public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency) {
-        return null; //no BTC paper wallet generator in open source version so far (It is present in built-in extension)
+        return null; // no BTC paper wallet generator in open source version so far (It is present in
+                     // built-in extension)
     }
 
     @Override
@@ -311,6 +320,12 @@ public class BitcoinExtension extends AbstractExtension{
                     preferredFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new BitFlyerExchange(preferredFiatCurrency, BITFLYER_COM_BASE_URL);
+            } else if ("enigma".equalsIgnoreCase(rsType)) {
+                String preferredFiatCurrency = FiatCurrency.USD.getCode();
+                if (st.hasMoreTokens()) {
+                    preferredFiatCurrency = st.nextToken().toUpperCase();
+                }
+                return new EnigmaExchange(preferredFiatCurrency);
             }
         }
         return null;
