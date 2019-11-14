@@ -85,7 +85,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
     private synchronized Exchange getExchange() {
         if (this.exchange == null) {
-            ExchangeSpecification bfxSpec = new org.knowm.xchange.bitfinex.v1.BitfinexExchange().getDefaultExchangeSpecification();
+            ExchangeSpecification bfxSpec = new org.knowm.xchange.bitfinex.BitfinexExchange().getDefaultExchangeSpecification();
             bfxSpec.setApiKey(this.apiKey);
             bfxSpec.setSecretKey(this.apiSecret);
             this.exchange = ExchangeFactory.INSTANCE.createExchange(bfxSpec);

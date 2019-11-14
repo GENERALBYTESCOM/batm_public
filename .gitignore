@@ -13,3 +13,5 @@ install-libs.sh
 .project
 .classpath
 .settings/
+.vscode/
+**/bin/
