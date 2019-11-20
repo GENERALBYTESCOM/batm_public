@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-URL="file:///home/pvyhnal/git/batm_main/batm_public/batm_ssh_tunnel/build/distributions/batm_ssh_tunnel-1.0.0.tar" # TODO
+URL="file://./batm_public/batm_ssh_tunnel/build/distributions/batm_ssh_tunnel-1.0.0.tar"
 PORT=22222
 DIR="/opt/batm_ssh_tunnel"
 USER="batmsshtunnel"
