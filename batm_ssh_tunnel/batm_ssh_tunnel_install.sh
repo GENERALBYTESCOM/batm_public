@@ -59,7 +59,7 @@ cd "$DIR" || { echo >&2 "Cannod cd to "$DIR".  Aborting."; exit 1; }
 cd -
 
 echo "Downloading and unpacking to $DIR"
-cat "$URL" | sudo -u "$USER" tar -xf -
+cat "$URL" | sudo -u "$USER" tar -xf -C "$DIR" -
 
 cd "$DIR"
 echo "Generating password"
