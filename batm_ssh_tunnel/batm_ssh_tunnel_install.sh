@@ -56,12 +56,12 @@ sudo useradd --system --create-home "$USER"
 sudo mkdir -p "$DIR" || { echo >&2 "Cannot mkdir "$DIR".  Aborting."; exit 1; }
 sudo chown "$USER" "$DIR"
 cd "$DIR" || { echo >&2 "Cannod cd to "$DIR".  Aborting."; exit 1; }
-
+cd -
 
 echo "Downloading and unpacking to $DIR"
 cat "$URL" | sudo -u "$USER" tar -xf -
 
-
+cd "$DIR"
 echo "Generating password"
 pwd=`sudo -iu "$USER" "$DIR/bin/batm_ssh_tunnel" init`
 if [[ -z "$PWD" ]]; then echo >&2 "Cannot generate password"; exit 1; fi
