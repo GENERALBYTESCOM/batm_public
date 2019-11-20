@@ -8,7 +8,8 @@ To Install:
 4. Install service
 
 Steps:
-``apt install unzip zip 
+```
+apt install unzip zip 
 curl -s "https://get.sdkman.io" | bash
 source "/root/.sdkman/bin/sdkman-init.sh"
 sdk install java  8.0.232.hs-adpt
@@ -17,6 +18,6 @@ cd batm_public
 ./gradlew build
 cd batm_ssh_tunnel
 ./batm_ssh_tunnel_install.sh
-``
+```
 
 
