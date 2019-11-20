@@ -55,7 +55,7 @@ sudo useradd --system --create-home "$USER"
 # create the installation directory and cd into it
 sudo mkdir -p "$DIR" || { echo >&2 "Cannot mkdir "$DIR".  Aborting."; exit 1; }
 sudo chown "$USER" "$DIR"
-cd "$DIR" || { echo >&2 "Cannod cd to "$DIR".  Aborting."; exit 1; }
+cd "$DIR" || { echo >&2 "Cannot cd to "$DIR".  Aborting."; exit 1; }
 cd -
 
 echo "Downloading and unpacking to $DIR"
