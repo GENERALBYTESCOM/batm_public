@@ -85,6 +85,7 @@ public enum FiatCurrency {
     UAH("Ukrainian hryvnia"),
     USD("United States dollar"),
     UYU("Uruguayan peso"),
+    UZS("Uzbekistani soʻm"),
     VES("Bolívares soberanos"),
     VND("Vietnamese dong"),
     XAF("Central African CFA franc"),
