@@ -70,7 +70,9 @@
             <cryptocurrency>DAI</cryptocurrency>
         </ratesource>
         <ratesource prefix="bitkub" name ="BitKub.com" >
+            <param name="fiatcurrency" />
             <cryptocurrency>BTC</cryptocurrency>
+            <help>THB is default fiat currency.</help>
         </ratesource>
             <ratesource prefix="bitfinex" name ="Bitfinex.com Exchange" >
                 <param name="fiatcurrency" />
