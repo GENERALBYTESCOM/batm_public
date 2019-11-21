@@ -283,6 +283,7 @@
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>XRP</cryptocurrency>
         </ratesource>
         <exchange prefix="coingi" name="Coingi.com">
             <param name="key"/>
@@ -364,6 +365,7 @@
             <cryptocurrency>VOLTZ</cryptocurrency>
             <cryptocurrency>WDC</cryptocurrency>
             <cryptocurrency>XMR</cryptocurrency>
+            <cryptocurrency>XRP</cryptocurrency>
             <cryptocurrency>XSG</cryptocurrency>
             <cryptocurrency>XZC</cryptocurrency>
         </ratesource>
@@ -422,6 +424,7 @@
             <cryptocurrency>VOLTZ</cryptocurrency>
             <cryptocurrency>WDC</cryptocurrency>
             <cryptocurrency>XMR</cryptocurrency>
+            <cryptocurrency>XRP</cryptocurrency>
             <cryptocurrency>XSG</cryptocurrency>
             <cryptocurrency>XZC</cryptocurrency>
         </ratesource>

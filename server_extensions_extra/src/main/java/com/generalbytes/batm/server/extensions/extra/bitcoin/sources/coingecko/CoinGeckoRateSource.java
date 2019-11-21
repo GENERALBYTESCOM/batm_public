@@ -87,6 +87,7 @@ public class CoinGeckoRateSource implements IRateSource {
         CRYPTOCURRENCIES.put(CryptoCurrency.VOLTZ.getCode(), "voltz");
         CRYPTOCURRENCIES.put(CryptoCurrency.WDC.getCode(), "worldcoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.XMR.getCode(), "monero");
+        CRYPTOCURRENCIES.put(CryptoCurrency.XRP.getCode(), "ripple");
         CRYPTOCURRENCIES.put(CryptoCurrency.XSG.getCode(), "snowgem");
         CRYPTOCURRENCIES.put(CryptoCurrency.XZC.getCode(), "zcoin");
     }
