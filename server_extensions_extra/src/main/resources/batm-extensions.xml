@@ -69,6 +69,17 @@
                 <cryptocurrency>DASH</cryptocurrency>
                 <cryptocurrency>DAI</cryptocurrency>
             </ratesource>
+            <ratesource prefix="bitkub" name ="BitKub.com" >
+                <param name="fiatcurrency" />
+                <cryptocurrency>BTC</cryptocurrency>
+                <cryptocurrency>ETH</cryptocurrency>
+                <cryptocurrency>BCH</cryptocurrency>
+                <cryptocurrency>LTC</cryptocurrency>
+                <cryptocurrency>DOGE</cryptocurrency>
+                <cryptocurrency>USDT</cryptocurrency>
+                <cryptocurrency>XRP</cryptocurrency>
+                <help>THB is default fiat currency.</help>
+            </ratesource>
             <ratesource prefix="bitfinex" name ="Bitfinex.com Exchange" >
                 <param name="fiatcurrency" />
                 <cryptocurrency>BTC</cryptocurrency>
