@@ -51,6 +51,9 @@ public class BitKubRateSource implements IRateSourceAdvanced {
         result.add(CryptoCurrency.ETH.getCode());
         result.add(CryptoCurrency.BCH.getCode());
         result.add(CryptoCurrency.LTC.getCode());
+        result.add(CryptoCurrency.DOGE.getCode());
+        result.add(CryptoCurrency.USDT.getCode());
+        result.add(CryptoCurrency.XRP.getCode());
         return result;
     }
 
