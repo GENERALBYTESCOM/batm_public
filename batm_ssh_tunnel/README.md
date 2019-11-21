@@ -5,7 +5,7 @@ Application is listening on port 2222 and is waiting for BATM server connection.
 Using ssh tunnels is recomended when BATM server wants to communicate to bitcoind or similar node as it adds additional layer of encryption.
 
 
-To Install (tested on ubuntu server 18.04):
+## To Install (tested on ubuntu server 18.04):
 
 0. Install dependencies
 ```
