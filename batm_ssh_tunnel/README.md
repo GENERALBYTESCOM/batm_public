@@ -14,7 +14,6 @@ apt install unzip zip
 1. Install Java 8 (used for compilation of client and running)
 ```
 curl -s "https://get.sdkman.io" | bash
-source "/root/.sdkman/bin/sdkman-init.sh"
 sdk install java  8.0.232.hs-adpt
 ```
 2. Clone this repository to download source code
