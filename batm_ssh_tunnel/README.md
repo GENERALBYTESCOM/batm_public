@@ -1,3 +1,5 @@
+# SSH TUNNEL CLIENT
+
 This client application can be used to simplify ssh tunnel creation from BATM server to your node.
 Application is listening on port 2222 and is waiting for BATM server connection.
 Using ssh tunnels is recomended when BATM server wants to communicate to bitcoind or similar node as it adds additional layer of encryption.
