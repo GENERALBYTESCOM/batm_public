@@ -10,7 +10,7 @@ Using ssh tunnels is recomended when BATM server wants to communicate to bitcoin
 0. Install Java 8 (used for compilation of client and running)
 ```
 apt update
-apt install openjdk-8-jre-headless
+apt install openjdk-8-jdk-headless
 ```
 1. Clone this repository to download source code
 ```
