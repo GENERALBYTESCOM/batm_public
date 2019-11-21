@@ -32,6 +32,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.itbit.ItB
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.enigma.EnigmaExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.bitcoinpay.BitcoinPayPP;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.coinofsale.CoinOfSalePP;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.bitkub.BitKubRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.bity.BityRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.coingecko.CoinGeckoRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.coinpaprika.CoinPaprikaRateSource;
@@ -338,6 +339,12 @@ public class BitcoinExtension extends AbstractExtension {
                     preferredFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new EnigmaExchange(preferredFiatCurrency);
+            } else if ("bitkub".equalsIgnoreCase(rsType)) {
+                String preferredFiatCurrency = FiatCurrency.THB.getCode();
+                if (st.hasMoreTokens()) {
+                    preferredFiatCurrency = st.nextToken().toUpperCase();
+                }
+                return new BitKubRateSource(preferredFiatCurrency);
             }
         }
         return null;
