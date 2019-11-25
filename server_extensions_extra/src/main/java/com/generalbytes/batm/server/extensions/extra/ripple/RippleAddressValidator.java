@@ -29,6 +29,9 @@ public class RippleAddressValidator implements ICryptoAddressValidator {
     @Override
     public boolean isAddressValid(String address) {
         if (address.startsWith("r")) { //example: r9cZA1mLK5R5Am25ArfXFmqgNwjZgnfk59
+            if (address.contains(":")) {
+                address = address.substring(0, address.indexOf(":")); // can contain a TAG after ":"
+            }
             try {
                 Base58.decodeToBigInteger(address);
             } catch (AddressFormatException e) {

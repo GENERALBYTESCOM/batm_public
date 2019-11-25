@@ -1,0 +1,23 @@
+# sudo cp batm-ssh-tunnel.service /etc/systemd/system/
+# sudo chmod 644 /etc/systemd/system/batm-ssh-tunnel.service
+# sudo systemctl daemon-reload
+# sudo systemctl enable batm-ssh-tunnel.service
+#
+# sudo systemctl start  batm-ssh-tunnel
+# sudo systemctl status batm-ssh-tunnel
+# sudo systemctl stop   batm-ssh-tunnel
+
+[Unit]
+Description=BATM SSH Tunnel Server
+After=multi-user.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/batm_ssh_tunnel
+ExecStart=/opt/batm_ssh_tunnel/bin/batm_ssh_tunnel
+Restart=always
+User=batmsshtunnel
+Group=batmsshtunnel
+
+[Install]
+WantedBy=multi-user.target

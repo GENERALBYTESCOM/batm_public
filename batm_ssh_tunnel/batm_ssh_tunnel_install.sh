@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-URL="file:///home/pvyhnal/git/batm_main/batm_public/batm_ssh_tunnel/build/distributions/batm_ssh_tunnel-1.0.0.tar" # TODO
+URL="./build/distributions/batm_ssh_tunnel-1.0.0.tar"
 PORT=22222
 DIR="/opt/batm_ssh_tunnel"
 USER="batmsshtunnel"
@@ -53,15 +53,15 @@ echo "Adding user $USER"
 sudo useradd --system --create-home "$USER"
 
 # create the installation directory and cd into it
-sudo mkdir -p "$DIR" || { echo >&2 "Cannod mkdir "$DIR".  Aborting."; exit 1; }
+sudo mkdir -p "$DIR" || { echo >&2 "Cannot mkdir "$DIR".  Aborting."; exit 1; }
 sudo chown "$USER" "$DIR"
-cd "$DIR" || { echo >&2 "Cannod cd to "$DIR".  Aborting."; exit 1; }
-
+cd "$DIR" || { echo >&2 "Cannot cd to "$DIR".  Aborting."; exit 1; }
+cd -
 
 echo "Downloading and unpacking to $DIR"
-curl -s "$URL" | sudo -u "$USER" tar -xf -
+cat "$URL" | sudo -u "$USER" tar -C "$DIR" -xf -
 
-
+cd "$DIR"
 echo "Generating password"
 pwd=`sudo -iu "$USER" "$DIR/bin/batm_ssh_tunnel" init`
 if [[ -z "$PWD" ]]; then echo >&2 "Cannot generate password"; exit 1; fi
