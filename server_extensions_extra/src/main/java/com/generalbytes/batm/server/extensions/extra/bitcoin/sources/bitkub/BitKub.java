@@ -26,12 +26,13 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import java.util.Map;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Path("/api")
 public interface BitKub {
     @GET
     @Path("/market/ticker?sym={to_currency}_{from_currency}")
-    RateInfo getTicker(@PathParam("from_currency") String fromCurrency, @PathParam("to_currency") String toCurrency);
+    Map<String, RateInfo> getTicker(@PathParam("from_currency") String fromCurrency, @PathParam("to_currency") String toCurrency);
 
 }

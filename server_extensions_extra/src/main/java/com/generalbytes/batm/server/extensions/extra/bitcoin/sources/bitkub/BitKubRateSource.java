@@ -39,6 +39,8 @@ public class BitKubRateSource implements IRateSourceAdvanced {
     private final BitKub api;
     private final String preferredFiatCurrency;
 
+    private RateInfo rateInfo;
+
     public BitKubRateSource(String preferredFiatCurrency) {
         api = RestProxyFactory.createProxy(BitKub.class, "https://api.bitkub.com");
         this.preferredFiatCurrency = preferredFiatCurrency;
@@ -65,7 +67,6 @@ public class BitKubRateSource implements IRateSourceAdvanced {
     }
 
 
-
     @Override
     public String getPreferredFiatCurrency() {
         return this.preferredFiatCurrency;
@@ -80,10 +81,8 @@ public class BitKubRateSource implements IRateSourceAdvanced {
     {
         String crypto = cryptoCurrency.toUpperCase();
         String fiat = fiatCurrency.toUpperCase();
-        this.rateInfo = api.getTicker(crypto, fiat);
+        this.rateInfo = api.getTicker(crypto, fiat).get(fiat + '_' + crypto);
     }
-
-    private RateInfo rateInfo;
 
 
     @Override
@@ -93,6 +92,7 @@ public class BitKubRateSource implements IRateSourceAdvanced {
             return null;
         }
         try {
+            log.info("{}-{} pair SET getExchangeRateLast", cryptoCurrency, fiatCurrency);
             setTicker(cryptoCurrency, fiatCurrency);
             return rateInfo.getLast();
         } catch (Exception e) {
@@ -108,6 +108,7 @@ public class BitKubRateSource implements IRateSourceAdvanced {
             return null;
         }
         try {
+            log.info("{}-{} pair SET getExchangeRateLast", cryptoCurrency, fiatCurrency);
             setTicker(cryptoCurrency, fiatCurrency);
             return rateInfo.getHighestBid();
         } catch (Exception e) {
@@ -123,6 +124,7 @@ public class BitKubRateSource implements IRateSourceAdvanced {
             return null;
         }
         try {
+            log.info("{}-{} pair SET getExchangeRateLast", cryptoCurrency, fiatCurrency);
             setTicker(cryptoCurrency, fiatCurrency);
             return rateInfo.getLowestAsk();
         } catch (Exception e) {
