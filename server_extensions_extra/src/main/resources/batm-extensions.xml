@@ -33,7 +33,7 @@
                 <param name="token" />
                 <param name="wallet_id" />
                 <param name="wallet_passphrase" />
-                <cryptocurrency>BCH</cryptocurrency>
+                <cryptocurrency buyonly="true">BCH</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency><!--BitGo’s Ethereum wallets are only available to BitGo Enterprise customers-->
@@ -45,7 +45,7 @@
                 <param name="token" />
                 <param name="wallet_id" />
                 <param name="wallet_passphrase" />
-                <cryptocurrency>BCH</cryptocurrency>
+                <cryptocurrency buyonly="true">BCH</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency><!--BitGo’s Ethereum wallets are only available to BitGo Enterprise customers-->
@@ -1417,7 +1417,7 @@
             <param name="mnemonic" />
             <param name="gaslimit" />
             <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
-            <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency buyonly="true">DAI</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="DAI" file="dai.png"/>
         <cryptologo cryptocurrency="DAI" file="dai.svg"/>
