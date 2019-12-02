@@ -13,9 +13,9 @@ import java.math.BigDecimal;
 public class CoinmarketcapRateSourceTest {
     private static final Logger log = LoggerFactory.getLogger("batm.master.extensions.CoinmarketcapRateSourceTest");
 
-    @Test(expected = NullPointerException.class)
+    @Test()
     public void nullApi() {
-        new CoinmarketcapRateSource(null, "USD");
+        Assert.assertNull(new CoinmarketcapRateSource(null, "USD").getExchangeRateLast("BTC", "CZK"));
     }
 
     /**

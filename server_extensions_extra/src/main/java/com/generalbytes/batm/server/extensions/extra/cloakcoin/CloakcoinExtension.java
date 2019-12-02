@@ -33,7 +33,7 @@ public class CloakcoinExtension extends AbstractExtension {
     public String getName() { return "BATM Cloakcoin extension"; }
 
     @Override
-    public IWallet createWallet(String walletLogin) {
+    public IWallet createWallet(String walletLogin, String tunnelPassword) {
         if (walletLogin != null && !walletLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(walletLogin, ":");
             String walletType = st.nextToken();

@@ -55,7 +55,7 @@ public abstract class AbstractExtension implements IExtension{
     }
 
     @Override
-    public IWallet createWallet(String walletLogin) {
+    public IWallet createWallet(String walletLogin, String tunnelPassword) {
         return null;
     }
 

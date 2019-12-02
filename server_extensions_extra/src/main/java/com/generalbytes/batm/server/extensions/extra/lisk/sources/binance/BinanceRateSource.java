@@ -48,7 +48,7 @@ public class BinanceRateSource implements IRateSource {
 
     @Override
     public Set<String> getCryptoCurrencies() {
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         result.add(CryptoCurrency.LSK.getCode());
         result.add(CryptoCurrency.NULS.getCode());
         return result;
@@ -56,7 +56,7 @@ public class BinanceRateSource implements IRateSource {
 
     @Override
     public Set<String> getFiatCurrencies() {
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         result.add(FiatCurrency.USD.getCode());
         result.add(FiatCurrency.HKD.getCode());
         return result;
@@ -73,15 +73,19 @@ public class BinanceRateSource implements IRateSource {
             return null;
         }
         final BinanceTickerData btcUsdt = api.getTicker("BTCUSDT");
-        final BinanceTickerData selectedCryptoInBtc = api.getTicker(cryptoCurrency + "BTC");
+        BigDecimal priceInBtc;
+        if ("BTC".equalsIgnoreCase(cryptoCurrency)) {
+            priceInBtc = BigDecimal.ONE;
+        } else {
+            BinanceTickerData selectedCryptoInBtc = api.getTicker(cryptoCurrency + "BTC");
+            priceInBtc = selectedCryptoInBtc.getPrice();
+        }
         CoinmarketcapRateSource coinMarketCapSource = new CoinmarketcapRateSource(coinmarketcapApiKey, fiatCurrency);
         BigDecimal lastUsdtFiat = coinMarketCapSource.getExchangeRateLast("USDT", fiatCurrency);
-        if (lastUsdtFiat != null && btcUsdt.getPrice()!=null && selectedCryptoInBtc.getPrice() !=null ) {
+        if (lastUsdtFiat != null && btcUsdt.getPrice() != null && priceInBtc != null ) {
             BigDecimal lastBtcPriceInUsdt = btcUsdt.getPrice();
-            BigDecimal lastSelectedCryptoPriceInBtc = selectedCryptoInBtc.getPrice();
-            BigDecimal lastSelectedCryptoPriceInUsdt = lastSelectedCryptoPriceInBtc.multiply(lastBtcPriceInUsdt);
-            BigDecimal lastSelectedCryptoPriceInFiat = lastSelectedCryptoPriceInUsdt.multiply(lastUsdtFiat);
-            return lastSelectedCryptoPriceInFiat;
+            BigDecimal lastSelectedCryptoPriceInUsdt = priceInBtc.multiply(lastBtcPriceInUsdt);
+            return lastSelectedCryptoPriceInUsdt.multiply(lastUsdtFiat);
         }
         return null;
     }

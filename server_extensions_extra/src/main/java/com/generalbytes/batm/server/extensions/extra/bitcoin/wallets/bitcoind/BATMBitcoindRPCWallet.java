@@ -77,10 +77,10 @@ public class BATMBitcoindRPCWallet implements IWallet {
 
     @Override
     public String getCryptoAddress(String cryptoCurrency) {
-        return getNewCryptoAddress(cryptoCurrency, null);
+        return generateNewDepositCryptoAddress(cryptoCurrency, null);
     }
 
-    protected String getNewCryptoAddress(String cryptoCurrency, String label) {
+    public String generateNewDepositCryptoAddress(String cryptoCurrency, String label) {
         if (!this.cryptoCurrency.equalsIgnoreCase(cryptoCurrency)) {
             log.error("Bitcoind wallet error: unknown cryptocurrency.");
             return null;

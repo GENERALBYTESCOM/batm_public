@@ -1,0 +1,29 @@
+apply plugin: "java"
+apply plugin: 'application'
+
+version = "1.0.0"
+
+application {
+    mainClassName = 'com.generalbytes.batm.sshtunnel.Main'
+}
+
+distributions {
+    main {
+        contents {
+            eachFile {
+                // place the files in the archive root - out of the top level directory
+                it.path = it.path.replaceFirst(/^$project.archivesBaseName-$version\//, '')
+            }
+        }
+    }
+}
+
+
+dependencies {
+    compile(group: 'org.apache.sshd', name: 'sshd-core', version: '2.3.0')
+    compile(group: 'org.apache.sshd', name: 'sshd-common', version: '2.3.0')
+    compile(group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3')
+    
+    compile group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.61'
+
+}

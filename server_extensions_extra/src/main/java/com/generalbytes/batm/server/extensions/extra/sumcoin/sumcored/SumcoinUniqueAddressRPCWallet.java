@@ -23,9 +23,4 @@ public class SumcoinUniqueAddressRPCWallet extends SumcoinRPCWallet implements I
     public SumcoinUniqueAddressRPCWallet(String rpcURL, String accountName) {
         super(rpcURL, accountName);
     }
-
-    @Override
-    public String generateNewDepositCryptoAddress(String cryptoCurrency, String label) {
-        return getCryptoAddress(cryptoCurrency);
-    }
 }

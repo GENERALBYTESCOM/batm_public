@@ -55,7 +55,7 @@ public class LightningCommand extends AbstractChatCommnad {
             return;
         }
         try {
-            conversation.sendText("Please wait");
+            conversation.sendText("Please wait...");
 
             Map<String, ? extends ILightningChannel> channels = ctx.findCryptoConfigurationsByTerminalSerialNumbers(resultingTerminalSerials).stream()
                 .filter(conf -> CryptoCurrency.LBTC.getCode().equals(conf.getCryptoCurrency()))

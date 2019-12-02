@@ -19,7 +19,7 @@
 package com.generalbytes.batm.server.extensions;
 
 /**
- * An {@link IWallet} or {@link IExchange} that is able to generate unique addresses
+ * An {@link IWallet} that is able to generate unique addresses
  * for receiving that will be used only for one transaction each.
  */
 public interface IGeneratesNewDepositCryptoAddress {

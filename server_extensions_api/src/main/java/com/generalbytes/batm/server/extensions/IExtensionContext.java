@@ -24,6 +24,7 @@ import com.generalbytes.batm.server.extensions.watchlist.WatchListResult;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.net.InetSocketAddress;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -149,6 +150,14 @@ public interface IExtensionContext {
      * @return true in case of success
      */
     boolean addIdentityPiece(String identityPublicId, IIdentityPiece iidentityPiece);
+
+    /**
+     *
+     * @return a tunnel manager that allows creating ssh tunnels on a remote ssh server.
+     * Used for creating encrypted tunnels for wallets on remote hosts.
+     * See {@link ITunnelManager#connectIfNeeded(String, InetSocketAddress)}
+     */
+    ITunnelManager getTunnelManager();
 
     //Email related stuff
     public static class EmbeddedEmailImage {

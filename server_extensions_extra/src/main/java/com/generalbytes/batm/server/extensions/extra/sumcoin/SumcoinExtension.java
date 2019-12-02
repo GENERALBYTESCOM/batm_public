@@ -30,13 +30,18 @@ import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.sumcoin.sumcored.SumcoinRPCWallet;
 import com.generalbytes.batm.server.extensions.extra.sumcoin.sources.sumcoinindex.SumcoinindexRateSource;
 import com.generalbytes.batm.server.extensions.extra.sumcoin.sumcored.SumcoinUniqueAddressRPCWallet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.net.InetSocketAddress;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
 public class SumcoinExtension extends AbstractExtension {
+    private static final Logger log = LoggerFactory.getLogger(SumcoinExtension.class);
+
     private static final ICryptoCurrencyDefinition DEFINITION = new SumcoinDefinition();
 
     @Override
@@ -45,7 +50,8 @@ public class SumcoinExtension extends AbstractExtension {
     }
 
     @Override
-    public IWallet createWallet(String walletLogin) {
+    public IWallet createWallet(String walletLogin, String tunnelPassword) {
+        try {
         if (walletLogin !=null && !walletLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(walletLogin,":");
             String walletType = st.nextToken();
@@ -58,14 +64,17 @@ public class SumcoinExtension extends AbstractExtension {
                 String username = st.nextToken();
                 String password = st.nextToken();
                 String hostname = st.nextToken();
-                String port = st.nextToken();
-                String accountName ="";
+                int port = Integer.parseInt(st.nextToken());
+                String accountName = "";
                 if (st.hasMoreTokens()) {
                     accountName = st.nextToken();
                 }
 
+                InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(tunnelPassword, InetSocketAddress.createUnresolved(hostname, port));
+                hostname = tunnelAddress.getHostString();
+                port = tunnelAddress.getPort();
 
-                if (protocol != null && username != null && password != null && hostname !=null && port != null && accountName != null) {
+                if (protocol != null && username != null && password != null && hostname !=null && accountName != null) {
                     String rpcURL = protocol +"://" + username +":" + password + "@" + hostname +":" + port;
                     if ("sumcoindnoforward".equalsIgnoreCase(walletType)) {
                         return new SumcoinUniqueAddressRPCWallet(rpcURL, accountName);
@@ -85,6 +94,9 @@ public class SumcoinExtension extends AbstractExtension {
                     return new DummyExchangeAndWalletAndSource(fiatCurrency, CryptoCurrency.SUM.getCode(), walletAddress);
                 }
             }
+        }
+        } catch (Exception e) {
+            log.error("", e);
         }
         return null;
     }

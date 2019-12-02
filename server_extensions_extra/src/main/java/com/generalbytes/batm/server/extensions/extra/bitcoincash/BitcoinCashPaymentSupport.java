@@ -80,7 +80,7 @@ public class BitcoinCashPaymentSupport extends AbstractRPCPaymentSupport {
     public BigDecimal calculateTxFee(int numberOfInputs, int numberOfOutputs, RPCClient client) {
         final int transactionSize = calculateTransactionSize(numberOfInputs, numberOfOutputs);
         try {
-            BigDecimal estimate = new BigDecimal(client.getEstimateFee(2));
+            BigDecimal estimate = new BigDecimal(client.getEstimateFee());
             if (BigDecimal.ZERO.compareTo(estimate) == 0 || estimate.compareTo(new BigDecimal("-1")) == 0 ) {
                 //bitcoind is clueless
                 return getMinimumNetworkFee(client);
