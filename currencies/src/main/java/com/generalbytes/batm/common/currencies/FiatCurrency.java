@@ -65,6 +65,7 @@ public enum FiatCurrency {
     KRW("South Korean won"),
     KWD("Kuwaiti dinar"),
     KZT("Kazakhstani tenge"),
+    MGA("Malagasy ariary"),
     MKD("Macedonian denar"),
     MXN("Mexican peso"),
     MYR("Malaysian ringgit"),
