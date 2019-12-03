@@ -43,15 +43,15 @@ public class ChainSoRateSource implements IRateSource{
 
 
     public ChainSoRateSource() {
-        api = RestProxyFactory.createProxy(IChainSo.class, "https://chain.so");
+        api = RestProxyFactory.createProxy(IChainSo.class, "https://sochain.com");
     }
 
     @Override
     public BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency) {
-        if (!CryptoCurrency.DOGE.getCode().equalsIgnoreCase(cryptoCurrency)) {
+        if (!getCryptoCurrencies().contains(cryptoCurrency)) {
             return null;
         }
-        if (!FiatCurrency.USD.getCode().equalsIgnoreCase(fiatCurrency)) {
+        if (!getFiatCurrencies().contains(fiatCurrency)) {
             return null;
         }
 
@@ -83,10 +83,10 @@ public class ChainSoRateSource implements IRateSource{
     }
 
     private BigDecimal getExchangeRateLastSync(String cryptoCurrency, String fiatCurrency) {
-        if (!CryptoCurrency.DOGE.getCode().equalsIgnoreCase(cryptoCurrency)) {
+        if (!getCryptoCurrencies().contains(cryptoCurrency)) {
             return null;
         }
-        if (!FiatCurrency.USD.getCode().equalsIgnoreCase(fiatCurrency)) {
+        if (!getFiatCurrencies().contains(fiatCurrency)) {
             return null;
         }
 
@@ -95,7 +95,7 @@ public class ChainSoRateSource implements IRateSource{
             ChainSoPrice[] prices = response.getData().getPrices();
             for (int i = 0; i < prices.length; i++) {
                 ChainSoPrice price = prices[i];
-                if ("cryptsy".equalsIgnoreCase(price.getExchange()) && fiatCurrency.equalsIgnoreCase(price.getPrice_base())) {
+                if ("coinspot".equalsIgnoreCase(price.getExchange()) && fiatCurrency.equalsIgnoreCase(price.getPrice_base())) {
                     return new BigDecimal(price.getPrice());
                 }
             }
@@ -113,12 +113,12 @@ public class ChainSoRateSource implements IRateSource{
     @Override
     public Set<String> getFiatCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(FiatCurrency.USD.getCode());
+        result.add(FiatCurrency.AUD.getCode());
         return result;
     }
 
     @Override
     public String getPreferredFiatCurrency() {
-        return FiatCurrency.USD.getCode();
+        return FiatCurrency.AUD.getCode();
     }
 }
