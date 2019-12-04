@@ -21,7 +21,6 @@ import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
-import com.generalbytes.batm.server.extensions.extra.dogecoin.sources.chainso.ChainSoRateSource;
 import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.BlockIOWalletWithClientSideSigning;
 import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.BlockIOWalletWithClientSideSigningWithUniqueAddresses;
 import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.dogecoind.DogecoindRPCWallet;
@@ -110,9 +109,7 @@ public class DogecoinExtension extends AbstractExtension{
             StringTokenizer st = new StringTokenizer(sourceLogin,":");
             String exchangeType = st.nextToken();
 
-            if ("chainso".equalsIgnoreCase(exchangeType)) {
-                return new ChainSoRateSource();
-            }else if ("dogefix".equalsIgnoreCase(exchangeType)) {
+            if ("dogefix".equalsIgnoreCase(exchangeType)) {
                 BigDecimal rate = BigDecimal.ZERO;
                 if (st.hasMoreTokens()) {
                     try {
