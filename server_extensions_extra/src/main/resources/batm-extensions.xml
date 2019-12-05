@@ -499,9 +499,6 @@
             <param name="accountname" />
             <cryptocurrency>DOGE</cryptocurrency>
         </wallet>
-        <ratesource prefix="chainso" name="Chain.so - Cryptsy" >
-            <cryptocurrency>DOGE</cryptocurrency>
-        </ratesource>
         <ratesource prefix="dogefix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>DOGE</cryptocurrency>
