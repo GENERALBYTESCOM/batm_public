@@ -17,6 +17,9 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * This class is used for publishing REST services on BATM CAS Server
  */
@@ -34,4 +37,13 @@ public interface IRestService {
      * @return
      */
     Class getImplementation();
+
+    /**
+     * Returns list of filters used in this rest service.
+     * Filter class has to implement javax.servlet.Filter interface.
+     * @return
+     */
+    default List<Class> getFilters() {
+        return new ArrayList<>(0);
+    }
 }
