@@ -105,7 +105,7 @@ public interface IExtensionContext {
      * @param phoneNumber
      * @return
      */
-    IIdentity findIdentityByPhoneNumber(String phoneNumber);
+    List<IIdentity> findIdentitiesByPhoneNumber(String phoneNumber);
 
 
     /**
@@ -121,7 +121,7 @@ public interface IExtensionContext {
      * @param phoneNumber
      * @return
      */
-    IIdentity findIdentityByPhoneNumber(String phoneNumber, String countryName);
+    List<IIdentity> findIdentityByPhoneNumber(String phoneNumber, String countryName);
 
     /**
      *

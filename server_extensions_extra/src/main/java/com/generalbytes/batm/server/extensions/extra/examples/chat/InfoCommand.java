@@ -643,18 +643,20 @@ public class InfoCommand extends AbstractChatCommnad{
             if (identity == null) {
                 conversation.sendText("Identity was not found.");
             }
-        }else if (phoneNumber != null) {
+        } else if (phoneNumber != null) {
             IPerson person = ctx.findPersonByChatId(conversation.getSenderUserId());
-            identity = ctx.findIdentityByPhoneNumber(phoneNumber, person.getContactCountry());
-            if (identity == null) {
+            List<IIdentity> identities = ctx.findIdentityByPhoneNumber(phoneNumber, person.getContactCountry());
+            if (identities == null) {
                 conversation.sendText("Identity was not found by phone number.");
+            } else {
+                identity = identities.get(0);
             }
         }
         if (identity != null) {
             IPerson person = ctx.findPersonByChatId(conversation.getSenderUserId());
             if (ctx.hasPersonPermissionToObject(IExtensionContext.PERMISSION_READ, person, identity)) {
                 formatAndSendIdentityDetails(ctx, conversation, person, identity);
-            }else{
+            } else{
                 conversation.sendText(PERMISSION_DENIED);
             }
         }
