@@ -83,10 +83,10 @@
             <ratesource prefix="satang" name ="Satang.pro" >
                 <param name="fiatcurrency" />
                 <cryptocurrency>BTC</cryptocurrency>
-                <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>BCH</cryptocurrency>
-                <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>DOGE</cryptocurrency>
+                <cryptocurrency>ETH</cryptocurrency>
+                <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>USDT</cryptocurrency>
                 <cryptocurrency>XRP</cryptocurrency>
                 <help>THB is default fiat currency.</help>

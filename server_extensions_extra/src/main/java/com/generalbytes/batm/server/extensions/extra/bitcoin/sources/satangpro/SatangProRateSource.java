@@ -51,6 +51,7 @@ public class SatangProRateSource implements IRateSourceAdvanced {
     }
 
     private String makeProductCode(String cryptoCurrency, String fiatCurrency) {
+        log.warn("{}_{} pair has been calculated", fiatCurrency, cryptoCurrency);
         return  fiatCurrency.toUpperCase() + "_" + cryptoCurrency.toUpperCase();
     }
 

@@ -26,10 +26,11 @@ import javax.ws.rs.core.MediaType;
 import java.util.Map;
 
 @Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
 @Path("/api")
 public interface SatangPro {
+
     @GET
     @Path("/orderbook-tickers")
     Map<String, SatangProRateInfo> getTicker();
+
 }
