@@ -77,9 +77,9 @@
                 <cryptocurrency>DOGE</cryptocurrency>
                 <cryptocurrency>USDT</cryptocurrency>
                 <cryptocurrency>XRP</cryptocurrency>
-                <help>THB is default fiat currency.</help>
+                <help>Fiat currency is THB.</help>
             </ratesource>
-            <ratesource prefix="satang" name ="Satang.pro" >
+            <ratesource prefix="satangpro" name ="Satang.pro" >
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>BCH</cryptocurrency>
                 <cryptocurrency>DOGE</cryptocurrency>
@@ -87,7 +87,7 @@
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>USDT</cryptocurrency>
                 <cryptocurrency>XRP</cryptocurrency>
-                <help>THB is default fiat currency.</help>
+                <help>Fiat currency is THB.</help>
             </ratesource>
             <ratesource prefix="bitfinex" name ="Bitfinex.com Exchange" >
                 <param name="fiatcurrency" />
