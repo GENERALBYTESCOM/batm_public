@@ -40,8 +40,10 @@ public class SatangProRateSource implements IRateSourceAdvanced {
     private final String preferredFiatCurrency;
 
     private static final String SATANG_PRO_BASE_URL = "https://api.tdax.com";
+    private static final long SATANG_PRO_TTL_MICROSECONDS = 20*1000;
 
     private SatangProRateInfo satangProRateInfo;
+    private long lastTime = 0;
 
     public SatangProRateSource(String preferredFiatCurrency) {
         this.api = RestProxyFactory.createProxy(SatangPro.class, SATANG_PRO_BASE_URL);
@@ -85,7 +87,11 @@ public class SatangProRateSource implements IRateSourceAdvanced {
 
     private void setTicker(String cryptoCurrency, String fiatCurrency)
     {
-        this.satangProRateInfo = api.getTicker().get(this.makeProductCode(cryptoCurrency, fiatCurrency));
+        if(lastTime == 0 || (lastTime < (System.currentTimeMillis() - SATANG_PRO_TTL_MICROSECONDS)))
+        {
+            this.lastTime = System.currentTimeMillis();
+            this.satangProRateInfo = api.getTicker().get(this.makeProductCode(cryptoCurrency, fiatCurrency));
+        }
     }
 
 

@@ -30,6 +30,6 @@ import java.util.Map;
 @Path("/api")
 public interface SatangPro {
     @GET
-    @Path("orderbook-tickers")
+    @Path("/orderbook-tickers")
     Map<String, SatangProRateInfo> getTicker();
 }
