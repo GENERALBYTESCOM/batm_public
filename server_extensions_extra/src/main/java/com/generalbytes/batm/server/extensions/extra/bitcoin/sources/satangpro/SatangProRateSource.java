@@ -41,7 +41,7 @@ public class SatangProRateSource implements IRateSourceAdvanced {
     private final SatangPro api;
     private final String preferredFiatCurrency;
 
-    private static final String SATANG_PRO_BASE_URL = "http://api.tdax.com";
+    private static final String SATANG_PRO_BASE_URL = "https://api.tdax.com";
 
     private SatangProRateInfo satangProRateInfo;
 
