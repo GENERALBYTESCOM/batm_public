@@ -39,7 +39,7 @@ public class SatangProRateSource implements IRateSourceAdvanced {
     private final SatangPro api;
     private final String preferredFiatCurrency;
 
-    private static final String SATANG_PRO_BASE_URL = "https://api.tdax.com";
+    private static final String SATANG_PRO_BASE_URL = "http://api.tdax.com";
     private static final long SATANG_PRO_TTL_MICROSECONDS = 20*1000;
 
     private SatangProRateInfo satangProRateInfo;
@@ -51,7 +51,7 @@ public class SatangProRateSource implements IRateSourceAdvanced {
     }
 
     private String makeProductCode(String cryptoCurrency, String fiatCurrency) {
-        log.warn("{}-{} pair has been calculated", fiatCurrency, cryptoCurrency);
+        log.debug("{}-{} pair has been calculated", cryptoCurrency, fiatCurrency);
         return  cryptoCurrency.toUpperCase() + "_" + fiatCurrency.toUpperCase();
     }
 
