@@ -23,9 +23,6 @@ import java.math.BigDecimal;
 
 public class SatangProRateInfo {
 
-    private SatangProRateInfoItem bid;
-    private SatangProRateInfoItem ask;
-
     public class SatangProRateInfoItem {
         private BigDecimal price;
         private BigDecimal amount;
@@ -39,6 +36,9 @@ public class SatangProRateInfo {
         }
 
     }
+
+    private SatangProRateInfoItem bid;
+    private SatangProRateInfoItem ask;
 
     public SatangProRateInfoItem getBid() {
         return bid;

@@ -23,6 +23,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.satangpro.d
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.io.IOException;
 import java.util.Map;
 
 @Produces(MediaType.APPLICATION_JSON)
@@ -31,6 +32,6 @@ public interface SatangPro {
 
     @GET
     @Path("/orderbook-tickers/")
-    Map<String, SatangProRateInfo> getTicker();
+    Map<String, SatangProRateInfo> getTicker() throws IOException;
 
 }

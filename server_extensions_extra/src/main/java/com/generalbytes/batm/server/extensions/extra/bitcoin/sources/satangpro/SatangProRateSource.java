@@ -26,10 +26,12 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.bitkub.BitK
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.satangpro.dto.SatangProRateInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import si.mazi.rescu.HttpStatusIOException;
 import si.mazi.rescu.RestProxyFactory;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class SatangProRateSource implements IRateSourceAdvanced {
@@ -40,10 +42,8 @@ public class SatangProRateSource implements IRateSourceAdvanced {
     private final String preferredFiatCurrency;
 
     private static final String SATANG_PRO_BASE_URL = "http://api.tdax.com";
-    private static final long SATANG_PRO_TTL_MICROSECONDS = 20*1000;
 
     private SatangProRateInfo satangProRateInfo;
-    private long lastTime = 0;
 
     public SatangProRateSource(String preferredFiatCurrency) {
         this.api = RestProxyFactory.createProxy(SatangPro.class, SATANG_PRO_BASE_URL);
@@ -51,7 +51,7 @@ public class SatangProRateSource implements IRateSourceAdvanced {
     }
 
     private String makeProductCode(String cryptoCurrency, String fiatCurrency) {
-        log.debug("{}-{} pair has been calculated", cryptoCurrency, fiatCurrency);
+        log.debug("{}_{} pair has been calculated", cryptoCurrency, fiatCurrency);
         return  cryptoCurrency.toUpperCase() + "_" + fiatCurrency.toUpperCase();
     }
 
@@ -88,10 +88,12 @@ public class SatangProRateSource implements IRateSourceAdvanced {
 
     private void setTicker(String cryptoCurrency, String fiatCurrency)
     {
-        if(lastTime == 0 || (lastTime < (System.currentTimeMillis() - SATANG_PRO_TTL_MICROSECONDS)))
-        {
-            this.lastTime = System.currentTimeMillis();
+        try {
             this.satangProRateInfo = api.getTicker().get(this.makeProductCode(cryptoCurrency, fiatCurrency));
+        } catch (HttpStatusIOException e) {
+            log.warn(e.getHttpBody(), e);
+        } catch (Exception e) {
+            log.error("", e);
         }
     }
 
@@ -104,8 +106,16 @@ public class SatangProRateSource implements IRateSourceAdvanced {
         }
         try {
             log.info("{}-{} pair SET getExchangeRateLast", cryptoCurrency, fiatCurrency);
+
             setTicker(cryptoCurrency, fiatCurrency);
-            return satangProRateInfo.getBid().getPrice().add( satangProRateInfo.getAsk().getPrice()).divide(new BigDecimal(2));
+            BigDecimal ret = satangProRateInfo.getBid().getPrice().add(satangProRateInfo.getAsk().getPrice())
+                .divide(new BigDecimal(2), BigDecimal.ROUND_UNNECESSARY);
+            log.info("{} = getBid, {} = getASK, {} = getRate(AVG)",
+                satangProRateInfo.getBid().getPrice(),
+                satangProRateInfo.getAsk().getPrice(), ret);
+
+            return ret;
+
         } catch (Exception e) {
             log.error("", e);
         }
