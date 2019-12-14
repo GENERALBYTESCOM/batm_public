@@ -21,7 +21,7 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.sources.bitkub.dto
 
 import java.math.BigDecimal;
 
-public class RateInfo {
+public class BitKubRateInfo {
     private int id;
     private BigDecimal last;
     private BigDecimal lowestAsk;

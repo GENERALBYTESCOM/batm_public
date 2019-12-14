@@ -17,45 +17,49 @@
  *
  ************************************************************************************/
 
-package com.generalbytes.batm.server.extensions.extra.bitcoin.sources.bitkub;
+package com.generalbytes.batm.server.extensions.extra.bitcoin.sources.satangpro;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.bitkub.dto.BitKubRateInfo;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.bitkub.BitKubRateSource;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.satangpro.dto.SatangProRateInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import si.mazi.rescu.RestProxyFactory;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import si.mazi.rescu.RestProxyFactory;
-
-public class BitKubRateSource implements IRateSourceAdvanced {
+public class SatangProRateSource implements IRateSourceAdvanced {
 
     private static final Logger log = LoggerFactory.getLogger(BitKubRateSource.class);
 
-    private final BitKub api;
+    private final SatangPro api;
     private final String preferredFiatCurrency;
 
-    private static final String BITKUB_BASE_URL = "https://api.bitkub.com";
+    private static final String SATANG_PRO_BASE_URL = "https://api.tdax.com";
 
-    private BitKubRateInfo bitKubRateInfo;
+    private SatangProRateInfo satangProRateInfo;
 
-    public BitKubRateSource(String preferredFiatCurrency) {
-        this.api = RestProxyFactory.createProxy(BitKub.class, BITKUB_BASE_URL);
+    public SatangProRateSource(String preferredFiatCurrency) {
+        this.api = RestProxyFactory.createProxy(SatangPro.class, SATANG_PRO_BASE_URL);
         this.preferredFiatCurrency = preferredFiatCurrency;
+    }
+
+    private String makeProductCode(String cryptoCurrency, String fiatCurrency) {
+        return  fiatCurrency.toUpperCase() + "_" + cryptoCurrency.toUpperCase();
     }
 
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<>();
         result.add(CryptoCurrency.BTC.getCode());
-        result.add(CryptoCurrency.ETH.getCode());
         result.add(CryptoCurrency.BCH.getCode());
-        result.add(CryptoCurrency.LTC.getCode());
         result.add(CryptoCurrency.DOGE.getCode());
+        result.add(CryptoCurrency.ETH.getCode());
+        result.add(CryptoCurrency.LTC.getCode());
         result.add(CryptoCurrency.USDT.getCode());
         result.add(CryptoCurrency.XRP.getCode());
         return result;
@@ -81,9 +85,7 @@ public class BitKubRateSource implements IRateSourceAdvanced {
 
     private void setTicker(String cryptoCurrency, String fiatCurrency)
     {
-        String crypto = cryptoCurrency.toUpperCase();
-        String fiat = fiatCurrency.toUpperCase();
-        this.bitKubRateInfo = api.getTicker(crypto, fiat).get(fiat + '_' + crypto);
+        this.satangProRateInfo = api.getTicker().get(this.makeProductCode(cryptoCurrency, fiatCurrency));
     }
 
 
@@ -96,7 +98,7 @@ public class BitKubRateSource implements IRateSourceAdvanced {
         try {
             log.info("{}-{} pair SET getExchangeRateLast", cryptoCurrency, fiatCurrency);
             setTicker(cryptoCurrency, fiatCurrency);
-            return bitKubRateInfo.getLast();
+            return satangProRateInfo.getBid().getPrice().add( satangProRateInfo.getAsk().getPrice()).divide(new BigDecimal(2));
         } catch (Exception e) {
             log.error("", e);
         }
@@ -112,7 +114,7 @@ public class BitKubRateSource implements IRateSourceAdvanced {
         try {
             log.info("{}-{} pair SET getExchangeRateLast", cryptoCurrency, fiatCurrency);
             setTicker(cryptoCurrency, fiatCurrency);
-            return bitKubRateInfo.getHighestBid();
+            return satangProRateInfo.getBid().getPrice();
         } catch (Exception e) {
             log.error("", e);
         }
@@ -128,7 +130,7 @@ public class BitKubRateSource implements IRateSourceAdvanced {
         try {
             log.info("{}-{} pair SET getExchangeRateLast", cryptoCurrency, fiatCurrency);
             setTicker(cryptoCurrency, fiatCurrency);
-            return bitKubRateInfo.getLowestAsk();
+            return satangProRateInfo.getAsk().getPrice();
         } catch (Exception e) {
             log.error("", e);
         }
@@ -153,4 +155,5 @@ public class BitKubRateSource implements IRateSourceAdvanced {
         }
         return null;
     }
+
 }

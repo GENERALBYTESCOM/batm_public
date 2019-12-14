@@ -37,6 +37,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.bity.BityRa
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.coingecko.CoinGeckoRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.coinpaprika.CoinPaprikaRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.mrcoin.MrCoinRateSource;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.satangpro.SatangProRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitcoind.BATMBitcoindRPCWallet;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitcoind.BATMBitcoindRPCWalletWithUniqueAddresses;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitcore.BitcoreWallet;
@@ -345,6 +346,12 @@ public class BitcoinExtension extends AbstractExtension {
                     preferredFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new BitKubRateSource(preferredFiatCurrency);
+            } else if ("satangpro".equalsIgnoreCase(rsType)) {
+                String preferredFiatCurrency = FiatCurrency.THB.getCode();
+                if (st.hasMoreTokens()) {
+                    preferredFiatCurrency = st.nextToken().toUpperCase();
+                }
+                return new SatangProRateSource(preferredFiatCurrency);
             }
         }
         return null;
