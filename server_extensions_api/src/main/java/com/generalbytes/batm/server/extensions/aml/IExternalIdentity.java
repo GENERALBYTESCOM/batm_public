@@ -25,7 +25,7 @@ public interface IExternalIdentity {
     int STATE_PROHIBITED                    = 3;
     int STATE_ANONYMOUS                     = 4;
     int STATE_PROHIBITED_TO_BE_REGISTERED   = 5;
-    
+
     String getId();
     int getState();
 
@@ -34,4 +34,5 @@ public interface IExternalIdentity {
     String getEmail();
     String getFirstname();
     String getLastname();
+    String getLanguage();
 }

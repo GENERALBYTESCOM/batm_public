@@ -144,6 +144,27 @@ public interface IExtensionContext {
     IIdentity addIdentity(String configurationCashCurrency, String terminalSerialNumber, String externalId, List<ILimit> limitCashPerTransaction, List<ILimit> limitCashPerHour, List<ILimit> limitCashPerDay, List<ILimit> limitCashPerWeek, List<ILimit> limitCashPerMonth, String note, int state, BigDecimal vipBuyDiscount, BigDecimal vipSellDiscount, Date created, Date registered);
 
     /**
+     *
+     * @param configurationCashCurrency
+     * @param terminalSerialNumber
+     * @param externalId
+     * @param limitCashPerTransaction
+     * @param limitCashPerHour
+     * @param limitCashPerDay
+     * @param limitCashPerWeek
+     * @param limitCashPerMonth
+     * @param note
+     * @param state see {@link IIdentity#STATE_REGISTERED} etc.
+     * @param vipBuyDiscount buy fee discount in percent
+     * @param vipSellDiscount sell fee discount in percent
+     * @param created
+     * @param registered
+     * @param language
+     * @return Identity with generated ID (identityPublicId)
+     */
+    IIdentity addIdentity(String configurationCashCurrency, String terminalSerialNumber, String externalId, List<ILimit> limitCashPerTransaction, List<ILimit> limitCashPerHour, List<ILimit> limitCashPerDay, List<ILimit> limitCashPerWeek, List<ILimit> limitCashPerMonth, String note, int state, BigDecimal vipBuyDiscount, BigDecimal vipSellDiscount, Date created, Date registered, String language);
+
+    /**
      * adds Identity Piece to an identity specified by identityPublicId
      * @param identityPublicId
      * @param iidentityPiece
