@@ -22,7 +22,9 @@ import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
 import com.generalbytes.batm.server.extensions.IPaperWalletGenerator;
+import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.IWallet;
+import com.generalbytes.batm.server.extensions.extra.bitcoincash.sources.telr.TelrRateSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -110,4 +112,35 @@ public class BitcoinCashExtension extends AbstractExtension {
         }
         return null;
     }
+
+    @Override
+    public IRateSource createRateSource(String sourceLogin) {
+        if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
+            StringTokenizer st = new StringTokenizer(sourceLogin, ":");
+            String rsType = st.nextToken();
+
+            if ("telr".equalsIgnoreCase(rsType)) {
+                /* Set authorization parameters. */
+                String address = st.nextToken();
+                String secret = st.nextToken();
+                String signature = st.nextToken();
+
+                /* Set preferred fiat currency. */
+                String preferredFiatCurrency = "USD";
+                if (st.hasMoreTokens()) {
+                    preferredFiatCurrency = st.nextToken().toUpperCase();
+                }
+
+                /* Initialize Telr Rate Source. */
+                return new TelrRateSource(
+                    address,
+                    secret,
+                    signature,
+                    preferredFiatCurrency
+                );
+            }
+        }
+        return null;
+    }
+
 }
