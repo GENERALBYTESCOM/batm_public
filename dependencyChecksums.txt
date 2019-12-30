@@ -58,6 +58,7 @@ verifyModule 'org.dashj:dashj-bls:0.15.2.20190416:8250ba224d55b826f8cea8162c99c5
 verifyModule 'org.dashj:dashj-core:0.15.2.20190416:b02021654d70435c9d90a3480e1e7ae2c022bcb1b6e1513e83e347f6d5cdbccf'
 verifyModule 'org.java-websocket:Java-WebSocket:1.3.8:64d38c6b4d6c9e830be6820d408caa02d1217e59e8bf34198cc22bd23429fa48'
 verifyModule 'org.json:json:20180130:3eddf6d9d50e770650e62abe62885f4393aa911430ecde73ebafb1ffd2cfad16'
+verifyModule 'org.knowm.xchange:xchange-binance:4.4.0:2dafca4a1d3abc6f8d43d1e346429cf54c3b7b249d8ce1ba0b7a0e504cb2e69e'
 verifyModule 'org.knowm.xchange:xchange-bitfinex:4.4.0:79134d5a58810e9b18468222b0f2288d49b70e2f18e72a7ba0c8c2efced848e0'
 verifyModule 'org.knowm.xchange:xchange-bittrex:4.4.0:fc17f1040e77b1c5ac55a1ecd19922bfbf7783e8062c6d24df6aa56f812967d2'
 verifyModule 'org.knowm.xchange:xchange-coinbasepro:4.4.0:3d4a11d889c55aa6c33f97ab7c5591ca95689bcac7aaec3ab78066cf92237514'
