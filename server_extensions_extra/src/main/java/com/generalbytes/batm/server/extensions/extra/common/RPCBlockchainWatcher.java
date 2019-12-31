@@ -44,73 +44,6 @@ public class RPCBlockchainWatcher implements IBlockchainWatcher{
     private Thread workerThread = null;
     private RPCClient rpcClient;
 
-    class TransactionWatchRecord {
-        private String cryptoCurrency;
-        private String transactionHash;
-        private IBlockchainWatcherTransactionListener listener;
-        private Object tag;
-        private int lastNumberOfConfirmations;
-
-        TransactionWatchRecord(String cryptoCurrency, String transactionHash, IBlockchainWatcherTransactionListener listener, Object tag, int lastNumberOfConfirmations) {
-            this.cryptoCurrency = cryptoCurrency;
-            this.transactionHash = transactionHash;
-            this.listener = listener;
-            this.tag = tag;
-            this.lastNumberOfConfirmations = lastNumberOfConfirmations;
-        }
-
-        public String getTransactionHash() {
-            return transactionHash;
-        }
-
-        public Object getTag() {
-            return tag;
-        }
-
-        public IBlockchainWatcherTransactionListener getListener() {
-            return listener;
-        }
-
-        public String getCryptoCurrency() {
-            return cryptoCurrency;
-        }
-    }
-
-    class AddressWatchRecord {
-        private String cryptoCurrency;
-        private String address;
-        private Object tag;
-        private IBlockchainWatcherAddressListener listener;
-        private List<String> lastTransactionIds = new ArrayList<>();
-
-        public AddressWatchRecord(String cryptoCurrency, String address, IBlockchainWatcherAddressListener listener, Object tag) {
-            this.cryptoCurrency = cryptoCurrency;
-            this.address = address;
-            this.tag = tag;
-            this.listener = listener;
-        }
-
-        public String getCryptoCurrency() {
-            return cryptoCurrency;
-        }
-
-        public String getAddress() {
-            return address;
-        }
-
-        public Object getTag() {
-            return tag;
-        }
-
-        public IBlockchainWatcherAddressListener getListener() {
-            return listener;
-        }
-
-        public List<String> getLastTransactionIds() {
-            return lastTransactionIds;
-        }
-    }
-
     public RPCBlockchainWatcher(RPCClient rpcClient) {
         this.rpcClient = rpcClient;
     }
@@ -155,7 +88,7 @@ public class RPCBlockchainWatcher implements IBlockchainWatcher{
         }
         List<String> transactionsInfo = new ArrayList<>(records2.size());
         for (TransactionWatchRecord r : records2) {
-            transactionsInfo.add(r.tag.toString());
+            transactionsInfo.add(r.getTag().toString());
         }
         return transactionsInfo;
     }
@@ -167,7 +100,7 @@ public class RPCBlockchainWatcher implements IBlockchainWatcher{
                 TransactionWatchRecord record = trecords.get(i);
                 if (record.getTransactionHash().equals(transactionHash)) {
                     trecords.remove(record);
-                    record.getListener().removedFromWatch(record.getCryptoCurrency(), record.transactionHash,record.tag);
+                    record.getListener().removedFromWatch(record.getCryptoCurrency(), record.getTransactionHash(), record.getTag());
                     return record.getTag();
                 }
             }
@@ -182,7 +115,7 @@ public class RPCBlockchainWatcher implements IBlockchainWatcher{
                 TransactionWatchRecord record = trecords.get(i);
                 if (record.getListener() == listener) {
                     trecords.remove(record);
-                    record.getListener().removedFromWatch(record.cryptoCurrency,record.transactionHash,record.tag);
+                    record.getListener().removedFromWatch(record.getCryptoCurrency(), record.getTransactionHash(), record.getTag());
                 } else {
                     i++;
                 }
@@ -227,7 +160,7 @@ public class RPCBlockchainWatcher implements IBlockchainWatcher{
                             List<TransactionWatchRecord> res2 = new LinkedList<>();
                             for (TransactionWatchRecord record : res) {
                                 // prioritize transactions with small number of confirmations
-                                if (record.lastNumberOfConfirmations < 3) {
+                                if (record.getLastNumberOfConfirmations() < 3) {
                                     checkTransactionRecord(record, currentBlockChainHeight);
                                     Thread.sleep(PERIOD_BETWEEN_CALLS_MILLIS);
                                 } else {
@@ -261,7 +194,7 @@ public class RPCBlockchainWatcher implements IBlockchainWatcher{
                                     IBlockchainWatcherAddressListener listener = arecord.getListener();
                                     if (listener != null) {
                                         BitcoindRpcClient.Transaction transaction = rpcClient.getTransaction(newTxId);
-                                        listener.newTransactionSeen(arecord.getCryptoCurrency(), arecord.getAddress(), newTxId,  transaction.confirmations(), arecord.tag);
+                                        listener.newTransactionSeen(arecord.getCryptoCurrency(), arecord.getAddress(), newTxId,  transaction.confirmations(), arecord.getTag());
                                     }
                                 }
                             }
@@ -286,7 +219,7 @@ public class RPCBlockchainWatcher implements IBlockchainWatcher{
     private void checkTransactionRecord(TransactionWatchRecord record, long currentBlockChainHeight) throws BitcoinRPCException {
         String txHash = record.getTransactionHash();
         if (record.getListener() != null) {
-            record.getListener().newBlockMined(record.getCryptoCurrency(), txHash,record.tag, currentBlockChainHeight);
+            record.getListener().newBlockMined(record.getCryptoCurrency(), txHash, record.getTag(), currentBlockChainHeight);
         }
         BitcoindRpcClient.Transaction t = rpcClient.getTransaction(txHash);
         long transactionHeight = -1;
@@ -300,11 +233,11 @@ public class RPCBlockchainWatcher implements IBlockchainWatcher{
         if (transactionHeight > 0) {
             //transaction is in block
             int numberOfConfirmations = 1 + (int)(currentBlockChainHeight - transactionHeight);
-            if (numberOfConfirmations > record.lastNumberOfConfirmations) {
-                record.lastNumberOfConfirmations = numberOfConfirmations;
+            if (numberOfConfirmations > record.getLastNumberOfConfirmations()) {
+                record.setLastNumberOfConfirmations(numberOfConfirmations);
                 log.debug("checkTransactionRecord - Number of confirmations for tx " + txHash + " is now " + numberOfConfirmations);
                 if (record.getListener() != null) {
-                    record.getListener().numberOfConfirmationsChanged(record.getCryptoCurrency(), txHash,record.tag,numberOfConfirmations);
+                    record.getListener().numberOfConfirmationsChanged(record.getCryptoCurrency(), txHash, record.getTag(), numberOfConfirmations);
                     numberOfConfirmationsChanged = true;
                 }
             }
