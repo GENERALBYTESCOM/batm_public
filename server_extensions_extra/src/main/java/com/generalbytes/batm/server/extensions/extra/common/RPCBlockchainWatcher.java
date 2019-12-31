@@ -323,43 +323,6 @@ public class RPCBlockchainWatcher implements IBlockchainWatcher{
         }
     }
 
-//    public static void main(String[] args) {
-//        try {
-//            RPCClient rpcClient = new RPCClient(BitcoinCashPaymentSupport.RPC_URL);
-//            final RPCBlockchainWatcher w = new RPCBlockchainWatcher(rpcClient);
-//            IBlockchainWatcherTransactionListener tlistener = new IBlockchainWatcherTransactionListener() {
-//                @Override
-//                public void removedFromWatch(String cryptoCurrency, String transactionHash, Object tag) {
-//                    log.info("Removed from Watch");
-//                }
-//
-//                @Override
-//                public void numberOfConfirmationsChanged(String cryptoCurrency, String transactionHash, Object tag, int numberOfConfirmations) {
-//                    log.info("numberOfConfirmationsChanged " + transactionHash + " = " + numberOfConfirmations);
-//                }
-//
-//                @Override
-//                public void newBlockMined(String cryptoCurrency, String transactionHash, Object tag, long blockHeight) {
-//
-//                }
-//            };
-//            w.addAddress(CryptoCurrency.BCH.getCode(), "qzezfqhxej3nyz3t5pq3vzmhazgkgns5qcvyul5cqj", new IBlockchainWatcherAddressListener() {
-//                @Override
-//                public void newTransactionSeen(String cryptoCurrency, String address, String transactionId, int confirmations, Object tag) {
-//                    log.info("New transaction " + transactionId + " seen on address " + address + " confirmations: " + confirmations + " tag:" + tag);
-//                    w.addTransaction(cryptoCurrency,transactionId,tlistener,tag);
-//                }
-//            },null);
-//            w.start();
-//            Thread.sleep(50000000);
-//            w.stop();
-//        } catch (InterruptedException e) {
-//            log.error("Error", e);
-//        } catch (MalformedURLException e) {
-//            log.error("Error", e);
-//        }
-//    }
-
     @Override
     public void addAddress(String cryptoCurrency, String address, IBlockchainWatcherAddressListener listener, Object tag) {
         synchronized (arecords) {
