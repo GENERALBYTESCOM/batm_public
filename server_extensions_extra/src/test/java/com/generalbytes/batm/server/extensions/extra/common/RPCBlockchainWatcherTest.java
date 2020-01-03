@@ -20,24 +20,24 @@ public class RPCBlockchainWatcherTest {
             final RPCBlockchainWatcher w = new RPCBlockchainWatcher(rpcClient);
             IBlockchainWatcherTransactionListener tlistener = new IBlockchainWatcherTransactionListener() {
                 @Override
-                public void removedFromWatch(String cryptoCurrency, String transactionHash, Object tag) {
+                public void removedFromWatch(String cryptoCurrency, String transactionHash) {
                     log.info("Removed from Watch");
                 }
 
                 @Override
-                public void numberOfConfirmationsChanged(String cryptoCurrency, String transactionHash, Object tag, int numberOfConfirmations) {
+                public void numberOfConfirmationsChanged(String cryptoCurrency, String transactionHash, int numberOfConfirmations) {
                     log.info("numberOfConfirmationsChanged " + transactionHash + " = " + numberOfConfirmations);
                 }
 
                 @Override
-                public void newBlockMined(String cryptoCurrency, String transactionHash, Object tag, long blockHeight) {
+                public void newBlockMined(String cryptoCurrency, String transactionHash, long blockHeight) {
 
                 }
             };
-            w.addAddress(CryptoCurrency.BCH.getCode(), "qzezfqhxej3nyz3t5pq3vzmhazgkgns5qcvyul5cqj", (cryptoCurrency, address, transactionId, confirmations, tag) -> {
-                log.info("New transaction " + transactionId + " seen on address " + address + " confirmations: " + confirmations + " tag:" + tag);
-                w.addTransaction(cryptoCurrency, transactionId, tlistener, tag);
-            }, null);
+            w.addAddress(CryptoCurrency.BCH.getCode(), "qzezfqhxej3nyz3t5pq3vzmhazgkgns5qcvyul5cqj", (cryptoCurrency, address, transactionId, confirmations) -> {
+                log.info("New transaction " + transactionId + " seen on address " + address + " confirmations: " + confirmations);
+                w.addTransaction(cryptoCurrency, transactionId, tlistener);
+            });
             w.start();
             Thread.sleep(50000000);
             w.stop();

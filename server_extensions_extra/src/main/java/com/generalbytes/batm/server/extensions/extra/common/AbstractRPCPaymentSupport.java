@@ -118,12 +118,12 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
         return watcher;
     }
 
-    private static boolean hasHashOfOne(BitcoindRpcClient.RawTransaction transaction, List<BitcoindRpcClient.RawTransaction> transactions) {
-        if (transaction == null || transactions == null || transactions.isEmpty()) {
+    private static boolean hasHashOfOne(String transactionHash, List<BitcoindRpcClient.RawTransaction> transactions) {
+        if (transactionHash == null || transactions == null || transactions.isEmpty()) {
             return false;
         }
         for (BitcoindRpcClient.RawTransaction tx : transactions) {
-            if (tx.txId().equals(transaction.txId())) {
+            if (tx.txId().equals(transactionHash)) {
                 return true;
             }
         }
@@ -226,12 +226,12 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
         }
 
         @Override
-        public void removedFromWatch(String cryptoCurrency, String transactionHash, Object tag) {
+        public void removedFromWatch(String cryptoCurrency, String transactionHash) {
             log_debug("Stopped watching of " + transactionHash + " " + request);
         }
 
         @Override
-        public void newBlockMined(String cryptoCurrency, String transactionHash, Object tag, long blockHeight) {
+        public void newBlockMined(String cryptoCurrency, String transactionHash, long blockHeight) {
             if (request.getState() == PaymentRequest.STATE_NEW && (createdAt + getMaximumWaitForPossibleRefundInMillis()) < System.currentTimeMillis()) {
                 //awaiting payment was too long even for refund
                 log_warn("PaymentTransactionListener.newBlockMined - Removing payment request - it timed out(no refund possible). " + request);
@@ -246,14 +246,13 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
         }
 
         @Override
-        public void numberOfConfirmationsChanged(String cryptoCurrency, String transactionHash, Object tag, int numberOfConfirmations) {
+        public void numberOfConfirmationsChanged(String cryptoCurrency, String transactionHash, int numberOfConfirmations) {
             if (incomingTransactions.size() > 0 && request.getState() != PaymentRequest.STATE_REMOVED) {
                 if (!seenInBlockChain) {
 
                     boolean performConfirmation = false;
-                    BitcoindRpcClient.RawTransaction transaction = (BitcoindRpcClient.RawTransaction) tag;
 
-                    if (incomingTransactions.size() > 0 && hasHashOfOne(transaction, incomingTransactions)) {
+                    if (incomingTransactions.size() > 0 && hasHashOfOne(transactionHash, incomingTransactions)) {
                         log_debug("PaymentTransactionListener.numberOfConfirmationsChanged - Incoming payment " + request.getAddress() + " appeared in blockchain (" + numberOfConfirmations + "). Confirmed.");
                         performConfirmation = true;
                         seenInBlockChain = true;
@@ -268,9 +267,8 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
 
                 if (request.getState() == PaymentRequest.STATE_SEEN_IN_BLOCK_CHAIN) {
                     if (numberOfConfirmations > 0) {
-                        BitcoindRpcClient.RawTransaction transaction = (BitcoindRpcClient.RawTransaction) tag;
                         IPaymentRequestListener.Direction direction = IPaymentRequestListener.Direction.INCOMING;
-                        if (hasHashOfOne(transaction, outgoingTransactions)) {
+                        if (hasHashOfOne(transactionHash, outgoingTransactions)) {
                             direction = IPaymentRequestListener.Direction.OUTGOING;
                         }
                         fireNumberOfConfirmationsChanged(request, numberOfConfirmations,direction);
@@ -296,7 +294,7 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
         }
 
         @Override
-        public void newTransactionSeen(String cryptoCurrency, String address, String transactionId, int confirmations, Object tag) {
+        public void newTransactionSeen(String cryptoCurrency, String address, String transactionId, int confirmations) {
             boolean performRefund = false;
             BitcoindRpcClient.Transaction tx = null;
             try {
@@ -374,7 +372,7 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
                                 incomingTransactions.add(tx.raw());
                                 int previousState = request.getState();
                                 request.setState(PaymentRequest.STATE_SEEN_TRANSACTION);
-                                startWatchingTransaction(getClient(request.getWallet()), request.getCryptoCurrency(), tx.txId(), this, tx.raw());
+                                startWatchingTransaction(getClient(request.getWallet()), request.getCryptoCurrency(), tx.txId(), this);
 
                                 fireStateChanged(request, previousState);
                                 fireNumberOfConfirmationsChanged(request, 0, IPaymentRequestListener.Direction.INCOMING);
@@ -393,9 +391,9 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
                                     log_debug("PaymentTransactionListener.onTransaction - Serialized transaction: " + newTx.rawTxSerializedHex);
                                     log_debug("PaymentTransactionListener.onTransaction - Broadcast transaction: " + newTx.rawTx);
 
-                                    startWatchingTransaction(getClient(request.getWallet()), request.getCryptoCurrency(), tx.txId(), this, tx.raw());
+                                    startWatchingTransaction(getClient(request.getWallet()), request.getCryptoCurrency(), tx.txId(), this);
                                     getClient(request.getWallet()).sendRawTransaction(newTx.rawTxSerializedHex);
-                                    startWatchingTransaction(getClient(request.getWallet()), request.getCryptoCurrency(), newTx.rawTx.txId(), this, newTx.rawTx);
+                                    startWatchingTransaction(getClient(request.getWallet()), request.getCryptoCurrency(), newTx.rawTx.txId(), this);
 
                                     fireStateChanged(request, previousState);
                                     fireNumberOfConfirmationsChanged(request, 0, IPaymentRequestListener.Direction.INCOMING);
@@ -466,12 +464,12 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
         getWatcher(client).removeAddresses(l);
     }
 
-    private void startWatchingTransaction(RPCClient client, String cryptoCurrency, String txId, IBlockchainWatcherTransactionListener l, Object tag) {
-        getWatcher(client).addTransaction(cryptoCurrency, txId, l, tag);
+    private void startWatchingTransaction(RPCClient client, String cryptoCurrency, String txId, IBlockchainWatcherTransactionListener l) {
+        getWatcher(client).addTransaction(cryptoCurrency, txId, l);
     }
 
-    private void startWatchingAddress(RPCClient client, String cryptoCurrency, String address, IBlockchainWatcherAddressListener l, Object tag) {
-        getWatcher(client).addAddress(cryptoCurrency, address, l, tag);
+    private void startWatchingAddress(RPCClient client, String cryptoCurrency, String address, IBlockchainWatcherAddressListener l) {
+        getWatcher(client).addAddress(cryptoCurrency, address, l);
     }
 
     @Override
@@ -517,7 +515,7 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
 
             PaymentTracker paymentTracker = new PaymentTracker(!spec.isDoNotForward(), paymentRequest, spec);
             requests.put(paymentRequest, paymentTracker);
-            startWatchingAddress(getClient(spec.getWallet()), getCurrency(), paymentAddress, paymentTracker,paymentRequest); //start watching the address
+            startWatchingAddress(getClient(spec.getWallet()), getCurrency(), paymentAddress, paymentTracker); //start watching the address
             return paymentRequest;
         } catch (BitcoinRPCException e) {
             log.error("", e);

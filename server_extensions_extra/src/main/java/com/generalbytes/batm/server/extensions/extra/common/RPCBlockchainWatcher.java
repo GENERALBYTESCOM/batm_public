@@ -48,8 +48,8 @@ public class RPCBlockchainWatcher implements IBlockchainWatcher{
         this.rpcClient = rpcClient;
     }
 
-    @SuppressWarnings("WeakerAccess")
-    public void addTransaction(String cryptoCurrency, String txId, IBlockchainWatcherTransactionListener l, Object tag) {
+    @Override
+    public void addTransaction(String cryptoCurrency, String txId, IBlockchainWatcherTransactionListener l) {
         synchronized (trecords) {
             BitcoindRpcClient.Transaction transaction = null;
             for (int i=0;i<60;i++) {
@@ -73,7 +73,7 @@ public class RPCBlockchainWatcher implements IBlockchainWatcher{
                 }
             }
             if (transaction != null) {
-                TransactionWatchRecord t = new TransactionWatchRecord(cryptoCurrency, txId, l, tag, transaction.confirmations());
+                TransactionWatchRecord t = new TransactionWatchRecord(cryptoCurrency, txId, l, transaction.confirmations());
                 trecords.add(t);
             }else{
                 log.error("Error: For some reason transaction " + txId + " was not recognized by wallet.");
@@ -81,41 +81,27 @@ public class RPCBlockchainWatcher implements IBlockchainWatcher{
         }
     }
 
-    public List<String> getTransactionsInfo() {
-        List<TransactionWatchRecord> records2;
-        synchronized (trecords) {
-            records2 = new ArrayList<>(trecords);
-        }
-        List<String> transactionsInfo = new ArrayList<>(records2.size());
-        for (TransactionWatchRecord r : records2) {
-            transactionsInfo.add(r.getTag().toString());
-        }
-        return transactionsInfo;
-    }
-
-    @SuppressWarnings("unused")
-    public Object removeTransaction(String transactionHash) {
+    public void removeTransaction(String transactionHash) {
         synchronized (trecords) {
             for (int i = 0; i < trecords.size(); i++) {
                 TransactionWatchRecord record = trecords.get(i);
                 if (record.getTransactionHash().equals(transactionHash)) {
                     trecords.remove(record);
-                    record.getListener().removedFromWatch(record.getCryptoCurrency(), record.getTransactionHash(), record.getTag());
-                    return record.getTag();
+                    record.getListener().removedFromWatch(record.getCryptoCurrency(), record.getTransactionHash());
+                    return;
                 }
             }
         }
-        return null;
     }
 
-    @SuppressWarnings("WeakerAccess")
+    @Override
     public void removeTransactions(IBlockchainWatcherTransactionListener listener) {
         synchronized (trecords) {
             for (int i = 0; i < trecords.size(); ) {
                 TransactionWatchRecord record = trecords.get(i);
                 if (record.getListener() == listener) {
                     trecords.remove(record);
-                    record.getListener().removedFromWatch(record.getCryptoCurrency(), record.getTransactionHash(), record.getTag());
+                    record.getListener().removedFromWatch(record.getCryptoCurrency(), record.getTransactionHash());
                 } else {
                     i++;
                 }
@@ -194,7 +180,7 @@ public class RPCBlockchainWatcher implements IBlockchainWatcher{
                                     IBlockchainWatcherAddressListener listener = arecord.getListener();
                                     if (listener != null) {
                                         BitcoindRpcClient.Transaction transaction = rpcClient.getTransaction(newTxId);
-                                        listener.newTransactionSeen(arecord.getCryptoCurrency(), arecord.getAddress(), newTxId,  transaction.confirmations(), arecord.getTag());
+                                        listener.newTransactionSeen(arecord.getCryptoCurrency(), arecord.getAddress(), newTxId, transaction.confirmations());
                                     }
                                 }
                             }
@@ -219,7 +205,7 @@ public class RPCBlockchainWatcher implements IBlockchainWatcher{
     private void checkTransactionRecord(TransactionWatchRecord record, long currentBlockChainHeight) throws BitcoinRPCException {
         String txHash = record.getTransactionHash();
         if (record.getListener() != null) {
-            record.getListener().newBlockMined(record.getCryptoCurrency(), txHash, record.getTag(), currentBlockChainHeight);
+            record.getListener().newBlockMined(record.getCryptoCurrency(), txHash, currentBlockChainHeight);
         }
         BitcoindRpcClient.Transaction t = rpcClient.getTransaction(txHash);
         long transactionHeight = -1;
@@ -237,7 +223,7 @@ public class RPCBlockchainWatcher implements IBlockchainWatcher{
                 record.setLastNumberOfConfirmations(numberOfConfirmations);
                 log.debug("checkTransactionRecord - Number of confirmations for tx " + txHash + " is now " + numberOfConfirmations);
                 if (record.getListener() != null) {
-                    record.getListener().numberOfConfirmationsChanged(record.getCryptoCurrency(), txHash, record.getTag(), numberOfConfirmations);
+                    record.getListener().numberOfConfirmationsChanged(record.getCryptoCurrency(), txHash, numberOfConfirmations);
                     numberOfConfirmationsChanged = true;
                 }
             }
@@ -257,9 +243,9 @@ public class RPCBlockchainWatcher implements IBlockchainWatcher{
     }
 
     @Override
-    public void addAddress(String cryptoCurrency, String address, IBlockchainWatcherAddressListener listener, Object tag) {
+    public void addAddress(String cryptoCurrency, String address, IBlockchainWatcherAddressListener listener) {
         synchronized (arecords) {
-            arecords.add(new AddressWatchRecord(cryptoCurrency, address,listener,tag));
+            arecords.add(new AddressWatchRecord(cryptoCurrency, address,listener));
         }
     }
 

@@ -8,14 +8,12 @@ import java.util.List;
 public class AddressWatchRecord {
     private String cryptoCurrency;
     private String address;
-    private Object tag;
     private IBlockchainWatcherAddressListener listener;
     private List<String> lastTransactionIds = new ArrayList<>();
 
-    public AddressWatchRecord(String cryptoCurrency, String address, IBlockchainWatcherAddressListener listener, Object tag) {
+    public AddressWatchRecord(String cryptoCurrency, String address, IBlockchainWatcherAddressListener listener) {
         this.cryptoCurrency = cryptoCurrency;
         this.address = address;
-        this.tag = tag;
         this.listener = listener;
     }
 
@@ -25,10 +23,6 @@ public class AddressWatchRecord {
 
     public String getAddress() {
         return address;
-    }
-
-    public Object getTag() {
-        return tag;
     }
 
     public IBlockchainWatcherAddressListener getListener() {
