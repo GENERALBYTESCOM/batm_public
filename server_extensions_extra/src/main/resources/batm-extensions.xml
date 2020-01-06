@@ -439,6 +439,85 @@
             <cryptocurrency>XSG</cryptocurrency>
             <cryptocurrency>XZC</cryptocurrency>
         </ratesource>
+        <exchange prefix="binancecom" name="Binance.com">
+            <param name="apikey"/>
+            <param name="secretkey"/>
+            <param name="fiatcurrency"/>
+            <cryptocurrency>BAT</cryptocurrency>
+            <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>BNB</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>CLOAK</cryptocurrency>
+            <cryptocurrency>DASH</cryptocurrency>
+            <cryptocurrency>DOGE</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>GRS</cryptocurrency>
+            <cryptocurrency>KMD</cryptocurrency>
+            <cryptocurrency>LSK</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>NULS</cryptocurrency>
+            <cryptocurrency>REP</cryptocurrency>
+            <cryptocurrency>SYS</cryptocurrency>
+            <cryptocurrency>TRX</cryptocurrency>
+            <cryptocurrency>USDS</cryptocurrency>
+            <cryptocurrency>USDT</cryptocurrency>
+            <cryptocurrency>VIA</cryptocurrency>
+            <cryptocurrency>XMR</cryptocurrency>
+            <cryptocurrency>XRP</cryptocurrency>
+            <cryptocurrency>XZC</cryptocurrency>
+        </exchange>
+<!--    No fiat on binance.com - use a stablecoin as fiat in future? -->
+<!--        <ratesource prefix="binancecom" name="Binance.com">-->
+<!--            <param name="fiatcurrency" />-->
+<!--            <cryptocurrency>BTC</cryptocurrency>-->
+<!--        </ratesource>-->
+        <exchange prefix="binanceus" name="Binance US">
+            <param name="apikey"/>
+            <param name="secretkey"/>
+            <param name="fiatcurrency"/>
+            <cryptocurrency>BAT</cryptocurrency>
+            <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>BNB</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>DASH</cryptocurrency>
+            <cryptocurrency>DOGE</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>USDT</cryptocurrency>
+            <cryptocurrency>XRP</cryptocurrency>
+        </exchange>
+        <ratesource prefix="binanceus" name="Binance US">
+            <param name="fiatcurrency" />
+            <cryptocurrency>BAT</cryptocurrency>
+            <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>BNB</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>DASH</cryptocurrency>
+            <cryptocurrency>DOGE</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>USDT</cryptocurrency>
+            <cryptocurrency>XRP</cryptocurrency>
+        </ratesource>
+        <exchange prefix="binancejersey" name="Binance Jersey">
+            <param name="apikey"/>
+            <param name="secretkey"/>
+            <param name="fiatcurrency"/>
+            <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>BNB</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+        </exchange>
+        <ratesource prefix="binancejersey" name="Binance Jersey">
+            <param name="fiatcurrency" />
+            <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>BNB</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+        </ratesource>
+
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.bitcoincash.BitcoinCashExtension">
         <wallet prefix="bitcoincashd" name="BitcoinABC/BitcoinClassic Cash Core - bitcoind" >
