@@ -34,5 +34,5 @@ public interface IExternalIdentity {
     String getEmail();
     String getFirstname();
     String getLastname();
-    String getLanguage();
+    //String getLanguage();
 }
