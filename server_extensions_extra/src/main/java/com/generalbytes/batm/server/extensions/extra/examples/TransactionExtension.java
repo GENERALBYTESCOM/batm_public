@@ -21,7 +21,6 @@ import com.generalbytes.batm.server.extensions.*;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /* Comment out this extension class in batm-extensions.xml */
 public class TransactionExtension extends AbstractExtension implements ITransactionListener {
@@ -51,26 +50,12 @@ public class TransactionExtension extends AbstractExtension implements ITransact
 
     @Override
     public Map<String, String> onTransactionCreated(ITransactionDetails transactionDetails) {
-        boolean incrementTicketId = false;
-        if (transactionDetails.getType() == ITransactionDetails.TYPE_BUY_CRYPTO
-            && (transactionDetails.getStatus() == ITransactionDetails.STATUS_BUY_IN_PROGRESS || transactionDetails.getStatus() == ITransactionDetails.STATUS_BUY_COMPLETED)) {
-            // valid buy
-            incrementTicketId = true;
-        }
-        if (transactionDetails.getType() == ITransactionDetails.TYPE_WITHDRAW_CASH && transactionDetails.getStatus() == ITransactionDetails.STATUS_WITHDRAW_COMPLETED) {
-            // valid sell
-            incrementTicketId = true;
-        }
-
         String terminalSerialNumber = transactionDetails.getTerminalSerialNumber();
         Long previousValue = ticketCounters.get(terminalSerialNumber);
-
         Map<String, String> result = new HashMap<>();
-        if (incrementTicketId) {
-            Long value =  (previousValue == null) ? 1 : (previousValue + 1);
-            ticketCounters.put(terminalSerialNumber, value);
-            result.put("ticket.counter", "" + value);
-        }
+        Long value =  (previousValue == null) ? 1 : (previousValue + 1);
+        ticketCounters.put(terminalSerialNumber, value);
+        result.put("ticket.counter", "" + value);
         result.put("ticket.previous.counter", ( (previousValue == null) ? "N/A" : "" + previousValue ) ); //result will be stored into database, linked to transdaction record and later be available in ticket template under key ticket.previous.counter
         return result;
     }
@@ -81,5 +66,4 @@ public class TransactionExtension extends AbstractExtension implements ITransact
         result.put("last.updated.at", "" + System.currentTimeMillis());
         return result;
     }
-
 }
