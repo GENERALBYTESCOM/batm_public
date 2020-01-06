@@ -133,17 +133,9 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
         try {
             DDOSUtils.waitForPossibleCall(getClass());
             String result = accountService.withdrawFunds(Currency.getInstance(cryptoCurrency), amount, destinationAddress);
-            if (result == null) {
-                log.warn("Bittrex exchange (withdrawFunds) failed with null");
-                return null;
-            }else if ("success".equalsIgnoreCase(result)){
-                log.warn("Bittrex exchange (withdrawFunds) finished successfully");
-                return "success";
-            }else{
-                log.warn("Bittrex exchange (withdrawFunds) failed with message: " + result);
-                return null;
-            }
-        } catch (IOException e) {
+            log.info("Bittrex exchange (withdrawFunds) finished with result: {}", result);
+            return result;
+        } catch (Exception e) {
             log.error("Error", e);
             log.error("Bittrex exchange (withdrawFunds) failed with message: " + e.getMessage());
         }
