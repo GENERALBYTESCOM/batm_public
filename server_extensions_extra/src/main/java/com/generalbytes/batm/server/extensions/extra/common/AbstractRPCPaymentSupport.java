@@ -333,6 +333,10 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
                             }
 
                             int previousState = request.getState();
+                            request.setState(PaymentRequest.STATE_SOMETHING_ARRIVED_AFTER_TIMEOUT);
+                            fireStateChanged(request, previousState);
+
+                            previousState = request.getState();
                             request.setState(PaymentRequest.STATE_REMOVED);
                             fireStateChanged(request, previousState);
                             stopListening();
