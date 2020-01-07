@@ -17,20 +17,21 @@
  *
  ************************************************************************************/
 
-package com.generalbytes.batm.server.extensions.extra.bitcoin.sources.bitkub;
+package com.generalbytes.batm.server.extensions.extra.bitcoin.sources.satangpro;
 
-import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.bitkub.dto.BitKubRateInfo;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.satangpro.dto.SatangProRateInfo;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.io.IOException;
 import java.util.Map;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Path("/api")
-public interface BitKub {
+public interface SatangPro {
 
     @GET
-    @Path("/market/ticker?sym={to_currency}_{from_currency}")
-    Map<String, BitKubRateInfo> getTicker(@PathParam("from_currency") String fromCurrency, @PathParam("to_currency") String toCurrency);
+    @Path("/orderbook-tickers/")
+    Map<String, SatangProRateInfo> getTicker() throws IOException;
 
 }

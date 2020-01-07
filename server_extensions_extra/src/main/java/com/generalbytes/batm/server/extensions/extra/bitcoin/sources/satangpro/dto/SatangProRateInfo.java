@@ -17,20 +17,35 @@
  *
  ************************************************************************************/
 
-package com.generalbytes.batm.server.extensions.extra.bitcoin.sources.bitkub;
+package com.generalbytes.batm.server.extensions.extra.bitcoin.sources.satangpro.dto;
 
-import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.bitkub.dto.BitKubRateInfo;
+import java.math.BigDecimal;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import java.util.Map;
+public class SatangProRateInfo {
 
-@Produces(MediaType.APPLICATION_JSON)
-@Path("/api")
-public interface BitKub {
+    public class SatangProRateInfoItem {
+        private BigDecimal price;
+        private BigDecimal amount;
 
-    @GET
-    @Path("/market/ticker?sym={to_currency}_{from_currency}")
-    Map<String, BitKubRateInfo> getTicker(@PathParam("from_currency") String fromCurrency, @PathParam("to_currency") String toCurrency);
+        public BigDecimal getPrice() {
+            return price;
+        }
+
+        public BigDecimal getAmount() {
+            return amount;
+        }
+
+    }
+
+    private SatangProRateInfoItem bid;
+    private SatangProRateInfoItem ask;
+
+    public SatangProRateInfoItem getBid() {
+        return bid;
+    }
+
+    public SatangProRateInfoItem getAsk() {
+        return ask;
+    }
 
 }

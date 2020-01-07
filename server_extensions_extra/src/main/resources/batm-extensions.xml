@@ -70,7 +70,6 @@
                 <cryptocurrency>DAI</cryptocurrency>
             </ratesource>
             <ratesource prefix="bitkub" name ="BitKub.com" >
-                <param name="fiatcurrency" />
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>BCH</cryptocurrency>
@@ -78,7 +77,17 @@
                 <cryptocurrency>DOGE</cryptocurrency>
                 <cryptocurrency>USDT</cryptocurrency>
                 <cryptocurrency>XRP</cryptocurrency>
-                <help>THB is default fiat currency.</help>
+                <help>Fiat currency is THB.</help>
+            </ratesource>
+            <ratesource prefix="satangpro" name ="Satang.pro" >
+                <cryptocurrency>BTC</cryptocurrency>
+                <cryptocurrency>BCH</cryptocurrency>
+                <cryptocurrency>DOGE</cryptocurrency>
+                <cryptocurrency>ETH</cryptocurrency>
+                <cryptocurrency>LTC</cryptocurrency>
+                <cryptocurrency>USDT</cryptocurrency>
+                <cryptocurrency>XRP</cryptocurrency>
+                <help>Fiat currency is THB.</help>
             </ratesource>
             <ratesource prefix="bitfinex" name ="Bitfinex.com Exchange" >
                 <param name="fiatcurrency" />
