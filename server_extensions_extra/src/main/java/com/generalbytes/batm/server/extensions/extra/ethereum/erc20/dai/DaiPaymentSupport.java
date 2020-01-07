@@ -104,7 +104,7 @@ public class DaiPaymentSupport implements IPaymentSupport {
 
     @Override
     public PaymentReceipt getPaymentReceipt(String paymentAddress) {
-        PaymentReceipt result = new PaymentReceipt(CryptoCurrency.LBTC.getCode(), paymentAddress);
+        PaymentReceipt result = new PaymentReceipt(CryptoCurrency.DAI.getCode(), paymentAddress);
         PaymentRequest paymentRequest = requests.get(paymentAddress);
         if (paymentRequest != null && paymentRequest.getState() == PaymentRequest.STATE_SEEN_IN_BLOCK_CHAIN) {
             result.setStatus(PaymentReceipt.STATUS_PAID);

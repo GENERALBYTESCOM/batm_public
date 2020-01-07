@@ -77,6 +77,8 @@ public interface ITransactionDetails {
     int SELL_ERROR_PAYMENT_INVALID = 17;
     int SELL_ERROR_DISABLED_SELL = 20;
     int SELL_ERROR_NOT_APPROVED = 21;
+    int SELL_ERROR_WITHDRAWAL_PROBLEM = 22;
+    int SELL_ERROR_WITHDRAWAL_NOT_ALLOWED = 23;
 
     int WITHDRAW_ERROR_NO_ERROR = 0;
     int WITHDRAW_ERROR_INVALID_PARAMETERS = 1;
@@ -86,6 +88,7 @@ public interface ITransactionDetails {
     int WITHDRAW_ERROR_NOT_ENOUGH_CASH = 13;
     int WITHDRAW_ERROR_PHONE_NUMBER_UNKNOWN = 18;
     int WITHDRAW_ERROR_NOT_APPROVED = 19;
+    int WITHDRAW_ERROR_CASH_DISPENSING_FAILED = 22;
 
     /**
      * Server time of the transaction

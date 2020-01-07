@@ -21,20 +21,16 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
-@Path("/api/v1")
+@Path("/api/v3")
 @Produces(MediaType.APPLICATION_JSON)
 public interface IBitcoinPay {
-
     @POST
-    @Path("/payment/btc")
+    @Path("/invoices")
     @Consumes(MediaType.APPLICATION_JSON)
     BitcoinPayPaymentResponseDTO createNewPaymentRequest(@HeaderParam("Authorization") String token, BitcoinPayPaymentRequestRequestDTO request);
 
 
     @GET
-    @Path("/payment/btc/{payment_id}")
+    @Path("/invoices/{payment_id}")
     BitcoinPayPaymentResponseDTO getPaymentStatus(@HeaderParam("Authorization") String token, @PathParam("payment_id") String paymentId);
-
-
-
 }

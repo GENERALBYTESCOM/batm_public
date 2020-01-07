@@ -13,22 +13,24 @@
  *
  * GENERAL BYTES s.r.o.
  * Web      :  http://www.generalbytes.com
+ * Author   :  pawel.nowacki@teleit.pl / +48.600100825 - wanda.exchange
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.dogecoin.sources.chainso;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+package com.generalbytes.batm.server.extensions.extra.bitcoin.sources.bitkub;
+
+import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.bitkub.dto.BitKubRateInfo;
+
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.Map;
 
-
-@Path("/api/v2/")
 @Produces(MediaType.APPLICATION_JSON)
-public interface IChainSo {
+@Path("/api")
+public interface BitKub {
+
     @GET
-    @Path("get_price/{crypto_currency}/{fiat_currency}")
-    ChainSoResponse getPrices(@PathParam("crypto_currency") String crypto_currency, @PathParam("fiat_currency") String fiat_currency);
+    @Path("/market/ticker?sym={to_currency}_{from_currency}")
+    Map<String, BitKubRateInfo> getTicker(@PathParam("from_currency") String fromCurrency, @PathParam("to_currency") String toCurrency);
 
 }

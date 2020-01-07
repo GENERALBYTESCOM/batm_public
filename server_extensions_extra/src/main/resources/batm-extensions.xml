@@ -2,6 +2,7 @@
 <extensions>
     <extension class="com.generalbytes.batm.server.extensions.extra.bitcoin.BitcoinExtension" >
             <wallet prefix="bitcoind" name="Bitcoin Core - bitcoind" >
+                <tunnel supported="true"/>
                 <param name="protocol" />
                 <param name="user" />
                 <param name="password" />
@@ -11,6 +12,7 @@
                 <cryptocurrency>BTC</cryptocurrency>
             </wallet>
             <wallet prefix="bitcoindnoforward" name="Bitcoin Core - bitcoind (no forward)" >
+                <tunnel supported="true"/>
                 <param name="protocol" />
                 <param name="user" />
                 <param name="password" />
@@ -31,7 +33,7 @@
                 <param name="token" />
                 <param name="wallet_id" />
                 <param name="wallet_passphrase" />
-                <cryptocurrency>BCH</cryptocurrency>
+                <cryptocurrency buyonly="true">BCH</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency><!--BitGo’s Ethereum wallets are only available to BitGo Enterprise customers-->
@@ -43,7 +45,7 @@
                 <param name="token" />
                 <param name="wallet_id" />
                 <param name="wallet_passphrase" />
-                <cryptocurrency>BCH</cryptocurrency>
+                <cryptocurrency buyonly="true">BCH</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency><!--BitGo’s Ethereum wallets are only available to BitGo Enterprise customers-->
@@ -66,6 +68,26 @@
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>DASH</cryptocurrency>
                 <cryptocurrency>DAI</cryptocurrency>
+            </ratesource>
+            <ratesource prefix="bitkub" name ="BitKub.com" >
+                <cryptocurrency>BTC</cryptocurrency>
+                <cryptocurrency>ETH</cryptocurrency>
+                <cryptocurrency>BCH</cryptocurrency>
+                <cryptocurrency>LTC</cryptocurrency>
+                <cryptocurrency>DOGE</cryptocurrency>
+                <cryptocurrency>USDT</cryptocurrency>
+                <cryptocurrency>XRP</cryptocurrency>
+                <help>Fiat currency is THB.</help>
+            </ratesource>
+            <ratesource prefix="satangpro" name ="Satang.pro" >
+                <cryptocurrency>BTC</cryptocurrency>
+                <cryptocurrency>BCH</cryptocurrency>
+                <cryptocurrency>DOGE</cryptocurrency>
+                <cryptocurrency>ETH</cryptocurrency>
+                <cryptocurrency>LTC</cryptocurrency>
+                <cryptocurrency>USDT</cryptocurrency>
+                <cryptocurrency>XRP</cryptocurrency>
+                <help>Fiat currency is THB.</help>
             </ratesource>
             <ratesource prefix="bitfinex" name ="Bitfinex.com Exchange" >
                 <param name="fiatcurrency" />
@@ -107,6 +129,7 @@
                 <cryptocurrency>XMR</cryptocurrency>
                 <cryptocurrency>$PAC</cryptocurrency>
                 <cryptocurrency>POT</cryptocurrency>
+                <cryptocurrency>XRP</cryptocurrency>
                 <cryptocurrency>BTX</cryptocurrency>
                 <cryptocurrency>BTCP</cryptocurrency>
                 <cryptocurrency>EFL</cryptocurrency>
@@ -280,6 +303,7 @@
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>XRP</cryptocurrency>
         </ratesource>
         <exchange prefix="coingi" name="Coingi.com">
             <param name="key"/>
@@ -294,6 +318,20 @@
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
+        </ratesource>
+        <exchange prefix="enigma" name="Enigma-Securities.com">
+            <param name="username"/>
+            <param name="password"/>
+            <param name="fiatcurrency"/>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>BCH</cryptocurrency>
+        </exchange>
+        <ratesource prefix="enigma" name="Enigma-Securities.com">
+            <param name="fiatcurrency" />
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>BCH</cryptocurrency>
         </ratesource>
         <ratesource prefix="coingecko" name ="CoinGecko.com" >
             <param name="fiatcurrency" />
@@ -347,6 +385,7 @@
             <cryptocurrency>VOLTZ</cryptocurrency>
             <cryptocurrency>WDC</cryptocurrency>
             <cryptocurrency>XMR</cryptocurrency>
+            <cryptocurrency>XRP</cryptocurrency>
             <cryptocurrency>XSG</cryptocurrency>
             <cryptocurrency>XZC</cryptocurrency>
         </ratesource>
@@ -405,12 +444,93 @@
             <cryptocurrency>VOLTZ</cryptocurrency>
             <cryptocurrency>WDC</cryptocurrency>
             <cryptocurrency>XMR</cryptocurrency>
+            <cryptocurrency>XRP</cryptocurrency>
             <cryptocurrency>XSG</cryptocurrency>
             <cryptocurrency>XZC</cryptocurrency>
         </ratesource>
+        <exchange prefix="binancecom" name="Binance.com">
+            <param name="apikey"/>
+            <param name="secretkey"/>
+            <param name="fiatcurrency"/>
+            <cryptocurrency>BAT</cryptocurrency>
+            <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>BNB</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>CLOAK</cryptocurrency>
+            <cryptocurrency>DASH</cryptocurrency>
+            <cryptocurrency>DOGE</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>GRS</cryptocurrency>
+            <cryptocurrency>KMD</cryptocurrency>
+            <cryptocurrency>LSK</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>NULS</cryptocurrency>
+            <cryptocurrency>REP</cryptocurrency>
+            <cryptocurrency>SYS</cryptocurrency>
+            <cryptocurrency>TRX</cryptocurrency>
+            <cryptocurrency>USDS</cryptocurrency>
+            <cryptocurrency>USDT</cryptocurrency>
+            <cryptocurrency>VIA</cryptocurrency>
+            <cryptocurrency>XMR</cryptocurrency>
+            <cryptocurrency>XRP</cryptocurrency>
+            <cryptocurrency>XZC</cryptocurrency>
+        </exchange>
+<!--    No fiat on binance.com - use a stablecoin as fiat in future? -->
+<!--        <ratesource prefix="binancecom" name="Binance.com">-->
+<!--            <param name="fiatcurrency" />-->
+<!--            <cryptocurrency>BTC</cryptocurrency>-->
+<!--        </ratesource>-->
+        <exchange prefix="binanceus" name="Binance US">
+            <param name="apikey"/>
+            <param name="secretkey"/>
+            <param name="fiatcurrency"/>
+            <cryptocurrency>BAT</cryptocurrency>
+            <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>BNB</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>DASH</cryptocurrency>
+            <cryptocurrency>DOGE</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>USDT</cryptocurrency>
+            <cryptocurrency>XRP</cryptocurrency>
+        </exchange>
+        <ratesource prefix="binanceus" name="Binance US">
+            <param name="fiatcurrency" />
+            <cryptocurrency>BAT</cryptocurrency>
+            <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>BNB</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>DASH</cryptocurrency>
+            <cryptocurrency>DOGE</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>USDT</cryptocurrency>
+            <cryptocurrency>XRP</cryptocurrency>
+        </ratesource>
+        <exchange prefix="binancejersey" name="Binance Jersey">
+            <param name="apikey"/>
+            <param name="secretkey"/>
+            <param name="fiatcurrency"/>
+            <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>BNB</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+        </exchange>
+        <ratesource prefix="binancejersey" name="Binance Jersey">
+            <param name="fiatcurrency" />
+            <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>BNB</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+        </ratesource>
+
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.bitcoincash.BitcoinCashExtension">
         <wallet prefix="bitcoincashd" name="BitcoinABC/BitcoinClassic Cash Core - bitcoind" >
+            <tunnel supported="true"/>
             <param name="protocol" />
             <param name="user" />
             <param name="password" />
@@ -421,6 +541,7 @@
             <help>For BCH SELL this is the only supported wallet</help>
         </wallet>
         <wallet prefix="bitcoincashdnoforward" name="BitcoinABC/BitcoinClassic Cash Core - bitcoind (no forward)" >
+            <tunnel supported="true"/>
             <param name="protocol" />
             <param name="user" />
             <param name="password" />
@@ -432,6 +553,28 @@
         </wallet>
         <cryptologo cryptocurrency="BCH" file="bch.png"/>
         <cryptologo cryptocurrency="BCH" file="bch.svg"/>
+        <ratesource prefix="telr" name="Telr.io Rate Source">
+            <param name="address" />
+            <param name="secret" />
+            <param name="signature" />
+            <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <help>Over 100+ crypto rates can be sourced directly from the Telr DeFi Network. Recommended for Telr Gatekeeper and Telr Cash operators.</help>
+        </ratesource>
+        <wallet prefix="telr_cash" name="Telr.io Cash Wallet (stable base coins)">
+            <param name="address" />
+            <param name="secret" />
+            <param name="signature" />
+            <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <help>Telr Cash is a non-custodial, stablecoin "hot" wallet with access to over 100+ cryptos.</help>
+        </wallet>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.dogecoin.DogecoinExtension">
         <wallet prefix="blockio" name="Block.io Wallet">
@@ -466,9 +609,6 @@
             <param name="accountname" />
             <cryptocurrency>DOGE</cryptocurrency>
         </wallet>
-        <ratesource prefix="chainso" name="Chain.so - Cryptsy" >
-            <cryptocurrency>DOGE</cryptocurrency>
-        </ratesource>
         <ratesource prefix="dogefix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>DOGE</cryptocurrency>
@@ -501,6 +641,7 @@
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.litecoin.LitecoinExtension" >
         <wallet prefix="litecoind" name="Litecoind">
+            <tunnel supported="true"/>
             <param name="protocol" />
             <param name="user" />
             <param name="password" />
@@ -510,6 +651,7 @@
             <cryptocurrency>LTC</cryptocurrency>
         </wallet>
         <wallet prefix="litecoindnoforward" name="Litecoind (no forward)">
+            <tunnel supported="true"/>
             <param name="protocol" />
             <param name="user" />
             <param name="password" />
@@ -617,6 +759,7 @@
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.dash.DashExtension" >
         <wallet prefix="dashd" name="dashd">
+            <tunnel supported="true"/>
             <param name="protocol" />
             <param name="user" />
             <param name="password" />
@@ -624,6 +767,17 @@
             <param name="port" />
             <param name="accountname" />
             <cryptocurrency>DASH</cryptocurrency>
+        </wallet>
+        <wallet prefix="dashdnoforward" name="Dash Core - dashd (no forward)" >
+            <tunnel supported="true"/>
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>DASH</cryptocurrency>
+            <help>For DASH SELL this is the only supported wallet. This variant generates new addresses for each transaction and does not forward payments from temporary address</help>
         </wallet>
         <ratesource prefix="cddash" name="Cryptodiggers" >
             <cryptocurrency>DASH</cryptocurrency>
@@ -993,6 +1147,20 @@
         </ratesource>
         <cryptologo cryptocurrency="POT" file="pot.png"/>
     </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.ripple.RippleExtension" >
+        <wallet prefix="xrpdemo" name="Ripple Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
+            <cryptocurrency>XRP</cryptocurrency>
+        </wallet>
+        <ratesource prefix="xrpfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>XRP</cryptocurrency>
+            <help>USD is default fiat currency.</help>
+        </ratesource>
+        <cryptologo cryptocurrency="XRP" file="xrp.png"/>
+        <cryptologo cryptocurrency="XRP" file="xrp.svg"/>
+    </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.dexacoin.DexCoinSupport">
         <ratesource prefix="dex_fix" name ="Fix Price" >
             <param name="price" />
@@ -1034,6 +1202,7 @@
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.sumcoin.SumcoinExtension" >
         <wallet prefix="sumcoind" name="Sumcoind">
+            <tunnel supported="true"/>
             <param name="protocol" />
             <param name="user" />
             <param name="password" />
@@ -1043,6 +1212,7 @@
             <cryptocurrency>SUM</cryptocurrency>
         </wallet>
         <wallet prefix="sumcoindnoforward" name="Sumcoind (no forward)">
+            <tunnel supported="true"/>
             <param name="protocol" />
             <param name="user" />
             <param name="password" />
@@ -1352,7 +1522,7 @@
             <param name="mnemonic" />
             <param name="gaslimit" />
             <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
-            <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency buyonly="true">DAI</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="DAI" file="dai.png"/>
         <cryptologo cryptocurrency="DAI" file="dai.svg"/>

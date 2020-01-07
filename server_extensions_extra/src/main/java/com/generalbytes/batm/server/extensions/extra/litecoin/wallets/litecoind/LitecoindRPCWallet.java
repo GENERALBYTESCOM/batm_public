@@ -93,6 +93,20 @@ public class LitecoindRPCWallet implements IWallet{
         }
     }
 
+    public String generateNewDepositCryptoAddress(String cryptoCurrency, String label) {
+        if (!CRYPTO_CURRENCY.equalsIgnoreCase(cryptoCurrency)) {
+            log.error("Litecoind wallet error: unknown cryptocurrency.");
+            return null;
+        }
+
+        try {
+            return getClient(rpcURL).getNewAddress(accountName);
+        } catch (BitcoinRPCException e) {
+            log.error("Error", e);
+            return null;
+        }
+    }
+
     @Override
     public BigDecimal getCryptoBalance(String cryptoCurrency) {
         if (!CRYPTO_CURRENCY.equalsIgnoreCase(cryptoCurrency)) {

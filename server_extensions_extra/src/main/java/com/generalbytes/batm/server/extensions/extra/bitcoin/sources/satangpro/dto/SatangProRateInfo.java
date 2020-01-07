@@ -13,46 +13,39 @@
  *
  * GENERAL BYTES s.r.o.
  * Web      :  http://www.generalbytes.com
+ * Author   :  pawel.nowacki@teleit.pl / +48.600100825 - wanda.exchange
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.dogecoin.sources.chainso;
 
+package com.generalbytes.batm.server.extensions.extra.bitcoin.sources.satangpro.dto;
 
-public class ChainSoPrice {
-    private String price;
-    private String price_base;
-    private String exchange;
-    private long time;
+import java.math.BigDecimal;
 
-    public String getPrice() {
-        return price;
+public class SatangProRateInfo {
+
+    public class SatangProRateInfoItem {
+        private BigDecimal price;
+        private BigDecimal amount;
+
+        public BigDecimal getPrice() {
+            return price;
+        }
+
+        public BigDecimal getAmount() {
+            return amount;
+        }
+
     }
 
-    public void setPrice(String price) {
-        this.price = price;
+    private SatangProRateInfoItem bid;
+    private SatangProRateInfoItem ask;
+
+    public SatangProRateInfoItem getBid() {
+        return bid;
     }
 
-    public String getPrice_base() {
-        return price_base;
+    public SatangProRateInfoItem getAsk() {
+        return ask;
     }
 
-    public void setPrice_base(String price_base) {
-        this.price_base = price_base;
-    }
-
-    public String getExchange() {
-        return exchange;
-    }
-
-    public void setExchange(String exchange) {
-        this.exchange = exchange;
-    }
-
-    public long getTime() {
-        return time;
-    }
-
-    public void setTime(long time) {
-        this.time = time;
-    }
 }

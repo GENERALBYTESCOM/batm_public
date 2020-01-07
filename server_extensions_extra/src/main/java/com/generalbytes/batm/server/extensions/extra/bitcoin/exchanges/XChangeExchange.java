@@ -77,8 +77,10 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
 
     public XChangeExchange(ExchangeSpecification specification, String preferredFiatCurrency) {
         exchange = ExchangeFactory.INSTANCE.createExchange(specification);
-        name = exchange.getExchangeSpecification().getExchangeName();
-        log = LoggerFactory.getLogger("batm.master.exchange." + name);
+        String exchangeName = exchange.getExchangeSpecification().getExchangeName();
+        String sslUri = exchange.getExchangeSpecification().getSslUri();
+        name = exchangeName + " (" + sslUri + ")"; // just for logging, do not setExchangeName() as it's used to load configuration json internally
+        log = LoggerFactory.getLogger("batm.master.exchange." + exchangeName);
         rateLimiter = RateLimiter.create(getAllowedCallsPerSecond());
         this.preferredFiatCurrency = preferredFiatCurrency;
     }
@@ -211,7 +213,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
             }
         } catch (HttpStatusIOException e) {
             log.info("{} exchange withdrawal failed; HTTP status: {}, body: {}", name, e.getHttpStatusCode(), e.getHttpBody(), e);
-        } catch (IOException e) {
+        } catch (IOException | ExchangeException e) {
             log.error("{} exchange withdrawal failed", name, e);
         }
         return null;
@@ -735,10 +737,9 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
                 } catch (InterruptedException e) {
                     log.error("Error", e);
                 }
-            } catch (IOException e) {
-                log.error("Error", e);
+            } catch (IOException | ExchangeException e) {
                 log.error("{} exchange sell coins task failed", name, e);
-            } catch (Throwable e) {
+            } catch (Exception e) {
                 log.error("Error", e);
             }
             return (orderId != null);

@@ -1,0 +1,18 @@
+<configuration>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%-5level %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread - %logger{36}] - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="debug">
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+    <logger name="com.generalbytes" level="trace"/>
+    <logger name="batm" level="trace"/>
+    <logger name="org.knowm.xchange" level="debug"/>
+    <logger name="si.mazi.rescu" level="debug"/>
+
+</configuration>

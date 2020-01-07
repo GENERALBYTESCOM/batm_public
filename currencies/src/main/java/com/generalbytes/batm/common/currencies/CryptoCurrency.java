@@ -94,6 +94,7 @@ public enum CryptoCurrency {
     XMR("Monero"),
     XORI("CHFToken"),
     XSG("SnowGem"),
+    XRP("Ripple"),
     XZC("Zcoin"),
     BAY("BitBayCoin"),
     NULS("NULS"),

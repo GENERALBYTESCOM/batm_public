@@ -18,9 +18,12 @@
 package com.generalbytes.batm.server.extensions.extra.dash.wallets.dashd;
 
 import wf.bitcoin.javabitcoindrpcclient.BitcoinRPCException;
-import wf.bitcoin.javabitcoindrpcclient.BitcoinJSONRPCClient;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.IWallet;
+import com.generalbytes.batm.server.extensions.extra.common.IRPCWallet;
+import com.generalbytes.batm.server.extensions.extra.common.RPCClient;
+import com.generalbytes.batm.server.extensions.extra.dash.wallets.DashRPCClient;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,11 +33,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class DashRPCWallet implements IWallet{
+public class DashRPCWallet implements IWallet, IRPCWallet {
     private static final Logger log = LoggerFactory.getLogger(DashRPCWallet.class);
     private static final String CRYPTO_CURRENCY = CryptoCurrency.DASH.getCode();
 
-    public DashRPCWallet(String rpcURL, String accountName) {
+    public DashRPCWallet(String rpcURL, String accountName) throws MalformedURLException {
         this.rpcURL = rpcURL;
         this.accountName = accountName;
     }
@@ -93,6 +96,20 @@ public class DashRPCWallet implements IWallet{
         }
     }
 
+    public String generateNewDepositCryptoAddress(String cryptoCurrency, String label) {
+        if (!CRYPTO_CURRENCY.equalsIgnoreCase(cryptoCurrency)) {
+            log.error("Dashd wallet error: unknown cryptocurrency.");
+            return null;
+        }
+
+        try {
+            return getClient(rpcURL).getNewAddress(accountName);
+        } catch (BitcoinRPCException e) {
+            log.error("Error", e);
+            return null;
+        }
+    }
+
     @Override
     public BigDecimal getCryptoBalance(String cryptoCurrency) {
         if (!CRYPTO_CURRENCY.equalsIgnoreCase(cryptoCurrency)) {
@@ -107,12 +124,17 @@ public class DashRPCWallet implements IWallet{
         }
     }
 
-    private BitcoinJSONRPCClient getClient(String rpcURL) {
+    private DashRPCClient getClient(String rpcURL) {
         try {
-            return new BitcoinJSONRPCClient(rpcURL);
+            return new DashRPCClient(rpcURL);
         } catch (MalformedURLException e) {
             log.error("Error", e);
         }
         return null;
+    }
+
+    @Override
+    public RPCClient getClient() {
+        return getClient(rpcURL);
     }
 }

@@ -17,6 +17,7 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair;
 
+import com.generalbytes.batm.server.extensions.ILightningChannel;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.AbstractLightningWallet;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.dto.Channel;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.dto.ErrorResponseException;
@@ -33,7 +34,10 @@ import si.mazi.rescu.RestProxyFactory;
 
 import java.math.BigDecimal;
 import java.net.ConnectException;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class EclairWallet extends AbstractLightningWallet {
 
@@ -98,19 +102,45 @@ public class EclairWallet extends AbstractLightningWallet {
         return callChecked(cryptoCurrency, () -> api.createInvoice(bitcoinToMSat(cryptoAmount), description, paymentValidityInSec).serialized);
     }
 
+    private Map<String, String> channelAliases = null;
+
+    @Override
+    public List<? extends ILightningChannel> getChannels() {
+        if (channelAliases == null) {
+            channelAliases = callChecked(() -> api.getAllNodes().stream().collect(Collectors.toMap(o -> o.nodeId, o -> o.alias)));
+        }
+
+        List<Channel> channels = callChecked(api::getChannels);
+        if (channels == null) {
+            return Collections.emptyList();
+        }
+        for (Channel channel : channels) {
+            channel.setLocalNodeAlias(channelAliases.get(channel.getLocalNodeId()));
+            channel.setRemoteNodeAlias(channelAliases.get(channel.getRemoteNodeId()));
+        }
+        return channels;
+    }
+
+    @Override
+    public boolean canSend(String invoice, BigDecimal amount, String cryptoCurrency) {
+        List<String> route = callChecked(cryptoCurrency, () -> api.findRoute(invoice, bitcoinToMSat(amount)));
+        log.debug("Route for {} {} to {}: {}", amount, cryptoCurrency, invoice, route);
+        return route != null && !route.isEmpty();
+    }
+
     @Override
     public BigDecimal getCryptoBalance(String cryptoCurrency) {
         return callChecked(cryptoCurrency, () -> {
-            List<Channel> channels = api.getChannels();
+            List<? extends ILightningChannel> channels = getChannels();
 
-            channels.stream().map(ch -> ch.channelId + " " + ch.state
-                + " Can send msat: " + ch.data.commitments.localCommit.spec.toLocalMsat
-                + " Can receive msat: " + ch.data.commitments.localCommit.spec.toRemoteMsat
-                + " Capacity sat: " + ch.data.commitments.commitInput.amountSatoshis
+            channels.stream().map(ch -> ch.getShortChannelId() + " " + ch.isOnline()
+                + " Can send msat: " + ch.getBalanceMsat()
+                + " Can receive msat: " + (ch.getCapacityMsat() - ch.getBalanceMsat())
+                + " Capacity sat: " + ch.getCapacityMsat()
             ).forEach(log::info);
 
             return mSatToBitcoin(channels.stream()
-                .mapToLong(ch -> ch.data.commitments.localCommit.spec.toLocalMsat)
+                .mapToLong(ILightningChannel::getBalanceMsat)
                 .max().orElse(0l));
         });
     }
