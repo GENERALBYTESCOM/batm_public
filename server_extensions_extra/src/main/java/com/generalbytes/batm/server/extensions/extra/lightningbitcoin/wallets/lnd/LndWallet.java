@@ -20,10 +20,12 @@ package com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.l
 import com.generalbytes.batm.server.extensions.ILightningChannel;
 import com.generalbytes.batm.server.extensions.ThrowingSupplier;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.AbstractLightningWallet;
+import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.lnd.dto.Channel;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.lnd.dto.ErrorResponseException;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.lnd.dto.Invoice;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.lnd.dto.Payment;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.lnd.dto.PaymentRequest;
+import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.lnd.dto.RouteResponse;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.lnd.dto.SendPaymentResponse;
 import com.generalbytes.batm.server.extensions.util.net.HexStringCertTrustManager;
 import okhttp3.HttpUrl;
@@ -39,6 +41,8 @@ import java.net.ConnectException;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class LndWallet extends AbstractLightningWallet {
 
@@ -122,15 +126,51 @@ public class LndWallet extends AbstractLightningWallet {
         });
     }
 
-
     @Override
     public List<? extends ILightningChannel> getChannels() {
-        return Collections.emptyList(); // TODO!
+        List<Channel> channels = callChecked(() -> api.getChannels().channels);
+        if (channels == null) {
+            return Collections.emptyList();
+        }
+        setAliases(channels);
+        return channels;
+    }
+
+    private static Map<String, String> aliasesByPubKey = null;
+    private static String localAlias = null;
+
+    public void setAliases(List<Channel> channels) {
+        if (aliasesByPubKey == null) {
+            aliasesByPubKey = callChecked(() -> api.getGraph()).nodes.stream()
+                .filter(o -> o.pub_key != null && o.alias != null)
+                .collect(Collectors.toMap(o -> o.pub_key, o -> o.alias));
+        }
+        if (localAlias == null) {
+            localAlias = callChecked(() -> api.getInfo().alias);
+        }
+        if (aliasesByPubKey != null) {
+            for (Channel channel : channels) {
+                channel.setLocalNodeAlias(localAlias);
+                channel.setRemoteNodeAlias(aliasesByPubKey.get(channel.getRemoteNodeId()));
+            }
+        }
     }
 
     @Override
     public boolean canSend(String invoice, BigDecimal amount, String cryptoCurrency) {
-        return true; // TODO
+        PaymentRequest paymentRequest = callChecked(cryptoCurrency, () -> api.decodePaymentRequest(invoice));
+        if (paymentRequest == null) {
+            return false;
+        }
+
+        List<RouteResponse.Route> routes = callChecked(cryptoCurrency, () -> api.getRoute(paymentRequest.destination, bitcoinToSat(amount)).routes);
+        if (routes == null || routes.isEmpty()) {
+            return false;
+        }
+
+        List<String> route = routes.get(0).hops.stream().map(h -> h.pub_key).collect(Collectors.toList());
+        log.debug("Route for {} {} to {}: {}", amount, cryptoCurrency, invoice, route);
+        return route != null && !route.isEmpty();
     }
 
     @Override

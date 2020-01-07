@@ -89,6 +89,7 @@ public class CoinPaprikaRateSource implements IRateSource {
         CRYPTOCURRENCIES.put(CryptoCurrency.VOLTZ.getCode(), "voltz-voltz");
         CRYPTOCURRENCIES.put(CryptoCurrency.WDC.getCode(), "wdc-worldcoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.XMR.getCode(), "xmr-monero");
+        CRYPTOCURRENCIES.put(CryptoCurrency.XRP.getCode(), "xrp-xrp");
         CRYPTOCURRENCIES.put(CryptoCurrency.XSG.getCode(), "xsg-snowgem");
         CRYPTOCURRENCIES.put(CryptoCurrency.XZC.getCode(), "xzc-zcoin");
     }

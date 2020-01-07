@@ -1,4 +1,4 @@
-/*************************************************************************************
+    /*************************************************************************************
  * Copyright (C) 2014-2019 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
@@ -65,6 +65,7 @@ public enum FiatCurrency {
     KRW("South Korean won"),
     KWD("Kuwaiti dinar"),
     KZT("Kazakhstani tenge"),
+    MGA("Malagasy ariary"),
     MKD("Macedonian denar"),
     MXN("Mexican peso"),
     MYR("Malaysian ringgit"),

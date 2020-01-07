@@ -15,22 +15,11 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
+package com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.lnd.dto;
 
-package com.generalbytes.batm.server.extensions;
+import java.util.List;
 
-/**
- * An {@link IWallet} that is able to generate unique addresses
- * for receiving that will be used only for one transaction each.
- */
-public interface IGeneratesNewDepositCryptoAddress {
-
-    /**
-     * Generates a new, unique receiving address and returns it
-     *
-     * @param cryptoCurrency
-     * @param label remote tx id
-     * @return the newly generated address
-     */
-    String generateNewDepositCryptoAddress(String cryptoCurrency, String label);
+public class Channels {
+    public List<Channel> channels;
 
 }

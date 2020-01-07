@@ -15,22 +15,19 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
+package com.generalbytes.batm.server.extensions.extra.bitcoincash.sources.telr;
 
-package com.generalbytes.batm.server.extensions;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
-/**
- * An {@link IWallet} that is able to generate unique addresses
- * for receiving that will be used only for one transaction each.
- */
-public interface IGeneratesNewDepositCryptoAddress {
-
-    /**
-     * Generates a new, unique receiving address and returns it
-     *
-     * @param cryptoCurrency
-     * @param label remote tx id
-     * @return the newly generated address
-     */
-    String generateNewDepositCryptoAddress(String cryptoCurrency, String label);
-
+// https://api.telr.io/v1
+@Produces(MediaType.APPLICATION_JSON)
+@Path("/v1")
+public interface ITelrRateSource {
+    @GET
+    @Path("/ticker/price/{quote_currency}")
+    String getPrice(@PathParam("quote_currency") String quoteCurrency);
 }

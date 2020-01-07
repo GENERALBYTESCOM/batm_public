@@ -15,44 +15,16 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.dogecoin.sources.chainso;
+package com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.lnd.dto;
 
+import java.util.List;
 
-public class ChainSoPrice {
-    private String price;
-    private String price_base;
-    private String exchange;
-    private long time;
+public class Graph {
+    public List<LightningNode> nodes;
 
-    public String getPrice() {
-        return price;
+    public static class LightningNode {
+        public String alias;
+        public String pub_key;
     }
 
-    public void setPrice(String price) {
-        this.price = price;
-    }
-
-    public String getPrice_base() {
-        return price_base;
-    }
-
-    public void setPrice_base(String price_base) {
-        this.price_base = price_base;
-    }
-
-    public String getExchange() {
-        return exchange;
-    }
-
-    public void setExchange(String exchange) {
-        this.exchange = exchange;
-    }
-
-    public long getTime() {
-        return time;
-    }
-
-    public void setTime(long time) {
-        this.time = time;
-    }
 }
