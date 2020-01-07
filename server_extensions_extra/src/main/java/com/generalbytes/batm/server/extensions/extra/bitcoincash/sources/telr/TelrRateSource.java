@@ -38,20 +38,20 @@ public class TelrRateSource implements IRateSourceAdvanced {
     }
 
     private final ITelrRateSource api;
-    private final String addr;
-    private final String msg;
-    private final String sig;
+    private final String address;
+    private final String secret;
+    private final String signature;
     private final String preferredFiatCurrency;
 
     public TelrRateSource(
-        String addr,
-        String msg,
-        String sig,
+        String address,
+        String secret,
+        String signature,
         String preferredFiatCurrency
     ) {
-        this.addr = addr;
-        this.msg = msg;
-        this.sig = sig;
+        this.address = address;
+        this.secret = secret;
+        this.signature = signature;
         this.preferredFiatCurrency = preferredFiatCurrency;
 
         api = RestProxyFactory.createProxy(ITelrRateSource.class, "https://api.telr.io");
@@ -100,7 +100,12 @@ public class TelrRateSource implements IRateSourceAdvanced {
     @Override
     public BigDecimal getExchangeRateForBuy(String cryptoCurrency, String fiatCurrency) {
         /* Request ticker price. */
-        final String tickerPrice = api.getPrice(cryptoCurrency);
+        final String tickerPrice = api.getPrice(
+            this.address,
+            this.secret,
+            this.signature,
+            cryptoCurrency
+        );
 
         /* Validate ticker price. */
         if (tickerPrice != null) {
@@ -114,7 +119,12 @@ public class TelrRateSource implements IRateSourceAdvanced {
     @Override
     public BigDecimal getExchangeRateForSell(String cryptoCurrency, String fiatCurrency) {
         /* Request ticker price. */
-        final String tickerPrice = api.getPrice(cryptoCurrency);
+        final String tickerPrice = api.getPrice(
+            this.address,
+            this.secret,
+            this.signature,
+            cryptoCurrency
+        );
 
         /* Validate ticker price. */
         if (tickerPrice != null) {
