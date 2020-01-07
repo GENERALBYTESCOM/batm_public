@@ -55,6 +55,11 @@ public class PaymentRequest {
      */
     public static final int STATE_TRANSACTION_INVALID = 5;
 
+    /**
+     * Coins received after timeout.
+     */
+    public static final int STATE_SOMETHING_ARRIVED_AFTER_TIMEOUT = 6;
+
     private int state = STATE_NEW;
     private String description;
     private long validTill;
