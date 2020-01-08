@@ -25,6 +25,7 @@ import com.generalbytes.batm.server.extensions.IPaperWalletGenerator;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.bitcoincash.sources.telr.TelrRateSource;
+import com.generalbytes.batm.server.extensions.extra.bitcoincash.wallets.telr.TelrCashWallet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,6 +76,11 @@ public class BitcoinCashExtension extends AbstractExtension {
                     }
                     return new BitcoinCashRPCWallet(rpcURL, accountName);
                 }
+            } else if ("telr_cash".equalsIgnoreCase(walletType)) {
+                String address = st.nextToken();
+                String secret = st.nextToken();
+                String signature = st.nextToken();
+                return new TelrCashWallet(address, secret, signature);
             }
         }
         } catch (Exception e) {

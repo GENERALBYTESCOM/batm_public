@@ -21,7 +21,7 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.sources.bitkub.dto
 
 import java.math.BigDecimal;
 
-public class RateInfo {
+public class BitKubRateInfo {
     private int id;
     private BigDecimal last;
     private BigDecimal lowestAsk;
@@ -37,79 +37,40 @@ public class RateInfo {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public BigDecimal getLast() {
         return last;
-    }
-
-    public void setLast(BigDecimal last) {
-        this.last = last;
     }
 
     public BigDecimal getLowestAsk() {
         return lowestAsk;
     }
 
-    public void setLowestAsk(BigDecimal lowestAsk) {
-        this.lowestAsk = lowestAsk;
-    }
-
     public BigDecimal getHighestBid() {
         return highestBid;
-    }
-
-    public void setHighestBid(BigDecimal highestBid) {
-        this.highestBid = highestBid;
     }
 
     public BigDecimal getPercentChange() {
         return percentChange;
     }
 
-    public void setPercentChange(BigDecimal percentChange) {
-        this.percentChange = percentChange;
-    }
-
     public BigDecimal getBaseVolume() {
         return baseVolume;
-    }
-
-    public void setBaseVolume(BigDecimal baseVolume) {
-        this.baseVolume = baseVolume;
     }
 
     public BigDecimal getQuoteVolume() {
         return quoteVolume;
     }
 
-    public void setQuoteVolume(BigDecimal quoteVolume) {
-        this.quoteVolume = quoteVolume;
-    }
-
     public boolean isFrozen() {
         return isFrozen;
-    }
-
-    public void setFrozen(boolean frozen) {
-        isFrozen = frozen;
     }
 
     public BigDecimal getHigh24hr() {
         return high24hr;
     }
 
-    public void setHigh24hr(BigDecimal high24hr) {
-        this.high24hr = high24hr;
-    }
-
     public BigDecimal getLow24hr() {
         return low24hr;
     }
 
-    public void setLow24hr(BigDecimal low24hr) {
-        this.low24hr = low24hr;
-    }
 }

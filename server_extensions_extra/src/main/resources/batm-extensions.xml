@@ -70,7 +70,6 @@
                 <cryptocurrency>DAI</cryptocurrency>
             </ratesource>
             <ratesource prefix="bitkub" name ="BitKub.com" >
-                <param name="fiatcurrency" />
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>BCH</cryptocurrency>
@@ -78,7 +77,17 @@
                 <cryptocurrency>DOGE</cryptocurrency>
                 <cryptocurrency>USDT</cryptocurrency>
                 <cryptocurrency>XRP</cryptocurrency>
-                <help>THB is default fiat currency.</help>
+                <help>Fiat currency is THB.</help>
+            </ratesource>
+            <ratesource prefix="satangpro" name ="Satang.pro" >
+                <cryptocurrency>BTC</cryptocurrency>
+                <cryptocurrency>BCH</cryptocurrency>
+                <cryptocurrency>DOGE</cryptocurrency>
+                <cryptocurrency>ETH</cryptocurrency>
+                <cryptocurrency>LTC</cryptocurrency>
+                <cryptocurrency>USDT</cryptocurrency>
+                <cryptocurrency>XRP</cryptocurrency>
+                <help>Fiat currency is THB.</help>
             </ratesource>
             <ratesource prefix="bitfinex" name ="Bitfinex.com Exchange" >
                 <param name="fiatcurrency" />
@@ -555,6 +564,17 @@
             <cryptocurrency>LTC</cryptocurrency>
             <help>Over 100+ crypto rates can be sourced directly from the Telr DeFi Network. Recommended for Telr Gatekeeper and Telr Cash operators.</help>
         </ratesource>
+        <wallet prefix="telr_cash" name="Telr.io Cash Wallet (stable base coins)">
+            <param name="address" />
+            <param name="secret" />
+            <param name="signature" />
+            <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <help>Telr Cash is a non-custodial, stablecoin "hot" wallet with access to over 100+ cryptos.</help>
+        </wallet>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.dogecoin.DogecoinExtension">
         <wallet prefix="blockio" name="Block.io Wallet">
