@@ -948,10 +948,8 @@
             <cryptocurrency>GRS</cryptocurrency>
             <help>USD is default fiat currency.</help>
         </ratesource>
-        <ratesource prefix="groestlcoincom" name="Groestlcoin.org" >
-            <cryptocurrency>GRS</cryptocurrency>
-        </ratesource>
         <cryptologo cryptocurrency="GRS" file="groestl.png"/>
+        <cryptologo cryptocurrency="GRS" file="groestl.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.hatch.HatchExtension" >
         <wallet prefix="hatchd" name="Hatch">

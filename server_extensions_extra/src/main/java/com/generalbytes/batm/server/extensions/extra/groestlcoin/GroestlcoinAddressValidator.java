@@ -18,8 +18,8 @@
 package com.generalbytes.batm.server.extensions.extra.groestlcoin;
 
 import com.generalbytes.batm.server.coinutil.AddressFormatException;
-import com.generalbytes.batm.server.coinutil.Base58;
-import com.generalbytes.batm.server.extensions.ExtensionsUtil;
+import com.generalbytes.batm.server.coinutil.Base58Groestl;
+import com.generalbytes.batm.server.extensions.extra.litecoin.Bech32;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 
 import org.slf4j.Logger;
@@ -30,16 +30,24 @@ public class GroestlcoinAddressValidator implements ICryptoAddressValidator {
 
     @Override
     public boolean isAddressValid(String address) {
-        if (address.startsWith("F")) {
+        if (address.startsWith("F") || address.startsWith("3")) {
             try {
-                Base58.decodeToBigInteger(address);
-                Base58.decodeChecked(address);
+                Base58Groestl.decodeToBigInteger(address);
+                Base58Groestl.decodeChecked(address);
+                return true;
             } catch (AddressFormatException e) {
-                log.error("Error", e);
+                log.debug("Address [" + address + "] is not recognized.", e);
                 return false;
             }
-            return true;
-        }else{
+        } else if (address.toLowerCase().startsWith("grs1")) {
+            try {
+                Bech32.decode(address);
+                return true;
+            } catch (Exception e) {
+                log.debug("Address [" + address + "] is not recognized.", e);
+                return false;
+            }
+        } else {
             return false;
         }
     }
@@ -51,7 +59,7 @@ public class GroestlcoinAddressValidator implements ICryptoAddressValidator {
 
     @Override
     public boolean mustBeBase58Address() {
-        return true;
+        return false;
     }
 
 }

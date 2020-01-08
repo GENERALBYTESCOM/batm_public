@@ -15,17 +15,21 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.groestlcoin.sources;
+package com.generalbytes.batm.server.extensions.extra.groestlcoin;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+import com.generalbytes.batm.server.extensions.CryptoCurrencyDefinition;
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.server.extensions.payment.IPaymentSupport;
 
-@Path("/api/v1/")
-@Produces(MediaType.APPLICATION_JSON)
-public interface IGroestlcoinTickerRateAPI {
-    @GET
-    @Path("ticker")
-    GroestlcoinTickerResponse getTicker();
+public class GroestlcoinDefinition extends CryptoCurrencyDefinition{
+    private IPaymentSupport paymentSupport = new GroestlcoinPaymentSupport();
+
+    public GroestlcoinDefinition() {
+        super(CryptoCurrency.BCH.getCode(), "Groestlcoin", "groestlcoin","https://groestlcoin.org");
+    }
+
+    @Override
+    public IPaymentSupport getPaymentSupport() {
+        return paymentSupport;
+    }
 }
