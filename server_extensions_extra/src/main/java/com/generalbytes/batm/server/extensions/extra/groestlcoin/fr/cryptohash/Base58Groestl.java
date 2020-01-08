@@ -15,10 +15,11 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.coinutil;
+package com.generalbytes.batm.server.extensions.extra.groestlcoin.fr.cryptohash;
 
-import java.io.UnsupportedEncodingException;
-import java.math.BigInteger;
+import com.generalbytes.batm.server.coinutil.AddressFormatException;
+import com.generalbytes.batm.server.coinutil.Base58;
+
 import java.util.Arrays;
 
 /**

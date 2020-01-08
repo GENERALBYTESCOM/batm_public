@@ -1,6 +1,5 @@
-package com.generalbytes.batm.server.coinutil;
+package com.generalbytes.batm.server.extensions.extra.groestlcoin.fr.cryptohash;
 
-import fr.cryptohash.Groestl512;
 
 /**
  * Created by Hash Engineering on 09/16/19 for the Groestl algorithm

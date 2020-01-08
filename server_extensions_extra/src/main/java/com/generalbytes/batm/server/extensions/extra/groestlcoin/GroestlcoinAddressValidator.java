@@ -18,7 +18,7 @@
 package com.generalbytes.batm.server.extensions.extra.groestlcoin;
 
 import com.generalbytes.batm.server.coinutil.AddressFormatException;
-import com.generalbytes.batm.server.coinutil.Base58Groestl;
+import com.generalbytes.batm.server.extensions.extra.groestlcoin.fr.cryptohash.Base58Groestl;
 import com.generalbytes.batm.server.extensions.extra.litecoin.Bech32;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 
