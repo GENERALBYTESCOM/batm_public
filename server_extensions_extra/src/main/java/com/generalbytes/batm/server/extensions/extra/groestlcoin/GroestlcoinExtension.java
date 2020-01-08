@@ -37,7 +37,6 @@ import java.util.StringTokenizer;
 
 public class GroestlcoinExtension extends AbstractExtension{
     private static final ICryptoCurrencyDefinition DEFINITION = new GroestlcoinDefinition();
-    public static final String CURRENCY = CryptoCurrency.BCH.getCode();
     private static final Logger log = LoggerFactory.getLogger(GroestlcoinExtension.class);
 
     @Override
@@ -116,7 +115,7 @@ public class GroestlcoinExtension extends AbstractExtension{
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(sourceLogin,":");
             String rsType = st.nextToken();
-            
+
             if ("grsfix".equalsIgnoreCase(rsType)) {
                 BigDecimal rate = BigDecimal.ZERO;
                 if (st.hasMoreTokens()) {

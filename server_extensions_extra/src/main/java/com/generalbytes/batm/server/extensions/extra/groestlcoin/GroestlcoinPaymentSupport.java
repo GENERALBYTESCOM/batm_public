@@ -43,7 +43,7 @@ public class GroestlcoinPaymentSupport extends AbstractRPCPaymentSupport {
 
     @Override
     public String getCurrency() {
-        return CryptoCurrency.BCH.getCode();
+        return CryptoCurrency.GRS.getCode();
     }
 
     @Override

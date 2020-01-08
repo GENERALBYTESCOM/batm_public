@@ -25,7 +25,7 @@ public class GroestlcoinDefinition extends CryptoCurrencyDefinition{
     private IPaymentSupport paymentSupport = new GroestlcoinPaymentSupport();
 
     public GroestlcoinDefinition() {
-        super(CryptoCurrency.BCH.getCode(), "Groestlcoin", "groestlcoin","https://groestlcoin.org");
+        super(CryptoCurrency.GRS.getCode(), "Groestlcoin", "groestlcoin","https://groestlcoin.org");
     }
 
     @Override
