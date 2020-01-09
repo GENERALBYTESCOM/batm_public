@@ -21,15 +21,24 @@ import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
-import com.generalbytes.batm.server.extensions.extra.groestlcoin.sources.GroestlcoinTickerRateSource;
+import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.CoinmarketcapRateSource;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.coinpaprika.CoinPaprikaRateSource;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.coingecko.CoinGeckoRateSource;
+import com.generalbytes.batm.server.extensions.extra.groestlcoin.wallets.groestlcoind.GroestlcoinUniqueAddressRPCWallet;
 import com.generalbytes.batm.server.extensions.extra.groestlcoin.wallets.groestlcoind.GroestlcoindRPCWallet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.net.InetSocketAddress;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
 public class GroestlcoinExtension extends AbstractExtension{
+    private static final ICryptoCurrencyDefinition DEFINITION = new GroestlcoinDefinition();
+    private static final Logger log = LoggerFactory.getLogger(GroestlcoinExtension.class);
+
     @Override
     public String getName() {
         return "BATM Groestlcoin extension";
@@ -37,6 +46,7 @@ public class GroestlcoinExtension extends AbstractExtension{
 
     @Override
     public IWallet createWallet(String walletLogin, String tunnelPassword) {
+        try {
         if (walletLogin !=null && !walletLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(walletLogin,":");
             String walletType = st.nextToken();
@@ -48,16 +58,22 @@ public class GroestlcoinExtension extends AbstractExtension{
                 String username = st.nextToken();
                 String password = st.nextToken();
                 String hostname = st.nextToken();
-                String port = st.nextToken();
+                int port = Integer.parseInt(st.nextToken());
                 String accountName ="";
                 if (st.hasMoreTokens()) {
                     accountName = st.nextToken();
                 }
 
+                InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(tunnelPassword, InetSocketAddress.createUnresolved(hostname, port));
+                hostname = tunnelAddress.getHostString();
+                port = tunnelAddress.getPort();
 
-                if (protocol != null && username != null && password != null && hostname !=null && port != null && accountName != null) {
-                    String rpcURL = protocol +"://" + username +":" + password + "@" + hostname +":" + port;
-                    return new GroestlcoindRPCWallet(rpcURL,accountName);
+                if (protocol != null && username != null && password != null && hostname != null && accountName != null) {
+                    String rpcURL = protocol + "://" + username + ":" + password + "@" + hostname + ":" + port;
+                    if ("groestlcoindnoforward".equalsIgnoreCase(walletType)) {
+                        return new GroestlcoinUniqueAddressRPCWallet(rpcURL, accountName);
+                    }
+                    return new GroestlcoindRPCWallet(rpcURL, accountName);
                 }
             }
             if ("grsdemo".equalsIgnoreCase(walletType)) {
@@ -73,7 +89,17 @@ public class GroestlcoinExtension extends AbstractExtension{
                 }
             }
         }
+        } catch (Exception e) {
+            log.warn("createWallet failed",e );
+        }
         return null;
+    }
+
+    @Override
+    public Set<ICryptoCurrencyDefinition> getCryptoCurrencyDefinitions() {
+        Set<ICryptoCurrencyDefinition> result = new HashSet<>();
+        result.add(DEFINITION);
+        return result;
     }
 
     @Override
@@ -88,9 +114,9 @@ public class GroestlcoinExtension extends AbstractExtension{
     public IRateSource createRateSource(String sourceLogin) {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(sourceLogin,":");
-            String prefix = st.nextToken();
+            String rsType = st.nextToken();
 
-            if ("grsfix".equalsIgnoreCase(prefix)) {
+            if ("grsfix".equalsIgnoreCase(rsType)) {
                 BigDecimal rate = BigDecimal.ZERO;
                 if (st.hasMoreTokens()) {
                     try {
@@ -102,9 +128,23 @@ public class GroestlcoinExtension extends AbstractExtension{
                 if (st.hasMoreTokens()) {
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
-                return new FixPriceRateSource(rate,preferedFiatCurrency);
-            }else if ("groestlcoincom".equalsIgnoreCase(prefix)) {
-                return new GroestlcoinTickerRateSource();
+                return new FixPriceRateSource(rate, preferedFiatCurrency);
+            } else if ("coinmarketcap".equalsIgnoreCase(rsType)) {
+                String preferredFiatCurrency = FiatCurrency.USD.getCode();
+                String apiKey = null;
+                if (st.hasMoreTokens()) {
+                    preferredFiatCurrency = st.nextToken().toUpperCase();
+                }
+                if (st.hasMoreTokens()) {
+                    apiKey = st.nextToken();
+                }
+                return new CoinmarketcapRateSource(apiKey, preferredFiatCurrency);
+            } else if ("coingecko".equalsIgnoreCase(rsType)) {
+                String preferredFiatCurrency = st.hasMoreTokens() ? st.nextToken().toUpperCase() : FiatCurrency.USD.getCode();
+                return new CoinGeckoRateSource(preferredFiatCurrency);
+            } else if ("coinpaprika".equalsIgnoreCase(rsType)) {
+                String preferredFiatCurrency = st.hasMoreTokens() ? st.nextToken().toUpperCase() : FiatCurrency.USD.getCode();
+                return new CoinPaprikaRateSource(preferredFiatCurrency);
             }
         }
         return null;

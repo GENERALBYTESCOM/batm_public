@@ -116,4 +116,18 @@ public class GroestlcoindRPCWallet implements IWallet{
         return null;
     }
 
+    public String generateNewDepositCryptoAddress(String cryptoCurrency, String label) {
+        if (!CRYPTO_CURRENCY.equalsIgnoreCase(cryptoCurrency)) {
+            log.error("Groestlcoind wallet error: unknown cryptocurrency.");
+            return null;
+        }
+
+        try {
+            return getClient(rpcURL).getNewAddress(accountName);
+        } catch (BitcoinRPCException e) {
+            log.error("Error", e);
+            return null;
+        }
+    }
+
 }
