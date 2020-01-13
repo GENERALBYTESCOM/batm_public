@@ -43,6 +43,7 @@ public enum CryptoCurrency {
     BNB("BinanceCoin"),
     BSD("BitSend"),
     BTC("Bitcoin"),
+    BSV("Bitcoin SV"),
     BTCP("Bitcoin Private"),
     BTDX("Bitcloud"),
     BTX("Bitcore"),

@@ -655,6 +655,21 @@
             <help>Telr Cash is a non-custodial, stablecoin "hot" wallet with access to over 100+ cryptos.</help>
         </wallet>
     </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.bitcoinsv.BitcoinSVExtension">
+        <wallet prefix="bitcoinsvd" name="Bitcoin SV - Anypay Hot Wallet" >
+            <tunnel supported="true"/>
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>BSV</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="BSV" file="bsv.png"/>
+        <cryptologo cryptocurrency="BSV" file="bsv.svg"/>
+    </extension>
+
     <extension class="com.generalbytes.batm.server.extensions.extra.dogecoin.DogecoinExtension">
         <wallet prefix="blockio" name="Block.io Wallet">
             <sendtomany supported="true"/>
