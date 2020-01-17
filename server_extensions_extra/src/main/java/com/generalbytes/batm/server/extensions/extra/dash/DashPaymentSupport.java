@@ -34,9 +34,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class DashPaymentSupport extends AbstractRPCPaymentSupport {
-    public void registerPaymentRequest(PaymentRequest request) {
-        //TODO
-    }
     private static final Logger log = LoggerFactory.getLogger(DashPaymentSupport.class);
 
     private DashAddressValidator addressValidator = new DashAddressValidator();

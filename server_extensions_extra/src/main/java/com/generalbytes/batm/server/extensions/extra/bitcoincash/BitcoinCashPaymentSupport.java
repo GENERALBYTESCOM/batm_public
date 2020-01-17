@@ -31,9 +31,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class BitcoinCashPaymentSupport extends AbstractRPCPaymentSupport {
-    public void registerPaymentRequest(PaymentRequest request) {
-        //TODO
-    }
     private static final Logger log = LoggerFactory.getLogger(BitcoinCashPaymentSupport.class);
 
     private BitcoinCashAddressValidator addressValidator = new BitcoinCashAddressValidator();

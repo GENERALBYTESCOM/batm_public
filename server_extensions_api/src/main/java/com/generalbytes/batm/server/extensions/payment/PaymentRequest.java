@@ -68,6 +68,7 @@ public class PaymentRequest {
     private String cryptoCurrency;
     private BigDecimal amount;
     private BigDecimal tolerance;
+    private boolean nonForwarding;
     private Object tag;
     private IPaymentRequestListener listener;
 
@@ -88,7 +89,7 @@ public class PaymentRequest {
 
     private IWallet wallet;
 
-    public PaymentRequest(String cryptoCurrency, String description, long validTill, String address, BigDecimal amount, BigDecimal tolerance, int removeAfterNumberOfConfirmationsOfIncomingTransaction, int removeAfterNumberOfConfirmationsOfOutgoingTransaction, IWallet wallet, String timeoutRefundAddress, List<IPaymentOutput> outputs, Integer paymentIndex) {
+    public PaymentRequest(String cryptoCurrency, String description, long validTill, String address, BigDecimal amount, BigDecimal tolerance, int removeAfterNumberOfConfirmationsOfIncomingTransaction, int removeAfterNumberOfConfirmationsOfOutgoingTransaction, IWallet wallet, String timeoutRefundAddress, List<IPaymentOutput> outputs, Boolean nonForwarding, Integer paymentIndex) {
         this.cryptoCurrency = cryptoCurrency;
         this.description = description;
         this.validTill = validTill;
@@ -97,6 +98,7 @@ public class PaymentRequest {
         this.removeAfterNumberOfConfirmationsOfIncomingTransaction = removeAfterNumberOfConfirmationsOfIncomingTransaction;
         this.removeAfterNumberOfConfirmationsOfOutgoingTransaction = removeAfterNumberOfConfirmationsOfOutgoingTransaction;
         this.tolerance = tolerance;
+        this.nonForwarding = Boolean.TRUE.equals(nonForwarding);
         txValue = BigDecimal.ZERO;
         this.wallet = wallet;
         this.timeoutRefundAddress = timeoutRefundAddress;
@@ -313,4 +315,7 @@ public class PaymentRequest {
         return paymentIndex;
     }
 
+    public boolean isNonForwarding() {
+        return nonForwarding;
+    }
 }

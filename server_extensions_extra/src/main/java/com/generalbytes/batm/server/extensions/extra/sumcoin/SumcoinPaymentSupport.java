@@ -33,9 +33,6 @@ import org.slf4j.LoggerFactory;
 
 public class SumcoinPaymentSupport extends AbstractRPCPaymentSupport {
 
-    public void registerPaymentRequest(PaymentRequest request) {
-        // TODO
-    }
     private static final Logger log = LoggerFactory.getLogger(SumcoinPaymentSupport.class);
 
     private SumcoinAddressValidator addressValidator = new SumcoinAddressValidator();

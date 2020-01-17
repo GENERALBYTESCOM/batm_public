@@ -50,7 +50,7 @@ public class DaiPaymentSupport implements IPaymentSupport {
         PaymentRequest request = new PaymentRequest(spec.getCryptoCurrency(), spec.getDescription(), validTillMillis,
             address, spec.getTotal(), BigDecimal.ZERO, spec.getRemoveAfterNumberOfConfirmationsOfIncomingTransaction(),
             spec.getRemoveAfterNumberOfConfirmationsOfOutgoingTransaction(), wallet, spec.getTimeoutRefundAddress(),
-            spec.getOutputs(), null);
+            spec.getOutputs(), spec.isDoNotForward(), null);
 
         ScheduledFuture<?> scheduledFuture = executorService.scheduleAtFixedRate(() -> {
             try {
