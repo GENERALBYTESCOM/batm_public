@@ -20,6 +20,7 @@ package com.generalbytes.batm.server.extensions.payment;
 import com.generalbytes.batm.server.extensions.IWallet;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * PaymentRequest is created and maintained by implementation of @{@link IPaymentSupport} of particular crypto currency based on @{@link IPaymentRequestSpecification}
@@ -78,12 +79,16 @@ public class PaymentRequest {
 
     private BigDecimal txValue;
     private String incomingTransactionHash;
+    private String outgoingTransactionHash;
+    private String timeoutRefundAddress;
+    private List<IPaymentOutput> outputs;
+    private Integer paymentIndex;
 
     private boolean alreadyRefunded;
 
     private IWallet wallet;
 
-    public PaymentRequest(String cryptoCurrency, String description, long validTill, String address, BigDecimal amount, BigDecimal tolerance, int removeAfterNumberOfConfirmationsOfIncomingTransaction, int removeAfterNumberOfConfirmationsOfOutgoingTransaction, IWallet wallet) {
+    public PaymentRequest(String cryptoCurrency, String description, long validTill, String address, BigDecimal amount, BigDecimal tolerance, int removeAfterNumberOfConfirmationsOfIncomingTransaction, int removeAfterNumberOfConfirmationsOfOutgoingTransaction, IWallet wallet, String timeoutRefundAddress, List<IPaymentOutput> outputs, Integer paymentIndex) {
         this.cryptoCurrency = cryptoCurrency;
         this.description = description;
         this.validTill = validTill;
@@ -94,6 +99,9 @@ public class PaymentRequest {
         this.tolerance = tolerance;
         txValue = BigDecimal.ZERO;
         this.wallet = wallet;
+        this.timeoutRefundAddress = timeoutRefundAddress;
+        this.outputs = outputs;
+        this.paymentIndex = paymentIndex;
     }
 
     /**
@@ -206,6 +214,14 @@ public class PaymentRequest {
         this.incomingTransactionHash = incomingTransactionHash;
     }
 
+    public String getOutgoingTransactionHash() {
+        return outgoingTransactionHash;
+    }
+
+    public void setOutgoingTransactionHash(String outgoingTransactionHash) {
+        this.outgoingTransactionHash = outgoingTransactionHash;
+    }
+
     @SuppressWarnings("all")
     public boolean wasAlreadyRefunded() {
         return alreadyRefunded;
@@ -214,6 +230,10 @@ public class PaymentRequest {
     @SuppressWarnings("all")
     public void setAsAlreadyRefunded() {
         this.alreadyRefunded = true;
+    }
+
+    public String getTimeoutRefundAddress() {
+        return timeoutRefundAddress;
     }
 
     @Override
@@ -280,4 +300,17 @@ public class PaymentRequest {
     public IWallet getWallet() {
         return wallet;
     }
+
+    public void setWallet(IWallet wallet) {
+        this.wallet = wallet;
+    }
+
+    public List<IPaymentOutput> getOutputs() {
+        return outputs;
+    }
+
+    public Integer getPaymentIndex() {
+        return paymentIndex;
+    }
+
 }

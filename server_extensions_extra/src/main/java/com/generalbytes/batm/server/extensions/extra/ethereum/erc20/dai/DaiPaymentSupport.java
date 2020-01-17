@@ -21,6 +21,9 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public class DaiPaymentSupport implements IPaymentSupport {
+    public void registerPaymentRequest(PaymentRequest request) {
+        //TODO
+    }
     private static final Logger log = LoggerFactory.getLogger(DaiPaymentSupport.class);
     private final Map<String, PaymentRequest> requests = new ConcurrentHashMap<>();
 
@@ -46,7 +49,8 @@ public class DaiPaymentSupport implements IPaymentSupport {
 
         PaymentRequest request = new PaymentRequest(spec.getCryptoCurrency(), spec.getDescription(), validTillMillis,
             address, spec.getTotal(), BigDecimal.ZERO, spec.getRemoveAfterNumberOfConfirmationsOfIncomingTransaction(),
-            spec.getRemoveAfterNumberOfConfirmationsOfOutgoingTransaction(), wallet);
+            spec.getRemoveAfterNumberOfConfirmationsOfOutgoingTransaction(), wallet, spec.getTimeoutRefundAddress(),
+            spec.getOutputs(), null);
 
         ScheduledFuture<?> scheduledFuture = executorService.scheduleAtFixedRate(() -> {
             try {

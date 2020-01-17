@@ -27,10 +27,15 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.concurrent.TimeUnit;
 
+import com.generalbytes.batm.server.extensions.payment.PaymentRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class SumcoinPaymentSupport extends AbstractRPCPaymentSupport {
+
+    public void registerPaymentRequest(PaymentRequest request) {
+        // TODO
+    }
     private static final Logger log = LoggerFactory.getLogger(SumcoinPaymentSupport.class);
 
     private SumcoinAddressValidator addressValidator = new SumcoinAddressValidator();

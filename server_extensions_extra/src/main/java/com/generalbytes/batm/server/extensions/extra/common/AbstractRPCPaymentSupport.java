@@ -508,8 +508,10 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
                 getTolerance(),
                 spec.getRemoveAfterNumberOfConfirmationsOfIncomingTransaction(),
                 spec.getRemoveAfterNumberOfConfirmationsOfOutgoingTransaction(),
-                spec.getWallet()
-                );
+                spec.getWallet(),
+                spec.getTimeoutRefundAddress(),
+                spec.getOutputs(),
+                null);
 
 
 

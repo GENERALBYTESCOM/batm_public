@@ -19,10 +19,8 @@ package com.generalbytes.batm.server.extensions.extra.bitcoincash;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
-import com.generalbytes.batm.server.extensions.extra.bitcoincash.test.PRS;
 import com.generalbytes.batm.server.extensions.extra.common.AbstractRPCPaymentSupport;
 import com.generalbytes.batm.server.extensions.extra.common.RPCClient;
-import com.generalbytes.batm.server.extensions.payment.IPaymentRequestListener;
 import com.generalbytes.batm.server.extensions.payment.PaymentRequest;
 
 import java.math.BigDecimal;
@@ -33,6 +31,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class BitcoinCashPaymentSupport extends AbstractRPCPaymentSupport {
+    public void registerPaymentRequest(PaymentRequest request) {
+        //TODO
+    }
     private static final Logger log = LoggerFactory.getLogger(BitcoinCashPaymentSupport.class);
 
     private BitcoinCashAddressValidator addressValidator = new BitcoinCashAddressValidator();

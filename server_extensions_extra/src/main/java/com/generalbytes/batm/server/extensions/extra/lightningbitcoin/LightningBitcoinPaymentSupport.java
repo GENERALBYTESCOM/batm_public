@@ -62,8 +62,8 @@ public class LightningBitcoinPaymentSupport implements IPaymentSupport {
         long validTillMillis = System.currentTimeMillis() + (spec.getValidInSeconds() * 1000);
 
         PaymentRequest request = new PaymentRequest(spec.getCryptoCurrency(), spec.getDescription(), validTillMillis,
-            invoice, spec.getTotal(), BigDecimal.ZERO, spec.getRemoveAfterNumberOfConfirmationsOfIncomingTransaction(),
-            spec.getRemoveAfterNumberOfConfirmationsOfOutgoingTransaction(), wallet);
+            invoice, spec.getTotal(), BigDecimal.ZERO, spec.getRemoveAfterNumberOfConfirmationsOfIncomingTransaction(), spec.getRemoveAfterNumberOfConfirmationsOfOutgoingTransaction(), wallet, spec.getTimeoutRefundAddress(),
+            spec.getOutputs(), null);
 
         ScheduledFuture<?> scheduledFuture = executorService.scheduleAtFixedRate(() -> {
             try {
@@ -111,6 +111,9 @@ public class LightningBitcoinPaymentSupport implements IPaymentSupport {
     }
 
 
+    public void registerPaymentRequest(PaymentRequest request) {
+        //TODO
+    }
     @Override
     public boolean isPaymentReceived(String paymentAddress) {
         PaymentRequest paymentRequest = requests.get(paymentAddress);
