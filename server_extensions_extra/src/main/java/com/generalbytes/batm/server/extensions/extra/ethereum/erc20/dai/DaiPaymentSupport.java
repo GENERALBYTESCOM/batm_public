@@ -21,9 +21,6 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public class DaiPaymentSupport implements IPaymentSupport {
-    public void registerPaymentRequest(PaymentRequest request) {
-        //TODO
-    }
     private static final Logger log = LoggerFactory.getLogger(DaiPaymentSupport.class);
     private final Map<String, PaymentRequest> requests = new ConcurrentHashMap<>();
 
@@ -52,15 +49,23 @@ public class DaiPaymentSupport implements IPaymentSupport {
             spec.getRemoveAfterNumberOfConfirmationsOfOutgoingTransaction(), wallet, spec.getTimeoutRefundAddress(),
             spec.getOutputs(), spec.isDoNotForward(), null);
 
+        registerPaymentRequest(request);
+        return request;
+    }
+
+    @Override
+    public void registerPaymentRequest(PaymentRequest request) {
+
         ScheduledFuture<?> scheduledFuture = executorService.scheduleAtFixedRate(() -> {
             try {
-                EtherScan.AddressBalance addressBalance = etherScan.getAddressBalance(address, spec.getCryptoCurrency());
+                EtherScan.AddressBalance addressBalance = etherScan.getAddressBalance(request.getAddress(), request.getCryptoCurrency());
 
                 if (addressBalance.receivedAmount.compareTo(BigDecimal.ZERO) > 0) {
-                    log.info("Received: {}, Requested: {}, {}", addressBalance.receivedAmount, spec.getTotal(), request);
-                    if (addressBalance.receivedAmount.compareTo(spec.getTotal()) == 0) {
+                    log.info("Received: {}, Requested: {}, {}", addressBalance.receivedAmount, request.getAmount(), request);
+                    if (addressBalance.receivedAmount.compareTo(request.getAmount()) == 0) {
                         if(request.getState() == PaymentRequest.STATE_NEW) {
                             log.info("Amounts matches {}", request);
+                            request.setTxValue(addressBalance.receivedAmount);
                             setState(request, PaymentRequest.STATE_SEEN_TRANSACTION);
                         }
                         if (addressBalance.confirmations > 0) {
@@ -92,11 +97,10 @@ public class DaiPaymentSupport implements IPaymentSupport {
             } catch (Throwable t) {
                 log.error("", t);
             }
-        }, spec.getValidInSeconds(), TimeUnit.SECONDS);
+        }, request.getValidTill() - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
 
-        requests.entrySet().removeIf(e -> e.getValue().getValidTill() <  System.currentTimeMillis());
-        requests.put(address, request);
-        return request;
+        requests.entrySet().removeIf(e -> e.getValue().getValidTill() < System.currentTimeMillis());
+        requests.put(request.getAddress(), request);
     }
 
 
