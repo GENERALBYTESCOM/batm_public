@@ -27,24 +27,25 @@ import java.util.Set;
 public interface IPaymentProcessor {
     /**
      * Returns Response containing details for crypto payment
-     * @param amount - fiat amount
-     * @param currency - fiat currency
+     * @param fiatAmount - fiat amount
+     * @param fiatCurrency - fiat currency
+     * @param cryptoCurrency - the cryptocurrency user indicated to pay in
      * @param settledCurrency - in which currency you want to have payment settled
      * @param reference - reference such as order number
      * @return
      */
-    public IPaymentProcessorPaymentResponse requestPayment(BigDecimal amount, String currency, String settledCurrency, String reference);
-    public IPaymentProcessorPaymentStatus getPaymentStatus(String paymentId);
+    IPaymentProcessorPaymentResponse requestPayment(BigDecimal fiatAmount, String fiatCurrency, String cryptoCurrency, String settledCurrency, String reference);
+    IPaymentProcessorPaymentStatus getPaymentStatus(String paymentId);
     /**
      * This method returns list of supported crypto currencies
      * @return
      */
-    public Set<String> getCryptoCurrencies();
+    Set<String> getCryptoCurrencies();
 
     /**
      * This method returns list of supported fiat currencies
      * @return
      */
-    public Set<String> getFiatCurrencies();
+    Set<String> getFiatCurrencies();
 
 }

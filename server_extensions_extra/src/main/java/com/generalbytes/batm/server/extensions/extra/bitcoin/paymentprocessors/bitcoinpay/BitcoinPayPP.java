@@ -25,8 +25,10 @@ import com.generalbytes.batm.server.extensions.IPaymentProcessorPaymentResponse;
 import com.generalbytes.batm.server.extensions.IPaymentProcessorPaymentStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import si.mazi.rescu.HttpStatusIOException;
 import si.mazi.rescu.RestProxyFactory;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
@@ -44,50 +46,58 @@ public class BitcoinPayPP implements IPaymentProcessor{
     }
 
     @Override
-    public IPaymentProcessorPaymentResponse requestPayment(BigDecimal amount, String currency, String settledCurrency, String reference) {
+    public IPaymentProcessorPaymentResponse requestPayment(BigDecimal fiatAmount, String fiatCurrency, String cryptoCurrency, String settledCurrency, String reference) {
         if (reference == null) {
             reference ="Empty";
         }
-        BitcoinPayPaymentResponseDTO r = api.createNewPaymentRequest("Bearer " + apiKey, new BitcoinPayPaymentRequestRequestDTO(new BPProduct(), new BPInvoice(amount,currency,CryptoCurrency.BTC.getCode()),new BPSettlement(settledCurrency), null, null, null, reference));
-        if (r != null) {
-            String cryptoCurrency = r.getRate().getCurrencyTo();
-            if (cryptoCurrency == null || cryptoCurrency.isEmpty()) {
-                cryptoCurrency = r.getRate().getCurrencyTo();
+        try {
+            BitcoinPayPaymentResponseDTO r = api.createNewPaymentRequest("Bearer " + apiKey, new BitcoinPayPaymentRequestRequestDTO(new BPProduct(), new BPInvoice(fiatAmount, fiatCurrency, cryptoCurrency), new BPSettlement(settledCurrency), null, null, null, reference));
+            if (r != null) {
+                String cryptoUri = r.getCryptoUri();
+                StringTokenizer st = new StringTokenizer(cryptoUri, ":?=");
+                String protocol = st.nextToken();
+                String address = st.nextToken();
+                st.nextToken();//amount
+                BigDecimal cryptoAmount = new BigDecimal(st.nextToken());
+                return new BitcoinPayPPResponse(address, cryptoAmount, cryptoCurrency, r.getMerchantAmount().getAmount(), r.getMerchantAmount().getCurrency(), r.getId(), r.getReference());
+            } else {
+                log.error("Payment request call to Payment Processor failed.");
             }
-            String cryptoUri = r.getCryptoUri();
-            StringTokenizer st = new StringTokenizer(cryptoUri,":?=");
-            String protocol = st.nextToken();
-            String address = st.nextToken();
-            st.nextToken();//amount
-            BigDecimal cryptoAmount = new BigDecimal(st.nextToken());
-            return new BitcoinPayPPResponse(address,cryptoAmount, cryptoCurrency,r.getMerchantAmount().getAmount(),r.getMerchantAmount().getCurrency(),r.getId(),r.getReference());
-        }else{
-            log.error("Payment request call to Payment Processor failed.");
-            return null;
+        } catch (HttpStatusIOException e) {
+            log.error("HTTP error {} : {}", e.getHttpStatusCode(), e.getHttpBody());
+        } catch (IOException e) {
+            log.error("Payment request call to Payment Processor failed.", e);
         }
+        return null;
     }
 
     @Override
     public IPaymentProcessorPaymentStatus getPaymentStatus(String paymentId) {
         if (paymentId != null) {
-            BitcoinPayPaymentResponseDTO s = api.getPaymentStatus("Bearer " + apiKey, paymentId);
-            if (s == null) {
-                log.error("Payment status call to Payment Processor failed.");
-            }else{
-                String statusString = s.getStatus();
-                int statusInt = IPaymentProcessorPaymentStatus.STATUS_INVALID;
-                if ("active".equalsIgnoreCase(statusString)) {
-                    statusInt = IPaymentProcessorPaymentStatus.STATUS_PENDING;
-                }else if ("confirming".equalsIgnoreCase(statusString)) {
-                    statusInt = IPaymentProcessorPaymentStatus.STATUS_RECEIVED;
-                }else if ("error".equalsIgnoreCase(statusString)) {
-                    statusInt = IPaymentProcessorPaymentStatus.STATUS_INSUFFICIENT_AMOUNT;
-                }else if ("expired".equalsIgnoreCase(statusString)) {
-                    statusInt = IPaymentProcessorPaymentStatus.STATUS_TIMEOUT;
-                }else if ("paid".equalsIgnoreCase(statusString)) {
-                    statusInt = IPaymentProcessorPaymentStatus.STATUS_CONFIRMED;
+            try {
+                BitcoinPayPaymentResponseDTO s = api.getPaymentStatus("Bearer " + apiKey, paymentId);
+                if (s == null) {
+                    log.error("Payment status call to Payment Processor failed.");
+                } else {
+                    String statusString = s.getStatus();
+                    int statusInt = IPaymentProcessorPaymentStatus.STATUS_INVALID;
+                    if ("active".equalsIgnoreCase(statusString)) {
+                        statusInt = IPaymentProcessorPaymentStatus.STATUS_PENDING;
+                    } else if ("confirming".equalsIgnoreCase(statusString)) {
+                        statusInt = IPaymentProcessorPaymentStatus.STATUS_RECEIVED;
+                    } else if ("error".equalsIgnoreCase(statusString)) {
+                        statusInt = IPaymentProcessorPaymentStatus.STATUS_INSUFFICIENT_AMOUNT;
+                    } else if ("expired".equalsIgnoreCase(statusString)) {
+                        statusInt = IPaymentProcessorPaymentStatus.STATUS_TIMEOUT;
+                    } else if ("paid".equalsIgnoreCase(statusString)) {
+                        statusInt = IPaymentProcessorPaymentStatus.STATUS_CONFIRMED;
+                    }
+                    return new BitcoinPayPPStatus(statusInt);
                 }
-                return new BitcoinPayPPStatus(statusInt);
+            } catch (HttpStatusIOException e) {
+                log.error("HTTP error {} : {}", e.getHttpStatusCode(), e.getHttpBody());
+            } catch (IOException e) {
+                log.error("Payment status call to Payment Processor failed.", e);
             }
         }else{
             log.error("Invalid payment id");
