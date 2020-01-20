@@ -58,8 +58,8 @@ public class CoinOfSalePP implements IPaymentProcessor {
     }
 
     @Override
-    public IPaymentProcessorPaymentResponse requestPayment(BigDecimal amount, String currency, String settledCurrency, String reference) {
-        CoSPaymentResponseDTO res = api.createPayment(token, pin, amount, currency);
+    public IPaymentProcessorPaymentResponse requestPayment(BigDecimal fiatAmount, String fiatCurrency, String cryptoCurrency, String settledCurrency, String reference) {
+    CoSPaymentResponseDTO res = api.createPayment(token, pin, fiatAmount, fiatCurrency);
         if (res != null) {
             return new COSPPResponse(res.getAddress(),res.getBitcoin_price(),CryptoCurrency.BTC.getCode(),res.getFiat_price(),res.getFiat_currency(),res.getAddress(),reference);
         }
