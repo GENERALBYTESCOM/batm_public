@@ -27,12 +27,12 @@ import java.util.Set;
 
 public class DummyExchangeAndWalletAndSource implements IExchange, IWallet, IRateSource {
 
-    private static final BigDecimal EXCHANGE_RATE = new BigDecimal(2000);
+    private static final BigDecimal EXCHANGE_RATE = new BigDecimal(20000);
     private static final BigDecimal WALLET_BALANCE = new BigDecimal(10);
     private static final BigDecimal EXCHANGE_BALANCE = new BigDecimal(1000);
     private static final String ETH_WALLET_ADDRESS = "0xB009BE55782FD3aDE5fc00624FaBdbba3094F6D2";
     private static final String DASH_WALLET_ADDRESS = "XrAwEffseCKgQPQhYqXuscBaoUnHqkKxQz"; //safe
-    private static final String BTC_WALLET_ADDRESS = "18nB5x3zxF26MuA89yNcnkS9qs33KNwLFu";
+    private static final String BTC_WALLET_ADDRESS = "1F8zy3DPqFAviDSrmwSXCJbShaJMHgwv3";
     private static final String XMR_WALLET_ADDRESS = "dc3c48b1577d25eb4ce56b266bcf7aab6b27c28a0ba305d8dfebff52e6f6f757";
     private static final String LTC_WALLET_ADDRESS = "LZRi2YvS3cR4Pc3hQkAxqYLKRXEjjxZdd5"; //safe
     private static final String TX_SELL_ID = "tx_sell_id";
