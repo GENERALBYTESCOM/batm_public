@@ -99,6 +99,7 @@ public enum CryptoCurrency {
     BAY("BitBayCoin"),
     NULS("NULS"),
     MUE("MonetaryUnit"),
+    XPM("Primecoin"),
 
     TBCH("test BCH"),
     TBTC("test BTC"),
