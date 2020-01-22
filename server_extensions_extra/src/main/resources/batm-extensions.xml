@@ -475,11 +475,10 @@
             <cryptocurrency>XRP</cryptocurrency>
             <cryptocurrency>XZC</cryptocurrency>
         </exchange>
-<!--    No fiat on binance.com - use a stablecoin as fiat in future? -->
-<!--        <ratesource prefix="binancecom" name="Binance.com">-->
-<!--            <param name="fiatcurrency" />-->
-<!--            <cryptocurrency>BTC</cryptocurrency>-->
-<!--        </ratesource>-->
+        <ratesource prefix="binancecom" name="Binance.com">
+            <param name="fiatcurrency" />
+            <cryptocurrency>BTC</cryptocurrency>
+        </ratesource>
         <exchange prefix="binanceus" name="Binance US">
             <param name="apikey"/>
             <param name="secretkey"/>
