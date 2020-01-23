@@ -385,6 +385,15 @@ public interface IExtensionContext {
     WatchListResult searchWatchList(WatchListQuery query);
 
     /**
+     * Queries the phone number for its type and if it is blocked based on the settings on terminal organization.
+     * Same functionality as "Use GB API For Blocking Not Registered Identities By Certain Line Type". Charged Service.
+     * @param phoneNumber phone number to be queried. If missing, the country prefix is determined by the terminal location.
+     * @param terminalSerialNumber terminal country and owner (Organization) are used while querying the phone number
+     * @return
+     */
+    PhoneNumberQueryResult queryPhoneNumber(String phoneNumber, String terminalSerialNumber);
+
+    /**
      * Returns Cash Collections ordered by sequence ID (primary key).
      * @param terminalSerialNumber
      * @param dateFrom
