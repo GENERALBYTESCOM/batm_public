@@ -202,6 +202,7 @@
                 <cryptocurrency>VIA</cryptocurrency>
                 <cryptocurrency>WDC</cryptocurrency>
                 <cryptocurrency>XMR</cryptocurrency>
+                <cryptocurrency>XPM</cryptocurrency>
                 <cryptocurrency>XSG</cryptocurrency>
                 <cryptocurrency>XZC</cryptocurrency>
                 <help>USD is default fiat currency.</help>
@@ -385,6 +386,7 @@
             <cryptocurrency>VOLTZ</cryptocurrency>
             <cryptocurrency>WDC</cryptocurrency>
             <cryptocurrency>XMR</cryptocurrency>
+            <cryptocurrency>XPM</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
             <cryptocurrency>XSG</cryptocurrency>
             <cryptocurrency>XZC</cryptocurrency>
@@ -1666,5 +1668,22 @@
         </ratesource>
         <cryptologo cryptocurrency="XSG" file="xsg.png"/>
         <cryptologo cryptocurrency="XSG" file="xsg.svg"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.primecoin.PrimecoinExtension" >
+        <wallet prefix="primecoind" name="Primecoin">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>XPM</cryptocurrency>
+        </wallet>
+        <wallet prefix="primedemo" name="Primecoin Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
+            <cryptocurrency>XPM</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="XPM" file="xpm.png"/>
     </extension>
 </extensions>
