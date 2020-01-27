@@ -55,4 +55,11 @@ public interface ICryptoCurrencyDefinition {
      * @return
      */
     IPaymentSupport getPaymentSupport();
+
+
+    /**
+     * Should return true if ATM should ask also for tag (for example this uses XRP). Default is false.
+     * @return
+     */
+    boolean isRequiresTag();
 }
