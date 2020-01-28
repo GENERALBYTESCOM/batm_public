@@ -37,16 +37,15 @@ public interface IBlockchainWatcher {
      * @param cryptoCurrency
      * @param transactionHash
      * @param listener
-     * @param tag - custom object which is handed over later to listener
      */
-    void addTransaction(String cryptoCurrency, String transactionHash, IBlockchainWatcherTransactionListener listener, Object tag);
+    void addTransaction(String cryptoCurrency, String transactionHash, IBlockchainWatcherTransactionListener listener);
 
     /**
      * Stop following this transaction
      * @param transactionHash
      * @return
      */
-    Object removeTransaction(String transactionHash);
+    void removeTransaction(String transactionHash);
 
     /**
      * Stop watching all transactions that use this listener
@@ -59,9 +58,8 @@ public interface IBlockchainWatcher {
      * @param cryptoCurrency
      * @param address
      * @param listener
-     * @param tag
      */
-    void addAddress(String cryptoCurrency, String address, IBlockchainWatcherAddressListener listener, Object tag);
+    void addAddress(String cryptoCurrency, String address, IBlockchainWatcherAddressListener listener);
 
     /**
      * Call this method to stop watching for new transactions on this address.

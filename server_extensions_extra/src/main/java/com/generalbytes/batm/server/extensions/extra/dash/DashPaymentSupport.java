@@ -21,9 +21,6 @@ import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.extra.common.AbstractRPCPaymentSupport;
 import com.generalbytes.batm.server.extensions.extra.common.RPCClient;
-import com.generalbytes.batm.server.extensions.extra.dash.wallets.dashd.DashRPCWallet;
-import com.generalbytes.batm.server.extensions.extra.dash.test.PRS;
-import com.generalbytes.batm.server.extensions.payment.IPaymentRequestListener;
 import com.generalbytes.batm.server.extensions.payment.PaymentRequest;
 import com.generalbytes.batm.server.extensions.payment.PaymentReceipt;
 import com.generalbytes.batm.server.extensions.extra.dash.wallets.DashRPCClient;
@@ -31,7 +28,6 @@ import com.generalbytes.batm.server.extensions.extra.dash.wallets.DashTransactio
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.net.MalformedURLException;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
@@ -114,7 +110,7 @@ public class DashPaymentSupport extends AbstractRPCPaymentSupport {
                         DashTransaction dashTx = (DashTransaction)client.getTransaction(paymentRequest.getIncomingTransactionHash());
                         if(dashTx.instantlock())
                             result.setConfidence(PaymentReceipt.CONFIDENCE_SURE);
-                        else 
+                        else
                             result.setConfidence(PaymentReceipt.CONFIDENCE_NONE);
                         break;
                 }
