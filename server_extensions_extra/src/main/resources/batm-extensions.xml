@@ -1685,5 +1685,6 @@
             <cryptocurrency>XPM</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="XPM" file="xpm.png"/>
+        <cryptologo cryptocurrency="XPM" file="xpm.jpeg"/>
     </extension>
 </extensions>
