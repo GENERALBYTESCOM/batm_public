@@ -23,7 +23,7 @@ import com.generalbytes.batm.server.extensions.extra.common.RPCWallet;
 //You need to have node running: i.e.:  bitcoind -rpcuser=rpcuser -rpcpassword=rpcpassword -rpcport=8332
 
 public class BitcoinCashRPCWallet extends RPCWallet {
-    public BitcoinCashRPCWallet(String rpcURL, String accountName) {
-        super(rpcURL, accountName, CryptoCurrency.BCH.getCode());
+    public BitcoinCashRPCWallet(String rpcURL, String label) {
+        super(rpcURL, label, CryptoCurrency.BCH.getCode());
     }
 }

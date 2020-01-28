@@ -203,27 +203,28 @@ public class BitcoinExtension extends AbstractExtension {
             StringTokenizer st = new StringTokenizer(walletLogin,":");
             String walletType = st.nextToken();
             if ("bitcoind".equalsIgnoreCase(walletType) || "bitcoindnoforward".equalsIgnoreCase(walletType)) {
-                // "bitcoind:protocol:user:password:ip:port:accountname"
+                // "bitcoind:protocol:user:password:ip:port:label"
 
                 String protocol = st.nextToken();
                 String username = st.nextToken();
                 String password = st.nextToken();
                 String hostname = st.nextToken();
                 int port = Integer.parseInt(st.nextToken());
+                String label = "";
                 if (st.hasMoreTokens()) {
-                    st.nextToken(); // accountName - support removed in v0.18, parameter not used
+                    label = st.nextToken();
                 }
 
                 InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(tunnelPassword, InetSocketAddress.createUnresolved(hostname, port));
                 hostname = tunnelAddress.getHostString();
                 port = tunnelAddress.getPort();
 
-                if (protocol != null && username != null && password != null && hostname != null) {
+                if (protocol != null && username != null && password != null && hostname != null && label != null) {
                     String rpcURL = protocol + "://" + username + ":" + password + "@" + hostname + ":" + port;
                     if ("bitcoindnoforward".equalsIgnoreCase(walletType)) {
-                        return new BATMBitcoindRPCWalletWithUniqueAddresses(rpcURL, CryptoCurrency.BTC.getCode());
+                        return new BATMBitcoindRPCWalletWithUniqueAddresses(rpcURL);
                     }
-                    return new BATMBitcoindRPCWallet(rpcURL, CryptoCurrency.BTC.getCode());
+                    return new BATMBitcoindRPCWallet(rpcURL, label);
                 }
             } else if ("bitcore".equalsIgnoreCase(walletType)) { // bitcore:apiKey:proxyUrl
                 String apiKey = st.nextToken();
