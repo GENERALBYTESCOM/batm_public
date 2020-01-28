@@ -17,6 +17,7 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges;
 
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.coinutil.DDOSUtils;
 import com.generalbytes.batm.server.extensions.IExchangeAdvanced;
 import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
@@ -31,6 +32,7 @@ import org.knowm.xchange.currency.Currency;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.Order;
 import org.knowm.xchange.dto.account.AccountInfo;
+import org.knowm.xchange.dto.account.AddressWithTag;
 import org.knowm.xchange.dto.account.Wallet;
 import org.knowm.xchange.dto.marketdata.OrderBook;
 import org.knowm.xchange.dto.trade.LimitOrder;
@@ -42,6 +44,7 @@ import org.knowm.xchange.exceptions.NotYetImplementedForExchangeException;
 import org.knowm.xchange.service.account.AccountService;
 import org.knowm.xchange.service.marketdata.MarketDataService;
 import org.knowm.xchange.service.trade.TradeService;
+import org.knowm.xchange.service.trade.params.DefaultWithdrawFundsParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import si.mazi.rescu.HttpStatusIOException;
@@ -202,9 +205,8 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
 
         log.info("{} exchange withdrawing {} {} to {}", name, amount, cryptoCurrency, destinationAddress);
 
-        AccountService accountService = exchange.getAccountService();
         try {
-            String result = accountService.withdrawFunds(Currency.getInstance(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency)), amount, destinationAddress);
+            String result = withdrawFunds(cryptoCurrency, amount, destinationAddress);
             if (isWithdrawSuccessful(result)) {
                 log.debug("{} exchange withdrawal completed with result: {}", name, result);
                 return "success";
@@ -217,6 +219,20 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
             log.error("{} exchange withdrawal failed", name, e);
         }
         return null;
+    }
+
+    private String withdrawFunds(String cryptoCurrency, BigDecimal amount, String destinationAddress) throws IOException {
+        AccountService accountService = exchange.getAccountService();
+        Currency exchangeCryptoCurrency = Currency.getInstance(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency));
+
+        if (CryptoCurrency.XRP.getCode().equals(cryptoCurrency)) {
+            String[] addressParts = destinationAddress.split(":");
+            if (addressParts.length == 2) {
+                return accountService.withdrawFunds(new DefaultWithdrawFundsParams(new AddressWithTag(addressParts[0], addressParts[1]), exchangeCryptoCurrency, amount));
+            }
+        }
+
+        return accountService.withdrawFunds(exchangeCryptoCurrency, amount, destinationAddress);
     }
 
     public String purchaseCoins(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
@@ -336,6 +352,16 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
 
         AccountService accountService = exchange.getAccountService();
         try {
+            if (CryptoCurrency.XRP.getCode().equals(cryptoCurrency)) {
+                AddressWithTag addressWithTag = accountService.requestDepositAddressData(Currency.getInstance(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency)));
+                if (addressWithTag == null) {
+                    return null;
+                }
+                if (addressWithTag.getDestinationTag() == null || addressWithTag.getDestinationTag().isEmpty()) {
+                    return addressWithTag.getAddress();
+                }
+                return addressWithTag.getAddress() + ":" + addressWithTag.getDestinationTag();
+            }
             return accountService.requestDepositAddress(Currency.getInstance(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency)));
         } catch (IOException e) {
             log.error("Error", e);
