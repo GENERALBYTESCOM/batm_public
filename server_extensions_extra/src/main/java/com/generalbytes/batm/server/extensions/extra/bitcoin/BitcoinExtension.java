@@ -146,7 +146,7 @@ public class BitcoinExtension extends AbstractExtension {
                 return new EnigmaExchange(username, password, preferredFiatCurrency);
 
             } else if ("binancecom".equalsIgnoreCase(prefix)) {
-                String preferredFiatCurrency = FiatCurrency.USD.getCode();
+                String preferredFiatCurrency = FiatCurrency.EUR.getCode();
                 String apikey = paramTokenizer.nextToken();
                 String secretKey = paramTokenizer.nextToken();
                 if (paramTokenizer.hasMoreTokens()) {
@@ -386,7 +386,7 @@ public class BitcoinExtension extends AbstractExtension {
                 }
                 return new SatangProRateSource(preferredFiatCurrency);
             } else if ("binancecom".equalsIgnoreCase(rsType)) {
-                String preferredFiatCurrency = FiatCurrency.USD.getCode();
+                String preferredFiatCurrency = FiatCurrency.EUR.getCode();
                 if (st.hasMoreTokens()) {
                     preferredFiatCurrency = st.nextToken().toUpperCase();
                 }
