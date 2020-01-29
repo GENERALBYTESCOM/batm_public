@@ -18,11 +18,9 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitcoind;
 
 import com.generalbytes.batm.server.extensions.IGeneratesNewDepositCryptoAddress;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class BATMBitcoindRPCWalletWithUniqueAddresses extends BATMBitcoindRPCWallet implements IGeneratesNewDepositCryptoAddress {
-    public BATMBitcoindRPCWalletWithUniqueAddresses(String rpcURL, String cryptoCurrency) {
-        super(rpcURL, cryptoCurrency);
+    public BATMBitcoindRPCWalletWithUniqueAddresses(String rpcURL) {
+        super(rpcURL, ""); // label is used only for reusing the same address
     }
 }

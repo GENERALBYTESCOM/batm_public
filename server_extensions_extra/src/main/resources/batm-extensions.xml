@@ -8,7 +8,7 @@
                 <param name="password" />
                 <param name="host" />
                 <param name="port" />
-                <!--<param name="accountname" /> removed in v0.18, parameter ignored -->
+                <param name="label" />
                 <cryptocurrency>BTC</cryptocurrency>
             </wallet>
             <wallet prefix="bitcoindnoforward" name="Bitcoin Core - bitcoind (no forward)" >
@@ -18,7 +18,6 @@
                 <param name="password" />
                 <param name="host" />
                 <param name="port" />
-                <!--<param name="accountname" /> removed in v0.18, parameter ignored -->
                 <cryptocurrency>BTC</cryptocurrency>
                 <help>This variant of the wallet generates new addresses for each transaction and does not forward payments from temporary address</help>
             </wallet>
@@ -202,6 +201,7 @@
                 <cryptocurrency>VIA</cryptocurrency>
                 <cryptocurrency>WDC</cryptocurrency>
                 <cryptocurrency>XMR</cryptocurrency>
+                <cryptocurrency>XPM</cryptocurrency>
                 <cryptocurrency>XSG</cryptocurrency>
                 <cryptocurrency>XZC</cryptocurrency>
                 <help>USD is default fiat currency.</help>
@@ -385,6 +385,7 @@
             <cryptocurrency>VOLTZ</cryptocurrency>
             <cryptocurrency>WDC</cryptocurrency>
             <cryptocurrency>XMR</cryptocurrency>
+            <cryptocurrency>XPM</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
             <cryptocurrency>XSG</cryptocurrency>
             <cryptocurrency>XZC</cryptocurrency>
@@ -475,11 +476,10 @@
             <cryptocurrency>XRP</cryptocurrency>
             <cryptocurrency>XZC</cryptocurrency>
         </exchange>
-<!--    No fiat on binance.com - use a stablecoin as fiat in future? -->
-<!--        <ratesource prefix="binancecom" name="Binance.com">-->
-<!--            <param name="fiatcurrency" />-->
-<!--            <cryptocurrency>BTC</cryptocurrency>-->
-<!--        </ratesource>-->
+        <ratesource prefix="binancecom" name="Binance.com">
+            <param name="fiatcurrency" />
+            <cryptocurrency>BTC</cryptocurrency>
+        </ratesource>
         <exchange prefix="binanceus" name="Binance US">
             <param name="apikey"/>
             <param name="secretkey"/>
@@ -536,7 +536,7 @@
             <param name="password" />
             <param name="host" />
             <param name="port" />
-            <param name="accountname" />
+            <param name="label" />
             <cryptocurrency>BCH</cryptocurrency>
             <help>For BCH SELL this is the only supported wallet</help>
         </wallet>
@@ -547,7 +547,6 @@
             <param name="password" />
             <param name="host" />
             <param name="port" />
-            <param name="accountname" />
             <cryptocurrency>BCH</cryptocurrency>
             <help>For BCH SELL this is the only supported wallet. This variant generates new addresses for each transaction and does not forward payments from temporary address</help>
         </wallet>
@@ -647,7 +646,7 @@
             <param name="password" />
             <param name="host" />
             <param name="port" />
-            <param name="accountname" />
+            <param name="label" />
             <cryptocurrency>LTC</cryptocurrency>
         </wallet>
         <wallet prefix="litecoindnoforward" name="Litecoind (no forward)">
@@ -657,7 +656,6 @@
             <param name="password" />
             <param name="host" />
             <param name="port" />
-            <param name="accountname" />
             <cryptocurrency>LTC</cryptocurrency>
             <help>This variant generates new addresses for each transaction and does not forward payments from temporary address</help>
         </wallet>
@@ -1208,7 +1206,7 @@
             <param name="password" />
             <param name="host" />
             <param name="port" />
-            <param name="accountname" />
+            <param name="label" />
             <cryptocurrency>SUM</cryptocurrency>
         </wallet>
         <wallet prefix="sumcoindnoforward" name="Sumcoind (no forward)">
@@ -1218,7 +1216,6 @@
             <param name="password" />
             <param name="host" />
             <param name="port" />
-            <param name="accountname" />
             <cryptocurrency>SUM</cryptocurrency>
             <help>This variant generates new addresses for each transaction and does not forward payments from temporary address</help>
         </wallet>
@@ -1666,5 +1663,23 @@
         </ratesource>
         <cryptologo cryptocurrency="XSG" file="xsg.png"/>
         <cryptologo cryptocurrency="XSG" file="xsg.svg"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.primecoin.PrimecoinExtension" >
+        <wallet prefix="primecoind" name="Primecoin">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>XPM</cryptocurrency>
+        </wallet>
+        <wallet prefix="primedemo" name="Primecoin Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
+            <cryptocurrency>XPM</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="XPM" file="xpm.png"/>
+        <cryptologo cryptocurrency="XPM" file="xpm.svg"/>
     </extension>
 </extensions>

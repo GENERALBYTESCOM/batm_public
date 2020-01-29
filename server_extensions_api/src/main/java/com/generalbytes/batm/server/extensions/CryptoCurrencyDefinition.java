@@ -27,6 +27,7 @@ public class CryptoCurrencyDefinition implements ICryptoCurrencyDefinition {
     private String name;
     private String protocol;
     private String authorWebsiteURL;
+    private boolean requiresTag;
 
     public CryptoCurrencyDefinition(String symbol, String name, String protocol, String authorWebsiteURL) {
         this.symbol = symbol;
@@ -63,5 +64,9 @@ public class CryptoCurrencyDefinition implements ICryptoCurrencyDefinition {
     @Override
     public String getProtocol() {
         return protocol;
+    }
+
+    public boolean isRequiresTag() {
+        return requiresTag;
     }
 }

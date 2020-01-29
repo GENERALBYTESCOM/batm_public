@@ -20,7 +20,7 @@ package com.generalbytes.batm.server.extensions.extra.litecoin.wallets.litecoind
 import com.generalbytes.batm.server.extensions.IGeneratesNewDepositCryptoAddress;
 
 public class LitecoindUniqueAddressRPCWallet extends LitecoindRPCWallet implements IGeneratesNewDepositCryptoAddress {
-    public LitecoindUniqueAddressRPCWallet(String rpcURL, String accountName) {
-        super(rpcURL, accountName);
+    public LitecoindUniqueAddressRPCWallet(String rpcURL) {
+        super(rpcURL, ""); // label is used only for reusing the same address
     }
 }

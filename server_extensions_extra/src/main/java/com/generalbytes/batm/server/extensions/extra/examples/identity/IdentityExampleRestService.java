@@ -20,6 +20,7 @@ package com.generalbytes.batm.server.extensions.extra.examples.identity;
 import com.generalbytes.batm.server.extensions.IExtensionContext;
 import com.generalbytes.batm.server.extensions.IIdentity;
 import com.generalbytes.batm.server.extensions.ILimit;
+import com.generalbytes.batm.server.extensions.PhoneNumberQueryResult;
 
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
@@ -53,6 +54,14 @@ public class IdentityExampleRestService {
 
         IExtensionContext ctx = IdentityExampleExtension.getExtensionContext();
         List<ILimit> limits = Arrays.asList(new LimitExample(fiatCurrency, limit));
+
+        PhoneNumberQueryResult phoneNumberQueryResult = ctx.queryPhoneNumber(phoneNumber, terminalSerialNumber);
+        if (phoneNumberQueryResult.isQuerySuccessful()) {
+            if (phoneNumberQueryResult.isLineTypeBlocked()) {
+                return "PHONE BLOCKED";
+            }
+            System.out.println("Phone type: " + phoneNumberQueryResult.getPhoneLineType().getPhoneTypeCode().name());
+        }
 
         int state = IIdentity.STATE_REGISTERED;
         Date now = new Date();

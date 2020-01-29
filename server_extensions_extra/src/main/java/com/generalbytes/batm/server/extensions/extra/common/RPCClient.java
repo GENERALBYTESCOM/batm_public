@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import wf.bitcoin.javabitcoindrpcclient.BitcoinRPCException;
 import wf.bitcoin.javabitcoindrpcclient.BitcoinJSONRPCClient;
+import wf.bitcoin.javabitcoindrpcclient.GenericRpcException;
 
 import java.net.MalformedURLException;
 import java.security.KeyManagementException;
@@ -135,6 +136,17 @@ public class RPCClient extends BitcoinJSONRPCClient {
         public int size() {
             return this.wrappedList.size();
         }
+    }
+
+
+    /**
+     *
+     * @param label
+     * @return address -> {"purpose" -> "receive"}
+     * @throws GenericRpcException
+     */
+    public Map<String, Map<String, String>> getAddressesByLabel(String label) throws GenericRpcException {
+        return (Map<String, Map<String, String>>) query("getaddressesbylabel", label);
     }
 
     public static String cleanAddressFromPossiblePrefix(String address) {
