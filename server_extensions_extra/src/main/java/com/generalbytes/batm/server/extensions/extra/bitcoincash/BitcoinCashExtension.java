@@ -59,9 +59,9 @@ public class BitcoinCashExtension extends AbstractExtension {
                 String password = st.nextToken();
                 String hostname = st.nextToken();
                 int port = Integer.parseInt(st.nextToken());
-                String accountName = "";
+                String label = "";
                 if (st.hasMoreTokens()) {
-                    accountName = st.nextToken();
+                    label = st.nextToken();
                 }
 
                 InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(tunnelPassword, InetSocketAddress.createUnresolved(hostname, port));
@@ -69,12 +69,12 @@ public class BitcoinCashExtension extends AbstractExtension {
                 port = tunnelAddress.getPort();
 
 
-                if (protocol != null && username != null && password != null && hostname != null && accountName != null) {
+                if (protocol != null && username != null && password != null && hostname != null && label != null) {
                     String rpcURL = protocol + "://" + username + ":" + password + "@" + hostname + ":" + port;
                     if ("bitcoincashdnoforward".equalsIgnoreCase(walletType)) {
-                        return new BitcoinCashUniqueAddressRPCWallet(rpcURL, accountName);
+                        return new BitcoinCashUniqueAddressRPCWallet(rpcURL);
                     }
-                    return new BitcoinCashRPCWallet(rpcURL, accountName);
+                    return new BitcoinCashRPCWallet(rpcURL, label);
                 }
             } else if ("telr_cash".equalsIgnoreCase(walletType)) {
                 String address = st.nextToken();

@@ -20,7 +20,7 @@ package com.generalbytes.batm.server.extensions.extra.bitcoincash;
 import com.generalbytes.batm.server.extensions.IGeneratesNewDepositCryptoAddress;
 
 public class BitcoinCashUniqueAddressRPCWallet extends BitcoinCashRPCWallet implements IGeneratesNewDepositCryptoAddress {
-    public BitcoinCashUniqueAddressRPCWallet(String rpcURL, String accountName) {
-        super(rpcURL, accountName);
+    public BitcoinCashUniqueAddressRPCWallet(String rpcURL) {
+        super(rpcURL, ""); // label is used only for reusing the same address
     }
 }

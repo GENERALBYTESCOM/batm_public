@@ -62,19 +62,25 @@ public class LightningBitcoinPaymentSupport implements IPaymentSupport {
         long validTillMillis = System.currentTimeMillis() + (spec.getValidInSeconds() * 1000);
 
         PaymentRequest request = new PaymentRequest(spec.getCryptoCurrency(), spec.getDescription(), validTillMillis,
-            invoice, spec.getTotal(), BigDecimal.ZERO, spec.getRemoveAfterNumberOfConfirmationsOfIncomingTransaction(),
-            spec.getRemoveAfterNumberOfConfirmationsOfOutgoingTransaction(), wallet);
+            invoice, spec.getTotal(), BigDecimal.ZERO, spec.getRemoveAfterNumberOfConfirmationsOfIncomingTransaction(), spec.getRemoveAfterNumberOfConfirmationsOfOutgoingTransaction(), wallet, spec.getTimeoutRefundAddress(),
+            spec.getOutputs(), spec.isDoNotForward(), null);
 
+        registerPaymentRequest(request);
+        return request;
+    }
+
+    @Override
+    public void registerPaymentRequest(PaymentRequest request) {
         ScheduledFuture<?> scheduledFuture = executorService.scheduleAtFixedRate(() -> {
             try {
                 if (request.getState() == PaymentRequest.STATE_SEEN_IN_BLOCK_CHAIN) {
                     return;
                 }
 
-                BigDecimal receivedAmount = wallet.getReceivedAmount(invoice, spec.getCryptoCurrency());
+                BigDecimal receivedAmount = ((ILightningWallet) request.getWallet()).getReceivedAmount(request.getAddress(), request.getCryptoCurrency());
                 if (receivedAmount != null && receivedAmount.compareTo(BigDecimal.ZERO) > 0) {
-                    log.info("Received: {}, Requested: {}, {}", receivedAmount, spec.getTotal(), request);
-                    if (spec.getTotal().compareTo(receivedAmount) != 0 && request.getState() != PaymentRequest.STATE_TRANSACTION_INVALID) {
+                    log.info("Received: {}, Requested: {}, {}", receivedAmount, request.getAmount(), request);
+                    if (request.getAmount().compareTo(receivedAmount) != 0 && request.getState() != PaymentRequest.STATE_TRANSACTION_INVALID) {
                         // This should not happen, receiving node should not accept a payment when amount does not match the invoice.
                         log.info("Received amount does not match the requested amount");
                         setState(request, PaymentRequest.STATE_TRANSACTION_INVALID);
@@ -82,6 +88,7 @@ public class LightningBitcoinPaymentSupport implements IPaymentSupport {
                     }
 
                     log.info("Amounts matches");
+                    request.setTxValue(receivedAmount);
                     setState(request, PaymentRequest.STATE_SEEN_TRANSACTION); // go through both states so the listener can react to both of them
                     setState(request, PaymentRequest.STATE_SEEN_IN_BLOCK_CHAIN);
                     fireNumberOfConfirmationsChanged(request, 999);
@@ -90,7 +97,6 @@ public class LightningBitcoinPaymentSupport implements IPaymentSupport {
             } catch (Throwable t) {
                 log.error("", t);
             }
-
         }, 3, 1, TimeUnit.SECONDS);
 
         executorService.schedule(() -> {
@@ -103,13 +109,11 @@ public class LightningBitcoinPaymentSupport implements IPaymentSupport {
             } catch (Throwable t) {
                 log.error("", t);
             }
-        }, spec.getValidInSeconds(), TimeUnit.SECONDS);
+        }, request.getValidTill() - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
 
-        requests.entrySet().removeIf(e -> e.getValue().getValidTill() <  System.currentTimeMillis());
-        requests.put(invoice, request);
-        return request;
+        requests.entrySet().removeIf(e -> e.getValue().getValidTill() < System.currentTimeMillis());
+        requests.put(request.getAddress(), request);
     }
-
 
     @Override
     public boolean isPaymentReceived(String paymentAddress) {

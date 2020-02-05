@@ -20,7 +20,7 @@ package com.generalbytes.batm.server.extensions.extra.sumcoin.sumcored;
 import com.generalbytes.batm.server.extensions.IGeneratesNewDepositCryptoAddress;
 
 public class SumcoinUniqueAddressRPCWallet extends SumcoinRPCWallet implements IGeneratesNewDepositCryptoAddress {
-    public SumcoinUniqueAddressRPCWallet(String rpcURL, String accountName) {
-        super(rpcURL, accountName);
+    public SumcoinUniqueAddressRPCWallet(String rpcURL) {
+        super(rpcURL, ""); // label is used only for reusing the same address
     }
 }

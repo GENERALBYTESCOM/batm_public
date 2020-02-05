@@ -37,11 +37,20 @@ public interface IPaymentSupport {
     /**
      * Server calls this method to create request for payment.
      * Payment
-     * When this method is called your {@link IPaymentSupport} implementation should start listening for payments on address
+     * When this method is called your {@link IPaymentSupport} implementation should start listening for payments on address.
+     * This method creates and registers the payment request. {@link IPaymentSupport#registerPaymentRequest(PaymentRequest)} is called as part of this method.
      * @param spec
      * @return
      */
     PaymentRequest createPaymentRequest(IPaymentRequestSpecification spec);
+
+    /**
+     * (re-)register the payment request previously created by {@link IPaymentSupport#createPaymentRequest(IPaymentRequestSpecification)}
+     * for listening for incoming payments. This is called with payment request stored in database
+     * when payment was not received yet and server was restarted.
+     * @param request
+     */
+    void registerPaymentRequest(PaymentRequest request);
 
     /**
      * This is a simple method to find out id payment was received on receiving address

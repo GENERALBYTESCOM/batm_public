@@ -27,18 +27,19 @@ import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
-public class RPCWallet implements IWallet, IRPCWallet{
+public class RPCWallet implements IWallet, IRPCWallet {
     private static final Logger log = LoggerFactory.getLogger(RPCWallet.class);
     private String cryptoCurrency;
 
-    private String accountName;
+    private String label;
     private RPCClient client;
 
 
-    public RPCWallet(String rpcURL, String accountName, String cryptoCurrency) {
-        this.accountName = accountName;
+    public RPCWallet(String rpcURL, String label, String cryptoCurrency) {
+        this.label = label;
         this.cryptoCurrency = cryptoCurrency;
         client = createClient(cryptoCurrency, rpcURL);
     }
@@ -62,9 +63,9 @@ public class RPCWallet implements IWallet, IRPCWallet{
             return null;
         }
 
-        log.info("RPCWallet sending coins from " + accountName + " to: " + destinationAddress + " " + amount);
+        log.info("RPCWallet sending {} {} to {}", amount, cryptoCurrency, destinationAddress);
         try {
-            String result = client.sendFrom(accountName, destinationAddress, amount);
+            String result = client.sendToAddress(destinationAddress, amount, description);
             log.debug("result = " + result);
             return result;
         } catch (BitcoinRPCException e) {
@@ -81,16 +82,37 @@ public class RPCWallet implements IWallet, IRPCWallet{
         }
 
         try {
-            List<String> addressesByAccount = client.getAddressesByAccount(accountName);
-            if (addressesByAccount == null || addressesByAccount.size() == 0) {
-                return null;
-            }else{
-                return addressesByAccount.get(0);
+            Map<String, Map<String, String>> addresses = client.getAddressesByLabel(label);
+            if (addresses != null && addresses.size() > 0) {
+                for (Map.Entry<String, Map<String, String>> e : addresses.entrySet()) {
+                    if (e.getValue().get("purpose") == null || "receive".equals(e.getValue().get("purpose"))) {
+                        return e.getKey();
+                    }
+                }
             }
         } catch (BitcoinRPCException e) {
+            try {
+                if (e.getRPCError() != null && e.getRPCError().getMessage() != null && e.getRPCError().getMessage().contains("No addresses with label")) {
+                    log.warn("generating new address. " + e.getMessage());
+                    return generateNewDepositCryptoAddress(cryptoCurrency, label);
+                }
+                if (e.getResponseCode() == 404) {
+                    log.warn("getaddressesbylabel not supported, using deprecated Accounts API. " + e.getResponse());
+                    List<String> addressesByAccount = client.getAddressesByAccount(label);
+                    if (addressesByAccount != null)
+                        if (addressesByAccount.size() > 0) {
+                            return addressesByAccount.get(0);
+                        } else {
+                            log.warn("getAddressesByAccount returned no address, generating new address");
+                            return generateNewDepositCryptoAddress(cryptoCurrency, label);
+                        }
+                }
+            } catch (Exception e1) {
+                log.error("Error", e1);
+            }
             log.error("Error", e);
-            return null;
         }
+        return null;
     }
 
     public String generateNewDepositCryptoAddress(String cryptoCurrency, String label) {
@@ -100,7 +122,7 @@ public class RPCWallet implements IWallet, IRPCWallet{
         }
 
         try {
-            return client.getNewAddress(accountName);
+            return client.getNewAddress(label);
         } catch (BitcoinRPCException e) {
             log.error("Error", e);
             return null;
@@ -114,7 +136,7 @@ public class RPCWallet implements IWallet, IRPCWallet{
             return null;
         }
         try {
-            return client.getBalance(accountName);
+            return client.getBalance();
         } catch (BitcoinRPCException e) {
             log.error("Error", e);
             return null;

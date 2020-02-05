@@ -22,7 +22,7 @@ import com.generalbytes.batm.server.extensions.extra.common.RPCWallet;
 
 
 public class SumcoinRPCWallet extends RPCWallet {
-    public SumcoinRPCWallet(String rpcURL, String accountName) {
-        super(rpcURL, accountName, CryptoCurrency.SUM.getCode());
+    public SumcoinRPCWallet(String rpcURL, String label) {
+        super(rpcURL, label, CryptoCurrency.SUM.getCode());
     }
 }

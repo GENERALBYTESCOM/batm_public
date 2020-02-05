@@ -18,6 +18,7 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.binance;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.common.currencies.FiatCurrency;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -36,6 +37,7 @@ public class BinanceComExchange extends BinanceExchange {
     @Override
     public Set<String> getFiatCurrencies() {
         Set<String> fiatCurrencies = new HashSet<>();
+        fiatCurrencies.add(FiatCurrency.EUR.getCode());
         return fiatCurrencies;
     }
 

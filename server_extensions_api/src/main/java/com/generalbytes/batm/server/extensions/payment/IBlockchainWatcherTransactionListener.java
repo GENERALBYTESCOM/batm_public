@@ -25,25 +25,22 @@ public interface IBlockchainWatcherTransactionListener {
      * This method is called when transaction is no longer watched
      * @param cryptoCurrency
      * @param transactionHash
-     * @param tag
      */
-    void removedFromWatch(String cryptoCurrency, String transactionHash, Object tag);
+    void removedFromWatch(String cryptoCurrency, String transactionHash);
 
     /**
      * This method is called when transaction is first time mined
      * @param cryptoCurrency
      * @param transactionHash
-     * @param tag
      * @param blockHeight
      */
-    void newBlockMined(String cryptoCurrency, String transactionHash, Object tag, long blockHeight);
+    void newBlockMined(String cryptoCurrency, String transactionHash, long blockHeight);
 
     /**
      * This when transaction's number of confirmations changes
      * @param cryptoCurrency
      * @param transactionHash
-     * @param tag
      * @param numberOfConfirmations
      */
-    void numberOfConfirmationsChanged(String cryptoCurrency, String transactionHash, Object tag, int numberOfConfirmations);
+    void numberOfConfirmationsChanged(String cryptoCurrency, String transactionHash, int numberOfConfirmations);
 }
