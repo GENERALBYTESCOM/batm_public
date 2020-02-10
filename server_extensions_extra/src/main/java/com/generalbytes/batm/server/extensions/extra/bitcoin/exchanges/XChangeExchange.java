@@ -73,9 +73,9 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
                 .build();
     }
 
-    private final Exchange exchange;
+    protected final Exchange exchange;
     private final String name;
-    private final Logger log;
+    protected final Logger log;
     private final RateLimiter rateLimiter;
 
     public XChangeExchange(ExchangeSpecification specification, String preferredFiatCurrency) {
@@ -260,7 +260,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
 
             Collections.sort(asks, asksComparator);
 
-            LimitOrder order = new LimitOrder(Order.OrderType.BID, amount, currencyPair, "", null, getTradablePrice(amount, asks));
+            LimitOrder order = new LimitOrder(Order.OrderType.BID, getTradableAmount(amount, currencyPair), currencyPair, "", null, getTradablePrice(amount, asks));
             log.debug("order = {}", order);
             DDOSUtils.waitForPossibleCall(getClass());
             String orderId = tradeService.placeLimitOrder(order);
@@ -399,7 +399,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
 
             Collections.sort(bids, bidsComparator);
 
-            LimitOrder order = new LimitOrder(Order.OrderType.ASK, cryptoAmount, currencyPair,
+            LimitOrder order = new LimitOrder(Order.OrderType.ASK, getTradableAmount(cryptoAmount, currencyPair), currencyPair,
                 "", null, getTradablePrice(cryptoAmount, bids));
 
             log.debug("order: {}", order);
@@ -620,7 +620,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
 
                 Collections.sort(asks, asksComparator);
 
-                LimitOrder order = new LimitOrder(Order.OrderType.BID, amount, currencyPair, "", null,
+                LimitOrder order = new LimitOrder(Order.OrderType.BID, getTradableAmount(amount, currencyPair), currencyPair, "", null,
                     getTradablePrice(amount, asks));
 
                 log.debug("limitOrder = {}", order);
@@ -750,7 +750,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
 
                 Collections.sort(bids, bidsComparator);
 
-                LimitOrder order = new LimitOrder(Order.OrderType.ASK, cryptoAmount, currencyPair,
+                LimitOrder order = new LimitOrder(Order.OrderType.ASK, getTradableAmount(cryptoAmount, currencyPair), currencyPair,
                     "", null, getTradablePrice(cryptoAmount, bids));
                 log.debug("order = {}", order);
 
@@ -842,6 +842,17 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
         public long getShortestTimeForNexStepInvocation() {
             return 5 * 1000; //it doesn't make sense to run step sooner than after 5 seconds
         }
+    }
+
+    /**
+     *
+     * @param cryptoAmount
+     * @param currencyPair
+     * @return Adjusted crypto amount that is possible to be traded on the exchange
+     * (e.g. rounded for the right precision that the exchange supports)
+     */
+    protected BigDecimal getTradableAmount(BigDecimal cryptoAmount, CurrencyPair currencyPair) {
+        return cryptoAmount;
     }
 
     @Override
