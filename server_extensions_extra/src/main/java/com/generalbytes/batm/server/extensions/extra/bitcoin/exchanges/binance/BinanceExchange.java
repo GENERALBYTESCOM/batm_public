@@ -19,8 +19,11 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.binance;
 
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.XChangeExchange;
 import org.knowm.xchange.ExchangeSpecification;
+import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.account.AccountInfo;
 import org.knowm.xchange.dto.account.Wallet;
+
+import java.math.BigDecimal;
 
 public abstract class BinanceExchange extends XChangeExchange {
 
@@ -58,5 +61,20 @@ public abstract class BinanceExchange extends XChangeExchange {
     @Override
     public Wallet getWallet(AccountInfo accountInfo, String currency) {
         return accountInfo.getWallet();
+    }
+
+    @Override
+    protected BigDecimal getTradableAmount(BigDecimal cryptoAmount, CurrencyPair currencyPair) {
+        try {
+            BigDecimal minStep = exchange.getExchangeMetaData().getCurrencyPairs().get(currencyPair).getAmountStepSize();
+            return minStep == null ? cryptoAmount : getAmountRoundedToMinStep(cryptoAmount, minStep);
+        } catch (Exception e) {
+            log.error("error adjusting the amount", e);
+            return cryptoAmount;
+        }
+    }
+
+    protected BigDecimal getAmountRoundedToMinStep(BigDecimal cryptoAmount, BigDecimal minStep) {
+        return cryptoAmount.divideToIntegralValue(minStep).multiply(minStep);
     }
 }
