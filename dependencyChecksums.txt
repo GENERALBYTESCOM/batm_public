@@ -65,7 +65,7 @@ verifyModule 'org.knowm.xchange:xchange-coinbasepro:4.4.0:3d4a11d889c55aa6c33f97
 verifyModule 'org.knowm.xchange:xchange-coingi:4.4.0:79b577b06d022e010ea6f3d174887a01e78e192a117d9e64b90fde9ef393d8fd'
 verifyModule 'org.knowm.xchange:xchange-core:4.4.0:727c631f05745022843735459c4586019bbe07c50c3ebba2e5f4595d16dd3831'
 verifyModule 'org.knowm.xchange:xchange-dvchain:4.4.0:4d4b9af6d8b38a04ad2a24fb0b6df8883dc9367aef7696e216c4bc26d626c2be'
-verifyModule 'org.knowm.xchange:xchange-enigma:4.4.0:fbaacb2e9f51c64637b2d17081b7119451123eed46d9184b72c971460a2e1cdd'
+verifyModule 'org.knowm.xchange:xchange-enigma:4.4.2:7d11620039b31bcce3d387211eaaace685ff6e798806482427f87aa015a826c8'
 verifyModule 'org.knowm.xchange:xchange-hitbtc:4.4.0:59125cd9cd28b598e0c8f0f255b0836abc5e0aeb606b2837c4d6f89d2affb521'
 verifyModule 'org.knowm.xchange:xchange-itbit:4.4.0:5282d9b00c25b12a3ed1072362134b6763eb35d008daa4cd0cd94d9f52aeccf5'
 verifyModule 'org.litecoinj:core:0.15.1.20190418:1eee20226aa76269601f1aa1f22d3980d1833c01b93112504e3c7ed4b972bbbe'
