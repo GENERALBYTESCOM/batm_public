@@ -53,6 +53,7 @@ verifyModule 'org.apache.commons:commons-lang3:3.9:de2e1dcdcf3ef917a8ce858661a06
 verifyModule 'org.bitcoinj:core:0.15.1.20190411:020a26078789d82c75fbbe865cf2c3a9aa02dd06963b8a5614c22caa210c2dc9'
 verifyModule 'org.bouncycastle:bcprov-jdk15on:1.61:dba6e408f205215ad1a89b70b37353d3cdae4ec61037e1feee885704e2413458'
 verifyModule 'org.checkerframework:checker-compat-qual:2.5.2:d7291cebf5e158d169807ae49d4b16ff672986f0c6d803e5f207c40cb61ef982'
+verifyModule 'org.checkerframework:checker-compat-qual:2.5.3:d76b9afea61c7c082908023f0cbc1427fab9abd2df915c8b8a3e7a509bccbc6d'
 verifyModule 'org.codehaus.mojo:animal-sniffer-annotations:1.17:92654f493ecfec52082e76354f0ebf87648dc3d5cec2e3c3cdb947c016747a53'
 verifyModule 'org.dashj:dashj-bls:0.15.2.20190416:8250ba224d55b826f8cea8162c99c54e7cbaff4bd53e424b63635d204919a2c8'
 verifyModule 'org.dashj:dashj-core:0.15.2.20190416:b02021654d70435c9d90a3480e1e7ae2c022bcb1b6e1513e83e347f6d5cdbccf'
