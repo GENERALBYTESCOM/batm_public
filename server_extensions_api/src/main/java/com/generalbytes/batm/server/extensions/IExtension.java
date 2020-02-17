@@ -19,6 +19,7 @@
 package com.generalbytes.batm.server.extensions;
 
 import com.generalbytes.batm.server.extensions.aml.IExternalIdentityProvider;
+import com.generalbytes.batm.server.extensions.aml.scoring.ITransactionScoringProvider;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.util.Set;
@@ -144,4 +145,10 @@ public interface IExtension {
      * @return
      */
     Set<IExternalIdentityProvider> getIdentityProviders();
+
+    /**
+     * @param transactionScoringProviderParamValues colon-separated list of parameters for the provider connection.
+     *                    The first parameter ("prefix") defines which provider to use.
+     */
+    ITransactionScoringProvider createTransactionScoringProvider(String transactionScoringProviderParamValues);
 }
