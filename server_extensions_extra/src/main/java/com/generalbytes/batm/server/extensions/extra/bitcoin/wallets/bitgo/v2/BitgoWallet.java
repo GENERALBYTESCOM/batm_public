@@ -179,6 +179,7 @@ public class BitgoWallet implements IWallet {
         s.add(CryptoCurrency.BCH.getCode());
         s.add(CryptoCurrency.BTC.getCode());
         s.add(CryptoCurrency.LTC.getCode());
+        s.add(CryptoCurrency.ETH.getCode());
 
         s.add(CryptoCurrency.TBCH.getCode());
         s.add(CryptoCurrency.TBTC.getCode());
