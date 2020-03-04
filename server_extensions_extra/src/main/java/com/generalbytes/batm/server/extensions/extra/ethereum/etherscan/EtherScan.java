@@ -1,6 +1,7 @@
 package com.generalbytes.batm.server.extensions.extra.ethereum.etherscan;
 
 import com.generalbytes.batm.server.extensions.extra.ethereum.etherscan.dto.GetTokenTransactionsResponse;
+import com.generalbytes.batm.server.extensions.payment.ReceivedAmount;
 import si.mazi.rescu.RestProxyFactory;
 
 import java.math.BigDecimal;
@@ -9,7 +10,7 @@ public class EtherScan {
 
     protected IEtherscanAPI etherScanApi = RestProxyFactory.createProxy(IEtherscanAPI.class, "https://api.etherscan.io");
 
-    public AddressBalance getAddressBalance(String address, String cryptoCurrency) {
+    public ReceivedAmount getAddressBalance(String address, String cryptoCurrency) {
 
         GetTokenTransactionsResponse tokenTransactions = etherScanApi.getTokenTransactions("account", "tokentx", address);
 
@@ -23,16 +24,7 @@ public class EtherScan {
             .min()
             .orElse(0);
 
-        return new AddressBalance(receivedAmount, confirmations);
+        return new ReceivedAmount(receivedAmount, confirmations);
     }
 
-    public class AddressBalance {
-        public final BigDecimal receivedAmount;
-        public final int confirmations;
-
-        public AddressBalance(BigDecimal receivedAmount, int confirmations) {
-            this.receivedAmount = receivedAmount;
-            this.confirmations = confirmations;
-        }
-    }
 }
