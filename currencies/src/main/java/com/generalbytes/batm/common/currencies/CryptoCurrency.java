@@ -79,6 +79,7 @@ public enum CryptoCurrency {
     POT("PotCoin"),
     REP("Augur"),
     SMART("SmartCash"),
+    SPICE("Spice"),
     START("Startcoin"),
     SUM("Sumcoin"),
     SYS("Syscoin"),
