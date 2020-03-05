@@ -1683,6 +1683,12 @@
         <cryptologo cryptocurrency="XPM" file="xpm.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.slp.SlpExtension" >
+        <wallet prefix="electroncashslp" name="Electron Cash SLP">
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+        </wallet>
         <!-- See https://github.com/kosinusbch/slp-token-icons for token logos -->
     </extension>
 </extensions>

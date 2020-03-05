@@ -47,7 +47,13 @@ public class SlpExtension extends AbstractExtension {
                 StringTokenizer st = new StringTokenizer(walletLogin, ":");
                 String walletType = st.nextToken();
 
-
+                if (walletType.equalsIgnoreCase("electroncashslp")) {
+                    String user = st.nextToken();
+                    String password = st.nextToken();
+                    String host = st.nextToken();
+                    int port = Integer.parseInt(st.nextToken());
+                    return new ElectronCashSlpWallet(user, password, host, port);
+                }
             }
         } catch (Exception e) {
             log.warn("", e);
