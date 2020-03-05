@@ -46,7 +46,7 @@ public class DaiPaymentSupport extends PollingPaymentSupport implements IPayment
                             setState(request, PaymentRequest.STATE_SEEN_IN_BLOCK_CHAIN);
                         }
                         log.info("{} confirmations for {}", addressBalance.getConfirmations(), request);
-                        fireNumberOfConfirmationsChanged(request, addressBalance.getConfirmations());
+                        updateNumberOfConfirmations(request, addressBalance.getConfirmations());
                     }
                 } else if (request.getState() != PaymentRequest.STATE_TRANSACTION_INVALID) {
                     log.info("Received amount does not match the requested amount");

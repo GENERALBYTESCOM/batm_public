@@ -57,7 +57,7 @@ public class LightningBitcoinPaymentSupport extends PollingPaymentSupport implem
                 request.setTxValue(receivedAmount);
                 setState(request, PaymentRequest.STATE_SEEN_TRANSACTION); // go through both states so the listener can react to both of them
                 setState(request, PaymentRequest.STATE_SEEN_IN_BLOCK_CHAIN);
-                fireNumberOfConfirmationsChanged(request, 999);
+                updateNumberOfConfirmations(request, 999);
             }
 
         } catch (Throwable t) {
