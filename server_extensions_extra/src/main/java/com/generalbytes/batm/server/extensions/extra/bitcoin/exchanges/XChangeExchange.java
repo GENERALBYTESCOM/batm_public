@@ -86,7 +86,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
         this.preferredFiatCurrency = preferredFiatCurrency;
     }
 
-    protected Exchange getExchange() {
+    protected synchronized Exchange getExchange() {
         if (exchange == null) {
             // this calls remote host so it's lazy loaded and not called when rate is cached and no remote call is needed
             exchange = ExchangeFactory.INSTANCE.createExchange(exchangeSpecification);
