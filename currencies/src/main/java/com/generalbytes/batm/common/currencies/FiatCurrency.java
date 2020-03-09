@@ -33,6 +33,7 @@ public enum FiatCurrency {
     AED("United Arab Emirates dirham"),
     ALL("Albanian lek"),
     AMD("Armenian dram"),
+    ARS("Argentine peso"),
     AUD("Australian dollar"),
     AZN("Azerbaijani manat"),
     BGN("Bulgarian lev"),
