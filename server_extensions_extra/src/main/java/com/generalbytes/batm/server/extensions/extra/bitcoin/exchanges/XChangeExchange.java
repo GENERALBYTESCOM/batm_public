@@ -357,10 +357,10 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
                 if (addressWithTag == null) {
                     return null;
                 }
-                if (addressWithTag.getDestinationTag() == null || addressWithTag.getDestinationTag().isEmpty()) {
+                if (addressWithTag.getAddressTag() == null || addressWithTag.getAddressTag().isEmpty()) {
                     return addressWithTag.getAddress();
                 }
-                return addressWithTag.getAddress() + ":" + addressWithTag.getDestinationTag();
+                return addressWithTag.getAddress() + ":" + addressWithTag.getAddressTag();
             }
             return accountService.requestDepositAddress(Currency.getInstance(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency)));
         } catch (IOException e) {
