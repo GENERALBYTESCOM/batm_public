@@ -795,7 +795,7 @@
       <param name="password" />
       <param name="host" />
       <param name="port" />
-      <param name="accountname" />
+      <param name="label" />
       <cryptocurrency>SYS</cryptocurrency>
     </wallet>
     <wallet prefix="sysdemo" name="Syscoin Demo Wallet">
