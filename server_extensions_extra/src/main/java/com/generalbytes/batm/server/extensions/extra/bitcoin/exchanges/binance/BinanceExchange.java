@@ -66,7 +66,7 @@ public abstract class BinanceExchange extends XChangeExchange {
     @Override
     protected BigDecimal getTradableAmount(BigDecimal cryptoAmount, CurrencyPair currencyPair) {
         try {
-            BigDecimal minStep = exchange.getExchangeMetaData().getCurrencyPairs().get(currencyPair).getAmountStepSize();
+            BigDecimal minStep = getExchange().getExchangeMetaData().getCurrencyPairs().get(currencyPair).getAmountStepSize();
             return minStep == null ? cryptoAmount : getAmountRoundedToMinStep(cryptoAmount, minStep);
         } catch (Exception e) {
             log.error("error adjusting the amount", e);

@@ -64,28 +64,34 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
 
     private String preferredFiatCurrency;
     private static final long cacheRefreshSeconds = 30;
-    private static final Cache<String, BigDecimal> rateCache = createCache();
+    private static final Cache<String, BigDecimal> rateCache = CacheBuilder
+        .newBuilder()
+        .expireAfterWrite(cacheRefreshSeconds, TimeUnit.SECONDS)
+        .build();
 
-    private static Cache<String, BigDecimal> createCache() {
-        return CacheBuilder
-                .newBuilder()
-                .expireAfterWrite(cacheRefreshSeconds, TimeUnit.SECONDS)
-                .build();
-    }
+    private Exchange exchange = null;
 
-    protected final Exchange exchange;
     private final String name;
     protected final Logger log;
     private final RateLimiter rateLimiter;
+    private final ExchangeSpecification exchangeSpecification;
 
     public XChangeExchange(ExchangeSpecification specification, String preferredFiatCurrency) {
-        exchange = ExchangeFactory.INSTANCE.createExchange(specification);
-        String exchangeName = exchange.getExchangeSpecification().getExchangeName();
-        String sslUri = exchange.getExchangeSpecification().getSslUri();
+        exchangeSpecification = specification;
+        String exchangeName = exchangeSpecification.getExchangeName();
+        String sslUri = exchangeSpecification.getSslUri();
         name = exchangeName + " (" + sslUri + ")"; // just for logging, do not setExchangeName() as it's used to load configuration json internally
         log = LoggerFactory.getLogger("batm.master.exchange." + exchangeName);
         rateLimiter = RateLimiter.create(getAllowedCallsPerSecond());
         this.preferredFiatCurrency = preferredFiatCurrency;
+    }
+
+    protected synchronized Exchange getExchange() {
+        if (exchange == null) {
+            // this calls remote host so it's lazy loaded and not called when rate is cached and no remote call is needed
+            exchange = ExchangeFactory.INSTANCE.createExchange(exchangeSpecification);
+        }
+        return exchange;
     }
 
     protected abstract boolean isWithdrawSuccessful(String result);
@@ -121,7 +127,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
             String fiatCurrency = keyParts[1];
 
             try {
-                return exchange.getMarketDataService()
+                return getExchange().getMarketDataService()
                         .getTicker(new CurrencyPair(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency), fiatCurrency))
                         .getLast();
             } catch (ExchangeException e) {
@@ -164,7 +170,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
             return BigDecimal.ZERO;
         }
         try {
-            AccountInfo accountInfo = exchange.getAccountService().getAccountInfo();
+            AccountInfo accountInfo = getExchange().getAccountService().getAccountInfo();
             Wallet wallet = getWallet(accountInfo, cryptoCurrency);
             BigDecimal balance = wallet.getBalance(Currency.getInstance(cryptoCurrency)).getAvailable();
             log.debug("{} exchange balance request: {} = {}", name, cryptoCurrency, balance);
@@ -182,7 +188,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
             return BigDecimal.ZERO;
         }
         try {
-            AccountInfo accountInfo = exchange.getAccountService().getAccountInfo();
+            AccountInfo accountInfo = getExchange().getAccountService().getAccountInfo();
             Wallet wallet = getWallet(accountInfo, fiatCurrency);
             BigDecimal balance = wallet.getBalance(Currency.getInstance(fiatCurrency)).getAvailable();
             log.debug("{} exchange balance request: {} = {}", name, fiatCurrency, balance);
@@ -222,7 +228,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
     }
 
     private String withdrawFunds(String cryptoCurrency, BigDecimal amount, String destinationAddress) throws IOException {
-        AccountService accountService = exchange.getAccountService();
+        AccountService accountService = getExchange().getAccountService();
         Currency exchangeCryptoCurrency = Currency.getInstance(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency));
 
         if (CryptoCurrency.XRP.getCode().equals(cryptoCurrency)) {
@@ -246,9 +252,9 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
             return null;
         }
 
-        AccountService accountService = exchange.getAccountService();
-        MarketDataService marketDataService = exchange.getMarketDataService();
-        TradeService tradeService = exchange.getTradeService();
+        AccountService accountService = getExchange().getAccountService();
+        MarketDataService marketDataService = getExchange().getMarketDataService();
+        TradeService tradeService = getExchange().getTradeService();
 
         try {
             log.debug("AccountInfo as String: {}", accountService.getAccountInfo());
@@ -350,7 +356,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
             return null;
         }
 
-        AccountService accountService = exchange.getAccountService();
+        AccountService accountService = getExchange().getAccountService();
         try {
             if (CryptoCurrency.XRP.getCode().equals(cryptoCurrency)) {
                 AddressWithTag addressWithTag = accountService.requestDepositAddressData(Currency.getInstance(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency)));
@@ -384,9 +390,9 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
         }
 
         log.info("Calling {} exchange (sell {} {})", name, cryptoAmount, cryptoCurrency);
-        AccountService accountService = exchange.getAccountService();
-        MarketDataService marketDataService = exchange.getMarketDataService();
-        TradeService tradeService = exchange.getTradeService();
+        AccountService accountService = getExchange().getAccountService();
+        MarketDataService marketDataService = getExchange().getMarketDataService();
+        TradeService tradeService = getExchange().getTradeService();
 
         try {
             log.debug("AccountInfo as String: {}", accountService.getAccountInfo());
@@ -499,7 +505,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
         }
 
         rateLimiter.acquire();
-        MarketDataService marketDataService = exchange.getMarketDataService();
+        MarketDataService marketDataService = getExchange().getMarketDataService();
         try {
             CurrencyPair currencyPair = new CurrencyPair(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency), fiatCurrency);
             OrderBook orderBook = marketDataService.getOrderBook(currencyPair);
@@ -547,7 +553,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
         }
 
         rateLimiter.acquire();
-        MarketDataService marketDataService = exchange.getMarketDataService();
+        MarketDataService marketDataService = getExchange().getMarketDataService();
         try {
             CurrencyPair currencyPair = new CurrencyPair(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency), fiatCurrency);
 
@@ -606,9 +612,9 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
         @Override
         public boolean onCreate() {
             log.debug("{} exchange purchase {} {}", name, amount, cryptoCurrency);
-            AccountService accountService = exchange.getAccountService();
-            MarketDataService marketDataService = exchange.getMarketDataService();
-            TradeService tradeService = exchange.getTradeService();
+            AccountService accountService = getExchange().getAccountService();
+            MarketDataService marketDataService = getExchange().getMarketDataService();
+            TradeService tradeService = getExchange().getTradeService();
 
             try {
                 log.debug("AccountInfo as String: {}", accountService.getAccountInfo());
@@ -648,7 +654,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
                 result = "Skipped";
                 return false;
             }
-            TradeService tradeService = exchange.getTradeService();
+            TradeService tradeService = getExchange().getTradeService();
             // get open orders
             boolean orderProcessed = false;
             long checkTillTime = System.currentTimeMillis() + MAXIMUM_TIME_TO_WAIT_FOR_ORDER_TO_FINISH;
@@ -735,9 +741,9 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
         @Override
         public boolean onCreate() {
             log.info("Calling {} exchange (sell {} {})", name, cryptoAmount, cryptoCurrency);
-            AccountService accountService = exchange.getAccountService();
-            MarketDataService marketDataService = exchange.getMarketDataService();
-            TradeService tradeService = exchange.getTradeService();
+            AccountService accountService = getExchange().getAccountService();
+            MarketDataService marketDataService = getExchange().getMarketDataService();
+            TradeService tradeService = getExchange().getTradeService();
 
             try {
                 log.debug("AccountInfo as String: {}", accountService.getAccountInfo());
@@ -779,7 +785,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
                 result = "Skipped";
                 return false;
             }
-            TradeService tradeService = exchange.getTradeService();
+            TradeService tradeService = getExchange().getTradeService();
             // get open orders
             boolean orderProcessed = false;
             long checkTillTime = System.currentTimeMillis() + MAXIMUM_TIME_TO_WAIT_FOR_ORDER_TO_FINISH;
