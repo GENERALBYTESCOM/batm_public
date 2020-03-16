@@ -626,7 +626,7 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
             }
             log_debug("createTransaction - Created for " + request.getAddress() + " transaction: tx = " + tx);
             String hexRawTransaction =  getClient(request.getWallet()).createRawTransaction(tx.inputs, tx.outputs);
-            hexRawTransaction = getClient(request.getWallet()).signRawTransaction(hexRawTransaction, null, null, this.getSigHashType());
+            hexRawTransaction = getClient(request.getWallet()).signRawTransactionWithWallet(hexRawTransaction, this.getSigHashType());
             BitcoindRpcClient.RawTransaction rawTransaction = getClient(request.getWallet()).decodeRawTransaction(hexRawTransaction);
             return new TXForBroadcast(rawTransaction, hexRawTransaction);
 
@@ -688,7 +688,7 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
                     }
                     log_debug("createTransaction - Created for " + request.getAddress() + " transaction: tx = " + tx);
                     String hexRawTransaction =  getClient(request.getWallet()).createRawTransaction(tx.inputs, tx.outputs);
-                    hexRawTransaction = getClient(request.getWallet()).signRawTransaction(hexRawTransaction, null, null, this.getSigHashType());
+                    hexRawTransaction = getClient(request.getWallet()).signRawTransactionWithWallet(hexRawTransaction, this.getSigHashType());
                     BitcoindRpcClient.RawTransaction rawTransaction = getClient(request.getWallet()).decodeRawTransaction(hexRawTransaction);
                     log_debug("createRefundTransaction - Created for " + request.getAddress() + " refund transaction: tx = " + tx);
                     fireRefundSent(request,timeoutAddress,toSendBack);

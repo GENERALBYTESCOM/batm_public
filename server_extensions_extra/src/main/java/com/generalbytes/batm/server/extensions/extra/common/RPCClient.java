@@ -81,6 +81,16 @@ public class RPCClient extends BitcoinJSONRPCClient {
     public double getEstimateFee(int numberOfBlocks) throws BitcoinRPCException {
         return ((Number)query("estimatefee",numberOfBlocks)).doubleValue();
     }
+
+    public String signRawTransactionWithWallet(String hex, String sigHashType) {
+
+        Map result = (Map) query("signrawtransactionwithwallet", hex, null, sigHashType); //if sigHashType is null it will return the default "ALL"
+        if ((Boolean) result.get("complete"))
+            return (String) result.get("hex");
+        else
+            throw new GenericRpcException("Incomplete");
+    }
+
     public interface ReceivedAddress {
         String address();
         String account();
