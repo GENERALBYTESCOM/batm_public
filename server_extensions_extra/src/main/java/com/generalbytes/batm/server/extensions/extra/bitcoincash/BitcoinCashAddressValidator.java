@@ -21,6 +21,17 @@ import com.generalbytes.batm.server.coinutil.Bech32;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 
 public class BitcoinCashAddressValidator implements ICryptoAddressValidator {
+
+    private final String prefix;
+
+    public BitcoinCashAddressValidator(String prefix) {
+        this.prefix = prefix;
+    }
+
+    public BitcoinCashAddressValidator() {
+        this("bitcoincash");
+    }
+
     @Override
     public boolean isAddressValid(String address) {
         if (address == null) {
@@ -33,7 +44,7 @@ public class BitcoinCashAddressValidator implements ICryptoAddressValidator {
                 return false;
             } else {
                 try {
-                    byte[] checksumData = Bech32.concatenateByteArrays(Bech32.concatenateByteArrays(Bech32.getPrefixBytes("bitcoincash"), new byte[]{0}), Bech32.decode(address));
+                    byte[] checksumData = Bech32.concatenateByteArrays(Bech32.concatenateByteArrays(Bech32.getPrefixBytes(prefix), new byte[]{0}), Bech32.decode(address));
                     byte[] calculateChecksumBytesPolymod = Bech32.calculateChecksumBytesPolymod(checksumData);
                     return Bech32.bytes2Long(calculateChecksumBytesPolymod) == 0L;
                 } catch (RuntimeException var3) {

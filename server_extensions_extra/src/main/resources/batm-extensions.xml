@@ -193,6 +193,7 @@
                 <cryptocurrency>POT</cryptocurrency>
                 <cryptocurrency>REP</cryptocurrency>
                 <cryptocurrency>SMART</cryptocurrency>
+                <cryptocurrency>SPICE</cryptocurrency>
                 <cryptocurrency>START</cryptocurrency>
                 <cryptocurrency>SUM</cryptocurrency>
                 <cryptocurrency>SYS</cryptocurrency>
@@ -375,6 +376,7 @@
             <cryptocurrency>POT</cryptocurrency>
             <cryptocurrency>REP</cryptocurrency>
             <cryptocurrency>SMART</cryptocurrency>
+            <cryptocurrency>SPICE</cryptocurrency>
             <cryptocurrency>START</cryptocurrency>
             <cryptocurrency>SYS</cryptocurrency>
             <cryptocurrency>TKN</cryptocurrency>
@@ -434,6 +436,7 @@
             <cryptocurrency>POT</cryptocurrency>
             <cryptocurrency>REP</cryptocurrency>
             <cryptocurrency>SMART</cryptocurrency>
+            <cryptocurrency>SPICE</cryptocurrency>
             <cryptocurrency>START</cryptocurrency>
             <cryptocurrency>SYS</cryptocurrency>
             <cryptocurrency>TBTC</cryptocurrency>
@@ -1682,4 +1685,17 @@
         <cryptologo cryptocurrency="XPM" file="xpm.png"/>
         <cryptologo cryptocurrency="XPM" file="xpm.svg"/>
     </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.slp.SlpExtension" >
+        <wallet prefix="electroncashslp" name="Electron Cash SLP">
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <cryptocurrency>SPICE</cryptocurrency>
+        </wallet>
+        <!-- See https://github.com/kosinusbch/slp-token-icons for token logos -->
+        <cryptologo cryptocurrency="SPICE" file="spice.png"/>
+        <cryptologo cryptocurrency="SPICE" file="spice.svg"/>
+    </extension>
+
 </extensions>

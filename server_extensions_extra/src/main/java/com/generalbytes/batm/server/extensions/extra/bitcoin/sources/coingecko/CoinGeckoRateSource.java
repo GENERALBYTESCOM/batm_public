@@ -77,6 +77,7 @@ public class CoinGeckoRateSource implements IRateSource {
         CRYPTOCURRENCIES.put(CryptoCurrency.POT.getCode(), "potcoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.REP.getCode(), "augur");
         CRYPTOCURRENCIES.put(CryptoCurrency.SMART.getCode(), "smartcash");
+        CRYPTOCURRENCIES.put(CryptoCurrency.SPICE.getCode(), "spice");
         CRYPTOCURRENCIES.put(CryptoCurrency.START.getCode(), "startcoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.SYS.getCode(), "syscoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.TKN.getCode(), "tokencard");

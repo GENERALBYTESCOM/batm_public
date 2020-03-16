@@ -1,0 +1,32 @@
+{
+    "v": 3,
+    "q": {
+        "db": ["c", "u"],
+        "aggregate": [
+            {
+                "$match": {
+                    "slp.valid": true,
+                    "slp.detail.transactionType": "SEND",
+                    "slp.detail.tokenIdHex": "%s",
+                    "out.e.a": "%s"
+                }
+            },
+            {
+                "$unwind": "$slp.detail.outputs"
+            },
+            {
+                "$match": {
+                    "slp.detail.outputs.address": "%s"
+                }
+            },
+            {
+                "$project": {
+                    "tx": "$tx.h",
+                    "height": "$blk.i",
+                    "amount": "$slp.detail.outputs.amount"
+                }
+            }
+        ],
+        "limit": 100
+    }
+}
