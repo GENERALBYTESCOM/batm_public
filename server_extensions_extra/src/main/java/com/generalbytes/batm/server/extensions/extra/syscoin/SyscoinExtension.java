@@ -40,22 +40,22 @@ public class SyscoinExtension extends AbstractExtension{
             String walletType = st.nextToken();
 
             if ("syscoind".equalsIgnoreCase(walletType)) {
-                //"syscoind:protocol:user:password:ip:port:accountname"
+                //"syscoind:protocol:user:password:ip:port:label"
 
                 String protocol = st.nextToken();
                 String username = st.nextToken();
                 String password = st.nextToken();
                 String hostname = st.nextToken();
                 String port = st.nextToken();
-                String accountName ="";
+                String label ="";
                 if (st.hasMoreTokens()) {
-                    accountName = st.nextToken();
+                    label = st.nextToken();
                 }
 
 
-                if (protocol != null && username != null && password != null && hostname !=null && port != null && accountName != null) {
+                if (protocol != null && username != null && password != null && hostname !=null && port != null && label != null) {
                     String rpcURL = protocol +"://" + username +":" + password + "@" + hostname +":" + port;
-                    return new SyscoinRPCWallet(rpcURL,accountName);
+                    return new SyscoinRPCWallet(rpcURL, label);
                 }
             }
             if ("sysdemo".equalsIgnoreCase(walletType)) {
