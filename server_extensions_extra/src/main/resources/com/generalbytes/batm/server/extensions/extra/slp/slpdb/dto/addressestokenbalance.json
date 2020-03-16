@@ -1,0 +1,38 @@
+{
+    "v":3,
+    "q":{
+        "db":["g"],
+        "aggregate":[
+            {
+                "$match": {
+                    "tokenDetails.tokenIdHex":"%s",
+                    "graphTxn.outputs":{
+                        "$elemMatch":{
+                            "address":{"$in":%s},
+                            "status":"UNSPENT",
+                            "slpAmount":{"$gte":0}
+                        }
+                    }
+                }
+            },
+            {
+                "$unwind":"$graphTxn.outputs"
+            },
+            {
+                "$match":{
+                    "graphTxn.outputs.address":{"$in":%s},
+                    "graphTxn.outputs.status":"UNSPENT",
+                    "graphTxn.outputs.slpAmount":{"$gte":0}
+                }
+            },
+            {
+                "$group":{
+                    "_id":null,
+                    "balance":{
+                        "$sum":"$graphTxn.outputs.slpAmount"
+                    }
+                }
+            }
+        ]
+    }
+}

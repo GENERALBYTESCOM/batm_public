@@ -101,7 +101,7 @@ public class BitgoWallet implements IWallet {
             status = result.get("status");
         } catch (HttpStatusIOException hse) {
             status = "ERROR";
-            log.debug("send coins error message: {}", hse.getHttpBody());
+            log.debug("send coins error - HttpStatusIOException, error message: {}, HTTP code: {}, HTTP content: {}", hse.getMessage(), hse.getHttpStatusCode(), hse.getHttpBody());
         } catch (ErrorResponseException e) {
             status = "ERROR";
             log.debug("send coins error message: {}", e.getMessage());

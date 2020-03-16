@@ -177,6 +177,13 @@ public class Base58 {
 
         return bytes;
     }
+    public static String encodeChecked(byte[] input){
+        byte[] digest = doubleDigest(input);
+        byte[] payloadDigest = new byte[input.length+4];
+        System.arraycopy(input, 0, payloadDigest, 0, input.length);
+        System.arraycopy(digest, 0, payloadDigest, input.length, 4);
+        return Base58.encode(payloadDigest);
+    }
 
     public static byte[] doubleDigest(byte[] input) {
         return doubleDigest(input, 0, input.length);
