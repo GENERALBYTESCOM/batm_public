@@ -58,7 +58,7 @@ Note for developers
 
 Requirements:
 * Linux is required in order to run compilers and tests.
-* Java
+* Java **1.8** (we recommend using https://sdkman.io/ for managing multiple JDK versions on your computer)
 * Gradle
 
 When you implement support for a new crypto-coin, please add it to **server_extensions_extra** - so that it may get into the default CAS installation pack for customers.
@@ -81,6 +81,8 @@ Build information
 cp server_extensions_extra/build/libs/batm_server_extensions_extra.jar /batm/app/master/extensions/
 ```
 Note that on startup, CAS scans the: <code>/batm/app/master/extensions/</code> folder for all files that have the .jar extension.
+
+If you happen to add new crypto currency in CryptoCurrency class in currencies module then don't forget to make sure that you copy your version of currencies-1.0.XX-SNAPSHOT.jar to /batm/app/master/lib
 
 How to run Tester
 ==========
