@@ -45,28 +45,30 @@ public class BitgoWalletTest {
         setLoggerLevel("batm", "trace");
         setLoggerLevel("si.mazi.rescu","trace");
 
-        api = RestProxyFactory.createProxy(IBitgoAPI.class, "http://localhost:3080/api");
+        api = RestProxyFactory.createProxy(IBitgoAPI.class, "http://localhost:3080/");
 
-        String host = "http://localhost";
-        String port = "3080";
+        String scheme = "http";
+        String host = "localhost";
+        int port = 3080;
         String token = "v2x8d5e9e46379dc328b2039a400a12b04ea986689b38107fd84cd339bc89e3fb21";
         String walletId = "5b20e3a9266bbe80095757489d84a6bb";
         String walletPassphrase = "JSZSuGNlHfgqPHjrp0eO";
 
-        wallet = new BitgoWallet(host, port, token, walletId, walletPassphrase);
+        wallet = new BitgoWallet(scheme, host, port, token, walletId, walletPassphrase);
     }
 
     @Test
     @Ignore
     public void getCryptAddressTest() {
         String coin = CryptoCurrency.TBTC.getCode();
-        String host = "https://test.bitgo.com";
-        String port = null;
+        String scheme = "https";
+        String host = "test.bitgo.com";
+        int port = 443;
         String token = "v2x8d5e9e46379dc328b2039a400a12b04ea986689b38107fd84cd339bc89e3fb21";
         String walletId = "5b20e3a9266bbe80095757489d84a6bb";
         String walletPassphrase = "JSZSuGNlHfgqPHjrp0eO";
 
-        final BitgoWallet remotewallet = new BitgoWallet(host, port, token, walletId, walletPassphrase);
+        final BitgoWallet remotewallet = new BitgoWallet(scheme, host, port, token, walletId, walletPassphrase);
         final String address = remotewallet.getCryptoAddress(coin);
         Assert.assertNotNull(address);
         Assert.assertEquals("2N2WR6aVSEgq5ZLTED9vHvCWFdAMf6yhebd", address);
@@ -76,13 +78,14 @@ public class BitgoWalletTest {
     @Ignore
     public void getCryptBalanceTest() {
         String coin = CryptoCurrency.TBTC.getCode();
-        String host = "https://test.bitgo.com";
-        String port = null;
+        String scheme = "https";
+        String host = "test.bitgo.com";
+        int port = 443;
         String token = "v2x8d5e9e46379dc328b2039a400a12b04ea986689b38107fd84cd339bc89e3fb21";
         String walletId = "5b20e3a9266bbe80095757489d84a6bb";
         String walletPassphrase = "JSZSuGNlHfgqPHjrp0eO";
 
-        final BitgoWallet remotewallet = new BitgoWallet(host, port, token, walletId, walletPassphrase);
+        final BitgoWallet remotewallet = new BitgoWallet(scheme, host, port, token, walletId, walletPassphrase);
         BigDecimal balance = remotewallet.getCryptoBalance(coin);
         Assert.assertNotNull(balance);
         log.info("balance = {}", balance);

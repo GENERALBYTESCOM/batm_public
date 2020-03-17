@@ -232,35 +232,46 @@ public class BitcoinExtension extends AbstractExtension {
                 // instead use \n and then remove the leading :
                 String proxyUrl = st.nextToken("\n").replaceFirst(":", "");
                 return new BitcoreWallet(apiKey, proxyUrl);
-            } else if ("bitgo".equalsIgnoreCase(walletType) || "bitgonoforward".equalsIgnoreCase(walletType)) { // bitgo:host:port:token:wallet_address:wallet_passphrase
+            } else if ("bitgo".equalsIgnoreCase(walletType) || "bitgonoforward".equalsIgnoreCase(walletType)) {
+                // bitgo:host:port:token:wallet_address:wallet_passphrase
+                // but host is optionally including the "http://" and port is optional
+                // bitgo:http://localhost:80:token:wallet_address:wallet_passphrase
+                // bitgo:http://localhost:token:wallet_address:wallet_passphrase
+                // bitgo:localhost:token:wallet_address:wallet_passphrase
+                // bitgo:localhost:80:token:wallet_address:wallet_passphrase
+
                 String first = st.nextToken();
-                String protocol = "";
-                String host = "";
-                String fullHost = "";
-                if (first != null && first.startsWith("http")) {
-                    protocol = first;
-                    host = st.nextToken();
-                    fullHost = protocol + ":" + host;
+                String scheme;
+                String host;
+                if (first.startsWith("http")) {
+                    scheme = first;
+                    host = st.nextToken().replaceAll("/", "");
                 } else {
+                    scheme = "http";
                     host = first;
-                    fullHost = host;
                 }
 
-                String port = "";
-                String token = "";
+                int port;
+                String token;
                 String next = st.nextToken();
-                if (next != null && next.length() > 6) {
+                if (next.length() > 6) {
+                    port = scheme.equals("https") ? 443 : 80;
                     token = next;
                 } else {
-                    port = next;
+                    port = Integer.parseInt(next);
                     token = st.nextToken();
                 }
                 String walletAddress = st.nextToken();
                 String walletPassphrase = st.nextToken();
+
+                InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(tunnelPassword, InetSocketAddress.createUnresolved(host, port));
+                host = tunnelAddress.getHostString();
+                port = tunnelAddress.getPort();
+
                 if ("bitgonoforward".equalsIgnoreCase(walletType)) {
-                    return new BitgoWalletWithUniqueAddresses(fullHost, port, token, walletAddress, walletPassphrase);
+                    return new BitgoWalletWithUniqueAddresses(scheme, host, port, token, walletAddress, walletPassphrase);
                 }
-                return new BitgoWallet(fullHost, port, token, walletAddress, walletPassphrase);
+                return new BitgoWallet(scheme, host, port, token, walletAddress, walletPassphrase);
             }
         }
         } catch (Exception e) {
