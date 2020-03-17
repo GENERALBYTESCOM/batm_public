@@ -68,7 +68,7 @@ public class BitgoAPITest {
         } catch (NoSuchAlgorithmException nae) {
             log.error("", nae);
         }
-        api = RestProxyFactory.createProxy(IBitgoAPI.class, "https://test.bitgo.com/api", config);
+        api = RestProxyFactory.createProxy(IBitgoAPI.class, "https://test.bitgo.com/", config);
     }
 
     @Test
@@ -243,7 +243,7 @@ public class BitgoAPITest {
     @Ignore("Local instance of bitgo-express test environment is required to run")
     public void sendCoinsTest() {
         try {
-            IBitgoAPI localapi = RestProxyFactory.createProxy(IBitgoAPI.class, "http://localhost:3080/api");
+            IBitgoAPI localapi = RestProxyFactory.createProxy(IBitgoAPI.class, "http://localhost:3080/");
             final String coin = "tbtc";
             final String id = "5b20e3a9266bbe80095757489d84a6bb";
             final String address = "2N5q4MwNSUxbAtaidhRgkiDrbwVR4yCZDhi";

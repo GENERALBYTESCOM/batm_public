@@ -23,6 +23,7 @@ import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.BitGoCoinRequest;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.ErrorResponseException;
 import com.generalbytes.batm.server.extensions.extra.worldcoin.sources.cd.CompatSSLSocketFactory;
+import okhttp3.HttpUrl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import si.mazi.rescu.ClientConfig;
@@ -48,10 +49,10 @@ public class BitgoWallet implements IWallet {
     protected String url;
     protected static final Integer readTimeout = 90 * 1000; //90 seconds
 
-    public BitgoWallet(String host, String port, String token, String walletId, String walletPassphrase) {
+    public BitgoWallet(String scheme, String host, int port, String token, String walletId, String walletPassphrase) {
         this.walletId = walletId;
         this.walletPassphrase = walletPassphrase;
-        this.url = createUrl(host, port);
+        this.url = new HttpUrl.Builder().scheme(scheme).host(host).port(port).build().toString();
 
         ClientConfig config = new ClientConfig();
         config.setHttpReadTimeout(readTimeout);
@@ -64,27 +65,11 @@ public class BitgoWallet implements IWallet {
             final CompatSSLSocketFactory socketFactory = new CompatSSLSocketFactory(sslcontext.getSocketFactory());
             config.setSslSocketFactory(socketFactory);
             config.setIgnoreHttpErrorCodes(true);
-        }catch(KeyManagementException kme) {
-            log.error("", kme);
-        } catch (NoSuchAlgorithmException nae) {
-            log.error("", nae);
+        }catch(KeyManagementException | NoSuchAlgorithmException e) {
+            log.error("", e);
         }
 
         api = RestProxyFactory.createProxy(IBitgoAPI.class, this.url, config);
-    }
-
-    private String createUrl(String host, String port) {
-        String url = host;
-        if(port != null && !port.equalsIgnoreCase("") && !port.equalsIgnoreCase(" ")) {
-            url = host + ":" + port;
-        }
-        url = url + "/api";
-        if(url.startsWith("https://") || url.startsWith("http://")) {
-            return url;
-        } else {
-            url = "http://" + url;
-        }
-        return url;
     }
 
     @Override

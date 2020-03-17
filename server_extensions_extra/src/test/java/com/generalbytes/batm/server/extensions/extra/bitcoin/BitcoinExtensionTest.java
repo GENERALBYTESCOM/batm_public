@@ -1,7 +1,7 @@
-package com.generalbytes.batm.server.extensions.bitcoin;
+package com.generalbytes.batm.server.extensions.extra.bitcoin;
 
 import com.generalbytes.batm.server.extensions.IWallet;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.BitcoinExtension;
+import com.generalbytes.batm.server.extensions.TestExtensionContext;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.BitgoWallet;
 import org.junit.Assert;
 import org.junit.Test;
@@ -13,6 +13,24 @@ import java.util.StringTokenizer;
 public class BitcoinExtensionTest {
 
     private static final Logger log = LoggerFactory.getLogger(BitcoinExtensionTest.class);
+
+    @Test
+    public void testCreateFromExtension() {
+        testUrl("http://localhost:3080/", "bitgo:http://localhost:3080:tokentoken:wallet_address:wallet_passphrase");
+        testUrl("http://localhost:3080/", "bitgo:localhost:3080:tokentoken:wallet_address:wallet_passphrase");
+        testUrl("http://localhost/", "bitgo:http://localhost:tokentoken:wallet_address:wallet_passphrase");
+        testUrl("http://localhost/", "bitgo:localhost:tokentoken:wallet_address:wallet_passphrase");
+        testUrl("https://localhost:3080/", "bitgo:https://localhost:3080:tokentoken:wallet_address:wallet_passphrase");
+        testUrl("https://localhost/", "bitgo:https://localhost:tokentoken:wallet_address:wallet_passphrase");
+    }
+
+    private void testUrl(String expected, String walletLogin) {
+        final BitcoinExtension bitcoinExtension = new BitcoinExtension();
+        bitcoinExtension.init(new TestExtensionContext());
+        final IWallet bitgowallet = bitcoinExtension.createWallet(walletLogin, null);
+        Assert.assertTrue(bitgowallet instanceof BitgoWallet);
+        Assert.assertEquals(expected, ((BitgoWallet)bitgowallet).getUrl());
+    }
 
     @Test
     public void bitgoFullTokenTest() {
@@ -52,11 +70,12 @@ public class BitcoinExtensionTest {
         Assert.assertEquals("3080", port);
 
         final BitcoinExtension bitcoinExtension = new BitcoinExtension();
+        bitcoinExtension.init(new TestExtensionContext());
         final IWallet bitgowallet = bitcoinExtension.createWallet(wallet, null);
         Assert.assertTrue(bitgowallet instanceof BitgoWallet);
         final BitgoWallet bitgoWallet = (BitgoWallet)bitgowallet;
         Assert.assertNotNull(bitgoWallet);
-        Assert.assertEquals("http://localhost:3080/api", bitgoWallet.getUrl());
+        Assert.assertEquals("http://localhost:3080/", bitgoWallet.getUrl());
         Assert.assertEquals("5b20e3a9266bbe80095757489d84a6bb", bitgoWallet.getWalletId());
         log.info("wallet = " + bitgoWallet);
     }
@@ -99,11 +118,12 @@ public class BitcoinExtensionTest {
         Assert.assertEquals("", port);
 
         final BitcoinExtension bitcoinExtension = new BitcoinExtension();
+        bitcoinExtension.init(new TestExtensionContext());
         final IWallet bitgowallet = bitcoinExtension.createWallet(wallet, null);
         Assert.assertTrue(bitgowallet instanceof BitgoWallet);
         final BitgoWallet bitgoWallet = (BitgoWallet)bitgowallet;
         Assert.assertNotNull(bitgoWallet);
-        Assert.assertEquals("http://localhost/api", bitgoWallet.getUrl());
+        Assert.assertEquals("http://localhost/", bitgoWallet.getUrl());
         Assert.assertEquals("5b20e3a9266bbe80095757489d84a6bb", bitgoWallet.getWalletId());
         log.info("wallet = " + bitgoWallet);
     }
@@ -146,11 +166,12 @@ public class BitcoinExtensionTest {
         Assert.assertEquals("3080", port);
 
         final BitcoinExtension bitcoinExtension = new BitcoinExtension();
+        bitcoinExtension.init(new TestExtensionContext());
         final IWallet bitgowallet = bitcoinExtension.createWallet(wallet, null);
         Assert.assertTrue(bitgowallet instanceof BitgoWallet);
         final BitgoWallet bitgoWallet = (BitgoWallet)bitgowallet;
         Assert.assertNotNull(bitgoWallet);
-        Assert.assertEquals("https://localhost:3080/api", bitgoWallet.getUrl());
+        Assert.assertEquals("https://localhost:3080/", bitgoWallet.getUrl());
         Assert.assertEquals("5b20e3a9266bbe80095757489d84a6bb", bitgoWallet.getWalletId());
         log.info("wallet = " + bitgoWallet);
     }
@@ -193,11 +214,12 @@ public class BitcoinExtensionTest {
         Assert.assertEquals("3080", port);
 
         final BitcoinExtension bitcoinExtension = new BitcoinExtension();
+        bitcoinExtension.init(new TestExtensionContext());
         final IWallet bitgowallet = bitcoinExtension.createWallet(wallet, null);
         Assert.assertTrue(bitgowallet instanceof BitgoWallet);
         final BitgoWallet bitgoWallet = (BitgoWallet)bitgowallet;
         Assert.assertNotNull(bitgoWallet);
-        Assert.assertEquals("http://localhost:3080/api", bitgoWallet.getUrl());
+        Assert.assertEquals("http://localhost:3080/", bitgoWallet.getUrl());
         Assert.assertEquals("5b20e3a9266bbe80095757489d84a6bb", bitgoWallet.getWalletId());
         log.info("wallet = " + bitgoWallet);
     }
@@ -206,12 +228,13 @@ public class BitcoinExtensionTest {
     public void bitgoWalletTest() {
         String address = "bitgo:http://localhost:3080:v2x8d5e9e46379dc328b2039a400a12b04ea986689b38107fd84cd339bc89e3fb21:5b20e3a9266bbe80095757489d84a6bb:Vranec8586";
         final BitcoinExtension bitcoinExtension = new BitcoinExtension();
+        bitcoinExtension.init(new TestExtensionContext());
         final IWallet wallet = bitcoinExtension.createWallet(address, null);
         Assert.assertTrue(wallet instanceof BitgoWallet);
         final BitgoWallet bitgoWallet = (BitgoWallet)wallet;
         Assert.assertNotNull(bitgoWallet);
         Assert.assertNotNull(bitgoWallet);
-        Assert.assertEquals("http://localhost:3080/api", bitgoWallet.getUrl());
+        Assert.assertEquals("http://localhost:3080/", bitgoWallet.getUrl());
         Assert.assertEquals("5b20e3a9266bbe80095757489d84a6bb", bitgoWallet.getWalletId());
         log.info("wallet = " + bitgoWallet);
     }
@@ -239,4 +262,5 @@ public class BitcoinExtensionTest {
         Assert.assertNotNull(value);
         Assert.assertEquals("needs unlock", value);
     }
+
 }
