@@ -1526,6 +1526,16 @@
         </wallet>
         <cryptologo cryptocurrency="DAI" file="dai.png"/>
         <cryptologo cryptocurrency="DAI" file="dai.svg"/>
+        <wallet prefix="infuraERC20_USDT_6_0xdac17f958d2ee523a2206206994597c13d831ec7" name="Infura.io wallet - USDT">
+            <!-- Hint: infuraERC20_TOKENSYMBOL_DECIMALPLACES_CONTRACTADDRESS -->
+            <param name="projectId" />
+            <param name="mnemonic" />
+            <param name="gaslimit" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
+            <cryptocurrency buyonly="true">USDT</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="USDT" file="usdt.png"/>
+        <cryptologo cryptocurrency="USDT" file="usdt.svg"/>
         <wallet prefix="infuraERC20_MKR_18_0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2" name="Infura.io wallet - MKR">
             <param name="projectId" />
             <param name="mnemonic" />
