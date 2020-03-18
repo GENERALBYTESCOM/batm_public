@@ -93,6 +93,8 @@ public enum FiatCurrency {
     XAF("Central African CFA franc"),
     ZAR("South African rand"),
 
+    USDC("USD Coin"),
+
     XAU("Gold"),
     ;
 
