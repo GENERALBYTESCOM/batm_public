@@ -478,6 +478,7 @@
             <cryptocurrency>XMR</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
             <cryptocurrency>XZC</cryptocurrency>
+            <cryptocurrency>FTT</cryptocurrency>
         </exchange>
         <ratesource prefix="binancecom" name="Binance.com">
             <param name="fiatcurrency" />
@@ -1536,6 +1537,16 @@
         </wallet>
         <cryptologo cryptocurrency="USDT" file="usdt.png"/>
         <cryptologo cryptocurrency="USDT" file="usdt.svg"/>
+        <wallet prefix="infuraERC20_FTT_18_0x50d1c9771902476076ecfc8b2a83ad6b9355a4c9" name="Infura.io wallet - FTT">
+            <!-- Hint: infuraERC20_TOKENSYMBOL_DECIMALPLACES_CONTRACTADDRESS -->
+            <param name="projectId" />
+            <param name="mnemonic" />
+            <param name="gaslimit" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
+            <cryptocurrency buyonly="true">FTT</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="FTT" file="ftt.png"/>
+        <cryptologo cryptocurrency="FTT" file="ftt.svg"/>
         <wallet prefix="infuraERC20_MKR_18_0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2" name="Infura.io wallet - MKR">
             <param name="projectId" />
             <param name="mnemonic" />
