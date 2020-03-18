@@ -38,6 +38,8 @@ public class BinanceComExchange extends BinanceExchange {
     public Set<String> getFiatCurrencies() {
         Set<String> fiatCurrencies = new HashSet<>();
         fiatCurrencies.add(FiatCurrency.EUR.getCode());
+        fiatCurrencies.add(FiatCurrency.USDC.getCode());
+        fiatCurrencies.add(FiatCurrency.USDT.getCode());
         return fiatCurrencies;
     }
 
