@@ -102,6 +102,7 @@ public enum CryptoCurrency {
     MUE("MonetaryUnit"),
     XPM("Primecoin"),
     FTT("FTX Token"),
+    TESTC("TESTCoin"),
 
     TBCH("test BCH"),
     TBTC("test BTC"),
