@@ -144,7 +144,6 @@
                 <cryptocurrency>CLOAK</cryptocurrency>
                 <cryptocurrency>FLASH</cryptocurrency>
                 <cryptocurrency>XSG</cryptocurrency>
-                <cryptocurrency>FTT</cryptocurrency>
             </ratesource>
             <ratesource prefix="stream365" name ="365.stream" >
                 <cryptocurrency>HBX</cryptocurrency>
@@ -206,7 +205,6 @@
                 <cryptocurrency>XPM</cryptocurrency>
                 <cryptocurrency>XSG</cryptocurrency>
                 <cryptocurrency>XZC</cryptocurrency>
-                <cryptocurrency>FTT</cryptocurrency>
                 <help>USD is default fiat currency.</help>
             </ratesource>
             <ratesource prefix="bitflyer" name="BitFlyer.jp Rate Source" >
@@ -393,7 +391,6 @@
             <cryptocurrency>XRP</cryptocurrency>
             <cryptocurrency>XSG</cryptocurrency>
             <cryptocurrency>XZC</cryptocurrency>
-            <cryptocurrency>FTT</cryptocurrency>
         </ratesource>
         <ratesource prefix="coinpaprika" name="CoinPaprika.com">
             <param name="fiatcurrency"/>
@@ -565,7 +562,7 @@
             <param name="signature" />
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
-            <cryptocurrency></cryptocurrency>
+            <cryptocurrency>DAI</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <help>Over 100+ crypto rates can be sourced directly from the Telr DeFi Network. Recommended for Telr Gatekeeper and Telr Cash operators.</help>
