@@ -59,6 +59,7 @@ public enum CryptoCurrency {
     EURS("STASIS EURO"),
     FLASH("FLASH"),
     FTO("FuturoCoin"),
+    FTT("FTXToken"),
     GRS("Groestlcoin"),
     HATCH("Hatch"),
     HBX("HBX"),
@@ -108,8 +109,6 @@ public enum CryptoCurrency {
     TLTC("test LTC"),
     TRMG("test RMG"),
     TXRP("test XRP"),
-
-    FTT("FTX Token"),
     ;
 
     private static Map<String, CryptoCurrency> cryptoCurrenciesUpperCase = new HashMap<>();
