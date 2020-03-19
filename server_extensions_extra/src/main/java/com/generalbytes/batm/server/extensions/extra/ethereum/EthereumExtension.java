@@ -52,6 +52,7 @@ public class EthereumExtension extends AbstractExtension{
         result.add(CryptoCurrency.ETH.getCode());
         result.add(CryptoCurrency.ANT.getCode());
         result.add(CryptoCurrency.BAT.getCode());
+        result.add(CryptoCurrency.FTT.getCode());
         result.add(CryptoCurrency.REP.getCode());
         result.add(CryptoCurrency.MKR.getCode());
         result.add(CryptoCurrency.DAI.getCode());
@@ -61,7 +62,6 @@ public class EthereumExtension extends AbstractExtension{
         result.add(CryptoCurrency.THBX.getCode());
         result.add(CryptoCurrency.MUSD.getCode());
         result.add(CryptoCurrency.EURS.getCode());
-        result.add(CryptoCurrency.FTT.getCode());
         return result;
     }
 
