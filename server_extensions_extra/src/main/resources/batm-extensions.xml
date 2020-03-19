@@ -1544,8 +1544,8 @@
             <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
             <cryptocurrency buyonly="true">FTT</cryptocurrency>
         </wallet>
-        <cryptologo cryptocurrency="FTT" file="usdt.png"/>
-        <cryptologo cryptocurrency="FTT" file="usdt.svg"/>
+        <cryptologo cryptocurrency="FTT" file="ftt.png"/>
+        <cryptologo cryptocurrency="FTT" file="ftt.svg"/>
         <wallet prefix="infuraERC20_MKR_18_0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2" name="Infura.io wallet - MKR">
             <param name="projectId" />
             <param name="mnemonic" />
