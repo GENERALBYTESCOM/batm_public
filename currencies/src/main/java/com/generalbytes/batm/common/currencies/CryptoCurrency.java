@@ -59,7 +59,7 @@ public enum CryptoCurrency {
     EURS("STASIS EURO"),
     FLASH("FLASH"),
     FTO("FuturoCoin"),
-    FTT("FTT","FTX Token"),
+    FTT("FTX Token"),
     GRS("Groestlcoin"),
     HATCH("Hatch"),
     HBX("HBX"),
