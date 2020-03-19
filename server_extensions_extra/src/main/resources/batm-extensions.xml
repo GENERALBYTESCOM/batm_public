@@ -177,7 +177,6 @@
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>FLASH</cryptocurrency>
                 <cryptocurrency>FTO</cryptocurrency>
-                <cryptocurrency>FTT</cryptocurrency>
                 <cryptocurrency>GRS</cryptocurrency>
                 <cryptocurrency>HATCH</cryptocurrency>
                 <cryptocurrency>LEO</cryptocurrency>
@@ -206,6 +205,7 @@
                 <cryptocurrency>XPM</cryptocurrency>
                 <cryptocurrency>XSG</cryptocurrency>
                 <cryptocurrency>XZC</cryptocurrency>
+                <cryptocurrency>FTT</cryptocurrency>
                 <help>USD is default fiat currency.</help>
             </ratesource>
             <ratesource prefix="bitflyer" name="BitFlyer.jp Rate Source" >
@@ -359,7 +359,6 @@
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>FLASH</cryptocurrency>
             <cryptocurrency>FTO</cryptocurrency>
-            <cryptocurrency>FTT</cryptocurrency>
             <cryptocurrency>GRS</cryptocurrency>
             <cryptocurrency>HATCH</cryptocurrency>
             <cryptocurrency>KMD</cryptocurrency>
@@ -420,7 +419,6 @@
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>FLASH</cryptocurrency>
             <cryptocurrency>FTO</cryptocurrency>
-            <cryptocurrency>FTT</cryptocurrency>
             <cryptocurrency>GRS</cryptocurrency>
             <cryptocurrency>HATCH</cryptocurrency>
             <cryptocurrency>HBX</cryptocurrency>
@@ -467,7 +465,6 @@
             <cryptocurrency>DASH</cryptocurrency>
             <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
-            <cryptocurrency>FTT</cryptocurrency>
             <cryptocurrency>GRS</cryptocurrency>
             <cryptocurrency>KMD</cryptocurrency>
             <cryptocurrency>LSK</cryptocurrency>
@@ -482,6 +479,7 @@
             <cryptocurrency>XMR</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
             <cryptocurrency>XZC</cryptocurrency>
+            <cryptocurrency>FTT</cryptocurrency>
         </exchange>
         <ratesource prefix="binancecom" name="Binance.com">
             <param name="fiatcurrency" />
