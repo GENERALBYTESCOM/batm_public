@@ -486,6 +486,7 @@
         <ratesource prefix="binancecom" name="Binance.com">
             <param name="fiatcurrency" />
             <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>FTT</cryptocurrency>
         </ratesource>
         <exchange prefix="binanceus" name="Binance US">
             <param name="apikey"/>
