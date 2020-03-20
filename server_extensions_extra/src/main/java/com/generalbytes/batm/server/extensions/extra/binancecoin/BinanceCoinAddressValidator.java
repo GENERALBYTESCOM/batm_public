@@ -39,7 +39,6 @@ public class BinanceCoinAddressValidator implements ICryptoAddressValidator {
                 log.debug("Address [" + address + "] is not recognized.", e);
                 return false;
             }
-            return true;
         }else{
             return false;
         }
