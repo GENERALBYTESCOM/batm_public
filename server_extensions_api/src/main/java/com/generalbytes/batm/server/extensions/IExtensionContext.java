@@ -117,11 +117,17 @@ public interface IExtensionContext {
 
 
     /**
-     * Finds and returns identity based on provided phone number this number. If you don't specify country then number has to be in international format (leading +countrycode is required)
+     * Finds and returns identity based on provided phone number. If you don't specify country then number has to be in international format (leading +countrycode is required)
      * @param phoneNumber
      * @return
      */
     List<IIdentity> findIdentityByPhoneNumber(String phoneNumber, String countryName);
+
+    /**
+     * @param documentNumber
+     * @return identities with the provided document (ID, passport, ... ) number. Empty list if nothing is found, never null.
+     */
+    List<IIdentity> findIdentitiesByDocumentNumber(String documentNumber);
 
     /**
      *
