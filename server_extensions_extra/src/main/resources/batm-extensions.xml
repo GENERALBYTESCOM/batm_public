@@ -1379,6 +1379,14 @@
         </ratesource>
         <cryptologo cryptocurrency="BTCP" file="btcp.png"/>
     </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.binancecoin.BinanceCoinExtension" >
+        <ratesource prefix="bnbfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>BNB</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="BNB" file="bnb.svg"/>
+        <cryptologo cryptocurrency="BNB" file="bnb.png"/>
+    </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.electra.ElectraExtension" >
         <wallet prefix="electrad" name="Electracoin">
             <param name="protocol" />
