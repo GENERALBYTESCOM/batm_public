@@ -76,9 +76,9 @@ public class BitgoWallet implements IWallet {
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
         final BitGoCoinRequest request = new BitGoCoinRequest(destinationAddress, toSatoshis(amount, cryptoCurrency), walletPassphrase);
         try {
-            Map<String, String> result = api.sendCoins(cryptoCurrency.toLowerCase(), this.walletId, request);
-            if (result != null) {
-                return result.get("status");
+            Map<String, Object> result = api.sendCoins(cryptoCurrency.toLowerCase(), this.walletId, request);
+            if (result != null && result.get("txid") instanceof String) {
+                return (String) result.get("txid");
             }
         } catch (HttpStatusIOException hse) {
             log.debug("send coins error - HttpStatusIOException, error message: {}, HTTP code: {}, HTTP content: {}", hse.getMessage(), hse.getHttpStatusCode(), hse.getHttpBody());
