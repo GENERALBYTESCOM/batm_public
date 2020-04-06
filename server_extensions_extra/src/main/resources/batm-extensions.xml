@@ -1555,6 +1555,15 @@
         </wallet>
         <cryptologo cryptocurrency="REP" file="rep.png"/>
         <cryptologo cryptocurrency="REP" file="rep.svg"/>
+        <wallet prefix="infuraERC20_JOB_8_0xdfbc9050F5B01DF53512DCC39B4f2B2BBaCD517A" name="Infura.io wallet - Jobchain">
+            <param name="projectId" />
+            <param name="mnemonic" />
+            <param name="gaslimit" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
+            <cryptocurrency>Jochain</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="Jobchain" file="jobchain.png"/>
+        <cryptologo cryptocurrency="Jobchain" file="jobchain.svg"/>
         <wallet prefix="infuraERC20_ANT_18_0x960b236A07cf122663c4303350609A66A7B288C0" name="Infura.io wallet - ANT">
             <param name="projectId" />
             <param name="mnemonic" />
