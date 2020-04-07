@@ -57,6 +57,7 @@ public enum FiatCurrency {
     HKD("Hong Kong dollar"),
     HRK("Croatian kuna"),
     HUF("Hungarian forint"),
+    IDR("Indonesian rupiah"),
     ILS("Israeli new shekel"),
     INR("Indian rupee"),
     ISK("Icelandic króna"),
