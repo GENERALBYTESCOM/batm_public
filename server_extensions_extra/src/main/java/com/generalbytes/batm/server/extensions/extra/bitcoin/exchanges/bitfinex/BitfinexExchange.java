@@ -32,6 +32,8 @@ import com.generalbytes.batm.server.extensions.*;
 import org.knowm.xchange.Exchange;
 import org.knowm.xchange.ExchangeFactory;
 import org.knowm.xchange.ExchangeSpecification;
+import org.knowm.xchange.bitfinex.service.BitfinexMarketDataService;
+import org.knowm.xchange.bitfinex.v1.dto.marketdata.BitfinexDepth;
 import org.knowm.xchange.currency.Currency;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.Order;
@@ -83,12 +85,39 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
         this(null, null, preferredFiatCurrency);
     }
 
+    // Hotfix https://github.com/knowm/XChange/issues/3459
+    // remove when fixed in mainstream
+    private static class HofixBitfinexExchange extends org.knowm.xchange.bitfinex.BitfinexExchange {
+        private static class HotfixBitfinexMarketDataService extends BitfinexMarketDataService {
+            public HotfixBitfinexMarketDataService(Exchange exchange) {
+                super(exchange);
+            }
+
+            @Override
+            public BitfinexDepth getBitfinexOrderBook(String pair, Integer limitBids, Integer limitAsks)
+                throws IOException {
+                // v2 api uses "t" prefix for currency pairs but it was used to call v1 API too so it failed with unknown pair exception
+                if (pair.startsWith("t")) {
+                    pair = pair.substring(1);
+                }
+                return super.getBitfinexOrderBook(pair, limitBids, limitAsks);
+            }
+        }
+
+        @Override
+        protected void initServices() {
+            super.initServices();
+            this.marketDataService = new HotfixBitfinexMarketDataService(this);
+        }
+    }
+
     private synchronized Exchange getExchange() {
         if (this.exchange == null) {
-            ExchangeSpecification bfxSpec = new org.knowm.xchange.bitfinex.BitfinexExchange().getDefaultExchangeSpecification();
+            ExchangeSpecification bfxSpec = new HofixBitfinexExchange().getDefaultExchangeSpecification();
             bfxSpec.setApiKey(this.apiKey);
             bfxSpec.setSecretKey(this.apiSecret);
-            this.exchange = ExchangeFactory.INSTANCE.createExchange(bfxSpec);
+            this.exchange = new HofixBitfinexExchange();
+            exchange.applySpecification(bfxSpec);
         }
         return this.exchange;
     }
@@ -667,11 +696,11 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
     public BigDecimal calculateBuyPrice(String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount) {
         CurrencyPair currencyPair = new CurrencyPair(getExchangeSpecificSymbol(cryptoCurrency), fiatCurrency);
 
+        DDOSUtils.waitForPossibleCall(getClass());
         if(!isCurrencyPairSupported(currencyPair)) {
             return null;
         }
 
-        DDOSUtils.waitForPossibleCall(getClass());
         MarketDataService marketDataService = getExchange().getMarketDataService();
         try {
             DDOSUtils.waitForPossibleCall(getClass());

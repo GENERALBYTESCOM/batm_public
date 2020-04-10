@@ -22,12 +22,14 @@ import java.io.Serializable;
 public final class ScoringResult implements Serializable {
     private final Integer risk;
     private final boolean highRisk;
+    private boolean suspicious;
     private final String message;
     private boolean scoringPerformed;
 
-    public ScoringResult(Integer risk, boolean highRisk, String message, boolean scoringPerformed) {
+    public ScoringResult(Integer risk, boolean highRisk, boolean suspicious, String message, boolean scoringPerformed) {
         this.risk = risk;
         this.highRisk = highRisk;
+        this.suspicious = suspicious;
         this.message = message;
         this.scoringPerformed = scoringPerformed;
     }
@@ -59,6 +61,17 @@ public final class ScoringResult implements Serializable {
     }
 
     /**
+     *
+     * @return true if the transaction is scored with a high risk score but not necessarily high enough to be declined.
+     *  False otherwise or if scoring was not performed.
+     *  Every "High risk" transaction is suspicious, not every "suspicious" one is "high risk".
+     *  If transaction is "Suspicious" but not "high risk" a notification is generated but the transaction is not blocked
+     */
+    public boolean isSuspicious() {
+        return suspicious;
+    }
+
+    /**
      * @return true if scoring was performed with a positive or negative result.
      * False if scoring failed, an error occurred, or the provider does not support
      * scoring of the provided transaction, address or cryptocurrency.
@@ -82,7 +95,7 @@ public final class ScoringResult implements Serializable {
      * can be used when scoring failed, is disabled or not configured properly.
      */
     public static ScoringResult notPerformed(String message) {
-        return new ScoringResult(null, false, message, false);
+        return new ScoringResult(null, false, false, message, false);
     }
 
     public static ScoringResult notPerformed() {
