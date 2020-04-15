@@ -116,6 +116,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
             ExchangeSpecification bfxSpec = new HofixBitfinexExchange().getDefaultExchangeSpecification();
             bfxSpec.setApiKey(this.apiKey);
             bfxSpec.setSecretKey(this.apiSecret);
+            bfxSpec.setShouldLoadRemoteMetaData(false);
             this.exchange = new HofixBitfinexExchange();
             exchange.applySpecification(bfxSpec);
         }
