@@ -88,3 +88,4 @@ verifyModule 'org.web3j:crypto:3.6.0:e9f82d411e6f5cea3a4f36d1dde2e7d361cb0640334
 verifyModule 'org.web3j:rlp:3.6.0:5630a766f9e9dd6c6149559e6ecd08ee7ff8e73b1dddcc6a8dc2f9e660d7c4b0'
 verifyModule 'org.web3j:tuples:3.6.0:73e0917ddfd55af676149ba369beeed609a7f1ce6067675de55acc9d1fd191f4'
 verifyModule 'org.web3j:utils:3.6.0:82f33449d2970e402b2634931d51837112b4d5f8f0feaa0488b89a7107ce21df'
+verifyModule 'com.madgag.spongycastle:core:1.52.0.0:07a401edbe26e1028e2324754557b741cc57306008df7b71a9e12ec32d65be8f'
