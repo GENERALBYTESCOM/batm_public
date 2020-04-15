@@ -242,16 +242,8 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
         try {
             DDOSUtils.waitForPossibleCall(getClass());
             String result = accountService.withdrawFunds(Currency.getInstance(getExchangeSpecificSymbol(cryptoCurrency)), amount, destinationAddress);
-            if (result == null) {
-                log.warn("Bitfinex exchange (withdrawFunds) failed with null");
-                return null;
-            }else if ("success".equalsIgnoreCase(result)){
-                log.warn("Bitfinex exchange (withdrawFunds) finished successfully");
-                return "success";
-            }else{
-                log.warn("Bitfinex exchange (withdrawFunds) failed with message: " + result);
-                return null;
-            }
+            log.debug("Bitfinex exchange (withdrawFunds) result: {}", result);
+            return result;
         } catch (IOException e) {
             log.error("Error", e);
             log.error("Bitfinex exchange (withdrawFunds) failed with message: " + e.getMessage());
