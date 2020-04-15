@@ -178,6 +178,8 @@
                 <cryptocurrency>FLASH</cryptocurrency>
                 <cryptocurrency>FTO</cryptocurrency>
                 <cryptocurrency>FTT</cryptocurrency>
+                <cryptocurrency>USDC</cryptocurrency>
+                <cryptocurrency>BUSD</cryptocurrency>
                 <cryptocurrency>GRS</cryptocurrency>
                 <cryptocurrency>HATCH</cryptocurrency>
                 <cryptocurrency>LEO</cryptocurrency>
@@ -360,6 +362,8 @@
             <cryptocurrency>FLASH</cryptocurrency>
             <cryptocurrency>FTO</cryptocurrency>
             <cryptocurrency>FTT</cryptocurrency>
+            <cryptocurrency>USDC</cryptocurrency>
+            <cryptocurrency>BUSD</cryptocurrency>
             <cryptocurrency>GRS</cryptocurrency>
             <cryptocurrency>HATCH</cryptocurrency>
             <cryptocurrency>KMD</cryptocurrency>
@@ -1559,6 +1563,26 @@
         </wallet>
         <cryptologo cryptocurrency="FTT" file="ftt.png"/>
         <cryptologo cryptocurrency="FTT" file="ftt.svg"/>
+        <wallet prefix="infuraERC20_USDC_6_0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48" name="Infura.io wallet - USDC">
+            <!-- Hint: infuraERC20_TOKENSYMBOL_DECIMALPLACES_CONTRACTADDRESS -->
+            <param name="projectId" />
+            <param name="mnemonic" />
+            <param name="gaslimit" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
+            <cryptocurrency buyonly="true">USDC</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="USDC" file="usdc.png"/>
+        <cryptologo cryptocurrency="USDC" file="usdc.svg"/>
+        <wallet prefix="infuraERC20_BUSD_18_0x4fabb145d64652a948d72533023f6e7a623c7c53" name="Infura.io wallet - BUSD">
+            <!-- Hint: infuraERC20_TOKENSYMBOL_DECIMALPLACES_CONTRACTADDRESS -->
+            <param name="projectId" />
+            <param name="mnemonic" />
+            <param name="gaslimit" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
+            <cryptocurrency buyonly="true">BUSD</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="BUSD" file="busd.png"/>
+        <cryptologo cryptocurrency="BUSD" file="busd.svg"/>
         <wallet prefix="infuraERC20_MKR_18_0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2" name="Infura.io wallet - MKR">
             <param name="projectId" />
             <param name="mnemonic" />

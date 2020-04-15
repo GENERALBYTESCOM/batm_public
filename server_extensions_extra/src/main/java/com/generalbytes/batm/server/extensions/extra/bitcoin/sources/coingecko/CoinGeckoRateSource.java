@@ -60,6 +60,8 @@ public class CoinGeckoRateSource implements IRateSource {
         CRYPTOCURRENCIES.put(CryptoCurrency.FLASH.getCode(), "flash");
         CRYPTOCURRENCIES.put(CryptoCurrency.FTO.getCode(), "futurocoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.FTT.getCode(), "ftx-token");
+        CRYPTOCURRENCIES.put(CryptoCurrency.USDC.getCode(), "usd-coin");
+        CRYPTOCURRENCIES.put(CryptoCurrency.BUSD.getCode(), "binance-usd");
         CRYPTOCURRENCIES.put(CryptoCurrency.GRS.getCode(), "groestlcoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.HATCH.getCode(), "hatch");
         CRYPTOCURRENCIES.put(CryptoCurrency.KMD.getCode(), "komodo");

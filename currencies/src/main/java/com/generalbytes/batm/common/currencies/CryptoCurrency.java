@@ -60,6 +60,8 @@ public enum CryptoCurrency {
     FLASH("FLASH"),
     FTO("FuturoCoin"),
     FTT("Ftx Token"),
+    USDC("USD Coin"),
+    BUSD("Binance USD"),
     GRS("Groestlcoin"),
     HATCH("Hatch"),
     HBX("HBX"),
