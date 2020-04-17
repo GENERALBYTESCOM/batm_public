@@ -68,7 +68,7 @@ public class BitgoAPITest {
         } catch (NoSuchAlgorithmException nae) {
             log.error("", nae);
         }
-        api = RestProxyFactory.createProxy(IBitgoAPI.class, "https://test.bitgo.com/api", config);
+        api = RestProxyFactory.createProxy(IBitgoAPI.class, "https://test.bitgo.com/", config);
     }
 
     @Test
@@ -243,7 +243,7 @@ public class BitgoAPITest {
     @Ignore("Local instance of bitgo-express test environment is required to run")
     public void sendCoinsTest() {
         try {
-            IBitgoAPI localapi = RestProxyFactory.createProxy(IBitgoAPI.class, "http://localhost:3080/api");
+            IBitgoAPI localapi = RestProxyFactory.createProxy(IBitgoAPI.class, "http://localhost:3080/");
             final String coin = "tbtc";
             final String id = "5b20e3a9266bbe80095757489d84a6bb";
             final String address = "2N5q4MwNSUxbAtaidhRgkiDrbwVR4yCZDhi";
@@ -253,17 +253,19 @@ public class BitgoAPITest {
             final BitGoCoinRequest request = new BitGoCoinRequest(address, amount, walletPassphrase);
             String accessToken = "Bearer v2x8d5e9e46379dc328b2039a400a12b04ea986689b38107fd84cd339bc89e3fb21";
             String contentType = "application/json";
-            Map<String, String> result = localapi.sendCoins(coin, id, request);
+            Map<String, Object> result = localapi.sendCoins(coin, id, request);
             Assert.assertNotNull(result);
 
-            String status = result.get("status");
+            Object statusO = result.get("status");
+            Assert.assertTrue(statusO instanceof String);
+            String status = (String) statusO;
             Assert.assertNotNull(status);
             Assert.assertEquals("signed", status);
 
-            String tx = result.get("tx");
+            Object tx = result.get("tx");
             Assert.assertNotNull(tx);
 
-            String txid = result.get("txid");
+            Object txid = result.get("txid");
             Assert.assertNotNull(txid);
         } catch (Exception e) {
             log.error("Error", e);

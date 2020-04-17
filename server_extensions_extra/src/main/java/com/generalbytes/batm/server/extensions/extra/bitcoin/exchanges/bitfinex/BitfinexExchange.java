@@ -32,6 +32,8 @@ import com.generalbytes.batm.server.extensions.*;
 import org.knowm.xchange.Exchange;
 import org.knowm.xchange.ExchangeFactory;
 import org.knowm.xchange.ExchangeSpecification;
+import org.knowm.xchange.bitfinex.service.BitfinexMarketDataService;
+import org.knowm.xchange.bitfinex.v1.dto.marketdata.BitfinexDepth;
 import org.knowm.xchange.currency.Currency;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.Order;
@@ -83,12 +85,40 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
         this(null, null, preferredFiatCurrency);
     }
 
+    // Hotfix https://github.com/knowm/XChange/issues/3459
+    // remove when fixed in mainstream
+    private static class HofixBitfinexExchange extends org.knowm.xchange.bitfinex.BitfinexExchange {
+        private static class HotfixBitfinexMarketDataService extends BitfinexMarketDataService {
+            public HotfixBitfinexMarketDataService(Exchange exchange) {
+                super(exchange);
+            }
+
+            @Override
+            public BitfinexDepth getBitfinexOrderBook(String pair, Integer limitBids, Integer limitAsks)
+                throws IOException {
+                // v2 api uses "t" prefix for currency pairs but it was used to call v1 API too so it failed with unknown pair exception
+                if (pair.startsWith("t")) {
+                    pair = pair.substring(1);
+                }
+                return super.getBitfinexOrderBook(pair, limitBids, limitAsks);
+            }
+        }
+
+        @Override
+        protected void initServices() {
+            super.initServices();
+            this.marketDataService = new HotfixBitfinexMarketDataService(this);
+        }
+    }
+
     private synchronized Exchange getExchange() {
         if (this.exchange == null) {
-            ExchangeSpecification bfxSpec = new org.knowm.xchange.bitfinex.BitfinexExchange().getDefaultExchangeSpecification();
+            ExchangeSpecification bfxSpec = new HofixBitfinexExchange().getDefaultExchangeSpecification();
             bfxSpec.setApiKey(this.apiKey);
             bfxSpec.setSecretKey(this.apiSecret);
-            this.exchange = ExchangeFactory.INSTANCE.createExchange(bfxSpec);
+            bfxSpec.setShouldLoadRemoteMetaData(false);
+            this.exchange = new HofixBitfinexExchange();
+            exchange.applySpecification(bfxSpec);
         }
         return this.exchange;
     }
@@ -212,16 +242,8 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
         try {
             DDOSUtils.waitForPossibleCall(getClass());
             String result = accountService.withdrawFunds(Currency.getInstance(getExchangeSpecificSymbol(cryptoCurrency)), amount, destinationAddress);
-            if (result == null) {
-                log.warn("Bitfinex exchange (withdrawFunds) failed with null");
-                return null;
-            }else if ("success".equalsIgnoreCase(result)){
-                log.warn("Bitfinex exchange (withdrawFunds) finished successfully");
-                return "success";
-            }else{
-                log.warn("Bitfinex exchange (withdrawFunds) failed with message: " + result);
-                return null;
-            }
+            log.debug("Bitfinex exchange (withdrawFunds) result: {}", result);
+            return result;
         } catch (IOException e) {
             log.error("Error", e);
             log.error("Bitfinex exchange (withdrawFunds) failed with message: " + e.getMessage());
@@ -667,11 +689,11 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
     public BigDecimal calculateBuyPrice(String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount) {
         CurrencyPair currencyPair = new CurrencyPair(getExchangeSpecificSymbol(cryptoCurrency), fiatCurrency);
 
+        DDOSUtils.waitForPossibleCall(getClass());
         if(!isCurrencyPairSupported(currencyPair)) {
             return null;
         }
 
-        DDOSUtils.waitForPossibleCall(getClass());
         MarketDataService marketDataService = getExchange().getMarketDataService();
         try {
             DDOSUtils.waitForPossibleCall(getClass());

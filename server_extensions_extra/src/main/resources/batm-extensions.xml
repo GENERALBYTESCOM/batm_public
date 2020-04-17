@@ -27,6 +27,7 @@
                 <cryptocurrency>BTC</cryptocurrency>
             </wallet>
             <wallet prefix="bitgo" name="BitGo Wallet">
+                <tunnel supported="true"/>
                 <param name="host" />
                 <param name="port" />
                 <param name="token" />
@@ -39,6 +40,7 @@
                 <help>Host should start with http:// or https://</help>
             </wallet>
             <wallet prefix="bitgonoforward" name="BitGo Wallet (no forward)">
+                <tunnel supported="true"/>
                 <param name="host" />
                 <param name="port" />
                 <param name="token" />
@@ -144,6 +146,7 @@
                 <cryptocurrency>CLOAK</cryptocurrency>
                 <cryptocurrency>FLASH</cryptocurrency>
                 <cryptocurrency>XSG</cryptocurrency>
+                <cryptocurrency>JOB</cryptocurrency>
             </ratesource>
             <ratesource prefix="stream365" name ="365.stream" >
                 <cryptocurrency>HBX</cryptocurrency>
@@ -182,6 +185,7 @@
                 <cryptocurrency>BUSD</cryptocurrency>
                 <cryptocurrency>GRS</cryptocurrency>
                 <cryptocurrency>HATCH</cryptocurrency>
+                <cryptocurrency>JOB</cryptocurrency>
                 <cryptocurrency>LEO</cryptocurrency>
                 <cryptocurrency>LINDA</cryptocurrency>
                 <cryptocurrency>LSK</cryptocurrency>
@@ -366,6 +370,7 @@
             <cryptocurrency>BUSD</cryptocurrency>
             <cryptocurrency>GRS</cryptocurrency>
             <cryptocurrency>HATCH</cryptocurrency>
+            <cryptocurrency>JOB</cryptocurrency>    
             <cryptocurrency>KMD</cryptocurrency>
             <cryptocurrency>LEO</cryptocurrency>
             <cryptocurrency>LINDA</cryptocurrency>
@@ -428,6 +433,7 @@
             <cryptocurrency>GRS</cryptocurrency>
             <cryptocurrency>HATCH</cryptocurrency>
             <cryptocurrency>HBX</cryptocurrency>
+            <cryptocurrency>JOB</cryptocurrency>
             <cryptocurrency>KMD</cryptocurrency>
             <cryptocurrency>LEO</cryptocurrency>
             <cryptocurrency>LINDA</cryptocurrency>
@@ -1610,6 +1616,15 @@
         </wallet>
         <cryptologo cryptocurrency="REP" file="rep.png"/>
         <cryptologo cryptocurrency="REP" file="rep.svg"/>
+        <wallet prefix="infuraERC20_JOB_8_0xdfbc9050F5B01DF53512DCC39B4f2B2BBaCD517A" name="Infura.io wallet - Jobchain">
+            <param name="projectId" />
+            <param name="mnemonic" />
+            <param name="gaslimit" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
+            <cryptocurrency>Jochain</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="Jobchain" file="jobchain.png"/>
+        <cryptologo cryptocurrency="Jobchain" file="jobchain.svg"/>
         <wallet prefix="infuraERC20_ANT_18_0x960b236A07cf122663c4303350609A66A7B288C0" name="Infura.io wallet - ANT">
             <param name="projectId" />
             <param name="mnemonic" />
