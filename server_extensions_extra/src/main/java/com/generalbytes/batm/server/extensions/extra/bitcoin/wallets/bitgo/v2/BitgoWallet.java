@@ -19,8 +19,11 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.Converters;
+import com.generalbytes.batm.server.extensions.ICanSendMany;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.BitGoCoinRequest;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.BitGoSendManyRequest;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.BitGoSendManyRequest.BitGoRecipient;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.ErrorResponseException;
 import com.generalbytes.batm.server.extensions.extra.worldcoin.sources.cd.CompatSSLSocketFactory;
 import okhttp3.HttpUrl;
@@ -35,11 +38,14 @@ import javax.ws.rs.HeaderParam;
 import java.math.BigDecimal;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-public class BitgoWallet implements IWallet {
+public class BitgoWallet implements IWallet, ICanSendMany {
 
     private static final Logger log = LoggerFactory.getLogger(BitgoWallet.class);
 
@@ -72,14 +78,36 @@ public class BitgoWallet implements IWallet {
         api = RestProxyFactory.createProxy(IBitgoAPI.class, this.url, config);
     }
 
+    private String getResultTxId(Map<String, Object> result) {
+        if (result != null && result.get("txid") instanceof String) {
+            return (String) result.get("txid");
+        }
+        return null;
+    }
+
+    @Override
+    public String sendMany(Collection<Transfer> transfers, String cryptoCurrency, String description) {
+        List<BitGoRecipient> recipients = transfers.stream()
+            .map(transfer -> new BitGoRecipient(transfer.getDestinationAddress(), toSatoshis(transfer.getAmount(), cryptoCurrency)))
+            .collect(Collectors.toList());
+        final BitGoSendManyRequest request = new BitGoSendManyRequest(recipients, walletPassphrase);
+        try {
+            return getResultTxId(api.sendMany(cryptoCurrency.toLowerCase(), this.walletId, request));
+        } catch (HttpStatusIOException hse) {
+            log.debug("send coins error - HttpStatusIOException, error message: {}, HTTP code: {}, HTTP content: {}", hse.getMessage(), hse.getHttpStatusCode(), hse.getHttpBody());
+        } catch (ErrorResponseException e) {
+            log.debug("send coins error message: {}", e.getMessage());
+        } catch (Exception e) {
+            log.error("Error", e);
+        }
+        return null;
+    }
+
     @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
         final BitGoCoinRequest request = new BitGoCoinRequest(destinationAddress, toSatoshis(amount, cryptoCurrency), walletPassphrase);
         try {
-            Map<String, Object> result = api.sendCoins(cryptoCurrency.toLowerCase(), this.walletId, request);
-            if (result != null && result.get("txid") instanceof String) {
-                return (String) result.get("txid");
-            }
+            return getResultTxId(api.sendCoins(cryptoCurrency.toLowerCase(), this.walletId, request));
         } catch (HttpStatusIOException hse) {
             log.debug("send coins error - HttpStatusIOException, error message: {}, HTTP code: {}, HTTP content: {}", hse.getMessage(), hse.getHttpStatusCode(), hse.getHttpBody());
         } catch (ErrorResponseException e) {

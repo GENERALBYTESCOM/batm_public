@@ -27,6 +27,7 @@
                 <cryptocurrency>BTC</cryptocurrency>
             </wallet>
             <wallet prefix="bitgo" name="BitGo Wallet">
+                <sendtomany supported="true"/>
                 <tunnel supported="true"/>
                 <param name="host" />
                 <param name="port" />
@@ -40,6 +41,7 @@
                 <help>Host should start with http:// or https://</help>
             </wallet>
             <wallet prefix="bitgonoforward" name="BitGo Wallet (no forward)">
+                <sendtomany supported="true"/>
                 <tunnel supported="true"/>
                 <param name="host" />
                 <param name="port" />
