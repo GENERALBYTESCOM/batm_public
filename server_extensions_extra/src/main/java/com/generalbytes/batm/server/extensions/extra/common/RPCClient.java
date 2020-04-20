@@ -24,6 +24,7 @@ import wf.bitcoin.javabitcoindrpcclient.BitcoinRPCException;
 import wf.bitcoin.javabitcoindrpcclient.BitcoinJSONRPCClient;
 import wf.bitcoin.javabitcoindrpcclient.GenericRpcException;
 
+import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -89,6 +90,17 @@ public class RPCClient extends BitcoinJSONRPCClient {
             return (String) result.get("hex");
         else
             throw new GenericRpcException("Incomplete");
+    }
+
+    /**
+     * See https://bitcoin.org/en/developer-reference#sendmany
+     * @param addressAmouts map of destination addresses and amounts to be sent to each of them
+     * @param comment
+     * @return txid
+     * @throws GenericRpcException
+     */
+    public String sendMany(Map<String, BigDecimal> addressAmouts, String comment) throws GenericRpcException {
+        return (String) query("sendmany", "", addressAmouts, null, comment);
     }
 
     public interface ReceivedAddress {
