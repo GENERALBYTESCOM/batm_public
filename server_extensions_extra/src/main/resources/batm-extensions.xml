@@ -588,6 +588,7 @@
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.dogecoin.DogecoinExtension">
         <wallet prefix="blockio" name="Block.io Wallet">
+            <sendtomany supported="true"/>
             <param name="apikey" />
             <param name="pin" />
             <param name="priority" />
@@ -597,6 +598,7 @@
             <help>You can specify optional parameter priority to increase the network fee paid in the given transaction. Options are low, medium, high and will pay 1x, 2x, and 3x the minimum network fees possible on the network, respectively. If not specified, low will be used.</help>
         </wallet>
         <wallet prefix="blockionoforward" name="Block.io Wallet (no forward)">
+            <sendtomany supported="true"/>
             <param name="apikey" />
             <param name="pin" />
             <param name="priority" />
