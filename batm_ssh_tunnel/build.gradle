@@ -23,7 +23,7 @@ dependencies {
     compile(group: 'org.apache.sshd', name: 'sshd-core', version: '2.3.0')
     compile(group: 'org.apache.sshd', name: 'sshd-common', version: '2.3.0')
     compile(group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3')
-    
-    compile group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.61'
+
+    compile group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.63'
 
 }
