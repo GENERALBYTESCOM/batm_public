@@ -44,6 +44,11 @@ public class TransactionExtension extends AbstractExtension implements ITransact
     }
 
     @Override
+    public OutputQueueInsertConfig overrideOutputQueueInsertConfig(ITransactionQueueRequest transactionQueueRequest, OutputQueueInsertConfig outputQueueInsertConfig) {
+        return null;
+    }
+
+    @Override
     public boolean isTransactionPreparationApproved(ITransactionPreparation preparation) {
         return true; //approve all transactions
     }

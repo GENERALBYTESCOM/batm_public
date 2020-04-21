@@ -49,6 +49,11 @@ public class WatchlistExtension extends AbstractExtension implements ITransactio
         return isTransactionApprovedInner(transactionRequest.getIdentityPublicId());
     }
 
+    @Override
+    public OutputQueueInsertConfig overrideOutputQueueInsertConfig(ITransactionQueueRequest transactionQueueRequest, OutputQueueInsertConfig outputQueueInsertConfig) {
+        return null;
+    }
+
     private boolean isTransactionApprovedInner(String identityPublicId) {
         if (identityPublicId == null) {
             return true;
