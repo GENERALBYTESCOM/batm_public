@@ -88,14 +88,7 @@ public class HitbtcExchange extends XChangeExchange {
 
     @Override
     public Wallet getWallet(AccountInfo accountInfo, String currency) {
-        Wallet trading = accountInfo.getWallet("Trading");
-        if (log.isDebugEnabled()) {
-            Wallet main = accountInfo.getWallet("Main");
-            BigDecimal tradingAvailable = trading.getBalance(Currency.getInstance(currency)).getAvailable();
-            BigDecimal mainAvailable = main.getBalance(Currency.getInstance(currency)).getAvailable();
-            log.debug("HitBtc wallets available {} balances: trading: {}, main: {}", currency, tradingAvailable, mainAvailable);
-        }
-        return trading;
+        return accountInfo.getWallet("Trading");
     }
 
 //    public static void main(String[] args) {
