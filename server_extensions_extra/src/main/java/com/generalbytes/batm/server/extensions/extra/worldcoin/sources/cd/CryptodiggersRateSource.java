@@ -20,6 +20,7 @@ package com.generalbytes.batm.server.extensions.extra.worldcoin.sources.cd;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.IRateSource;
+import com.generalbytes.batm.server.extensions.util.net.CompatSSLSocketFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.net.ssl.SSLContext;

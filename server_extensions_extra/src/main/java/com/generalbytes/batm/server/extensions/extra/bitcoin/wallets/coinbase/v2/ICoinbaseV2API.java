@@ -1,0 +1,80 @@
+package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2;
+
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBAccountResponse;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBAccountsResponse;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBAddressesResponse;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBCreateAddressRequest;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBCreateAddressResponse;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBExchangeRatesResponse;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBSendRequest;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBSendResponse;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+
+import si.mazi.rescu.ParamsDigest;
+
+/**
+ * Created by b00lean on 23.7.17.
+ */
+@Path("/v2")
+@Produces(MediaType.APPLICATION_JSON)
+public interface ICoinbaseV2API {
+
+    @GET
+    @Path("/exchange-rates")
+    CBExchangeRatesResponse getExchangeRates(@QueryParam("currency") String fiatCurrency);
+
+    @GET
+    @Path("/accounts")
+    CBAccountsResponse getAccounts(@HeaderParam("CB-ACCESS-KEY") String apiKey,
+                                   @HeaderParam("CB-VERSION") String apiVersion,
+                                   @HeaderParam("CB-ACCESS-SIGN") ParamsDigest digest,
+                                   @HeaderParam("CB-ACCESS-TIMESTAMP") long timestamp);
+
+    @GET
+    @Path("/accounts/{account_id}")
+    CBAccountResponse getAccount(@HeaderParam("CB-ACCESS-KEY") String apiKey,
+                                 @HeaderParam("CB-VERSION") String apiVersion,
+                                 @HeaderParam("CB-ACCESS-SIGN") ParamsDigest digest,
+                                 @HeaderParam("CB-ACCESS-TIMESTAMP") long timestamp,
+                                 @PathParam("account_id") String accountId);
+
+
+    @GET
+    @Path("/accounts/{account_id}/addresses")
+    CBAddressesResponse getAccountAddresses(@HeaderParam("CB-ACCESS-KEY") String apiKey,
+                                            @HeaderParam("CB-VERSION") String apiVersion,
+                                            @HeaderParam("CB-ACCESS-SIGN") ParamsDigest digest,
+                                            @HeaderParam("CB-ACCESS-TIMESTAMP") long timestamp,
+                                            @PathParam("account_id") String accountId);
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/accounts/{account_id}/addresses")
+    CBCreateAddressResponse createAddress(@HeaderParam("CB-ACCESS-KEY") String apiKey,
+                                          @HeaderParam("CB-VERSION") String apiVersion,
+                                          @HeaderParam("CB-ACCESS-SIGN") ParamsDigest digest,
+                                          @HeaderParam("CB-ACCESS-TIMESTAMP") long timestamp,
+                                          @PathParam("account_id") String accountId,
+                                          CBCreateAddressRequest request);
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/accounts/{account_id}/transactions")
+    CBSendResponse send(@HeaderParam("CB-ACCESS-KEY") String apiKey,
+                        @HeaderParam("CB-VERSION") String apiVersion,
+                        @HeaderParam("CB-ACCESS-SIGN") ParamsDigest digest,
+                        @HeaderParam("CB-ACCESS-TIMESTAMP") long timestamp,
+                        @PathParam("account_id") String accountId,
+                        CBSendRequest sendRequest);
+
+
+}

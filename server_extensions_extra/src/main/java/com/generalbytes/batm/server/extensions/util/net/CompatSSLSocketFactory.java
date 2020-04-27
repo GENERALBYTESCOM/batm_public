@@ -1,4 +1,4 @@
-package com.generalbytes.batm.server.extensions.extra.dash.sources.cddash;
+package com.generalbytes.batm.server.extensions.util.net;
 import javax.net.ssl.SSLSocket;
 
 import java.io.IOException;
