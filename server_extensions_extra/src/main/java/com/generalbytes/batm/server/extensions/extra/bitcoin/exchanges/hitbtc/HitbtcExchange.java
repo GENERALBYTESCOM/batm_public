@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2019 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2020 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -88,14 +88,7 @@ public class HitbtcExchange extends XChangeExchange {
 
     @Override
     public Wallet getWallet(AccountInfo accountInfo, String currency) {
-        Wallet trading = accountInfo.getWallet("Trading");
-        if (log.isDebugEnabled()) {
-            Wallet main = accountInfo.getWallet("Main");
-            BigDecimal tradingAvailable = trading.getBalance(Currency.getInstance(currency)).getAvailable();
-            BigDecimal mainAvailable = main.getBalance(Currency.getInstance(currency)).getAvailable();
-            log.debug("HitBtc wallets available {} balances: trading: {}, main: {}", currency, tradingAvailable, mainAvailable);
-        }
-        return trading;
+        return accountInfo.getWallet("Trading");
     }
 
 //    public static void main(String[] args) {
