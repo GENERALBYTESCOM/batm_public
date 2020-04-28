@@ -292,6 +292,55 @@
         </exchange>
         <cryptologo cryptocurrency="BTC" file="btc.png"/>
         <cryptologo cryptocurrency="BTC" file="btc.svg"/>
+        <ratesource prefix="coinbasers" name="Coinbase.com Rate Source" >
+            <param name="fiatcurrency" />
+            <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency>XRP</cryptocurrency>
+            <help>fiatcurrency parameter is optional</help>
+        </ratesource>
+        <wallet prefix="coinbasewallet2" name="Coinbase.com Wallet" >
+            <param name="apikey" />
+            <param name="secretkey" />
+            <param name="accountname" />
+            <cryptocurrency>BAT</cryptocurrency>
+            <cryptocurrency buyonly="true">BCH</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>DASH</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>XRP</cryptocurrency>
+            <help>accountname parameter is optional</help>
+        </wallet>
+        <wallet prefix="coinbasewallet2noforward" name="Coinbase.com Wallet (no forward)" >
+            <param name="apikey" />
+            <param name="secretkey" />
+            <param name="accountname" />
+            <cryptocurrency>BAT</cryptocurrency>
+            <cryptocurrency buyonly="true">BCH</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>XRP</cryptocurrency>
+            <help>accountname parameter is optional. This variant of the wallet generates new addresses for each transaction and does not forward payments from temporary address</help>
+        </wallet>
+        <exchange prefix="coinbaseexchange" name="Coinbase.com Exchange">
+            <param name="apikey" />
+            <param name="secretkey" />
+            <param name="accountname" />
+            <param name="fiatcurrency" />
+            <param name="paymentmethod" />
+            <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>BAT</cryptocurrency>
+            <help>fiatcurrency,paymentmethod are optional</help>
+        </exchange>
         <exchange prefix="coinbasepro" name="Coinbase Pro">
             <param name="key"/>
             <param name="secret"/>
@@ -364,7 +413,7 @@
             <cryptocurrency>FTO</cryptocurrency>
             <cryptocurrency>GRS</cryptocurrency>
             <cryptocurrency>HATCH</cryptocurrency>
-            <cryptocurrency>JOB</cryptocurrency>    
+            <cryptocurrency>JOB</cryptocurrency>
             <cryptocurrency>KMD</cryptocurrency>
             <cryptocurrency>LEO</cryptocurrency>
             <cryptocurrency>LINDA</cryptocurrency>

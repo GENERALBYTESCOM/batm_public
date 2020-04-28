@@ -20,6 +20,7 @@ package com.generalbytes.batm.server.extensions.extra.dash.sources.cddash;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.IRateSource;
+import com.generalbytes.batm.server.extensions.util.net.CompatSSLSocketFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.net.ssl.SSLContext;
@@ -56,7 +57,7 @@ public class CryptodiggersRateSource implements IRateSource{
         try {
             SSLContext sslcontext=SSLContext.getInstance("TLS");
             sslcontext.init(null,null,null);
-            final CompatSSLSocketFactory socketFactory = new CompatSSLSocketFactory(sslcontext.getSocketFactory());
+            final com.generalbytes.batm.server.extensions.util.net.CompatSSLSocketFactory socketFactory = new CompatSSLSocketFactory(sslcontext.getSocketFactory());
             config.setSslSocketFactory(socketFactory);
             config.setIgnoreHttpErrorCodes(true);
             api = RestProxyFactory.createProxy(ICryptodiggersRateAPI.class, "https://www.cryptodiggers.eu", config);
