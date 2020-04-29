@@ -727,6 +727,7 @@
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.lightningbitcoin.LightningBitcoinExtension" >
         <wallet prefix="eclair" name="eclair">
+            <tunnel supported="true"/>
             <param name="scheme" />
             <param name="host" />
             <param name="port" />
@@ -734,6 +735,7 @@
             <cryptocurrency>LBTC</cryptocurrency>
         </wallet>
         <wallet prefix="lnd" name="lnd">
+            <tunnel supported="true"/>
             <param name="host" />
             <param name="port" />
             <param name="macaroon" />
