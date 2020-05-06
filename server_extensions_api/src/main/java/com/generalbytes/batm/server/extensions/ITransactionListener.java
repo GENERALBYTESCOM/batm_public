@@ -38,6 +38,19 @@ public interface ITransactionListener {
     boolean isTransactionApproved(ITransactionRequest transactionRequest);
 
     /**
+     * Called when there is an Output Queue configured for a BUY transaction on the server
+     * and the transaction is about to be queued instead.
+     * The default rules for inserting into the given queue (configured in Output Queue in admin) are passed in as an argument
+     * and extensions can return overridden rules.
+     * @param transactionQueueRequest information about the transaction that is going to be queued
+     * @param outputQueueInsertConfig rules for inserting into the queue configured in admin or possibly already overridden by another extension
+     * @return new rules for inserting the transaction into the queue.
+     * This can be a new {@link OutputQueueInsertConfig} instance or the same one that is passed in (modified or not).
+     * Returning null has the same effect as returning unmodified outputQueueInsertConfig argument.
+     */
+    OutputQueueInsertConfig overrideOutputQueueInsertConfig(ITransactionQueueRequest transactionQueueRequest, OutputQueueInsertConfig outputQueueInsertConfig);
+
+    /**
      * Callback method that is called by server when transaction is created on server
      * Returned value is a map of keys and values that will be stored in the database and available for later use in ticket template
      * @param transactionDetails

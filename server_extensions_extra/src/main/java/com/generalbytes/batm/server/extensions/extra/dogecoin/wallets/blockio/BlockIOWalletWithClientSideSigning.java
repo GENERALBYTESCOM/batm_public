@@ -21,6 +21,7 @@ package com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.server.extensions.ICanSendMany;
 import com.generalbytes.batm.server.extensions.IWallet;
 import org.bouncycastle.asn1.ASN1Integer;
 import org.bouncycastle.asn1.DERSequenceGenerator;
@@ -53,17 +54,23 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.Security;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.IBlockIO.PRIORITY_HIGH;
 import static com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.IBlockIO.PRIORITY_LOW;
 import static com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.IBlockIO.PRIORITY_MEDIUM;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public class BlockIOWalletWithClientSideSigning implements IWallet {
+public class BlockIOWalletWithClientSideSigning implements IWallet, ICanSendMany {
     private static final Logger log = LoggerFactory.getLogger("batm.master.extensions.BlockIOWallet2");
     private ObjectMapper jsonObjectMapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
     private String pin;
@@ -147,12 +154,17 @@ public class BlockIOWalletWithClientSideSigning implements IWallet {
     }
 
     @Override
-    public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
+    public String sendMany(Collection<Transfer> transfers, String cryptoCurrency, String description) {
         if (!getCryptoCurrencies().contains(cryptoCurrency)) {
             return null;
         }
         try {
-            BlockIOResponseWithdrawalToBeSigned response = api.withdrawToBeSigned(amount.toPlainString(), destinationAddress, priority);
+            // sum amounts for the same address - this wallet cannot send multiple amounts to the same address
+            Map<String, BigDecimal> destinationAddressAmounts = transfers.stream()
+                .collect(Collectors.toMap(Transfer::getDestinationAddress, Transfer::getAmount, BigDecimal::add));
+            List<BigDecimal> amounts = new ArrayList<>(destinationAddressAmounts.values());
+            List<String> toAddresses = new ArrayList<>(destinationAddressAmounts.keySet());
+            BlockIOResponseWithdrawalToBeSigned response = api.withdrawToAddressesToBeSigned(amounts, toAddresses, priority);
             if (response != null && response.getStatus() != null && "success".equalsIgnoreCase(response.getStatus()) && response.getData() != null) {
                 log.debug("Block.io reference_id = " + response.getData().getReference_id());
                 BlockIOInput[] inputs = response.getData().getInputs();
@@ -188,6 +200,11 @@ public class BlockIOWalletWithClientSideSigning implements IWallet {
         }
 
         return null;
+    }
+
+    @Override
+    public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
+        return sendMany(Collections.singleton(new Transfer(destinationAddress, amount)), cryptoCurrency, description);
     }
 
     private static byte[] signTransaction(byte[] dataToSign, byte[] expectedSignerPublicKey, String passphrase, String pin) {
