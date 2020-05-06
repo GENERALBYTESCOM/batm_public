@@ -19,6 +19,7 @@ package com.generalbytes.batm.server.extensions.extra.examples.identity;
 
 import com.generalbytes.batm.server.extensions.IExtensionContext;
 import com.generalbytes.batm.server.extensions.IIdentity;
+import com.generalbytes.batm.server.extensions.IIdentityPiece;
 import com.generalbytes.batm.server.extensions.ILimit;
 import com.generalbytes.batm.server.extensions.PhoneNumberQueryResult;
 
@@ -28,10 +29,13 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 @Path("/")
 public class IdentityExampleRestService {
@@ -47,9 +51,10 @@ public class IdentityExampleRestService {
                            @FormParam("terminalSerialNumber") String terminalSerialNumber, @FormParam("note") String note,
                            @FormParam("phoneNumber") String phoneNumber, @FormParam("firstName") String firstName,
                            @FormParam("lastName") String lastName, @FormParam("emailAddress") String emailAddress,
-                           @FormParam("idCardNumber") String idCardNumber, @FormParam("contactZIP") String contactZIP,
+                           @FormParam("idCardNumber") String idCardNumber, @FormParam("documentValidToYYYYMMDD") String documentValidToYYYYMMDD,
+                           @FormParam("contactZIP") String contactZIP,
                            @FormParam("contactCountry") String contactCountry, @FormParam("contactProvince") String contactProvince,
-                           @FormParam("contactCity") String contactCity, @FormParam("contactAddress") String contactAddress) {
+                           @FormParam("contactCity") String contactCity, @FormParam("contactAddress") String contactAddress) throws ParseException {
 
 
         IExtensionContext ctx = IdentityExampleExtension.getExtensionContext();
@@ -71,7 +76,9 @@ public class IdentityExampleRestService {
 
         IIdentity identity = ctx.addIdentity(fiatCurrency, terminalSerialNumber, externalId, limits, limits, limits, limits, limits, note, state, discount, discount, now, now);
         String identityPublicId = identity.getPublicId();
-        ctx.addIdentityPiece(identityPublicId, IdentityPieceExample.fromPersonalInfo(firstName, lastName, idCardNumber, contactZIP, contactCountry, contactProvince, contactCity, contactAddress));
+        ctx.addIdentityPiece(identityPublicId, IdentityPieceExample.fromPersonalInfo(firstName, lastName, idCardNumber, IIdentityPiece.DOCUMENT_TYPE_ID_CARD,
+            documentValidToYYYYMMDD == null ? null : new SimpleDateFormat("yyyyMMdd", Locale.US).parse(documentValidToYYYYMMDD),
+            contactZIP, contactCountry, contactProvince, contactCity, contactAddress));
         ctx.addIdentityPiece(identityPublicId, IdentityPieceExample.fromPhoneNumber(phoneNumber));
         ctx.addIdentityPiece(identityPublicId, IdentityPieceExample.fromEmailAddress(emailAddress));
         ctx.addIdentityPiece(identityPublicId, IdentityPieceExample.fromSelfie("image/jpeg", exampleJpeg));
