@@ -19,6 +19,7 @@ package com.generalbytes.batm.server.extensions.extra;
 
 import com.generalbytes.batm.server.extensions.IExchange;
 import com.generalbytes.batm.server.extensions.IExchangeAdvanced;
+import com.generalbytes.batm.server.extensions.ITask;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -51,11 +52,24 @@ public class ExchangeTest {
         this.exchange = exchange;
     }
 
-
     @Test
     public void testPurchase() {
+        String purchaseId = exchange.purchaseCoins(BigDecimal.TEN, cryptoCurrency,"USD", "test");
+        System.out.println(purchaseId);
+        Assert.assertNotNull(purchaseId);
+    }
+
+    @Test
+    public void testPurchaseAdvanced() {
         if (exchange instanceof IExchangeAdvanced) {
-            ((IExchangeAdvanced) exchange).createPurchaseCoinsTask(BigDecimal.TEN, cryptoCurrency, "USD", "test");
+            ITask tt = ((IExchangeAdvanced) exchange).createPurchaseCoinsTask(BigDecimal.TEN, cryptoCurrency, "USD", "test");
+            tt.onCreate();
+            for (int i = 0; i < 10 && !tt.isFinished(); i++) {
+                tt.onDoStep();
+            }
+            String purchaseId = tt.getResult() == null ? null : tt.getResult().toString();
+            System.out.println(purchaseId);
+            Assert.assertNotNull(purchaseId);
         }
     }
 
@@ -64,6 +78,13 @@ public class ExchangeTest {
         BigDecimal cryptoBalance = exchange.getCryptoBalance(cryptoCurrency);
         System.out.println(cryptoBalance);
         Assert.assertNotNull(cryptoBalance);
+    }
+
+    @Test
+    public void testGetDepositAddress() {
+        String depositAddress = exchange.getDepositAddress(cryptoCurrency);
+        System.out.println(depositAddress);
+        Assert.assertNotNull(depositAddress);
     }
 
     @Test
