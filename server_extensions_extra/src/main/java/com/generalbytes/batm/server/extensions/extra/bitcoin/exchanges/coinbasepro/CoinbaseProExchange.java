@@ -58,6 +58,7 @@ public class CoinbaseProExchange extends XChangeExchange {
         cryptoCurrencies.add(CryptoCurrency.ETH.getCode());
         cryptoCurrencies.add(CryptoCurrency.LTC.getCode());
         cryptoCurrencies.add(CryptoCurrency.XRP.getCode());
+        cryptoCurrencies.add(CryptoCurrency.XTZ.getCode());
         return cryptoCurrencies;
     }
 
