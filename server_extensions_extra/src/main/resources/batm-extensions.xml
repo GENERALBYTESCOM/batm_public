@@ -402,6 +402,7 @@
             <cryptocurrency>XRP</cryptocurrency>
             <cryptocurrency>XSG</cryptocurrency>
             <cryptocurrency>XZC</cryptocurrency>
+            <cryptocurrency>XTZ</cryptocurrency>
         </ratesource>
         <ratesource prefix="coinpaprika" name="CoinPaprika.com">
             <param name="fiatcurrency"/>
@@ -464,6 +465,7 @@
             <cryptocurrency>XRP</cryptocurrency>
             <cryptocurrency>XSG</cryptocurrency>
             <cryptocurrency>XZC</cryptocurrency>
+            <cryptocurrency>XTZ</cryptocurrency>
         </ratesource>
         <exchange prefix="binancecom" name="Binance.com">
             <param name="apikey"/>
@@ -492,6 +494,7 @@
             <cryptocurrency>XRP</cryptocurrency>
             <cryptocurrency>XZC</cryptocurrency>
             <cryptocurrency>FTT</cryptocurrency>
+            <cryptocurrency>XTZ</cryptocurrency>
         </exchange>
         <ratesource prefix="binancecom" name="Binance.com">
             <param name="fiatcurrency" />
@@ -1396,6 +1399,14 @@
         </ratesource>
         <cryptologo cryptocurrency="BNB" file="bnb.svg"/>
         <cryptologo cryptocurrency="BNB" file="bnb.png"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.tezos.TezosExtension" >
+        <ratesource prefix="xtzfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>XTZ</cryptocurrency>
+        </ratesource>
+        <cryptologo cryptocurrency="XTZ" file="xtz.svg"/>
+        <cryptologo cryptocurrency="XTZ" file="xtz.png"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.electra.ElectraExtension" >
         <wallet prefix="electrad" name="Electracoin">

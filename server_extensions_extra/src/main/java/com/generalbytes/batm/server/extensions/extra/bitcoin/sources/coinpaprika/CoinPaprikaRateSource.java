@@ -94,6 +94,7 @@ public class CoinPaprikaRateSource implements IRateSource {
         CRYPTOCURRENCIES.put(CryptoCurrency.XRP.getCode(), "xrp-xrp");
         CRYPTOCURRENCIES.put(CryptoCurrency.XSG.getCode(), "xsg-snowgem");
         CRYPTOCURRENCIES.put(CryptoCurrency.XZC.getCode(), "xzc-zcoin");
+        CRYPTOCURRENCIES.put(CryptoCurrency.XTZ.getCode(), "xtz-tezos");
     }
 
     private final CoinPaprikaV1API api;

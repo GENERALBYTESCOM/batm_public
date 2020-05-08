@@ -95,6 +95,7 @@ public enum FiatCurrency {
     ZAR("South African rand"),
 
     USDC("USD Coin"),
+    BUSD("Binance USD"),
     USDT("Tether USD"),
     
     XAU("Gold"),

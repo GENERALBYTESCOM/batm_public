@@ -105,6 +105,7 @@ public enum CryptoCurrency {
     NULS("NULS"),
     MUE("MonetaryUnit"),
     XPM("Primecoin"),
+    XTZ("Tezos"),
 
     TBCH("test BCH"),
     TBTC("test BTC"),
