@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2019 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2020 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -23,7 +23,7 @@ import com.generalbytes.batm.server.extensions.IExchangeAdvanced;
 import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
 import com.generalbytes.batm.server.extensions.ITask;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitflyer.dto.*;
-import com.generalbytes.batm.server.extensions.extra.dash.sources.cddash.CompatSSLSocketFactory;
+import com.generalbytes.batm.server.extensions.util.net.CompatSSLSocketFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import si.mazi.rescu.ClientConfig;

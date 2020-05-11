@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2019 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2020 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -41,6 +41,11 @@ public class TransactionExtension extends AbstractExtension implements ITransact
     @Override
     public boolean isTransactionApproved(ITransactionRequest transactionRequest) {
         return true; //approve all transactions
+    }
+
+    @Override
+    public OutputQueueInsertConfig overrideOutputQueueInsertConfig(ITransactionQueueRequest transactionQueueRequest, OutputQueueInsertConfig outputQueueInsertConfig) {
+        return null;
     }
 
     @Override

@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2019 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2020 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -20,6 +20,7 @@ package com.generalbytes.batm.server.extensions.extra.worldcoin.sources.cd;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.IRateSource;
+import com.generalbytes.batm.server.extensions.util.net.CompatSSLSocketFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.net.ssl.SSLContext;

@@ -3,6 +3,7 @@
     <extension class="com.generalbytes.batm.server.extensions.extra.bitcoin.BitcoinExtension" >
             <wallet prefix="bitcoind" name="Bitcoin Core - bitcoind" >
                 <tunnel supported="true"/>
+                <sendtomany supported="true"/>
                 <param name="protocol" />
                 <param name="user" />
                 <param name="password" />
@@ -13,6 +14,7 @@
             </wallet>
             <wallet prefix="bitcoindnoforward" name="Bitcoin Core - bitcoind (no forward)" >
                 <tunnel supported="true"/>
+                <sendtomany supported="true"/>
                 <param name="protocol" />
                 <param name="user" />
                 <param name="password" />
@@ -27,6 +29,7 @@
                 <cryptocurrency>BTC</cryptocurrency>
             </wallet>
             <wallet prefix="bitgo" name="BitGo Wallet">
+                <sendtomany supported="true"/>
                 <tunnel supported="true"/>
                 <param name="host" />
                 <param name="port" />
@@ -40,6 +43,7 @@
                 <help>Host should start with http:// or https://</help>
             </wallet>
             <wallet prefix="bitgonoforward" name="BitGo Wallet (no forward)">
+                <sendtomany supported="true"/>
                 <tunnel supported="true"/>
                 <param name="host" />
                 <param name="port" />
@@ -292,6 +296,55 @@
         </exchange>
         <cryptologo cryptocurrency="BTC" file="btc.png"/>
         <cryptologo cryptocurrency="BTC" file="btc.svg"/>
+        <ratesource prefix="coinbasers" name="Coinbase.com Rate Source" >
+            <param name="fiatcurrency" />
+            <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency>XRP</cryptocurrency>
+            <help>fiatcurrency parameter is optional</help>
+        </ratesource>
+        <wallet prefix="coinbasewallet2" name="Coinbase.com Wallet" >
+            <param name="apikey" />
+            <param name="secretkey" />
+            <param name="accountname" />
+            <cryptocurrency>BAT</cryptocurrency>
+            <cryptocurrency buyonly="true">BCH</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>DASH</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>XRP</cryptocurrency>
+            <help>accountname parameter is optional</help>
+        </wallet>
+        <wallet prefix="coinbasewallet2noforward" name="Coinbase.com Wallet (no forward)" >
+            <param name="apikey" />
+            <param name="secretkey" />
+            <param name="accountname" />
+            <cryptocurrency>BAT</cryptocurrency>
+            <cryptocurrency buyonly="true">BCH</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>XRP</cryptocurrency>
+            <help>accountname parameter is optional. This variant of the wallet generates new addresses for each transaction and does not forward payments from temporary address</help>
+        </wallet>
+        <exchange prefix="coinbaseexchange" name="Coinbase.com Exchange">
+            <param name="apikey" />
+            <param name="secretkey" />
+            <param name="accountname" />
+            <param name="fiatcurrency" />
+            <param name="paymentmethod" />
+            <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>BAT</cryptocurrency>
+            <help>fiatcurrency,paymentmethod are optional</help>
+        </exchange>
         <exchange prefix="coinbasepro" name="Coinbase Pro">
             <param name="key"/>
             <param name="secret"/>
@@ -364,7 +417,7 @@
             <cryptocurrency>FTO</cryptocurrency>
             <cryptocurrency>GRS</cryptocurrency>
             <cryptocurrency>HATCH</cryptocurrency>
-            <cryptocurrency>JOB</cryptocurrency>    
+            <cryptocurrency>JOB</cryptocurrency>
             <cryptocurrency>KMD</cryptocurrency>
             <cryptocurrency>LEO</cryptocurrency>
             <cryptocurrency>LINDA</cryptocurrency>
@@ -586,6 +639,7 @@
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.dogecoin.DogecoinExtension">
         <wallet prefix="blockio" name="Block.io Wallet">
+            <sendtomany supported="true"/>
             <param name="apikey" />
             <param name="pin" />
             <param name="priority" />
@@ -595,6 +649,7 @@
             <help>You can specify optional parameter priority to increase the network fee paid in the given transaction. Options are low, medium, high and will pay 1x, 2x, and 3x the minimum network fees possible on the network, respectively. If not specified, low will be used.</help>
         </wallet>
         <wallet prefix="blockionoforward" name="Block.io Wallet (no forward)">
+            <sendtomany supported="true"/>
             <param name="apikey" />
             <param name="pin" />
             <param name="priority" />
@@ -650,6 +705,7 @@
     <extension class="com.generalbytes.batm.server.extensions.extra.litecoin.LitecoinExtension" >
         <wallet prefix="litecoind" name="Litecoind">
             <tunnel supported="true"/>
+            <sendtomany supported="true"/>
             <param name="protocol" />
             <param name="user" />
             <param name="password" />
@@ -660,6 +716,7 @@
         </wallet>
         <wallet prefix="litecoindnoforward" name="Litecoind (no forward)">
             <tunnel supported="true"/>
+            <sendtomany supported="true"/>
             <param name="protocol" />
             <param name="user" />
             <param name="password" />
@@ -678,6 +735,7 @@
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.lightningbitcoin.LightningBitcoinExtension" >
         <wallet prefix="eclair" name="eclair">
+            <tunnel supported="true"/>
             <param name="scheme" />
             <param name="host" />
             <param name="port" />
@@ -685,6 +743,7 @@
             <cryptocurrency>LBTC</cryptocurrency>
         </wallet>
         <wallet prefix="lnd" name="lnd">
+            <tunnel supported="true"/>
             <param name="host" />
             <param name="port" />
             <param name="macaroon" />

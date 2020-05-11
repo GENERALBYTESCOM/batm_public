@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2019 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2020 GENERAL BYTES s.r.o. All rights reserved.
  * Copyright (C) 2017 MrCoin Ltd.
  *
  * This software may be distributed and modified under the terms of the GNU

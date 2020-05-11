@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2019 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2020 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -22,10 +22,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-public class DummyExchangeAndWalletAndSource implements IExchange, IWallet, IRateSource {
+public class DummyExchangeAndWalletAndSource implements IExchange, IWallet, IRateSource, ICanSendMany {
 
     private static final BigDecimal EXCHANGE_RATE = new BigDecimal(2000);
     private static final BigDecimal WALLET_BALANCE = new BigDecimal(10);
@@ -119,7 +120,13 @@ public class DummyExchangeAndWalletAndSource implements IExchange, IWallet, IRat
 
     @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
-        log.info(String.format("S1%s-DummyExchangeWallet: sending coins to S2%s S3%s", this.cryptoCurrency, destinationAddress, amount));
+        log.info("{}-DummyExchangeWallet: sending coins to {} {}", this.cryptoCurrency, destinationAddress, amount);
+        return TXT_ID;
+    }
+
+    @Override
+    public String sendMany(Collection<Transfer> transfers, String cryptoCurrency, String description) {
+        log.info("{}-DummyExchangeWallet: sendMany: {} {}", this.cryptoCurrency, transfers, description);
         return TXT_ID;
     }
 

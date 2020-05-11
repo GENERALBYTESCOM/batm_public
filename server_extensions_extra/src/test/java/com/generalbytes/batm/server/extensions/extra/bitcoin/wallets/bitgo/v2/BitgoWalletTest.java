@@ -4,6 +4,7 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.LoggerContext;
 import com.generalbytes.batm.server.extensions.Converters;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.server.extensions.ICanSendMany;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -13,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import si.mazi.rescu.RestProxyFactory;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -101,6 +103,21 @@ public class BitgoWalletTest {
         String description = null;
 
         String result = wallet.sendCoins(destinationAddress, amount, coin, description);
+        log.info("send coins status = {}", result);
+    }
+
+    @Test
+    @Ignore("Local instance of bitgo-express is required to run")
+    public void sendManyTest() {
+        String coin = CryptoCurrency.TBTC.getCode();
+        Integer amountInt = 10000;
+        BigDecimal amount = BigDecimal.valueOf(amountInt).divide(Converters.TBTC);
+        String description = null;
+
+        String result = ((ICanSendMany) wallet).sendMany(Arrays.asList(
+            new ICanSendMany.Transfer("2N5q4MwNSUxbAtaidhRgkiDrbwVR4yCZDhi", new BigDecimal("0.0001")),
+            new ICanSendMany.Transfer("2N5q4MwNSUxbAtaidhRgkiDrbwVR4yCZDhi", new BigDecimal("0.002"))
+        ), coin, "test send to self");
         log.info("send coins status = {}", result);
     }
 }

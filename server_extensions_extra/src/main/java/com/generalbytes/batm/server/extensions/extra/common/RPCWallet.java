@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2019 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2020 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -17,6 +17,7 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.common;
 
+import com.generalbytes.batm.server.extensions.ICanSendMany;
 import wf.bitcoin.javabitcoindrpcclient.BitcoinRPCException;
 import com.generalbytes.batm.server.extensions.IWallet;
 
@@ -25,12 +26,14 @@ import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-public class RPCWallet implements IWallet, IRPCWallet {
+public class RPCWallet implements IWallet, IRPCWallet, ICanSendMany {
     private static final Logger log = LoggerFactory.getLogger(RPCWallet.class);
     private String cryptoCurrency;
 
@@ -66,6 +69,27 @@ public class RPCWallet implements IWallet, IRPCWallet {
         log.info("RPCWallet sending {} {} to {}", amount, cryptoCurrency, destinationAddress);
         try {
             String result = client.sendToAddress(destinationAddress, amount, description);
+            log.debug("result = " + result);
+            return result;
+        } catch (BitcoinRPCException e) {
+            log.error("Error", e);
+            return null;
+        }
+    }
+
+    @Override
+    public String sendMany(Collection<ICanSendMany.Transfer> transfers, String cryptoCurrency, String description) {
+        if (!this.cryptoCurrency.equalsIgnoreCase(cryptoCurrency)) {
+            log.error("RPCWallet wallet error: unknown cryptocurrency.");
+            return null;
+        }
+
+        log.info("sendmany {}: {}", cryptoCurrency, transfers);
+        try {
+            // sum amounts for the same addresses - this wallet cannot send multiple amounts to the same address
+            Map<String, BigDecimal> destinationAddressAmounts = transfers.stream()
+                .collect(Collectors.toMap(Transfer::getDestinationAddress, Transfer::getAmount, BigDecimal::add));
+            String result = client.sendMany(destinationAddressAmounts, description);
             log.debug("result = " + result);
             return result;
         } catch (BitcoinRPCException e) {
