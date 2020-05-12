@@ -106,4 +106,8 @@ public class WatchlistExtension extends AbstractExtension implements ITransactio
     public Map<String, String> onTransactionUpdated(ITransactionDetails transactionDetails) {
         return null;
     }
+
+    @Override
+    public void receiptSent(IReceiptDetails receiptDetails) {
+    }
 }
