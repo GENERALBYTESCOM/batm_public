@@ -51,12 +51,14 @@ public class LndWallet extends AbstractLightningWallet {
     private final String url;
     private final LndAPI api;
 
-    public LndWallet(String host, int port, String macaroon, String certHexString) throws GeneralSecurityException {
-        url = new HttpUrl.Builder().scheme("https").host(host).port(port).build().toString();
+    public LndWallet(String url, String macaroon, String certHexString) throws GeneralSecurityException {
+        this.url = url;
         final ClientConfig config = new ClientConfig();
         config.addDefaultParam(HeaderParam.class, "Grpc-Metadata-macaroon", macaroon);
-        config.setSslSocketFactory(HexStringCertTrustManager.getSslSocketFactory(certHexString));
-        api = RestProxyFactory.createProxy(LndAPI.class, url, config);
+        if(certHexString != null) {
+            config.setSslSocketFactory(HexStringCertTrustManager.getSslSocketFactory(certHexString));
+        }
+        this.api = RestProxyFactory.createProxy(LndAPI.class, url, config);
     }
 
     /**
