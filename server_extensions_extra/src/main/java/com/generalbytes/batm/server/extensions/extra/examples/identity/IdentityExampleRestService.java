@@ -68,7 +68,7 @@ public class IdentityExampleRestService {
             System.out.println("Phone type: " + phoneNumberQueryResult.getPhoneLineType().getPhoneTypeCode().name());
         }
 
-        int state = IIdentity.STATE_REGISTERED;
+        int state = IIdentity.STATE_NOT_REGISTERED;
         Date now = new Date();
 
         // read the image data from the request or a file
@@ -85,6 +85,27 @@ public class IdentityExampleRestService {
         ctx.addIdentityPiece(identityPublicId, IdentityPieceExample.fromIdScan("image/jpeg", exampleJpeg));
 
         return identityPublicId;
+    }
+
+    // curl -k -XPOST https://localhost:7743/extensions/identity-example/update -d "identityPublicId=IE3BVEBUIIXZ3SZV&emailAddress=email@example.com"
+    @POST
+    @Path("/update")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String update(@FormParam("identityPublicId") String identityPublicId, @FormParam("emailAddress") String emailAddress) {
+
+        IExtensionContext ctx = IdentityExampleExtension.getExtensionContext();
+        IIdentity identity = ctx.findIdentityByIdentityId(identityPublicId);
+        if (identity == null) {
+            return "identity not found";
+        }
+        int newState = IIdentity.STATE_REGISTERED;
+        String note = identity.getNote() + " updated from an extension";
+        IIdentity updatedIdentity = ctx.updateIdentity(identityPublicId, identity.getExternalId(),
+            newState, identity.getType(), identity.getCreated(), identity.getRegistered(),
+            identity.getVipBuyDiscount(), identity.getVipSellDiscount(), note,
+            identity.getLimitCashPerTransaction(), identity.getLimitCashPerHour(), identity.getLimitCashPerDay(), identity.getLimitCashPerMonth());
+
+        return updatedIdentity.getPublicId();
     }
 
 }
