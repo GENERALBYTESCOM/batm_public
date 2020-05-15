@@ -65,4 +65,9 @@ public interface ITransactionListener {
      * @return
      */
     Map<String,String> onTransactionUpdated(ITransactionDetails transactionDetails);
+
+    /**
+     * Callback method that is called by server with user email address or cellphone number after the receipt is sent to the user
+     */
+    void receiptSent(IReceiptDetails receiptDetails);
 }

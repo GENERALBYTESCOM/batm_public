@@ -18,12 +18,15 @@
 package com.generalbytes.batm.server.extensions.extra.examples;
 
 import com.generalbytes.batm.server.extensions.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /* Comment out this extension class in batm-extensions.xml */
 public class TransactionExtension extends AbstractExtension implements ITransactionListener {
+    Logger log = LoggerFactory.getLogger(TransactionExtension.class);
 
     private final Map<String, Long> ticketCounters = new HashMap<>(); //each terminal has its counter
 
@@ -70,5 +73,10 @@ public class TransactionExtension extends AbstractExtension implements ITransact
         Map<String, String> result = new HashMap<>();
         result.put("last.updated.at", "" + System.currentTimeMillis());
         return result;
+    }
+
+    @Override
+    public void receiptSent(IReceiptDetails receiptDetails) {
+        log.info("Extension - receipt sent from {} - phone: {}, email: {}", receiptDetails.getTerminalSerialNumber(), receiptDetails.getCellphone(), receiptDetails.getEmail());
     }
 }
