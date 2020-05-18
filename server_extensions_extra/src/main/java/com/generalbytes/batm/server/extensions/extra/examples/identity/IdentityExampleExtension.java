@@ -20,12 +20,18 @@ package com.generalbytes.batm.server.extensions.extra.examples.identity;
 import com.generalbytes.batm.server.extensions.AbstractExtension;
 import com.generalbytes.batm.server.extensions.IExtensionContext;
 import com.generalbytes.batm.server.extensions.IRestService;
+import com.generalbytes.batm.server.extensions.aml.IExternalIdentity;
+import com.generalbytes.batm.server.extensions.aml.IExternalIdentityProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.Set;
 
 // uncomment in batm-extensions.xml
 public class IdentityExampleExtension extends AbstractExtension {
+    Logger log = LoggerFactory.getLogger(IdentityExampleExtension.class);
+
     private static IExtensionContext ctx;
 
     @Override
@@ -50,4 +56,74 @@ public class IdentityExampleExtension extends AbstractExtension {
         return ctx;
     }
 
+    @Override
+    public Set<IExternalIdentityProvider> getIdentityProviders() {
+        Set<IExternalIdentityProvider> ips = new HashSet<>();
+        ips.add(new IExternalIdentityProvider() {
+            @Override
+            public IExternalIdentity findIdentityByExternalId(String identityExternalId) {
+                return null;
+            }
+
+            @Override
+            public IExternalIdentity findIdentityByPhoneNumber(String cellPhoneNumber) {
+                if (cellPhoneNumber == null || !cellPhoneNumber.endsWith("123")) {
+                    return null;
+                }
+                log.info("Returning External Identity");
+                return new IExternalIdentity() {
+                    @Override
+                    public String getId() {
+                        return "1";
+                    }
+
+                    @Override
+                    public int getState() {
+                        return STATE_REGISTERED;
+                    }
+
+                    @Override
+                    public String getPhoneNumber() {
+                        return cellPhoneNumber;
+                    }
+
+                    @Override
+                    public String getEmail() {
+                        return "k@k.com";
+                    }
+
+                    @Override
+                    public String getFirstname() {
+                        return "John";
+                    }
+
+                    @Override
+                    public String getLastname() {
+                        return "Doe";
+                    }
+
+                    @Override
+                    public String getLanguage() {
+                        return "en";
+                    }
+                };
+            }
+
+            @Override
+            public IExternalIdentity findIdentityByEmail(String emailAddress) {
+                return null;
+            }
+
+            @Override
+            public boolean isPINCorrect(String identityExternalId, String pinEnteredByCustomer) {
+                if (pinEnteredByCustomer.equalsIgnoreCase("1234")) {
+                    log.debug("Customer " + identityExternalId + " entered correct PIN");
+                    return true;
+                }
+                log.debug("Customer " + identityExternalId + " entered incorrect PIN");
+                return false;
+            }
+        });
+        return ips;
+    }
 }
