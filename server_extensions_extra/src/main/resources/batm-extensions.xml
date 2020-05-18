@@ -1693,7 +1693,8 @@
     </extension>
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.TransactionExtension" />-->
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.identity.IdentityExampleExtension" />-->
-    <!-- <extension class="com.generalbytes.batm.server.extensions.extra.watchlists.WatchlistExtension" />-->
+    <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.identity.ExternalIdentityExampleExtension" />-->
+    <!--<extension class="com.generalbytes.batm.server.extensions.extra.watchlists.WatchlistExtension" />-->
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.rest.RESTExampleExtension" />-->
     <extension class="com.generalbytes.batm.server.extensions.extra.examples.chat.ChatBotExtensionExample" />
     <extension class="com.generalbytes.batm.server.extensions.extra.nuls.NulsExtension" >
