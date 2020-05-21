@@ -88,6 +88,11 @@ public class TestExtensionContext implements IExtensionContext {
     }
 
     @Override
+    public IIdentity updateIdentity(String identityId, String externalId, int state, int type, Date created, Date registered, BigDecimal vipBuyDiscount, BigDecimal vipSellDiscount, String note, List<ILimit> limitCashPerTransaction, List<ILimit> limitCashPerHour, List<ILimit> limitCashPerDay, List<ILimit> limitCashPerMonth) {
+        return null;
+    }
+
+    @Override
     public ITunnelManager getTunnelManager() {
         return (tunnelPassword, originalWalletAddress) -> originalWalletAddress;
     }
