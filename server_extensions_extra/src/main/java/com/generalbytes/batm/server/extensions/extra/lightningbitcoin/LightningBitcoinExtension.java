@@ -24,6 +24,7 @@ import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.EclairWallet;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.lnd.LndWallet;
+import okhttp3.HttpUrl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,24 +65,28 @@ public class LightningBitcoinExtension extends AbstractExtension {
                     }
                 } else if ("lnd".equalsIgnoreCase(walletType)) {
                     // echo 127.0.0.1:8080:`xxd -ps -u -c10000 ~/.lnd/data/chain/bitcoin/mainnet/admin.macaroon`:`xxd -ps -u -c10000 ~/.lnd/tls.cert`
-                    String host = st.nextToken();
-                    int port = Integer.parseInt(st.nextToken());
-                    String macaroon = st.nextToken();
-                    String cert = st.nextToken();
+                    // scheme://host:port/:macaroon:[cert]
+                    // scheme://host/path/:macaroon:[cert]
+                    // scheme://host:port/path:macaroon:[cert]
 
-                    InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(tunnelPassword, InetSocketAddress.createUnresolved(host, port));
-                    host = tunnelAddress.getHostString();
-                    port = tunnelAddress.getPort();
-
-                    if (host != null && macaroon != null && macaroon.length() > 4 && cert != null && cert.length() > 4) {
-                        try {
-                            return new LndWallet(host, port, macaroon, cert);
-                        } catch (Exception e) {
-                            log.warn("Error creating lnd wallet; host={}, port={}, macaroon={}..., cert={}...", host, port, macaroon.substring(0, 4), cert.substring(0, 4), e);
-                        }
-                    } else {
-                        log.warn("Invalid lnd wallet parameters");
+                    String url = st.nextToken() + ":" + st.nextToken();
+                    if (!url.endsWith("/")) {
+                        url += ":" + st.nextToken();
                     }
+                    HttpUrl parsedUrl = HttpUrl.parse(url);
+                    if (parsedUrl == null) {
+                        log.error("Invalid URL configured: {}", url);
+                        return null;
+                    }
+                    InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(tunnelPassword, InetSocketAddress.createUnresolved(parsedUrl.host(), parsedUrl.port()));
+                    url = new HttpUrl.Builder().scheme(parsedUrl.scheme()).host(tunnelAddress.getHostString()).port(tunnelAddress.getPort()).encodedPath(parsedUrl.encodedPath()).build().toString();
+                    String macaroon = st.nextToken();
+                    String cert = st.hasMoreTokens() ? st.nextToken() : null;
+                    if(macaroon == null || macaroon.trim().isEmpty()) {
+                        log.error("macaroon param missing");
+                        return null;
+                    }
+                    return new LndWallet(url, macaroon, cert);
                 }
             }
         } catch (Exception e) {
