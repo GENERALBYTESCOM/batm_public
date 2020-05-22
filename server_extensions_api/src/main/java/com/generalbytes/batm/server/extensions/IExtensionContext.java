@@ -179,6 +179,16 @@ public interface IExtensionContext {
     boolean addIdentityPiece(String identityPublicId, IIdentityPiece iidentityPiece);
 
     /**
+     * @param identityId     public ID of an existing identity to be updated
+     * @param state new state to be set
+     * @param note new note to be set
+     * @return updated identity
+     */
+    IIdentity updateIdentity(String identityId, String externalId, int state, int type, Date created, Date registered,
+                             BigDecimal vipBuyDiscount, BigDecimal vipSellDiscount, String note,
+                             List<ILimit> limitCashPerTransaction, List<ILimit> limitCashPerHour, List<ILimit> limitCashPerDay, List<ILimit> limitCashPerMonth);
+
+    /**
      *
      * @return a tunnel manager that allows creating ssh tunnels on a remote ssh server.
      * Used for creating encrypted tunnels for wallets on remote hosts.

@@ -744,11 +744,10 @@
         </wallet>
         <wallet prefix="lnd" name="lnd">
             <tunnel supported="true"/>
-            <param name="host" />
-            <param name="port" />
+            <param name="url" />
             <param name="macaroon" />
             <param name="cert" />
-            <help>macaroon and cert are base64 encoded files admin.macaroon and tls.cert</help><!--  Configuration can be obtained for example with this command: echo 127.0.0.1:8080:`xxd -ps -u -c10000 ~/.lnd/data/chain/bitcoin/mainnet/admin.macaroon`:`xxd -ps -u -c10000 ~/.lnd/tls.cert` -->
+            <help>URL starts with https://, may contain a port number and must end with '/'. Macaroon and cert are hex encoded files admin.macaroon and tls.cert. Cert parameter is not mandatory if trusted authority signed cert is used.</help>
             <cryptocurrency>LBTC</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="LBTC" file="lbtc.png"/>
@@ -1623,7 +1622,7 @@
             <param name="mnemonic" />
             <param name="gaslimit" />
             <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
-            <cryptocurrency>Jochain</cryptocurrency>
+            <cryptocurrency>JOB</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="Jobchain" file="jobchain.png"/>
         <cryptologo cryptocurrency="Jobchain" file="jobchain.svg"/>
@@ -1693,7 +1692,8 @@
     </extension>
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.TransactionExtension" />-->
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.identity.IdentityExampleExtension" />-->
-    <!-- <extension class="com.generalbytes.batm.server.extensions.extra.watchlists.WatchlistExtension" />-->
+    <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.identity.ExternalIdentityExampleExtension" />-->
+    <!--<extension class="com.generalbytes.batm.server.extensions.extra.watchlists.WatchlistExtension" />-->
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.rest.RESTExampleExtension" />-->
     <extension class="com.generalbytes.batm.server.extensions.extra.examples.chat.ChatBotExtensionExample" />
     <extension class="com.generalbytes.batm.server.extensions.extra.nuls.NulsExtension" >

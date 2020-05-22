@@ -26,6 +26,7 @@ import java.util.Set;
 
 // uncomment in batm-extensions.xml
 public class IdentityExampleExtension extends AbstractExtension {
+
     private static IExtensionContext ctx;
 
     @Override
