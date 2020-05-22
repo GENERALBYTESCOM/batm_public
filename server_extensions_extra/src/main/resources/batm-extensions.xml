@@ -1622,7 +1622,7 @@
             <param name="mnemonic" />
             <param name="gaslimit" />
             <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
-            <cryptocurrency>Jochain</cryptocurrency>
+            <cryptocurrency>JOB</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="Jobchain" file="jobchain.png"/>
         <cryptologo cryptocurrency="Jobchain" file="jobchain.svg"/>
