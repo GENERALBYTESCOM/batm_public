@@ -164,6 +164,7 @@ public class BlockIOWalletWithClientSideSigning implements IWallet, ICanSendMany
                 .collect(Collectors.toMap(Transfer::getDestinationAddress, Transfer::getAmount, BigDecimal::add));
             List<BigDecimal> amounts = new ArrayList<>(destinationAddressAmounts.values());
             List<String> toAddresses = new ArrayList<>(destinationAddressAmounts.keySet());
+            log.info("{} calling withdraw {} to {}", getClass().getSimpleName(), amounts, toAddresses);
             BlockIOResponseWithdrawalToBeSigned response = api.withdrawToAddressesToBeSigned(amounts, toAddresses, priority);
             if (response != null && response.getStatus() != null && "success".equalsIgnoreCase(response.getStatus()) && response.getData() != null) {
                 log.debug("Block.io reference_id = " + response.getData().getReference_id());
