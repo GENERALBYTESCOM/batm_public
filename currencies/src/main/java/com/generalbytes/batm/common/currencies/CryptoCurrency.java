@@ -62,6 +62,7 @@ public enum CryptoCurrency {
     GRS("Groestlcoin"),
     HATCH("Hatch"),
     HBX("HBX"),
+    HT("Huobi Token"),
     KMD("Komodo"),
     JOB("Jobchain"),
     LBTC("Lightning Network Bitcoin"),
