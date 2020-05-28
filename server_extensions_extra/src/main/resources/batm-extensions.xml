@@ -151,6 +151,7 @@
                 <cryptocurrency>FLASH</cryptocurrency>
                 <cryptocurrency>XSG</cryptocurrency>
                 <cryptocurrency>JOB</cryptocurrency>
+                <cryptocurrency>HT</cryptocurrency>
             </ratesource>
             <ratesource prefix="stream365" name ="365.stream" >
                 <cryptocurrency>HBX</cryptocurrency>
@@ -186,6 +187,7 @@
                 <cryptocurrency>FTO</cryptocurrency>
                 <cryptocurrency>GRS</cryptocurrency>
                 <cryptocurrency>HATCH</cryptocurrency>
+                <cryptocurrency>HT</cryptocurrency>
                 <cryptocurrency>JOB</cryptocurrency>
                 <cryptocurrency>LEO</cryptocurrency>
                 <cryptocurrency>LINDA</cryptocurrency>
@@ -417,6 +419,7 @@
             <cryptocurrency>FTO</cryptocurrency>
             <cryptocurrency>GRS</cryptocurrency>
             <cryptocurrency>HATCH</cryptocurrency>
+            <cryptocurrency>HT</cryptocurrency>
             <cryptocurrency>JOB</cryptocurrency>
             <cryptocurrency>KMD</cryptocurrency>
             <cryptocurrency>LEO</cryptocurrency>
@@ -478,6 +481,7 @@
             <cryptocurrency>FTO</cryptocurrency>
             <cryptocurrency>GRS</cryptocurrency>
             <cryptocurrency>HATCH</cryptocurrency>
+            <cryptocurrency>HT</cryptocurrency>
             <cryptocurrency>HBX</cryptocurrency>
             <cryptocurrency>JOB</cryptocurrency>
             <cryptocurrency>KMD</cryptocurrency>
@@ -1688,6 +1692,15 @@
         </wallet>
         <cryptologo cryptocurrency="USDS" file="usds.png"/>
         <cryptologo cryptocurrency="USDS" file="usds.svg"/>
+        <wallet prefix="infuraERC20_HT_18_0x6f259637dcd74c767781e37bc6133cd6a68aa161" name="Infura.io wallet - Huobi Token">
+            <param name="projectId" />
+            <param name="mnemonic" />
+            <param name="gaslimit" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
+            <cryptocurrency>HT</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="HT" file="HT.png"/>
+        <cryptologo cryptocurrency="HT" file="HT.svg"/>
         <!-- ADD your ERC20 tokens here. And don't forget to add cryptologos. -->
     </extension>
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.TransactionExtension" />-->
