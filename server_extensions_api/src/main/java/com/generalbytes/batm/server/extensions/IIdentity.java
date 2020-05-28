@@ -48,6 +48,7 @@ public interface IIdentity {
     Date getWatchListLastScanAt();
     boolean isWatchListBanned();
     String getNote();
+    List<IIdentityNote> getNotes();
     List<IIdentityPiece> getIdentityPieces();
 
     //Individual limits set on identity
