@@ -52,6 +52,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.security.MessageDigest;
 import java.security.Security;
 import java.util.ArrayList;
@@ -162,8 +163,11 @@ public class BlockIOWalletWithClientSideSigning implements IWallet, ICanSendMany
             // sum amounts for the same address - this wallet cannot send multiple amounts to the same address
             Map<String, BigDecimal> destinationAddressAmounts = transfers.stream()
                 .collect(Collectors.toMap(Transfer::getDestinationAddress, Transfer::getAmount, BigDecimal::add));
-            List<BigDecimal> amounts = new ArrayList<>(destinationAddressAmounts.values());
+            List<BigDecimal> amounts = destinationAddressAmounts.values().stream()
+                .map(amount -> amount.setScale(8, RoundingMode.FLOOR))
+                .collect(Collectors.toList());
             List<String> toAddresses = new ArrayList<>(destinationAddressAmounts.keySet());
+            log.info("{} calling withdraw {} to {}", getClass().getSimpleName(), amounts, toAddresses);
             BlockIOResponseWithdrawalToBeSigned response = api.withdrawToAddressesToBeSigned(amounts, toAddresses, priority);
             if (response != null && response.getStatus() != null && "success".equalsIgnoreCase(response.getStatus()) && response.getData() != null) {
                 log.debug("Block.io reference_id = " + response.getData().getReference_id());

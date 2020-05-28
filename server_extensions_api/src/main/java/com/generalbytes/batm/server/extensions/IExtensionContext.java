@@ -295,7 +295,7 @@ public interface IExtensionContext {
      * Call this transaction to create a sell transaction. After this call server will await crypto transaction to arrive and allocate cash for the customer.
      * @param fiatAmount
      * @param fiatCurrency
-     * @param cryptoAmount - ignored - reserved for future.
+     * @param cryptoAmount - ignored but must be filled - reserved for future.
      * @param cryptoCurrency
      * @param identityPublicId
      * @param discountCode
