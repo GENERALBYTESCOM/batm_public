@@ -19,6 +19,7 @@ package com.generalbytes.batm.server.extensions.extra.examples.identity;
 
 import com.generalbytes.batm.server.extensions.IExtensionContext;
 import com.generalbytes.batm.server.extensions.IIdentity;
+import com.generalbytes.batm.server.extensions.IIdentityNote;
 import com.generalbytes.batm.server.extensions.IIdentityPiece;
 import com.generalbytes.batm.server.extensions.ILimit;
 import com.generalbytes.batm.server.extensions.PhoneNumberQueryResult;
@@ -31,6 +32,7 @@ import javax.ws.rs.core.MediaType;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
@@ -106,6 +108,21 @@ public class IdentityExampleRestService {
             identity.getLimitCashPerTransaction(), identity.getLimitCashPerHour(), identity.getLimitCashPerDay(), identity.getLimitCashPerMonth());
 
         return updatedIdentity.getPublicId();
+    }
+
+    // curl -k -XPOST https://localhost:7743/extensions/identity-example/getnotes -d "identityPublicId=IE3BVEBUIIXZ3SZV"
+    @POST
+    @Path("/getnotes")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<IIdentityNote> getNotes(@FormParam("identityPublicId") String identityPublicId) {
+
+        IExtensionContext ctx = IdentityExampleExtension.getExtensionContext();
+        IIdentity identity = ctx.findIdentityByIdentityId(identityPublicId);
+        if (identity == null) {
+            return new ArrayList<>();
+        }
+
+        return identity.getNotes();
     }
 
 }
