@@ -21,8 +21,8 @@ import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.IExtensionContext;
 import com.generalbytes.batm.server.extensions.IPaperWallet;
 import com.generalbytes.batm.server.extensions.IPaperWalletGenerator;
-import com.generalbytes.bitrafael.api.wallet.bch.WalletToolsBCH;
 
+import com.generalbytes.bitrafael.tools.wallet.bch.WalletToolsBCH;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

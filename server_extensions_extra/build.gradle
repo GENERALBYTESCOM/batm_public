@@ -72,6 +72,10 @@ dependencies {
     githubCompile(group: 'com.github.GENERALBYTESCOM.bitrafael_public', name: 'bitrafael-client', version: bitrafaelVersion) {
         exclude group: 'org.slf4j', module: 'slf4j-simple'
     }
+    generalBytesCompile(group: 'com.generalbytes.bitrafael.public', name: 'bitrafael-client-api', version: bitrafaelVersion)
+    githubCompile(group: 'com.github.GENERALBYTESCOM.bitrafael_public', name: 'bitrafael-client-api', version: bitrafaelVersion)
+    generalBytesCompile(group: 'com.generalbytes.bitrafael.public', name: 'bitrafael-server-api', version: bitrafaelVersion)
+    githubCompile(group: 'com.github.GENERALBYTESCOM.bitrafael_public', name: 'bitrafael-server-api', version: bitrafaelVersion)
 
     testCompile(group: 'junit', name: 'junit', version: '4.10')
     testCompile(group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3')
