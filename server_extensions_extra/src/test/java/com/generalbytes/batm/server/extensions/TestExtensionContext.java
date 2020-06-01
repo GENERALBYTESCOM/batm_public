@@ -23,6 +23,16 @@ public class TestExtensionContext implements IExtensionContext {
     }
 
     @Override
+    public void addTerminalListener(ITerminalListener listener) {
+
+    }
+
+    @Override
+    public void removeTerminalListener(ITerminalListener listener) {
+
+    }
+
+    @Override
     public ITransactionDetails findTransactionByTransactionId(String remoteOrLocalTransactionId) {
         return null;
     }

@@ -55,6 +55,13 @@ public interface IExtensionContext {
     boolean removeTransactionListener(ITransactionListener listener);
 
     /**
+     * Register listener for terminal events
+     */
+    void addTerminalListener(ITerminalListener listener);
+
+    void removeTerminalListener(ITerminalListener listener);
+
+    /**
      * Finds and returns transaction by given remote or local transaction id
      * @param remoteOrLocalTransactionId
      * @return
