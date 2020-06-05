@@ -26,6 +26,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.binance.B
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.binance.BinanceUsExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitfinex.BitfinexExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitflyer.BitFlyerExchange;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitpandapro.BitpandaProExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bittrex.BittrexExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.CoinbaseExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbasepro.CoinbaseProExchange;
@@ -196,6 +197,13 @@ public class BitcoinExtension extends AbstractExtension {
                 }
                 return new BinanceJerseyExchange(apikey, secretKey, preferredFiatCurrency);
 
+            } else if ("bitpandapro".equalsIgnoreCase(prefix)) {
+                String preferredFiatCurrency = FiatCurrency.EUR.getCode();
+                String apikey = paramTokenizer.nextToken();
+                if (paramTokenizer.hasMoreTokens()) {
+                    preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase();
+                }
+                return BitpandaProExchange.asExchange(apikey, preferredFiatCurrency);
             }
         }
         return null;
@@ -461,6 +469,12 @@ public class BitcoinExtension extends AbstractExtension {
                     preferredFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new BinanceJerseyExchange(preferredFiatCurrency);
+            } else if ("bitpandapro".equalsIgnoreCase(rsType)) {
+                String preferredFiatCurrency = FiatCurrency.EUR.getCode();
+                if (st.hasMoreTokens()) {
+                    preferredFiatCurrency = st.nextToken().toUpperCase();
+                }
+                return BitpandaProExchange.asRateSource(preferredFiatCurrency);
             }
         }
         return null;
