@@ -6,6 +6,7 @@ verifyModule 'com.fasterxml.jackson.core:jackson-core:2.9.9:3083079be6088db2ed0a
 verifyModule 'com.fasterxml.jackson.core:jackson-databind:2.9.8:2351c3eba73a545db9079f5d6d768347ad72666537362c8220fe3e950a55a864'
 verifyModule 'com.fasterxml.jackson.core:jackson-databind:2.9.9:5cbbf429d9e32e3881f0a1438a1f666912219327e9e68b5dcaef6d8e5c5f6b28'
 verifyModule 'com.generalbytes.bitrafael.public:bitrafael-client-api:1.0.38:4fd575c9a2b14bc2adb2ad0726ebd2a57264dd06b88f521a444a69cc1adfcab6'
+verifyModule 'com.generalbytes.bitrafael.public:bitrafael-client:1.0.38:c494424b549f9f804ed9f26cdb15177d0522477b4f0986b2f63986393035f280'
 verifyModule 'com.generalbytes.bitrafael.public:bitrafael-server-api:1.0.38:ea0b2343476495b64ac06bc6da9f0b8a3cec9245d07d4e500d7e9def26f2f719'
 verifyModule 'com.github.GENERALBYTESCOM.bitrafael_public:bitrafael-client-api:1.0.38:7ce4cdfb7bcc5bfa9887fe15fdd003b840f6ce5ca76a232c03e9f201d88e3736'
 verifyModule 'com.github.GENERALBYTESCOM.bitrafael_public:bitrafael-client:1.0.38:32ff2844e48fe88579232e70547a444f0e6347fd775fb5bbfbf52daf8e26fa38'
