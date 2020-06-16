@@ -189,11 +189,20 @@ public interface IExtensionContext {
      * @param identityId     public ID of an existing identity to be updated
      * @param state new state to be set
      * @param note new note to be set
+     * @param limitCashPerWeek
+     * @param limitCashPer3Months
+     * @param limitCashPer12Months
+     * @param limitCashPerCalendarQuarter
+     * @param limitCashPerCalendarYear
+     * @param limitCashTotalIdentity
+     * @param configurationCashCurrency
      * @return updated identity
      */
     IIdentity updateIdentity(String identityId, String externalId, int state, int type, Date created, Date registered,
                              BigDecimal vipBuyDiscount, BigDecimal vipSellDiscount, String note,
-                             List<ILimit> limitCashPerTransaction, List<ILimit> limitCashPerHour, List<ILimit> limitCashPerDay, List<ILimit> limitCashPerMonth);
+                             List<ILimit> limitCashPerTransaction, List<ILimit> limitCashPerHour, List<ILimit> limitCashPerDay, List<ILimit> limitCashPerWeek,
+                             List<ILimit> limitCashPerMonth, List<ILimit> limitCashPer3Months, List<ILimit> limitCashPer12Months, List<ILimit> limitCashPerCalendarQuarter,
+                             List<ILimit> limitCashPerCalendarYear, List<ILimit> limitCashTotalIdentity, String configurationCashCurrency);
 
     /**
      *

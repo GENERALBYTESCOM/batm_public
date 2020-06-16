@@ -55,5 +55,13 @@ public interface IIdentity {
     List<ILimit> getLimitCashPerTransaction();
     List<ILimit> getLimitCashPerHour();
     List<ILimit> getLimitCashPerDay();
+    List<ILimit> getLimitCashPerWeek();
     List<ILimit> getLimitCashPerMonth();
+    List<ILimit> getLimitCashPer3Months();
+    List<ILimit> getLimitCashPer12Months();
+    List<ILimit> getLimitCashPerCalendarQuarter();
+    List<ILimit> getLimitCashPerCalendarYear();
+    List<ILimit> getLimitCashTotalIdentity();
+
+    String getConfigurationCashCurrency();
 }
