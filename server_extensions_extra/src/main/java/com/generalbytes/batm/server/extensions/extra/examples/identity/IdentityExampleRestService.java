@@ -105,7 +105,9 @@ public class IdentityExampleRestService {
         IIdentity updatedIdentity = ctx.updateIdentity(identityPublicId, identity.getExternalId(),
             newState, identity.getType(), identity.getCreated(), identity.getRegistered(),
             identity.getVipBuyDiscount(), identity.getVipSellDiscount(), note,
-            identity.getLimitCashPerTransaction(), identity.getLimitCashPerHour(), identity.getLimitCashPerDay(), identity.getLimitCashPerMonth());
+            identity.getLimitCashPerTransaction(), identity.getLimitCashPerHour(), identity.getLimitCashPerDay(), identity.getLimitCashPerWeek(),
+            identity.getLimitCashPerMonth(), identity.getLimitCashPer3Months(), identity.getLimitCashPer12Months(), identity.getLimitCashPerCalendarQuarter(),
+            identity.getLimitCashPerCalendarYear(), identity.getLimitCashTotalIdentity(), identity.getConfigurationCashCurrency());
 
         return updatedIdentity.getPublicId();
     }
