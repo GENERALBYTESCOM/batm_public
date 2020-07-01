@@ -47,6 +47,7 @@ public enum CryptoCurrency {
     BTDX("Bitcloud"),
     BTX("Bitcore"),
     BURST("Burst"),
+    CGT("CACHE Gold"),
     CLOAK("CloakCoin"),
     DAI("Dai"),
     DASH("Dash"),

@@ -152,6 +152,7 @@
                 <cryptocurrency>XSG</cryptocurrency>
                 <cryptocurrency>JOB</cryptocurrency>
                 <cryptocurrency>HT</cryptocurrency>
+                <cryptocurrency>CGT</cryptocurrency>
             </ratesource>
             <ratesource prefix="stream365" name ="365.stream" >
                 <cryptocurrency>HBX</cryptocurrency>
@@ -173,6 +174,7 @@
                 <cryptocurrency>BTDX</cryptocurrency>
                 <cryptocurrency>BTX</cryptocurrency>
                 <cryptocurrency>BURST</cryptocurrency>
+                <cryptocurrency>CGT</cryptocurrency>
                 <cryptocurrency>CLOAK</cryptocurrency>
                 <cryptocurrency>DAI</cryptocurrency>
                 <cryptocurrency>DAI</cryptocurrency>
@@ -406,6 +408,7 @@
             <cryptocurrency>BTDX</cryptocurrency>
             <cryptocurrency>BTX</cryptocurrency>
             <cryptocurrency>BURST</cryptocurrency>
+            <cryptocurrency>CGT</cryptocurrency>
             <cryptocurrency>CLOAK</cryptocurrency>
             <cryptocurrency>DAI</cryptocurrency>
             <cryptocurrency>DASH</cryptocurrency>
@@ -1701,6 +1704,15 @@
         </wallet>
         <cryptologo cryptocurrency="HT" file="HT.png"/>
         <cryptologo cryptocurrency="HT" file="HT.svg"/>
+        <wallet prefix="infuraERC20_CGT_8_0xf5238462e7235c7b62811567e63dd17d12c2eaa0" name="Infura.io wallet - CACHE Gold">
+            <param name="projectId" />
+            <param name="mnemonic" />
+            <param name="gaslimit" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
+            <cryptocurrency>CGT</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="CGT" file="cgt.png"/>
+        <cryptologo cryptocurrency="CGT" file="cgt.svg"/>
         <!-- ADD your ERC20 tokens here. And don't forget to add cryptologos. -->
     </extension>
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.TransactionExtension" />-->
