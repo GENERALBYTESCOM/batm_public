@@ -145,11 +145,11 @@ public interface ITransactionPreparation {
      */
     Map<String, BigDecimal> getCashTransactionLimit();
 
-    /**
-     * Maximum cash amount (with the limit name) that customer can insert/sell into/to machine
-     * @return
-     */
-    Map<String, ITransactionLimit> getCashTransactionLimitWithName();
+//    /**
+//     * Maximum cash amount (with the limit name) that customer can insert/sell into/to machine
+//     * @return
+//     */
+//    Map<String, ITransactionLimit> getCashTransactionLimitWithName();
 
     /**
      * Minumum cash amount that customer can insert into machine
