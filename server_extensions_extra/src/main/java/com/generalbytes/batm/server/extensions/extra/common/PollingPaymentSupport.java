@@ -40,6 +40,7 @@ import java.util.concurrent.TimeUnit;
 public abstract class PollingPaymentSupport implements IPaymentSupport {
     protected static final Logger log = LoggerFactory.getLogger(PollingPaymentSupport.class);
     private static final long MAXIMUM_WATCHING_TIME_MILLIS = TimeUnit.DAYS.toMillis(1);
+    private static final long REMOVE_REQUESTS_AFTER_MILLIS = TimeUnit.MINUTES.toMillis(5);
 
     private final List<Integer> stopPollingStates = Arrays.asList(
         PaymentRequest.STATE_TRANSACTION_INVALID,
@@ -119,8 +120,12 @@ public abstract class PollingPaymentSupport implements IPaymentSupport {
 
     private void stopPolling(PaymentRequest request, int newState, String message) throws StopPollingException {
         log.info("Stopping polling, {}, {}", message, request);
-        setState(request, newState);
-        requests.remove(request.getAddress());
+        // remove request after some time so a POS can still ask for a payment receipt
+        executorService.schedule(() -> {
+            setState(request, newState);
+            PaymentRequest removed = requests.remove(request.getAddress());
+            log.debug("Request removed: {}", removed);
+        }, REMOVE_REQUESTS_AFTER_MILLIS, TimeUnit.MILLISECONDS);
         throw new StopPollingException();
     }
 
