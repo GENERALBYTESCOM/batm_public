@@ -39,6 +39,7 @@ public enum FiatCurrency {
     BGN("Bulgarian lev"),
     BHD("Bahraini dinar"),
     BRL("Brazilian real"),
+    BSD("Bahamian Dollar"),
     CAD("Canadian dollar"),
     CHF("Swiss franc"),
     CNY("Chinese yuan renminbi"),
