@@ -188,6 +188,7 @@
                 <cryptocurrency>GRS</cryptocurrency>
                 <cryptocurrency>HATCH</cryptocurrency>
                 <cryptocurrency>HT</cryptocurrency>
+                <cryptocurrency>ILC</cryptocurrency>
                 <cryptocurrency>JOB</cryptocurrency>
                 <cryptocurrency>LEO</cryptocurrency>
                 <cryptocurrency>LINDA</cryptocurrency>
@@ -420,6 +421,7 @@
             <cryptocurrency>GRS</cryptocurrency>
             <cryptocurrency>HATCH</cryptocurrency>
             <cryptocurrency>HT</cryptocurrency>
+            <cryptocurrency>ILC</cryptocurrency>
             <cryptocurrency>JOB</cryptocurrency>
             <cryptocurrency>KMD</cryptocurrency>
             <cryptocurrency>LEO</cryptocurrency>
@@ -1796,6 +1798,23 @@
         <!-- See https://github.com/kosinusbch/slp-token-icons for token logos -->
         <cryptologo cryptocurrency="SPICE" file="spice.png"/>
         <cryptologo cryptocurrency="SPICE" file="spice.svg"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.ilcoin.ILCoinExtension" >
+        <wallet prefix="ilcoind" name="ILCoin">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>ILC</cryptocurrency>
+        </wallet>
+        <wallet prefix="ilcdemo" name="ILCoin Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
+            <cryptocurrency>ILC</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="ILC" file="ilc.png"/>
     </extension>
 
 </extensions>
