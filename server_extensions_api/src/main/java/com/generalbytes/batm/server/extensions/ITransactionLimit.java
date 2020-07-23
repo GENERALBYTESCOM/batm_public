@@ -22,4 +22,5 @@ import java.math.BigDecimal;
 public interface ITransactionLimit {
     BigDecimal getAmount();
     String getName();
+    String getCurrency();
 }
