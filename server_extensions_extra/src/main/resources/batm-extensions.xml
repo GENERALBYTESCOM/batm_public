@@ -1815,6 +1815,7 @@
             <cryptocurrency>ILC</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="ILC" file="ilc.png"/>
+        <cryptologo cryptocurrency="ILC" file="ilc.svg"/>
     </extension>
 
 </extensions>
