@@ -1,6 +1,7 @@
 package com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,7 @@ import java.math.BigDecimal;
 /**
  * Class CoinmarketcapRateSourceV2Test tests method getExchangeRateLast() of class CoinmarketcapRateSourceV2
  */
+@Ignore("Requires external systems connectivity")
 public class CoinmarketcapRateSourceTest {
     private static final Logger log = LoggerFactory.getLogger("batm.master.extensions.CoinmarketcapRateSourceTest");
 

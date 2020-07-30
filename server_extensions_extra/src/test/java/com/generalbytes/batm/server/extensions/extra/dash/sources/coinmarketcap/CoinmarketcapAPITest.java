@@ -2,6 +2,7 @@ package com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap
 
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Map;
 
+@Ignore("Requires external systems connectivity")
 public class CoinmarketcapAPITest {
     private static final Logger log = LoggerFactory.getLogger("batm.master.extensions.CoinmarketcapAPITest");
     public static final String API_KEY = "ba025ccf-579b-40e4-be05-cbcebd83c476";
