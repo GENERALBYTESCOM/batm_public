@@ -1799,7 +1799,7 @@
         <cryptologo cryptocurrency="SPICE" file="spice.png"/>
         <cryptologo cryptocurrency="SPICE" file="spice.svg"/>
     </extension>
-    <extension class="com.generalbytes.batm.server.extensions.extra.ilcoin.ILCoinExtension" >
+    <extension class="com.generalbytes.batm.server.extensions.extra.ilcoin.IlcoinExtension" >
         <wallet prefix="ilcoind" name="ILCoin">
             <param name="protocol" />
             <param name="user" />
