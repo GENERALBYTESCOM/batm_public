@@ -63,6 +63,7 @@ public enum CryptoCurrency {
     HATCH("Hatch"),
     HBX("HBX"),
     HT("Huobi Token"),
+    ILC("ILCoin"),
     KMD("Komodo"),
     JOB("Jobchain"),
     LBTC("Lightning Network Bitcoin"),
