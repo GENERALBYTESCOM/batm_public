@@ -2,7 +2,7 @@ package com.generalbytes.batm.server.extensions.extra.bitcoincash;
 
 import com.generalbytes.batm.server.coinutil.AddressFormatException;
 import com.generalbytes.batm.server.coinutil.Base58;
-import com.generalbytes.bitrafael.api.wallet.bch.Bech32;
+import com.generalbytes.bitrafael.tools.wallet.bch.Bech32;
 
 import java.util.Arrays;
 import java.util.Objects;

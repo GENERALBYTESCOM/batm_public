@@ -4,4 +4,3 @@ include ':server_extensions_test'
 include ':currencies'
 include ':batm_ssh_tunnel'
 
-enableFeaturePreview('STABLE_PUBLISHING')

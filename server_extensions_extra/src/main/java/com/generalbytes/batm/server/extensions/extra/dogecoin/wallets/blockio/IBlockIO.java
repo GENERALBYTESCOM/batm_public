@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2019 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2020 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -25,6 +25,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.List;
 
 @Path("/api/v2/")
 @Produces(MediaType.APPLICATION_JSON)
@@ -53,6 +55,10 @@ public interface IBlockIO {
     @POST
     @Path("sign_and_finalize_withdrawal")
     BlockIOResponseWithdrawal signAndFinalizeWithdrawal(@FormParam("signature_data") String signedDataInJson) throws IOException;
+
+    @GET
+    @Path("withdraw")
+    BlockIOResponseWithdrawalToBeSigned withdrawToAddressesToBeSigned(@QueryParam("amounts") List<BigDecimal> amounts, @QueryParam("to_addresses") List<String> toAddresses, @QueryParam("priority") String priority) throws IOException;
 
     @GET
     @Path("withdraw")

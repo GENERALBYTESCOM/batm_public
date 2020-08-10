@@ -3,6 +3,7 @@
     <extension class="com.generalbytes.batm.server.extensions.extra.bitcoin.BitcoinExtension" >
             <wallet prefix="bitcoind" name="Bitcoin Core - bitcoind" >
                 <tunnel supported="true"/>
+                <sendtomany supported="true"/>
                 <param name="protocol" />
                 <param name="user" />
                 <param name="password" />
@@ -13,6 +14,7 @@
             </wallet>
             <wallet prefix="bitcoindnoforward" name="Bitcoin Core - bitcoind (no forward)" >
                 <tunnel supported="true"/>
+                <sendtomany supported="true"/>
                 <param name="protocol" />
                 <param name="user" />
                 <param name="password" />
@@ -27,6 +29,7 @@
                 <cryptocurrency>BTC</cryptocurrency>
             </wallet>
             <wallet prefix="bitgo" name="BitGo Wallet">
+                <sendtomany supported="true"/>
                 <tunnel supported="true"/>
                 <param name="host" />
                 <param name="port" />
@@ -40,6 +43,7 @@
                 <help>Host should start with http:// or https://</help>
             </wallet>
             <wallet prefix="bitgonoforward" name="BitGo Wallet (no forward)">
+                <sendtomany supported="true"/>
                 <tunnel supported="true"/>
                 <param name="host" />
                 <param name="port" />
@@ -147,6 +151,7 @@
                 <cryptocurrency>FLASH</cryptocurrency>
                 <cryptocurrency>XSG</cryptocurrency>
                 <cryptocurrency>JOB</cryptocurrency>
+                <cryptocurrency>HT</cryptocurrency>
             </ratesource>
             <ratesource prefix="stream365" name ="365.stream" >
                 <cryptocurrency>HBX</cryptocurrency>
@@ -185,6 +190,8 @@
                 <cryptocurrency>BUSD</cryptocurrency>
                 <cryptocurrency>GRS</cryptocurrency>
                 <cryptocurrency>HATCH</cryptocurrency>
+                <cryptocurrency>HT</cryptocurrency>
+                <cryptocurrency>ILC</cryptocurrency>
                 <cryptocurrency>JOB</cryptocurrency>
                 <cryptocurrency>LEO</cryptocurrency>
                 <cryptocurrency>LINDA</cryptocurrency>
@@ -295,6 +302,55 @@
         </exchange>
         <cryptologo cryptocurrency="BTC" file="btc.png"/>
         <cryptologo cryptocurrency="BTC" file="btc.svg"/>
+        <ratesource prefix="coinbasers" name="Coinbase.com Rate Source" >
+            <param name="fiatcurrency" />
+            <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency>XRP</cryptocurrency>
+            <help>fiatcurrency parameter is optional</help>
+        </ratesource>
+        <wallet prefix="coinbasewallet2" name="Coinbase.com Wallet" >
+            <param name="apikey" />
+            <param name="secretkey" />
+            <param name="accountname" />
+            <cryptocurrency>BAT</cryptocurrency>
+            <cryptocurrency buyonly="true">BCH</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>DASH</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>XRP</cryptocurrency>
+            <help>accountname parameter is optional</help>
+        </wallet>
+        <wallet prefix="coinbasewallet2noforward" name="Coinbase.com Wallet (no forward)" >
+            <param name="apikey" />
+            <param name="secretkey" />
+            <param name="accountname" />
+            <cryptocurrency>BAT</cryptocurrency>
+            <cryptocurrency buyonly="true">BCH</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>XRP</cryptocurrency>
+            <help>accountname parameter is optional. This variant of the wallet generates new addresses for each transaction and does not forward payments from temporary address</help>
+        </wallet>
+        <exchange prefix="coinbaseexchange" name="Coinbase.com Exchange">
+            <param name="apikey" />
+            <param name="secretkey" />
+            <param name="accountname" />
+            <param name="fiatcurrency" />
+            <param name="paymentmethod" />
+            <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>BAT</cryptocurrency>
+            <help>fiatcurrency,paymentmethod are optional</help>
+        </exchange>
         <exchange prefix="coinbasepro" name="Coinbase Pro">
             <param name="key"/>
             <param name="secret"/>
@@ -371,7 +427,9 @@
             <cryptocurrency>BUSD</cryptocurrency>
             <cryptocurrency>GRS</cryptocurrency>
             <cryptocurrency>HATCH</cryptocurrency>
-            <cryptocurrency>JOB</cryptocurrency>    
+            <cryptocurrency>HT</cryptocurrency>
+            <cryptocurrency>ILC</cryptocurrency>
+            <cryptocurrency>JOB</cryptocurrency>
             <cryptocurrency>KMD</cryptocurrency>
             <cryptocurrency>LEO</cryptocurrency>
             <cryptocurrency>LINDA</cryptocurrency>
@@ -434,6 +492,7 @@
             <cryptocurrency>FTT</cryptocurrency>
             <cryptocurrency>GRS</cryptocurrency>
             <cryptocurrency>HATCH</cryptocurrency>
+            <cryptocurrency>HT</cryptocurrency>
             <cryptocurrency>HBX</cryptocurrency>
             <cryptocurrency>JOB</cryptocurrency>
             <cryptocurrency>KMD</cryptocurrency>
@@ -548,7 +607,19 @@
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
         </ratesource>
-
+        <exchange prefix="bitpandapro" name="Bitpanda Pro">
+            <param name="apikey"/>
+            <param name="fiatcurrency"/>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>XRP</cryptocurrency>
+        </exchange>
+        <ratesource prefix="bitpandapro" name="Bitpanda Pro">
+            <param name="fiatcurrency"/>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>XRP</cryptocurrency>
+        </ratesource>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.bitcoincash.BitcoinCashExtension">
         <wallet prefix="bitcoincashd" name="BitcoinABC/BitcoinClassic Cash Core - bitcoind" >
@@ -599,6 +670,7 @@
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.dogecoin.DogecoinExtension">
         <wallet prefix="blockio" name="Block.io Wallet">
+            <sendtomany supported="true"/>
             <param name="apikey" />
             <param name="pin" />
             <param name="priority" />
@@ -608,6 +680,7 @@
             <help>You can specify optional parameter priority to increase the network fee paid in the given transaction. Options are low, medium, high and will pay 1x, 2x, and 3x the minimum network fees possible on the network, respectively. If not specified, low will be used.</help>
         </wallet>
         <wallet prefix="blockionoforward" name="Block.io Wallet (no forward)">
+            <sendtomany supported="true"/>
             <param name="apikey" />
             <param name="pin" />
             <param name="priority" />
@@ -663,6 +736,7 @@
     <extension class="com.generalbytes.batm.server.extensions.extra.litecoin.LitecoinExtension" >
         <wallet prefix="litecoind" name="Litecoind">
             <tunnel supported="true"/>
+            <sendtomany supported="true"/>
             <param name="protocol" />
             <param name="user" />
             <param name="password" />
@@ -673,6 +747,7 @@
         </wallet>
         <wallet prefix="litecoindnoforward" name="Litecoind (no forward)">
             <tunnel supported="true"/>
+            <sendtomany supported="true"/>
             <param name="protocol" />
             <param name="user" />
             <param name="password" />
@@ -691,6 +766,7 @@
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.lightningbitcoin.LightningBitcoinExtension" >
         <wallet prefix="eclair" name="eclair">
+            <tunnel supported="true"/>
             <param name="scheme" />
             <param name="host" />
             <param name="port" />
@@ -698,11 +774,11 @@
             <cryptocurrency>LBTC</cryptocurrency>
         </wallet>
         <wallet prefix="lnd" name="lnd">
-            <param name="host" />
-            <param name="port" />
+            <tunnel supported="true"/>
+            <param name="url" />
             <param name="macaroon" />
             <param name="cert" />
-            <help>macaroon and cert are base64 encoded files admin.macaroon and tls.cert</help><!--  Configuration can be obtained for example with this command: echo 127.0.0.1:8080:`xxd -ps -u -c10000 ~/.lnd/data/chain/bitcoin/mainnet/admin.macaroon`:`xxd -ps -u -c10000 ~/.lnd/tls.cert` -->
+            <help>URL starts with https://, may contain a port number and must end with '/'. Macaroon and cert are hex encoded files admin.macaroon and tls.cert. Cert parameter is not mandatory if trusted authority signed cert is used.</help>
             <cryptocurrency>LBTC</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="LBTC" file="lbtc.png"/>
@@ -1633,7 +1709,7 @@
             <param name="mnemonic" />
             <param name="gaslimit" />
             <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
-            <cryptocurrency>Jochain</cryptocurrency>
+            <cryptocurrency>JOB</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="Jobchain" file="jobchain.png"/>
         <cryptologo cryptocurrency="Jobchain" file="jobchain.svg"/>
@@ -1699,11 +1775,22 @@
         </wallet>
         <cryptologo cryptocurrency="USDS" file="usds.png"/>
         <cryptologo cryptocurrency="USDS" file="usds.svg"/>
+        <wallet prefix="infuraERC20_HT_18_0x6f259637dcd74c767781e37bc6133cd6a68aa161" name="Infura.io wallet - Huobi Token">
+            <param name="projectId" />
+            <param name="mnemonic" />
+            <param name="gaslimit" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
+            <cryptocurrency>HT</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="HT" file="HT.png"/>
+        <cryptologo cryptocurrency="HT" file="HT.svg"/>
         <!-- ADD your ERC20 tokens here. And don't forget to add cryptologos. -->
     </extension>
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.TransactionExtension" />-->
+    <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.ProfitOverrideExtension" />-->
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.identity.IdentityExampleExtension" />-->
-    <!-- <extension class="com.generalbytes.batm.server.extensions.extra.watchlists.WatchlistExtension" />-->
+    <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.identity.ExternalIdentityExampleExtension" />-->
+    <!--<extension class="com.generalbytes.batm.server.extensions.extra.watchlists.WatchlistExtension" />-->
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.rest.RESTExampleExtension" />-->
     <extension class="com.generalbytes.batm.server.extensions.extra.examples.chat.ChatBotExtensionExample" />
     <extension class="com.generalbytes.batm.server.extensions.extra.nuls.NulsExtension" >
@@ -1780,6 +1867,24 @@
         <!-- See https://github.com/kosinusbch/slp-token-icons for token logos -->
         <cryptologo cryptocurrency="SPICE" file="spice.png"/>
         <cryptologo cryptocurrency="SPICE" file="spice.svg"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.ilcoin.IlcoinExtension" >
+        <wallet prefix="ilcoind" name="ILCoin">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>ILC</cryptocurrency>
+        </wallet>
+        <wallet prefix="ilcdemo" name="ILCoin Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
+            <cryptocurrency>ILC</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="ILC" file="ilc.png"/>
+        <cryptologo cryptocurrency="ILC" file="ilc.svg"/>
     </extension>
 
 </extensions>

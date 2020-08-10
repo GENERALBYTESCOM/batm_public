@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2019 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2020 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -24,9 +24,11 @@ import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.EclairWallet;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.lnd.LndWallet;
+import okhttp3.HttpUrl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.InetSocketAddress;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -43,34 +45,52 @@ public class LightningBitcoinExtension extends AbstractExtension {
 
     @Override
     public IWallet createWallet(String walletLogin, String tunnelPassword) {
-        if (walletLogin != null && !walletLogin.trim().isEmpty()) {
-            StringTokenizer st = new StringTokenizer(walletLogin, ":");
-            String walletType = st.nextToken();
+        try {
+            if (walletLogin != null && !walletLogin.trim().isEmpty()) {
+                StringTokenizer st = new StringTokenizer(walletLogin, ":");
+                String walletType = st.nextToken();
 
-            if ("eclair".equalsIgnoreCase(walletType)) {
-                String scheme = st.nextToken();
-                String host = st.nextToken();
-                String port = st.nextToken();
-                String password = st.nextToken();
-                if (scheme != null && host != null && port != null && password != null) {
-                    return new EclairWallet(scheme, host, Integer.parseInt(port), password);
-                }
-            } else if ("lnd".equalsIgnoreCase(walletType)) {
-                // echo 127.0.0.1:8080:`xxd -ps -u -c10000 ~/.lnd/data/chain/bitcoin/mainnet/admin.macaroon`:`xxd -ps -u -c10000 ~/.lnd/tls.cert`
-                String host = st.nextToken();
-                String port = st.nextToken();
-                String macaroon = st.nextToken();
-                String cert = st.nextToken();
-                if (host != null && port != null && macaroon != null && macaroon.length() > 4 && cert != null && cert.length() > 4) {
-                    try {
-                        return new LndWallet(host, Integer.parseInt(port), macaroon, cert);
-                    } catch (Exception e) {
-                        log.warn("Error creating lnd wallet; host={}, port={}, macaroon={}..., cert={}...", host, port, macaroon.substring(0, 4), cert.substring(0, 4), e);
+                if ("eclair".equalsIgnoreCase(walletType)) {
+                    String scheme = st.nextToken();
+                    String host = st.nextToken();
+                    int port = Integer.parseInt(st.nextToken());
+                    String password = st.nextToken();
+
+                    InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(tunnelPassword, InetSocketAddress.createUnresolved(host, port));
+                    host = tunnelAddress.getHostString();
+                    port = tunnelAddress.getPort();
+
+                    if (scheme != null && host != null && password != null) {
+                        return new EclairWallet(scheme, host, port, password);
                     }
-                } else {
-                    log.warn("Invalid lnd wallet parameters");
+                } else if ("lnd".equalsIgnoreCase(walletType)) {
+                    // echo 127.0.0.1:8080:`xxd -ps -u -c10000 ~/.lnd/data/chain/bitcoin/mainnet/admin.macaroon`:`xxd -ps -u -c10000 ~/.lnd/tls.cert`
+                    // scheme://host:port/:macaroon:[cert]
+                    // scheme://host/path/:macaroon:[cert]
+                    // scheme://host:port/path:macaroon:[cert]
+
+                    String url = st.nextToken() + ":" + st.nextToken();
+                    if (!url.endsWith("/")) {
+                        url += ":" + st.nextToken();
+                    }
+                    HttpUrl parsedUrl = HttpUrl.parse(url);
+                    if (parsedUrl == null) {
+                        log.error("Invalid URL configured: {}", url);
+                        return null;
+                    }
+                    InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(tunnelPassword, InetSocketAddress.createUnresolved(parsedUrl.host(), parsedUrl.port()));
+                    url = new HttpUrl.Builder().scheme(parsedUrl.scheme()).host(tunnelAddress.getHostString()).port(tunnelAddress.getPort()).encodedPath(parsedUrl.encodedPath()).build().toString();
+                    String macaroon = st.nextToken();
+                    String cert = st.hasMoreTokens() ? st.nextToken() : null;
+                    if(macaroon == null || macaroon.trim().isEmpty()) {
+                        log.error("macaroon param missing");
+                        return null;
+                    }
+                    return new LndWallet(url, macaroon, cert);
                 }
             }
+        } catch (Exception e) {
+            log.warn("createWallet failed", e);
         }
         return null;
     }

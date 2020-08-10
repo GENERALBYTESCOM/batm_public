@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2019 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2020 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -19,6 +19,8 @@ package com.generalbytes.batm.server.extensions.extra.examples.identity;
 
 import com.generalbytes.batm.server.extensions.IExtensionContext;
 import com.generalbytes.batm.server.extensions.IIdentity;
+import com.generalbytes.batm.server.extensions.IIdentityNote;
+import com.generalbytes.batm.server.extensions.IIdentityPiece;
 import com.generalbytes.batm.server.extensions.ILimit;
 import com.generalbytes.batm.server.extensions.PhoneNumberQueryResult;
 
@@ -28,10 +30,14 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 @Path("/")
 public class IdentityExampleRestService {
@@ -47,9 +53,10 @@ public class IdentityExampleRestService {
                            @FormParam("terminalSerialNumber") String terminalSerialNumber, @FormParam("note") String note,
                            @FormParam("phoneNumber") String phoneNumber, @FormParam("firstName") String firstName,
                            @FormParam("lastName") String lastName, @FormParam("emailAddress") String emailAddress,
-                           @FormParam("idCardNumber") String idCardNumber, @FormParam("contactZIP") String contactZIP,
+                           @FormParam("idCardNumber") String idCardNumber, @FormParam("documentValidToYYYYMMDD") String documentValidToYYYYMMDD,
+                           @FormParam("contactZIP") String contactZIP,
                            @FormParam("contactCountry") String contactCountry, @FormParam("contactProvince") String contactProvince,
-                           @FormParam("contactCity") String contactCity, @FormParam("contactAddress") String contactAddress) {
+                           @FormParam("contactCity") String contactCity, @FormParam("contactAddress") String contactAddress) throws ParseException {
 
 
         IExtensionContext ctx = IdentityExampleExtension.getExtensionContext();
@@ -63,7 +70,7 @@ public class IdentityExampleRestService {
             System.out.println("Phone type: " + phoneNumberQueryResult.getPhoneLineType().getPhoneTypeCode().name());
         }
 
-        int state = IIdentity.STATE_REGISTERED;
+        int state = IIdentity.STATE_NOT_REGISTERED;
         Date now = new Date();
 
         // read the image data from the request or a file
@@ -71,13 +78,53 @@ public class IdentityExampleRestService {
 
         IIdentity identity = ctx.addIdentity(fiatCurrency, terminalSerialNumber, externalId, limits, limits, limits, limits, limits, note, state, discount, discount, now, now);
         String identityPublicId = identity.getPublicId();
-        ctx.addIdentityPiece(identityPublicId, IdentityPieceExample.fromPersonalInfo(firstName, lastName, idCardNumber, contactZIP, contactCountry, contactProvince, contactCity, contactAddress));
+        ctx.addIdentityPiece(identityPublicId, IdentityPieceExample.fromPersonalInfo(firstName, lastName, idCardNumber, IIdentityPiece.DOCUMENT_TYPE_ID_CARD,
+            documentValidToYYYYMMDD == null ? null : new SimpleDateFormat("yyyyMMdd", Locale.US).parse(documentValidToYYYYMMDD),
+            contactZIP, contactCountry, contactProvince, contactCity, contactAddress));
         ctx.addIdentityPiece(identityPublicId, IdentityPieceExample.fromPhoneNumber(phoneNumber));
         ctx.addIdentityPiece(identityPublicId, IdentityPieceExample.fromEmailAddress(emailAddress));
         ctx.addIdentityPiece(identityPublicId, IdentityPieceExample.fromSelfie("image/jpeg", exampleJpeg));
         ctx.addIdentityPiece(identityPublicId, IdentityPieceExample.fromIdScan("image/jpeg", exampleJpeg));
 
         return identityPublicId;
+    }
+
+    // curl -k -XPOST https://localhost:7743/extensions/identity-example/update -d "identityPublicId=IE3BVEBUIIXZ3SZV&emailAddress=email@example.com"
+    @POST
+    @Path("/update")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String update(@FormParam("identityPublicId") String identityPublicId, @FormParam("emailAddress") String emailAddress) {
+
+        IExtensionContext ctx = IdentityExampleExtension.getExtensionContext();
+        IIdentity identity = ctx.findIdentityByIdentityId(identityPublicId);
+        if (identity == null) {
+            return "identity not found";
+        }
+        int newState = IIdentity.STATE_REGISTERED;
+        String note = identity.getNote() + " updated from an extension";
+        IIdentity updatedIdentity = ctx.updateIdentity(identityPublicId, identity.getExternalId(),
+            newState, identity.getType(), identity.getCreated(), identity.getRegistered(),
+            identity.getVipBuyDiscount(), identity.getVipSellDiscount(), note,
+            identity.getLimitCashPerTransaction(), identity.getLimitCashPerHour(), identity.getLimitCashPerDay(), identity.getLimitCashPerWeek(),
+            identity.getLimitCashPerMonth(), identity.getLimitCashPer3Months(), identity.getLimitCashPer12Months(), identity.getLimitCashPerCalendarQuarter(),
+            identity.getLimitCashPerCalendarYear(), identity.getLimitCashTotalIdentity(), identity.getConfigurationCashCurrency());
+
+        return updatedIdentity.getPublicId();
+    }
+
+    // curl -k -XPOST https://localhost:7743/extensions/identity-example/getnotes -d "identityPublicId=IE3BVEBUIIXZ3SZV"
+    @POST
+    @Path("/getnotes")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<IIdentityNote> getNotes(@FormParam("identityPublicId") String identityPublicId) {
+
+        IExtensionContext ctx = IdentityExampleExtension.getExtensionContext();
+        IIdentity identity = ctx.findIdentityByIdentityId(identityPublicId);
+        if (identity == null) {
+            return new ArrayList<>();
+        }
+
+        return identity.getNotes();
     }
 
 }

@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2019 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2020 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -18,12 +18,15 @@
 package com.generalbytes.batm.server.extensions.extra.examples;
 
 import com.generalbytes.batm.server.extensions.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /* Comment out this extension class in batm-extensions.xml */
 public class TransactionExtension extends AbstractExtension implements ITransactionListener {
+    Logger log = LoggerFactory.getLogger(TransactionExtension.class);
 
     private final Map<String, Long> ticketCounters = new HashMap<>(); //each terminal has its counter
 
@@ -41,6 +44,11 @@ public class TransactionExtension extends AbstractExtension implements ITransact
     @Override
     public boolean isTransactionApproved(ITransactionRequest transactionRequest) {
         return true; //approve all transactions
+    }
+
+    @Override
+    public OutputQueueInsertConfig overrideOutputQueueInsertConfig(ITransactionQueueRequest transactionQueueRequest, OutputQueueInsertConfig outputQueueInsertConfig) {
+        return null;
     }
 
     @Override
@@ -65,5 +73,10 @@ public class TransactionExtension extends AbstractExtension implements ITransact
         Map<String, String> result = new HashMap<>();
         result.put("last.updated.at", "" + System.currentTimeMillis());
         return result;
+    }
+
+    @Override
+    public void receiptSent(IReceiptDetails receiptDetails) {
+        log.info("Extension - receipt sent from {} - phone: {}, email: {}", receiptDetails.getTerminalSerialNumber(), receiptDetails.getCellphone(), receiptDetails.getEmail());
     }
 }

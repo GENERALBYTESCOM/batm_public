@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2019 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2020 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -21,9 +21,9 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
-import com.generalbytes.bitrafael.api.wallet.IWalletTools;
-import com.generalbytes.bitrafael.api.wallet.eth.MasterPrivateKeyETH;
-import com.generalbytes.bitrafael.api.wallet.eth.WalletToolsETH;
+import com.generalbytes.bitrafael.tools.api.wallet.IWalletTools;
+import com.generalbytes.bitrafael.tools.wallet.eth.MasterPrivateKeyETH;
+import com.generalbytes.bitrafael.tools.wallet.eth.WalletToolsETH;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.ECKeyPair;
 import org.web3j.crypto.MnemonicUtils;

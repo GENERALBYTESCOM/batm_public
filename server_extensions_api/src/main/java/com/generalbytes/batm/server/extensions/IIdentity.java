@@ -48,11 +48,20 @@ public interface IIdentity {
     Date getWatchListLastScanAt();
     boolean isWatchListBanned();
     String getNote();
+    List<IIdentityNote> getNotes();
     List<IIdentityPiece> getIdentityPieces();
 
     //Individual limits set on identity
     List<ILimit> getLimitCashPerTransaction();
     List<ILimit> getLimitCashPerHour();
     List<ILimit> getLimitCashPerDay();
+    List<ILimit> getLimitCashPerWeek();
     List<ILimit> getLimitCashPerMonth();
+    List<ILimit> getLimitCashPer3Months();
+    List<ILimit> getLimitCashPer12Months();
+    List<ILimit> getLimitCashPerCalendarQuarter();
+    List<ILimit> getLimitCashPerCalendarYear();
+    List<ILimit> getLimitCashTotalIdentity();
+
+    String getConfigurationCashCurrency();
 }

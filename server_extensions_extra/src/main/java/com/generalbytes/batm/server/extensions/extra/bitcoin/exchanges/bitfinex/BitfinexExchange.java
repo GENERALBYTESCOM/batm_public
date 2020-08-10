@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2019 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2020 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -30,9 +30,13 @@ import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.coinutil.DDOSUtils;
 import com.generalbytes.batm.server.extensions.*;
 import org.knowm.xchange.Exchange;
-import org.knowm.xchange.ExchangeFactory;
 import org.knowm.xchange.ExchangeSpecification;
+import org.knowm.xchange.bitfinex.BitfinexErrorAdapter;
+import org.knowm.xchange.bitfinex.dto.BitfinexException;
+import org.knowm.xchange.bitfinex.service.BitfinexAccountService;
 import org.knowm.xchange.bitfinex.service.BitfinexMarketDataService;
+import org.knowm.xchange.bitfinex.v1.dto.account.BitfinexDepositAddressRequest;
+import org.knowm.xchange.bitfinex.v1.dto.account.BitfinexDepositAddressResponse;
 import org.knowm.xchange.bitfinex.v1.dto.marketdata.BitfinexDepth;
 import org.knowm.xchange.currency.Currency;
 import org.knowm.xchange.currency.CurrencyPair;
@@ -60,10 +64,12 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
     private String apiSecret;
     private String preferredFiatCurrency;
 
-    private static final HashMap<String,BigDecimal> rateAmounts = new HashMap<String, BigDecimal>();
-    private static HashMap<String,Long> rateTimes = new HashMap<String, Long>();
+    private static final HashMap<String, BigDecimal> rateAmounts = new HashMap<String, BigDecimal>();
+    private static HashMap<String, Long> rateTimes = new HashMap<String, Long>();
     private static final long MAXIMUM_ALLOWED_TIME_OFFSET = 30 * 1000;
-    private Set<String> depositCurrenciesSupported = new HashSet<>(Arrays.asList("BTC", "LTC", "ETH")); // FIXME after xchange lib update
+    private Set<String> depositCurrenciesSupported = new HashSet<>(Arrays.asList("BTC", "LTC", "ETH", "IOT", "BCH", "BTG", "EOS", "XMR", "NEO", "XRP", "XLM", "TRX", "ZEC", "DASH")); // see BitfinexAccountServiceRaw.requestDepositAddressRaw()
+    private static final HashSet<String> FIAT_CURRENCIES = new HashSet<>(Collections.singletonList("USD"));
+    private static final HashSet<String> CRYPTO_CURRENCIES = new HashSet<>(Arrays.asList("BTC", "ETH", "LTC", "BCH", "DASH", "XMR"));
 
     /**
      * exchange
@@ -86,7 +92,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
     }
 
     // Hotfix https://github.com/knowm/XChange/issues/3459
-    // remove when fixed in mainstream
+    // remove when fixed in upstream
     private static class HofixBitfinexExchange extends org.knowm.xchange.bitfinex.BitfinexExchange {
         private static class HotfixBitfinexMarketDataService extends BitfinexMarketDataService {
             public HotfixBitfinexMarketDataService(Exchange exchange) {
@@ -108,8 +114,43 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
         protected void initServices() {
             super.initServices();
             this.marketDataService = new HotfixBitfinexMarketDataService(this);
+
+            // WORKAROUND for BCH deposit - remove after released in upstream
+            // https://github.com/knowm/XChange/pull/3507
+            this.accountService = new BitfinexAccountService(this) {
+
+
+                @Override
+                public String requestDepositAddress(Currency currency, String... arguments) throws IOException {
+                    try {
+                        final BitfinexDepositAddressResponse response =
+                            requestDepositAddressRaw(currency.getCurrencyCode());
+                        return response.getAddress();
+                    } catch (BitfinexException e) {
+                        throw BitfinexErrorAdapter.adapt(e);
+                    }
+                }
+
+                @Override
+                public BitfinexDepositAddressResponse requestDepositAddressRaw(String currency) throws IOException {
+                    if (!currency.equalsIgnoreCase("BCH")) {
+                        return super.requestDepositAddressRaw(currency);
+                    }
+
+                    String type = "bab"; // bitcoin cash (ABC)
+
+                    return bitfinex.requestDeposit(
+                        apiKey,
+                        payloadCreator,
+                        signatureCreator,
+                        new BitfinexDepositAddressRequest(
+                            String.valueOf(exchange.getNonceFactory().createValue()), type, "exchange", 0));
+                }
+            };
         }
     }
+
+    ////// WORKAROUND END ////////
 
     private synchronized Exchange getExchange() {
         if (this.exchange == null) {
@@ -124,23 +165,11 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
     }
 
     public Set<String> getCryptoCurrencies() {
-        return getExchange().getExchangeSymbols().stream()
-            .map(pair -> pair.base.getCurrencyCode())
-            .collect(Collectors.toSet());
+        return CRYPTO_CURRENCIES;
     }
 
     public Set<String> getFiatCurrencies() {
-        return getExchange().getExchangeSymbols().stream()
-            .map(pair -> pair.counter.getCurrencyCode())
-            .collect(Collectors.toSet());
-    }
-
-    private boolean isCurrencyPairSupported(CurrencyPair pair) {
-        boolean supported = getExchange().getExchangeSymbols().contains(pair);
-        if (!supported) {
-            log.info("Currency pair not supported: {}. Pairs supported by exchange: {}", pair, getExchange().getExchangeSymbols());
-        }
-        return supported;
+        return FIAT_CURRENCIES;
     }
 
     public String getPreferredFiatCurrency() {
@@ -254,7 +283,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
     public String purchaseCoins(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
         CurrencyPair currencyPair = new CurrencyPair(getExchangeSpecificSymbol(cryptoCurrency), fiatCurrencyToUse);
 
-        if(!isCurrencyPairSupported(currencyPair)) {
+        if (!getCryptoCurrencies().contains(cryptoCurrency)) {
             return null;
         }
 
@@ -318,7 +347,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
     public ITask createPurchaseCoinsTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
         CurrencyPair currencyPair = new CurrencyPair(getExchangeSpecificSymbol(cryptoCurrency), fiatCurrencyToUse);
 
-        if(!isCurrencyPairSupported(currencyPair)) {
+        if (!getCryptoCurrencies().contains(cryptoCurrency)) {
             return null;
         }
         return new PurchaseCoinsTask(amount,cryptoCurrency,fiatCurrencyToUse,description);
@@ -326,7 +355,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
     @Override
     public String getDepositAddress(String cryptoCurrency) {
-        Set<String> supportedCryptoCurrencies = depositCurrenciesSupported; // FIXME getCryptoCurrencies();
+        Set<String> supportedCryptoCurrencies = depositCurrenciesSupported;
         if (!supportedCryptoCurrencies.contains(cryptoCurrency)) {
             log.error("Bitfinex implementation supports only " + Arrays.toString(supportedCryptoCurrencies.toArray()) + " for deposit");
             return null;
@@ -334,7 +363,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
         AccountService accountService = getExchange().getAccountService();
         try {
             DDOSUtils.waitForPossibleCall(getClass());
-            return accountService.requestDepositAddress(Currency.getInstance(getExchangeSpecificSymbol(cryptoCurrency)));
+            return accountService.requestDepositAddress(Currency.getInstance(cryptoCurrency)); // here it must be without getExchangeSpecificSymbol
         } catch (Exception e) {
             log.error("Error", e);
         }
@@ -345,7 +374,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
     public String sellCoins(BigDecimal cryptoAmount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
         CurrencyPair currencyPair = new CurrencyPair(getExchangeSpecificSymbol(cryptoCurrency), fiatCurrencyToUse);
 
-        if(!isCurrencyPairSupported(currencyPair)) {
+        if (!getCryptoCurrencies().contains(cryptoCurrency)) {
             return null;
         }
 
@@ -407,8 +436,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
     @Override
     public ITask createSellCoinsTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
-        CurrencyPair currencyPair = new CurrencyPair(getExchangeSpecificSymbol(cryptoCurrency), fiatCurrencyToUse);
-        if(!isCurrencyPairSupported(currencyPair)) {
+        if (!getCryptoCurrencies().contains(cryptoCurrency)) {
             return null;
         }
         return new SellCoinsTask(amount,cryptoCurrency,fiatCurrencyToUse,description);
@@ -690,7 +718,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
         CurrencyPair currencyPair = new CurrencyPair(getExchangeSpecificSymbol(cryptoCurrency), fiatCurrency);
 
         DDOSUtils.waitForPossibleCall(getClass());
-        if(!isCurrencyPairSupported(currencyPair)) {
+        if (!getCryptoCurrencies().contains(cryptoCurrency)) {
             return null;
         }
 
@@ -737,7 +765,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
     public BigDecimal calculateSellPrice(String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount) {
         CurrencyPair currencyPair = new CurrencyPair(getExchangeSpecificSymbol(cryptoCurrency), fiatCurrency);
 
-        if(!isCurrencyPairSupported(currencyPair)) {
+        if (!getCryptoCurrencies().contains(cryptoCurrency)) {
             return null;
         }
 
@@ -785,6 +813,9 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
     private String getExchangeSpecificSymbol(String cryptoCurrency) {
         if (CryptoCurrency.DASH.getCode().equals(cryptoCurrency)) {
             return "DSH";
+        }
+        if (CryptoCurrency.BCH.getCode().equals(cryptoCurrency)) {
+            return "BAB";
         }
         return cryptoCurrency;
     }

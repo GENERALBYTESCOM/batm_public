@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2019 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2020 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -53,6 +53,13 @@ public interface IExtensionContext {
      * @return
      */
     boolean removeTransactionListener(ITransactionListener listener);
+
+    /**
+     * Register listener for terminal events
+     */
+    void addTerminalListener(ITerminalListener listener);
+
+    void removeTerminalListener(ITerminalListener listener);
 
     /**
      * Finds and returns transaction by given remote or local transaction id
@@ -179,6 +186,25 @@ public interface IExtensionContext {
     boolean addIdentityPiece(String identityPublicId, IIdentityPiece iidentityPiece);
 
     /**
+     * @param identityId     public ID of an existing identity to be updated
+     * @param state new state to be set
+     * @param note new note to be set
+     * @param limitCashPerWeek
+     * @param limitCashPer3Months
+     * @param limitCashPer12Months
+     * @param limitCashPerCalendarQuarter
+     * @param limitCashPerCalendarYear
+     * @param limitCashTotalIdentity
+     * @param configurationCashCurrency
+     * @return updated identity
+     */
+    IIdentity updateIdentity(String identityId, String externalId, int state, int type, Date created, Date registered,
+                             BigDecimal vipBuyDiscount, BigDecimal vipSellDiscount, String note,
+                             List<ILimit> limitCashPerTransaction, List<ILimit> limitCashPerHour, List<ILimit> limitCashPerDay, List<ILimit> limitCashPerWeek,
+                             List<ILimit> limitCashPerMonth, List<ILimit> limitCashPer3Months, List<ILimit> limitCashPer12Months, List<ILimit> limitCashPerCalendarQuarter,
+                             List<ILimit> limitCashPerCalendarYear, List<ILimit> limitCashTotalIdentity, String configurationCashCurrency);
+
+    /**
      *
      * @return a tunnel manager that allows creating ssh tunnels on a remote ssh server.
      * Used for creating encrypted tunnels for wallets on remote hosts.
@@ -285,7 +311,7 @@ public interface IExtensionContext {
      * Call this transaction to create a sell transaction. After this call server will await crypto transaction to arrive and allocate cash for the customer.
      * @param fiatAmount
      * @param fiatCurrency
-     * @param cryptoAmount - ignored - reserved for future.
+     * @param cryptoAmount - ignored but must be filled - reserved for future.
      * @param cryptoCurrency
      * @param identityPublicId
      * @param discountCode

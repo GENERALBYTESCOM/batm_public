@@ -28,6 +28,10 @@ public interface IIdentityPiece {
     int TYPE_SELFIE = 5;
     int TYPE_CAMERA_IMAGE = 6;
 
+    int DOCUMENT_TYPE_ID_CARD = 1;
+    int DOCUMENT_TYPE_PASSPORT = 2;
+    int DOCUMENT_TYPE_DRIVING_LICENCE = 3;
+
     int getPieceType();
     Date getCreated();
     String getPhoneNumber();
@@ -49,4 +53,10 @@ public interface IIdentityPiece {
     String getContactZIP();
     String getIdCardNumber();
     IPerson getCreatedBy();
+    Date getDocumentValidTo();
+
+    /**
+     * @return null or one of {@link IIdentityPiece#DOCUMENT_TYPE_ID_CARD}, {@link IIdentityPiece#DOCUMENT_TYPE_PASSPORT}, {@link IIdentityPiece#DOCUMENT_TYPE_DRIVING_LICENCE}
+     */
+    Integer getDocumentType();
 }

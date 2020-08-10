@@ -23,6 +23,16 @@ public class TestExtensionContext implements IExtensionContext {
     }
 
     @Override
+    public void addTerminalListener(ITerminalListener listener) {
+
+    }
+
+    @Override
+    public void removeTerminalListener(ITerminalListener listener) {
+
+    }
+
+    @Override
     public ITransactionDetails findTransactionByTransactionId(String remoteOrLocalTransactionId) {
         return null;
     }
@@ -85,6 +95,11 @@ public class TestExtensionContext implements IExtensionContext {
     @Override
     public boolean addIdentityPiece(String identityPublicId, IIdentityPiece iidentityPiece) {
         return false;
+    }
+
+    @Override
+    public IIdentity updateIdentity(String identityId, String externalId, int state, int type, Date created, Date registered, BigDecimal vipBuyDiscount, BigDecimal vipSellDiscount, String note, List<ILimit> limitCashPerTransaction, List<ILimit> limitCashPerHour, List<ILimit> limitCashPerDay, List<ILimit> limitCashPerWeek, List<ILimit> limitCashPerMonth, List<ILimit> limitCashPer3Months, List<ILimit> limitCashPer12Months, List<ILimit> limitCashPerCalendarQuarter, List<ILimit> limitCashPerCalendarYear, List<ILimit> limitCashTotalIdentity, String configurationCashCurrency) {
+        return null;
     }
 
     @Override

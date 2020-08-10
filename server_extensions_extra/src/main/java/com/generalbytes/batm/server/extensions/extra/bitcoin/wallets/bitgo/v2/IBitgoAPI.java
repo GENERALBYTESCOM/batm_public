@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2019 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2020 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -20,6 +20,7 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.BitGoCoinRequest;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.BitGoCreateAddressRequest;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.BitGoCreateAddressResponse;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.BitGoSendManyRequest;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.ErrorResponseException;
 
 import javax.ws.rs.*;
@@ -30,6 +31,11 @@ import java.util.Map;
 @Path("/api/v2")
 @Produces(MediaType.APPLICATION_JSON)
 public interface IBitgoAPI {
+
+    @POST
+    @Path("/{coin}/wallet/{id}/sendmany")
+    @Consumes(MediaType.APPLICATION_JSON)
+    Map<String, Object> sendMany(@PathParam("coin") String coin, @PathParam("id") String id, BitGoSendManyRequest request) throws IOException;
 
     @POST
     @Path("/{coin}/wallet/{id}/sendcoins")

@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2019 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2020 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -47,6 +47,11 @@ public class WatchlistExtension extends AbstractExtension implements ITransactio
     @Override
     public boolean isTransactionApproved(ITransactionRequest transactionRequest) {
         return isTransactionApprovedInner(transactionRequest.getIdentityPublicId());
+    }
+
+    @Override
+    public OutputQueueInsertConfig overrideOutputQueueInsertConfig(ITransactionQueueRequest transactionQueueRequest, OutputQueueInsertConfig outputQueueInsertConfig) {
+        return null;
     }
 
     private boolean isTransactionApprovedInner(String identityPublicId) {
@@ -100,5 +105,9 @@ public class WatchlistExtension extends AbstractExtension implements ITransactio
     @Override
     public Map<String, String> onTransactionUpdated(ITransactionDetails transactionDetails) {
         return null;
+    }
+
+    @Override
+    public void receiptSent(IReceiptDetails receiptDetails) {
     }
 }
