@@ -15,6 +15,8 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.SortedSet;
@@ -83,6 +85,23 @@ public final class BitpandaProExchange implements IExchangeAdvanced, IRateSource
         CryptoCurrency.ETH.getCode(),
         CryptoCurrency.XRP.getCode()
     );
+
+    static private final Map<String, Integer> fiatPricePrecisions = new HashMap<>();
+    static private final Map<String, Integer> instrumentAmountPrecisions = new HashMap<>();
+
+    // https://api.exchange.bitpanda.com/public/v1/instruments
+    // https://api.exchange.bitpanda.com/public/v1/currencies
+    static {
+        fiatPricePrecisions.put("EUR", 2);
+        fiatPricePrecisions.put("CHF", 2);
+
+        instrumentAmountPrecisions.put("BTC_EUR", 5);
+        instrumentAmountPrecisions.put("ETH_EUR", 4);
+        instrumentAmountPrecisions.put("XRP_EUR", 0);
+        instrumentAmountPrecisions.put("BTC_CHF", 5);
+        instrumentAmountPrecisions.put("ETH_CHF", 2);
+        instrumentAmountPrecisions.put("XRP_CHF", 0);
+    }
 
     private final IBitpandaProAPI api;
     // allow 2 requests per second -> 120 requests/minute, safely below api rate limits
@@ -529,11 +548,14 @@ public final class BitpandaProExchange implements IExchangeAdvanced, IRateSource
     // endregion
 
     private CreateOrder limitOrder(Side side, BigDecimal amount, String base, String quote) {
+        final String instrument = asInstrument(base, quote);
+        BigDecimal amountScaled = amount.setScale(instrumentAmountPrecisions.get(instrument), BigDecimal.ROUND_FLOOR);
+
         final BigDecimal price;
         if (side == Side.SELL) {
-            price = calculateSellPrice(base, quote, amount);
+            price = calculateSellPrice(base, quote, amountScaled).setScale(fiatPricePrecisions.get(quote), BigDecimal.ROUND_FLOOR);
         } else if (side == Side.BUY) {
-            price = calculateBuyPrice(base, quote, amount);
+            price = calculateBuyPrice(base, quote, amountScaled).setScale(fiatPricePrecisions.get(quote), BigDecimal.ROUND_CEILING);
         } else {
             throw new IllegalArgumentException("illegal order side " + side);
         }
@@ -542,11 +564,10 @@ public final class BitpandaProExchange implements IExchangeAdvanced, IRateSource
             throw new IllegalStateException("failed to determine appropriate limit price");
         }
 
-        final String instrument = asInstrument(base, quote);
 
         final CreateOrder payload = new CreateOrder();
         payload.setInstrumentCode(instrument);
-        payload.setAmount(amount);
+        payload.setAmount(amountScaled);
         payload.setPrice(price);
         payload.setSide(side);
         payload.setType(Order.Type.LIMIT);
