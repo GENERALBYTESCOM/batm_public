@@ -99,7 +99,7 @@ public final class BitpandaProExchange implements IExchangeAdvanced, IRateSource
         instrumentAmountPrecisions.put("ETH_EUR", 4);
         instrumentAmountPrecisions.put("XRP_EUR", 0);
         instrumentAmountPrecisions.put("BTC_CHF", 5);
-        instrumentAmountPrecisions.put("ETH_CHF", 2);
+        instrumentAmountPrecisions.put("ETH_CHF", 4);
         instrumentAmountPrecisions.put("XRP_CHF", 0);
     }
 
