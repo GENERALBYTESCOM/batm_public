@@ -70,6 +70,7 @@ public class CoinbaseWalletV2 implements IWallet {
         Set<String> result = new HashSet<String>();
         result.add(CryptoCurrency.BAT.getCode());
         result.add(CryptoCurrency.DAI.getCode());
+        result.add(CryptoCurrency.BIZZ.getCode());
         result.add(CryptoCurrency.BCH.getCode());
         result.add(CryptoCurrency.BTC.getCode());
         result.add(CryptoCurrency.ETH.getCode());
@@ -186,7 +187,8 @@ public class CoinbaseWalletV2 implements IWallet {
             return "litecoin";
         }else if (CryptoCurrency.ETH.getCode().equalsIgnoreCase(cryptoCurrency)
             || CryptoCurrency.BAT.getCode().equalsIgnoreCase(cryptoCurrency)
-            || CryptoCurrency.DAI.getCode().equalsIgnoreCase(cryptoCurrency)){
+            || CryptoCurrency.DAI.getCode().equalsIgnoreCase(cryptoCurrency)
+            || CryptoCurrency.BIZZ.getCode().equalsIgnoreCase(cryptoCurrency)){
             return "ethereum";
         }else if (CryptoCurrency.BCH.getCode().equalsIgnoreCase(cryptoCurrency)){
             return "bitcoincash";
