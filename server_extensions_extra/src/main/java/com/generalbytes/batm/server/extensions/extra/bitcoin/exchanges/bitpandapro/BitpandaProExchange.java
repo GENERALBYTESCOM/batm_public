@@ -8,6 +8,7 @@ import static java.util.Comparator.reverseOrder;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URI;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -15,6 +16,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.SortedSet;
@@ -49,6 +51,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitpandap
 import com.generalbytes.batm.server.extensions.util.net.CompatSSLSocketFactory;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.util.concurrent.RateLimiter;
@@ -83,6 +86,17 @@ public final class BitpandaProExchange implements IExchangeAdvanced, IRateSource
         CryptoCurrency.ETH.getCode(),
         CryptoCurrency.XRP.getCode()
     );
+    // from https://api.exchange.bitpanda.com/public/v1/instruments
+    private static final Map<String, Integer> INSTRUMENT_AMOUNT_PRECISION = ImmutableMap.<String, Integer>builder()
+        .put("BTC_EUR", 5)
+        .put("ETH_EUR", 4)
+        .put("XRP_EUR", 0)
+        .put("BTC_CHF", 5)
+        .put("ETH_CHF", 4)
+        .put("XRP_CHF", 0)
+        .build()
+    ;
+
 
     private final IBitpandaProAPI api;
     // allow 2 requests per second -> 120 requests/minute, safely below api rate limits
@@ -196,22 +210,30 @@ public final class BitpandaProExchange implements IExchangeAdvanced, IRateSource
     public BigDecimal calculateBuyPrice(String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount) {
         return safely(() -> {
             final String instrument = asInstrument(cryptoCurrency, fiatCurrency);
-            final OrderBookSnapshot snapshot = api.orderBook(instrument, 2, 50);
-            final SortedSet<OrderBookEntry> asks =
-                ImmutableSortedSet.copyOf(comparing(OrderBookEntry::getPrice, naturalOrder()), snapshot.getAsks());
-            return calculateRequiredLimitPrice(cryptoAmount, asks).multiply(cryptoAmount);
+            return calculateRequiredLimitPriceToBuy(instrument, cryptoAmount).multiply(cryptoAmount);
         }, "calculateBuyPrice", cryptoCurrency, fiatCurrency, cryptoAmount);
+    }
+
+    private BigDecimal calculateRequiredLimitPriceToBuy(String instrument, BigDecimal amount) {
+        final OrderBookSnapshot snapshot = api.orderBook(instrument, 2, 50);
+        final SortedSet<OrderBookEntry> asks =
+            ImmutableSortedSet.copyOf(comparing(OrderBookEntry::getPrice, naturalOrder()), snapshot.getAsks());
+        return calculateRequiredLimitPrice(amount, asks);
     }
 
     @Override
     public BigDecimal calculateSellPrice(String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount) {
         return safely(() -> {
             final String instrument = asInstrument(cryptoCurrency, fiatCurrency);
-            final OrderBookSnapshot snapshot = api.orderBook(instrument, 2, 50);
-            final SortedSet<OrderBookEntry> bids =
-                ImmutableSortedSet.copyOf(comparing(OrderBookEntry::getPrice, reverseOrder()), snapshot.getBids());
-            return calculateRequiredLimitPrice(cryptoAmount, bids).multiply(cryptoAmount);
+            return calculateRequiredLimitPriceToSell(instrument, cryptoAmount).multiply(cryptoAmount);
         }, "calculateSellPrice", cryptoCurrency, fiatCurrency, cryptoAmount);
+    }
+
+    private BigDecimal calculateRequiredLimitPriceToSell(String instrument, BigDecimal amount) {
+        final OrderBookSnapshot snapshot = api.orderBook(instrument, 2, 50);
+        final SortedSet<OrderBookEntry> bids =
+            ImmutableSortedSet.copyOf(comparing(OrderBookEntry::getPrice, reverseOrder()), snapshot.getBids());
+        return calculateRequiredLimitPrice(amount, bids);
     }
 
     /**
@@ -529,24 +551,21 @@ public final class BitpandaProExchange implements IExchangeAdvanced, IRateSource
     // endregion
 
     private CreateOrder limitOrder(Side side, BigDecimal amount, String base, String quote) {
+        final String instrument = asInstrument(base, quote);
+        final BigDecimal amountScaled = amount.setScale(INSTRUMENT_AMOUNT_PRECISION.get(instrument), RoundingMode.FLOOR);
+
         final BigDecimal price;
         if (side == Side.SELL) {
-            price = calculateSellPrice(base, quote, amount);
+            price = calculateRequiredLimitPriceToSell(instrument, amountScaled);
         } else if (side == Side.BUY) {
-            price = calculateBuyPrice(base, quote, amount);
+            price = calculateRequiredLimitPriceToBuy(instrument, amountScaled);
         } else {
             throw new IllegalArgumentException("illegal order side " + side);
         }
 
-        if (price == null) {
-            throw new IllegalStateException("failed to determine appropriate limit price");
-        }
-
-        final String instrument = asInstrument(base, quote);
-
         final CreateOrder payload = new CreateOrder();
         payload.setInstrumentCode(instrument);
-        payload.setAmount(amount);
+        payload.setAmount(amountScaled);
         payload.setPrice(price);
         payload.setSide(side);
         payload.setType(Order.Type.LIMIT);
