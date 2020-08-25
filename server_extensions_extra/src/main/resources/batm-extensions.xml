@@ -661,6 +661,7 @@
             <param name="apikey" />
             <param name="pin" />
             <param name="priority" />
+            <param name="fromLabel" />
             <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
@@ -671,6 +672,7 @@
             <param name="apikey" />
             <param name="pin" />
             <param name="priority" />
+            <param name="fromLabel" />
             <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
