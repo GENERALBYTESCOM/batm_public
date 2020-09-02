@@ -51,6 +51,8 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.Bi
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.CoinbaseV2RateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.CoinbaseWalletV2;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.CoinbaseWalletV2WithUniqueAddresses;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryptx.v2.CryptXWallet;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryptx.v2.CryptXWithUniqueAddresses;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -321,6 +323,35 @@ public class BitcoinExtension extends AbstractExtension {
                     return new CoinbaseWalletV2WithUniqueAddresses(apiKey, secretKey, accountName);
                 }
                 return new CoinbaseWalletV2(apiKey, secretKey, accountName);
+            } else if ("cryptx".equalsIgnoreCase(walletType) || "cryptxnoforward".equalsIgnoreCase(walletType)) {
+
+                String first = st.nextToken();
+                String scheme;
+                String host;
+                if (first.startsWith("http")) {
+                    scheme = first;
+                    host = st.nextToken().replaceAll("/", "");
+                } else {
+                    scheme = "http";
+                    host = first;
+                }
+
+                int port;
+                String token;
+                String next = st.nextToken();
+                if (next.length() > 6) {
+                    port = scheme.equals("https") ? 443 : 80;
+                    token = next;
+                } else {
+                    port = Integer.parseInt(next);
+                    token = st.nextToken();
+                }
+                String walletId = st.nextToken();
+
+                if ("cryptxnoforward".equalsIgnoreCase(walletType)) {
+                    return new CryptXWithUniqueAddresses(scheme, host, port, token, walletId);
+                }
+                return new CryptXWallet(scheme, host, port, token, walletId);
             }
         }
         } catch (Exception e) {
