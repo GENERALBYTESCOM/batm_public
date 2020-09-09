@@ -62,6 +62,7 @@ public enum FiatCurrency {
     ILS("Israeli new shekel"),
     INR("Indian rupee"),
     ISK("Icelandic króna"),
+    IXP("Northern Ireland pound"),
     JEP("Jersey pound"),
     JPY("Japanese yen"),
     KES("Kenyan shilling"),
