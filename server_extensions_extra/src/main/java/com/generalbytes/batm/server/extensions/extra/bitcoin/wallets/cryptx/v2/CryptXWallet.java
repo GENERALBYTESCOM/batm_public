@@ -169,6 +169,10 @@ public class CryptXWallet implements IWallet {
         return null;
     }
 
+    public String getUrl() {
+        return this.url;
+    }
+
     protected void checkForSuccess(Map<String, Object> response) throws CryptXException {
         Object errorKey = response.get("errorKey");
         if (errorKey != null) {
