@@ -40,13 +40,13 @@ public class CryptXWalletTest {
     @BeforeClass
     public static void setup() {
         setLoggerLevel("batm", "trace");
-        setLoggerLevel("si.mazi.rescu","trace");
+        setLoggerLevel("si.mazi.rescu", "trace");
 
-        api = RestProxyFactory.createProxy(ICryptXAPI.class, "http://localhost:3080/");
+        api = RestProxyFactory.createProxy(ICryptXAPI.class, "http://62.168.190.83:8880/");
 
         String scheme = "http";
-        String host = "10.10.2.5";
-        int port = 8080;
+        String host = "62.168.190.83";
+        int port = 8880;
         String token = "e0b6d079081282674449888d78e307304eb5533ef1b8dd4134afa2508c48029a";
         String walletId = "86823de0-e06c-4cb0-9894-c72bf71948a2";
 
