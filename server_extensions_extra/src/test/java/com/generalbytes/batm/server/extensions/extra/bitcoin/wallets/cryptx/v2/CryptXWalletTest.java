@@ -12,6 +12,7 @@ import si.mazi.rescu.RestProxyFactory;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 public class CryptXWalletTest {
 
@@ -66,7 +67,6 @@ public class CryptXWalletTest {
         String coin = CryptoCurrency.TBTC.getCode();
         BigDecimal balance = wallet.getCryptoBalance(coin);
         Assert.assertNotNull(balance);
-        Assert.assertEquals(balance, BigDecimal.valueOf(10033695, 8));
     }
 
     @Test
@@ -79,7 +79,7 @@ public class CryptXWalletTest {
     @Test
     public void sendCoinsTest() {
         String coin = CryptoCurrency.TBTC.getCode();
-        String txId = wallet.sendCoins("tb1qjfejvrtghh2zds8u6qrndt6dlu3fmf32xvpyg8", BigDecimal.valueOf(10, 8), coin, "UNIQUE_1");
+        String txId = wallet.sendCoins("tb1qjfejvrtghh2zds8u6qrndt6dlu3fmf32xvpyg8", BigDecimal.valueOf(10000, 8), coin, UUID.randomUUID().toString());
         Assert.assertNotNull(txId);
     }
 
