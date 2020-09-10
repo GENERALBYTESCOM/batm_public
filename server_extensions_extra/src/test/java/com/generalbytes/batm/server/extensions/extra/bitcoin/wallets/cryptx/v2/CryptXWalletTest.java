@@ -5,6 +5,7 @@ import ch.qos.logback.classic.LoggerContext;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +56,7 @@ public class CryptXWalletTest {
     }
 
     @Test
+    @Ignore
     public void getCryptoAddressTest() {
         String coin = CryptoCurrency.TBTC.getCode();
         String cryptoAddress = wallet.getCryptoAddress(coin);
@@ -63,6 +65,7 @@ public class CryptXWalletTest {
     }
 
     @Test
+    @Ignore
     public void getCryptoBalanceTest() {
         String coin = CryptoCurrency.TBTC.getCode();
         BigDecimal balance = wallet.getCryptoBalance(coin);
@@ -70,6 +73,7 @@ public class CryptXWalletTest {
     }
 
     @Test
+    @Ignore
     public void createCryptoAddressTest() {
         String coin = CryptoCurrency.TBTC.getCode();
         String batm_test = wallet.generateNewDepositCryptoAddress(coin, "BATM_TEST");
@@ -77,6 +81,7 @@ public class CryptXWalletTest {
     }
 
     @Test
+    @Ignore
     public void sendCoinsTest() {
         String coin = CryptoCurrency.TBTC.getCode();
         String txId = wallet.sendCoins("tb1qjfejvrtghh2zds8u6qrndt6dlu3fmf32xvpyg8", BigDecimal.valueOf(10000, 8), coin, UUID.randomUUID().toString());
