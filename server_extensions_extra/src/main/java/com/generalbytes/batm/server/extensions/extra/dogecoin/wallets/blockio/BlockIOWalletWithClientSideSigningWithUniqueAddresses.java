@@ -27,8 +27,8 @@ import java.util.Random;
 public class BlockIOWalletWithClientSideSigningWithUniqueAddresses extends BlockIOWalletWithClientSideSigning implements IGeneratesNewDepositCryptoAddress {
     private static final Logger log = LoggerFactory.getLogger(BlockIOWalletWithClientSideSigningWithUniqueAddresses.class);
 
-    public BlockIOWalletWithClientSideSigningWithUniqueAddresses(String apiKey, String pin, String priority) {
-        super(apiKey, pin, priority);
+    public BlockIOWalletWithClientSideSigningWithUniqueAddresses(String apiKey, String pin, String priority, String fromLabel) {
+        super(apiKey, pin, priority, fromLabel);
     }
 
     @Override
