@@ -22,6 +22,7 @@ import com.generalbytes.batm.server.extensions.IIdentity;
 import com.generalbytes.batm.server.extensions.IIdentityNote;
 import com.generalbytes.batm.server.extensions.IIdentityPiece;
 import com.generalbytes.batm.server.extensions.ILimit;
+import com.generalbytes.batm.server.extensions.IRemainingLimit;
 import com.generalbytes.batm.server.extensions.PhoneNumberQueryResult;
 
 import javax.ws.rs.FormParam;
@@ -125,6 +126,17 @@ public class IdentityExampleRestService {
         }
 
         return identity.getNotes();
+    }
+
+    // curl -k -XPOST https://localhost:7743/extensions/identity-example/getidentityremaininglimits -d "fiatCurrency=CZK&terminalSerialNumber=BT100305&identityPublicId=IE3BVEBUIIXZ3SZV"
+    @POST
+    @Path("/getidentityremaininglimits")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<IRemainingLimit> getIdentityRemainingLimits(@FormParam("fiatCurrency") String fiatCurrency, @FormParam("terminalSerialNumber") String terminalSerialNumber, @FormParam("identityPublicId") String identityPublicId /* , fiatCurrency */) {
+
+        IExtensionContext ctx = IdentityExampleExtension.getExtensionContext();
+
+        return ctx.getIdentityRemainingLimits(fiatCurrency, terminalSerialNumber, identityPublicId);
     }
 
 }

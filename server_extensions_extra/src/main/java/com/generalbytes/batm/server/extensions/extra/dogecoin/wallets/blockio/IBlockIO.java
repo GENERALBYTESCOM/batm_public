@@ -58,7 +58,7 @@ public interface IBlockIO {
 
     @GET
     @Path("withdraw")
-    BlockIOResponseWithdrawalToBeSigned withdrawToAddressesToBeSigned(@QueryParam("amounts") List<BigDecimal> amounts, @QueryParam("to_addresses") List<String> toAddresses, @QueryParam("priority") String priority) throws IOException;
+    BlockIOResponseWithdrawalToBeSigned withdrawToAddressesToBeSigned(@QueryParam("from_labels") List<String> fromLabels, @QueryParam("amounts") List<BigDecimal> amounts, @QueryParam("to_addresses") List<String> toAddresses, @QueryParam("priority") String priority) throws IOException;
 
     @GET
     @Path("withdraw")

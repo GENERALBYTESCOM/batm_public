@@ -22,13 +22,13 @@ import com.generalbytes.batm.server.extensions.payment.IPaymentSupport;
 
 public interface ICryptoCurrencyDefinition {
     /**
-     * Returns name of the crytocurrency. For example: Bitcoin
+     * Returns name of the cryptocurrency. For example: Bitcoin
      * @return
      */
     String getName();
 
     /**
-     * Returns protocol of the crytocurrency. Used on redeem tickets for example "bitcoin:address?amount=1". For example: bitcoin
+     * Returns protocol of the cryptocurrency. Used on redeem tickets for example "bitcoin:address?amount=1". For example: bitcoin
      * @return
      */
     String getProtocol();

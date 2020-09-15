@@ -48,7 +48,11 @@ public class DogecoinExtension extends AbstractExtension{
                 if (st.hasMoreTokens()) {
                     priority = st.nextToken();
                 }
-                return new BlockIOWalletWithClientSideSigning(apikey, pin, priority);
+                String fromLabel = null;
+                if (st.hasMoreTokens()) {
+                    fromLabel = st.nextToken();
+                }
+                return new BlockIOWalletWithClientSideSigning(apikey, pin, priority, fromLabel);
 
             } else if ("blockionoforward".equalsIgnoreCase(walletType)) {
                 String apikey = st.nextToken();
@@ -57,7 +61,11 @@ public class DogecoinExtension extends AbstractExtension{
                 if (st.hasMoreTokens()) {
                     priority = st.nextToken();
                 }
-                return new BlockIOWalletWithClientSideSigningWithUniqueAddresses(apikey,pin, priority);
+                String fromLabel = null;
+                if (st.hasMoreTokens()) {
+                    fromLabel = st.nextToken();
+                }
+                return new BlockIOWalletWithClientSideSigningWithUniqueAddresses(apikey,pin, priority, fromLabel);
 
             } else if ("dogecoind".equalsIgnoreCase(walletType)) {
                 //"dogecoind:protocol:user:password:ip:port:accountname"

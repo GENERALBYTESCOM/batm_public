@@ -76,13 +76,14 @@ public class BlockIOWalletWithClientSideSigning implements IWallet, ICanSendMany
     private ObjectMapper jsonObjectMapper = new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
     private String pin;
     private String priority;
+    private final String fromLabel;
 
     protected IBlockIO api;
 
     static {
         Security.addProvider(new BouncyCastleProvider());
     }
-    public BlockIOWalletWithClientSideSigning(String apiKey, String pin, String priority) {
+    public BlockIOWalletWithClientSideSigning(String apiKey, String pin, String priority, String fromLabel) {
         this.pin = pin;
         if (priority == null) {
             this.priority = PRIORITY_LOW;
@@ -95,6 +96,8 @@ public class BlockIOWalletWithClientSideSigning implements IWallet, ICanSendMany
         } else {
             this.priority = PRIORITY_LOW;
         }
+
+        this.fromLabel = fromLabel;
 
         ClientConfig config = new ClientConfig();
         config.addDefaultParam(QueryParam.class, "api_key", apiKey);
@@ -168,7 +171,8 @@ public class BlockIOWalletWithClientSideSigning implements IWallet, ICanSendMany
                 .collect(Collectors.toList());
             List<String> toAddresses = new ArrayList<>(destinationAddressAmounts.keySet());
             log.info("{} calling withdraw {} to {}", getClass().getSimpleName(), amounts, toAddresses);
-            BlockIOResponseWithdrawalToBeSigned response = api.withdrawToAddressesToBeSigned(amounts, toAddresses, priority);
+            List<String> fromLabels = fromLabel == null ? null : Collections.nCopies(toAddresses.size(), fromLabel);
+            BlockIOResponseWithdrawalToBeSigned response = api.withdrawToAddressesToBeSigned(fromLabels, amounts, toAddresses, priority);
             if (response != null && response.getStatus() != null && "success".equalsIgnoreCase(response.getStatus()) && response.getData() != null) {
                 log.debug("Block.io reference_id = " + response.getData().getReference_id());
                 BlockIOInput[] inputs = response.getData().getInputs();

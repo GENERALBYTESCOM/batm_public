@@ -226,4 +226,9 @@ public class TestExtensionContext implements IExtensionContext {
     public List<IEventRecord> getEvents(String terminalSerialNumber, Date dateFrom, Date dateTo) {
         return null;
     }
+
+    @Override
+    public List<IRemainingLimit> getIdentityRemainingLimits(String fiatCurrency, String terminalSerialNumber, String identityPublicId) {
+        return null;
+    }
 }

@@ -66,13 +66,13 @@ public class BitpandaProExchangeTest {
 
     @Test
     public void shouldSellCoins() {
-        final String orderId = subject.sellCoins(BigDecimal.ONE, BTC.getCode(), EUR.getCode(), "batm-sell-test");
+        final String orderId = subject.sellCoins(new BigDecimal("0.01"), BTC.getCode(), EUR.getCode(), "batm-sell-test");
         assertNotNull(orderId);
     }
 
     @Test
     public void shouldSellCoinsAdvanced() throws InterruptedException {
-        final ITask task = subject.createSellCoinsTask(BigDecimal.ONE, BTC.getCode(), EUR.getCode(), "batm-sell-advanced-test");
+        final ITask task = subject.createSellCoinsTask(new BigDecimal("0.02"), BTC.getCode(), EUR.getCode(), "batm-sell-advanced-test");
         task.onCreate();
         for (int i = 0; i < 10 && !task.isFinished(); i++) {
             Thread.sleep(1000L);
@@ -83,13 +83,13 @@ public class BitpandaProExchangeTest {
 
     @Test
     public void shouldPurchaseCoins() {
-        final String orderId = subject.purchaseCoins(BigDecimal.ONE, BTC.getCode(), EUR.getCode(), "batm-purchase-test");
+        final String orderId = subject.purchaseCoins(new BigDecimal("0.01"), BTC.getCode(), EUR.getCode(), "batm-purchase-test");
         assertNotNull(orderId);
     }
 
     @Test
     public void shouldPurchaseCoinsAdvanced() throws InterruptedException {
-        final ITask task = subject.createPurchaseCoinsTask(BigDecimal.TEN, BTC.getCode(), EUR.getCode(), "batm-purchase-advanced-test");
+        final ITask task = subject.createPurchaseCoinsTask(new BigDecimal("0.02"), BTC.getCode(), EUR.getCode(), "batm-purchase-advanced-test");
         task.onCreate();
         for (int i = 0; i < 10 && !task.isFinished(); i++) {
             Thread.sleep(1000L);
