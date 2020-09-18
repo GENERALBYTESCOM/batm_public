@@ -73,6 +73,7 @@
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>DASH</cryptocurrency>
                 <cryptocurrency>DAI</cryptocurrency>
+                <cryptocurrency>BIZZ</cryptocurrency>
             </ratesource>
             <ratesource prefix="bitkub" name ="BitKub.com" >
                 <cryptocurrency>BTC</cryptocurrency>
@@ -123,6 +124,7 @@
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>DAI</cryptocurrency>
+                <cryptocurrency>BIZZ</cryptocurrency>
                 <cryptocurrency>EURS</cryptocurrency>
                 <cryptocurrency>USDS</cryptocurrency>
                 <cryptocurrency>MKR</cryptocurrency>
@@ -176,7 +178,7 @@
                 <cryptocurrency>BURST</cryptocurrency>
                 <cryptocurrency>CLOAK</cryptocurrency>
                 <cryptocurrency>DAI</cryptocurrency>
-                <cryptocurrency>DAI</cryptocurrency>
+                <cryptocurrency>BIZZ</cryptocurrency>
                 <cryptocurrency>DASH</cryptocurrency>
                 <cryptocurrency>DEX</cryptocurrency>
                 <cryptocurrency>DGB</cryptocurrency>
@@ -307,6 +309,7 @@
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency>BIZZ</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
             <help>fiatcurrency parameter is optional</help>
         </ratesource>
@@ -331,6 +334,7 @@
             <cryptocurrency buyonly="true">BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency>BIZZ</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
@@ -410,6 +414,7 @@
             <cryptocurrency>BURST</cryptocurrency>
             <cryptocurrency>CLOAK</cryptocurrency>
             <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency>BIZZ</cryptocurrency>
             <cryptocurrency>DASH</cryptocurrency>
             <cryptocurrency>DEX</cryptocurrency>
             <cryptocurrency>DGB</cryptocurrency>
@@ -473,6 +478,7 @@
             <cryptocurrency>BURST</cryptocurrency>
             <cryptocurrency>CLOAK</cryptocurrency>
             <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency>BIZZ</cryptocurrency>
             <cryptocurrency>DASH</cryptocurrency>
             <cryptocurrency>DEX</cryptocurrency>
             <cryptocurrency>DGB</cryptocurrency>
@@ -640,6 +646,7 @@
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency>BIZZ</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <help>Over 100+ crypto rates can be sourced directly from the Telr DeFi Network. Recommended for Telr Gatekeeper and Telr Cash operators.</help>
@@ -651,6 +658,7 @@
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency>BIZZ</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <help>Telr Cash is a non-custodial, stablecoin "hot" wallet with access to over 100+ cryptos.</help>
@@ -1611,6 +1619,18 @@
         </wallet>
         <cryptologo cryptocurrency="DAI" file="dai.png"/>
         <cryptologo cryptocurrency="DAI" file="dai.svg"/>
+
+        <wallet prefix="infuraERC20_BIZZ_8_0x7a8ca2f815a260660158a38c34ca321a3605ecfe" name="Infura.io wallet - BIZZ">
+            <!-- Hint: infuraERC20_TOKENSYMBOL_DECIMALPLACES_CONTRACTADDRESS -->
+            <param name="projectId" />
+            <param name="mnemonic" />
+            <param name="gaslimit" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
+            <cryptocurrency buyonly="true">BIZZ</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="BIZZ" file="bizz.png"/>
+        <cryptologo cryptocurrency="BIZZ" file="bizz.svg"/>
+
         <wallet prefix="infuraERC20_MKR_18_0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2" name="Infura.io wallet - MKR">
             <param name="projectId" />
             <param name="mnemonic" />
@@ -1720,6 +1740,7 @@
         <cryptologo cryptocurrency="HT" file="HT.svg"/>
         <!-- ADD your ERC20 tokens here. And don't forget to add cryptologos. -->
     </extension>
+
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.TransactionExtension" />-->
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.ProfitOverrideExtension" />-->
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.identity.IdentityExampleExtension" />-->
