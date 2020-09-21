@@ -105,6 +105,7 @@ public enum CryptoCurrency {
     NULS("NULS"),
     MUE("MonetaryUnit"),
     XPM("Primecoin"),
+    ZPAE("ZelaaPayAE"),
 
     TBCH("test BCH"),
     TBTC("test BTC"),

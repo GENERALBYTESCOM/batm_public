@@ -155,6 +155,7 @@
                 <cryptocurrency>XSG</cryptocurrency>
                 <cryptocurrency>JOB</cryptocurrency>
                 <cryptocurrency>HT</cryptocurrency>
+                <cryptocurrency>ZPAE</cryptocurrency>
             </ratesource>
             <ratesource prefix="stream365" name ="365.stream" >
                 <cryptocurrency>HBX</cryptocurrency>
@@ -219,6 +220,7 @@
                 <cryptocurrency>XPM</cryptocurrency>
                 <cryptocurrency>XSG</cryptocurrency>
                 <cryptocurrency>XZC</cryptocurrency>
+                <cryptocurrency>ZPAE</cryptocurrency>
                 <help>USD is default fiat currency.</help>
             </ratesource>
             <ratesource prefix="bitflyer" name="BitFlyer.jp Rate Source" >
@@ -460,6 +462,7 @@
             <cryptocurrency>XRP</cryptocurrency>
             <cryptocurrency>XSG</cryptocurrency>
             <cryptocurrency>XZC</cryptocurrency>
+            <cryptocurrency>ZPAE</cryptocurrency>
         </ratesource>
         <ratesource prefix="coinpaprika" name="CoinPaprika.com">
             <param name="fiatcurrency"/>
@@ -1738,6 +1741,14 @@
         </wallet>
         <cryptologo cryptocurrency="HT" file="HT.png"/>
         <cryptologo cryptocurrency="HT" file="HT.svg"/>
+        <wallet prefix="infuraERC20_ZPAE_18_0x045Eb7e34e94B28C7A3641BC5e1A1F61f225Af9F" name="Infura.io wallet - ZPAE">
+            <param name="projectId" />
+            <param name="mnemonic" />
+            <param name="gaslimit" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
+            <cryptocurrency>ZPAE</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="ZPAE" file="zpae.png"/>
         <!-- ADD your ERC20 tokens here. And don't forget to add cryptologos. -->
     </extension>
 
