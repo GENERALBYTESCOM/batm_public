@@ -442,4 +442,14 @@ public interface IExtensionContext {
      * @return
      */
     List<IEventRecord> getEvents(String terminalSerialNumber, Date dateFrom, Date dateTo);
+
+    /**
+     * Return remaining limits for identity.
+     *
+     * @param fiatCurrency in which currency are limit amounts
+     * @param terminalSerialNumber serial number for obtaining AML/KYC settings
+     * @param identityPublicId  public ID of an existing identity to be updated
+     * @return Remaining limits for given identity.
+     */
+    List<IRemainingLimit> getIdentityRemainingLimits(String fiatCurrency, String terminalSerialNumber, String identityPublicId);
 }
