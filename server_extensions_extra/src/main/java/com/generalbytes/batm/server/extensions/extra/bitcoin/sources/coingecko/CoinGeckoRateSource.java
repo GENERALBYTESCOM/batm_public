@@ -92,6 +92,7 @@ public class CoinGeckoRateSource implements IRateSource {
         CRYPTOCURRENCIES.put(CryptoCurrency.XRP.getCode(), "ripple");
         CRYPTOCURRENCIES.put(CryptoCurrency.XSG.getCode(), "snowgem");
         CRYPTOCURRENCIES.put(CryptoCurrency.XZC.getCode(), "zcoin");
+        CRYPTOCURRENCIES.put(CryptoCurrency.ZPAE.getCode(), "zelaapayae");
     }
 
     private final CoinGeckoV3API api;
