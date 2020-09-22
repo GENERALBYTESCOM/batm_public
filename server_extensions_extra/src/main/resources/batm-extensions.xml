@@ -56,6 +56,32 @@
                 <cryptocurrency>ETH</cryptocurrency><!--BitGo’s Ethereum wallets are only available to BitGo Enterprise customers-->
                 <help>This variant of the wallet generates new addresses for each transaction and does not forward payments from temporary address. Host should start with http:// or https://</help>
             </wallet>
+            <wallet prefix="cryptx" name="CryptX Wallet System">
+                <sendtomany supported="false"/>
+                <tunnel supported="true"/>
+                <param name="host" />
+                <param name="port" />
+                <param name="token" />
+                <param name="wallet_id" />
+                <cryptocurrency>BCH</cryptocurrency>
+                <cryptocurrency>BTC</cryptocurrency>
+                <cryptocurrency>LTC</cryptocurrency>
+                <cryptocurrency>ETH</cryptocurrency>
+                <help>Host should start with http:// or https://</help>
+            </wallet>
+            <wallet prefix="cryptxnoforward" name="CryptX Wallet System (no forward)">
+                <sendtomany supported="false"/>
+                <tunnel supported="true"/>
+                <param name="host" />
+                <param name="port" />
+                <param name="token" />
+                <param name="wallet_id" />
+                <cryptocurrency>BCH</cryptocurrency>
+                <cryptocurrency>BTC</cryptocurrency>
+                <cryptocurrency>LTC</cryptocurrency>
+                <cryptocurrency>ETH</cryptocurrency>
+                <help>This variant of the wallet generates new addresses for each transaction and does not forward payments from temporary address. Host should start with http:// or https://</help>
+            </wallet>
             <ratesource prefix="btcfix" name ="Fix Price" >
                 <param name="price" />
                 <cryptocurrency>BTC</cryptocurrency>
