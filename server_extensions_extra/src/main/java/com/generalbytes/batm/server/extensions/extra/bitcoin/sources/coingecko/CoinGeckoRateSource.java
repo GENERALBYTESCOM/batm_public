@@ -50,6 +50,7 @@ public class CoinGeckoRateSource implements IRateSource {
         CRYPTOCURRENCIES.put(CryptoCurrency.BURST.getCode(), "burst");
         CRYPTOCURRENCIES.put(CryptoCurrency.CLOAK.getCode(), "cloakcoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.DAI.getCode(), "dai");
+        CRYPTOCURRENCIES.put(CryptoCurrency.BIZZ.getCode(), "bizzcoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.DASH.getCode(), "dash");
         CRYPTOCURRENCIES.put(CryptoCurrency.DEX.getCode(), "dex");
         CRYPTOCURRENCIES.put(CryptoCurrency.DGB.getCode(), "digibyte");
@@ -92,6 +93,7 @@ public class CoinGeckoRateSource implements IRateSource {
         CRYPTOCURRENCIES.put(CryptoCurrency.XRP.getCode(), "ripple");
         CRYPTOCURRENCIES.put(CryptoCurrency.XSG.getCode(), "snowgem");
         CRYPTOCURRENCIES.put(CryptoCurrency.XZC.getCode(), "zcoin");
+        CRYPTOCURRENCIES.put(CryptoCurrency.ZPAE.getCode(), "zelaapayae");
     }
 
     private final CoinGeckoV3API api;
