@@ -645,7 +645,7 @@
         </ratesource>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.bitcoincash.BitcoinCashExtension">
-        <wallet prefix="bitcoincashd" name="BitcoinABC/BitcoinClassic Cash Core - bitcoind" >
+        <wallet prefix="bitcoincashd" name="BitcoinABC/BCHN Cash Core - bitcoind" >
             <tunnel supported="true"/>
             <param name="protocol" />
             <param name="user" />
@@ -656,7 +656,7 @@
             <cryptocurrency>BCH</cryptocurrency>
             <help>For BCH SELL this is the only supported wallet</help>
         </wallet>
-        <wallet prefix="bitcoincashdnoforward" name="BitcoinABC/BitcoinClassic Cash Core - bitcoind (no forward)" >
+        <wallet prefix="bitcoincashdnoforward" name="BitcoinABC/BCHN Cash Core - bitcoind (no forward)" >
             <tunnel supported="true"/>
             <param name="protocol" />
             <param name="user" />
