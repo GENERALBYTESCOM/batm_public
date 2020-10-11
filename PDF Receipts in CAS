@@ -1,0 +1,7 @@
+PDF Receipts in CAS
+
+Writing this commit to suggest development of a PDF receipt for each transaction that is executed on terminals.
+
+Currently the terminals only allow for receipts to be printed, sms, or emailed shortly after the transaction. Especially for BATM2, clients
+are calling in to request receipts that they did not receive. It would be helpful if the receipt was somehow available in CAS to be sent to 
+the client by email or even sms. 
