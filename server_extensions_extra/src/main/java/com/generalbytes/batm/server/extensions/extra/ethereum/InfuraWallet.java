@@ -19,7 +19,6 @@ package com.generalbytes.batm.server.extensions.extra.ethereum;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.IWallet;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.web3j.crypto.Credentials;
@@ -27,12 +26,10 @@ import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.response.EthGetBalance;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
-import org.web3j.protocol.exceptions.TransactionException;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.Transfer;
 import org.web3j.utils.Convert;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
@@ -126,11 +123,7 @@ public class InfuraWallet implements IWallet{
             log.debug("InfuraWallet receipt = " + receipt);
             return receipt.getTransactionHash();
         } catch (TimeoutException e) {
-            return "info_in_future"; //error probably will not happen as we waited already 10 seconds.
-        } catch (IOException e) {
-            log.error("Error sending coins.", e);
-        } catch (InterruptedException | TransactionException e) {
-            log.error("Error sending coins.", e);
+            log.error("Sending coins timeouted", e);
         } catch (Exception e) {
             log.error("Error sending coins.", e);
         }
