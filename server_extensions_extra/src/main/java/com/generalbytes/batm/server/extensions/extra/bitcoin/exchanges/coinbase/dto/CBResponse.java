@@ -42,7 +42,6 @@ public class CBResponse {
         return toString(errors);
     }
 
-    @SuppressWarnings("unused")
     public String getWarningMessages() {
         return toString(warnings);
     }

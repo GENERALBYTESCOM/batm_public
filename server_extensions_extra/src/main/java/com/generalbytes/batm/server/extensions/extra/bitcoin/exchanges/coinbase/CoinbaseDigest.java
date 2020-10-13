@@ -22,6 +22,7 @@ import si.mazi.rescu.RestInvocation;
 
 import javax.crypto.Mac;
 import javax.ws.rs.HeaderParam;
+import java.nio.charset.StandardCharsets;
 
 public class CoinbaseDigest  extends BaseParamsDigest {
 
@@ -39,6 +40,10 @@ public class CoinbaseDigest  extends BaseParamsDigest {
         sha256_HMAC.update(restInvocation.getParamValue(HeaderParam.class, "CB-ACCESS-TIMESTAMP").toString().getBytes());
         sha256_HMAC.update(restInvocation.getHttpMethod().toUpperCase().getBytes());
         sha256_HMAC.update(restInvocation.getPath().getBytes());
+        if (restInvocation.getQueryString() != null && !restInvocation.getQueryString().isEmpty()) {
+            sha256_HMAC.update("?".getBytes(StandardCharsets.US_ASCII));
+            sha256_HMAC.update(restInvocation.getQueryString().getBytes());
+        }
         if (restInvocation.getRequestBody() != null) {
             sha256_HMAC.update(restInvocation.getRequestBody().getBytes());
         }

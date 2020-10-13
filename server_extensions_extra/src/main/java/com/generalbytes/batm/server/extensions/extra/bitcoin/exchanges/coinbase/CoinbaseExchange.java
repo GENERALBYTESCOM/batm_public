@@ -45,6 +45,8 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 public class CoinbaseExchange implements IRateSourceAdvanced, IExchangeAdvanced {
@@ -553,51 +555,68 @@ public class CoinbaseExchange implements IRateSourceAdvanced, IExchangeAdvanced 
         }
     }
 
-    private CBAccount getAccount(String accountName, String currency) {
-        String coinBaseTime = getTime();
-        CBAccountsResponse accountsResponse = null;
+    private CBAccount getAccount(String accountName, String currency) throws IOException {
         if (currency == null) {
             log.error("getAccount (1) - currency is null");
             return null;
         }
-        try {
-            DDOSUtils.waitForPossibleCall(getClass());
-            accountsResponse = api.getAccounts(CB_VERSION, apiKey, CoinbaseDigest.createInstance(secretKey), coinBaseTime);
-        } catch (IOException e) {
-            log.error("getAccount (2)", e);
-        }
-        if (accountsResponse != null && accountsResponse.errors != null) {
-            log.error("getAccount (3) - " + accountsResponse.getErrorMessages());
-        }
-        if (accountsResponse != null && accountsResponse.data != null && accountsResponse.data.length > 0) {
-            CBAccount[] accounts = accountsResponse.data;
-            if (accountName != null) {
-                for (CBAccount cbAccount : accounts) {
-                    if (accountName.equalsIgnoreCase(cbAccount.name)) {
-                        if (currency.equalsIgnoreCase(cbAccount.currency.code)) {
-                            return cbAccount;
-                        }
-                    }
-                }
-            } else {
-                for (CBAccount cbAccount : accounts) {
-                    if (cbAccount.primary) {
-                        if (currency.equalsIgnoreCase(cbAccount.currency.code)) {
-                            return cbAccount;
-                        }
-                    }
-                }
-            }
+        final List<CBAccount> accounts = getAccounts();
+
+        if (accountName != null) {
             for (CBAccount cbAccount : accounts) {
-                if (currency.equalsIgnoreCase(cbAccount.currency.code)) {
-                    return cbAccount;
+                if (accountName.equalsIgnoreCase(cbAccount.name)) {
+                    if (currency.equalsIgnoreCase(cbAccount.currency.code)) {
+                        return cbAccount;
+                    }
+                }
+            }
+        } else {
+            for (CBAccount cbAccount : accounts) {
+                if (cbAccount.primary) {
+                    if (currency.equalsIgnoreCase(cbAccount.currency.code)) {
+                        return cbAccount;
+                    }
                 }
             }
         }
-        return null; //not found
+        for (CBAccount cbAccount : accounts) {
+            if (currency.equalsIgnoreCase(cbAccount.currency.code)) {
+                return cbAccount;
+            }
+        }
+        log.warn("no account found, accountName: {}, currency: {}", accountName, currency);
+        return null;
     }
 
-    private String getAccountId(String accountName, String currency) {
+
+    /**
+     * @return all accounts from the API using pagination
+     */
+    private List<CBAccount> getAccounts() throws IOException {
+        LinkedList<CBAccount> accounts = new LinkedList<>();
+        String startingAfter = null; // start pagination from the beginning
+        do {
+            DDOSUtils.waitForPossibleCall(getClass());
+            log.debug("Getting accounts, startingAfter: {}", startingAfter);
+            CBAccountsResponse accountsResponse = api.getAccounts(CB_VERSION, apiKey, CoinbaseDigest.createInstance(secretKey), getTime(), startingAfter);
+            if (accountsResponse.errors != null) {
+                throw new IllegalStateException(accountsResponse.getErrorMessages());
+            }
+            if (accountsResponse.warnings != null) {
+                log.warn("getAccounts warning: {}", accountsResponse.getWarningMessages());
+            }
+            startingAfter = null;
+            if (accountsResponse.data != null && accountsResponse.data.length > 0) {
+                accounts.addAll(Arrays.asList(accountsResponse.data));
+                if (accountsResponse.pagination != null && accountsResponse.pagination.next_uri != null) {
+                    startingAfter = accounts.getLast().id;
+                }
+            }
+        } while (startingAfter != null);
+        return accounts;
+    }
+
+    private String getAccountId(String accountName, String currency) throws IOException {
         CBAccount account = getAccount(accountName, currency);
         return (account != null) ? account.id : null;
     }
