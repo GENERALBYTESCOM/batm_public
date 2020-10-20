@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 public class DummyExchangeAndWalletAndSource implements IExchange, IWallet, IRateSource, ICanSendMany {
@@ -36,8 +37,6 @@ public class DummyExchangeAndWalletAndSource implements IExchange, IWallet, IRat
     private static final String BTC_WALLET_ADDRESS = "18nB5x3zxF26MuA89yNcnkS9qs33KNwLFu";
     private static final String XMR_WALLET_ADDRESS = "dc3c48b1577d25eb4ce56b266bcf7aab6b27c28a0ba305d8dfebff52e6f6f757";
     private static final String LTC_WALLET_ADDRESS = "LZRi2YvS3cR4Pc3hQkAxqYLKRXEjjxZdd5"; //safe
-    private static final String TX_SELL_ID = "tx_sell_id";
-    private static final String TXT_ID = "txt_id";
     private String fiatCurrency;
     private String cryptoCurrency;
     private String walletAddress;
@@ -115,19 +114,19 @@ public class DummyExchangeAndWalletAndSource implements IExchange, IWallet, IRat
 
     @Override
     public String sellCoins(BigDecimal cryptoAmount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
-        return TX_SELL_ID;
+        return getSellTransactionId();
     }
 
     @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
         log.info("{}-DummyExchangeWallet: sending coins to {} {}", this.cryptoCurrency, destinationAddress, amount);
-        return TXT_ID;
+        return getSendTransactionId();
     }
 
     @Override
     public String sendMany(Collection<Transfer> transfers, String cryptoCurrency, String description) {
         log.info("{}-DummyExchangeWallet: sendMany: {} {}", this.cryptoCurrency, transfers, description);
-        return TXT_ID;
+        return getSendTransactionId();
     }
 
     @Override
@@ -169,5 +168,13 @@ public class DummyExchangeAndWalletAndSource implements IExchange, IWallet, IRat
     @Override
     public String getPreferredCryptoCurrency() {
         return cryptoCurrency;
+    }
+
+    private String getSellTransactionId() {
+        return String.format("22222222222222222222222222222222222222222222222222222222%08x", new Random().nextInt());
+    }
+
+    private String getSendTransactionId() {
+        return String.format("11111111111111111111111111111111111111111111111111111111%08x", new Random().nextInt());
     }
 }
