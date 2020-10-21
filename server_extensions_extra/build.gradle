@@ -117,3 +117,14 @@ dependencyVerifications {
     }
     configuration project.configurations.githubCompile
 }
+
+test {
+    testLogging {
+        events "failed"
+        showExceptions true
+        exceptionFormat "full"
+        showCauses true
+        showStackTraces true
+        showStandardStreams = false
+    }
+}
