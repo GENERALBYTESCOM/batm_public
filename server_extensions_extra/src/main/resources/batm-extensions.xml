@@ -1765,8 +1765,8 @@
             <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
             <cryptocurrency>HT</cryptocurrency>
         </wallet>
-        <cryptologo cryptocurrency="HT" file="HT.png"/>
-        <cryptologo cryptocurrency="HT" file="HT.svg"/>
+        <cryptologo cryptocurrency="HT" file="ht.png"/>
+        <cryptologo cryptocurrency="HT" file="ht.svg"/>
         <wallet prefix="infuraERC20_ZPAE_18_0x045Eb7e34e94B28C7A3641BC5e1A1F61f225Af9F" name="Infura.io wallet - ZPAE">
             <param name="projectId" />
             <param name="mnemonic" />
