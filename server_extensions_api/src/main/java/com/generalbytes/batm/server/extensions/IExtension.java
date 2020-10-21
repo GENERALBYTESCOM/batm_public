@@ -20,6 +20,7 @@ package com.generalbytes.batm.server.extensions;
 
 import com.generalbytes.batm.server.extensions.aml.IExternalIdentityProvider;
 import com.generalbytes.batm.server.extensions.aml.scoring.ITransactionScoringProvider;
+import com.generalbytes.batm.server.extensions.communication.ICommunicationProvider;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.util.Set;
@@ -151,4 +152,11 @@ public interface IExtension {
      *                    The first parameter ("prefix") defines which provider to use.
      */
     ITransactionScoringProvider createTransactionScoringProvider(String transactionScoringProviderParamValues);
+
+    /**
+     * Optionally returns external communication providers that can be used by server to sending SMS or making voice calls.
+     * @return
+     */
+    Set<ICommunicationProvider> getCommunicationProviders();
+
 }

@@ -1784,6 +1784,8 @@
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.identity.ExternalIdentityExampleExtension" />-->
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.watchlists.WatchlistExtension" />-->
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.rest.RESTExampleExtension" />-->
+    <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.communication.ExternalCommunicationExampleExtension" />-->
+
     <extension class="com.generalbytes.batm.server.extensions.extra.examples.chat.ChatBotExtensionExample" />
     <extension class="com.generalbytes.batm.server.extensions.extra.nuls.NulsExtension" >
         <wallet prefix="nulsBinance" name="NULS">
