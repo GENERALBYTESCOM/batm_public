@@ -612,24 +612,6 @@
             <cryptocurrency>USDT</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
         </ratesource>
-        <exchange prefix="binancejersey" name="Binance Jersey">
-            <param name="apikey"/>
-            <param name="secretkey"/>
-            <param name="fiatcurrency"/>
-            <cryptocurrency>BCH</cryptocurrency>
-            <cryptocurrency>BNB</cryptocurrency>
-            <cryptocurrency>BTC</cryptocurrency>
-            <cryptocurrency>ETH</cryptocurrency>
-            <cryptocurrency>LTC</cryptocurrency>
-        </exchange>
-        <ratesource prefix="binancejersey" name="Binance Jersey">
-            <param name="fiatcurrency" />
-            <cryptocurrency>BCH</cryptocurrency>
-            <cryptocurrency>BNB</cryptocurrency>
-            <cryptocurrency>BTC</cryptocurrency>
-            <cryptocurrency>ETH</cryptocurrency>
-            <cryptocurrency>LTC</cryptocurrency>
-        </ratesource>
         <exchange prefix="bitpandapro" name="Bitpanda Pro">
             <param name="apikey"/>
             <param name="fiatcurrency"/>
