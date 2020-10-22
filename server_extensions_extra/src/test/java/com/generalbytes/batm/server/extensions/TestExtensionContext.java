@@ -1,5 +1,6 @@
 package com.generalbytes.batm.server.extensions;
 
+import com.generalbytes.batm.server.extensions.exceptions.BuyException;
 import com.generalbytes.batm.server.extensions.exceptions.CashbackException;
 import com.generalbytes.batm.server.extensions.exceptions.SellException;
 import com.generalbytes.batm.server.extensions.watchlist.WatchListQuery;
@@ -154,6 +155,11 @@ public class TestExtensionContext implements IExtensionContext {
 
     @Override
     public ITransactionSellInfo sellCrypto(String terminalSerialNumber, BigDecimal fiatAmount, String fiatCurrency, BigDecimal cryptoAmount, String cryptoCurrency, String identityPublicId, String discountCode) throws SellException {
+        return null;
+    }
+
+    @Override
+    public ITransactionBuyInfo buyCrypto(String terminalSerialNumber, BigDecimal fiatAmount, String fiatCurrency, BigDecimal cryptoAmount, String cryptoCurrency, String destinationAddress, String identityPublicId, String discountCode) throws BuyException {
         return null;
     }
 
