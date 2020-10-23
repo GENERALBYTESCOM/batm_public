@@ -91,6 +91,7 @@ public enum CryptoCurrency {
     TKN("TokenCard"),
     TRTL("TurtleCoin"),
     TRX("Tron"),
+    UCA("UCA"),
     USDS("StableUSD"),
     USDT("Tether"),
     VIA("Viacoin"),
