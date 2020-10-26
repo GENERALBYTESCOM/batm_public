@@ -28,6 +28,7 @@ import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
 import com.generalbytes.batm.server.extensions.ITask;
 import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.digifinex.dto.Account;
 import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.digifinex.dto.Balance;
+import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.digifinex.dto.DepositAddresses;
 import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.digifinex.dto.MarketTick;
 import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.digifinex.dto.OrderBookSnapshot;
 import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.digifinex.dto.Symbol;
@@ -35,8 +36,6 @@ import com.generalbytes.batm.server.extensions.util.net.CompatSSLSocketFactory;
 
 import org.knowm.xchange.dto.account.Wallet;
 import org.knowm.xchange.dto.account.AccountInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import si.mazi.rescu.ClientConfig;
 import si.mazi.rescu.HmacPostBodyDigest;
@@ -275,8 +274,10 @@ public class DigiFinexExchange implements IExchangeAdvanced, IRateSourceAdvanced
      * @return available balance of given currency
      */
     private BigDecimal fetchBalance(String code) {
-        final Account balances = api.balances(HmacPostBodyDigest.createInstance(secret));
-
+        final Account balances = api.balances(
+            RequestSigner.createInstance(secret), 
+            Long.toString(System.currentTimeMillis()/1000));
+        
         if (balances.getBalances() == null) {
             // account has no balances - implicitly empty
             return BigDecimal.ZERO;
@@ -314,7 +315,11 @@ public class DigiFinexExchange implements IExchangeAdvanced, IRateSourceAdvanced
 
 	@Override
 	public String getDepositAddress(String cryptoCurrency) {
-		// TODO Auto-generated method stub
+		DepositAddresses depositAddresses = api.getDepositAddresses(
+            cryptoCurrency, 
+            RequestSigner.createInstance(secret), 
+            Long.toString(System.currentTimeMillis()/1000));
+            LOG.info(depositAddresses.toString());
 		return null;
 	}
 

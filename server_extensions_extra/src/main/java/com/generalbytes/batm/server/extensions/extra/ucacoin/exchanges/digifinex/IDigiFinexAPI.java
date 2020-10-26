@@ -17,8 +17,11 @@ import javax.ws.rs.core.MediaType;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.digifinex.dto.Account;
+import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.digifinex.dto.DepositAddress;
+import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.digifinex.dto.DepositAddresses;
 import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.digifinex.dto.MarketTick;
 import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.digifinex.dto.OrderBookSnapshot;
+import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.digifinex.dto.OrderStates;
 import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.digifinex.dto.Symbol;
 
 import si.mazi.rescu.HttpResponseAware;
@@ -50,24 +53,33 @@ public interface IDigiFinexAPI {
     @GET
     @Path("/spot/assets")
     @Produces({ "application/json" })
-    Account balances(@HeaderParam("ACCESS-SIGN") ParamsDigest signer) throws ApiError;
-/*
-    @GET
-    @Path("/account/orders/{order_id}")
-    @Produces({ "application/json" })
-    OrderState getOrder(@PathParam("order_id") UUID orderId) throws ApiError;
+    Account balances(
+        @HeaderParam("ACCESS-SIGN") ParamsDigest signer,
+        @HeaderParam("ACCESS-TIMESTAMP") String timestamp) throws ApiError;
 
+    @GET
+    @Path("/{market}/order")
+    @Produces({ "application/json" })
+    OrderStates getOrderStates(
+        @PathParam("market") String market,
+        @QueryParam("order_id") String[] orderIds,
+        @HeaderParam("ACCESS-SIGN") ParamsDigest signer,
+        @HeaderParam("ACCESS-TIMESTAMP") String timestamp) throws ApiError;
+/*
     @POST
     @Path("/account/orders")
     @Consumes({ "application/json" })
     @Produces({ "application/json" })
     Order createOrder(CreateOrder createOrder) throws ApiError;
-
+*/
     @GET
-    @Path("/account/deposit/crypto/{currency_code}")
+    @Path("/deposit/address")
     @Produces({ "application/json" })
-    DepositAddress cryptoDepositAddress(@PathParam("currency_code") String currencyCode) throws ApiError;
-
+    DepositAddresses getDepositAddresses(        
+        @QueryParam("currency") String currency,
+        @HeaderParam("ACCESS-SIGN") ParamsDigest signer,
+        @HeaderParam("ACCESS-TIMESTAMP") String timestamp) throws ApiError;
+/*
     @POST
     @Path("/account/deposit/crypto")
     @Consumes({ "application/json" })

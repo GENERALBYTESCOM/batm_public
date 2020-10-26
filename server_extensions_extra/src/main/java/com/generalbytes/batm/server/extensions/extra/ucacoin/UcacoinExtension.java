@@ -115,7 +115,7 @@ public class UcacoinExtension extends AbstractExtension{
         if ((paramString != null) && (!paramString.trim().isEmpty())) {
             StringTokenizer paramTokenizer = new StringTokenizer(paramString, ":");
             String prefix = paramTokenizer.nextToken();
-            if ("crex24".equalsIgnoreCase(prefix)) {
+            if ("digifinex".equalsIgnoreCase(prefix)) {
                 String apiKey = paramTokenizer.nextToken();
                 String apiSecret = paramTokenizer.nextToken();
                 String preferredFiatCurrency = FiatCurrency.USD.getCode();

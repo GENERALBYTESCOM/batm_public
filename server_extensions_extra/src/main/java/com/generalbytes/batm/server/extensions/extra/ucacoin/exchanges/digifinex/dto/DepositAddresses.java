@@ -2,33 +2,35 @@ package com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.digifine
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Account details of a registered user, including balances.
  **/
-public class Account {
+public class DepositAddresses {
 
     @JsonProperty("code")
     private String code;
 
     @JsonProperty("list")
-    private List<Balance> balances = new ArrayList<>();
+    private List<DepositAddress> addresses = new ArrayList<>();
 
-    public List<Balance> getBalances() {
-        return balances;
+    
+    public List<DepositAddress> getAddresses() {
+        return addresses;
     }
 
-    public void setBalances(
-        List<Balance> balances) {
-        this.balances = balances;
+    public void setAddresses(
+        List<DepositAddress> addresses) {
+        this.addresses = addresses;
     }
 
     @Override public String toString() {
         return "Account{" +
-            " balances=" + balances +
+            " addresses=" + addresses +
             ", code=" + code +"}";
     }
 }

@@ -43,7 +43,7 @@ public class Balance   {
 
     @Override public String toString() {
         return "Balance{" +
-            ", currency='" + currency + '\'' +
+            "currency='" + currency + '\'' +
             ", free=" + free +
             ", total=" + total +
             '}';
