@@ -237,4 +237,9 @@ public class TestExtensionContext implements IExtensionContext {
     public List<IRemainingLimit> getIdentityRemainingLimits(String fiatCurrency, String terminalSerialNumber, String identityPublicId) {
         return null;
     }
+
+    @Override
+    public IApiAccess morphisAuthenticate(String apiKey) {
+        return null;
+    }
 }

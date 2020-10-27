@@ -465,4 +465,11 @@ public interface IExtensionContext {
      * @return Remaining limits for given identity.
      */
     List<IRemainingLimit> getIdentityRemainingLimits(String fiatCurrency, String terminalSerialNumber, String identityPublicId);
+
+    /**
+     * Authenticate Morphis API key
+     * @return true if the token is valid
+     */
+    IApiAccess morphisAuthenticate(String apiKey);
+
 }
