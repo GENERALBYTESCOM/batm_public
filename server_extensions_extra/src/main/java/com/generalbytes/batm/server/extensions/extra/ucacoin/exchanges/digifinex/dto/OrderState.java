@@ -162,7 +162,7 @@ public class OrderState {
 
 
     @Override public String toString() {
-        return "OrderState{}";
+        return "OrderState{} ";
     }
 }
 

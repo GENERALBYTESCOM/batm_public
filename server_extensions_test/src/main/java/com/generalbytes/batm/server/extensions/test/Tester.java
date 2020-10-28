@@ -501,7 +501,11 @@ public class Tester {
 					System.err.println("Exchange returned NULL.");
 				}
 				final String depositAddress = e.getDepositAddress(selectedCryptoCurrency);
-				System.out.println("Deposit Address: " + depositAddress);
+                System.out.println("Deposit Address: " + depositAddress);
+                
+                final String order = e.sellCoins(new BigDecimal(1), "UCA", "BTC", "NOT SURE WHY");
+                System.out.println("Order: " + order);
+
 				return;
 			}
 		}

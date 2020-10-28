@@ -16,10 +16,11 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.digifinex.dto.CreateOrder;
 import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.digifinex.dto.Account;
-import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.digifinex.dto.DepositAddress;
 import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.digifinex.dto.DepositAddresses;
 import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.digifinex.dto.MarketTick;
+import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.digifinex.dto.Order;
 import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.digifinex.dto.OrderBookSnapshot;
 import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.digifinex.dto.OrderStates;
 import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.digifinex.dto.Symbol;
@@ -58,24 +59,28 @@ public interface IDigiFinexAPI {
         @HeaderParam("ACCESS-TIMESTAMP") String timestamp) throws ApiError;
 
     @GET
-    @Path("/{market}/order")
+    @Path("/spot/order")
     @Produces({ "application/json" })
     OrderStates getOrderStates(
-        @PathParam("market") String market,
         @QueryParam("order_id") String[] orderIds,
         @HeaderParam("ACCESS-SIGN") ParamsDigest signer,
         @HeaderParam("ACCESS-TIMESTAMP") String timestamp) throws ApiError;
-/*
+
+
     @POST
-    @Path("/account/orders")
+    @Path("/spot/order/new")
     @Consumes({ "application/json" })
     @Produces({ "application/json" })
-    Order createOrder(CreateOrder createOrder) throws ApiError;
-*/
+    Order createOrder(  
+        CreateOrder request,        
+        @HeaderParam("ACCESS-SIGN") ParamsDigest signer,
+        @HeaderParam("ACCESS-TIMESTAMP") String timestamp
+    ) throws ApiError;
+
     @GET
     @Path("/deposit/address")
     @Produces({ "application/json" })
-    DepositAddresses getDepositAddresses(        
+    DepositAddresses getDepositAddresses(      
         @QueryParam("currency") String currency,
         @HeaderParam("ACCESS-SIGN") ParamsDigest signer,
         @HeaderParam("ACCESS-TIMESTAMP") String timestamp) throws ApiError;
@@ -106,7 +111,7 @@ public interface IDigiFinexAPI {
 
         @Override public String getMessage() {
             return String.format(Locale.ENGLISH, "api request failed (errorCode=%s,http_status=%s)",
-                this.code, this.getHttpStatusCode()
+                this, this.getHttpStatusCode()
             );
         }
 

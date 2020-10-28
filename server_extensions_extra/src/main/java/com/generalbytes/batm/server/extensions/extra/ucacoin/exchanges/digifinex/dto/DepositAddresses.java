@@ -15,7 +15,7 @@ public class DepositAddresses {
     @JsonProperty("code")
     private String code;
 
-    @JsonProperty("list")
+    @JsonProperty("data")
     private List<DepositAddress> addresses = new ArrayList<>();
 
     
@@ -29,7 +29,7 @@ public class DepositAddresses {
     }
 
     @Override public String toString() {
-        return "Account{" +
+        return "DepositAddresses{" +
             " addresses=" + addresses +
             ", code=" + code +"}";
     }

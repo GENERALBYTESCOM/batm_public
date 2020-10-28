@@ -9,6 +9,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  **/
 public class OrderBookSnapshot   {
 
+  @JsonProperty("code")
+  private String code;
   @JsonProperty("bids")
   private Object bids;
   @JsonProperty("asks")
@@ -32,9 +34,9 @@ public class OrderBookSnapshot   {
 
     @Override public String toString() {
         return "OrderBookSnapshot{" +
-            ", bids=" + bids +
+            " bids=" + bids.toString() +
             ", asks=" + asks +
-            '}';
+            "code=" + code + " }";
     }
 }
 

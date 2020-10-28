@@ -40,9 +40,26 @@ public class RequestSigner extends BaseParamsDigest {
     @Override
     public String digestParams(RestInvocation restInvocation) {
         Mac sha256_HMAC = getMac();
-        if (restInvocation.getRequestBody() != null) {
-            sha256_HMAC.update(restInvocation.getRequestBody().getBytes());
+        String payloadString = "";
+        LOG.info("QUERY" + restInvocation.getQueryString());
+        LOG.info("BODY" + restInvocation.getRequestBody());
+
+        if (restInvocation.getQueryString() != null && !restInvocation.getQueryString().isEmpty()) {
+            payloadString += restInvocation.getQueryString();
+            if (restInvocation.getRequestBody() != null) {
+
+                payloadString += "&" + restInvocation.getRequestBody();
+            }
+        } else {
+            if (restInvocation.getRequestBody() != null) {
+                payloadString += restInvocation.getRequestBody();
+            }
         }
+
+        LOG.info("PAYLOAD" + payloadString);
+
+        sha256_HMAC.update(payloadString.getBytes());
+
         byte[] result = sha256_HMAC.doFinal();
         String signature = bytesToHexString(result);
 

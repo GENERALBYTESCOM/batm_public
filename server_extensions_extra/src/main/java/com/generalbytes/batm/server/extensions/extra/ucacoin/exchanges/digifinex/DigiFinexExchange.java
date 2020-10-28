@@ -4,9 +4,12 @@ import static java.lang.String.format;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URI;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +33,11 @@ import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.digifinex
 import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.digifinex.dto.Balance;
 import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.digifinex.dto.DepositAddresses;
 import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.digifinex.dto.MarketTick;
+import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.digifinex.dto.CreateOrder;
+import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.digifinex.dto.Order;
 import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.digifinex.dto.OrderBookSnapshot;
+import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.digifinex.dto.OrderState;
+import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.digifinex.dto.Side;
 import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.digifinex.dto.Symbol;
 import com.generalbytes.batm.server.extensions.util.net.CompatSSLSocketFactory;
 
@@ -63,6 +70,9 @@ public class DigiFinexExchange implements IExchangeAdvanced, IRateSourceAdvanced
 
         return new DigiFinexExchange(LIVE_URL, apikey, secret, preferredFiatCurrency);
     }
+
+        enum TradableLimitFor {BUY, SELL}
+
 	
 	 // all CRYPTO_FIAT combinations are supported
 	 private static final ImmutableSet<String> FIAT_CURRENCIES = ImmutableSet.of(
@@ -72,12 +82,11 @@ public class DigiFinexExchange implements IExchangeAdvanced, IRateSourceAdvanced
         CryptoCurrency.BTC.getCode(),
         CryptoCurrency.UCA.getCode()
     );
-    // from https://api.exchange.bitpanda.com/public/v1/instruments
-    private static final Map<String, Integer> INSTRUMENT_AMOUNT_PRECISION = ImmutableMap.<String, Integer>builder()
-        .put("BTC_UCA", 8)
-        .put("UCA_USD", 5)
-        .build()
-    ;
+
+    private static final ImmutableSet<String> SYMBOLS = ImmutableSet.of(
+        "UCA_BTC",
+        "UCA_USD"
+    );
 
     private final IDigiFinexAPI api;
     // allow 2 requests per second -> 120 requests/minute, safely below api rate limits
@@ -151,7 +160,7 @@ public class DigiFinexExchange implements IExchangeAdvanced, IRateSourceAdvanced
 	@Override
 	public BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency) {
 		return safely(() -> {
-			final String instrument = asInstrument(cryptoCurrency, fiatCurrency);
+			final String instrument = asSymbol(cryptoCurrency, fiatCurrency);
 			return rateCache.get(instrument, () -> fetchExchangeRateLast(instrument));
 		}, "getExchangeRateLast", cryptoCurrency, fiatCurrency);
 	}
@@ -191,7 +200,7 @@ public class DigiFinexExchange implements IExchangeAdvanced, IRateSourceAdvanced
     @Override
     public BigDecimal calculateBuyPrice(String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount) {
         return safely(() -> {
-            final String instrument = asInstrument(cryptoCurrency, fiatCurrency);
+            final String instrument = asSymbol(cryptoCurrency, fiatCurrency);
             return calculateRequiredLimitPriceToBuy(instrument, cryptoAmount).multiply(cryptoAmount);
         }, "calculateBuyPrice", cryptoCurrency, fiatCurrency, cryptoAmount);
     }
@@ -205,13 +214,17 @@ public class DigiFinexExchange implements IExchangeAdvanced, IRateSourceAdvanced
     @Override
     public BigDecimal calculateSellPrice(String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount) {
         return safely(() -> {
-            final String instrument = asInstrument(cryptoCurrency, fiatCurrency);
+            final String instrument = asSymbol(cryptoCurrency, fiatCurrency);
             return calculateRequiredLimitPriceToSell(instrument, cryptoAmount).multiply(cryptoAmount);
         }, "calculateSellPrice", cryptoCurrency, fiatCurrency, cryptoAmount);
     }
 
     private BigDecimal calculateRequiredLimitPriceToSell(String instrument, BigDecimal amount) {
-		final OrderBookSnapshot snapshot = api.orderBook(instrument, 50);
+        LOG.info(instrument);
+        LOG.info(amount.toString());
+
+        final OrderBookSnapshot snapshot = api.orderBook(instrument, 50);
+        LOG.info(snapshot.toString());
 		final List<List<Float>> bids = snapshot.getBids();
 
         return calculateRequiredLimitPrice(amount, bids);
@@ -228,10 +241,11 @@ public class DigiFinexExchange implements IExchangeAdvanced, IRateSourceAdvanced
         BigDecimal remaining = amountToFill;
         BigDecimal price = null;
 
+
         for (List<Float> entry : orderbook) {
-			BigDecimal valueRemaining = new BigDecimal(Float.toString(entry.get(0)));
+			BigDecimal valueRemaining = new BigDecimal(Float.toString(entry.get(1)));
 			remaining = remaining.subtract(valueRemaining);
-			BigDecimal valuePrice = new BigDecimal(Float.toString(entry.get(1)));
+			BigDecimal valuePrice = new BigDecimal(Float.toString(entry.get(0)));
             price = valuePrice;
 
             if (remaining.compareTo(BigDecimal.ZERO) <= 0) {
@@ -248,9 +262,7 @@ public class DigiFinexExchange implements IExchangeAdvanced, IRateSourceAdvanced
         return price;
     }
 
-
     // region IExchange
-
     @Override
     public BigDecimal getCryptoBalance(String cryptoCurrency) {
         return safely(() -> {
@@ -292,26 +304,63 @@ public class DigiFinexExchange implements IExchangeAdvanced, IRateSourceAdvanced
         return BigDecimal.ZERO; // a balance is created on first deposit/trade, until then it is empty implicitly
     }
 
+    private static final int MAX_ORDER_FILL_CHECKS = 10;
 
-	@Override
-	public String purchaseCoins(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse,
-			String description) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    private String executeSync(CreateOrder payload) {
+        LOG.info("creating limit order using {}", payload.toString());
+        final Order order = api.createOrder(payload, RequestSigner.createInstance(secret), 
+        Long.toString(System.currentTimeMillis()/1000));
+        
+        LOG.info("limit order created: {}", order.toString());
+        wait(Duration.ofSeconds(2));
 
-	@Override
-	public String sellCoins(BigDecimal cryptoAmount, String cryptoCurrency, String fiatCurrencyToUse,
-			String description) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+        for (int checks = 0; checks < MAX_ORDER_FILL_CHECKS; checks++) {
+            OrderState current;
+            try {
+                String[] orderIds = new String[1];
+                orderIds[0] = order.getOrderId();
+                current = api.getOrderStates(orderIds, RequestSigner.createInstance(secret), 
+                Long.toString(System.currentTimeMillis()/1000)).getOrderStates().get(0);
+            } catch (final IDigiFinexAPI.ApiError e) {
+                LOG.debug("failed to get order status {}", e.toString());
+                current = null;
+            }
 
-	@Override
-	public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+            if (current != null && 2 == current.getStatus()) {
+                LOG.debug("order filled {}", current.toString());
+                return order.getOrderId();
+            }
+
+            LOG.debug("waiting for order to be processed {}", current);
+            wait(Duration.ofSeconds(3));
+        }
+
+        throw new IllegalStateException("executed order was not fully filled in time");
+    }
+
+
+    @Override
+    public String purchaseCoins(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
+        return safely(() -> {
+            final CreateOrder request = limitOrder(Side.BUY, amount, cryptoCurrency, fiatCurrencyToUse);
+            return executeSync(request).toString();
+        }, "purchaseCoins", amount, cryptoCurrency, fiatCurrencyToUse, description);
+    }
+
+    @Override
+    public String sellCoins(BigDecimal cryptoAmount, String cryptoCurrency, String fiatCurrencyToUse,
+        String description) {
+        return safely(() -> {
+            final CreateOrder request = limitOrder(Side.SELL, cryptoAmount, cryptoCurrency, fiatCurrencyToUse);
+            return executeSync(request).toString();
+        }, "sellCoins", cryptoAmount, cryptoCurrency, fiatCurrencyToUse, description);
+    }
+
+    @Override
+    public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
+        return null;
+    }
+
 
 	@Override
 	public String getDepositAddress(String cryptoCurrency) {
@@ -320,31 +369,127 @@ public class DigiFinexExchange implements IExchangeAdvanced, IRateSourceAdvanced
             RequestSigner.createInstance(secret), 
             Long.toString(System.currentTimeMillis()/1000));
             LOG.info(depositAddresses.toString());
-		return null;
+		return depositAddresses.getAddresses().get(0).getAddress();
 	}
 
-	@Override
-	public ITask createPurchaseCoinsTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse,
-			String description) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public ITask createPurchaseCoinsTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
+        return safely(() -> new OrderExecutionTask(limitOrder(Side.BUY, amount, cryptoCurrency, fiatCurrencyToUse)),
+            "createPurchaseCoinsTask", amount, cryptoCurrency, fiatCurrencyToUse, description);
+    }
 
-	@Override
-	public ITask createSellCoinsTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse,
-			String description) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public ITask createSellCoinsTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
+        return safely(() -> new OrderExecutionTask(limitOrder(Side.SELL, amount, cryptoCurrency, fiatCurrencyToUse)),
+            "createSellCoinsTask", amount, cryptoCurrency, fiatCurrencyToUse, description);
+    }
 
-	private Wallet getWallet(AccountInfo accountInfo) {
-        Map<String, Wallet> wallets = accountInfo.getWallets();
-        if (wallets.containsKey("exchange")) {
-            return wallets.get("exchange");
+    private final class OrderExecutionTask implements ITask {
+
+        private final CreateOrder request;
+        // task state
+        private Instant start;
+        private boolean finished;
+        private String result;
+        private String orderId;
+
+
+        public OrderExecutionTask(CreateOrder request) {
+            this.request = request;
         }
-        throw new UnsupportedOperationException("Wallets in account: " + wallets.keySet());
-	}
-	
+
+        @Override public boolean onCreate() {
+            return wrapped(() -> {
+                LOG.info("creating limit order using {}", request);
+                final Order order = api.createOrder(request,RequestSigner.createInstance(secret), 
+                Long.toString(System.currentTimeMillis()/1000));
+                this.orderId = order.getOrderId();
+                LOG.info("limit order created: {}", order.toString());
+
+                DigiFinexExchange.wait(Duration.ofSeconds(2));
+
+                start = Instant.now(); // track order execution timeout
+                return true;
+            }, "onCreate");
+        }
+
+        @Override public boolean onDoStep() {
+            return wrapped(() -> {
+                if (orderId == null) {
+                    finished = true;
+                    throw new IllegalStateException("skip task - order was not created");
+                }
+
+                final Duration elapsed = Duration.between(start, Instant.now());
+                if (elapsed.compareTo(Duration.ofHours(5)) > 0) {
+                    finished = true;
+                    throw new IllegalStateException("executed order was not fully filled in time");
+                }
+
+                String[] orderIds = new String[1];
+                orderIds[0] = orderId;
+
+                final OrderState current = api.getOrderStates(orderIds, RequestSigner.createInstance(secret), 
+                Long.toString(System.currentTimeMillis()/1000)).getOrderStates().get(0);
+                if (2 == current.getStatus()) {
+                    LOG.debug("order filled {}", current);
+                    this.result = current.getOrderId();
+                    finished = true;
+                    return true;
+                }
+
+                return result != null;
+            }, "OnDoStep");
+        }
+
+        @Override
+        public boolean isFinished() {
+            return finished;
+        }
+
+        @Override
+        public String getResult() {
+            return result;
+        }
+
+        @Override
+        public boolean isFailed() {
+            return finished && result == null;
+        }
+
+        @Override
+        public void onFinish() {
+            LOG.debug("order execution finished -- {}", request);
+        }
+
+        @Override
+        public long getShortestTimeForNexStepInvocation() {
+            return 5 * 1000; //it doesn't make sense to run step sooner than after 5 seconds
+        }
+
+        private boolean wrapped(Callable<Boolean> action, String method) {
+            final String label = this.getClass().getSimpleName() + "#" + method;
+            try {
+                final Boolean result = action.call();
+                LOG.debug("{} -> {}", label, result);
+                return result == null ? false : result;
+            } catch (Exception e) {
+                LOG.error("failed to {} ({}) - {}", label, this, e.toString(), e);
+                return false;
+            }
+        }
+
+        @Override public String toString() {
+            return "OrderExecutionTask{" +
+                "request=" + request +
+                ", start=" + start +
+                ", finished=" + finished +
+                ", orderId=" + orderId +
+                ", result='" + result + '\'' +
+                '}';
+        }
+    }
+
 	 /**
      * Execute an action and yield its result or {@code null} if there is any error.
      *
@@ -368,9 +513,8 @@ public class DigiFinexExchange implements IExchangeAdvanced, IRateSourceAdvanced
         return null;
 	}
 	
-	private String asInstrument(String base, String quote) {
-        assertValidCrypto(base);
-        assertValidFiat(quote);
+	private String asSymbol(String base, String quote) {
+        if (quote == "USD") quote = "USDT";
         // all crypto/fiat pairs are supported
         return base + "_" + quote;
 	}
@@ -391,6 +535,38 @@ public class DigiFinexExchange implements IExchangeAdvanced, IRateSourceAdvanced
 
         final String msg = format("%s is not a supported fiat currency (supported=%s)", code, FIAT_CURRENCIES);
         throw new IllegalArgumentException(msg);
+    }
+
+    private CreateOrder limitOrder(Side side, BigDecimal amount, String base, String quote) {
+        final String symbol = asSymbol(base, quote);
+        LOG.info(symbol);
+        final BigDecimal amountScaled = amount.setScale(8, RoundingMode.FLOOR);
+        String type = "";
+        final BigDecimal price;
+        if (side == Side.SELL) {
+            type = "sell";
+            price = calculateRequiredLimitPriceToSell(symbol, amountScaled);
+        } else if (side == Side.BUY) {
+            type = "buy";
+            price = calculateRequiredLimitPriceToBuy(symbol, amountScaled);
+        } else {
+            throw new IllegalArgumentException("illegal order side " + side);
+        }
+
+        final CreateOrder payload = new CreateOrder();
+        payload.setSymbol(symbol);
+        payload.setAmount(amountScaled.floatValue());
+        payload.setPrice(price.floatValue());
+        payload.setType(type);
+
+        return payload;
+    }
+
+    private static void wait(Duration duration) {
+        try {
+            Thread.sleep(duration.toMillis());
+        } catch (InterruptedException ignored) {
+        }
     }
 
     
