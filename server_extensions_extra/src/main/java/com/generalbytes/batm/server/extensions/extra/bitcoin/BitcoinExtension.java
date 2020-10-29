@@ -22,7 +22,6 @@ import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.binance.BinanceComExchange;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.binance.BinanceJerseyExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.binance.BinanceUsExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitfinex.BitfinexExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitflyer.BitFlyerExchange;
@@ -189,15 +188,6 @@ public class BitcoinExtension extends AbstractExtension {
                     preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase();
                 }
                 return new BinanceUsExchange(apikey, secretKey, preferredFiatCurrency);
-
-            } else if ("binancejersey".equalsIgnoreCase(prefix)) {
-                String preferredFiatCurrency = FiatCurrency.EUR.getCode();
-                String apikey = paramTokenizer.nextToken();
-                String secretKey = paramTokenizer.nextToken();
-                if (paramTokenizer.hasMoreTokens()) {
-                    preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase();
-                }
-                return new BinanceJerseyExchange(apikey, secretKey, preferredFiatCurrency);
 
             } else if ("bitpandapro".equalsIgnoreCase(prefix)) {
                 String preferredFiatCurrency = FiatCurrency.EUR.getCode();
@@ -494,12 +484,6 @@ public class BitcoinExtension extends AbstractExtension {
                     preferredFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new BinanceUsExchange(preferredFiatCurrency);
-            } else if ("binancejersey".equalsIgnoreCase(rsType)) {
-                String preferredFiatCurrency = FiatCurrency.EUR.getCode();
-                if (st.hasMoreTokens()) {
-                    preferredFiatCurrency = st.nextToken().toUpperCase();
-                }
-                return new BinanceJerseyExchange(preferredFiatCurrency);
             } else if ("bitpandapro".equalsIgnoreCase(rsType)) {
                 String preferredFiatCurrency = FiatCurrency.EUR.getCode();
                 if (st.hasMoreTokens()) {
