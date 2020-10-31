@@ -15,7 +15,7 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bittrex;
+package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stex;
 
 import com.generalbytes.batm.server.coinutil.DDOSUtils;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
@@ -43,9 +43,9 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 
-public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
+public class StexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
 
-    private static final Logger log = LoggerFactory.getLogger("batm.master.BittrexExchange");
+    private static final Logger log = LoggerFactory.getLogger("batm.master.StexExchange");
 
     private static final Set<String> FIAT_CURRENCIES = new HashSet<>();
     public static final Comparator<LimitOrder> asksComparator = Comparator.comparing(LimitOrder::getLimitPrice);
@@ -69,7 +69,7 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
 
     private synchronized Exchange getExchange() {
         if (this.exchange == null) {
-            ExchangeSpecification bfxSpec = new org.knowm.xchange.bittrex.BittrexExchange().getDefaultExchangeSpecification();
+            ExchangeSpecification bfxSpec = new org.knowm.xchange.stex.StexExchange().getDefaultExchangeSpecification();
             bfxSpec.setApiKey(this.apiKey);
             bfxSpec.setSecretKey(this.apiSecret);
             this.exchange = ExchangeFactory.INSTANCE.createExchange(bfxSpec);
@@ -84,7 +84,7 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
         cryptoCurrencies.add(CryptoCurrency.BCH.getCode());
         cryptoCurrencies.add(CryptoCurrency.ETH.getCode());
         cryptoCurrencies.add(CryptoCurrency.LTC.getCode());
-        cryptoCurrencies.add(CryptoCurrency.BAY.getCode());
+        cryptoCurrencies.add(CryptoCurrency.SUM.getCode());
         return cryptoCurrencies;
     }
 
@@ -93,7 +93,7 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
         return FIAT_CURRENCIES;
     }
 
-    public BittrexExchange(String apiKey, String apiSecret) {
+    public StexExchange(String apiKey, String apiSecret) {
         this.apiKey = apiKey;
         this.apiSecret = apiSecret;
     }
@@ -103,14 +103,14 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
         if (!getCryptoCurrencies().contains(cryptoCurrency)) {
             return BigDecimal.ZERO;
         }
-        log.debug("Calling Bittrex exchange (getbalance)");
+        log.debug("Calling Stex exchange (getbalance)");
 
         try {
             DDOSUtils.waitForPossibleCall(getClass());
             return getExchange().getAccountService().getAccountInfo().getWallet().getBalance(Currency.getInstance(cryptoCurrency)).getAvailable();
         } catch (IOException e) {
             log.error("Error", e);
-            log.error("Bittrex exchange (getbalance) failed with message: " + e.getMessage());
+            log.error("Stex exchange (getbalance) failed with message: " + e.getMessage());
         }
         return null;
     }
@@ -123,21 +123,21 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
     @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
         if (!getCryptoCurrencies().contains(cryptoCurrency)) {
-            log.error("Bittrex implementation supports only " + Arrays.toString(getCryptoCurrencies().toArray()));
+            log.error("Stex implementation supports only " + Arrays.toString(getCryptoCurrencies().toArray()));
             return null;
         }
 
-        log.info("Calling Bittrex exchange (withdrawal destination: " + destinationAddress + " amount: " + amount + " " + cryptoCurrency + ")");
+        log.info("Calling Stex exchange (withdrawal destination: " + destinationAddress + " amount: " + amount + " " + cryptoCurrency + ")");
 
         AccountService accountService = getExchange().getAccountService();
         try {
             DDOSUtils.waitForPossibleCall(getClass());
             String result = accountService.withdrawFunds(Currency.getInstance(cryptoCurrency), amount, destinationAddress);
-            log.info("Bittrex exchange (withdrawFunds) finished with result: {}", result);
+            log.info("Stex exchange (withdrawFunds) finished with result: {}", result);
             return result;
         } catch (Exception e) {
             log.error("Error", e);
-            log.error("Bittrex exchange (withdrawFunds) failed with message: " + e.getMessage());
+            log.error("Stex exchange (withdrawFunds) failed with message: " + e.getMessage());
         }
         return null;
     }
@@ -147,14 +147,14 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
         if (!FiatCurrency.USD.getCode().equalsIgnoreCase(fiatCurrency)) {
             return BigDecimal.ZERO;
         }
-        log.debug("Calling Bittrex exchange (getbalance)");
+        log.debug("Calling Stex exchange (getbalance)");
 
         try {
             DDOSUtils.waitForPossibleCall(getClass());
             return getExchange().getAccountService().getAccountInfo().getWallet().getBalance(Currency.getInstance(fiatCurrency)).getAvailable();
         } catch (IOException e) {
             log.error("Error", e);
-            log.error("Bittrex exchange (getbalance) failed with message: " + e.getMessage());
+            log.error("Stex exchange (getbalance) failed with message: " + e.getMessage());
         }
         return null;
     }
@@ -162,15 +162,15 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
     @Override
     public String sellCoins(BigDecimal cryptoAmount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
         if (!getCryptoCurrencies().contains(cryptoCurrency)) {
-            log.error("Bittrex implementation supports only " + Arrays.toString(getCryptoCurrencies().toArray()));
+            log.error("Stex implementation supports only " + Arrays.toString(getCryptoCurrencies().toArray()));
             return null;
         }
         if (!FiatCurrency.USD.getCode().equalsIgnoreCase(fiatCurrencyToUse)) {
-            log.error("Bittrex supports only " + FiatCurrency.USD.getCode() );
+            log.error("Stex supports only " + FiatCurrency.USD.getCode() );
             return null;
         }
 
-        log.info("Calling Bittrex exchange (sell " + cryptoAmount + " " + cryptoCurrency + ")");
+        log.info("Calling Stex exchange (sell " + cryptoAmount + " " + cryptoCurrency + ")");
         TradeService tradeService = getExchange().getTradeService();
         MarketDataService marketDataService = getExchange().getMarketDataService();
 
@@ -197,7 +197,7 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
                 return orderId;
             }
         } catch (IOException e) {
-            log.error("Bittrex exchange (sellCoins) failed", e);
+            log.error("Stex exchange (sellCoins) failed", e);
         }
         return null;
     }
@@ -205,15 +205,15 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
     @Override
     public String purchaseCoins(BigDecimal cryptoAmount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
         if (!getCryptoCurrencies().contains(cryptoCurrency)) {
-            log.error("Bittrex implementation supports only " + Arrays.toString(getCryptoCurrencies().toArray()));
+            log.error("Stex implementation supports only " + Arrays.toString(getCryptoCurrencies().toArray()));
             return null;
         }
         if (!FiatCurrency.USD.getCode().equalsIgnoreCase(fiatCurrencyToUse)) {
-            log.error("Bittrex supports only " + FiatCurrency.USD.getCode() );
+            log.error("Stex supports only " + FiatCurrency.USD.getCode() );
             return null;
         }
 
-        log.info("Calling Bittrex exchange (purchase " + cryptoAmount + " " + cryptoCurrency + ")");
+        log.info("Calling Stex exchange (purchase " + cryptoAmount + " " + cryptoCurrency + ")");
         TradeService tradeService = getExchange().getTradeService();
         MarketDataService marketDataService = getExchange().getMarketDataService();
 
@@ -237,7 +237,7 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
                 return orderId;
             }
         } catch (IOException e) {
-            log.error("Bittrex exchange (purchaseCoins) failed", e);
+            log.error("Stex exchange (purchaseCoins) failed", e);
         }
         return null;
     }
@@ -259,7 +259,7 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
                 return order.getLimitPrice();
             }
         }
-        throw new IOException("Bittrex TradablePrice not available");
+        throw new IOException("Stex TradablePrice not available");
     }
 
     /**
@@ -291,7 +291,7 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
     @Override
     public String getDepositAddress(String cryptoCurrency) {
         if (!getCryptoCurrencies().contains(cryptoCurrency)) {
-            log.error("Bittrex implementation supports only " + Arrays.toString(getCryptoCurrencies().toArray()));
+            log.error("Stex implementation supports only " + Arrays.toString(getCryptoCurrencies().toArray()));
             return null;
         }
         AccountService accountService = getExchange().getAccountService();
@@ -340,7 +340,7 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
             BigDecimal tradableLimit = getTradablePrice(cryptoAmount, asks);
 
             if (tradableLimit != null) {
-                log.debug("Called Bittrex exchange for BUY rate: {}{} = {}", cryptoCurrency, fiatCurrency, tradableLimit);
+                log.debug("Called Stex exchange for BUY rate: {}{} = {}", cryptoCurrency, fiatCurrency, tradableLimit);
                 return tradableLimit.multiply(cryptoAmount);
             }
         } catch (Throwable e) {
@@ -364,7 +364,7 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
             BigDecimal tradableLimit = getTradablePrice(cryptoAmount, bids);
 
             if (tradableLimit != null) {
-                log.debug("Called Bittrex exchange for SELL rate: {}{} = {}", cryptoCurrency, fiatCurrency, tradableLimit);
+                log.debug("Called Stex exchange for SELL rate: {}{} = {}", cryptoCurrency, fiatCurrency, tradableLimit);
                 return tradableLimit.multiply(cryptoAmount);
             }
         } catch (Throwable e) {
@@ -383,7 +383,7 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
             BigDecimal amount = rateAmounts.get(key);
             if (amount == null) {
                 BigDecimal result = getExchangeRateLastSync(cryptoCurrency, fiatCurrency);
-                log.debug("Called bittrex exchange for rate: " + key + " = " + result);
+                log.debug("Called stex exchange for rate: " + key + " = " + result);
                 rateAmounts.put(key,result);
                 rateTimes.put(key,now+MAXIMUM_ALLOWED_TIME_OFFSET);
                 return result;
@@ -394,7 +394,7 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
                 }else{
                     //do the job;
                     BigDecimal result = getExchangeRateLastSync(cryptoCurrency, fiatCurrency);
-                    log.debug("Called bittrex exchange for rate: " + key + " = " + result);
+                    log.debug("Called stex exchange for rate: " + key + " = " + result);
                     rateAmounts.put(key,result);
                     rateTimes.put(key,now+MAXIMUM_ALLOWED_TIME_OFFSET);
                     return result;
@@ -419,27 +419,27 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
     @Override
     public ITask createPurchaseCoinsTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
         if (!getCryptoCurrencies().contains(cryptoCurrency)) {
-            log.error("Bittrex implementation supports only " + Arrays.toString(getCryptoCurrencies().toArray()));
+            log.error("Stex implementation supports only " + Arrays.toString(getCryptoCurrencies().toArray()));
             return null;
         }
         if (!FiatCurrency.USD.getCode().equalsIgnoreCase(fiatCurrencyToUse)) {
-            log.error("Bittrex supports only " + FiatCurrency.USD.getCode() );
+            log.error("Stex supports only " + FiatCurrency.USD.getCode() );
             return null;
         }
-        return new BittrexExchange.PurchaseCoinsTask(amount,cryptoCurrency,fiatCurrencyToUse,description);
+        return new StexExchange.PurchaseCoinsTask(amount,cryptoCurrency,fiatCurrencyToUse,description);
     }
 
     @Override
     public ITask createSellCoinsTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
         if (!getCryptoCurrencies().contains(cryptoCurrency)) {
-            log.error("Bittrex implementation supports only " + Arrays.toString(getCryptoCurrencies().toArray()));
+            log.error("Stex implementation supports only " + Arrays.toString(getCryptoCurrencies().toArray()));
             return null;
         }
         if (!FiatCurrency.USD.getCode().equalsIgnoreCase(fiatCurrencyToUse)) {
-            log.error("Bittrex supports only " + FiatCurrency.USD.getCode() );
+            log.error("Stex supports only " + FiatCurrency.USD.getCode() );
             return null;
         }
-        return new BittrexExchange.SellCoinsTask(amount,cryptoCurrency,fiatCurrencyToUse,description);
+        return new StexExchange.SellCoinsTask(amount,cryptoCurrency,fiatCurrencyToUse,description);
     }
 
     class PurchaseCoinsTask implements ITask {
@@ -463,7 +463,7 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
 
         @Override
         public boolean onCreate() {
-            log.info("Calling Bittrex exchange (purchase " + amount + " " + cryptoCurrency + ")");
+            log.info("Calling Stex exchange (purchase " + amount + " " + cryptoCurrency + ")");
             TradeService tradeService = getExchange().getTradeService();
             MarketDataService marketDataService = getExchange().getMarketDataService();
 
@@ -486,7 +486,7 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
                 sleep(2000); //give exchange 2 seconds to reflect open order in order book
             } catch (IOException e) {
                 log.error("Error", e);
-                log.error("Bittrex exchange (purchaseCoins) failed with message: " + e.getMessage());
+                log.error("Stex exchange (purchaseCoins) failed with message: " + e.getMessage());
             } catch (Throwable e) {
                 log.error("Error", e);
             }
@@ -588,7 +588,7 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
 
         @Override
         public boolean onCreate() {
-            log.info("Calling Bittrex exchange (sell " + cryptoAmount + " " + cryptoCurrency + ")");
+            log.info("Calling Stex exchange (sell " + cryptoAmount + " " + cryptoCurrency + ")");
             TradeService tradeService = getExchange().getTradeService();
             MarketDataService marketDataService = getExchange().getMarketDataService();
 
@@ -612,7 +612,7 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
                 sleep(2000); //give exchange 2 seconds to reflect open order in order book
             } catch (IOException e) {
                 log.error("Error", e);
-                log.error("Bittrex exchange (sellCoins) failed with message: " + e.getMessage());
+                log.error("Stex exchange (sellCoins) failed with message: " + e.getMessage());
             } catch (Throwable e) {
                 log.error("Error", e);
             }
@@ -702,7 +702,7 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
     }
 
 //    public static void main(String[] args) {
-//        log.info(new BittrexExchange("XXX", "XXX")
+//        log.info(new StexExchange("XXX", "XXX")
 //            .purchaseCoins(new BigDecimal(50), "BCH", "USD", "desc"));
 //    }
 }
