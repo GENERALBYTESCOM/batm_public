@@ -22,7 +22,7 @@ import com.generalbytes.batm.server.extensions.IExtensionContext;
 import com.generalbytes.batm.server.extensions.IPaperWallet;
 import com.generalbytes.batm.server.extensions.IPaperWalletGenerator;
 
-import com.generalbytes.bitrafael.tools.wallet.dash.WalletToolsSUM;
+import com.generalbytes.bitrafael.tools.wallet.sum.WalletToolsSUM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
