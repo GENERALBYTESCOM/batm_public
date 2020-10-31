@@ -1331,7 +1331,7 @@
             <param name="walletAddress" />
             <cryptocurrency>SUM</cryptocurrency>
         </wallet>
-        <ratesource prefix="sumcoinindex" name="Sumcoinindex" >
+        <ratesource prefix="sumcoinindex" name="Sumcoin Index" >
             <cryptocurrency>SUM</cryptocurrency>
         </ratesource>
         <ratesource prefix="sumfix" name ="Fix Price" >
