@@ -70,8 +70,7 @@ public interface IDigiFinexAPI {
     @POST
     @Path("/spot/order/new")
     @Consumes({ "application/json" })
-    @Produces({ "application/json" })
-    Order createOrder(  
+    Object createOrder(  
         CreateOrder request,        
         @HeaderParam("ACCESS-SIGN") ParamsDigest signer,
         @HeaderParam("ACCESS-TIMESTAMP") String timestamp

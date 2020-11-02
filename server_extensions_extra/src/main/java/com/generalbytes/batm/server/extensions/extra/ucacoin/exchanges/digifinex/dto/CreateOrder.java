@@ -15,10 +15,8 @@ public class CreateOrder {
     private String symbol;
     @JsonProperty("type")
     private String type;
-    @JsonSerialize(using = ToStringSerializer.class)
     @JsonProperty("amount")
     private float amount;
-    @JsonSerialize(using = ToStringSerializer.class)
     @JsonProperty("price")
     private float price;
 
