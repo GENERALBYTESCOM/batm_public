@@ -439,13 +439,20 @@ public interface IExtensionContext {
     PhoneNumberQueryResult queryPhoneNumber(String phoneNumber, String terminalSerialNumber);
 
     /**
-     * Returns Cash Collections ordered by sequence ID (primary key).
+     * Returns Cash Collections ordered by sequence ID (primary key). This variant uses TERMINAL time.
      * @param terminalSerialNumber
-     * @param dateFrom
-     * @param dateTo
+     * @param terminalTimeFrom
+     * @param terminalTimeTo
      * @return
      */
-    List<ITerminalCashCollectionRecord> getCashCollections(String terminalSerialNumber, Date dateFrom, Date dateTo);
+    List<ITerminalCashCollectionRecord> getCashCollections(String terminalSerialNumber, Date terminalTimeFrom, Date terminalTimeTo);
+
+    /**
+     * This variant uses SERVER time
+     * @param publicIdFrom limit the result only to collection records newer than the one with this public ID
+     * @return
+     */
+    List<ITerminalCashCollectionRecord> getCashCollections(String terminalSerialNumber, Date serverTimeFrom, Date serverTimeTo, String publicIdFrom);
 
     /**
      * Returns Event Logs ordered by ordered by sequence ID (primary key).

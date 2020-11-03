@@ -224,7 +224,12 @@ public class TestExtensionContext implements IExtensionContext {
     }
 
     @Override
-    public List<ITerminalCashCollectionRecord> getCashCollections(String terminalSerialNumber, Date dateFrom, Date dateTo) {
+    public List<ITerminalCashCollectionRecord> getCashCollections(String terminalSerialNumber, Date terminalTimeFrom, Date terminalTimeTo) {
+        return null;
+    }
+
+    @Override
+    public List<ITerminalCashCollectionRecord> getCashCollections(String terminalSerialNumber, Date serverTimeFrom, Date serverTimeTo, String publicIdFrom) {
         return null;
     }
 
