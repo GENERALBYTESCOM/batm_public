@@ -44,6 +44,11 @@ public class TestExtensionContext implements IExtensionContext {
     }
 
     @Override
+    public List<ITransactionDetails> findTransactions(String terminalSerialNumber, Date serverTimeFrom, Date serverTimeTo, String previousRID, boolean includeBanknotes) {
+        return null;
+    }
+
+    @Override
     public IPerson findPersonByChatId(String chatUserId) {
         return null;
     }

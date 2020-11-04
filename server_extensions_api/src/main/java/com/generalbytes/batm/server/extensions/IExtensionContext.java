@@ -77,6 +77,16 @@ public interface IExtensionContext {
     List<ITransactionDetails> findAllTransactionsByIdentityId(String publicIdentityId);
 
     /**
+     * @param terminalSerialNumber
+     * @param serverTimeFrom limit returned transactions by server time of the transaction
+     * @param serverTimeTo
+     * @param previousRID if not null only transactions NEWER than this one are returned
+     * @param includeBanknotes adds banknote information to the result (performs extra db queries)
+     * @return
+     */
+    List<ITransactionDetails> findTransactions(String terminalSerialNumber, Date serverTimeFrom, Date serverTimeTo, String previousRID, boolean includeBanknotes);
+
+    /**
      * Finds person by chat user id
      * @param chatUserId
      * @return
