@@ -53,11 +53,17 @@ public class BitgoWallet implements IWallet, ICanSendMany {
     protected String walletId;
     protected String walletPassphrase;
     protected String url;
+    protected String feeRate;
     protected static final Integer readTimeout = 90 * 1000; //90 seconds
 
     public BitgoWallet(String scheme, String host, int port, String token, String walletId, String walletPassphrase) {
+      this(scheme, host, port, token, walletId, walletPassphrase, "");
+    }
+
+    public BitgoWallet(String scheme, String host, int port, String token, String walletId, String walletPassphrase, String feeRate) {
         this.walletId = walletId;
         this.walletPassphrase = walletPassphrase;
+        this.feeRate = feeRate;
         this.url = new HttpUrl.Builder().scheme(scheme).host(host).port(port).build().toString();
 
         ClientConfig config = new ClientConfig();
@@ -105,7 +111,7 @@ public class BitgoWallet implements IWallet, ICanSendMany {
 
     @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
-        final BitGoCoinRequest request = new BitGoCoinRequest(destinationAddress, toSatoshis(amount, cryptoCurrency), walletPassphrase);
+        final BitGoCoinRequest request = new BitGoCoinRequest(destinationAddress, toSatoshis(amount, cryptoCurrency), walletPassphrase, this.feeRate);
         try {
             return getResultTxId(api.sendCoins(cryptoCurrency.toLowerCase(), this.walletId, request));
         } catch (HttpStatusIOException hse) {

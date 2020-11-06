@@ -263,6 +263,7 @@ public class BitcoinExtension extends AbstractExtension {
                 // bitgo:http://localhost:token:wallet_address:wallet_passphrase
                 // bitgo:localhost:token:wallet_address:wallet_passphrase
                 // bitgo:localhost:80:token:wallet_address:wallet_passphrase
+                // bitgo:localhost:80:token:wallet_address:wallet_passphrase:fee_rate
 
                 String first = st.nextToken();
                 String scheme;
@@ -292,10 +293,15 @@ public class BitcoinExtension extends AbstractExtension {
                 host = tunnelAddress.getHostString();
                 port = tunnelAddress.getPort();
 
+                String feeRate = "";
+                if (st.hasMoreTokens()) {
+                  feeRate = st.nextToken();
+                }
+
                 if ("bitgonoforward".equalsIgnoreCase(walletType)) {
                     return new BitgoWalletWithUniqueAddresses(scheme, host, port, token, walletAddress, walletPassphrase);
                 }
-                return new BitgoWallet(scheme, host, port, token, walletAddress, walletPassphrase);
+                return new BitgoWallet(scheme, host, port, token, walletAddress, walletPassphrase, feeRate);
 
             } else if ("coinbasewallet2".equalsIgnoreCase(walletType)
                 || "coinbasewallet2noforward".equalsIgnoreCase(walletType)) {
