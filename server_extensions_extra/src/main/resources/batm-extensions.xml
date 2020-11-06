@@ -1896,14 +1896,22 @@
         <ratesource prefix="digifinexRateSource" name ="Digifinex Rate Source" >
             <param name="fiatCurrency" />
             <cryptocurrency>UCA</cryptocurrency>
-            <cryptocurrency>BTC</cryptocurrency>
+        </ratesource>
+        <ratesource prefix="bkexRateSource" name ="Bkex Rate Source" >
+            <param name="fiatCurrency" />
+            <cryptocurrency>UCA</cryptocurrency>
         </ratesource>
         <exchange prefix="digifinex" name="DigiFinex">
             <param name="apikey"/>
             <param name="secretkey"/>
             <param name="fiatcurrency"/>
             <cryptocurrency>UCA</cryptocurrency>
-            <cryptocurrency>BTC</cryptocurrency>
+        </exchange>
+        <exchange prefix="bkex" name="Bkex">
+            <param name="apikey"/>
+            <param name="secretkey"/>
+            <param name="fiatcurrency"/>
+            <cryptocurrency>UCA</cryptocurrency>
         </exchange>
         <cryptologo cryptocurrency="UCA" file="xpm.png"/>
         <cryptologo cryptocurrency="UCA" file="xpm.svg"/>

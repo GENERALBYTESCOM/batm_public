@@ -12,7 +12,6 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.Callable;
@@ -29,24 +28,22 @@ import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.IExchangeAdvanced;
 import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
 import com.generalbytes.batm.server.extensions.ITask;
-import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.bkex.dto.Account;
 import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.bkex.dto.Balance;
+import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.bkex.dto.Balances;
 import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.bkex.dto.CreateOrder;
+import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.bkex.dto.CreatedOrder;
+import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.bkex.dto.DepositAddress;
 import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.bkex.dto.DepositAddressResponse;
 import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.bkex.dto.MarketTick;
 import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.bkex.dto.OrderBookSnapshot;
+import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.bkex.dto.OrderState;
 import com.generalbytes.batm.server.extensions.util.net.CompatSSLSocketFactory;
 
-import org.knowm.xchange.dto.account.Wallet;
-import org.knowm.xchange.dto.account.AccountInfo;
-
 import si.mazi.rescu.ClientConfig;
-import si.mazi.rescu.HmacPostBodyDigest;
 import si.mazi.rescu.RestProxyFactory;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.util.concurrent.RateLimiter;
 
@@ -72,9 +69,9 @@ public class BkexExchange implements IExchangeAdvanced, IRateSourceAdvanced {
     }
 
     // all CRYPTO_FIAT combinations are supported
-    private static final ImmutableSet<String> FIAT_CURRENCIES = ImmutableSet.of(FiatCurrency.USD.getCode());
-    private static final ImmutableSet<String> CRYPTO_CURRENCIES = ImmutableSet.of(CryptoCurrency.BTC.getCode(),
-            CryptoCurrency.UCA.getCode());
+    private static final ImmutableSet<String> FIAT_CURRENCIES = ImmutableSet.of(CryptoCurrency.USDT.getCode());
+    private static final ImmutableSet<String> CRYPTO_CURRENCIES = ImmutableSet.of(CryptoCurrency.UCA.getCode(),
+            CryptoCurrency.BTC.getCode());
 
     private final IBkexAPI api;
     // allow 2 requests per second -> 120 requests/minute, safely below api rate
@@ -91,6 +88,10 @@ public class BkexExchange implements IExchangeAdvanced, IRateSourceAdvanced {
     // visible for testing
     BkexExchange(URI baseUri, String apikey, String secret, String preferredFiatCurrency) {
         this.preferredFiatCurrency = Objects.requireNonNull(preferredFiatCurrency, "preferred fiat currency");
+        LOG.info(this.preferredFiatCurrency);
+        LOG.info(FIAT_CURRENCIES.toString());
+
+        
 
         if (!FIAT_CURRENCIES.contains(preferredFiatCurrency)) {
             LOG.error("cannot set {} as preferred fiat currency (supports {})", preferredFiatCurrency, FIAT_CURRENCIES);
@@ -152,8 +153,15 @@ public class BkexExchange implements IExchangeAdvanced, IRateSourceAdvanced {
     }
 
     private BigDecimal fetchExchangeRateLast(String symbol) {
-        final MarketTick ticks = api.marketTickerForInstrument(symbol);
-        return ticks.getTicks().get(0).getClose();
+        try {
+            final MarketTick ticks = api.marketTickerForInstrument(symbol);
+            return ticks.getTicks().get(0).getPrice();
+        } catch (Exception e) {
+            LOG.info("ERROR");
+
+            LOG.info(e.getCause().toString());
+        }
+        return null;
     }
 
     // endregion
@@ -166,7 +174,7 @@ public class BkexExchange implements IExchangeAdvanced, IRateSourceAdvanced {
     public BigDecimal getExchangeRateForBuy(String cryptoCurrency, String fiatCurrency) {
         BigDecimal result = calculateBuyPrice(cryptoCurrency, fiatCurrency, LIQUIDITY_PROBE_VOLUME);
         if (result != null) {
-            return result.divide(LIQUIDITY_PROBE_VOLUME, 2, BigDecimal.ROUND_UP);
+            return result.divide(LIQUIDITY_PROBE_VOLUME, 8, BigDecimal.ROUND_UP);
         }
         return null;
     }
@@ -175,7 +183,7 @@ public class BkexExchange implements IExchangeAdvanced, IRateSourceAdvanced {
     public BigDecimal getExchangeRateForSell(String cryptoCurrency, String fiatCurrency) {
         BigDecimal result = calculateSellPrice(cryptoCurrency, fiatCurrency, LIQUIDITY_PROBE_VOLUME);
         if (result != null) {
-            return result.divide(LIQUIDITY_PROBE_VOLUME, 2, BigDecimal.ROUND_DOWN);
+            return result.divide(LIQUIDITY_PROBE_VOLUME, 8, BigDecimal.ROUND_DOWN);
         }
         return null;
     }
@@ -189,9 +197,10 @@ public class BkexExchange implements IExchangeAdvanced, IRateSourceAdvanced {
     }
 
     private BigDecimal calculateRequiredLimitPriceToBuy(String instrument, BigDecimal amount) {
+        
         final OrderBookSnapshot snapshot = api.orderBook(instrument, 50).getSnapshot();
         final List<List<Float>> asks = snapshot.getAsks();
-        return calculateRequiredLimitPrice(amount, asks);
+        return  calculateRequiredLimitPrice(amount, asks);
     }
 
     @Override
@@ -203,13 +212,10 @@ public class BkexExchange implements IExchangeAdvanced, IRateSourceAdvanced {
     }
 
     private BigDecimal calculateRequiredLimitPriceToSell(String instrument, BigDecimal amount) {
-        LOG.info(instrument);
-        LOG.info(amount.toString());
 
         final OrderBookSnapshot snapshot = api.orderBook(instrument, 50).getSnapshot();
-        LOG.info(snapshot.toString());
         final List<List<Float>> bids = snapshot.getBids();
-
+        //return null;
         return calculateRequiredLimitPrice(amount, bids);
     }
 
@@ -268,14 +274,15 @@ public class BkexExchange implements IExchangeAdvanced, IRateSourceAdvanced {
      * @return available balance of given currency
      */
     private BigDecimal fetchBalance(String code) {
-        final Account balances = api.balances(RequestSigner.createInstance(secret));
+        final Balances wallet = api.balances(RequestSigner.createInstance(secret)).getWallet();
 
-        if (balances.getBalances() == null) {
+        
+        if (wallet.getBalances() == null) {
             // account has no balances - implicitly empty
             return BigDecimal.ZERO;
         }
 
-        for (Balance current : balances.getBalances()) {
+        for (Balance current : wallet.getBalances()) {
             if (code.equalsIgnoreCase(current.getCurrency())) {
                 return current.getAvailable();
             }
@@ -285,17 +292,21 @@ public class BkexExchange implements IExchangeAdvanced, IRateSourceAdvanced {
                                 // implicitly
     }
 
-    private static final int MAX_ORDER_FILL_CHECKS = 10;
-
     private String executeSync(CreateOrder payload) {
 
         try {
 
-            LOG.info("creating limit order using bla{}", payload.toString());
-            final Object order = api.createOrder(payload, RequestSigner.createInstance(secret));
+            final CreatedOrder order = api.createOrder(
+                payload.getDirection(),
+                payload.getPrice(), 
+                payload.getSource(),
+                payload.getSymbol(),
+                payload.getType(),
+                payload.getVolume(),
+                payload, RequestSigner.createInstance(secret));
 
-            LOG.info("limit order created: {}", order.toString());
-            return order.toString();
+            LOG.info("limit order created: {}", order.getOrderId());
+            return order.getOrderId();
         } catch (Exception e) {
 
             LOG.info("limit order ERROR: {}", e.toString());
@@ -340,6 +351,7 @@ public class BkexExchange implements IExchangeAdvanced, IRateSourceAdvanced {
     public String sellCoins(BigDecimal cryptoAmount, String cryptoCurrency, String fiatCurrencyToUse,
             String description) {
         return safely(() -> {
+
             final CreateOrder request = limitOrder("ASK", cryptoAmount, cryptoCurrency, fiatCurrencyToUse);
             return executeSync(request).toString();
         }, "sellCoins", cryptoAmount, cryptoCurrency, fiatCurrencyToUse, description);
@@ -355,7 +367,12 @@ public class BkexExchange implements IExchangeAdvanced, IRateSourceAdvanced {
         DepositAddressResponse depositAddresses = api.getDepositAddresses(cryptoCurrency,
                 RequestSigner.createInstance(secret));
         LOG.info(depositAddresses.toString());
-        return depositAddresses.getAddresses().get(0).getAddress();
+        List<DepositAddress> addresses = depositAddresses.getAddresses();
+        if (addresses.size() > 0) {
+            return depositAddresses.getAddresses().get(0).getAddress();
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -390,7 +407,15 @@ public class BkexExchange implements IExchangeAdvanced, IRateSourceAdvanced {
             return wrapped(() -> {
                 LOG.info("creating limit order using {}", request);
 
-                final Object order = api.createOrder(request, RequestSigner.createInstance(secret));
+                final Object order = api.createOrder(
+                    request.getDirection(),
+                    request.getPrice(), 
+                    request.getSource(),
+                    request.getSymbol(),
+                    request.getType(),
+                    request.getVolume(),
+                    request,
+                    RequestSigner.createInstance(secret));
                 // this.orderId = order.getOrderId();
                 LOG.info("limit order created: {}", order.toString());
 
@@ -414,11 +439,10 @@ public class BkexExchange implements IExchangeAdvanced, IRateSourceAdvanced {
                     throw new IllegalStateException("executed order was not fully filled in time");
                 }
 
-                final OrderState current = api.getOrderStates(orderId, RequestSigner.createInstance(secret), 
-                Long.toString(System.currentTimeMillis()/1000)).getOrderStates().get(0);
+                final OrderState current = api.getOrderState(orderId, RequestSigner.createInstance(secret)).getOrderState();
                 if (2 == current.getStatus()) {
                     LOG.debug("order filled {}", current);
-                    this.result = current.getOrderId();
+                    this.result = current.getId();
                     finished = true;
                     return true;
                 }
@@ -527,7 +551,6 @@ public class BkexExchange implements IExchangeAdvanced, IRateSourceAdvanced {
         final String symbol = asSymbol(base, quote);
         LOG.info(symbol);
         final BigDecimal amountScaled = amount.setScale(8, RoundingMode.FLOOR);
-        String type = "";
         final BigDecimal price;
         if (side == "ASK") {
             price = calculateRequiredLimitPriceToSell(symbol, amountScaled);
@@ -541,7 +564,11 @@ public class BkexExchange implements IExchangeAdvanced, IRateSourceAdvanced {
         payload.setSymbol(symbol);
         payload.setVolume(amountScaled.floatValue());
         payload.setPrice(Float.parseFloat(price.toPlainString()));
-        payload.setType(type);
+        payload.setDirection(side);
+        LOG.info("BLA");
+
+        LOG.info(payload.toString());
+
 
         return payload;
     }

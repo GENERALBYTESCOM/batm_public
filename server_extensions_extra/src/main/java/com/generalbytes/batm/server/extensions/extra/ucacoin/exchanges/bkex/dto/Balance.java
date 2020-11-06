@@ -1,7 +1,6 @@
 package com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.bkex.dto;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

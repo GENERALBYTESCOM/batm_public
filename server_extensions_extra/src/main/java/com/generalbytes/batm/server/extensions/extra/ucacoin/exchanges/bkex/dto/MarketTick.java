@@ -1,15 +1,8 @@
 package com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.bkex.dto;
 
-import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Statistics on market activity within the last 24 hours. Market ticks are updated on every trade of a market and use a sliding window with minutely granularity to calculate statistics on activity with the last 24 hours.

@@ -5,8 +5,6 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 /**
  * Account details of a registered user, including balances.
  **/
@@ -31,10 +29,14 @@ public class DepositAddressResponse {
         this.addresses = addresses;
     }
 
-    @Override public String toString() {
-        return "DepositAddresses{" +
-            " addresses=" + addresses +
-            ", code=" + code +"}";
+    @Override
+    public String toString() {
+        return "{" +
+            " code='" + code + "'" +
+            ", msg='" + msg + "'" +
+            ", addresses='" + addresses + "'" +
+            "}";
     }
+
 }
 

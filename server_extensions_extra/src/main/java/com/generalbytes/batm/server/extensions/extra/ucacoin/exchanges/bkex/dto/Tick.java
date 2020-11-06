@@ -9,29 +9,8 @@ public class Tick {
     @JsonProperty("symbol")
     private String symbol;
 
-    @JsonProperty("close")
-    private BigDecimal close;
-
-    @JsonProperty("open")
-    private BigDecimal open;
-
-    @JsonProperty("high")
-    private BigDecimal high;
-
-    @JsonProperty("low")
-    private BigDecimal low;
-
-    @JsonProperty("volume")
-    private BigDecimal volume;
-
-    @JsonProperty("quoteVolume")
-    private BigDecimal quoteVolume;
-
-    @JsonProperty("change")
-    private BigDecimal change;
-
-    @JsonProperty("ts")
-    private int ts;
+    @JsonProperty("price")
+    private BigDecimal price;
 
     public String getSymbol() {
         return this.symbol;
@@ -41,67 +20,20 @@ public class Tick {
         this.symbol = symbol;
     }
 
-    public BigDecimal getClose() {
-        return this.close;
+    public BigDecimal getPrice() {
+        return this.price;
     }
 
-    public void setClose(BigDecimal close) {
-        this.close = close;
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
-    public BigDecimal getOpen() {
-        return this.open;
+    @Override
+    public String toString() {
+        return "{" +
+            " symbol='" + symbol + "'" +
+            ", price='" + price + "'" +
+            "}";
     }
-
-    public void setOpen(BigDecimal open) {
-        this.open = open;
-    }
-
-    public BigDecimal getHigh() {
-        return this.high;
-    }
-
-    public void setHigh(BigDecimal high) {
-        this.high = high;
-    }
-
-    public BigDecimal getLow() {
-        return this.low;
-    }
-
-    public void setLow(BigDecimal low) {
-        this.low = low;
-    }
-
-    public BigDecimal getVolume() {
-        return this.volume;
-    }
-
-    public void setVolume(BigDecimal volume) {
-        this.volume = volume;
-    }
-
-    public BigDecimal getQuoteVolume() {
-        return this.quoteVolume;
-    }
-
-    public void setQuoteVolume(BigDecimal quoteVolume) {
-        this.quoteVolume = quoteVolume;
-    }
-
-    public BigDecimal getChange() {
-        return this.change;
-    }
-
-    public void setChange(BigDecimal change) {
-        this.change = change;
-    }
-
-    public int getTs() {
-        return this.ts;
-    }
-
-    public void setTs(int ts) {
-        this.ts = ts;
-    }
+    
 }

@@ -4,6 +4,7 @@ import javax.crypto.Mac;
 
 import si.mazi.rescu.RestInvocation;
 
+
 import org.knowm.xchange.service.BaseParamsDigest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,14 +27,8 @@ public class RequestSigner extends BaseParamsDigest {
     @Override
     public String digestParams(RestInvocation restInvocation) {
         Mac sha256_HMAC = getMac();
-        String payloadString = "";
-        LOG.info("QUERY" + restInvocation.getQueryString());
 
-        payloadString += restInvocation.getQueryString();
-
-        LOG.info("PAYLOAD" + payloadString);
-
-        sha256_HMAC.update(payloadString.getBytes());
+        sha256_HMAC.update(restInvocation.getQueryString().getBytes());
 
         byte[] result = sha256_HMAC.doFinal();
         String signature = bytesToHexString(result);

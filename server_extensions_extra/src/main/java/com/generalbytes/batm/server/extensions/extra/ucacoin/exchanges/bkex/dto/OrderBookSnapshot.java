@@ -44,9 +44,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
    */
 public class OrderBookSnapshot   {
 
-  @JsonProperty("bids")
+  @JsonProperty("bid")
   private Object bids;
-  @JsonProperty("asks")
+  @JsonProperty("ask")
   private Object asks;
 
     public List<List<Float>> getBids() {
@@ -67,7 +67,7 @@ public class OrderBookSnapshot   {
 
     @Override public String toString() {
         return "OrderBookSnapshot{" +
-            " bids=" + bids.toString() +
+            " bids=" + bids +
             ", asks=" + asks + "}";
     }
 }

@@ -21,13 +21,19 @@ import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.extra.ucacoin.wallets.UcacoinRPCWallet;
-import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.digifinex.DigiFinexExchange;
+import com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.bkex.BkexExchange;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class UcacoinExtension extends AbstractExtension{
+
+    private static final Logger LOG = LoggerFactory.getLogger("batm.master.bkexExchange");
+
     @Override
     public String getName() {
         return "BATM Ucacoin extension";
@@ -88,16 +94,14 @@ public class UcacoinExtension extends AbstractExtension{
             StringTokenizer st = new StringTokenizer(sourceLogin,":");
             String exchangeType = st.nextToken();
 
-            if ("coinmarketcap".equalsIgnoreCase(exchangeType)) {
-                String preferredFiatCurrency = FiatCurrency.USD.getCode();
-                String apiKey = null;
+            if ("bkexRateSource".equalsIgnoreCase(exchangeType)) {
+                String preferredFiatCurrency = CryptoCurrency.USDT.getCode();
+        
                 if (st.hasMoreTokens()) {
                     preferredFiatCurrency = st.nextToken().toUpperCase();
                 }
-                if (st.hasMoreTokens()) {
-                    apiKey = st.nextToken();
-                }
-                return DigiFinexExchange.asRateSource(preferredFiatCurrency);
+                
+                return BkexExchange.asRateSource(preferredFiatCurrency);
             }
 
         }
@@ -115,14 +119,14 @@ public class UcacoinExtension extends AbstractExtension{
         if ((paramString != null) && (!paramString.trim().isEmpty())) {
             StringTokenizer paramTokenizer = new StringTokenizer(paramString, ":");
             String prefix = paramTokenizer.nextToken();
-            if ("digifinex".equalsIgnoreCase(prefix)) {
+            if ("bkex".equalsIgnoreCase(prefix)) {
                 String apiKey = paramTokenizer.nextToken();
                 String apiSecret = paramTokenizer.nextToken();
                 String preferredFiatCurrency = FiatCurrency.USD.getCode();
                 if (paramTokenizer.hasMoreTokens()) {
                     preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase();
                 }
-                return DigiFinexExchange.asExchange(apiKey, apiSecret, preferredFiatCurrency);
+                return BkexExchange.asExchange(apiKey, apiSecret, preferredFiatCurrency);
             }
         }
 

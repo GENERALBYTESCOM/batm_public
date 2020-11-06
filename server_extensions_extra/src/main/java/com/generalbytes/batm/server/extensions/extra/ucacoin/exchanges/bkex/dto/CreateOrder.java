@@ -1,6 +1,7 @@
 package com.generalbytes.batm.server.extensions.extra.ucacoin.exchanges.bkex.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.ws.rs.FormParam;
+
 
 /**
  * A wrapper for accepted order types which can be submitted for execution.
@@ -17,18 +18,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  **/
 public class CreateOrder {
 
-    @JsonProperty("volume")
-    private float volume;
-    @JsonProperty("price")
-    private float price;
-    @JsonProperty("symbol")
-    private String symbol;
-    @JsonProperty("direction")
+    @FormParam("direction")
     private String direction;
-    @JsonProperty("source")
+    @FormParam("price")
+    private float price;
+    @FormParam("source")
     private String source = "WALLET";
-    @JsonProperty("type")
+    @FormParam("symbol")
+    private String symbol;
+    @FormParam("type")
     private String type = "LIMIT";
+    @FormParam("volume")
+    private float volume;
 
     public float getVolume() {
         return this.volume;
