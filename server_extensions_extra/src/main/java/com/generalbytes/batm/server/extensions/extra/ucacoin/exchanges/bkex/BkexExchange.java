@@ -24,7 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
-import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.IExchangeAdvanced;
 import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
 import com.generalbytes.batm.server.extensions.ITask;
@@ -88,10 +87,6 @@ public class BkexExchange implements IExchangeAdvanced, IRateSourceAdvanced {
     // visible for testing
     BkexExchange(URI baseUri, String apikey, String secret, String preferredFiatCurrency) {
         this.preferredFiatCurrency = Objects.requireNonNull(preferredFiatCurrency, "preferred fiat currency");
-        LOG.info(this.preferredFiatCurrency);
-        LOG.info(FIAT_CURRENCIES.toString());
-
-        
 
         if (!FIAT_CURRENCIES.contains(preferredFiatCurrency)) {
             LOG.error("cannot set {} as preferred fiat currency (supports {})", preferredFiatCurrency, FIAT_CURRENCIES);
@@ -158,7 +153,6 @@ public class BkexExchange implements IExchangeAdvanced, IRateSourceAdvanced {
             return ticks.getTicks().get(0).getPrice();
         } catch (Exception e) {
             LOG.info("ERROR");
-
             LOG.info(e.getCause().toString());
         }
         return null;
@@ -366,7 +360,6 @@ public class BkexExchange implements IExchangeAdvanced, IRateSourceAdvanced {
     public String getDepositAddress(String cryptoCurrency) {
         DepositAddressResponse depositAddresses = api.getDepositAddresses(cryptoCurrency,
                 RequestSigner.createInstance(secret));
-        LOG.info(depositAddresses.toString());
         List<DepositAddress> addresses = depositAddresses.getAddresses();
         if (addresses.size() > 0) {
             return depositAddresses.getAddresses().get(0).getAddress();
@@ -483,7 +476,6 @@ public class BkexExchange implements IExchangeAdvanced, IRateSourceAdvanced {
                 LOG.debug("{} -> {}", label, result);
                 return result == null ? false : result;
             } catch (Exception e) {
-                LOG.info(e.toString());
                 LOG.error("failed to {} ({}) - {}", label, this, e.toString(), e);
                 return false;
             }
@@ -549,7 +541,6 @@ public class BkexExchange implements IExchangeAdvanced, IRateSourceAdvanced {
 
     private CreateOrder limitOrder(String side, BigDecimal amount, String base, String quote) {
         final String symbol = asSymbol(base, quote);
-        LOG.info(symbol);
         final BigDecimal amountScaled = amount.setScale(8, RoundingMode.FLOOR);
         final BigDecimal price;
         if (side == "ASK") {
@@ -565,10 +556,6 @@ public class BkexExchange implements IExchangeAdvanced, IRateSourceAdvanced {
         payload.setVolume(amountScaled.floatValue());
         payload.setPrice(Float.parseFloat(price.toPlainString()));
         payload.setDirection(side);
-        LOG.info("BLA");
-
-        LOG.info(payload.toString());
-
 
         return payload;
     }

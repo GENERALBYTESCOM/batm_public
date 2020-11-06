@@ -502,10 +502,6 @@ public class Tester {
 				}
 				final String depositAddress = e.getDepositAddress(selectedCryptoCurrency);
                 System.out.println("Deposit Address: " + depositAddress);
-                
-                final String order = e.purchaseCoins(new BigDecimal(100), "UCA", "USDT", "NOT SURE WHY");
-                System.out.println("Order: " + order);
-
 				return;
 			}
 		}

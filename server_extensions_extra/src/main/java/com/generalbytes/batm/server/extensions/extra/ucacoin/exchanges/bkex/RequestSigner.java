@@ -33,7 +33,6 @@ public class RequestSigner extends BaseParamsDigest {
         byte[] result = sha256_HMAC.doFinal();
         String signature = bytesToHexString(result);
 
-        LOG.info(signature);
         return signature;
     }
 
