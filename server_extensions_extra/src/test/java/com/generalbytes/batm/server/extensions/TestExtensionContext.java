@@ -249,7 +249,7 @@ public class TestExtensionContext implements IExtensionContext {
     }
 
     @Override
-    public IApiAccess morphisAuthenticate(String apiKey) {
+    public IApiAccess getAPIAccessByKey(String apiKey) {
         return null;
     }
 }

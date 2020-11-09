@@ -458,9 +458,12 @@ public interface IExtensionContext {
     List<ITerminalCashCollectionRecord> getCashCollections(String terminalSerialNumber, Date terminalTimeFrom, Date terminalTimeTo);
 
     /**
-     * This variant uses SERVER time
-     * @param publicIdFrom limit the result only to collection records newer than the one with this public ID
-     * @return
+     * Gets cash collection records. This variant uses SERVER time
+     * @param terminalSerialNumber get collection records of the terminal defined by this serial number
+     * @param serverTimeFrom limit the result only to collection records newer than given SERVER time. Optional
+     * @param serverTimeTo limit the result only to collection records older than given SERVER time. Optional
+     * @param publicIdFrom limit the result only to collection records newer than the one with this public ID. Optional
+     * @return list of csah collection records for the given terminal
      */
     List<ITerminalCashCollectionRecord> getCashCollections(String terminalSerialNumber, Date serverTimeFrom, Date serverTimeTo, String publicIdFrom);
 
@@ -484,9 +487,10 @@ public interface IExtensionContext {
     List<IRemainingLimit> getIdentityRemainingLimits(String fiatCurrency, String terminalSerialNumber, String identityPublicId);
 
     /**
-     * Authenticate Morphis API key
-     * @return true if the token is valid
+     * Authenticate API key
+     * @param apiKey apiKey to search for
+     * @return null if token is not found or is not valid
      */
-    IApiAccess morphisAuthenticate(String apiKey);
+    IApiAccess getAPIAccessByKey(String apiKey);
 
 }
