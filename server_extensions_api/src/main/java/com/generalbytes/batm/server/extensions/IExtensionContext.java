@@ -77,6 +77,16 @@ public interface IExtensionContext {
     List<ITransactionDetails> findAllTransactionsByIdentityId(String publicIdentityId);
 
     /**
+     * @param terminalSerialNumber
+     * @param serverTimeFrom limit returned transactions by server time of the transaction
+     * @param serverTimeTo
+     * @param previousRID if not null only transactions NEWER than this one are returned
+     * @param includeBanknotes adds banknote information to the result (performs extra db queries)
+     * @return
+     */
+    List<ITransactionDetails> findTransactions(String terminalSerialNumber, Date serverTimeFrom, Date serverTimeTo, String previousRID, boolean includeBanknotes);
+
+    /**
      * Finds person by chat user id
      * @param chatUserId
      * @return
@@ -439,13 +449,23 @@ public interface IExtensionContext {
     PhoneNumberQueryResult queryPhoneNumber(String phoneNumber, String terminalSerialNumber);
 
     /**
-     * Returns Cash Collections ordered by sequence ID (primary key).
+     * Returns Cash Collections ordered by sequence ID (primary key). This variant uses TERMINAL time.
      * @param terminalSerialNumber
-     * @param dateFrom
-     * @param dateTo
+     * @param terminalTimeFrom
+     * @param terminalTimeTo
      * @return
      */
-    List<ITerminalCashCollectionRecord> getCashCollections(String terminalSerialNumber, Date dateFrom, Date dateTo);
+    List<ITerminalCashCollectionRecord> getCashCollections(String terminalSerialNumber, Date terminalTimeFrom, Date terminalTimeTo);
+
+    /**
+     * Gets cash collection records. This variant uses SERVER time
+     * @param terminalSerialNumber get collection records of the terminal defined by this serial number
+     * @param serverTimeFrom limit the result only to collection records newer than given SERVER time. Optional
+     * @param serverTimeTo limit the result only to collection records older than given SERVER time. Optional
+     * @param publicIdFrom limit the result only to collection records newer than the one with this public ID. Optional
+     * @return list of csah collection records for the given terminal
+     */
+    List<ITerminalCashCollectionRecord> getCashCollections(String terminalSerialNumber, Date serverTimeFrom, Date serverTimeTo, String publicIdFrom);
 
     /**
      * Returns Event Logs ordered by ordered by sequence ID (primary key).
@@ -465,4 +485,12 @@ public interface IExtensionContext {
      * @return Remaining limits for given identity.
      */
     List<IRemainingLimit> getIdentityRemainingLimits(String fiatCurrency, String terminalSerialNumber, String identityPublicId);
+
+    /**
+     * Authenticate API key
+     * @param apiKey apiKey to search for
+     * @return null if token is not found or is not valid
+     */
+    IApiAccess getAPIAccessByKey(String apiKey);
+
 }

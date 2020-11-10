@@ -44,6 +44,11 @@ public class TestExtensionContext implements IExtensionContext {
     }
 
     @Override
+    public List<ITransactionDetails> findTransactions(String terminalSerialNumber, Date serverTimeFrom, Date serverTimeTo, String previousRID, boolean includeBanknotes) {
+        return null;
+    }
+
+    @Override
     public IPerson findPersonByChatId(String chatUserId) {
         return null;
     }
@@ -224,7 +229,12 @@ public class TestExtensionContext implements IExtensionContext {
     }
 
     @Override
-    public List<ITerminalCashCollectionRecord> getCashCollections(String terminalSerialNumber, Date dateFrom, Date dateTo) {
+    public List<ITerminalCashCollectionRecord> getCashCollections(String terminalSerialNumber, Date terminalTimeFrom, Date terminalTimeTo) {
+        return null;
+    }
+
+    @Override
+    public List<ITerminalCashCollectionRecord> getCashCollections(String terminalSerialNumber, Date serverTimeFrom, Date serverTimeTo, String publicIdFrom) {
         return null;
     }
 
@@ -235,6 +245,11 @@ public class TestExtensionContext implements IExtensionContext {
 
     @Override
     public List<IRemainingLimit> getIdentityRemainingLimits(String fiatCurrency, String terminalSerialNumber, String identityPublicId) {
+        return null;
+    }
+
+    @Override
+    public IApiAccess getAPIAccessByKey(String apiKey) {
         return null;
     }
 }

@@ -19,6 +19,7 @@ package com.generalbytes.batm.server.extensions;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 public interface ITransactionDetails {
 
@@ -274,8 +275,20 @@ public interface ITransactionDetails {
      */
     BigDecimal getDiscountQuotient();
 
+    /**
+     * @return rate source price
+     */
+    BigDecimal getRateSourcePrice();
 
+    /**
+     * @return expected profit in %
+     */
+    BigDecimal getExpectedProfit();
 
+    /**
+     * @return transaction note
+     */
+    String getNote();
 
-
+    List<IBanknoteCounts> getBanknotes();
 }
