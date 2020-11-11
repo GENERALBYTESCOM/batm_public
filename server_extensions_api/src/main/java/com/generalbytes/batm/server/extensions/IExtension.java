@@ -159,4 +159,10 @@ public interface IExtension {
      */
     Set<ICommunicationProvider> getCommunicationProviders();
 
+    /**
+     * @return Validators that can be used to validate SSNs
+     */
+    Set<ISsnValidator> getSsnValidators();
+
+
 }
