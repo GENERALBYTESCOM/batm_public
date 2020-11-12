@@ -1,13 +1,18 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitpandapro;
 
 import static com.generalbytes.batm.common.currencies.CryptoCurrency.BTC;
+import static com.generalbytes.batm.common.currencies.CryptoCurrency.ETH;
+import static com.generalbytes.batm.common.currencies.CryptoCurrency.XRP;
+import static com.generalbytes.batm.common.currencies.FiatCurrency.CHF;
 import static com.generalbytes.batm.common.currencies.FiatCurrency.EUR;
+import static com.generalbytes.batm.common.currencies.FiatCurrency.GBP;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 import java.net.URI;
+import java.util.stream.Stream;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -39,17 +44,21 @@ public class BitpandaProExchangeTest {
     }
 
     @Test
-    public void shouldFetchEuroBalance() {
-        final BigDecimal balance = subject.getFiatBalance(EUR.getCode());
-        assertNotNull(balance);
-        assertTrue("negative balance", balance.compareTo(BigDecimal.ZERO) >= 0);
+    public void shouldFetchFiatBalances() {
+        Stream.of(EUR, CHF, GBP).forEach(currency -> {
+            final BigDecimal balance = subject.getFiatBalance(EUR.getCode());
+            assertNotNull("getFiatBalance(" + currency + ")", balance);
+            assertTrue("negative balance", balance.compareTo(BigDecimal.ZERO) >= 0);
+        });
     }
 
     @Test
-    public void shouldFetchBitcoinBalance() {
-        final BigDecimal balance = subject.getCryptoBalance(BTC.getCode());
-        assertNotNull(balance);
-        assertTrue("negative balance", balance.compareTo(BigDecimal.ZERO) >= 0);
+    public void shouldFetchCryptoBalances() {
+        Stream.of(BTC, ETH, XRP).forEach(currency -> {
+            final BigDecimal balance = subject.getCryptoBalance(BTC.getCode());
+            assertNotNull("getCryptoBalance(" + currency + ")", balance);
+            assertTrue("negative balance", balance.compareTo(BigDecimal.ZERO) >= 0);
+        });
     }
 
     @Test
