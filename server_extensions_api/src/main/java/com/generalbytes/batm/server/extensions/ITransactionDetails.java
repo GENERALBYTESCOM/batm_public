@@ -27,6 +27,7 @@ public interface ITransactionDetails {
     int TYPE_BUY_CRYPTO = 0;
     int TYPE_SELL_CRYPTO = 1;
     int TYPE_WITHDRAW_CASH = 2;
+    int TYPE_CASHBACK = 3;
 
     //Buy states
     int STATUS_BUY_IN_PROGRESS = 0;
@@ -45,6 +46,10 @@ public interface ITransactionDetails {
     int STATUS_WITHDRAW_IN_PROGRESS = 0;
     int STATUS_WITHDRAW_COMPLETED = 1;
     int STATUS_WITHDRAW_ERROR = 2;
+
+    //Cashback states
+    int STATUS_CASHBACK_COMPLETED = 0;
+    int STATUS_CASHBACK_ERROR = 1;
 
     //error codes
     int BUY_ERROR_NO_ERROR = 0;
