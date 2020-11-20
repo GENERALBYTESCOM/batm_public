@@ -48,7 +48,7 @@ public class TokencoinPaperWalletGenerator implements IPaperWalletGenerator {
     private static final String MESSAGE = "We have attached a QR code with your address. Please use your QR code to add more funds to your account. Your address is ";
 
     @Override
-    public IPaperWallet generateWallet(String cryptoCurrency, String passphrase, String language) {
+    public IPaperWallet generateWallet(String cryptoCurrency, String passphrase, String language, boolean shouldBeVanity) {
 
         return generateWallet();
     }

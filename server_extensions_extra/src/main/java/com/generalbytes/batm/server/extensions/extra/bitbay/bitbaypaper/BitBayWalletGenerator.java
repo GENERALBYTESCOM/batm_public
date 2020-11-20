@@ -42,9 +42,9 @@ public class BitBayWalletGenerator implements IPaperWalletGenerator {
     }
 
     @Override
-    public IPaperWallet generateWallet(String cryptoCurrency, String oneTimePassword, String userLanguage) {
+    public IPaperWallet generateWallet(String cryptoCurrency, String oneTimePassword, String userLanguage, boolean shouldBeVanity) {
         WalletToolsBCH wt = new WalletToolsBCH();
-        String privateKey = wt.generateWalletPrivateKeyWithPrefix(prefix, CryptoCurrency.BAY.getCode());
+        String privateKey = wt.generateWalletPrivateKeyWithPrefix(shouldBeVanity ? prefix : null, CryptoCurrency.BAY.getCode());
         String address = wt.getWalletAddressFromPrivateKey(privateKey, CryptoCurrency.BAY.getCode());
 
         byte[] content = ctx.createPaperWallet7ZIP(privateKey, address, oneTimePassword, cryptoCurrency);
