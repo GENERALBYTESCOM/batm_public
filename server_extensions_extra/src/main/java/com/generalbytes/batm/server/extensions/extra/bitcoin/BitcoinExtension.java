@@ -294,8 +294,12 @@ public class BitcoinExtension extends AbstractExtension {
                 port = tunnelAddress.getPort();
 
                 String feeRate = "";
+                String fee = "";
                 if (st.hasMoreTokens()) {
-                  feeRate = st.nextToken();
+                  fee = st.nextToken();
+                  if (Integer.parseInt(fee) >= 1) {
+                    feeRate = fee;
+                  }
                 }
 
                 if ("bitgonoforward".equalsIgnoreCase(walletType)) {
