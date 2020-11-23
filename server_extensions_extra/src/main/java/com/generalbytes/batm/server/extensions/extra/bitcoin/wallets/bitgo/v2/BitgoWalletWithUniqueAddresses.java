@@ -28,8 +28,12 @@ import si.mazi.rescu.HttpStatusIOException;
 public class BitgoWalletWithUniqueAddresses extends BitgoWallet implements IGeneratesNewDepositCryptoAddress {
     private static final Logger log = LoggerFactory.getLogger(BitgoWalletWithUniqueAddresses.class);
 
-    public BitgoWalletWithUniqueAddresses(String scheme, String host, int port, String token, String walletId, String walletPassphrase) {
-        super(scheme, host, port, token, walletId, walletPassphrase);
+    public BitgoWalletWithUniqueAddresses(String scheme, String host, int port, String token, String walletId, String walletPassphrase){
+      super(scheme, host, port, token, walletId, walletPassphrase, "");
+    }
+
+    public BitgoWalletWithUniqueAddresses(String scheme, String host, int port, String token, String walletId, String walletPassphrase, String feeRate) {
+        super(scheme, host, port, token, walletId, walletPassphrase, feeRate);
     }
 
     @Override
