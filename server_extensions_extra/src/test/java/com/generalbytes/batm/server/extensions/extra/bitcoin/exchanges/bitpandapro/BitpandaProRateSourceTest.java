@@ -1,9 +1,12 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitpandapro;
 
 import static com.generalbytes.batm.common.currencies.CryptoCurrency.BTC;
+import static com.generalbytes.batm.common.currencies.FiatCurrency.CHF;
 import static com.generalbytes.batm.common.currencies.FiatCurrency.EUR;
+import static com.generalbytes.batm.common.currencies.FiatCurrency.GBP;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
@@ -34,6 +37,20 @@ public class BitpandaProRateSourceTest {
     @Test
     public void shouldYieldConfiguredPreferredFiatCurrency() {
         assertEquals("EUR", subject.getPreferredFiatCurrency());
+    }
+
+    @Test
+    public void shouldFailOnInvalidInstrument() {
+        // bogus crypto
+        assertNull(subject.getExchangeRateLast("GAGA", "EUR"));
+        // bogus fiat
+        assertNull(subject.getExchangeRateLast("BTC", "GAGA"));
+        // fiat <> fiat
+        assertNull(subject.getExchangeRateLast("EUR", "CHF"));
+        // crypto <> crypto
+        assertNull(subject.getExchangeRateLast("BTC", "ETH"));
+        // GBP only supports BTC
+        assertNull(subject.getExchangeRateLast("ETH", "GBP"));
     }
 
     @Test
@@ -71,5 +88,16 @@ public class BitpandaProRateSourceTest {
         assertTrue("calculated non-positive sell price", sell.compareTo(BigDecimal.ZERO) > 0);
 
         assertTrue("buy price is smaller than sell", buy.compareTo(sell) >= 0);
+    }
+
+    @Test
+    public void shouldSupportAllConfiguredPairs() {
+        assertNotNull("BTC/EUR", subject.getExchangeRateLast(BTC.getCode(), EUR.getCode()));
+        assertNotNull("ETH/EUR", subject.getExchangeRateLast(BTC.getCode(), EUR.getCode()));
+        assertNotNull("XRP/EUR", subject.getExchangeRateLast(BTC.getCode(), EUR.getCode()));
+        assertNotNull("BTC/CHF", subject.getExchangeRateLast(BTC.getCode(), CHF.getCode()));
+        assertNotNull("ETH/CHF", subject.getExchangeRateLast(BTC.getCode(), CHF.getCode()));
+        assertNotNull("XRP/CHF", subject.getExchangeRateLast(BTC.getCode(), CHF.getCode()));
+        assertNotNull("BTC/GBP", subject.getExchangeRateLast(BTC.getCode(), GBP.getCode()));
     }
 }
