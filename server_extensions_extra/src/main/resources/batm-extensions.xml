@@ -1723,7 +1723,6 @@
         </wallet>
         <cryptologo cryptocurrency="BIZZ" file="bizz.png"/>
         <cryptologo cryptocurrency="BIZZ" file="bizz.svg"/>
-
         <wallet prefix="infuraERC20_MKR_18_0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2" name="Infura.io wallet - MKR">
             <param name="projectId" />
             <param name="mnemonic" />
