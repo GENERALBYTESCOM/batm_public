@@ -27,10 +27,12 @@ public interface IPaperWalletGenerator {
      * User language is provided produce paper wallet instructions in customer's language selected on the ATM
      * @param cryptoCurrency
      * @param onetimePassword
+     * @param shouldBeVanity  if true (default) the returned wallet address should be a vanity address, e.g. start with 1GB for bitcoin etc.
+     *                        If this is false, any random address should be generated for improved privacy.
      * @param userLanguage*
      * @return
      *
      * @see com.generalbytes.batm.server.extensions.IPaperWallet
      */
-    public IPaperWallet generateWallet(String cryptoCurrency, String onetimePassword, String userLanguage);
+    IPaperWallet generateWallet(String cryptoCurrency, String onetimePassword, String userLanguage, boolean shouldBeVanity);
 }
