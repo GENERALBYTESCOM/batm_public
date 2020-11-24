@@ -1,5 +1,6 @@
 package com.generalbytes.batm.server.extensions;
 
+import com.generalbytes.batm.server.extensions.exceptions.BuyException;
 import com.generalbytes.batm.server.extensions.exceptions.CashbackException;
 import com.generalbytes.batm.server.extensions.exceptions.SellException;
 import com.generalbytes.batm.server.extensions.watchlist.WatchListQuery;
@@ -39,6 +40,11 @@ public class TestExtensionContext implements IExtensionContext {
 
     @Override
     public List<ITransactionDetails> findAllTransactionsByIdentityId(String publicIdentityId) {
+        return null;
+    }
+
+    @Override
+    public List<ITransactionDetails> findTransactions(String terminalSerialNumber, Date serverTimeFrom, Date serverTimeTo, String previousRID, boolean includeBanknotes) {
         return null;
     }
 
@@ -158,6 +164,11 @@ public class TestExtensionContext implements IExtensionContext {
     }
 
     @Override
+    public ITransactionBuyInfo buyCrypto(String terminalSerialNumber, BigDecimal fiatAmount, String fiatCurrency, BigDecimal cryptoAmount, String cryptoCurrency, String destinationAddress, String identityPublicId, String discountCode) throws BuyException {
+        return null;
+    }
+
+    @Override
     public ITransactionCashbackInfo cashback(String terminalSerialNumber, BigDecimal fiatAmount, String fiatCurrency, String identityPublicId) throws CashbackException {
         return null;
     }
@@ -218,7 +229,12 @@ public class TestExtensionContext implements IExtensionContext {
     }
 
     @Override
-    public List<ITerminalCashCollectionRecord> getCashCollections(String terminalSerialNumber, Date dateFrom, Date dateTo) {
+    public List<ITerminalCashCollectionRecord> getCashCollections(String terminalSerialNumber, Date terminalTimeFrom, Date terminalTimeTo) {
+        return null;
+    }
+
+    @Override
+    public List<ITerminalCashCollectionRecord> getCashCollections(String terminalSerialNumber, Date serverTimeFrom, Date serverTimeTo, String publicIdFrom) {
         return null;
     }
 
@@ -229,6 +245,11 @@ public class TestExtensionContext implements IExtensionContext {
 
     @Override
     public List<IRemainingLimit> getIdentityRemainingLimits(String fiatCurrency, String terminalSerialNumber, String identityPublicId) {
+        return null;
+    }
+
+    @Override
+    public IApiAccess getAPIAccessByKey(String apiKey) {
         return null;
     }
 }

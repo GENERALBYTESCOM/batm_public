@@ -38,8 +38,8 @@ public class Channel implements ILightningChannel {
                 public Spec spec;
 
                 public class Spec {
-                    public Long toLocalMsat;
-                    public Long toRemoteMsat;
+                    public Long toLocal;
+                    public Long toRemote;
                 }
             }
 
@@ -99,7 +99,7 @@ public class Channel implements ILightningChannel {
 
     @Override
     public long getBalanceMsat() {
-        return data.commitments.localCommit.spec.toLocalMsat;
+        return data.commitments.localCommit.spec.toLocal;
     }
 
 

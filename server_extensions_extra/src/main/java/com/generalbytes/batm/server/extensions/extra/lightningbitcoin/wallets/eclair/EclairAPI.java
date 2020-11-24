@@ -138,7 +138,7 @@ public interface EclairAPI {
      * @throws ErrorResponseException
      */
     @POST
-    @Path("/allnodes")
+    @Path("/nodes")
     List<NodeInfo> getAllNodes() throws IOException, ErrorResponseException;
 
     /**

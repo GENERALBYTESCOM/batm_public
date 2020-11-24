@@ -37,10 +37,13 @@ public class BinanceComExchange extends BinanceExchange {
     @Override
     public Set<String> getFiatCurrencies() {
         Set<String> fiatCurrencies = new HashSet<>();
+        fiatCurrencies.add(FiatCurrency.AUD.getCode());
         fiatCurrencies.add(FiatCurrency.EUR.getCode());
         fiatCurrencies.add(FiatCurrency.USDC.getCode());
         fiatCurrencies.add(FiatCurrency.BUSD.getCode());
         fiatCurrencies.add(FiatCurrency.USDT.getCode());
+        fiatCurrencies.add(FiatCurrency.GBP.getCode());
+        fiatCurrencies.add(FiatCurrency.RUB.getCode());
         return fiatCurrencies;
     }
 

@@ -25,6 +25,7 @@ import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.ethereum.erc20.ERC20Wallet;
+import com.generalbytes.batm.server.extensions.extra.ethereum.erc20.bizz.BizzDefinition;
 import com.generalbytes.batm.server.extensions.extra.ethereum.erc20.dai.DaiDefinition;
 import com.generalbytes.batm.server.extensions.extra.ethereum.erc20.usdt.UsdtDefinition;
 import com.generalbytes.batm.server.extensions.extra.ethereum.sources.stasis.StasisTickerRateSource;
@@ -38,6 +39,7 @@ import java.util.StringTokenizer;
 public class EthereumExtension extends AbstractExtension{
     private static final CryptoCurrencyDefinition DAI_CRYPTOCURRENCY_DEFINITION = new DaiDefinition();
     private static final CryptoCurrencyDefinition USDT_CRYPTOCURRENCY_DEFINITION = new UsdtDefinition();
+    private static final CryptoCurrencyDefinition BIZZ_CRYPTOCURRENCY_DEFINITION = new BizzDefinition();
 
     @Override
     public String getName() {
@@ -57,11 +59,14 @@ public class EthereumExtension extends AbstractExtension{
         result.add(CryptoCurrency.FTT.getCode());
         result.add(CryptoCurrency.USDC.getCode());
         result.add(CryptoCurrency.BUSD.getCode());
+        result.add(CryptoCurrency.BIZZ.getCode());
         result.add(CryptoCurrency.HBX.getCode());
         result.add(CryptoCurrency.VOLTZ.getCode());
         result.add(CryptoCurrency.THBX.getCode());
         result.add(CryptoCurrency.MUSD.getCode());
         result.add(CryptoCurrency.EURS.getCode());
+        result.add(CryptoCurrency.USDT.getCode());
+        result.add(CryptoCurrency.ZPAE.getCode());
         return result;
     }
 
@@ -142,6 +147,7 @@ public class EthereumExtension extends AbstractExtension{
         Set<ICryptoCurrencyDefinition> result = new HashSet<>();
         result.add(DAI_CRYPTOCURRENCY_DEFINITION);
         result.add(USDT_CRYPTOCURRENCY_DEFINITION);
+        result.add(BIZZ_CRYPTOCURRENCY_DEFINITION);
         return result;
     }
 
