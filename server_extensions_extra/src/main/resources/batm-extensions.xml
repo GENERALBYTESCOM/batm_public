@@ -600,7 +600,6 @@
             <param name="fiatcurrency" />
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>FTT</cryptocurrency>
-            <cryptocurrency>YFI</cryptocurrency>
         </ratesource>
         <exchange prefix="binanceus" name="Binance US">
             <param name="apikey"/>
