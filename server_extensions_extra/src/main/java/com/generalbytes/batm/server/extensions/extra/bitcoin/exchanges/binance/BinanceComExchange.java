@@ -58,7 +58,6 @@ public class BinanceComExchange extends BinanceExchange {
         cryptoCurrencies.add(CryptoCurrency.DASH.getCode());
         cryptoCurrencies.add(CryptoCurrency.DOGE.getCode());
         cryptoCurrencies.add(CryptoCurrency.ETH.getCode());
-        cryptoCurrencies.add(CryptoCurrency.FTT.getCode());
         cryptoCurrencies.add(CryptoCurrency.GRS.getCode());
         cryptoCurrencies.add(CryptoCurrency.KMD.getCode());
         cryptoCurrencies.add(CryptoCurrency.LSK.getCode());
@@ -75,6 +74,7 @@ public class BinanceComExchange extends BinanceExchange {
         cryptoCurrencies.add(CryptoCurrency.XZC.getCode());
         cryptoCurrencies.add(CryptoCurrency.FTT.getCode());
         cryptoCurrencies.add(CryptoCurrency.XTZ.getCode());
+        cryptoCurrencies.add(CryptoCurrency.YFI.getCode());
         return cryptoCurrencies;
     }
 }
