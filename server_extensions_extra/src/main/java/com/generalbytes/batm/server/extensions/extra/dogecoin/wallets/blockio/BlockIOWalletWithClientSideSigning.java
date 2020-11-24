@@ -126,13 +126,6 @@ public class BlockIOWalletWithClientSideSigning implements IWallet, ICanSendMany
         try {
             BlockIOResponseAddresses response = api.getAddresses();
             if (response != null && response.getData() != null && response.getData().getAddresses() != null && response.getData().getAddresses().length > 0) {
-                if (fromLabel != null) {
-                    for(BlockIOAddress address : response.getData().getAddresses()) {
-                        if(fromLabel.equals(address.getLabel())) {
-                            return address.getAddress();
-                        }
-                    }
-                }
                 return response.getData().getAddresses()[0].getAddress();
             }
         } catch (HttpStatusIOException e) {
@@ -151,8 +144,7 @@ public class BlockIOWalletWithClientSideSigning implements IWallet, ICanSendMany
             return null;
         }
         try {
-            List<String> labels = fromLabel != null ? Collections.singletonList(fromLabel) : Collections.emptyList();
-            BlockIOResponseBalance response = api.getAddressBalance(labels);
+            BlockIOResponseBalance response = api.getBalance();
             if (response != null && response.getData() != null && response.getData().getAvailable_balance() != null) {
                 return new BigDecimal(response.getData().getAvailable_balance());
             }

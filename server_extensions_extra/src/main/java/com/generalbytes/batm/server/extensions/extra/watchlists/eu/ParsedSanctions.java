@@ -35,9 +35,9 @@ public class ParsedSanctions {
 
     public static ParsedSanctions parse(ExportType export) {
         List<NameAliasType> result = new ArrayList<>();
-        List<SanctionEntityType> entities = export.getSanctionEntity();
-        for (int i = 0; i < entities.size(); i++) {
-            result.addAll(entities.get(i).getNameAlias());
+        List<SanctionEntityType> enities = export.getSanctionEntity();
+        for (int i = 0; i < enities.size(); i++) {
+            result.addAll(enities.get(i).getNameAlias());
         }
         return new ParsedSanctions(result);
     }
@@ -53,7 +53,7 @@ public class ParsedSanctions {
         lastName = lastName.trim();
         firstName = firstName.trim();
 
-        Set<String> candidateParties = new HashSet<>();
+        Set<String> candidateParties = new HashSet<String>();
         Set<Match> matchedParties = new HashSet<>();
 
         if (firstName.isEmpty()) {
@@ -76,23 +76,19 @@ public class ParsedSanctions {
             for (int j = 0; j < aliases.size(); j++) {
                 NameAliasType alias = aliases.get(j);
                 boolean addedMatch = false;
-                //check against whole name
                 if (!alias.getWholeName().trim().isEmpty()) {
                     if (alias.getWholeName().equalsIgnoreCase(lastName) || alias.getWholeName().equalsIgnoreCase(firstName + " " + lastName) ) {
                         matchedParties.add(new Match(alias.getLogicalId() + "", 100));
                         addedMatch = true;
                     }
                 }
-                //check against lastname and first name
                 if (!addedMatch) {
-                    if (!(alias.getFirstName().trim().isEmpty() && alias.getLastName().trim().isEmpty())) { // if both are not empty
-                        if (alias.getLastName().trim().equalsIgnoreCase(lastName)) {
-                            if (alias.getFirstName().trim().equalsIgnoreCase(firstName)) {
-                                //ok seems like we have a winner
-                                matchedParties.add(new Match(alias.getLogicalId() + "", 100));
-                            } else {
-                                candidateParties.add(alias.getLogicalId() + "");
-                            }
+                    if (alias.getLastName().trim().equalsIgnoreCase(lastName)) {
+                        if (alias.getFirstName().trim().equalsIgnoreCase(firstName)) {
+                            //ok seems like we have a winner
+                            matchedParties.add(new Match(alias.getLogicalId() + "", 100));
+                        } else {
+                            candidateParties.add(alias.getLogicalId() + "");
                         }
                     }
                 }

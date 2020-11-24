@@ -49,7 +49,6 @@ public enum CryptoCurrency {
     BURST("Burst"),
     CLOAK("CloakCoin"),
     DAI("Dai"),
-    BIZZ("BIZZCOIN"),
     DASH("Dash"),
     DEX("DEX"),
     DGB("DigiByte"),
@@ -109,7 +108,6 @@ public enum CryptoCurrency {
     MUE("MonetaryUnit"),
     XPM("Primecoin"),
     XTZ("Tezos"),
-    ZPAE("ZelaaPayAE"),
 
     TBCH("test BCH"),
     TBTC("test BTC"),

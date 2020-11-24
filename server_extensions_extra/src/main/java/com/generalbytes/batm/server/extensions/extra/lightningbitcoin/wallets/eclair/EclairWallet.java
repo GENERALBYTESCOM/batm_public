@@ -151,7 +151,7 @@ public class EclairWallet extends AbstractLightningWallet {
     public BigDecimal getReceivedAmount(String destinationAddress, String cryptoCurrency) {
         return callChecked(cryptoCurrency, () -> {
             try {
-                return mSatToBitcoin(api.getReceivedInfoByInvoice(destinationAddress).amount);
+                return mSatToBitcoin(api.getReceivedInfoByInvoice(destinationAddress).amountMsat);
             } catch (ErrorResponseException e) {
                 if (e.error.equals("Not found")) {
                     return BigDecimal.ZERO;

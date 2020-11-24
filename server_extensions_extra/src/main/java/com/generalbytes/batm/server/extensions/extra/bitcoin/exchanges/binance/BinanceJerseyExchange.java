@@ -23,14 +23,14 @@ import com.generalbytes.batm.common.currencies.FiatCurrency;
 import java.util.HashSet;
 import java.util.Set;
 
-public class BinanceComExchange extends BinanceExchange {
-    private static final String SSL_URI = "https://api.binance.com/";
+public class BinanceJerseyExchange extends BinanceExchange {
+    private static final String SSL_URI = "https://api.binance.je/";
 
-    public BinanceComExchange(String preferredFiatCurrency) {
+    public BinanceJerseyExchange(String preferredFiatCurrency) {
         super(preferredFiatCurrency, SSL_URI);
     }
 
-    public BinanceComExchange(String key, String secret, String preferredFiatCurrency) {
+    public BinanceJerseyExchange(String key, String secret, String preferredFiatCurrency) {
         super(key, secret, preferredFiatCurrency, SSL_URI);
     }
 
@@ -38,40 +38,18 @@ public class BinanceComExchange extends BinanceExchange {
     public Set<String> getFiatCurrencies() {
         Set<String> fiatCurrencies = new HashSet<>();
         fiatCurrencies.add(FiatCurrency.EUR.getCode());
-        fiatCurrencies.add(FiatCurrency.USDC.getCode());
-        fiatCurrencies.add(FiatCurrency.BUSD.getCode());
-        fiatCurrencies.add(FiatCurrency.USDT.getCode());
+        fiatCurrencies.add(FiatCurrency.GBP.getCode());
         return fiatCurrencies;
     }
 
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> cryptoCurrencies = new HashSet<>();
-        cryptoCurrencies.add(CryptoCurrency.BAT.getCode());
         cryptoCurrencies.add(CryptoCurrency.BCH.getCode());
         cryptoCurrencies.add(CryptoCurrency.BNB.getCode());
         cryptoCurrencies.add(CryptoCurrency.BTC.getCode());
-        cryptoCurrencies.add(CryptoCurrency.CLOAK.getCode());
-        cryptoCurrencies.add(CryptoCurrency.DASH.getCode());
-        cryptoCurrencies.add(CryptoCurrency.DOGE.getCode());
         cryptoCurrencies.add(CryptoCurrency.ETH.getCode());
-        cryptoCurrencies.add(CryptoCurrency.FTT.getCode());
-        cryptoCurrencies.add(CryptoCurrency.GRS.getCode());
-        cryptoCurrencies.add(CryptoCurrency.KMD.getCode());
-        cryptoCurrencies.add(CryptoCurrency.LSK.getCode());
         cryptoCurrencies.add(CryptoCurrency.LTC.getCode());
-        cryptoCurrencies.add(CryptoCurrency.NULS.getCode());
-        cryptoCurrencies.add(CryptoCurrency.REP.getCode());
-        cryptoCurrencies.add(CryptoCurrency.SYS.getCode());
-        cryptoCurrencies.add(CryptoCurrency.TRX.getCode());
-        cryptoCurrencies.add(CryptoCurrency.USDS.getCode());
-        cryptoCurrencies.add(CryptoCurrency.USDT.getCode());
-        cryptoCurrencies.add(CryptoCurrency.VIA.getCode());
-        cryptoCurrencies.add(CryptoCurrency.XMR.getCode());
-        cryptoCurrencies.add(CryptoCurrency.XRP.getCode());
-        cryptoCurrencies.add(CryptoCurrency.XZC.getCode());
-        cryptoCurrencies.add(CryptoCurrency.FTT.getCode());
-        cryptoCurrencies.add(CryptoCurrency.XTZ.getCode());
         return cryptoCurrencies;
     }
 }

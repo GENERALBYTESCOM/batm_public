@@ -59,11 +59,6 @@ public class OFACWatchList implements IWatchList{
     }
 
     @Override
-    public String getId() {
-        return "ofac";
-    }
-
-    @Override
     public String toString() {
         return getName();
     }

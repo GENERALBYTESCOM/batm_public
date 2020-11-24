@@ -160,24 +160,6 @@ public class RESTServiceExample {
         return "ERROR";
     }
 
-    /**
-     * Creates buy transaction.
-     */
-    @GET
-    @Path("/buy_crypto")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Object buyCrypto(@QueryParam("serial_number") String serialNumber, @QueryParam("fiat_amount") BigDecimal fiatAmount, @QueryParam("fiat_currency") String fiatCurrency, @QueryParam("crypto_amount") BigDecimal cryptoAmount, @QueryParam("crypto_currency") String cryptoCurrency, @QueryParam("destination_address") String destinationAddress, @QueryParam("identity_public_id") String identityPublicId, @QueryParam("discount_code") String discountCode) {
-        if (serialNumber == null || fiatAmount == null || fiatCurrency == null || cryptoAmount == null || cryptoCurrency == null || destinationAddress == null) {
-            return "missing parameters";
-        }
-        try {
-            return RESTExampleExtension.getExtensionContext().buyCrypto(serialNumber, fiatAmount, fiatCurrency, cryptoAmount, cryptoCurrency, destinationAddress, identityPublicId, discountCode);
-        } catch (Throwable e) {
-            log.error("Error", e);
-        }
-        return "ERROR";
-    }
-
     @GET
     @Path("/cashback")
     @Produces(MediaType.APPLICATION_JSON)

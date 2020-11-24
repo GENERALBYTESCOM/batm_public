@@ -19,7 +19,6 @@ package com.generalbytes.batm.server.extensions;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 
 public interface ITransactionDetails {
 
@@ -27,7 +26,6 @@ public interface ITransactionDetails {
     int TYPE_BUY_CRYPTO = 0;
     int TYPE_SELL_CRYPTO = 1;
     int TYPE_WITHDRAW_CASH = 2;
-    int TYPE_CASHBACK = 3;
 
     //Buy states
     int STATUS_BUY_IN_PROGRESS = 0;
@@ -46,10 +44,6 @@ public interface ITransactionDetails {
     int STATUS_WITHDRAW_IN_PROGRESS = 0;
     int STATUS_WITHDRAW_COMPLETED = 1;
     int STATUS_WITHDRAW_ERROR = 2;
-
-    //Cashback states
-    int STATUS_CASHBACK_COMPLETED = 0;
-    int STATUS_CASHBACK_ERROR = 1;
 
     //error codes
     int BUY_ERROR_NO_ERROR = 0;
@@ -280,20 +274,8 @@ public interface ITransactionDetails {
      */
     BigDecimal getDiscountQuotient();
 
-    /**
-     * @return rate source price
-     */
-    BigDecimal getRateSourcePrice();
 
-    /**
-     * @return expected profit in %
-     */
-    BigDecimal getExpectedProfit();
 
-    /**
-     * @return transaction note
-     */
-    String getNote();
 
-    List<IBanknoteCounts> getBanknotes();
+
 }

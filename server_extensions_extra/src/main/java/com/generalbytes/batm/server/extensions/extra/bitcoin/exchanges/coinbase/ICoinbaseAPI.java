@@ -59,8 +59,7 @@ public interface ICoinbaseAPI {
     CBAccountsResponse getAccounts(@HeaderParam("CB-VERSION") String version,
                                    @HeaderParam("CB-ACCESS-KEY") String key,
                                    @HeaderParam("CB-ACCESS-SIGN") ParamsDigest digest,
-                                   @HeaderParam("CB-ACCESS-TIMESTAMP") String coinBaseTime,
-                                   @QueryParam("starting_after") String startingAfter) throws IOException, RuntimeException;
+                                   @HeaderParam("CB-ACCESS-TIMESTAMP") String coinBaseTime) throws IOException, RuntimeException;
 
     @POST
     @Path("/accounts/{account_id}/addresses")

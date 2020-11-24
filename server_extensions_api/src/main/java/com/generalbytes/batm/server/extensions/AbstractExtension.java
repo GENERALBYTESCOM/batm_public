@@ -19,7 +19,6 @@ package com.generalbytes.batm.server.extensions;
 
 import com.generalbytes.batm.server.extensions.aml.IExternalIdentityProvider;
 import com.generalbytes.batm.server.extensions.aml.scoring.ITransactionScoringProvider;
-import com.generalbytes.batm.server.extensions.communication.ICommunicationProvider;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.util.Set;
@@ -103,11 +102,6 @@ public abstract class AbstractExtension implements IExtension{
 
     @Override
     public ITransactionScoringProvider createTransactionScoringProvider(String transactionScoringProviderParamValues) {
-        return null;
-    }
-
-    @Override
-    public Set<ICommunicationProvider> getCommunicationProviders() {
         return null;
     }
 }

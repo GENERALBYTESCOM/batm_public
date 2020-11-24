@@ -39,12 +39,6 @@ public interface IWatchList {
     String getName();
 
     /**
-     * Internal name of watchlist
-     * @return
-     */
-    String getId();
-
-    /**
      * Short description of the watchlist. For instance link to a website containing more information about the watchlist data
      * @return
      */

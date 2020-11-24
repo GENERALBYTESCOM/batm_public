@@ -19,21 +19,21 @@ package com.generalbytes.batm.server.extensions.extra.ethereum;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.IWallet;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
-import org.web3j.protocol.core.methods.request.Transaction;
 import org.web3j.protocol.core.methods.response.EthGetBalance;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
+import org.web3j.protocol.exceptions.TransactionException;
 import org.web3j.protocol.http.HttpService;
-import org.web3j.tx.RawTransactionManager;
 import org.web3j.tx.Transfer;
 import org.web3j.utils.Convert;
 
+import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -113,20 +113,24 @@ public class InfuraWallet implements IWallet{
         }
 
         try {
-            log.info("InfuraWallet - sending {} {} from {} to {}", amount, cryptoCurrency, credentials.getAddress(), destinationAddress);
-            BigInteger weiValue = Convert.toWei(amount, ETHER).toBigIntegerExact();
-            Transfer transfer = new Transfer(w, new RawTransactionManager(w, credentials));
-            Transaction transaction = Transaction.createEtherTransaction(credentials.getAddress(), null, null, null, destinationAddress, weiValue);
-            BigInteger gasLimit = w.ethEstimateGas(transaction).send().getAmountUsed();
-            BigInteger gasPrice = transfer.requestCurrentGasPrice();
-            log.info("InfuraWallet - gasPrice: {} gasLimit: {}", gasPrice, gasLimit);
+            log.info("InfuraWallet sending coins from " + credentials.getAddress() + " to: " + destinationAddress + " " + amount + " " + cryptoCurrency);
 
-            CompletableFuture<TransactionReceipt> future = transfer.sendFunds(destinationAddress, amount, ETHER, gasPrice, gasLimit).sendAsync();
+            CompletableFuture<TransactionReceipt> future = Transfer.sendFunds(
+                w, credentials,
+                destinationAddress,
+                amount,
+                Convert.Unit.ETHER)
+                .sendAsync();
+
             TransactionReceipt receipt = future.get(10, TimeUnit.SECONDS);
             log.debug("InfuraWallet receipt = " + receipt);
             return receipt.getTransactionHash();
         } catch (TimeoutException e) {
-            log.error("Sending coins timeouted", e);
+            return "info_in_future"; //error probably will not happen as we waited already 10 seconds.
+        } catch (IOException e) {
+            log.error("Error sending coins.", e);
+        } catch (InterruptedException | TransactionException e) {
+            log.error("Error sending coins.", e);
         } catch (Exception e) {
             log.error("Error sending coins.", e);
         }

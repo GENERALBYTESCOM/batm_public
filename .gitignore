@@ -13,6 +13,4 @@ install-libs.sh
 .classpath
 .settings/
 .vscode/
-
-local.properties
 **/bin/

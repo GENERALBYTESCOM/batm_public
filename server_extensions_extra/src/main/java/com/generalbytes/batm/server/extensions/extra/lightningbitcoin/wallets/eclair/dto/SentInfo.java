@@ -21,7 +21,7 @@ public class SentInfo {
     public String id;
     public String paymentHash;
     public Status status;
-    public Long amount;
+    public Long amountMsat;
     public Long createdAt;
     public Long completedAt;
 

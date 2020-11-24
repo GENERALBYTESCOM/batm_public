@@ -47,11 +47,6 @@ public class CzechSanctionList implements IWatchList{
     }
 
     @Override
-    public String getId() {
-        return "cz";
-    }
-
-    @Override
     public String toString() {
         return getName();
     }

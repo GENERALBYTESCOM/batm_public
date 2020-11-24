@@ -60,11 +60,6 @@ public class EUSanctionsList implements IWatchList {
     }
 
     @Override
-    public String getId() {
-        return "eu";
-    }
-
-    @Override
     public String toString() {
         return getName();
     }
