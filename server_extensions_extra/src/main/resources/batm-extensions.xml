@@ -187,6 +187,7 @@
                 <cryptocurrency>FLASH</cryptocurrency>
                 <cryptocurrency>FTO</cryptocurrency>
                 <cryptocurrency>FTT</cryptocurrency>
+                <cryptocurrency>YFI</cryptocurrency>
                 <cryptocurrency>USDC</cryptocurrency>
                 <cryptocurrency>BUSD</cryptocurrency>
                 <cryptocurrency>GRS</cryptocurrency>
@@ -424,6 +425,7 @@
             <cryptocurrency>FLASH</cryptocurrency>
             <cryptocurrency>FTO</cryptocurrency>
             <cryptocurrency>FTT</cryptocurrency>
+            <cryptocurrency>YFI</cryptocurrency>
             <cryptocurrency>USDC</cryptocurrency>
             <cryptocurrency>BUSD</cryptocurrency>
             <cryptocurrency>GRS</cryptocurrency>
@@ -491,6 +493,7 @@
             <cryptocurrency>FLASH</cryptocurrency>
             <cryptocurrency>FTO</cryptocurrency>
             <cryptocurrency>FTT</cryptocurrency>
+            <cryptocurrency>YFI</cryptocurrency>
             <cryptocurrency>GRS</cryptocurrency>
             <cryptocurrency>HATCH</cryptocurrency>
             <cryptocurrency>HT</cryptocurrency>
@@ -555,6 +558,7 @@
             <cryptocurrency>XRP</cryptocurrency>
             <cryptocurrency>XZC</cryptocurrency>
             <cryptocurrency>FTT</cryptocurrency>
+            <cryptocurrency>YFI</cryptocurrency>
             <cryptocurrency>XTZ</cryptocurrency>
         </exchange>
         <ratesource prefix="binancecom" name="Binance.com">
@@ -1660,6 +1664,16 @@
         </wallet>
         <cryptologo cryptocurrency="FTT" file="ftt.png"/>
         <cryptologo cryptocurrency="FTT" file="ftt.svg"/>
+        <wallet prefix="infuraERC20_YFI_18_0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e" name="Infura.io wallet - YFI">
+            <!-- Hint: infuraERC20_TOKENSYMBOL_DECIMALPLACES_CONTRACTADDRESS -->
+            <param name="projectId" />
+            <param name="mnemonic" />
+            <param name="gaslimit" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
+            <cryptocurrency buyonly="true">YFI</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="YFI" file="yfi.png"/>
+        <cryptologo cryptocurrency="YFI" file="yfi.svg"/>
         <wallet prefix="infuraERC20_USDC_6_0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48" name="Infura.io wallet - USDC">
             <!-- Hint: infuraERC20_TOKENSYMBOL_DECIMALPLACES_CONTRACTADDRESS -->
             <param name="projectId" />
