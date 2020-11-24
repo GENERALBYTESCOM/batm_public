@@ -53,19 +53,29 @@ public class HexStringCertTrustManager implements X509TrustManager {
     @Override
     public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
 
-        boolean match = false;
         try {
-            for (X509Certificate c : chain) {
-                if (c.equals(cert)) {
-                    match = true;
-                }
+            //
+            // A TLS server can send as many certificates as it wants (as part of its certificate
+            // chain), but it's only guaranteed for the first certificate (chain[0]) that it
+            // actually also possesses the matching private key (as otherwise it wouldn't be able
+            // to open the TLS session).
+            //
+            // All other certs (chain[1]...chain[n]) should be considered as UNTRUSTED (a malicious
+            // server can include ANY cert in the chain, even one where it doesn't possess the
+            // private key).
+            //
+            // Certs are public knowledge (basically they are just public keys wth some metadata).
+            // So anybody who can connect to a TLS server can acquire its certificate.
+            //
+            if (chain[0].equals(cert)) {
+                return;
             }
         } catch (Exception e) {
             throw new CertificateException();
         }
 
-        if (!match)
-            throw new CertificateException();
+        // if we come here, certificate is not valid
+        throw new CertificateException();
     }
 
     @Override

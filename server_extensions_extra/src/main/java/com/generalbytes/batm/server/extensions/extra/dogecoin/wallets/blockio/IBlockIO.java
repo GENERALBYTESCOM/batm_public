@@ -49,6 +49,10 @@ public interface IBlockIO {
     BlockIOResponseBalance getBalance() throws IOException;
 
     @GET
+    @Path("get_address_balance")
+    BlockIOResponseBalance getAddressBalance(@QueryParam("labels") List<String> labels) throws IOException;
+
+    @GET
     @Path("withdraw")
     BlockIOResponseWithdrawal withdraw(@QueryParam("pin") String pin, @QueryParam("amount") String amount, @QueryParam("payment_address") String payment_address, @QueryParam("priority") String priority) throws IOException;
 

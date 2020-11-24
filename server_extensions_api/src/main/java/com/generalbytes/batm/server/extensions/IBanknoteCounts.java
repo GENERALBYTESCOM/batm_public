@@ -37,4 +37,5 @@ public interface IBanknoteCounts {
     BigDecimal getDenomination();
     String getCurrency();
     int getCount();
+    Integer getCapacity();
 }

@@ -19,7 +19,5 @@ package com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.e
 
 public class ReceivedInfo {
     public String paymentHash;
-    public Long amountMsat;
-    public Long receivedAt;
-
+    public Long amount;
 }

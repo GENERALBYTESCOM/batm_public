@@ -80,4 +80,9 @@ public interface ITerminalCashCollectionRecord {
      * @return
      */
     String getCashboxName();
+
+    /**
+     * @return Cash collection public ID
+     */
+    String getPublicId();
 }
