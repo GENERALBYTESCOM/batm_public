@@ -54,7 +54,10 @@ public interface ICoinbaseV2API {
     CBAccountsResponse getAccounts(@HeaderParam("CB-ACCESS-KEY") String apiKey,
                                    @HeaderParam("CB-VERSION") String apiVersion,
                                    @HeaderParam("CB-ACCESS-SIGN") ParamsDigest digest,
-                                   @HeaderParam("CB-ACCESS-TIMESTAMP") long timestamp);
+                                   @HeaderParam("CB-ACCESS-TIMESTAMP") long timestamp,
+                                   // order of QueryParams here is important because of the CBDigest signature
+                                   @QueryParam("limit") int limit,
+                                   @QueryParam("starting_after") String startingAfter);
 
     @GET
     @Path("/accounts/{account_id}")

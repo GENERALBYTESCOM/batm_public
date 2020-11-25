@@ -25,4 +25,13 @@ public class CBWarning {
     private String id;
     private String message;
     private String url;
+
+    @Override
+    public String toString() {
+        return "CBWarning{" +
+            "id='" + id + '\'' +
+            ", message='" + message + '\'' +
+            ", url='" + url + '\'' +
+            '}';
+    }
 }
