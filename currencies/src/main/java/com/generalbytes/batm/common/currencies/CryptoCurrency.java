@@ -98,7 +98,7 @@ public enum CryptoCurrency {
     WDC("WorldCoin"),
     XMR("Monero"),
     XORI("CHFToken"),
-    TENT("SnowGem"),
+    TENT("Tent"),
     XRP("Ripple"),
     XZC("Zcoin"),
     BAY("BitBayCoin"),
