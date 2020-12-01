@@ -178,7 +178,7 @@
                 <cryptocurrency>XZC</cryptocurrency>
                 <cryptocurrency>CLOAK</cryptocurrency>
                 <cryptocurrency>FLASH</cryptocurrency>
-                <cryptocurrency>XSG</cryptocurrency>
+                <cryptocurrency>TENT</cryptocurrency>
                 <cryptocurrency>JOB</cryptocurrency>
                 <cryptocurrency>HT</cryptocurrency>
                 <cryptocurrency>ZPAE</cryptocurrency>
@@ -244,7 +244,7 @@
                 <cryptocurrency>WDC</cryptocurrency>
                 <cryptocurrency>XMR</cryptocurrency>
                 <cryptocurrency>XPM</cryptocurrency>
-                <cryptocurrency>XSG</cryptocurrency>
+                <cryptocurrency>TENT</cryptocurrency>
                 <cryptocurrency>XZC</cryptocurrency>
                 <cryptocurrency>ZPAE</cryptocurrency>
                 <help>USD is default fiat currency.</help>
@@ -486,7 +486,7 @@
             <cryptocurrency>XMR</cryptocurrency>
             <cryptocurrency>XPM</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
-            <cryptocurrency>XSG</cryptocurrency>
+            <cryptocurrency>TENT</cryptocurrency>
             <cryptocurrency>XZC</cryptocurrency>
             <cryptocurrency>ZPAE</cryptocurrency>
         </ratesource>
@@ -550,7 +550,7 @@
             <cryptocurrency>WDC</cryptocurrency>
             <cryptocurrency>XMR</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
-            <cryptocurrency>XSG</cryptocurrency>
+            <cryptocurrency>TENT</cryptocurrency>
             <cryptocurrency>XZC</cryptocurrency>
         </ratesource>
         <exchange prefix="binancecom" name="Binance.com">
@@ -1793,26 +1793,26 @@
         <cryptologo cryptocurrency="NULS" file="nuls.png"/>
         <cryptologo cryptocurrency="NULS" file="nuls.svg"/>
     </extension>
-    <extension class="com.generalbytes.batm.server.extensions.extra.snowgem.SnowgemExtension" >
+    <extension class="com.generalbytes.batm.server.extensions.extra.tent.TentExtension" >
         <wallet prefix="snowgemd" name="snowgemd">
             <param name="protocol" />
             <param name="user" />
             <param name="password" />
             <param name="host" />
             <param name="port" />
-            <cryptocurrency>XSG</cryptocurrency>
+            <cryptocurrency>TENT</cryptocurrency>
         </wallet>
         <wallet prefix="snowgemdemo" name="Snowgem Demo Wallet">
             <param name="fiatCurrency" />
             <param name="walletAddress" />
-            <cryptocurrency>XSG</cryptocurrency>
+            <cryptocurrency>TENT</cryptocurrency>
         </wallet>
-        <ratesource prefix="xsgfix" name ="Fix Price" >
+        <ratesource prefix="tentfix" name ="Fix Price" >
             <param name="price" />
-            <cryptocurrency>XSG</cryptocurrency>
+            <cryptocurrency>TENT</cryptocurrency>
         </ratesource>
-        <cryptologo cryptocurrency="XSG" file="xsg.png"/>
-        <cryptologo cryptocurrency="XSG" file="xsg.svg"/>
+        <cryptologo cryptocurrency="TENT" file="tent.png"/>
+        <cryptologo cryptocurrency="TENT" file="tent.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.primecoin.PrimecoinExtension" >
         <wallet prefix="primecoind" name="Primecoin">

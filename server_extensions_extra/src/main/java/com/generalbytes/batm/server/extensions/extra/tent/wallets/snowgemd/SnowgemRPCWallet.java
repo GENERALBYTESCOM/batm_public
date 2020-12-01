@@ -15,7 +15,7 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.snowgem.wallets.snowgemd;
+package com.generalbytes.batm.server.extensions.extra.tent.wallets.snowgemd;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.IWallet;
@@ -32,7 +32,7 @@ import java.util.Set;
 
 public class SnowgemRPCWallet implements IWallet {
     private static final Logger LOG = LoggerFactory.getLogger(SnowgemRPCWallet.class);
-    private static final String CRYPTO_CURRENCY = CryptoCurrency.XSG.getCode();
+    private static final String CRYPTO_CURRENCY = CryptoCurrency.TENT.getCode();
 
     private BitcoinJSONRPCClient client;
 
