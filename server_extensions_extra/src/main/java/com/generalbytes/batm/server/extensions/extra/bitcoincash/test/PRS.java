@@ -40,11 +40,12 @@ public class PRS implements IPaymentRequestSpecification{
     private boolean zeroFixedFee;
     private BigDecimal minimumMiningFeePerByte;
     private BigDecimal maximumMiningFeePerByte;
+    private BigDecimal tolerance;
     private IWallet wallet;
 
     private List<IPaymentOutput> outputs = new LinkedList<>();
 
-    public PRS(String cryptoCurrency, String description, long validInSeconds, int removeAfterNumberOfConfirmations, boolean doNotForward, boolean zeroFixedFee, BigDecimal minimumMiningFeePerByte, BigDecimal maximumMiningFeePerByte, IWallet wallet) {
+    public PRS(String cryptoCurrency, String description, long validInSeconds, int removeAfterNumberOfConfirmations, boolean doNotForward, boolean zeroFixedFee, BigDecimal minimumMiningFeePerByte, BigDecimal maximumMiningFeePerByte, BigDecimal tolerance, IWallet wallet) {
         this.cryptoCurrency = cryptoCurrency;
         this.description = description;
         this.validInSeconds = validInSeconds;
@@ -54,16 +55,18 @@ public class PRS implements IPaymentRequestSpecification{
         this.zeroFixedFee = zeroFixedFee;
         this.minimumMiningFeePerByte = (minimumMiningFeePerByte != null) ? minimumMiningFeePerByte : BigDecimal.ZERO;
         this.maximumMiningFeePerByte = (maximumMiningFeePerByte != null) ? maximumMiningFeePerByte : BigDecimal.ZERO;
+        this.tolerance = tolerance;
         this.wallet = wallet;
     }
 
-    public PRS(String cryptoCurrency, String description, long validInSeconds, boolean zeroFixedFee, BigDecimal minimumMiningFeePerByte, BigDecimal maximumMiningFeePerByte, IWallet wallet) {
+    public PRS(String cryptoCurrency, String description, long validInSeconds, boolean zeroFixedFee, BigDecimal minimumMiningFeePerByte, BigDecimal maximumMiningFeePerByte, BigDecimal tolerance, IWallet wallet) {
         this.cryptoCurrency = cryptoCurrency;
         this.description = description;
         this.validInSeconds = validInSeconds;
         this.zeroFixedFee = zeroFixedFee;
         this.minimumMiningFeePerByte = (minimumMiningFeePerByte != null) ? minimumMiningFeePerByte : BigDecimal.ZERO;
         this.maximumMiningFeePerByte = (maximumMiningFeePerByte != null) ? maximumMiningFeePerByte : BigDecimal.ZERO;
+        this.tolerance = tolerance;
         this.wallet = wallet;
     }
 
@@ -172,6 +175,11 @@ public class PRS implements IPaymentRequestSpecification{
     @Override
     public IWallet getWallet() {
         return wallet;
+    }
+
+    @Override
+    public BigDecimal getTolerance() {
+        return tolerance;
     }
 
     @Override
