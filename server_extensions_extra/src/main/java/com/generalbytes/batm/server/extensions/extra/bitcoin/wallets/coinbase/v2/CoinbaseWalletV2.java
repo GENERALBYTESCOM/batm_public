@@ -35,6 +35,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -98,49 +99,65 @@ public class CoinbaseWalletV2 implements IWallet {
         }
     }
 
+    /**
+     * @return all accounts from the API using pagination
+     */
+    private List<CBAccount> getAccounts() {
+        LinkedList<CBAccount> accounts = new LinkedList<>();
+        String startingAfter = null; // start pagination from the beginning
+        do {
+            log.debug("Getting accounts, startingAfter: {}", startingAfter);
+            long timeStamp = getTimestamp();
+            CBAccountsResponse accountsResponse = api.getAccounts(apiKey, API_VERSION, CBDigest.createInstance(apiSecret, timeStamp), timeStamp, 100, startingAfter);
+
+            if (accountsResponse.getErrors() != null) {
+                throw new IllegalStateException(accountsResponse.getErrorMessages());
+            }
+            if (accountsResponse.getWarnings() != null) {
+                log.warn("getAccounts warning: {}", accountsResponse.getWarnings());
+            }
+            startingAfter = null;
+            if (accountsResponse.getData() != null && accountsResponse.getData().size() > 0) {
+                accounts.addAll(accountsResponse.getData());
+                if (accountsResponse.getPagination() != null && accountsResponse.getPagination().getNext_uri() != null) {
+                    startingAfter = accounts.getLast().getId();
+                }
+            }
+        } while (startingAfter != null);
+        return accounts;
+    }
+
     private String getAccountId(String accountName, String cryptoCurrency) {
-        long timeStamp = getTimestamp();
-        CBAccountsResponse accountsResponse = api.getAccounts(apiKey, API_VERSION, CBDigest.createInstance(apiSecret, timeStamp), timeStamp);
-        if (accountsResponse != null && accountsResponse.getData() != null && !accountsResponse.getData().isEmpty()) {
-            List<CBAccount> accounts = accountsResponse.getData();
-            if (accountName != null) {
-                for (int i = 0; i < accounts.size(); i++) {
-                    CBAccount cbAccount = accounts.get(i);
-                    if (accountName.equalsIgnoreCase(cbAccount.getName())) {
-                        if (cryptoCurrency.equalsIgnoreCase(cbAccount.getCurrency())) {
-                            preferredCryptoCurrency = cbAccount.getCurrency();
-                            return cbAccount.getId();
-                        }
-                    }
-                }
-            }else{
-                for (int i = 0; i < accounts.size(); i++) {
-                    CBAccount cbAccount = accounts.get(i);
-                    if (cbAccount.isPrimary()) {
-                        if (cryptoCurrency.equalsIgnoreCase(cbAccount.getCurrency())) {
-                            preferredCryptoCurrency = cbAccount.getCurrency();
-                            return cbAccount.getId();
-                        }
+        List<CBAccount> accounts = getAccounts();
+        if (accountName != null) {
+            for (CBAccount cbAccount : accounts) {
+                if (accountName.equalsIgnoreCase(cbAccount.getName())) {
+                    if (cryptoCurrency.equalsIgnoreCase(cbAccount.getCurrency())) {
+                        preferredCryptoCurrency = cbAccount.getCurrency();
+                        return cbAccount.getId();
                     }
                 }
             }
-            for (int i = 0; i < accounts.size(); i++) {
-                CBAccount cbAccount = accounts.get(i);
-                if (cryptoCurrency.equalsIgnoreCase(cbAccount.getCurrency())) {
-                    preferredCryptoCurrency = cbAccount.getCurrency();
-                    return cbAccount.getId();
+        } else {
+            for (CBAccount cbAccount : accounts) {
+                if (cbAccount.isPrimary()) {
+                    if (cryptoCurrency.equalsIgnoreCase(cbAccount.getCurrency())) {
+                        preferredCryptoCurrency = cbAccount.getCurrency();
+                        return cbAccount.getId();
+                    }
                 }
             }
-
-            CBAccount cbAccount = accounts.get(0);
-            preferredCryptoCurrency = cbAccount.getCurrency();
-            return cbAccount.getId();
         }
-        if (accountsResponse != null && accountsResponse.getErrors() != null) {
-            log.error("getAccountId - " + accountsResponse.getErrorMessages());
+        for (CBAccount cbAccount : accounts) {
+            if (cryptoCurrency.equalsIgnoreCase(cbAccount.getCurrency())) {
+                preferredCryptoCurrency = cbAccount.getCurrency();
+                return cbAccount.getId();
+            }
         }
 
-        return null; //not found
+        CBAccount cbAccount = accounts.get(0);
+        preferredCryptoCurrency = cbAccount.getCurrency();
+        return cbAccount.getId();
     }
 
     protected long getTimestamp() {

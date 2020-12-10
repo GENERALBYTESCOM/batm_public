@@ -23,6 +23,8 @@ import javax.crypto.Mac;
 
 import si.mazi.rescu.RestInvocation;
 
+import java.nio.charset.StandardCharsets;
+
 public class CBDigest extends BaseParamsDigest {
 
     private long timestamp;
@@ -42,7 +44,7 @@ public class CBDigest extends BaseParamsDigest {
         Mac sha256_HMAC = getMac();
         String requestBody = restInvocation.getRequestBody();
         String method = restInvocation.getHttpMethod().toUpperCase();
-        String path = restInvocation.getPath();
+        String path = restInvocation.getInvocationUrl().replace(restInvocation.getBaseUrl(), "");
 
         String toSign = timestamp+method+path;
 
@@ -50,7 +52,7 @@ public class CBDigest extends BaseParamsDigest {
             toSign+=requestBody;
         }
 
-        sha256_HMAC.update(toSign.getBytes());
+        sha256_HMAC.update(toSign.getBytes(StandardCharsets.UTF_8));
         byte[] result = sha256_HMAC.doFinal();
         return bytesToHexString(result);
     }
