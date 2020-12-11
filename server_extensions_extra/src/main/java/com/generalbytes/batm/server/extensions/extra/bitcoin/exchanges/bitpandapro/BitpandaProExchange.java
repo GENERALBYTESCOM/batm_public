@@ -96,6 +96,7 @@ public final class BitpandaProExchange implements IExchangeAdvanced, IRateSource
         .put("BTC_CHF", 5)
         .put("ETH_CHF", 4)
         .put("XRP_CHF", 0)
+        .put("BTC_GBP", 5)
         .build()
     ;
 
