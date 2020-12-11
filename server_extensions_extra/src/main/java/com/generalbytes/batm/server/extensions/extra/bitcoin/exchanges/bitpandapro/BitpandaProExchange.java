@@ -76,12 +76,14 @@ public final class BitpandaProExchange implements IExchangeAdvanced, IRateSource
         return new BitpandaProExchange(LIVE_URL, apikey, preferredFiatCurrency);
     }
 
-    // all CRYPTO_FIAT combinations are supported for EUR and CHF pairs
+    // EUR and CHF support all CRYPTO_FIAT combinations
     // GBP supports only BTC
+    // TRY supports BTC and ETH
     private static final ImmutableSet<String> FIAT_CURRENCIES = ImmutableSet.of(
         FiatCurrency.EUR.getCode(),
         FiatCurrency.CHF.getCode(),
-        FiatCurrency.GBP.getCode()
+        FiatCurrency.GBP.getCode(),
+        FiatCurrency.TRY.getCode()
     );
     private static final ImmutableSet<String> CRYPTO_CURRENCIES = ImmutableSet.of(
         CryptoCurrency.BTC.getCode(),
@@ -97,6 +99,8 @@ public final class BitpandaProExchange implements IExchangeAdvanced, IRateSource
         .put("ETH_CHF", 4)
         .put("XRP_CHF", 0)
         .put("BTC_GBP", 5)
+        .put("BTC_TRY", 7)
+        .put("ETH_TRY", 6)
         .build()
     ;
 
@@ -579,12 +583,16 @@ public final class BitpandaProExchange implements IExchangeAdvanced, IRateSource
     private String asInstrument(String base, String quote) {
         assertValidCrypto(base);
         assertValidFiat(quote);
-        // GBP only supports BTC
-        if (FiatCurrency.GBP.getCode().equals(quote) && !CryptoCurrency.BTC.getCode().equals(base)) {
-            final String msg = format("%s_%s is not a supported pair", base, quote);
+
+        final String instrument = base + "_" + quote;
+
+        // verify that the pair is supported
+        if (!INSTRUMENT_AMOUNT_PRECISION.containsKey(instrument)) {
+            final String msg = format("%s is not a supported pair", instrument);
             throw new IllegalArgumentException(msg);
-        } // EUR and CHF support all crypto combinations
-        return base + "_" + quote;
+        }
+
+        return instrument;
     }
 
     private void assertValidCrypto(String code) {
