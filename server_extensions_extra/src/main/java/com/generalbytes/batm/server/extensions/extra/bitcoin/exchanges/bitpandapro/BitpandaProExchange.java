@@ -76,7 +76,8 @@ public final class BitpandaProExchange implements IExchangeAdvanced, IRateSource
         return new BitpandaProExchange(LIVE_URL, apikey, preferredFiatCurrency);
     }
 
-    // all CRYPTO_FIAT combinations are supported for EUR and CHF pairs
+    // EUR supports all CRYPTO_FIAT combinations
+    // CHF supports BTC, ETH and XRP
     // GBP supports only BTC
     private static final ImmutableSet<String> FIAT_CURRENCIES = ImmutableSet.of(
         FiatCurrency.EUR.getCode(),
@@ -86,7 +87,8 @@ public final class BitpandaProExchange implements IExchangeAdvanced, IRateSource
     private static final ImmutableSet<String> CRYPTO_CURRENCIES = ImmutableSet.of(
         CryptoCurrency.BTC.getCode(),
         CryptoCurrency.ETH.getCode(),
-        CryptoCurrency.XRP.getCode()
+        CryptoCurrency.XRP.getCode(),
+        CryptoCurrency.DOGE.getCode()
     );
     // from https://api.exchange.bitpanda.com/public/v1/instruments
     private static final Map<String, Integer> INSTRUMENT_AMOUNT_PRECISION = ImmutableMap.<String, Integer>builder()
@@ -97,6 +99,7 @@ public final class BitpandaProExchange implements IExchangeAdvanced, IRateSource
         .put("ETH_CHF", 4)
         .put("XRP_CHF", 0)
         .put("BTC_GBP", 5)
+        .put("DOGE_EUR", 0)
         .build()
     ;
 
@@ -579,12 +582,16 @@ public final class BitpandaProExchange implements IExchangeAdvanced, IRateSource
     private String asInstrument(String base, String quote) {
         assertValidCrypto(base);
         assertValidFiat(quote);
-        // GBP only supports BTC
-        if (FiatCurrency.GBP.getCode().equals(quote) && !CryptoCurrency.BTC.getCode().equals(base)) {
-            final String msg = format("%s_%s is not a supported pair", base, quote);
+
+        final String instrument = base + "_" + quote;
+
+        // verify that the pair is supported
+        if (!INSTRUMENT_AMOUNT_PRECISION.containsKey(instrument)) {
+            final String msg = format("%s is not a supported pair", instrument);
             throw new IllegalArgumentException(msg);
-        } // EUR and CHF support all crypto combinations
-        return base + "_" + quote;
+        }
+
+        return instrument;
     }
 
     private void assertValidCrypto(String code) {
