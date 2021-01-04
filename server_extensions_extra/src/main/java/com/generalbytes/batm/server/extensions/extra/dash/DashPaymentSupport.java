@@ -40,7 +40,6 @@ public class DashPaymentSupport extends AbstractRPCPaymentSupport {
 
     private static final long MAXIMUM_WAIT_FOR_POSSIBLE_REFUND_MILLIS = TimeUnit.DAYS.toMillis(3); // 3 days
     private static final long MAXIMUM_WATCHING_TIME_MILLIS = TimeUnit.DAYS.toMillis(3); // 3 days (exactly plus Sell Offer Expiration 5-120 minutes)
-    private static final BigDecimal TOLERANCE = new BigDecimal("0.0002"); // Received amount should be  cryptoTotalToSend +- tolerance
 
     @Override
     public String getCurrency() {
@@ -55,11 +54,6 @@ public class DashPaymentSupport extends AbstractRPCPaymentSupport {
     @Override
     public long getMaximumWaitForPossibleRefundInMillis() {
         return MAXIMUM_WAIT_FOR_POSSIBLE_REFUND_MILLIS;
-    }
-
-    @Override
-    public BigDecimal getTolerance() {
-        return TOLERANCE;
     }
 
     @Override
