@@ -63,7 +63,7 @@
                 <param name="port" />
                 <param name="token" />
                 <param name="wallet_id" />
-                <cryptocurrency>BCH</cryptocurrency>
+                <cryptocurrency buyonly="true">BCH</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
@@ -76,7 +76,7 @@
                 <param name="port" />
                 <param name="token" />
                 <param name="wallet_id" />
-                <cryptocurrency>BCH</cryptocurrency>
+                <cryptocurrency buyonly="true">BCH</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
