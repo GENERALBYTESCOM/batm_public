@@ -19,6 +19,7 @@
 package com.generalbytes.batm.server.extensions.extra.watchlists.ofac;
 
 
+import com.generalbytes.batm.server.extensions.watchlist.BlacklistedAddress;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 import com.generalbytes.batm.server.extensions.watchlist.WatchListQuery;
 import com.generalbytes.batm.server.extensions.watchlist.WatchListResult;
@@ -37,9 +38,10 @@ import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
-
+@SuppressWarnings("Duplicates")
 public class OFACWatchList implements IWatchList{
     private static final Logger log = LoggerFactory.getLogger("batm.master.watchlist.OFAC");
     private static final String DOWNLOAD_URL = "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml";
@@ -52,6 +54,7 @@ public class OFACWatchList implements IWatchList{
     private ParsedSanctions sanctions;
 
     private static final int UPDATE_PERIOD_IN_MINS = 60 * 24; //every 24 hours in mins
+    private static final String WATCHLIST_ID = "ofac";
 
     @Override
     public String getName() {
@@ -60,7 +63,7 @@ public class OFACWatchList implements IWatchList{
 
     @Override
     public String getId() {
-        return "ofac";
+        return WATCHLIST_ID;
     }
 
     @Override
@@ -192,5 +195,25 @@ public class OFACWatchList implements IWatchList{
             log.error("Error", e);
         }
         return false;
+    }
+
+    @Override
+    public Set<BlacklistedAddress> getBlacklistedCryptoAddresses() {
+        synchronized (this) {
+            if (sanctions == null) {
+                sanctions = parseSanctionsList();
+            }
+        }
+
+        if (sanctions == null) {
+            return new HashSet<>();
+        }
+
+        Set<BlacklistedAddress> result = new HashSet<>();
+        Set<String> blackSet = sanctions.getBlacklistedCryptoAddresses();
+        for (String address : blackSet) {
+            result.add(new BlacklistedAddress(WATCHLIST_ID, address));
+        }
+        return result;
     }
 }

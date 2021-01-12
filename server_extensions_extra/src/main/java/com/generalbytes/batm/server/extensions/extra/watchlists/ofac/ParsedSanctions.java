@@ -54,17 +54,33 @@ public class ParsedSanctions {
     public static final String TYPE_LAST_NAME = "1520";
     public static final String TYPE_FIRST_NAME = "1521";
 
+    public static final String TYPE_DIGITAL_CURRENCY_ADDRESS = "Digital Currency Address";
+
     private Map<String,List<ParsedNamePart>> nameParts = new HashMap<String, List<ParsedNamePart>>();
     private Map<String,String> partyIndexes = new HashMap<String, String>();
+    private Set<String> blacklistedCryptoAddresses = new HashSet<>();
 
-    public ParsedSanctions(Map<String, List<ParsedNamePart>> nameParts, Map<String, String> partyIndexes) {
+    public ParsedSanctions(Map<String, List<ParsedNamePart>> nameParts, Map<String, String> partyIndexes, Set<String> blacklistedCryptoAddresses) {
         this.nameParts = nameParts;
         this.partyIndexes = partyIndexes;
+        this.blacklistedCryptoAddresses = blacklistedCryptoAddresses;
     }
 
     public static ParsedSanctions parse(Sanctions sanctions) {
         List<ParsedNamePart> names = new ArrayList<ParsedNamePart>();
         Map<String,String> partyIndexes = new HashMap<String, String>();
+        Set<String> blacklistedCryptoAddresses = new HashSet<>();
+
+        final ReferenceValueSetsSchemaType referenceValueSets = sanctions.getReferenceValueSets();
+        final ReferenceValueSetsSchemaType.FeatureTypeValues featureTypeValues = referenceValueSets.getFeatureTypeValues();
+
+        Set<BigInteger> featureTypeIDs = new HashSet<>();
+        for (ReferenceValueSetsSchemaType.FeatureTypeValues.FeatureType featureType : featureTypeValues.getFeatureType()) {
+            if (featureType.getValue() != null && featureType.getValue().startsWith(TYPE_DIGITAL_CURRENCY_ADDRESS)) {
+                featureTypeIDs.add(featureType.getID());
+            }
+        }
+
         final Sanctions.DistinctParties distinctParties = sanctions.getDistinctParties();
         final List<DistinctPartySchemaType> distinctParty = distinctParties.getDistinctParty();
 
@@ -76,6 +92,7 @@ public class ParsedSanctions {
             final List<DistinctPartySchemaType.Profile> profile = dp.getProfile();
             for (int j = 0; j < profile.size(); j++) {
                 DistinctPartySchemaType.Profile p = profile.get(j);
+
                 final List<IdentitySchemaType> identity = p.getIdentity();
                 for (int k = 0; k < identity.size(); k++) {
                     IdentitySchemaType idt = identity.get(k);
@@ -99,9 +116,18 @@ public class ParsedSanctions {
                         }
                     }
                 }
+
+                for (FeatureSchemaType featureSchemaType : p.getFeature()) {
+                    if (featureTypeIDs.contains(featureSchemaType.getFeatureTypeID())) {
+                        for (FeatureSchemaType.FeatureVersion featureVersion : featureSchemaType.getFeatureVersion()) {
+                            for (FeatureSchemaType.FeatureVersion.VersionDetail versionDetail : featureVersion.getVersionDetail()) {
+                                blacklistedCryptoAddresses.add(versionDetail.getValue());
+                            }
+                        }
+                    }
+                }
             }
         }
-
 
         Map<String,List<ParsedNamePart>> result = new HashMap<String, List<ParsedNamePart>>();
         for (int i = 0; i < names.size(); i++) {
@@ -114,9 +140,7 @@ public class ParsedSanctions {
             parsedNameParts.add(namePart);
         }
 
-        return new ParsedSanctions(result,partyIndexes);
-
-
+        return new ParsedSanctions(result, partyIndexes, blacklistedCryptoAddresses);
     }
 
     private static String findNamePartTypeFromNameGroup(List<IdentitySchemaType.NamePartGroups.MasterNamePartGroup> masterNamePartGroup, BigInteger namePartGroupID) {
@@ -210,5 +234,7 @@ public class ParsedSanctions {
         return null;
     }
 
-
+    public Set<String> getBlacklistedCryptoAddresses() {
+        return blacklistedCryptoAddresses;
+    }
 }
