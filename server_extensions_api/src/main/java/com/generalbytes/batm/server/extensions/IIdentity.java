@@ -64,4 +64,5 @@ public interface IIdentity {
     List<ILimit> getLimitCashTotalIdentity();
 
     String getConfigurationCashCurrency();
+    IOrganization getOrganization();
 }
