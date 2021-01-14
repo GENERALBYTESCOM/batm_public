@@ -23,8 +23,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import wf.bitcoin.javabitcoindrpcclient.BitcoinRPCException;
 import wf.bitcoin.javabitcoindrpcclient.GenericRpcException;
-import com.generalbytes.batm.server.extensions.extra.dash.wallets.MapWrapper;
 import java.util.logging.Logger;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
@@ -43,6 +43,26 @@ public class DashRPCClient extends RPCClient {
     public Transaction getTransaction(String txId) {
         return new DashTransactionWrapper((Map) query("gettransaction", txId));
     }
+
+    @Override
+    public double getEstimateFee(int numberOfBlocks) throws BitcoinRPCException {
+        Map result = (Map) query("estimatesmartfee", numberOfBlocks);
+        Object estimate = result.get("feerate");
+        if (estimate == null) {
+            throw new GenericRpcException("getEstimateFee - no result: " + result.toString());
+        }
+        return ((Number)estimate).doubleValue();
+    }
+
+    @Override
+    public String signRawTransactionWithWallet(String hex, String sigHashType) {
+        Map result = (Map) query("signrawtransaction", hex, null, null, sigHashType); //if sigHashType is null it will return the default "ALL"
+        if ((Boolean) result.get("complete"))
+            return (String) result.get("hex");
+        else
+            throw new GenericRpcException("Incomplete");
+    }
+
 
     @SuppressWarnings("serial")
     class DashTransactionWrapper extends MapWrapper implements DashTransaction, Serializable {
