@@ -519,4 +519,43 @@ public class BitcoinExtension extends AbstractExtension {
     public Set<ICryptoCurrencyDefinition> getCryptoCurrencyDefinitions() {
         return null;
     }
+
+    @Override
+    public boolean cancelWalletTunnel(String walletLogin, String tunnelPassword) {
+        StringTokenizer st = new StringTokenizer(walletLogin,":");
+        String walletType = st.nextToken();
+
+        String hostname = null;
+        Integer port = null;
+        if ("bitcoind".equalsIgnoreCase(walletType) || "bitcoindnoforward".equalsIgnoreCase(walletType)) {
+            // skip protocol, username and password
+            st.nextToken();
+            st.nextToken();
+            st.nextToken();
+            hostname = st.nextToken();
+            port = Integer.parseInt(st.nextToken());
+        } else if ("bitgo".equalsIgnoreCase(walletType) || "bitgonoforward".equalsIgnoreCase(walletType)) {
+            String first = st.nextToken();
+            String scheme;
+            if (first.startsWith("http")) {
+                scheme = first;
+                hostname = st.nextToken().replaceAll("/", "");
+            } else {
+                scheme = "http";
+                hostname = first;
+            }
+
+            String next = st.nextToken();
+            if (next.length() > 6) {
+                port = scheme.equals("https") ? 443 : 80;
+            } else {
+                port = Integer.parseInt(next);
+            }
+        }
+
+        if (hostname == null || port == null) {
+            return false;
+        }
+        return ctx.getTunnelManager().removeTunnelKnownHost(tunnelPassword, InetSocketAddress.createUnresolved(hostname, port));
+    }
 }

@@ -82,7 +82,7 @@ public class LightningBitcoinExtension extends AbstractExtension {
                     url = new HttpUrl.Builder().scheme(parsedUrl.scheme()).host(tunnelAddress.getHostString()).port(tunnelAddress.getPort()).encodedPath(parsedUrl.encodedPath()).build().toString();
                     String macaroon = st.nextToken();
                     String cert = st.hasMoreTokens() ? st.nextToken() : null;
-                    if(macaroon == null || macaroon.trim().isEmpty()) {
+                    if (macaroon == null || macaroon.trim().isEmpty()) {
                         log.error("macaroon param missing");
                         return null;
                     }
@@ -115,5 +115,34 @@ public class LightningBitcoinExtension extends AbstractExtension {
         Set<ICryptoCurrencyDefinition> result = new HashSet<>();
         result.add(DEFINITION);
         return result;
+    }
+
+    @Override
+    public boolean cancelWalletTunnel(String walletLogin, String tunnelPassword) {
+        StringTokenizer st = new StringTokenizer(walletLogin,":");
+        String walletType = st.nextToken();
+
+        String hostname = null;
+        Integer port = null;
+        if ("eclair".equalsIgnoreCase(walletType)) {
+            // skip scheme
+            st.nextToken();
+            hostname = st.nextToken();
+            port = Integer.parseInt(st.nextToken());
+        } else if ("lnd".equalsIgnoreCase(walletType)) {
+            String url = st.nextToken() + ":" + st.nextToken();
+            if (!url.endsWith("/")) {
+                url += ":" + st.nextToken();
+            }
+            HttpUrl parsedUrl = HttpUrl.parse(url);
+            hostname = parsedUrl.host();
+            port = parsedUrl.port();
+        }
+
+        if (hostname == null || port == null) {
+            return false;
+
+        }
+        return ctx.getTunnelManager().removeTunnelKnownHost(tunnelPassword, InetSocketAddress.createUnresolved(hostname, port));
     }
 }

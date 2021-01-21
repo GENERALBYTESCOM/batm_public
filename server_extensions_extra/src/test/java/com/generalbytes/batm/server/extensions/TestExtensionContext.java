@@ -6,7 +6,9 @@ import com.generalbytes.batm.server.extensions.exceptions.SellException;
 import com.generalbytes.batm.server.extensions.watchlist.WatchListQuery;
 import com.generalbytes.batm.server.extensions.watchlist.WatchListResult;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.InetSocketAddress;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -110,7 +112,17 @@ public class TestExtensionContext implements IExtensionContext {
 
     @Override
     public ITunnelManager getTunnelManager() {
-        return (tunnelPassword, originalWalletAddress) -> originalWalletAddress;
+        return new ITunnelManager() {
+            @Override
+            public InetSocketAddress connectIfNeeded(String tunnelPassword, InetSocketAddress originalWalletAddress)  {
+                return originalWalletAddress;
+            }
+
+            @Override
+            public boolean removeTunnelKnownHost(String tunnelPassword, InetSocketAddress walletAddress) {
+                return false;
+            }
+        };
     }
 
     @Override

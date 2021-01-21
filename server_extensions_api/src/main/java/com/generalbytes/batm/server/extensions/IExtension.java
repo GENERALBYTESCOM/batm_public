@@ -165,4 +165,5 @@ public interface IExtension {
     Set<ISsnValidator> getSsnValidators();
 
 
+    boolean cancelWalletTunnel(String walletLogin, String tunnelPassword);
 }

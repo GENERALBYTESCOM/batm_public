@@ -156,4 +156,22 @@ public class GroestlcoinExtension extends AbstractExtension{
         result.add(CryptoCurrency.GRS.getCode());
         return result;
     }
+
+    @Override
+    public boolean cancelWalletTunnel(String walletLogin, String tunnelPassword) {
+        StringTokenizer st = new StringTokenizer(walletLogin,":");
+        String walletType = st.nextToken();
+
+        if ("groestlcoind".equalsIgnoreCase(walletType)) {
+            // skip protocol, username, password
+            st.nextToken();
+            st.nextToken();
+            st.nextToken();
+
+            String hostname = st.nextToken();
+            int port = Integer.parseInt(st.nextToken());
+            return ctx.getTunnelManager().removeTunnelKnownHost(tunnelPassword, InetSocketAddress.createUnresolved(hostname, port));
+        }
+        return false;
+    }
 }
