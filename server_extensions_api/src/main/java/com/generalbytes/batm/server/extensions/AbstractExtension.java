@@ -115,7 +115,4 @@ public abstract class AbstractExtension implements IExtension{
     public Set<ISsnValidator> getSsnValidators() {
         return null;
     }
-
-    @Override
-    public boolean cancelWalletTunnel(String walletLogin, String tunnelPassword) { return false; }
 }

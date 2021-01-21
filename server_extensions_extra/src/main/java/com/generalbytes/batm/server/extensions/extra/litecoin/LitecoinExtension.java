@@ -59,7 +59,7 @@ public class LitecoinExtension extends AbstractExtension{
                     label = st.nextToken();
                 }
 
-                InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(tunnelPassword, InetSocketAddress.createUnresolved(hostname, port));
+                InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(walletLogin, tunnelPassword, InetSocketAddress.createUnresolved(hostname, port));
                 hostname = tunnelAddress.getHostString();
                 port = tunnelAddress.getPort();
 
@@ -115,23 +115,5 @@ public class LitecoinExtension extends AbstractExtension{
         Set<String> result = new HashSet<String>();
         result.add(CryptoCurrency.LTC.getCode());
         return result;
-    }
-
-    @Override
-    public boolean cancelWalletTunnel(String walletLogin, String tunnelPassword) {
-        StringTokenizer st = new StringTokenizer(walletLogin,":");
-        String walletType = st.nextToken();
-
-        if ("litecoind".equalsIgnoreCase(walletType) || "litecoindnoforward".equalsIgnoreCase(walletType)) {
-            // skip protocol, username, password
-            st.nextToken();
-            st.nextToken();
-            st.nextToken();
-
-            String hostname = st.nextToken();
-            int port = Integer.parseInt(st.nextToken());
-            return ctx.getTunnelManager().removeTunnelKnownHost(tunnelPassword, InetSocketAddress.createUnresolved(hostname, port));
-        }
-        return false;
     }
 }

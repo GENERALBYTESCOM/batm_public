@@ -18,7 +18,6 @@
 package com.generalbytes.batm.server.extensions.extra.sumcoin;
 
 import com.generalbytes.batm.server.extensions.AbstractExtension;
-import com.generalbytes.batm.server.extensions.CryptoCurrencyDefinition;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.DummyExchangeAndWalletAndSource;
@@ -70,7 +69,7 @@ public class SumcoinExtension extends AbstractExtension {
                     label = st.nextToken();
                 }
 
-                InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(tunnelPassword, InetSocketAddress.createUnresolved(hostname, port));
+                InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(walletLogin, tunnelPassword, InetSocketAddress.createUnresolved(hostname, port));
                 hostname = tunnelAddress.getHostString();
                 port = tunnelAddress.getPort();
 
@@ -152,23 +151,5 @@ public class SumcoinExtension extends AbstractExtension {
         Set<ICryptoCurrencyDefinition> result = new HashSet<>();
         result.add(DEFINITION);
         return result;
-    }
-
-    @Override
-    public boolean cancelWalletTunnel(String walletLogin, String tunnelPassword) {
-        StringTokenizer st = new StringTokenizer(walletLogin,":");
-        String walletType = st.nextToken();
-
-        if ("sumcoind".equalsIgnoreCase(walletType) || "sumcoindnoforward".equalsIgnoreCase(walletType)) {
-            // skip protocol, username, password
-            st.nextToken();
-            st.nextToken();
-            st.nextToken();
-
-            String hostname = st.nextToken();
-            int port = Integer.parseInt(st.nextToken());
-            return ctx.getTunnelManager().removeTunnelKnownHost(tunnelPassword, InetSocketAddress.createUnresolved(hostname, port));
-        }
-        return false;
     }
 }

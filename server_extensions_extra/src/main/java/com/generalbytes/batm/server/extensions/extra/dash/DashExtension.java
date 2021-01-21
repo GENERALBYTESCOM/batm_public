@@ -40,7 +40,6 @@ import java.util.StringTokenizer;
 
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
-import java.util.*;
 
 public class DashExtension extends AbstractExtension{
     private static final Logger log = LoggerFactory.getLogger(DashExtension.class);
@@ -73,7 +72,7 @@ public class DashExtension extends AbstractExtension{
                     accountName = st.nextToken();
                 }
 
-                InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(tunnelPassword, InetSocketAddress.createUnresolved(hostname, port));
+                InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(walletLogin, tunnelPassword, InetSocketAddress.createUnresolved(hostname, port));
                 hostname = tunnelAddress.getHostString();
                 port = tunnelAddress.getPort();
 
@@ -162,24 +161,5 @@ public class DashExtension extends AbstractExtension{
             return new DashWalletGenerator("Xgb", ctx);
         }
         return null;
-    }
-
-    @Override
-    public boolean cancelWalletTunnel(String walletLogin, String tunnelPassword) {
-        StringTokenizer st = new StringTokenizer(walletLogin,":");
-        String walletType = st.nextToken();
-
-        if ("dashd".equalsIgnoreCase(walletType)
-            || "dashdnoforward".equalsIgnoreCase(walletType)) {
-            // skip protocol, username, password
-            st.nextToken();
-            st.nextToken();
-            st.nextToken();
-
-            String hostname = st.nextToken();
-            int port = Integer.parseInt(st.nextToken());
-            return ctx.getTunnelManager().removeTunnelKnownHost(tunnelPassword, InetSocketAddress.createUnresolved(hostname, port));
-        }
-        return false;
     }
 }

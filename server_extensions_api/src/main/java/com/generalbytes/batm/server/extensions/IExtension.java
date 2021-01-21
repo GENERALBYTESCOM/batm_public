@@ -163,7 +163,4 @@ public interface IExtension {
      * @return Validators that can be used to validate SSNs
      */
     Set<ISsnValidator> getSsnValidators();
-
-
-    boolean cancelWalletTunnel(String walletLogin, String tunnelPassword);
 }

@@ -56,7 +56,7 @@ public class LightningBitcoinExtension extends AbstractExtension {
                     int port = Integer.parseInt(st.nextToken());
                     String password = st.nextToken();
 
-                    InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(tunnelPassword, InetSocketAddress.createUnresolved(host, port));
+                    InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(walletLogin, tunnelPassword, InetSocketAddress.createUnresolved(host, port));
                     host = tunnelAddress.getHostString();
                     port = tunnelAddress.getPort();
 
@@ -78,7 +78,7 @@ public class LightningBitcoinExtension extends AbstractExtension {
                         log.error("Invalid URL configured: {}", url);
                         return null;
                     }
-                    InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(tunnelPassword, InetSocketAddress.createUnresolved(parsedUrl.host(), parsedUrl.port()));
+                    InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(walletLogin, tunnelPassword, InetSocketAddress.createUnresolved(parsedUrl.host(), parsedUrl.port()));
                     url = new HttpUrl.Builder().scheme(parsedUrl.scheme()).host(tunnelAddress.getHostString()).port(tunnelAddress.getPort()).encodedPath(parsedUrl.encodedPath()).build().toString();
                     String macaroon = st.nextToken();
                     String cert = st.hasMoreTokens() ? st.nextToken() : null;
@@ -115,34 +115,5 @@ public class LightningBitcoinExtension extends AbstractExtension {
         Set<ICryptoCurrencyDefinition> result = new HashSet<>();
         result.add(DEFINITION);
         return result;
-    }
-
-    @Override
-    public boolean cancelWalletTunnel(String walletLogin, String tunnelPassword) {
-        StringTokenizer st = new StringTokenizer(walletLogin,":");
-        String walletType = st.nextToken();
-
-        String hostname = null;
-        Integer port = null;
-        if ("eclair".equalsIgnoreCase(walletType)) {
-            // skip scheme
-            st.nextToken();
-            hostname = st.nextToken();
-            port = Integer.parseInt(st.nextToken());
-        } else if ("lnd".equalsIgnoreCase(walletType)) {
-            String url = st.nextToken() + ":" + st.nextToken();
-            if (!url.endsWith("/")) {
-                url += ":" + st.nextToken();
-            }
-            HttpUrl parsedUrl = HttpUrl.parse(url);
-            hostname = parsedUrl.host();
-            port = parsedUrl.port();
-        }
-
-        if (hostname == null || port == null) {
-            return false;
-
-        }
-        return ctx.getTunnelManager().removeTunnelKnownHost(tunnelPassword, InetSocketAddress.createUnresolved(hostname, port));
     }
 }
