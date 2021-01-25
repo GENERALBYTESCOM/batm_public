@@ -128,7 +128,9 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
 
             try {
                 return getExchange().getMarketDataService()
-                        .getTicker(new CurrencyPair(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency), fiatCurrency))
+                        .getTicker(new CurrencyPair(
+                            translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency),
+                            translateFiatCurrencySymbolToExchangeSpecificSymbol(fiatCurrency)))
                         .getLast();
             } catch (ExchangeException e) {
                 log.error("Error", e);
@@ -259,7 +261,10 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
         try {
             log.debug("AccountInfo as String: {}", accountService.getAccountInfo());
 
-            CurrencyPair currencyPair = new CurrencyPair(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency), fiatCurrencyToUse);
+            CurrencyPair currencyPair = new CurrencyPair(
+                translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency),
+                translateFiatCurrencySymbolToExchangeSpecificSymbol(fiatCurrencyToUse)
+            );
 
             OrderBook orderBook = marketDataService.getOrderBook(currencyPair);
             List<LimitOrder> asks = orderBook.getAsks();
@@ -397,7 +402,10 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
         try {
             log.debug("AccountInfo as String: {}", accountService.getAccountInfo());
 
-            CurrencyPair currencyPair = new CurrencyPair(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency), fiatCurrencyToUse);
+            CurrencyPair currencyPair = new CurrencyPair(
+                translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency),
+                translateFiatCurrencySymbolToExchangeSpecificSymbol(fiatCurrencyToUse)
+            );
 
             OrderBook orderBook = marketDataService.getOrderBook(currencyPair);
             List<LimitOrder> bids = orderBook.getBids();
@@ -507,7 +515,10 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
         rateLimiter.acquire();
         MarketDataService marketDataService = getExchange().getMarketDataService();
         try {
-            CurrencyPair currencyPair = new CurrencyPair(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency), fiatCurrency);
+            CurrencyPair currencyPair = new CurrencyPair(
+                translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency),
+                translateFiatCurrencySymbolToExchangeSpecificSymbol(fiatCurrency)
+            );
             OrderBook orderBook = marketDataService.getOrderBook(currencyPair);
             List<LimitOrder> asks = orderBook.getAsks();
             BigDecimal targetAmount = cryptoAmount;
@@ -555,7 +566,9 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
         rateLimiter.acquire();
         MarketDataService marketDataService = getExchange().getMarketDataService();
         try {
-            CurrencyPair currencyPair = new CurrencyPair(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency), fiatCurrency);
+            CurrencyPair currencyPair = new CurrencyPair(
+                translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency),
+                translateFiatCurrencySymbolToExchangeSpecificSymbol(fiatCurrency));
 
             OrderBook orderBook = marketDataService.getOrderBook(currencyPair);
             List<LimitOrder> bids = orderBook.getBids();
@@ -619,7 +632,10 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
             try {
                 log.debug("AccountInfo as String: {}", accountService.getAccountInfo());
 
-                CurrencyPair currencyPair = new CurrencyPair(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency), fiatCurrencyToUse);
+                CurrencyPair currencyPair = new CurrencyPair(
+                    translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency),
+                    translateFiatCurrencySymbolToExchangeSpecificSymbol(fiatCurrencyToUse)
+                );
 
                 OrderBook orderBook = marketDataService.getOrderBook(currencyPair);
                 List<LimitOrder> asks = orderBook.getAsks();
@@ -748,7 +764,10 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
             try {
                 log.debug("AccountInfo as String: {}", accountService.getAccountInfo());
 
-                CurrencyPair currencyPair = new CurrencyPair(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency), fiatCurrencyToUse);
+                CurrencyPair currencyPair = new CurrencyPair(
+                    translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency),
+                    translateFiatCurrencySymbolToExchangeSpecificSymbol(fiatCurrencyToUse)
+                );
 
                 OrderBook orderBook = marketDataService.getOrderBook(currencyPair);
                 List<LimitOrder> bids = orderBook.getBids();
@@ -868,5 +887,9 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
 
     protected String translateCryptoCurrencySymbolToExchangeSpecificSymbol(String from) {
         return from;
+    }
+
+    protected String translateFiatCurrencySymbolToExchangeSpecificSymbol(String currency) {
+        return currency;
     }
 }
