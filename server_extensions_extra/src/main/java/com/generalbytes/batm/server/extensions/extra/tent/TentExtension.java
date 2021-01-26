@@ -15,12 +15,12 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.snowgem;
+package com.generalbytes.batm.server.extensions.extra.tent;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
-import com.generalbytes.batm.server.extensions.extra.snowgem.wallets.snowgemd.SnowgemRPCWallet;
+import com.generalbytes.batm.server.extensions.extra.tent.wallets.snowgemd.SnowgemRPCWallet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,13 +29,13 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-public class SnowgemExtension extends AbstractExtension {
+public class TentExtension extends AbstractExtension {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SnowgemExtension.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TentExtension.class);
 
     @Override
     public String getName() {
-        return "BATM XSG extra extension";
+        return "BATM TENT extra extension";
     }
 
     @Override
@@ -65,7 +65,7 @@ public class SnowgemExtension extends AbstractExtension {
                 }
 
                 if (fiatCurrency != null && walletAddress != null) {
-                    return new DummyExchangeAndWalletAndSource(fiatCurrency, CryptoCurrency.XSG.getCode(), walletAddress);
+                    return new DummyExchangeAndWalletAndSource(fiatCurrency, CryptoCurrency.TENT.getCode(), walletAddress);
                 }
             }
         }
@@ -75,8 +75,8 @@ public class SnowgemExtension extends AbstractExtension {
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (CryptoCurrency.XSG.getCode().equalsIgnoreCase(cryptoCurrency)){
-            return new SnowgemAddressValidator();
+        if (CryptoCurrency.TENT.getCode().equalsIgnoreCase(cryptoCurrency)){
+            return new TentAddressValidator();
         }
         return null;
     }
@@ -87,7 +87,7 @@ public class SnowgemExtension extends AbstractExtension {
             StringTokenizer st = new StringTokenizer(sourceLogin, ":");
             String exchangeType = st.nextToken();
             String preferredFiatCurrency = FiatCurrency.USD.getCode();
-            if("xsgfix".equalsIgnoreCase(exchangeType)){
+            if("tentfix".equalsIgnoreCase(exchangeType)){
                 BigDecimal rate = BigDecimal.ZERO;
                 if (st.hasMoreTokens()) {
                     try {
@@ -107,7 +107,7 @@ public class SnowgemExtension extends AbstractExtension {
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<>();
-        result.add(CryptoCurrency.XSG.getCode());
+        result.add(CryptoCurrency.TENT.getCode());
         return result;
     }
 }

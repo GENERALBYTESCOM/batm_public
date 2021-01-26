@@ -15,7 +15,7 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.snowgem;
+package com.generalbytes.batm.server.extensions.extra.tent;
 
 import com.generalbytes.batm.server.coinutil.AddressFormatException;
 import com.generalbytes.batm.server.coinutil.Base58;
@@ -24,9 +24,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class SnowgemAddressValidator implements ICryptoAddressValidator {
+public class TentAddressValidator implements ICryptoAddressValidator {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SnowgemAddressValidator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TentAddressValidator.class);
 
     @Override
     public boolean isAddressValid(String address) {
