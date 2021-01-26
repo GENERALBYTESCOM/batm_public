@@ -239,7 +239,7 @@ public class BitcoinExtension extends AbstractExtension {
                     label = st.nextToken();
                 }
 
-                InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(tunnelPassword, InetSocketAddress.createUnresolved(hostname, port));
+                InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(walletLogin, tunnelPassword, InetSocketAddress.createUnresolved(hostname, port));
                 hostname = tunnelAddress.getHostString();
                 port = tunnelAddress.getPort();
 
@@ -288,7 +288,7 @@ public class BitcoinExtension extends AbstractExtension {
                 String walletAddress = st.nextToken();
                 String walletPassphrase = st.nextToken();
 
-                InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(tunnelPassword, InetSocketAddress.createUnresolved(host, port));
+                InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(walletLogin, tunnelPassword, InetSocketAddress.createUnresolved(host, port));
                 host = tunnelAddress.getHostString();
                 port = tunnelAddress.getPort();
 
