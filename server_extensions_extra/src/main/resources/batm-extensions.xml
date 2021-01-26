@@ -180,6 +180,7 @@
                 <cryptocurrency>FLASH</cryptocurrency>
                 <cryptocurrency>XSG</cryptocurrency>
                 <cryptocurrency>JOB</cryptocurrency>
+                <cryptocurrency>LMY</cryptocurrency>
                 <cryptocurrency>HT</cryptocurrency>
                 <cryptocurrency>ZPAE</cryptocurrency>
             </ratesource>
@@ -457,6 +458,7 @@
             <cryptocurrency>HT</cryptocurrency>
             <cryptocurrency>ILC</cryptocurrency>
             <cryptocurrency>JOB</cryptocurrency>
+            <cryptocurrency>LMY</cryptocurrency>
             <cryptocurrency>KMD</cryptocurrency>
             <cryptocurrency>LEO</cryptocurrency>
             <cryptocurrency>LINDA</cryptocurrency>
@@ -522,6 +524,7 @@
             <cryptocurrency>HT</cryptocurrency>
             <cryptocurrency>HBX</cryptocurrency>
             <cryptocurrency>JOB</cryptocurrency>
+            <cryptocurrency>LMY</cryptocurrency>
             <cryptocurrency>KMD</cryptocurrency>
             <cryptocurrency>LEO</cryptocurrency>
             <cryptocurrency>LINDA</cryptocurrency>
@@ -1699,6 +1702,15 @@
         </wallet>
         <cryptologo cryptocurrency="JOB" file="jobchain.png"/>
         <cryptologo cryptocurrency="JOB" file="jobchain.svg"/>
+        <wallet prefix="infuraERC20_LMY_18_0x66fD97a78d8854fEc445cd1C80a07896B0b4851f" name="Infura.io wallet - Lunch Money">
+            <param name="projectId" />
+            <param name="mnemonic" />
+            <param name="gaslimit" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
+            <cryptocurrency>LMY</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="LMY" file="lunchmoney.png"/>
+        <cryptologo cryptocurrency="LMY" file="lunchmoney.svg"/>
         <wallet prefix="infuraERC20_ANT_18_0x960b236A07cf122663c4303350609A66A7B288C0" name="Infura.io wallet - ANT">
             <param name="projectId" />
             <param name="mnemonic" />

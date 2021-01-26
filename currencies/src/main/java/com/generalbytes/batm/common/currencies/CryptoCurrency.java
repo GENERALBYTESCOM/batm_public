@@ -67,6 +67,7 @@ public enum CryptoCurrency {
     ILC("ILCoin"),
     KMD("Komodo"),
     JOB("Jobchain"),
+    LMY("Lunch Money"),
     LBTC("Lightning Network Bitcoin"),
     LEO("LEOcoin"),
     LINDA("Linda"),
