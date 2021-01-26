@@ -18,6 +18,7 @@
 package com.generalbytes.batm.server.extensions.aml;
 
 import com.generalbytes.batm.server.extensions.Contact;
+import com.generalbytes.batm.server.extensions.IIdentity;
 
 /**
  *  Anti-Money-Laundering Provider.
@@ -34,4 +35,12 @@ public interface IAMLProvider {
      * @return Contact information about phone number holder.
      */
     Contact getContactByPhoneNumber(String phoneNumberInternational);
+
+    /**
+     * Validate identity information against external system. For example to check that SSN belongs to a person with provided name.
+     */
+    IIdentityValidationResult validateIdentity(IIdentity identity);
+
+
+
 }

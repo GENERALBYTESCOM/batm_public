@@ -18,6 +18,7 @@
 
 package com.generalbytes.batm.server.extensions;
 
+import com.generalbytes.batm.server.extensions.aml.IAMLProvider;
 import com.generalbytes.batm.server.extensions.aml.IExternalIdentityProvider;
 import com.generalbytes.batm.server.extensions.aml.scoring.ITransactionScoringProvider;
 import com.generalbytes.batm.server.extensions.communication.ICommunicationProvider;
@@ -146,6 +147,12 @@ public interface IExtension {
      * @return
      */
     Set<IExternalIdentityProvider> getIdentityProviders();
+
+    /**
+     * Optionally returns AML providers that can be used by server to for example validate identities
+     * @return
+     */
+    Set<IAMLProvider> getAMLProviders();
 
     /**
      * @param transactionScoringProviderParamValues colon-separated list of parameters for the provider connection.
