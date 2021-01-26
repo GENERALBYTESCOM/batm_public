@@ -19,6 +19,7 @@
 package com.generalbytes.batm.server.extensions.extra.watchlists;
 
 import com.generalbytes.batm.server.extensions.*;
+import com.generalbytes.batm.server.extensions.extra.watchlists.ca.CaWatchList;
 import com.generalbytes.batm.server.extensions.extra.watchlists.czech.CzechSanctionList;
 import com.generalbytes.batm.server.extensions.extra.watchlists.eu.EUSanctionsList;
 import com.generalbytes.batm.server.extensions.extra.watchlists.ofac.OFACWatchList;
@@ -28,9 +29,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class BasicWatchlistsExtension extends AbstractExtension{
-    private IWatchList ofacWatchList = new OFACWatchList();
-    private IWatchList czechSanctionList = new CzechSanctionList();
-    private IWatchList euSanctionList = new EUSanctionsList();
+    private final IWatchList ofacWatchList = new OFACWatchList();
+    private final IWatchList czechSanctionList = new CzechSanctionList();
+    private final IWatchList euSanctionList = new EUSanctionsList();
+    private final IWatchList caWatchList = new CaWatchList();
 
     @Override
     public String getName() {
@@ -39,10 +41,11 @@ public class BasicWatchlistsExtension extends AbstractExtension{
 
     @Override
     public Set<String> getSupportedWatchListsNames() {
-        final HashSet<String> watchListNames = new HashSet<String>();
+        final HashSet<String> watchListNames = new HashSet<>();
         watchListNames.add(ofacWatchList.getName());
         watchListNames.add(czechSanctionList.getName());
         watchListNames.add(euSanctionList.getName());
+        watchListNames.add(caWatchList.getName());
         return watchListNames;
     }
 
@@ -56,6 +59,9 @@ public class BasicWatchlistsExtension extends AbstractExtension{
         }
         if (euSanctionList.getName().equals(name)) {
             return euSanctionList;
+        }
+        if (caWatchList.getName().equals(name)) {
+            return caWatchList;
         }
         return null;
     }
