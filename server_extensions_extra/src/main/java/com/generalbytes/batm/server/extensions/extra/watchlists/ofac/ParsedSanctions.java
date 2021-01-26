@@ -18,10 +18,22 @@
 
 package com.generalbytes.batm.server.extensions.extra.watchlists.ofac;
 
-import com.generalbytes.batm.server.extensions.extra.watchlists.ofac.tags.*;
+import com.generalbytes.batm.server.extensions.extra.watchlists.IParsedSanctions;
+import com.generalbytes.batm.server.extensions.extra.watchlists.Match;
+import com.generalbytes.batm.server.extensions.extra.watchlists.ofac.tags.DistinctPartySchemaType;
+import com.generalbytes.batm.server.extensions.extra.watchlists.ofac.tags.DocumentedNameSchemaType;
+import com.generalbytes.batm.server.extensions.extra.watchlists.ofac.tags.FeatureSchemaType;
+import com.generalbytes.batm.server.extensions.extra.watchlists.ofac.tags.IdentitySchemaType;
+import com.generalbytes.batm.server.extensions.extra.watchlists.ofac.tags.ReferenceValueSetsSchemaType;
+import com.generalbytes.batm.server.extensions.extra.watchlists.ofac.tags.Sanctions;
 
 import java.math.BigInteger;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 /*
@@ -50,25 +62,25 @@ Having issues to understand what each element in XML means? Don't worry, I don't
 
 
  */
-public class ParsedSanctions {
+public class ParsedSanctions implements IParsedSanctions {
     public static final String TYPE_LAST_NAME = "1520";
     public static final String TYPE_FIRST_NAME = "1521";
 
     public static final String TYPE_DIGITAL_CURRENCY_ADDRESS = "Digital Currency Address";
 
-    private Map<String,List<ParsedNamePart>> nameParts = new HashMap<String, List<ParsedNamePart>>();
-    private Map<String,String> partyIndexes = new HashMap<String, String>();
-    private Set<String> blacklistedCryptoAddresses = new HashSet<>();
+    private final Map<String, List<ParsedNamePart>> nameParts;
+    private final Map<String, String> partyIndexes;
+    private final Set<String> blacklistedCryptoAddresses;
 
-    public ParsedSanctions(Map<String, List<ParsedNamePart>> nameParts, Map<String, String> partyIndexes, Set<String> blacklistedCryptoAddresses) {
+    private ParsedSanctions(Map<String, List<ParsedNamePart>> nameParts, Map<String, String> partyIndexes, Set<String> blacklistedCryptoAddresses) {
         this.nameParts = nameParts;
         this.partyIndexes = partyIndexes;
         this.blacklistedCryptoAddresses = blacklistedCryptoAddresses;
     }
 
     public static ParsedSanctions parse(Sanctions sanctions) {
-        List<ParsedNamePart> names = new ArrayList<ParsedNamePart>();
-        Map<String,String> partyIndexes = new HashMap<String, String>();
+        List<ParsedNamePart> names = new ArrayList<>();
+        Map<String, String> partyIndexes = new HashMap<>();
         Set<String> blacklistedCryptoAddresses = new HashSet<>();
 
         final ReferenceValueSetsSchemaType referenceValueSets = sanctions.getReferenceValueSets();
@@ -87,28 +99,22 @@ public class ParsedSanctions {
         for (int i = 0; i < distinctParty.size(); i++) {
             DistinctPartySchemaType dp = distinctParty.get(i);
             final String profileId = dp.getFixedRef();
-            partyIndexes.put(profileId,i +"");
+            partyIndexes.put(profileId, i + "");
 
             final List<DistinctPartySchemaType.Profile> profile = dp.getProfile();
-            for (int j = 0; j < profile.size(); j++) {
-                DistinctPartySchemaType.Profile p = profile.get(j);
-
+            for (DistinctPartySchemaType.Profile p : profile) {
                 final List<IdentitySchemaType> identity = p.getIdentity();
-                for (int k = 0; k < identity.size(); k++) {
-                    IdentitySchemaType idt = identity.get(k);
+                for (IdentitySchemaType idt : identity) {
                     final List<IdentitySchemaType.Alias> alias = idt.getAlias();
-                    for (int l = 0; l < alias.size(); l++) {
-                        IdentitySchemaType.Alias as = alias.get(l);
+                    for (IdentitySchemaType.Alias as : alias) {
                         final List<DocumentedNameSchemaType> documentedName = as.getDocumentedName();
-                        for (int m = 0; m < documentedName.size(); m++) {
-                            DocumentedNameSchemaType dnt =  documentedName.get(m);
+                        for (DocumentedNameSchemaType dnt : documentedName) {
                             final List<DocumentedNameSchemaType.DocumentedNamePart> dnp = dnt.getDocumentedNamePart();
-                            for (int n = 0; n < dnp.size(); n++) {
-                                DocumentedNameSchemaType.DocumentedNamePart part = dnp.get(n);
+                            for (DocumentedNameSchemaType.DocumentedNamePart part : dnp) {
                                 final DocumentedNameSchemaType.DocumentedNamePart.NamePartValue namePartValue = part.getNamePartValue();
                                 final String value = namePartValue.getValue();
                                 final BigInteger namePartGroupID = namePartValue.getNamePartGroupID();
-                                final String aliasType = as.getAliasTypeID() +"";
+                                final String aliasType = as.getAliasTypeID() + "";
 
                                 String nameType = findNamePartTypeFromNameGroup(idt.getNamePartGroups().getMasterNamePartGroup(), namePartGroupID);
                                 names.add(new ParsedNamePart(profileId, namePartGroupID + "", nameType, aliasType, value));
@@ -129,14 +135,9 @@ public class ParsedSanctions {
             }
         }
 
-        Map<String,List<ParsedNamePart>> result = new HashMap<String, List<ParsedNamePart>>();
-        for (int i = 0; i < names.size(); i++) {
-            ParsedNamePart namePart = names.get(i);
-            List<ParsedNamePart> parsedNameParts = result.get(namePart.getNameType());
-            if (parsedNameParts == null) {
-                parsedNameParts = new ArrayList<ParsedNamePart>();
-                result.put(namePart.getNameType(), parsedNameParts);
-            }
+        Map<String, List<ParsedNamePart>> result = new HashMap<>();
+        for (ParsedNamePart namePart : names) {
+            List<ParsedNamePart> parsedNameParts = result.computeIfAbsent(namePart.getNameType(), k -> new ArrayList<>());
             parsedNameParts.add(namePart);
         }
 
@@ -144,13 +145,11 @@ public class ParsedSanctions {
     }
 
     private static String findNamePartTypeFromNameGroup(List<IdentitySchemaType.NamePartGroups.MasterNamePartGroup> masterNamePartGroup, BigInteger namePartGroupID) {
-        for (int i = 0; i < masterNamePartGroup.size(); i++) {
-            IdentitySchemaType.NamePartGroups.MasterNamePartGroup group = masterNamePartGroup.get(i);
+        for (IdentitySchemaType.NamePartGroups.MasterNamePartGroup group : masterNamePartGroup) {
             final List<IdentitySchemaType.NamePartGroups.MasterNamePartGroup.NamePartGroup> namePartGroup = group.getNamePartGroup();
-            for (int j = 0; j < namePartGroup.size(); j++) {
-                IdentitySchemaType.NamePartGroups.MasterNamePartGroup.NamePartGroup partGroup = namePartGroup.get(j);
+            for (IdentitySchemaType.NamePartGroups.MasterNamePartGroup.NamePartGroup partGroup : namePartGroup) {
                 if (namePartGroupID.compareTo(partGroup.getID()) == 0) {
-                    return partGroup.getNamePartTypeID() +"";
+                    return partGroup.getNamePartTypeID() + "";
                 }
             }
         }
@@ -158,12 +157,7 @@ public class ParsedSanctions {
 
     }
 
-    /**
-     * Returns list of matched party ids based on first and last name
-     * @param firstName
-     * @param lastName
-     * @return
-     */
+    @Override
     public Set<Match> search(String firstName, String lastName) {
         if (firstName == null) {
             firstName = "";
@@ -175,27 +169,25 @@ public class ParsedSanctions {
         lastName = lastName.trim();
         firstName = firstName.trim();
 
-        Set<String> candidateParties = new HashSet<String>();
-        Set<Match> matchedParties = new HashSet<Match>();
+        Set<String> candidateParties = new HashSet<>();
+        Set<Match> matchedParties = new HashSet<>();
 
 
         if (firstName.isEmpty()) {
             //search just against last names
             List<ParsedNamePart> parsedNameParts = nameParts.get(TYPE_LAST_NAME);
             if (parsedNameParts != null) {
-                for (int i = 0; i < parsedNameParts.size(); i++) {
-                    ParsedNamePart namePart = parsedNameParts.get(i);
+                for (ParsedNamePart namePart : parsedNameParts) {
                     if (namePart.getValue().trim().equalsIgnoreCase(lastName)) {
-                        matchedParties.add(new Match(namePart.getPartyId(),100));
+                        matchedParties.add(new Match(namePart.getPartyId(), 100));
                     }
                 }
             }
-        }else {
+        } else {
             //search against lastname and firstname
             List<ParsedNamePart> parsedNameParts = nameParts.get(TYPE_LAST_NAME);
             if (parsedNameParts != null) {
-                for (int i = 0; i < parsedNameParts.size(); i++) {
-                    ParsedNamePart namePart = parsedNameParts.get(i);
+                for (ParsedNamePart namePart : parsedNameParts) {
                     if (namePart.getValue().trim().equalsIgnoreCase(lastName)) {
                         candidateParties.add(namePart.getPartyId());
                     }
@@ -205,12 +197,11 @@ public class ParsedSanctions {
 
             parsedNameParts = nameParts.get(TYPE_FIRST_NAME);
             if (parsedNameParts != null) {
-                for (int i = 0; i < parsedNameParts.size(); i++) {
-                    ParsedNamePart namePart = parsedNameParts.get(i);
+                for (ParsedNamePart namePart : parsedNameParts) {
                     if (candidateParties.contains(namePart.getPartyId())) {
                         if (namePart.getValue().trim().equalsIgnoreCase(firstName)) {
                             //ok seems like we have a winner
-                            matchedParties.add(new Match(namePart.getPartyId(),100));
+                            matchedParties.add(new Match(namePart.getPartyId(), 100));
                         }
                     }
                 }
@@ -220,15 +211,16 @@ public class ParsedSanctions {
                 //both first name and last name didn't match
                 //so lets report at least lastname matches with 50% score/confidence
                 for (String candidateParty : candidateParties) {
-                    matchedParties.add(new Match(candidateParty,50));
+                    matchedParties.add(new Match(candidateParty, 50));
                 }
             }
         }
         return matchedParties;
     }
 
+    @Override
     public String getPartyIndexByPartyId(String partyId) {
-        if (partyIndexes !=null) {
+        if (partyIndexes != null) {
             return partyIndexes.get(partyId);
         }
         return null;

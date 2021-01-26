@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<data-set xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <record>
+        <Country>Belarus / Bélarus</Country>
+        <LastName>Atabekov</LastName>
+        <GivenName>Khazalbek Bakhtibekovich</GivenName>
+        <Item>1</Item>
+    </record>
+    <record>
+        <Country>Belarus / Bélarus</Country>
+        <LastName>Balaba</LastName>
+        <GivenName>Dmitry Vladimirovich</GivenName>
+        <DateOfBirth>1972</DateOfBirth>
+        <Item>2</Item>
+    </record>
+    <record>
+        <Country>Zimbabwe</Country>
+        <LastName>Chindori-Chininga </LastName>
+        <GivenName>Edward </GivenName>
+        <DateOfBirth>1955-03-14</DateOfBirth>
+        <Schedule>N/A</Schedule>
+        <Item>8</Item>
+    </record>
+    <record>
+        <Country>Belarus / Bélarus</Country>
+        <LastName>Barsukov</LastName>
+        <GivenName>Aleksandr Petrovich</GivenName>
+        <DateOfBirth>1965-04-29</DateOfBirth>
+        <Item>3</Item>
+    </record>
+    <record>
+        <Country>Burma / Birmanie</Country>
+        <Entity>Air Bagan</Entity>
+        <Aliases>Air Bagan Holdings Pte. Ltd., Air Bagan Limited</Aliases>
+        <Schedule>1</Schedule>
+        <Item>1</Item>
+    </record>
+    <record>
+        <Country>Syria / Syrie</Country>
+        <Title>Major General/major-général</Title>
+        <LastName>Al-Ahmad</LastName>
+        <GivenName>Jumah </GivenName>
+        <Schedule>2</Schedule>
+        <Item>60</Item>
+    </record>
+    <record>
+        <Country>Zimbabwe</Country>
+        <LastName>Mumbengegwi </LastName>
+        <GivenName>Samuel Creighton</GivenName>
+        <DateOfBirth>1942-10-23</DateOfBirth>
+        <Schedule>N/A</Schedule>
+        <Item>26</Item>
+    </record>
+</data-set>

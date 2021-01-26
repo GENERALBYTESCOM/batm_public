@@ -18,7 +18,6 @@
 package com.generalbytes.batm.server.extensions.extra.sumcoin;
 
 import com.generalbytes.batm.server.extensions.AbstractExtension;
-import com.generalbytes.batm.server.extensions.CryptoCurrencyDefinition;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.DummyExchangeAndWalletAndSource;
@@ -70,7 +69,7 @@ public class SumcoinExtension extends AbstractExtension {
                     label = st.nextToken();
                 }
 
-                InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(tunnelPassword, InetSocketAddress.createUnresolved(hostname, port));
+                InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(walletLogin, tunnelPassword, InetSocketAddress.createUnresolved(hostname, port));
                 hostname = tunnelAddress.getHostString();
                 port = tunnelAddress.getPort();
 
@@ -153,5 +152,4 @@ public class SumcoinExtension extends AbstractExtension {
         result.add(DEFINITION);
         return result;
     }
-
 }

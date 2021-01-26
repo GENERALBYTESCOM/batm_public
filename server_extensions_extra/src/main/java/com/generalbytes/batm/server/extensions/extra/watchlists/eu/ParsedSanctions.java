@@ -17,6 +17,8 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.watchlists.eu;
 
+import com.generalbytes.batm.server.extensions.extra.watchlists.IParsedSanctions;
+import com.generalbytes.batm.server.extensions.extra.watchlists.Match;
 import com.generalbytes.batm.server.extensions.extra.watchlists.eu.tags.ExportType;
 import com.generalbytes.batm.server.extensions.extra.watchlists.eu.tags.NameAliasType;
 import com.generalbytes.batm.server.extensions.extra.watchlists.eu.tags.SanctionEntityType;
@@ -26,8 +28,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class ParsedSanctions {
-    private List<NameAliasType> aliases;
+public class ParsedSanctions implements IParsedSanctions {
+    private final List<NameAliasType> aliases;
 
     private ParsedSanctions(List<NameAliasType> aliases) {
         this.aliases = aliases;
@@ -36,12 +38,13 @@ public class ParsedSanctions {
     public static ParsedSanctions parse(ExportType export) {
         List<NameAliasType> result = new ArrayList<>();
         List<SanctionEntityType> entities = export.getSanctionEntity();
-        for (int i = 0; i < entities.size(); i++) {
-            result.addAll(entities.get(i).getNameAlias());
+        for (SanctionEntityType entity : entities) {
+            result.addAll(entity.getNameAlias());
         }
         return new ParsedSanctions(result);
     }
 
+    @Override
     public Set<Match> search(String firstName, String lastName) {
         if (firstName == null) {
             firstName = "";
@@ -59,8 +62,7 @@ public class ParsedSanctions {
         if (firstName.isEmpty()) {
             if (!lastName.isEmpty()) {
                 //search just against last names
-                for (int j = 0; j < aliases.size(); j++) {
-                    NameAliasType alias = aliases.get(j);
+                for (NameAliasType alias : aliases) {
                     if (alias.getLastName().trim().equalsIgnoreCase(lastName)) {
                         matchedParties.add(new Match(alias.getLogicalId() + "", 100));
                     } else if (alias.getWholeName().trim().equalsIgnoreCase(lastName)) {
@@ -73,12 +75,11 @@ public class ParsedSanctions {
             }
         }else {
             //search against lastname and firstname
-            for (int j = 0; j < aliases.size(); j++) {
-                NameAliasType alias = aliases.get(j);
+            for (NameAliasType alias : aliases) {
                 boolean addedMatch = false;
                 //check against whole name
                 if (!alias.getWholeName().trim().isEmpty()) {
-                    if (alias.getWholeName().equalsIgnoreCase(lastName) || alias.getWholeName().equalsIgnoreCase(firstName + " " + lastName) ) {
+                    if (alias.getWholeName().equalsIgnoreCase(lastName) || alias.getWholeName().equalsIgnoreCase(firstName + " " + lastName)) {
                         matchedParties.add(new Match(alias.getLogicalId() + "", 100));
                         addedMatch = true;
                     }
@@ -98,7 +99,7 @@ public class ParsedSanctions {
                 }
             }
 
-            if (matchedParties.size() == 0) {
+            if (matchedParties.isEmpty()) {
                 //both first name and last name didn't match
                 //so lets report at least lastname matches with 50% score/confidence
                 for (String candidateParty : candidateParties) {
@@ -109,6 +110,7 @@ public class ParsedSanctions {
         return matchedParties;
     }
 
+    @Override
     public String getPartyIndexByPartyId(String partyId) {
         return partyId;
     }

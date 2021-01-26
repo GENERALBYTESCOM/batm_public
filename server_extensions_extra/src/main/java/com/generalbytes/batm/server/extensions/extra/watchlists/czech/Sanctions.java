@@ -17,6 +17,8 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.watchlists.czech;
 
+import com.generalbytes.batm.server.extensions.extra.watchlists.Match;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
