@@ -22,10 +22,16 @@ import java.util.List;
 public class BitGoSendManyRequest {
     public List<BitGoRecipient> recipients;
     public String walletPassphrase;
+    public Integer numBlocks;
 
-    public BitGoSendManyRequest(List<BitGoRecipient> recipients, String walletPassphrase) {
+    public BitGoSendManyRequest(List<BitGoRecipient> recipients, String walletPassphrase){
+      this(recipients, walletPassphrase, 2);
+    }
+
+    public BitGoSendManyRequest(List<BitGoRecipient> recipients, String walletPassphrase, Integer numBlocks) {
         this.recipients = recipients;
         this.walletPassphrase = walletPassphrase;
+        this.numBlocks = numBlocks;
     }
 
     public static class BitGoRecipient {
