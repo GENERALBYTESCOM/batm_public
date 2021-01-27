@@ -18,7 +18,6 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.poloniex;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
-import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.XChangeExchange;
 import org.knowm.xchange.ExchangeSpecification;
 import org.knowm.xchange.dto.account.AccountInfo;
@@ -28,6 +27,35 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class PoloniexExchange extends XChangeExchange {
+
+    private static final Set<String> SUPPORTED_FIATS = new HashSet<>();
+    private static final Set<String> SUPPORTED_CRYPTOS = new HashSet<>();
+
+    static {
+        SUPPORTED_FIATS.add(CryptoCurrency.BUSD.getCode());
+        SUPPORTED_FIATS.add(CryptoCurrency.DAI.getCode());
+        SUPPORTED_FIATS.add(CryptoCurrency.USDC.getCode());
+        SUPPORTED_FIATS.add(CryptoCurrency.USDT.getCode());
+
+        SUPPORTED_CRYPTOS.add(CryptoCurrency.BCH.getCode());
+        SUPPORTED_CRYPTOS.add(CryptoCurrency.BTC.getCode());
+        SUPPORTED_CRYPTOS.add(CryptoCurrency.BURST.getCode());
+        SUPPORTED_CRYPTOS.add(CryptoCurrency.ETH.getCode());
+        SUPPORTED_CRYPTOS.add(CryptoCurrency.LTC.getCode());
+        SUPPORTED_CRYPTOS.add(CryptoCurrency.DASH.getCode());
+        SUPPORTED_CRYPTOS.add(CryptoCurrency.DAI.getCode());
+        SUPPORTED_CRYPTOS.add(CryptoCurrency.DGB.getCode());
+        SUPPORTED_CRYPTOS.add(CryptoCurrency.DOGE.getCode());
+        SUPPORTED_CRYPTOS.add(CryptoCurrency.LSK.getCode());
+        SUPPORTED_CRYPTOS.add(CryptoCurrency.NXT.getCode());
+        SUPPORTED_CRYPTOS.add(CryptoCurrency.POT.getCode());
+        SUPPORTED_CRYPTOS.add(CryptoCurrency.REP.getCode());
+        SUPPORTED_CRYPTOS.add(CryptoCurrency.SYS.getCode());
+        SUPPORTED_CRYPTOS.add(CryptoCurrency.VIA.getCode());
+        SUPPORTED_CRYPTOS.add(CryptoCurrency.XMR.getCode());
+        SUPPORTED_CRYPTOS.add(CryptoCurrency.XRP.getCode());
+        SUPPORTED_CRYPTOS.add(CryptoCurrency.XPM.getCode());
+    }
 
     public PoloniexExchange(String preferredFiatCurrency) {
         super(getDefaultSpecification(), preferredFiatCurrency);
@@ -50,33 +78,12 @@ public class PoloniexExchange extends XChangeExchange {
 
     @Override
     public Set<String> getCryptoCurrencies() {
-        Set<String> cryptoCurrencies = new HashSet<>();
-        cryptoCurrencies.add(CryptoCurrency.BCH.getCode());
-        cryptoCurrencies.add(CryptoCurrency.BTC.getCode());
-        cryptoCurrencies.add(CryptoCurrency.BURST.getCode());
-        cryptoCurrencies.add(CryptoCurrency.ETH.getCode());
-        cryptoCurrencies.add(CryptoCurrency.LTC.getCode());
-        cryptoCurrencies.add(CryptoCurrency.DASH.getCode());
-        cryptoCurrencies.add(CryptoCurrency.DAI.getCode());
-        cryptoCurrencies.add(CryptoCurrency.DGB.getCode());
-        cryptoCurrencies.add(CryptoCurrency.DOGE.getCode());
-        cryptoCurrencies.add(CryptoCurrency.LSK.getCode());
-        cryptoCurrencies.add(CryptoCurrency.NXT.getCode());
-        cryptoCurrencies.add(CryptoCurrency.POT.getCode());
-        cryptoCurrencies.add(CryptoCurrency.REP.getCode());
-        cryptoCurrencies.add(CryptoCurrency.SYS.getCode());
-        cryptoCurrencies.add(CryptoCurrency.VIA.getCode());
-        cryptoCurrencies.add(CryptoCurrency.XMR.getCode());
-        cryptoCurrencies.add(CryptoCurrency.XRP.getCode());
-        cryptoCurrencies.add(CryptoCurrency.XPM.getCode());
-        return cryptoCurrencies;
+        return SUPPORTED_CRYPTOS;
     }
 
     @Override
     public Set<String> getFiatCurrencies() {
-        Set<String> fiatCurrencies = new HashSet<>();
-        fiatCurrencies.add(FiatCurrency.USD.getCode());
-        return fiatCurrencies;
+        return SUPPORTED_FIATS;
     }
 
     @Override
@@ -92,13 +99,5 @@ public class PoloniexExchange extends XChangeExchange {
     @Override
     public Wallet getWallet(AccountInfo accountInfo, String currency) {
         return accountInfo.getWallet();
-    }
-
-    @Override
-    protected String translateFiatCurrencySymbolToExchangeSpecificSymbol(String currency) {
-        if (FiatCurrency.USD.getCode().equalsIgnoreCase(currency)) {
-            return "USDT";
-        }
-        return currency;
     }
 }

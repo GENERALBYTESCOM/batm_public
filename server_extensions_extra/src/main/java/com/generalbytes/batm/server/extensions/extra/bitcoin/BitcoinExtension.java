@@ -61,6 +61,7 @@ import java.math.BigDecimal;
 import java.net.InetSocketAddress;
 import java.util.*;
 
+import static com.generalbytes.batm.common.currencies.CryptoCurrency.USDT;
 import static com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitflyer.BitFlyerExchange.BITFLYER_COM_BASE_URL;
 import static com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitflyer.BitFlyerExchange.BITFLYER_JP_BASE_URL;
 
@@ -198,7 +199,7 @@ public class BitcoinExtension extends AbstractExtension {
                 }
                 return BitpandaProExchange.asExchange(apikey, preferredFiatCurrency);
             } else if ("poloniex".equalsIgnoreCase(prefix)) {
-                String preferredFiatCurrency = FiatCurrency.USD.getCode();
+                String preferredFiatCurrency = USDT.getCode();
                 String key = paramTokenizer.nextToken();
                 String secret = paramTokenizer.nextToken();
                 if (paramTokenizer.hasMoreTokens()) {
@@ -500,7 +501,7 @@ public class BitcoinExtension extends AbstractExtension {
                 }
                 return BitpandaProExchange.asRateSource(preferredFiatCurrency);
             } else if ("poloniex".equals(rsType)) {
-                String preferredFiatCurrency = FiatCurrency.USD.getCode();
+                String preferredFiatCurrency = USDT.getCode();
                 if (st.hasMoreTokens()) {
                     preferredFiatCurrency = st.nextToken().toUpperCase();
                 }
