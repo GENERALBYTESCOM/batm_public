@@ -53,6 +53,7 @@ public class BinanceUsExchange extends BinanceExchange {
         cryptoCurrencies.add(CryptoCurrency.DOGE.getCode());
         cryptoCurrencies.add(CryptoCurrency.ETH.getCode());
         cryptoCurrencies.add(CryptoCurrency.LTC.getCode());
+        cryptoCurrencies.add(CryptoCurrency.NANO.getCode());
         cryptoCurrencies.add(CryptoCurrency.USDT.getCode());
         cryptoCurrencies.add(CryptoCurrency.XRP.getCode());
         return cryptoCurrencies;

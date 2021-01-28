@@ -72,6 +72,7 @@ public class CoinGeckoRateSource implements IRateSource {
         CRYPTOCURRENCIES.put(CryptoCurrency.MEC.getCode(), "megacoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.MKR.getCode(), "maker");
         CRYPTOCURRENCIES.put(CryptoCurrency.MUE.getCode(), "monetaryunit");
+        CRYPTOCURRENCIES.put(CryptoCurrency.NANO.getCode(), "nano");
         CRYPTOCURRENCIES.put(CryptoCurrency.NBT.getCode(), "ninsa-b-token");
         CRYPTOCURRENCIES.put(CryptoCurrency.NLG.getCode(), "gulden");
         CRYPTOCURRENCIES.put(CryptoCurrency.NULS.getCode(), "nuls");
