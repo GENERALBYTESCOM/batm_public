@@ -44,7 +44,7 @@ import java.util.Locale;
 public class IdentityExampleRestService {
 
     // Uncomment this example in ***batm-extensions.xml*** and call it for example with:
-    // curl -k -XPOST https://localhost:7743/extensions/identity-example/register -d "terminalSerialNumber=BT102239&externalId=EXTID0001&fiatCurrency=USD&limit=1000000&discount=100&phoneNumber=+12065550100&firstName=Chuck&lastName=Norris&emailAddress=chucknorrisfans@hotmail.com&idCardNumber=123456&contactZIP=77868&contactCountry=United States&contactProvince=TX&contactCity=Navasota&contactAddress=4360 Lone Wolf Ranch Road"
+    // curl -k -XPOST https://localhost:7743/extensions/identity-example/register -d "terminalSerialNumber=BT102239&externalId=EXTID0001&fiatCurrency=USD&limit=1000000&discount=100&phoneNumber=+12065550100&firstName=Chuck&lastName=Norris&emailAddress=chucknorrisfans@hotmail.com&idCardNumber=123456&contactZIP=77868&contactCountry=United States&contactProvince=TX&contactCity=Navasota&contactAddress=4360 Lone Wolf Ranch Road&dateOfBirth=12/31/1999"
 
     @POST
     @Path("/register")
@@ -57,7 +57,8 @@ public class IdentityExampleRestService {
                            @FormParam("idCardNumber") String idCardNumber, @FormParam("documentValidToYYYYMMDD") String documentValidToYYYYMMDD,
                            @FormParam("contactZIP") String contactZIP,
                            @FormParam("contactCountry") String contactCountry, @FormParam("contactProvince") String contactProvince,
-                           @FormParam("contactCity") String contactCity, @FormParam("contactAddress") String contactAddress) throws ParseException {
+                           @FormParam("contactCity") String contactCity, @FormParam("contactAddress") String contactAddress,
+                           @FormParam("dateOfBirth") String dateOfBirth) throws ParseException {
 
 
         IExtensionContext ctx = IdentityExampleExtension.getExtensionContext();
@@ -71,6 +72,7 @@ public class IdentityExampleRestService {
             System.out.println("Phone type: " + phoneNumberQueryResult.getPhoneLineType().getPhoneTypeCode().name());
         }
 
+        Date dateOfBirthParsed = new SimpleDateFormat("MM/dd/yyyy", Locale.US).parse(dateOfBirth);
         int state = IIdentity.STATE_NOT_REGISTERED;
         Date now = new Date();
 
@@ -81,7 +83,7 @@ public class IdentityExampleRestService {
         String identityPublicId = identity.getPublicId();
         ctx.addIdentityPiece(identityPublicId, IdentityPieceExample.fromPersonalInfo(firstName, lastName, idCardNumber, IIdentityPiece.DOCUMENT_TYPE_ID_CARD,
             documentValidToYYYYMMDD == null ? null : new SimpleDateFormat("yyyyMMdd", Locale.US).parse(documentValidToYYYYMMDD),
-            contactZIP, contactCountry, contactProvince, contactCity, contactAddress));
+            contactZIP, contactCountry, contactProvince, contactCity, contactAddress, dateOfBirthParsed));
         ctx.addIdentityPiece(identityPublicId, IdentityPieceExample.fromPhoneNumber(phoneNumber));
         ctx.addIdentityPiece(identityPublicId, IdentityPieceExample.fromEmailAddress(emailAddress));
         ctx.addIdentityPiece(identityPublicId, IdentityPieceExample.fromSelfie("image/jpeg", exampleJpeg));
