@@ -306,7 +306,7 @@ public class BitcoinExtension extends AbstractExtension {
                 }
 
                 if ("bitgonoforward".equalsIgnoreCase(walletType)) {
-                  return new BitgoWalletWithUniqueAddresses(scheme, host, port, token, walletType, walletPassphrase, numBlocks);
+                  return new BitgoWalletWithUniqueAddresses(scheme, host, port, token, walletAddress, walletPassphrase, numBlocks);
                 }
 
                 return new BitgoWallet(scheme, host, port, token, walletAddress, walletPassphrase, numBlocks);
