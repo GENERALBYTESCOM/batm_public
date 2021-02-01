@@ -21,6 +21,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Map;
+import java.util.UUID;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -100,14 +101,14 @@ public class NanoRPCClient {
 
     public String sendFrom(String walletId, String fromAccount, String toAddress, BigDecimal amount)
             throws IOException, RpcException {
-        int id = (int) Math.floor(Math.random() * Integer.MAX_VALUE);
+
         RequestSend request = new RequestSend(walletId, fromAccount, toAddress,
-                NanoAmount.valueOfNano(amount).getAsRaw(), Integer.toString(id));
+                NanoAmount.valueOfNano(amount).getAsRaw(), UUID.randomUUID().toString());
         ResponseBlockHash hash = rpc.processRequest(request);
         return hash.getBlockHash().toHexString();
     }
 
-    public static void main(String[] args) {
+/*    public static void main(String[] args) {
 
         // You need to have node running: i.e.: nano_node --daemon with rpc enabled as
         // well as a wallet set up.
@@ -144,4 +145,5 @@ public class NanoRPCClient {
             System.out.println(e.toString());
         }
     }
+*/
 }

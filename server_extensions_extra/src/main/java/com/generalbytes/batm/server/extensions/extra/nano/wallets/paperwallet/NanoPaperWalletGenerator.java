@@ -109,7 +109,7 @@ public class NanoPaperWalletGenerator implements IPaperWalletGenerator {
         return null;
     }
 
-    public static void main(String[] args) {
+/*    public static void main(String[] args) {
         NanoPaperWalletGenerator paperWalletGenerator = new NanoPaperWalletGenerator();
         IPaperWallet paperWallet = paperWalletGenerator.generateWallet(CryptoCurrency.NANO.getCode(), "", "", false);
 
@@ -130,4 +130,5 @@ public class NanoPaperWalletGenerator implements IPaperWalletGenerator {
             return;
         }
     }
+*/
 }
