@@ -178,8 +178,9 @@
                 <cryptocurrency>XZC</cryptocurrency>
                 <cryptocurrency>CLOAK</cryptocurrency>
                 <cryptocurrency>FLASH</cryptocurrency>
-                <cryptocurrency>XSG</cryptocurrency>
+                <cryptocurrency>TENT</cryptocurrency>
                 <cryptocurrency>JOB</cryptocurrency>
+                <cryptocurrency>LMY</cryptocurrency>
                 <cryptocurrency>HT</cryptocurrency>
                 <cryptocurrency>ZPAE</cryptocurrency>
                 <cryptocurrency>NANO</cryptocurrency>
@@ -245,7 +246,7 @@
                 <cryptocurrency>WDC</cryptocurrency>
                 <cryptocurrency>XMR</cryptocurrency>
                 <cryptocurrency>XPM</cryptocurrency>
-                <cryptocurrency>XSG</cryptocurrency>
+                <cryptocurrency>TENT</cryptocurrency>
                 <cryptocurrency>XZC</cryptocurrency>
                 <cryptocurrency>ZPAE</cryptocurrency>
                 <help>USD is default fiat currency.</help>
@@ -393,6 +394,29 @@
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
         </exchange>
+        <exchange prefix="poloniex" name="Poloniex">
+            <param name="key"/>
+            <param name="secret"/>
+            <param name="fiatcurrency" />
+            <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>BURST</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>DASH</cryptocurrency>
+            <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency>DGB</cryptocurrency>
+            <cryptocurrency>DOGE</cryptocurrency>
+            <cryptocurrency>LSK</cryptocurrency>
+            <cryptocurrency>NXT</cryptocurrency>
+            <cryptocurrency>POT</cryptocurrency>
+            <cryptocurrency>REP</cryptocurrency>
+            <cryptocurrency>SYS</cryptocurrency>
+            <cryptocurrency>VIA</cryptocurrency>
+            <cryptocurrency>XMR</cryptocurrency>
+            <cryptocurrency>XRP</cryptocurrency>
+            <cryptocurrency>XPM</cryptocurrency>
+        </exchange>
         <ratesource prefix="coinbasepro" name="Coinbase Pro">
             <param name="fiatcurrency" />
             <cryptocurrency>BCH</cryptocurrency>
@@ -400,6 +424,27 @@
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
+        </ratesource>
+        <ratesource prefix="poloniex" name="Poloniex">
+            <param name="fiatcurrency" />
+            <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>BURST</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>DASH</cryptocurrency>
+            <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency>DGB</cryptocurrency>
+            <cryptocurrency>DOGE</cryptocurrency>
+            <cryptocurrency>LSK</cryptocurrency>
+            <cryptocurrency>NXT</cryptocurrency>
+            <cryptocurrency>POT</cryptocurrency>
+            <cryptocurrency>REP</cryptocurrency>
+            <cryptocurrency>SYS</cryptocurrency>
+            <cryptocurrency>VIA</cryptocurrency>
+            <cryptocurrency>XMR</cryptocurrency>
+            <cryptocurrency>XRP</cryptocurrency>
+            <cryptocurrency>XPM</cryptocurrency>
         </ratesource>
         <exchange prefix="coingi" name="Coingi.com">
             <param name="key"/>
@@ -459,6 +504,7 @@
             <cryptocurrency>HT</cryptocurrency>
             <cryptocurrency>ILC</cryptocurrency>
             <cryptocurrency>JOB</cryptocurrency>
+            <cryptocurrency>LMY</cryptocurrency>
             <cryptocurrency>KMD</cryptocurrency>
             <cryptocurrency>LEO</cryptocurrency>
             <cryptocurrency>LINDA</cryptocurrency>
@@ -489,7 +535,7 @@
             <cryptocurrency>XMR</cryptocurrency>
             <cryptocurrency>XPM</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
-            <cryptocurrency>XSG</cryptocurrency>
+            <cryptocurrency>TENT</cryptocurrency>
             <cryptocurrency>XZC</cryptocurrency>
             <cryptocurrency>ZPAE</cryptocurrency>
         </ratesource>
@@ -525,6 +571,7 @@
             <cryptocurrency>HT</cryptocurrency>
             <cryptocurrency>HBX</cryptocurrency>
             <cryptocurrency>JOB</cryptocurrency>
+            <cryptocurrency>LMY</cryptocurrency>
             <cryptocurrency>KMD</cryptocurrency>
             <cryptocurrency>LEO</cryptocurrency>
             <cryptocurrency>LINDA</cryptocurrency>
@@ -554,7 +601,7 @@
             <cryptocurrency>WDC</cryptocurrency>
             <cryptocurrency>XMR</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
-            <cryptocurrency>XSG</cryptocurrency>
+            <cryptocurrency>TENT</cryptocurrency>
             <cryptocurrency>XZC</cryptocurrency>
         </ratesource>
         <exchange prefix="binancecom" name="Binance.com">
@@ -587,7 +634,28 @@
         </exchange>
         <ratesource prefix="binancecom" name="Binance.com">
             <param name="fiatcurrency" />
+            <cryptocurrency>BAT</cryptocurrency>
+            <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>BNB</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>CLOAK</cryptocurrency>
+            <cryptocurrency>DASH</cryptocurrency>
+            <cryptocurrency>DOGE</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>GRS</cryptocurrency>
+            <cryptocurrency>KMD</cryptocurrency>
+            <cryptocurrency>LSK</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>NULS</cryptocurrency>
+            <cryptocurrency>REP</cryptocurrency>
+            <cryptocurrency>SYS</cryptocurrency>
+            <cryptocurrency>TRX</cryptocurrency>
+            <cryptocurrency>USDS</cryptocurrency>
+            <cryptocurrency>USDT</cryptocurrency>
+            <cryptocurrency>VIA</cryptocurrency>
+            <cryptocurrency>XMR</cryptocurrency>
+            <cryptocurrency>XRP</cryptocurrency>
+            <cryptocurrency>XZC</cryptocurrency>
         </ratesource>
         <exchange prefix="binanceus" name="Binance US">
             <param name="apikey"/>
@@ -1620,7 +1688,7 @@
             <param name="price" />
             <cryptocurrency>LSK</cryptocurrency>
         </ratesource>
-        <ratesource prefix="binanceRateSource" name ="Binance Rate Source" >
+        <ratesource prefix="binanceRateSource" name ="Binance Rate Source for LSK" >
             <param name="fiatCurrency" />
             <param name="coinmarketcapApiKey"/>
             <cryptocurrency>LSK</cryptocurrency>
@@ -1696,6 +1764,15 @@
         </wallet>
         <cryptologo cryptocurrency="JOB" file="jobchain.png"/>
         <cryptologo cryptocurrency="JOB" file="jobchain.svg"/>
+        <wallet prefix="infuraERC20_LMY_18_0x66fD97a78d8854fEc445cd1C80a07896B0b4851f" name="Infura.io wallet - Lunch Money">
+            <param name="projectId" />
+            <param name="mnemonic" />
+            <param name="gaslimit" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
+            <cryptocurrency>LMY</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="LMY" file="lunchmoney.png"/>
+        <cryptologo cryptocurrency="LMY" file="lunchmoney.svg"/>
         <wallet prefix="infuraERC20_ANT_18_0x960b236A07cf122663c4303350609A66A7B288C0" name="Infura.io wallet - ANT">
             <param name="projectId" />
             <param name="mnemonic" />
@@ -1811,26 +1888,26 @@
         <cryptologo cryptocurrency="NULS" file="nuls.png"/>
         <cryptologo cryptocurrency="NULS" file="nuls.svg"/>
     </extension>
-    <extension class="com.generalbytes.batm.server.extensions.extra.snowgem.SnowgemExtension" >
+    <extension class="com.generalbytes.batm.server.extensions.extra.tent.TentExtension" >
         <wallet prefix="snowgemd" name="snowgemd">
             <param name="protocol" />
             <param name="user" />
             <param name="password" />
             <param name="host" />
             <param name="port" />
-            <cryptocurrency>XSG</cryptocurrency>
+            <cryptocurrency>TENT</cryptocurrency>
         </wallet>
         <wallet prefix="snowgemdemo" name="Snowgem Demo Wallet">
             <param name="fiatCurrency" />
             <param name="walletAddress" />
-            <cryptocurrency>XSG</cryptocurrency>
+            <cryptocurrency>TENT</cryptocurrency>
         </wallet>
-        <ratesource prefix="xsgfix" name ="Fix Price" >
+        <ratesource prefix="tentfix" name ="Fix Price" >
             <param name="price" />
-            <cryptocurrency>XSG</cryptocurrency>
+            <cryptocurrency>TENT</cryptocurrency>
         </ratesource>
-        <cryptologo cryptocurrency="XSG" file="xsg.png"/>
-        <cryptologo cryptocurrency="XSG" file="xsg.svg"/>
+        <cryptologo cryptocurrency="TENT" file="tent.png"/>
+        <cryptologo cryptocurrency="TENT" file="tent.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.primecoin.PrimecoinExtension" >
         <wallet prefix="primecoind" name="Primecoin">

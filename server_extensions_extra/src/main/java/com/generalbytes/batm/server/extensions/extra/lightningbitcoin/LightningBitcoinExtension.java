@@ -56,7 +56,7 @@ public class LightningBitcoinExtension extends AbstractExtension {
                     int port = Integer.parseInt(st.nextToken());
                     String password = st.nextToken();
 
-                    InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(tunnelPassword, InetSocketAddress.createUnresolved(host, port));
+                    InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(walletLogin, tunnelPassword, InetSocketAddress.createUnresolved(host, port));
                     host = tunnelAddress.getHostString();
                     port = tunnelAddress.getPort();
 
@@ -78,11 +78,11 @@ public class LightningBitcoinExtension extends AbstractExtension {
                         log.error("Invalid URL configured: {}", url);
                         return null;
                     }
-                    InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(tunnelPassword, InetSocketAddress.createUnresolved(parsedUrl.host(), parsedUrl.port()));
+                    InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(walletLogin, tunnelPassword, InetSocketAddress.createUnresolved(parsedUrl.host(), parsedUrl.port()));
                     url = new HttpUrl.Builder().scheme(parsedUrl.scheme()).host(tunnelAddress.getHostString()).port(tunnelAddress.getPort()).encodedPath(parsedUrl.encodedPath()).build().toString();
                     String macaroon = st.nextToken();
                     String cert = st.hasMoreTokens() ? st.nextToken() : null;
-                    if(macaroon == null || macaroon.trim().isEmpty()) {
+                    if (macaroon == null || macaroon.trim().isEmpty()) {
                         log.error("macaroon param missing");
                         return null;
                     }

@@ -124,8 +124,13 @@ public class Tester {
             System.err.println("Error: None of the extensions was loaded.");
             usage();
             System.exit(1);
-        }else{
+        } else {
             for (IExtension extension : extensions) {
+                try {
+                    extension.init(new TestExtensionContext());
+                } catch (AbstractMethodError e) {
+                    //eat it for backward compatibility reasons
+                }
                 System.out.println("Loaded extension: " + extension.getName());
             }
         }
@@ -405,7 +410,7 @@ public class Tester {
 				for (String selectedCryptoCurrency : cryptoCurrencies) {
 					System.out.println("Crypto Currency:");
 					System.out.println("  " + selectedCryptoCurrency);
-                
+
 					final BigDecimal exchangeRateLast = rs.getExchangeRateLast(selectedCryptoCurrency, preferredFiatCurrency);
 					if (exchangeRateLast != null) {
 						System.out.println("Exchange Rate Last: 1 " + selectedCryptoCurrency + " = " + exchangeRateLast.stripTrailingZeros().toPlainString() + " " + preferredFiatCurrency);

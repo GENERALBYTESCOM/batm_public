@@ -24,6 +24,7 @@ public class CryptXWithUniqueAddresses extends CryptXWallet implements IGenerate
             cryptoCurrency = getPreferredCryptoCurrency();
         }
         if (!getCryptoCurrencies().contains(cryptoCurrency)) {
+            log.warn("{} not supported", cryptoCurrency);
             return null;
         }
         cryptoCurrency = cryptoCurrency.toLowerCase();
@@ -36,15 +37,7 @@ public class CryptXWithUniqueAddresses extends CryptXWallet implements IGenerate
             }
 
             Map<String, Object> address = api.createAddress(cryptoCurrency, this.walletId, request);
-
-            checkForSuccess(address);
-
-            Object addressObj = address.get("address");
-            if (addressObj == null || !(addressObj instanceof String)) {
-                return null;
-            }
-
-            return (String) addressObj;
+            return (String) address.get("address");
         } catch (HttpStatusIOException hse) {
             log.debug("create address error: {}", hse.getHttpBody());
         } catch (CryptXException e) {
