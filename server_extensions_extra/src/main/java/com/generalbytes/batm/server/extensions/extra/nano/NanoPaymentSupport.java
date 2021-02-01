@@ -117,7 +117,7 @@ public class NanoPaymentSupport extends PollingPaymentSupport {
         }
     }
 
-    public static void main(String[] args) {
+/*   public static void main(String[] args) {
         // You need to have node running: i.e.: nano_node --daemon with rpc enabled
 
         try {
@@ -160,4 +160,5 @@ public class NanoPaymentSupport extends PollingPaymentSupport {
             e.printStackTrace();
         }
     }
+*/
 }

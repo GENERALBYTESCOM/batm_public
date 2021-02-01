@@ -26,7 +26,7 @@ public class NanoAddressValidator implements ICryptoAddressValidator {
     public boolean isAddressValid(String address) {
         // Only accepting nano_ prefixed addresses
         if (address.startsWith("nano_")) {
-            String[] prefixes = new String[] { "nano_" };
+            String[] prefixes = new String[] { "nano" };
             return NanoAccount.isValid(address, prefixes);
         } else {
             return false;
