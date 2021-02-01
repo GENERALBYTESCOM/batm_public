@@ -6,6 +6,11 @@ package com.generalbytes.batm.server.extensions.aml;
 public interface IIdentityValidationResult {
 
     /**
+     * The Score, the Identity is valid from.
+     */
+    double VALID_IDENTITY_SCORE_THRESHOLD = 0.8;
+
+    /**
      * Contains unique id of a validation check.
      * @return
      */
