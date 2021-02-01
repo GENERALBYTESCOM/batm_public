@@ -204,7 +204,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
         return accountInfo.getWallet(translateCryptoCurrencySymbolToExchangeSpecificSymbol(currency));
     }
 
-    public final String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
+    public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
         if (!isCryptoCurrencySupported(cryptoCurrency)){
             return null;
         }
@@ -868,5 +868,10 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
 
     protected String translateCryptoCurrencySymbolToExchangeSpecificSymbol(String from) {
         return from;
+    }
+
+    protected BigDecimal getWithdrawalFee(String cryptoCurrency) {
+        Currency exchangeCryptoCurrency = Currency.getInstance(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency));
+        return exchange.getExchangeMetaData().getCurrencies().get(exchangeCryptoCurrency).getWithdrawalFee();
     }
 }
