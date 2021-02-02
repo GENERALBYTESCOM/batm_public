@@ -59,4 +59,9 @@ public interface IIdentityPiece {
      * @return null or one of {@link IIdentityPiece#DOCUMENT_TYPE_ID_CARD}, {@link IIdentityPiece#DOCUMENT_TYPE_PASSPORT}, {@link IIdentityPiece#DOCUMENT_TYPE_DRIVING_LICENCE}
      */
     Integer getDocumentType();
+
+    /**
+     * used with TYPE_PERSONAL_INFORMATION
+     */
+    Date getDateOfBirth();
 }

@@ -392,6 +392,29 @@
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
         </exchange>
+        <exchange prefix="poloniex" name="Poloniex">
+            <param name="key"/>
+            <param name="secret"/>
+            <param name="fiatcurrency" />
+            <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>BURST</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>DASH</cryptocurrency>
+            <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency>DGB</cryptocurrency>
+            <cryptocurrency>DOGE</cryptocurrency>
+            <cryptocurrency>LSK</cryptocurrency>
+            <cryptocurrency>NXT</cryptocurrency>
+            <cryptocurrency>POT</cryptocurrency>
+            <cryptocurrency>REP</cryptocurrency>
+            <cryptocurrency>SYS</cryptocurrency>
+            <cryptocurrency>VIA</cryptocurrency>
+            <cryptocurrency>XMR</cryptocurrency>
+            <cryptocurrency>XRP</cryptocurrency>
+            <cryptocurrency>XPM</cryptocurrency>
+        </exchange>
         <ratesource prefix="coinbasepro" name="Coinbase Pro">
             <param name="fiatcurrency" />
             <cryptocurrency>BCH</cryptocurrency>
@@ -399,6 +422,27 @@
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
+        </ratesource>
+        <ratesource prefix="poloniex" name="Poloniex">
+            <param name="fiatcurrency" />
+            <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>BURST</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>DASH</cryptocurrency>
+            <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency>DGB</cryptocurrency>
+            <cryptocurrency>DOGE</cryptocurrency>
+            <cryptocurrency>LSK</cryptocurrency>
+            <cryptocurrency>NXT</cryptocurrency>
+            <cryptocurrency>POT</cryptocurrency>
+            <cryptocurrency>REP</cryptocurrency>
+            <cryptocurrency>SYS</cryptocurrency>
+            <cryptocurrency>VIA</cryptocurrency>
+            <cryptocurrency>XMR</cryptocurrency>
+            <cryptocurrency>XRP</cryptocurrency>
+            <cryptocurrency>XPM</cryptocurrency>
         </ratesource>
         <exchange prefix="coingi" name="Coingi.com">
             <param name="key"/>
