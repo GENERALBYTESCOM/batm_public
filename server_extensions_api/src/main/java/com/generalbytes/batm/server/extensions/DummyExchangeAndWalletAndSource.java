@@ -39,11 +39,16 @@ public class DummyExchangeAndWalletAndSource implements IExchange, IWallet, IRat
     private static final String LTC_WALLET_ADDRESS = "LZRi2YvS3cR4Pc3hQkAxqYLKRXEjjxZdd5"; //safe
     private String fiatCurrency;
     private String cryptoCurrency;
+    private final boolean simulateFailure;
     private String walletAddress;
 
     private static final Logger log = LoggerFactory.getLogger("batm_public.server_extensions_api.DummyExchangeAndWalletAndSource");
 
     public DummyExchangeAndWalletAndSource(String fiatCurrency, String cryptoCurrency, String walletAddress) throws IllegalArgumentException {
+        this(fiatCurrency, cryptoCurrency, false, walletAddress);
+    }
+
+    public DummyExchangeAndWalletAndSource(String fiatCurrency, String cryptoCurrency, boolean simulateFailure, String walletAddress) throws IllegalArgumentException {
         if (fiatCurrency == null || cryptoCurrency == null) {
             throw new NullPointerException("Fiat and crypto currency has to be specified.");
         }
@@ -66,6 +71,7 @@ public class DummyExchangeAndWalletAndSource implements IExchange, IWallet, IRat
 
         this.cryptoCurrency = cryptoCurrency;
         this.fiatCurrency = fiatCurrency;
+        this.simulateFailure = simulateFailure;
     }
 
     @Override
@@ -171,10 +177,10 @@ public class DummyExchangeAndWalletAndSource implements IExchange, IWallet, IRat
     }
 
     private String getSellTransactionId() {
-        return String.format("22222222222222222222222222222222222222222222222222222222%08x", new Random().nextInt());
+        return simulateFailure ? null : String.format("22222222222222222222222222222222222222222222222222222222%08x", new Random().nextInt());
     }
 
     private String getSendTransactionId() {
-        return String.format("11111111111111111111111111111111111111111111111111111111%08x", new Random().nextInt());
+        return simulateFailure ? null : String.format("11111111111111111111111111111111111111111111111111111111%08x", new Random().nextInt());
     }
 }
