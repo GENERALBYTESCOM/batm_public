@@ -29,13 +29,14 @@ public class CryptXWithUniqueAddresses extends CryptXWallet implements IGenerate
         cryptoCurrency = cryptoCurrency.toLowerCase();
         try {
             CryptXCreateAddressRequest request = new CryptXCreateAddressRequest(label);
-            CryptoCurrency currency = CryptoCurrency.valueOfCode(cryptoCurrency);
+            String apiCryptocurrency = getAPICryptocurrency(cryptoCurrency);
+            CryptoCurrency currency = CryptoCurrency.valueOfCode(apiCryptocurrency);
 
             if (currency == CryptoCurrency.ETH) {
                 request.setAddressFormat(null);
             }
 
-            Map<String, Object> address = api.createAddress(cryptoCurrency, this.walletId, request);
+            Map<String, Object> address = api.createAddress(apiCryptocurrency, this.walletId, request);
 
             checkForSuccess(address);
 

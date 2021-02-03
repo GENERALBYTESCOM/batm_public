@@ -3,6 +3,7 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryptx.v2;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.Converters;
 import com.generalbytes.batm.server.extensions.IWallet;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryptx.v2.dto.Balance;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryptx.v2.dto.CryptXException;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryptx.v2.dto.CryptXSendTransactionRequest;
 import com.generalbytes.batm.server.extensions.util.net.CompatSSLSocketFactory;
@@ -22,6 +23,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import static com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryptx.v2.ICryptXAPI.*;
 
 public class CryptXWallet implements IWallet {
 
@@ -100,7 +103,8 @@ public class CryptXWallet implements IWallet {
         }
         cryptoCurrency = cryptoCurrency.toLowerCase();
         try {
-            final Map<String, Object> wallet = api.getWallet(cryptoCurrency, this.walletId);
+            String apiCryptocurrency = getAPICryptocurrency(cryptoCurrency);
+            final Map<String, Object> wallet = api.getWallet(apiCryptocurrency, this.walletId, false);
 
             checkForSuccess(wallet);
 
@@ -132,6 +136,7 @@ public class CryptXWallet implements IWallet {
         coins.add(CryptoCurrency.LTC.getCode());
         coins.add(CryptoCurrency.BCH.getCode());
         coins.add(CryptoCurrency.ETH.getCode());
+        coins.add(CryptoCurrency.USDT.getCode());
 
         coins.add(CryptoCurrency.TBTC.getCode());
         coins.add(CryptoCurrency.TLTC.getCode());
@@ -156,28 +161,14 @@ public class CryptXWallet implements IWallet {
         cryptoCurrency = cryptoCurrency.toLowerCase();
 
         try {
-            final Map<String, Object> wallet = api.getWallet(cryptoCurrency, this.walletId);
-
-            checkForSuccess(wallet);
-
-            if (wallet == null || wallet.isEmpty()) {
+            final Balance balance = api.getWalletBalance(cryptoCurrency, this.walletId, false);
+            if (balance == null) {
                 return null;
             }
 
-            Object balance = wallet.get("balance");
-            if (balance == null || !(balance instanceof Map)) {
-                return null;
-            }
+            BigInteger spendableBalance = balance.getSpendableBalance();
 
-            Map balanceObj = (Map) balance;
-            Object spendableBalance = balanceObj.get("spendableBalance");
-            if (spendableBalance == null || !(spendableBalance instanceof String)) {
-                return null;
-            }
-
-            return toMajorUnit(cryptoCurrency, (String) spendableBalance);
-        } catch (HttpStatusIOException hse) {
-            log.debug("getCryptoBalance error: {}", hse.getHttpBody());
+            return toMajorUnit(cryptoCurrency, spendableBalance.toString());
         } catch (CryptXException e) {
             log.debug("getCryptoBalance error: {}", e.getErrorMessage());
         } catch (Exception e) {
@@ -198,6 +189,13 @@ public class CryptXWallet implements IWallet {
         }
     }
 
+    public String getAPICryptocurrency(String cryptoCurrency) {
+        if (cryptoCurrency.equalsIgnoreCase(CryptoCurrency.USDT.getCode())) {
+            return CryptoCurrency.ETH.getCode();
+        }
+        return cryptoCurrency;
+    }
+
     private String toMinorUnit(String cryptoCurrency, BigDecimal amount) {
         try {
             switch (CryptoCurrency.valueOfCode(cryptoCurrency)) {
@@ -213,6 +211,8 @@ public class CryptXWallet implements IWallet {
                 case TETH:
                 case ETH:
                     return amount.multiply(Converters.ETH).toBigInteger().toString();
+                case USDT:
+                    return amount.multiply(Converters.USDT).toBigInteger().toString();
                 default:
                     return amount.toBigInteger().toString();
             }
@@ -228,16 +228,18 @@ public class CryptXWallet implements IWallet {
             switch (CryptoCurrency.valueOfCode(cryptoCurrency)) {
                 case TBTC:
                 case BTC:
-                    return new BigDecimal(bigIntegerAmount).movePointLeft(8);
+                    return new BigDecimal(bigIntegerAmount).divide(Converters.BTC);
                 case TLTC:
                 case LTC:
-                    return new BigDecimal(bigIntegerAmount).movePointLeft(8);
+                    return new BigDecimal(bigIntegerAmount).divide(Converters.LTC);
                 case TBCH:
                 case BCH:
-                    return new BigDecimal(bigIntegerAmount).movePointLeft(8);
+                    return new BigDecimal(bigIntegerAmount).divide(Converters.BCH);
                 case TETH:
                 case ETH:
-                    return new BigDecimal(bigIntegerAmount).movePointLeft(18);
+                    return new BigDecimal(bigIntegerAmount).divide(Converters.ETH);
+                case USDT:
+                    return new BigDecimal(bigIntegerAmount).divide(Converters.USDT);
                 default:
                     return new BigDecimal(bigIntegerAmount);
             }

@@ -1,5 +1,6 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryptx.v2;
 
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryptx.v2.dto.Balance;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryptx.v2.dto.CryptXCreateAddressRequest;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryptx.v2.dto.CryptXException;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryptx.v2.dto.CryptXSendTransactionRequest;
@@ -37,6 +38,18 @@ public interface ICryptXAPI {
     @POST
     @Path("/{coin}/wallet/{walletId}/address")
     @Consumes(MediaType.APPLICATION_JSON)
-    Map<String, Object> createAddress(@PathParam("coin") String coin, @PathParam("walletId") String walletId, CryptXCreateAddressRequest request) throws IOException;
+    Map<String, Object> createAddress(
+        @PathParam("coin") String coin,
+        @PathParam("walletId") String walletId,
+        CryptXCreateAddressRequest request
+    ) throws IOException;
+
+    @GET
+    @Path("{coin}/wallet/{walletId}/balance")
+    Balance getWalletBalance(
+        @PathParam("coin") String coin,
+        @PathParam("walletId") String walletId,
+        @QueryParam("allTokens") Boolean allTokens
+    );
 
 }
