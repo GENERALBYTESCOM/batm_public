@@ -33,6 +33,4 @@ public interface ITunnelManager {
      * @throws IOException if opening a tunnel is needed (configured) but opening it failed.
      */
     InetSocketAddress connectIfNeeded(String walletLogin, String tunnelPassword, InetSocketAddress originalWalletAddress) throws IOException;
-
-    boolean removeTunnelKnownHost(String walletLogin, String tunnelPassword);
 }
