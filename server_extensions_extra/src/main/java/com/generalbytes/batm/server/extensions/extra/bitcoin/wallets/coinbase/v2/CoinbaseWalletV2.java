@@ -55,8 +55,6 @@ public class CoinbaseWalletV2 implements IWallet {
     protected String accountName;
     protected Map<String,String> accountIds = new HashMap<>();
 
-
-
     public CoinbaseWalletV2(String apiKey, String apiSecret, String accountName) {
         this.accountName = accountName;
         this.apiKey = apiKey;
@@ -74,6 +72,7 @@ public class CoinbaseWalletV2 implements IWallet {
         result.add(CryptoCurrency.BIZZ.getCode());
         result.add(CryptoCurrency.BCH.getCode());
         result.add(CryptoCurrency.BTC.getCode());
+        result.add(CryptoCurrency.ETC.getCode());
         result.add(CryptoCurrency.ETH.getCode());
         result.add(CryptoCurrency.DASH.getCode());
         result.add(CryptoCurrency.LTC.getCode());
@@ -87,8 +86,6 @@ public class CoinbaseWalletV2 implements IWallet {
             return CryptoCurrency.BTC.getCode();
         }
         return preferredCryptoCurrency;
-
-
     }
 
     protected synchronized void initIfNeeded(String cryptoCurrency) {
@@ -173,7 +170,7 @@ public class CoinbaseWalletV2 implements IWallet {
         }
         initIfNeeded(cryptoCurrency);
         long timeStamp = getTimestamp();
-        CBAddressesResponse addressesResponse = api.getAccountAddresses(apiKey, API_VERSION, CBDigest.createInstance(apiSecret, timeStamp), timeStamp,accountIds.get(cryptoCurrency));
+        CBAddressesResponse addressesResponse = api.getAccountAddresses(apiKey, API_VERSION, CBDigest.createInstance(apiSecret, timeStamp), timeStamp, accountIds.get(cryptoCurrency));
         if (addressesResponse != null && addressesResponse.getData() != null && !addressesResponse.getData().isEmpty()) {
             List<CBAddress> addresses = addressesResponse.getData();
             String network  = getNetworkName(cryptoCurrency);
