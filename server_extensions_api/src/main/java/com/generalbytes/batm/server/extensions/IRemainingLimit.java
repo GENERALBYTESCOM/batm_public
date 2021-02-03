@@ -22,6 +22,7 @@ public interface IRemainingLimit {
      * cpy - cash per calendar year
      * ct - total cash identity limit
      * cpta - total cash limit per crypto address
+     * resulting_limit - effective current limit
      *
      * @return
      */

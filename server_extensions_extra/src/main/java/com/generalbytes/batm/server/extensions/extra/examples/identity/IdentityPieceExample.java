@@ -40,8 +40,9 @@ class IdentityPieceExample implements IIdentityPiece {
     private final String fileName;
     private final String mimeType;
     private final byte[] data;
+    private final Date dateOfBirth;
 
-    IdentityPieceExample(int type, String phoneNumber, String emailAddress, String firstName, String lastName, String idCardNumber, Integer documentType, Date documentValidTo, String contactZIP, String contactCountry, String contactProvince, String contactCity, String contactAddress, String fileName, String mimeType, byte[] data) {
+    IdentityPieceExample(int type, String phoneNumber, String emailAddress, String firstName, String lastName, String idCardNumber, Integer documentType, Date documentValidTo, String contactZIP, String contactCountry, String contactProvince, String contactCity, String contactAddress, Date dateOfBirth, String fileName, String mimeType, byte[] data) {
         this.type = type;
         this.phoneNumber = phoneNumber;
         this.emailAddress = emailAddress;
@@ -55,37 +56,38 @@ class IdentityPieceExample implements IIdentityPiece {
         this.contactProvince = contactProvince;
         this.contactCity = contactCity;
         this.contactAddress = contactAddress;
+        this.dateOfBirth = dateOfBirth;
         this.fileName = fileName;
         this.mimeType = mimeType;
         this.data = data;
     }
 
     public static IdentityPieceExample fromEmailAddress(String emailAddress) {
-        return new IdentityPieceExample(TYPE_EMAIL, null, emailAddress, null, null, null, null, null, null, null, null, null, null, null, null, null);
+        return new IdentityPieceExample(TYPE_EMAIL, null, emailAddress, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
     }
 
     public static IdentityPieceExample fromSelfie(String mimeType, byte[] data) {
-        return new IdentityPieceExample(TYPE_SELFIE, null, null, null, null, null, null, null, null, null, null, null, null, null, mimeType, data);
+        return new IdentityPieceExample(TYPE_SELFIE, null, null, null, null, null, null, null, null, null, null, null, null, null, null, mimeType, data);
     }
 
     public static IdentityPieceExample fromCameraImage(String mimeType, byte[] data) {
-        return new IdentityPieceExample(TYPE_CAMERA_IMAGE, null, null, null, null, null, null, null, null, null, null, null, null, null, mimeType, data);
+        return new IdentityPieceExample(TYPE_CAMERA_IMAGE, null, null, null, null, null, null, null, null, null, null, null, null, null, null, mimeType, data);
     }
 
     public static IdentityPieceExample fromFingerprint(byte[] data) {
-        return new IdentityPieceExample(TYPE_FINGERPRINT, null, null, null, null, null, null, null, null, null, null, null, null, null, null, data);
+        return new IdentityPieceExample(TYPE_FINGERPRINT, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, data);
     }
 
     public static IdentityPieceExample fromIdScan(String mimeType, byte[] data) {
-        return new IdentityPieceExample(TYPE_ID_SCAN, null, null, null, null, null, null, null, null, null, null, null, null, null, mimeType, data);
+        return new IdentityPieceExample(TYPE_ID_SCAN, null, null, null, null, null, null, null, null, null, null, null, null, null, null, mimeType, data);
     }
 
     public static IdentityPieceExample fromPhoneNumber(String phoneNumber) {
-        return new IdentityPieceExample(TYPE_CELLPHONE, phoneNumber, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+        return new IdentityPieceExample(TYPE_CELLPHONE, phoneNumber, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
     }
 
-    public static IdentityPieceExample fromPersonalInfo(String firstName, String lastName, String idCardNumber, int documentType, Date documentValidTo, String contactZIP, String contactCountry, String contactProvince, String contactCity, String contactAddress) {
-        return new IdentityPieceExample(TYPE_PERSONAL_INFORMATION, null, null, firstName, lastName, idCardNumber, documentType, documentValidTo, contactZIP, contactCountry, contactProvince, contactCity, contactAddress, null, null, null);
+    public static IdentityPieceExample fromPersonalInfo(String firstName, String lastName, String idCardNumber, int documentType, Date documentValidTo, String contactZIP, String contactCountry, String contactProvince, String contactCity, String contactAddress, Date dateOfBirth) {
+        return new IdentityPieceExample(TYPE_PERSONAL_INFORMATION, null, null, firstName, lastName, idCardNumber, documentType, documentValidTo, contactZIP, contactCountry, contactProvince, contactCity, contactAddress, dateOfBirth, null, null, null);
     }
 
     @Override
@@ -171,6 +173,11 @@ class IdentityPieceExample implements IIdentityPiece {
     @Override
     public Date getDocumentValidTo() {
         return documentValidTo;
+    }
+
+    @Override
+    public Date getDateOfBirth() {
+        return dateOfBirth;
     }
 
     @Override

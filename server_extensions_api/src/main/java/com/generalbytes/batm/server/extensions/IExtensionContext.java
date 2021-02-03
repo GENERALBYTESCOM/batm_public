@@ -219,7 +219,7 @@ public interface IExtensionContext {
      *
      * @return a tunnel manager that allows creating ssh tunnels on a remote ssh server.
      * Used for creating encrypted tunnels for wallets on remote hosts.
-     * See {@link ITunnelManager#connectIfNeeded(String, InetSocketAddress)}
+     * See {@link ITunnelManager#connectIfNeeded(String, String, InetSocketAddress)}
      */
     ITunnelManager getTunnelManager();
 

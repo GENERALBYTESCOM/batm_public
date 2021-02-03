@@ -3,11 +3,11 @@ buildscript {
         hasGbArtifactory = (project.hasProperty('gbArtifactoryUrl')
             && project.hasProperty('gbArtifactoryUser')
             && project.hasProperty('gbArtifactoryPassword'))
-        
+
         hasGbUploadArtifactory = (project.hasProperty('gbArtifactoryUploadUrl')
             && project.hasProperty('gbArtifactoryUser')
             && project.hasProperty('gbArtifactoryPassword'))
-        
+
         setRepositoriesFor = { RepositoryHandler repositoryHandler ->
             if (hasGbArtifactory) {
                 repositoryHandler.maven {
@@ -43,7 +43,7 @@ allprojects {
         options.encoding = 'UTF-8'
         options.incremental = true
     }
-    
+
     afterEvaluate {
         if (pluginManager.hasPlugin('com.generalbytes.gradle.dependency.verification')) {
             dependencyChecksums {

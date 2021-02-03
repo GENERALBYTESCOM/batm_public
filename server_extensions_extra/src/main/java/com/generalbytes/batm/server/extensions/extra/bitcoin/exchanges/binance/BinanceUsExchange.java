@@ -26,6 +26,27 @@ import java.util.Set;
 public class BinanceUsExchange extends BinanceExchange {
     private static final String SSL_URI = "https://api.binance.us/";
 
+    private static final Set<String> SUPPORTED_FIATS = new HashSet<>();
+    private static final Set<String> SUPPORTED_CRYPTOS = new HashSet<>();
+
+    static {
+        SUPPORTED_FIATS.add(FiatCurrency.USD.getCode());
+        SUPPORTED_FIATS.add(CryptoCurrency.BUSD.getCode());
+        SUPPORTED_FIATS.add(CryptoCurrency.USDC.getCode());
+        SUPPORTED_FIATS.add(CryptoCurrency.USDT.getCode());
+
+        SUPPORTED_CRYPTOS.add(CryptoCurrency.BAT.getCode());
+        SUPPORTED_CRYPTOS.add(CryptoCurrency.BCH.getCode());
+        SUPPORTED_CRYPTOS.add(CryptoCurrency.BNB.getCode());
+        SUPPORTED_CRYPTOS.add(CryptoCurrency.BTC.getCode());
+        SUPPORTED_CRYPTOS.add(CryptoCurrency.DASH.getCode());
+        SUPPORTED_CRYPTOS.add(CryptoCurrency.DOGE.getCode());
+        SUPPORTED_CRYPTOS.add(CryptoCurrency.ETH.getCode());
+        SUPPORTED_CRYPTOS.add(CryptoCurrency.LTC.getCode());
+        SUPPORTED_CRYPTOS.add(CryptoCurrency.USDT.getCode());
+        SUPPORTED_CRYPTOS.add(CryptoCurrency.XRP.getCode());
+    }
+
     public BinanceUsExchange(String preferredFiatCurrency) {
         super(preferredFiatCurrency, SSL_URI);
     }
@@ -36,25 +57,11 @@ public class BinanceUsExchange extends BinanceExchange {
 
     @Override
     public Set<String> getFiatCurrencies() {
-        Set<String> fiatCurrencies = new HashSet<>();
-        fiatCurrencies.add(FiatCurrency.USD.getCode());
-        return fiatCurrencies;
+       return SUPPORTED_FIATS;
     }
-
 
     @Override
     public Set<String> getCryptoCurrencies() {
-        Set<String> cryptoCurrencies = new HashSet<>();
-        cryptoCurrencies.add(CryptoCurrency.BAT.getCode());
-        cryptoCurrencies.add(CryptoCurrency.BCH.getCode());
-        cryptoCurrencies.add(CryptoCurrency.BNB.getCode());
-        cryptoCurrencies.add(CryptoCurrency.BTC.getCode());
-        cryptoCurrencies.add(CryptoCurrency.DASH.getCode());
-        cryptoCurrencies.add(CryptoCurrency.DOGE.getCode());
-        cryptoCurrencies.add(CryptoCurrency.ETH.getCode());
-        cryptoCurrencies.add(CryptoCurrency.LTC.getCode());
-        cryptoCurrencies.add(CryptoCurrency.USDT.getCode());
-        cryptoCurrencies.add(CryptoCurrency.XRP.getCode());
-        return cryptoCurrencies;
+       return SUPPORTED_CRYPTOS;
     }
 }

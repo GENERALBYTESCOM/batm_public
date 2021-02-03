@@ -17,23 +17,20 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.watchlists.czech;
 
+import com.generalbytes.batm.server.extensions.extra.watchlists.Match;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 import com.generalbytes.batm.server.extensions.watchlist.WatchListMatch;
 import com.generalbytes.batm.server.extensions.watchlist.WatchListQuery;
 import com.generalbytes.batm.server.extensions.watchlist.WatchListResult;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.generalbytes.batm.server.extensions.watchlist.WatchListQuery.TYPE_ENTITY;
-import static com.generalbytes.batm.server.extensions.watchlist.WatchListQuery.TYPE_INDIVIDUAL;
+import static com.generalbytes.batm.server.extensions.watchlist.WatchListQuery.*;
 
 public class CzechSanctionList implements IWatchList{
-    private static final Logger log = LoggerFactory.getLogger("batm.master.watchlist.Czech");
+
     private Sanctions sanctions;
 
     @Override
@@ -92,7 +89,7 @@ public class CzechSanctionList implements IWatchList{
         if (result.isEmpty()) {
             return new WatchListResult(WatchListResult.RESULT_TYPE_WATCHLIST_SEARCHED);
         }else{
-            final ArrayList<WatchListMatch> matches = new ArrayList<WatchListMatch>();
+            final ArrayList<WatchListMatch> matches = new ArrayList<>();
             for (Match match : result) {
                 final String partyIndex = sanctions.getPartyIndexByPartyId(match.getPartyId());
                 matches.add(new WatchListMatch(match.getScore(),"Matched Czech Sanction list. PartyIndex: "+ partyIndex + ".",getName()));

@@ -32,5 +32,5 @@ public interface ITunnelManager {
      * If the tunnel was established then it returns localhost with a port where the tunnel is listening. This port is tunneled to the original wallet address.
      * @throws IOException if opening a tunnel is needed (configured) but opening it failed.
      */
-    InetSocketAddress connectIfNeeded(String tunnelPassword, InetSocketAddress originalWalletAddress) throws IOException;
+    InetSocketAddress connectIfNeeded(String walletLogin, String tunnelPassword, InetSocketAddress originalWalletAddress) throws IOException;
 }

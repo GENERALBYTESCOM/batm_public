@@ -40,7 +40,6 @@ import java.util.StringTokenizer;
 
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
-import java.util.*;
 
 public class DashExtension extends AbstractExtension{
     private static final Logger log = LoggerFactory.getLogger(DashExtension.class);
@@ -73,7 +72,7 @@ public class DashExtension extends AbstractExtension{
                     accountName = st.nextToken();
                 }
 
-                InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(tunnelPassword, InetSocketAddress.createUnresolved(hostname, port));
+                InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(walletLogin, tunnelPassword, InetSocketAddress.createUnresolved(hostname, port));
                 hostname = tunnelAddress.getHostString();
                 port = tunnelAddress.getPort();
 

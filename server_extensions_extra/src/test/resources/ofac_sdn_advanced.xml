@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Sanctions xmlns="http://www.un.org/sanctions/1.0" Version="3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://www.un.org/sanctions/1.0 http://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xsd">
+    <DateOfIssue CalendarTypeID="1">
+        <Year>2021</Year>
+        <Month>1</Month>
+        <Day>19</Day>
+    </DateOfIssue>
+    <ReferenceValueSets>
+        <AliasTypeValues>
+            <AliasType ID="1400">A.K.A.</AliasType>
+            <AliasType ID="1401">F.K.A.</AliasType>
+            <AliasType ID="1402">N.K.A.</AliasType>
+            <AliasType ID="1403">Name</AliasType>
+        </AliasTypeValues>
+        <AreaCodeValues>
+            <AreaCode ID="11110" CountryID="11110" Description="Iraq" AreaCodeTypeID="1">IQ</AreaCode>
+        </AreaCodeValues>
+        <AreaCodeTypeValues>
+            <AreaCodeType ID="1">ISO 3166 (2)</AreaCodeType>
+        </AreaCodeTypeValues>
+        <CalendarTypeValues>
+            <CalendarType ID="1">Gregorian</CalendarType>
+        </CalendarTypeValues>
+        <CountryValues>
+            <Country ID="11110" ISO2="IQ">Iraq</Country>
+        </CountryValues>
+        <CountryRelevanceValues>
+            <CountryRelevance ID="1413">PRIMARY</CountryRelevance>
+        </CountryRelevanceValues>
+        <DecisionMakingBodyValues>
+            <DecisionMakingBody ID="1" OrganisationID="1">United States Treasury Department</DecisionMakingBody>
+        </DecisionMakingBodyValues>
+        <DetailReferenceValues>
+            <DetailReference ID="702">Bulk Carrier</DetailReference>
+        </DetailReferenceValues>
+        <DetailTypeValues>
+            <DetailType ID="1430">DATE</DetailType>
+            <DetailType ID="1431">LOOKUP</DetailType>
+            <DetailType ID="1432">TEXT</DetailType>
+            <DetailType ID="1433">COUNTRY</DetailType>
+            <DetailType ID="1434">LOCATION</DetailType>
+        </DetailTypeValues>
+        <DocNameStatusValues>
+            <DocNameStatus ID="1">Primary Latin</DocNameStatus>
+            <DocNameStatus ID="2">Others</DocNameStatus>
+        </DocNameStatusValues>
+        <EntryEventTypeValues>
+            <EntryEventType ID="1">Created</EntryEventType>
+        </EntryEventTypeValues>
+        <EntryLinkTypeValues/>
+        <ExRefTypeValues/>
+        <FeatureTypeValues>
+            <FeatureType ID="1" FeatureTypeGroupID="1">Vessel Call Sign</FeatureType>
+        </FeatureTypeValues>
+        <FeatureTypeGroupValues>
+            <FeatureTypeGroup ID="1">Unknown</FeatureTypeGroup>
+        </FeatureTypeGroupValues>
+        <IDRegDocDateTypeValues>
+            <IDRegDocDateType ID="1480">Issue Date</IDRegDocDateType>
+            <IDRegDocDateType ID="1481">Expiration Date</IDRegDocDateType>
+        </IDRegDocDateTypeValues>
+        <IDRegDocTypeValues>
+            <IDRegDocType ID="1570">Cedula No.</IDRegDocType>
+        </IDRegDocTypeValues>
+        <IdentityFeatureLinkTypeValues>
+            <IdentityFeatureLinkType ID="1">Unknown</IdentityFeatureLinkType>
+        </IdentityFeatureLinkTypeValues>
+        <LegalBasisValues>
+            <LegalBasis ID="1" LegalBasisShortRef="Unknown" LegalBasisTypeID="1" SanctionsProgramID="1">Unknown</LegalBasis>
+        </LegalBasisValues>
+        <LegalBasisTypeValues>
+            <LegalBasisType ID="1">Unknown</LegalBasisType>
+        </LegalBasisTypeValues>
+        <ListValues>
+            <List ID="1550">SDN List</List>
+            <List ID="91243">Non-SDN Palestinian Legislative Council List</List>
+            <List ID="91469">FSE List</List>
+            <List ID="91507">Sectoral Sanctions Identifications List</List>
+            <List ID="91512">Consolidated List</List>
+        </ListValues>
+        <LocPartTypeValues>
+            <LocPartType ID="1">Unknown</LocPartType>
+            <LocPartType ID="1450">REGION</LocPartType>
+            <LocPartType ID="1451">ADDRESS1</LocPartType>
+            <LocPartType ID="1452">ADDRESS2</LocPartType>
+            <LocPartType ID="1453">ADDRESS3</LocPartType>
+            <LocPartType ID="1454">CITY</LocPartType>
+            <LocPartType ID="1455">STATE/PROVINCE</LocPartType>
+            <LocPartType ID="1456">POSTAL CODE</LocPartType>
+        </LocPartTypeValues>
+        <LocPartValueStatusValues>
+            <LocPartValueStatus ID="1">Main</LocPartValueStatus>
+        </LocPartValueStatusValues>
+        <LocPartValueTypeValues>
+            <LocPartValueType ID="1">Unknown</LocPartValueType>
+        </LocPartValueTypeValues>
+        <NamePartTypeValues>
+            <NamePartType ID="1520">Last Name</NamePartType>
+            <NamePartType ID="1521">First Name</NamePartType>
+            <NamePartType ID="1522">Middle Name</NamePartType>
+            <NamePartType ID="1523">Maiden Name</NamePartType>
+            <NamePartType ID="1524">Aircraft Name</NamePartType>
+            <NamePartType ID="1525">Entity Name</NamePartType>
+            <NamePartType ID="1526">Vessel Name</NamePartType>
+            <NamePartType ID="1528">Nickname</NamePartType>
+            <NamePartType ID="91708">Patronymic</NamePartType>
+            <NamePartType ID="91709">Matronymic</NamePartType>
+        </NamePartTypeValues>
+        <OrganisationValues>
+            <Organisation ID="1" CountryID="11212">State</Organisation>
+        </OrganisationValues>
+        <PartySubTypeValues>
+            <PartySubType ID="1" PartyTypeID="4">Vessel</PartySubType>
+            <PartySubType ID="2" PartyTypeID="4">Aircraft</PartySubType>
+            <PartySubType ID="3" PartyTypeID="2">Unknown</PartySubType>
+            <PartySubType ID="4" PartyTypeID="1">Unknown</PartySubType>
+        </PartySubTypeValues>
+        <PartyTypeValues>
+            <PartyType ID="1">Individual</PartyType>
+            <PartyType ID="2">Entity</PartyType>
+            <PartyType ID="3">Location</PartyType>
+            <PartyType ID="4">Transport</PartyType>
+            <PartyType ID="5">Other Entity</PartyType>
+        </PartyTypeValues>
+        <RelationQualityValues>
+            <RelationQuality ID="1540">High</RelationQuality>
+            <RelationQuality ID="1542">on OFAC's SDN list:</RelationQuality>
+            <RelationQuality ID="1">Unknown</RelationQuality>
+        </RelationQualityValues>
+        <RelationTypeValues>
+            <RelationType ID="1555" Symmetrical="false">Associate Of</RelationType>
+            <RelationType ID="15001" Symmetrical="false">Providing support to</RelationType>
+            <RelationType ID="15002" Symmetrical="false">Acting for or on behalf of</RelationType>
+            <RelationType ID="15003" Symmetrical="false">Owned or Controlled By</RelationType>
+            <RelationType ID="15004" Symmetrical="false">Family member of</RelationType>
+            <RelationType ID="91422" Symmetrical="false">playing a significant role in</RelationType>
+            <RelationType ID="91725" Symmetrical="false">Leader or official of</RelationType>
+            <RelationType ID="91900" Symmetrical="false">Principal Executive Officer</RelationType>
+            <RelationType ID="92019" Symmetrical="false">Owns, controls, or operates</RelationType>
+        </RelationTypeValues>
+        <ReliabilityValues>
+            <Reliability ID="1560">Confirmed</Reliability>
+            <Reliability ID="1561">False</Reliability>
+            <Reliability ID="91479">Reported</Reliability>
+            <Reliability ID="1">Unknown</Reliability>
+        </ReliabilityValues>
+        <SanctionsProgramValues>
+            <SanctionsProgram ID="1" SubsidiaryBodyID="1">Unknown</SanctionsProgram>
+        </SanctionsProgramValues>
+        <SanctionsTypeValues>
+            <SanctionsType ID="1705">Block</SanctionsType>
+            <SanctionsType ID="91419">NDAA Special Conditions</SanctionsType>
+            <SanctionsType ID="91506">13662 Sectoral Directive 2</SanctionsType>
+            <SanctionsType ID="91513">13662 Sectoral Directive 3</SanctionsType>
+            <SanctionsType ID="91514">13662 Sectoral Directive 4</SanctionsType>
+            <SanctionsType ID="91867">CAATSA Section 231/235 Sanctions</SanctionsType>
+            <SanctionsType ID="1">Program</SanctionsType>
+        </SanctionsTypeValues>
+        <ScriptValues>
+            <Script ID="160" ScriptCode="Arab">Arabic</Script>
+            <Script ID="501" ScriptCode="Hans">Chinese Simplified</Script>
+            <Script ID="502" ScriptCode="Hant">Chinese Traditional</Script>
+            <Script ID="220" ScriptCode="Cyrl">Cyrillic</Script>
+            <Script ID="413" ScriptCode="Japanese">Japanese</Script>
+            <Script ID="215" ScriptCode="Latin">Latin</Script>
+            <Script ID="287" ScriptCode="Korean">Korean</Script>
+        </ScriptValues>
+        <ScriptStatusValues>
+            <ScriptStatus ID="1">Unknown</ScriptStatus>
+        </ScriptStatusValues>
+        <SubsidiaryBodyValues>
+            <SubsidiaryBody ID="1" Notional="false" DecisionMakingBodyID="1">Office of Foreign Assets Control</SubsidiaryBody>
+        </SubsidiaryBodyValues>
+        <SupInfoTypeValues/>
+        <TargetTypeValues/>
+        <ValidityValues>
+            <Validity ID="1">Valid</Validity>
+            <Validity ID="2">Fraudulent</Validity>
+        </ValidityValues>
+    </ReferenceValueSets>
+
+    <Locations>
+        <Location ID="25">
+            <LocationAreaCode AreaCodeID="11073"/>
+            <LocationCountry CountryID="11073" CountryRelevanceID="1413"/>
+            <LocationPart LocPartTypeID="1454">
+                <LocationPartValue Primary="true" LocPartValueTypeID="1" LocPartValueStatusID="1">
+                    <Comment/>
+                    <Value>Havana</Value>
+                </LocationPartValue>
+            </LocationPart>
+            <FeatureVersionReference FeatureVersionID="200025"/>
+        </Location>
+    </Locations>
+    <IDRegDocuments>
+        <IDRegDocument ID="19525" IDRegDocTypeID="91412" IdentityID="4267" IssuedBy-CountryID="11211" ValidityID="1">
+            <Comment/>
+            <IDRegistrationNo>01074897</IDRegistrationNo>
+            <IssuingAuthority/>
+            <DocumentedNameReference DocumentedNameID="40097"/>
+        </IDRegDocument>
+    </IDRegDocuments>
+
+    <DistinctParties>
+        <DistinctParty FixedRef="7843">
+            <Comment>named in UNSCR 1483; President since 1979;</Comment>
+            <Profile ID="7843" PartySubTypeID="4">
+                <Identity ID="4021" FixedRef="7843" Primary="true" False="false">
+                    <Alias FixedRef="7843" AliasTypeID="1403" Primary="true" LowQuality="false">
+                        <DocumentedName ID="4021" FixedRef="7843" DocNameStatusID="1">
+                            <DocumentedNamePart>
+                                <NamePartValue NamePartGroupID="6214" ScriptID="215" ScriptStatusID="1" Acronym="false">AL-TIKRITI
+                                </NamePartValue>
+                            </DocumentedNamePart>
+                            <DocumentedNamePart>
+                                <NamePartValue NamePartGroupID="6215" ScriptID="215" ScriptStatusID="1" Acronym="false">Saddam Hussein
+                                </NamePartValue>
+                            </DocumentedNamePart>
+                        </DocumentedName>
+                    </Alias>
+                    <Alias FixedRef="7843" AliasTypeID="1400" Primary="false" LowQuality="true">
+                        <DocumentedName ID="12341" FixedRef="7843" DocNameStatusID="2">
+                            <DocumentedNamePart>
+                                <NamePartValue NamePartGroupID="18236" ScriptID="215" ScriptStatusID="1" Acronym="false">ABU ALI
+                                </NamePartValue>
+                            </DocumentedNamePart>
+                        </DocumentedName>
+                    </Alias>
+                    <Alias FixedRef="7843" AliasTypeID="1400" Primary="false" LowQuality="false">
+                        <DocumentedName ID="12342" FixedRef="7843" DocNameStatusID="2">
+                            <DocumentedNamePart>
+                                <NamePartValue NamePartGroupID="18237" ScriptID="215" ScriptStatusID="1" Acronym="false">HUSAYN
+                                </NamePartValue>
+                            </DocumentedNamePart>
+                            <DocumentedNamePart>
+                                <NamePartValue NamePartGroupID="18238" ScriptID="215" ScriptStatusID="1" Acronym="false">Saddam
+                                </NamePartValue>
+                            </DocumentedNamePart>
+                        </DocumentedName>
+                    </Alias>
+                    <Alias FixedRef="7843" AliasTypeID="1400" Primary="false" LowQuality="false">
+                        <DocumentedName ID="12343" FixedRef="7843" DocNameStatusID="2">
+                            <DocumentedNamePart>
+                                <NamePartValue NamePartGroupID="18239" ScriptID="215" ScriptStatusID="1" Acronym="false">HUSSAIN
+                                </NamePartValue>
+                            </DocumentedNamePart>
+                            <DocumentedNamePart>
+                                <NamePartValue NamePartGroupID="18240" ScriptID="215" ScriptStatusID="1" Acronym="false">Saddam
+                                </NamePartValue>
+                            </DocumentedNamePart>
+                        </DocumentedName>
+                    </Alias>
+                    <Alias FixedRef="7843" AliasTypeID="1400" Primary="false" LowQuality="false">
+                        <DocumentedName ID="12344" FixedRef="7843" DocNameStatusID="2">
+                            <DocumentedNamePart>
+                                <NamePartValue NamePartGroupID="18241" ScriptID="215" ScriptStatusID="1" Acronym="false">HUSSEIN
+                                </NamePartValue>
+                            </DocumentedNamePart>
+                            <DocumentedNamePart>
+                                <NamePartValue NamePartGroupID="18242" ScriptID="215" ScriptStatusID="1" Acronym="false">Saddam
+                                </NamePartValue>
+                            </DocumentedNamePart>
+                        </DocumentedName>
+                    </Alias>
+                    <NamePartGroups>
+                        <MasterNamePartGroup>
+                            <NamePartGroup ID="6214" NamePartTypeID="1520"/>
+                        </MasterNamePartGroup>
+                        <MasterNamePartGroup>
+                            <NamePartGroup ID="6215" NamePartTypeID="1521"/>
+                        </MasterNamePartGroup>
+                        <MasterNamePartGroup>
+                            <NamePartGroup ID="18236" NamePartTypeID="1520"/>
+                        </MasterNamePartGroup>
+                        <MasterNamePartGroup>
+                            <NamePartGroup ID="18237" NamePartTypeID="1520"/>
+                        </MasterNamePartGroup>
+                        <MasterNamePartGroup>
+                            <NamePartGroup ID="18238" NamePartTypeID="1521"/>
+                        </MasterNamePartGroup>
+                        <MasterNamePartGroup>
+                            <NamePartGroup ID="18239" NamePartTypeID="1520"/>
+                        </MasterNamePartGroup>
+                        <MasterNamePartGroup>
+                            <NamePartGroup ID="18240" NamePartTypeID="1521"/>
+                        </MasterNamePartGroup>
+                        <MasterNamePartGroup>
+                            <NamePartGroup ID="18241" NamePartTypeID="1520"/>
+                        </MasterNamePartGroup>
+                        <MasterNamePartGroup>
+                            <NamePartGroup ID="18242" NamePartTypeID="1521"/>
+                        </MasterNamePartGroup>
+                    </NamePartGroups>
+                </Identity>
+                <Feature ID="2066" FeatureTypeID="8">
+                    <FeatureVersion ID="3398" ReliabilityID="1">
+                        <Comment/>
+                        <DatePeriod CalendarTypeID="1" YearFixed="false" MonthFixed="false" DayFixed="false">
+                            <Start Approximate="false" YearFixed="false" MonthFixed="false" DayFixed="false">
+                                <From>
+                                    <Year>1937</Year>
+                                    <Month>4</Month>
+                                    <Day>28</Day>
+                                </From>
+                                <To>
+                                    <Year>1937</Year>
+                                    <Month>4</Month>
+                                    <Day>28</Day>
+                                </To>
+                            </Start>
+                            <End Approximate="false" YearFixed="false" MonthFixed="false" DayFixed="false">
+                                <From>
+                                    <Year>1937</Year>
+                                    <Month>4</Month>
+                                    <Day>28</Day>
+                                </From>
+                                <To>
+                                    <Year>1937</Year>
+                                    <Month>4</Month>
+                                    <Day>28</Day>
+                                </To>
+                            </End>
+                        </DatePeriod>
+                        <VersionDetail DetailTypeID="1430"/>
+                    </FeatureVersion>
+                    <IdentityReference IdentityID="4021" IdentityFeatureLinkTypeID="1"/>
+                </Feature>
+                <Feature ID="2067" FeatureTypeID="9">
+                    <FeatureVersion ID="3399" ReliabilityID="1">
+                        <Comment/>
+                        <VersionDetail DetailTypeID="1432">al-Awja, near Tikrit, Iraq</VersionDetail>
+                    </FeatureVersion>
+                    <IdentityReference IdentityID="4021" IdentityFeatureLinkTypeID="1"/>
+                </Feature>
+                <Feature ID="2068" FeatureTypeID="10">
+                    <FeatureVersion ID="3400" ReliabilityID="1">
+                        <Comment/>
+                        <VersionDetail DetailTypeID="1433"/>
+                        <VersionLocation LocationID="186110"/>
+                    </FeatureVersion>
+                    <IdentityReference IdentityID="4021" IdentityFeatureLinkTypeID="1"/>
+                </Feature>
+                <Feature ID="156761" FeatureTypeID="25">
+                    <FeatureVersion ID="206761" ReliabilityID="1">
+                        <Comment/>
+                        <VersionLocation LocationID="6761"/>
+                    </FeatureVersion>
+                    <IdentityReference IdentityID="4021" IdentityFeatureLinkTypeID="1"/>
+                </Feature>
+            </Profile>
+        </DistinctParty>
+    </DistinctParties>
+    <ProfileRelationships>
+        <ProfileRelationship ID="6659" From-ProfileID="2686" To-ProfileID="4697" RelationTypeID="15002" RelationQualityID="1" Former="false"
+                             SanctionsEntryID="2686">
+            <Comment/>
+        </ProfileRelationship>
+    </ProfileRelationships>
+    <SanctionsEntries>
+        <SanctionsEntry ID="36" ProfileID="36" ListID="1550">
+            <EntryEvent ID="36" EntryEventTypeID="1" LegalBasisID="1">
+                <Comment/>
+                <Date CalendarTypeID="1">
+                    <Year>1986</Year>
+                    <Month>12</Month>
+                    <Day>10</Day>
+                </Date>
+            </EntryEvent>
+            <SanctionsMeasure ID="4716" SanctionsTypeID="1705">
+                <DatePeriod CalendarTypeID="1" YearFixed="true" MonthFixed="true" DayFixed="true"/>
+            </SanctionsMeasure>
+            <SanctionsMeasure ID="126005" SanctionsTypeID="1">
+                <Comment>CUBA</Comment>
+                <DatePeriod CalendarTypeID="1" YearFixed="true" MonthFixed="true" DayFixed="true"/>
+            </SanctionsMeasure>
+        </SanctionsEntry>
+        <SanctionsEntry ID="173" ProfileID="173" ListID="1550">
+            <EntryEvent ID="173" EntryEventTypeID="1" LegalBasisID="1">
+                <Comment/>
+                <Date CalendarTypeID="1">
+                    <Year>1984</Year>
+                    <Month>7</Month>
+                    <Day>12</Day>
+                </Date>
+            </EntryEvent>
+            <SanctionsMeasure ID="9029" SanctionsTypeID="1705">
+                <DatePeriod CalendarTypeID="1" YearFixed="true" MonthFixed="true" DayFixed="true"/>
+            </SanctionsMeasure>
+            <SanctionsMeasure ID="126014" SanctionsTypeID="1">
+                <Comment>CUBA</Comment>
+                <DatePeriod CalendarTypeID="1" YearFixed="true" MonthFixed="true" DayFixed="true"/>
+            </SanctionsMeasure>
+        </SanctionsEntry>
+    </SanctionsEntries>
+    <SanctionsEntryLinks />
+</Sanctions>

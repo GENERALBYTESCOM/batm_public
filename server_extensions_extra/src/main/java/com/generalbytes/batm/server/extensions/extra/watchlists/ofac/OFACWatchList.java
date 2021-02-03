@@ -18,13 +18,11 @@
 
 package com.generalbytes.batm.server.extensions.extra.watchlists.ofac;
 
-
+import com.generalbytes.batm.server.extensions.extra.watchlists.AbstractWatchList;
+import com.generalbytes.batm.server.extensions.extra.watchlists.ofac.tags.Sanctions;
 import com.generalbytes.batm.server.extensions.watchlist.BlacklistedAddress;
-import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 import com.generalbytes.batm.server.extensions.watchlist.WatchListQuery;
 import com.generalbytes.batm.server.extensions.watchlist.WatchListResult;
-import com.generalbytes.batm.server.extensions.watchlist.WatchListMatch;
-import com.generalbytes.batm.server.extensions.extra.watchlists.ofac.tags.Sanctions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,29 +30,18 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.URL;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-@SuppressWarnings("Duplicates")
-public class OFACWatchList implements IWatchList{
+public class OFACWatchList extends AbstractWatchList<ParsedSanctions> {
     private static final Logger log = LoggerFactory.getLogger("batm.master.watchlist.OFAC");
     private static final String DOWNLOAD_URL = "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml";
-    private String downloadDirectory;
+    private static final String SANCTIONS_FILENAME = "ofac_sdn_advanced.xml";
+    private static final int UPDATE_PERIOD_IN_MINS = 60 * 24; //every 24 hours in mins
+    private static final String WATCHLIST_ID = "ofac";
 
     // more information here: https://www.treasury.gov/resource-center/sanctions/SDN-List/Pages/default.aspx
     // and here: https://www.treasury.gov/resource-center/sanctions/SDN-List/Pages/sdn_advanced.aspx
-
-
-    private ParsedSanctions sanctions;
-
-    private static final int UPDATE_PERIOD_IN_MINS = 60 * 24; //every 24 hours in mins
-    private static final String WATCHLIST_ID = "ofac";
 
     @Override
     public String getName() {
@@ -88,45 +75,17 @@ public class OFACWatchList implements IWatchList{
 
     @Override
     public int refresh() {
-        File watchlistsDir = new File(downloadDirectory);
-        if (!watchlistsDir.exists()) {
-            watchlistsDir.mkdirs();
-        }
-        log.debug("Downloading OFAC SDN watch list...");
-        final File finalFile = new File(watchlistsDir, "ofac_sdn_advanced.xml");
-        final File downloadToFile = new File(watchlistsDir, "ofac_sdn_advanced.xml.download");
-        final boolean res = downloadFile(DOWNLOAD_URL, downloadToFile);
-        if (res) {
-            boolean changed = true;
-            if (downloadToFile.exists() && finalFile.exists()) {
-                changed = downloadToFile.length() != finalFile.length();
-            }
-            if (changed) {
-                if (checkParsing(downloadToFile) && switchFiles(finalFile, downloadToFile)) {
-                    sanctions = parseSanctionsList();
-                    return LIST_CHANGED;
-                } else {
-                    return LIST_REFRESH_FAILED;
-                }
-            }else{
-                downloadToFile.delete();
-                return LIST_NOT_CHANGED;
-            }
-        }
-        return LIST_REFRESH_FAILED;
+        return refreshWatchListFile(DOWNLOAD_URL, SANCTIONS_FILENAME);
     }
 
-    private synchronized boolean switchFiles(File finalFile, File downloadToFile) {
-        return downloadToFile.renameTo(finalFile);
-    }
-
-    private boolean checkParsing(File downloadToFile) {
-        log.debug("Parsing " + downloadToFile.getAbsolutePath() + "...");
+    @Override
+    protected boolean checkParsing(File xmlFile) {
+        log.debug("Parsing " + xmlFile.getAbsolutePath() + "...");
         try {
             JAXBContext jc = JAXBContext.newInstance(Sanctions.class);
 
             Unmarshaller unmarshaller = jc.createUnmarshaller();
-            Sanctions sanctions = (Sanctions) unmarshaller.unmarshal(downloadToFile);
+            Sanctions sanctions = (Sanctions) unmarshaller.unmarshal(xmlFile);
             if (sanctions != null) {
                 return true;
             }
@@ -139,42 +98,19 @@ public class OFACWatchList implements IWatchList{
 
     @Override
     public WatchListResult search(WatchListQuery query) {
-        synchronized (this) {
-            if (sanctions == null) {
-                sanctions = parseSanctionsList();
-            }
-        }
-
-        if (sanctions == null) {
-            return new WatchListResult(WatchListResult.RESULT_TYPE_WATCHLIST_NOT_READY);
-        }
-
-        //do the actual matching
-        final Set<Match> result = sanctions.search(query.getFirstName(), query.getLastName());
-
-
-        if (result.isEmpty()) {
-            return new WatchListResult(WatchListResult.RESULT_TYPE_WATCHLIST_SEARCHED);
-        }else{
-            final ArrayList<WatchListMatch> matches = new ArrayList<WatchListMatch>();
-            for (Match match : result) {
-                final String partyIndex = sanctions.getPartyIndexByPartyId(match.getPartyId());
-                matches.add(new WatchListMatch(match.getScore(),"Matched OFAC SDN Number: " + match.getPartyId() + " partyIndex: "+ partyIndex + ". For more details click <a href=\'https://sanctionssearch.ofac.treas.gov\'>here</a>.",getName()));
-            }
-            return new WatchListResult(matches);
-        }
+        return searchWatchList(query, "OFAC SDN", "https://sanctionssearch.ofac.treas.gov");
     }
 
-    private ParsedSanctions parseSanctionsList() {
-        final String watchlistsLocation = downloadDirectory;
-        File watchlistsDir = new File(watchlistsLocation);
-        final File finalFile = new File(watchlistsDir, "ofac_sdn_advanced.xml");
+    @Override
+    protected ParsedSanctions parseSanctionsList() {
+        File watchlistsDir = new File(downloadDirectory);
+        final File finalFile = new File(watchlistsDir, SANCTIONS_FILENAME);
         if (finalFile.exists()) {
             try {
                 JAXBContext jc = JAXBContext.newInstance(Sanctions.class);
 
                 Unmarshaller unmarshaller = jc.createUnmarshaller();
-                Sanctions temporary  = (Sanctions) unmarshaller.unmarshal(finalFile);
+                Sanctions temporary = (Sanctions) unmarshaller.unmarshal(finalFile);
                 return ParsedSanctions.parse(temporary);
 
             } catch (JAXBException e) {
@@ -182,19 +118,6 @@ public class OFACWatchList implements IWatchList{
             }
         }
         return null;
-    }
-
-    public static boolean downloadFile(String fileURL, File downloadToFile) {
-        try {
-            URL website = new URL(fileURL);
-            ReadableByteChannel rbc = Channels.newChannel(website.openStream());
-            FileOutputStream fos = new FileOutputStream(downloadToFile);
-            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-            return true;
-        } catch (IOException e) {
-            log.error("Error", e);
-        }
-        return false;
     }
 
     @Override
