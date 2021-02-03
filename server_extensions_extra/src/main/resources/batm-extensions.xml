@@ -63,11 +63,12 @@
                 <param name="port" />
                 <param name="token" />
                 <param name="wallet_id" />
+                <param name="priority" />
                 <cryptocurrency buyonly="true">BCH</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
-                <help>Host should start with http:// or https://</help>
+                <help>Host should start with http:// or https://. You can specify optional parameter priority to increase the network fee paid in the given transaction. Options are low, medium, high and will try to get your transaction included into next 24, 8, or 2 blocks, respectively. If not specified, high priority will be used.</help>
             </wallet>
             <wallet prefix="cryptxnoforward" name="CryptX Wallet System (no forward)">
                 <sendtomany supported="false"/>
@@ -80,7 +81,7 @@
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
-                <help>This variant of the wallet generates new addresses for each transaction and does not forward payments from temporary address. Host should start with http:// or https://</help>
+                <help>Host should start with http:// or https://. You can specify optional parameter priority to increase the network fee paid in the given transaction. Options are low, medium, high and will try to get your transaction included into next 24, 8, or 2 blocks, respectively. If not specified, high priority will be used.</help>
             </wallet>
             <ratesource prefix="btcfix" name ="Fix Price" >
                 <param name="price" />

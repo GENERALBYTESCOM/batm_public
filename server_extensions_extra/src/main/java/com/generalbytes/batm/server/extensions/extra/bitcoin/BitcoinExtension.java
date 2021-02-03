@@ -338,10 +338,15 @@ public class BitcoinExtension extends AbstractExtension {
                 }
                 String walletId = st.nextToken();
 
-                if ("cryptxnoforward".equalsIgnoreCase(walletType)) {
-                    return new CryptXWithUniqueAddresses(scheme, host, port, token, walletId);
+                String priority = null;
+                if (st.hasMoreTokens()) {
+                    priority = st.nextToken();
                 }
-                return new CryptXWallet(scheme, host, port, token, walletId);
+
+                if ("cryptxnoforward".equalsIgnoreCase(walletType)) {
+                    return new CryptXWithUniqueAddresses(scheme, host, port, token, walletId, priority);
+                }
+                return new CryptXWallet(scheme, host, port, token, walletId, priority);
             }
         }
         } catch (Exception e) {

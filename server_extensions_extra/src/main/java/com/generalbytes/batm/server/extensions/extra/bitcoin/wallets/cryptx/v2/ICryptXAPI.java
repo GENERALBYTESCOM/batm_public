@@ -13,14 +13,26 @@ import java.util.Map;
 @Produces(MediaType.APPLICATION_JSON)
 public interface ICryptXAPI {
 
+    String PRIORITY_LOW = "low";
+    String PRIORITY_MEDIUM = "medium";
+    String PRIORITY_HIGH = "high";
+
     @POST
     @Path("/{coin}/wallet/{walletId}/transaction")
     @Consumes(MediaType.APPLICATION_JSON)
-    Map<String, Object> sendTransaction(@PathParam("coin") String coin, @PathParam("walletId") String walletId, CryptXSendTransactionRequest request) throws IOException;
+    Map<String, Object> sendTransaction(
+        @PathParam("coin") String coin,
+        @PathParam("walletId") String walletId,
+        CryptXSendTransactionRequest request
+    ) throws IOException;
 
     @GET
     @Path("/{coin}/wallet/{walletId}")
-    Map<String, Object> getWallet(@PathParam("coin") String coin, @PathParam("walletId") String walletId) throws IOException;
+    Map<String, Object> getWallet(
+        @PathParam("coin") String coin,
+        @PathParam("walletId") String walletId,
+        @QueryParam("includeBalance") boolean includeBalance
+    ) throws IOException;
 
     @POST
     @Path("/{coin}/wallet/{walletId}/address")

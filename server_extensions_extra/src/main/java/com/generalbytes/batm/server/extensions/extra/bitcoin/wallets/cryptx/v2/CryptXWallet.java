@@ -31,10 +31,23 @@ public class CryptXWallet implements IWallet {
     protected String walletId;
     protected String url;
     protected static final Integer readTimeout = 90 * 1000;
+    private int priority;
 
-    public CryptXWallet(String scheme, String host, int port, String token, String walletId) {
+    public CryptXWallet(String scheme, String host, int port, String token, String walletId, String priority) {
         this.walletId = walletId;
         this.url = new HttpUrl.Builder().scheme(scheme).host(host).port(port).build().toString();
+
+        if (priority == null) {
+            this.priority = 2;
+        } else if (PRIORITY_LOW.equalsIgnoreCase(priority.trim())) {
+            this.priority = 24;
+        } else if (PRIORITY_MEDIUM.equalsIgnoreCase(priority.trim())) {
+            this.priority = 8;
+        } else if (PRIORITY_HIGH.equalsIgnoreCase(priority.trim())) {
+            this.priority = 2;
+        } else {
+            this.priority = 2;
+        }
 
         ClientConfig config = new ClientConfig();
         config.setHttpReadTimeout(readTimeout);
@@ -57,12 +70,17 @@ public class CryptXWallet implements IWallet {
 
     @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
-        CryptXSendTransactionRequest sendTransactionRequest = new CryptXSendTransactionRequest(destinationAddress, toMinorUnit(cryptoCurrency, amount), description);
+        CryptXSendTransactionRequest sendTransactionRequest = new CryptXSendTransactionRequest(
+            destinationAddress,
+            toMinorUnit(cryptoCurrency, amount),
+            description,
+            priority != 0 ? priority : null
+        );
         try {
             Map<String, Object> response = api.sendTransaction(cryptoCurrency.toLowerCase(), this.walletId, sendTransactionRequest);
             checkForSuccess(response);
             return getTxidFromSendTransactionResponse(response);
-        }  catch (HttpStatusIOException hse) {
+        } catch (HttpStatusIOException hse) {
             log.debug("send coins error - HttpStatusIOException, error message: {}, HTTP code: {}, HTTP content: {}", hse.getMessage(), hse.getHttpStatusCode(), hse.getHttpBody());
         } catch (CryptXException e) {
             log.debug("send coins error message: {}", e.getErrorMessage());

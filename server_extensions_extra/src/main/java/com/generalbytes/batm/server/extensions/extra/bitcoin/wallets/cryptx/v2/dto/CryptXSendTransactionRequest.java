@@ -12,11 +12,11 @@ public class CryptXSendTransactionRequest {
 
     private boolean subtractFeeFromOutputs;
 
-    public CryptXSendTransactionRequest(String address, String value, String uniqueId) {
+    public CryptXSendTransactionRequest(String address, String value, String uniqueId, int blocksSize) {
         this.address = address;
         this.value = value;
         this.uniqueId = uniqueId;
-        this.blocksSize = 2;
+        this.blocksSize = blocksSize != 0 ? blocksSize : 2;
         this.subtractFeeFromOutputs = false;
     }
 

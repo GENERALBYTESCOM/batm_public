@@ -14,8 +14,8 @@ public class CryptXWithUniqueAddresses extends CryptXWallet implements IGenerate
 
     private static final Logger log = LoggerFactory.getLogger(CryptXWithUniqueAddresses.class);
 
-    public CryptXWithUniqueAddresses(String scheme, String host, int port, String token, String walletId) {
-        super(scheme, host, port, token, walletId);
+    public CryptXWithUniqueAddresses(String scheme, String host, int port, String token, String walletId, String priority) {
+        super(scheme, host, port, token, walletId, priority);
     }
 
     @Override
