@@ -50,6 +50,6 @@ public interface ICryptXAPI {
         @PathParam("coin") String coin,
         @PathParam("walletId") String walletId,
         @QueryParam("allTokens") Boolean allTokens
-    );
+    ) throws IOException;
 
 }

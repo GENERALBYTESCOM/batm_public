@@ -139,6 +139,8 @@ public class CryptXWallet implements IWallet {
             BigInteger spendableBalance = balance.getSpendableBalance();
 
             return toMajorUnit(cryptoCurrency, spendableBalance.toString());
+        } catch (HttpStatusIOException hse) {
+            log.debug("getCryptoBalance error: {}", hse.getHttpBody());
         } catch (CryptXException e) {
             log.debug("getCryptoBalance error: {}", e.getErrorMessage());
         } catch (Exception e) {
