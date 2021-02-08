@@ -22,6 +22,7 @@ import com.generalbytes.batm.server.extensions.AbstractExtension;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
 import com.generalbytes.batm.server.extensions.IWallet;
+import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.DemoLightningWallet;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.EclairWallet;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.lnd.LndWallet;
 import okhttp3.HttpUrl;
@@ -87,6 +88,8 @@ public class LightningBitcoinExtension extends AbstractExtension {
                         return null;
                     }
                     return new LndWallet(url, macaroon, cert);
+                } else if ("lbtcdemo".equalsIgnoreCase(walletType)) {
+                    return new DemoLightningWallet();
                 }
             }
         } catch (Exception e) {
