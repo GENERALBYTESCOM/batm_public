@@ -240,7 +240,8 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
             }
         }
 
-        return accountService.withdrawFunds(exchangeCryptoCurrency, amount, destinationAddress);
+        CurrencyPair pair = new CurrencyPair(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency), getPreferredFiatCurrency());
+        return accountService.withdrawFunds(exchangeCryptoCurrency, getTradableAmount(amount, pair), destinationAddress);
     }
 
     public String purchaseCoins(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
