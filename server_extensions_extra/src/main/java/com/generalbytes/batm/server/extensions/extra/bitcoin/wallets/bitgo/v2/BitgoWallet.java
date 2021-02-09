@@ -54,11 +54,17 @@ public class BitgoWallet implements IWallet, ICanSendMany {
     protected String walletPassphrase;
     protected String url;
     protected static final Integer readTimeout = 90 * 1000; //90 seconds
+    protected Integer numBlocks;
 
     public BitgoWallet(String scheme, String host, int port, String token, String walletId, String walletPassphrase) {
+      this(scheme, host, port, token, walletId, walletPassphrase, 2);
+    }
+
+    public BitgoWallet(String scheme, String host, int port, String token, String walletId, String walletPassphrase, Integer numBlocks) {
         this.walletId = walletId;
         this.walletPassphrase = walletPassphrase;
         this.url = new HttpUrl.Builder().scheme(scheme).host(host).port(port).build().toString();
+        this.numBlocks = numBlocks;
 
         ClientConfig config = new ClientConfig();
         config.setHttpReadTimeout(readTimeout);
@@ -90,7 +96,7 @@ public class BitgoWallet implements IWallet, ICanSendMany {
         List<BitGoRecipient> recipients = transfers.stream()
             .map(transfer -> new BitGoRecipient(transfer.getDestinationAddress(), toSatoshis(transfer.getAmount(), cryptoCurrency)))
             .collect(Collectors.toList());
-        final BitGoSendManyRequest request = new BitGoSendManyRequest(recipients, walletPassphrase);
+        final BitGoSendManyRequest request = new BitGoSendManyRequest(recipients, walletPassphrase, this.numBlocks);
         try {
             return getResultTxId(api.sendMany(cryptoCurrency.toLowerCase(), this.walletId, request));
         } catch (HttpStatusIOException hse) {
@@ -105,7 +111,7 @@ public class BitgoWallet implements IWallet, ICanSendMany {
 
     @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
-        final BitGoCoinRequest request = new BitGoCoinRequest(destinationAddress, toSatoshis(amount, cryptoCurrency), walletPassphrase);
+        final BitGoCoinRequest request = new BitGoCoinRequest(destinationAddress, toSatoshis(amount, cryptoCurrency), walletPassphrase, this.numBlocks);
         try {
             return getResultTxId(api.sendCoins(cryptoCurrency.toLowerCase(), this.walletId, request));
         } catch (HttpStatusIOException hse) {
