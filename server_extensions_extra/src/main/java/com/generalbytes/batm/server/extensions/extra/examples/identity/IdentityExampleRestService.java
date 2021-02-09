@@ -60,6 +60,36 @@ public class IdentityExampleRestService {
                            @FormParam("contactCity") String contactCity, @FormParam("contactAddress") String contactAddress,
                            @FormParam("dateOfBirth") String dateOfBirth) throws ParseException {
 
+        return registerInner(fiatCurrency, externalId, limit, discount, terminalSerialNumber, note, phoneNumber,
+            firstName, lastName, emailAddress, idCardNumber, documentValidToYYYYMMDD, contactZIP, contactCountry,
+            contactProvince, contactCity, contactAddress, dateOfBirth, null);
+    }
+
+    @POST
+    @Path("/register")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String register(@FormParam("fiatCurrency") String fiatCurrency, @FormParam("externalId") String externalId,
+                           @FormParam("limit") BigDecimal limit, @FormParam("discount") BigDecimal discount,
+                           @FormParam("terminalSerialNumber") String terminalSerialNumber, @FormParam("note") String note,
+                           @FormParam("phoneNumber") String phoneNumber, @FormParam("firstName") String firstName,
+                           @FormParam("lastName") String lastName, @FormParam("emailAddress") String emailAddress,
+                           @FormParam("idCardNumber") String idCardNumber, @FormParam("documentValidToYYYYMMDD") String documentValidToYYYYMMDD,
+                           @FormParam("contactZIP") String contactZIP,
+                           @FormParam("contactCountry") String contactCountry, @FormParam("contactProvince") String contactProvince,
+                           @FormParam("contactCity") String contactCity, @FormParam("contactAddress") String contactAddress,
+                           @FormParam("dateOfBirth") String dateOfBirth, @FormParam("contactAddress") String occupation) throws ParseException {
+
+        return registerInner(fiatCurrency, externalId, limit, discount, terminalSerialNumber, note, phoneNumber,
+            firstName, lastName, emailAddress, idCardNumber, documentValidToYYYYMMDD, contactZIP, contactCountry,
+            contactProvince, contactCity, contactAddress, dateOfBirth, occupation);
+    }
+
+
+    public String registerInner(String fiatCurrency, String externalId, BigDecimal limit, BigDecimal discount,
+                                String terminalSerialNumber, String note, String phoneNumber, String firstName,
+                                String lastName, String emailAddress, String idCardNumber, String documentValidToYYYYMMDD,
+                                String contactZIP, String contactCountry, String contactProvince,
+                                String contactCity, String contactAddress, String dateOfBirth, String occupation) throws ParseException {
 
         IExtensionContext ctx = IdentityExampleExtension.getExtensionContext();
         List<ILimit> limits = Arrays.asList(new LimitExample(fiatCurrency, limit));
@@ -83,7 +113,7 @@ public class IdentityExampleRestService {
         String identityPublicId = identity.getPublicId();
         ctx.addIdentityPiece(identityPublicId, IdentityPieceExample.fromPersonalInfo(firstName, lastName, idCardNumber, IIdentityPiece.DOCUMENT_TYPE_ID_CARD,
             documentValidToYYYYMMDD == null ? null : new SimpleDateFormat("yyyyMMdd", Locale.US).parse(documentValidToYYYYMMDD),
-            contactZIP, contactCountry, contactProvince, contactCity, contactAddress, dateOfBirthParsed));
+            contactZIP, contactCountry, contactProvince, contactCity, contactAddress, dateOfBirthParsed, occupation));
         ctx.addIdentityPiece(identityPublicId, IdentityPieceExample.fromPhoneNumber(phoneNumber));
         ctx.addIdentityPiece(identityPublicId, IdentityPieceExample.fromEmailAddress(emailAddress));
         ctx.addIdentityPiece(identityPublicId, IdentityPieceExample.fromSelfie("image/jpeg", exampleJpeg));

@@ -64,4 +64,7 @@ public interface IIdentityPiece {
      * used with TYPE_PERSONAL_INFORMATION
      */
     Date getDateOfBirth();
+
+    String getOccupation();
+
 }
