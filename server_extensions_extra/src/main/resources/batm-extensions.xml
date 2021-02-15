@@ -1848,6 +1848,7 @@
             <cryptocurrency>USDT</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="USDT" file="usdt.png"/>
+        <cryptologo cryptocurrency="USDT" file="usdt.svg"/>
         <!-- ADD your ERC20 tokens here. And don't forget to add cryptologos. -->
     </extension>
 
