@@ -62,7 +62,7 @@ public class IdentityExampleRestService {
 
         return registerInner(fiatCurrency, externalId, limit, discount, terminalSerialNumber, note, phoneNumber,
             firstName, lastName, emailAddress, idCardNumber, documentValidToYYYYMMDD, contactZIP, contactCountry,
-            contactProvince, contactCity, contactAddress, dateOfBirth, null);
+            contactProvince, contactCity, contactAddress, dateOfBirth, null, null);
     }
 
     @POST
@@ -77,11 +77,12 @@ public class IdentityExampleRestService {
                            @FormParam("contactZIP") String contactZIP,
                            @FormParam("contactCountry") String contactCountry, @FormParam("contactProvince") String contactProvince,
                            @FormParam("contactCity") String contactCity, @FormParam("contactAddress") String contactAddress,
-                           @FormParam("dateOfBirth") String dateOfBirth, @FormParam("contactAddress") String occupation) throws ParseException {
+                           @FormParam("dateOfBirth") String dateOfBirth, @FormParam("occupation") String occupation,
+                           @FormParam("ssn") String ssn) throws ParseException {
 
         return registerInner(fiatCurrency, externalId, limit, discount, terminalSerialNumber, note, phoneNumber,
             firstName, lastName, emailAddress, idCardNumber, documentValidToYYYYMMDD, contactZIP, contactCountry,
-            contactProvince, contactCity, contactAddress, dateOfBirth, occupation);
+            contactProvince, contactCity, contactAddress, dateOfBirth, occupation, ssn);
     }
 
 
@@ -89,7 +90,7 @@ public class IdentityExampleRestService {
                                 String terminalSerialNumber, String note, String phoneNumber, String firstName,
                                 String lastName, String emailAddress, String idCardNumber, String documentValidToYYYYMMDD,
                                 String contactZIP, String contactCountry, String contactProvince,
-                                String contactCity, String contactAddress, String dateOfBirth, String occupation) throws ParseException {
+                                String contactCity, String contactAddress, String dateOfBirth, String occupation, String ssn) throws ParseException {
 
         IExtensionContext ctx = IdentityExampleExtension.getExtensionContext();
         List<ILimit> limits = Arrays.asList(new LimitExample(fiatCurrency, limit));
@@ -113,7 +114,7 @@ public class IdentityExampleRestService {
         String identityPublicId = identity.getPublicId();
         ctx.addIdentityPiece(identityPublicId, IdentityPieceExample.fromPersonalInfo(firstName, lastName, idCardNumber, IIdentityPiece.DOCUMENT_TYPE_ID_CARD,
             documentValidToYYYYMMDD == null ? null : new SimpleDateFormat("yyyyMMdd", Locale.US).parse(documentValidToYYYYMMDD),
-            contactZIP, contactCountry, contactProvince, contactCity, contactAddress, dateOfBirthParsed, occupation));
+            contactZIP, contactCountry, contactProvince, contactCity, contactAddress, dateOfBirthParsed, occupation, ssn));
         ctx.addIdentityPiece(identityPublicId, IdentityPieceExample.fromPhoneNumber(phoneNumber));
         ctx.addIdentityPiece(identityPublicId, IdentityPieceExample.fromEmailAddress(emailAddress));
         ctx.addIdentityPiece(identityPublicId, IdentityPieceExample.fromSelfie("image/jpeg", exampleJpeg));
