@@ -1839,7 +1839,15 @@
             <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
             <cryptocurrency>ZPAE</cryptocurrency>
         </wallet>
-        <cryptologo cryptocurrency="ZPAE" file="zpae.png"/>
+        <wallet prefix="infuraERC20_USDT_6_0xdac17f958d2ee523a2206206994597c13d831ec7" name="Infura.io wallet - USDT">
+            <!-- Hint: infuraERC20_TOKENSYMBOL_DECIMALPLACES_CONTRACTADDRESS -->
+            <param name="projectId" />
+            <param name="mnemonic" />
+            <param name="gaslimit" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
+            <cryptocurrency>USDT</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="USDT" file="usdt.png"/>
         <!-- ADD your ERC20 tokens here. And don't forget to add cryptologos. -->
     </extension>
 
