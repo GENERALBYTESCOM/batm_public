@@ -65,6 +65,17 @@ public interface IIdentityPiece {
      */
     Date getDateOfBirth();
 
+    /**
+     * used with TYPE_PERSONAL_INFORMATION
+     * @return identity's job/occupation
+     */
     String getOccupation();
+
+    /**
+     * used with TYPE_PERSONAL_INFORMATION
+     * @return null or social security number
+     */
+    String getSSN();
+
 
 }
