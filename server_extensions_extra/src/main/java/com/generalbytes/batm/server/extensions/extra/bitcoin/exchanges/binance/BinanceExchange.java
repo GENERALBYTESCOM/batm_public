@@ -100,6 +100,7 @@ public abstract class BinanceExchange extends XChangeExchange {
     private static ExchangeSpecification getDefaultSpecification(String sslUri) {
         ExchangeSpecification spec = new org.knowm.xchange.binance.BinanceExchange().getDefaultExchangeSpecification();
         spec.setSslUri(sslUri);
+        spec.setShouldLoadRemoteMetaData(true); // true is default, but make sure it loads current withdraw fees
         return spec;
     }
 
@@ -139,4 +140,14 @@ public abstract class BinanceExchange extends XChangeExchange {
     protected BigDecimal getAmountRoundedToMinStep(BigDecimal cryptoAmount, BigDecimal minStep) {
         return cryptoAmount.divideToIntegralValue(minStep).multiply(minStep);
     }
+
+    @Override
+    public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
+        BigDecimal withdrawalFee = getWithdrawalFee(cryptoCurrency);
+        BigDecimal withdrawalAmount = amount.add(withdrawalFee);
+        log.info("Withdrawing {} + {} withdrawal fee = {} {}", amount, withdrawalFee, withdrawalAmount, cryptoCurrency);
+
+        return super.sendCoins(destinationAddress, withdrawalAmount, cryptoCurrency, description);
+    }
+
 }

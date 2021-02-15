@@ -26,6 +26,8 @@ public class BitgoWalletTest {
 
     private static BitgoWallet wallet;
 
+    private static BitgoWallet walletParams;
+
     private static void setLoggerLevel(String name, String level) {
         try {
             LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
@@ -55,8 +57,10 @@ public class BitgoWalletTest {
         String token = "v2x8d5e9e46379dc328b2039a400a12b04ea986689b38107fd84cd339bc89e3fb21";
         String walletId = "5b20e3a9266bbe80095757489d84a6bb";
         String walletPassphrase = "JSZSuGNlHfgqPHjrp0eO";
+        int numBlocks = 10;
 
         wallet = new BitgoWallet(scheme, host, port, token, walletId, walletPassphrase);
+        walletParams = new BitgoWallet(scheme, host, port, token, walletId, walletPassphrase, numBlocks);
     }
 
     @Test
@@ -119,5 +123,18 @@ public class BitgoWalletTest {
             new ICanSendMany.Transfer("2N5q4MwNSUxbAtaidhRgkiDrbwVR4yCZDhi", new BigDecimal("0.002"))
         ), coin, "test send to self");
         log.info("send coins status = {}", result);
+    }
+
+    @Test
+    @Ignore("Local instance of bitgo-express is required to run")
+    public void sendCoinsNumBlocksTest() {
+        String destinationAddress = "2N5q4MwNSUxbAtaidhRgkiDrbwVR4yCZDhi";
+        String coin = CryptoCurrency.TBTC.getCode();
+        Integer amountInt = 10000;
+        BigDecimal amount = BigDecimal.valueOf(amountInt).divide(Converters.TBTC);
+        String description = "CAS: uses the numBlocks API parameter";
+
+        String result = walletParams.sendCoins(destinationAddress, amount, coin, description);
+        log.info("send coins with numBlocks parameter status = {}", result);
     }
 }

@@ -267,12 +267,14 @@ public class BitcoinExtension extends AbstractExtension {
                 String proxyUrl = st.nextToken("\n").replaceFirst(":", "");
                 return new BitcoreWallet(apiKey, proxyUrl);
             } else if ("bitgo".equalsIgnoreCase(walletType) || "bitgonoforward".equalsIgnoreCase(walletType)) {
-                // bitgo:host:port:token:wallet_address:wallet_passphrase
-                // but host is optionally including the "http://" and port is optional
+                // bitgo:host:port:token:wallet_address:wallet_passphrase:num_blocks
+                // but host is optionally including the "http://" and port is optional,
+                // num_blocks is an optional integer greater than 2 and it's used to calculate mining fee.
                 // bitgo:http://localhost:80:token:wallet_address:wallet_passphrase
                 // bitgo:http://localhost:token:wallet_address:wallet_passphrase
                 // bitgo:localhost:token:wallet_address:wallet_passphrase
                 // bitgo:localhost:80:token:wallet_address:wallet_passphrase
+                // bitgo:localhost:80:token:wallet_address:wallet_passphrase:num_blocks
 
                 String first = st.nextToken();
                 String scheme;
@@ -302,10 +304,22 @@ public class BitcoinExtension extends AbstractExtension {
                 host = tunnelAddress.getHostString();
                 port = tunnelAddress.getPort();
 
-                if ("bitgonoforward".equalsIgnoreCase(walletType)) {
-                    return new BitgoWalletWithUniqueAddresses(scheme, host, port, token, walletAddress, walletPassphrase);
+                String blocks;
+                int num;
+                Integer numBlocks = 2;
+                if(st.hasMoreTokens()){
+                  blocks = st.nextToken();
+                  num = Integer.parseInt(blocks);
+                  if(num > 2) {
+                    numBlocks = num;
+                  }
                 }
-                return new BitgoWallet(scheme, host, port, token, walletAddress, walletPassphrase);
+
+                if ("bitgonoforward".equalsIgnoreCase(walletType)) {
+                  return new BitgoWalletWithUniqueAddresses(scheme, host, port, token, walletAddress, walletPassphrase, numBlocks);
+                }
+
+                return new BitgoWallet(scheme, host, port, token, walletAddress, walletPassphrase, numBlocks);
 
             } else if ("coinbasewallet2".equalsIgnoreCase(walletType)
                 || "coinbasewallet2noforward".equalsIgnoreCase(walletType)) {
