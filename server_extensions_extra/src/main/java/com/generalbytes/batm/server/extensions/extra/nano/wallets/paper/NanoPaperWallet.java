@@ -15,36 +15,34 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.nano.wallets.paperwallet;
+package com.generalbytes.batm.server.extensions.extra.nano.wallets.paper;
 
 import com.generalbytes.batm.server.extensions.IPaperWallet;
+import com.generalbytes.batm.server.extensions.extra.nano.NanoExtension;
 
 public class NanoPaperWallet implements IPaperWallet {
-    private String cryptoCurrency;
-    private String address;
-    private String privateKey;
-    private String message;
-    private String fileExtension = "png";
-    private String contentType = "image/png";
 
-    private byte[] content;
+    private final String address;
+    private final String privateKey;
+    private final String message;
+    private final byte[] content;
+
+    public NanoPaperWallet(String address, String privateKey, String message, byte[] qrContent) {
+        this.address = address;
+        this.privateKey = privateKey;
+        this.message = message;
+        this.content = qrContent;
+    }
+
 
     @Override
     public String getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
     @Override
     public String getPrivateKey() {
         return privateKey;
-    }
-
-    public void setPrivateKey(String privateKey) {
-        this.privateKey = privateKey;
     }
 
     @Override
@@ -54,33 +52,17 @@ public class NanoPaperWallet implements IPaperWallet {
 
     @Override
     public String getCryptoCurrency() {
-        return cryptoCurrency;
-    }
-
-    public void setCryptoCurrency(String cryptoCurrency) {
-        this.cryptoCurrency = cryptoCurrency;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
+        return NanoExtension.CURRENCY_CODE;
     }
 
     @Override
     public String getFileExtension() {
-        return fileExtension;
-    }
-
-    public void setFileExtension(String fileExtension) {
-        this.fileExtension = fileExtension;
+        return "png";
     }
 
     @Override
     public String getContentType() {
-        return contentType;
-    }
-
-    public void setContentType(String contentType) {
-        this.contentType = contentType;
+        return "image/png";
     }
 
     @Override
@@ -88,7 +70,4 @@ public class NanoPaperWallet implements IPaperWallet {
         return content;
     }
 
-    public void setContent(byte[] content) {
-        this.content = content;
-    }
 }

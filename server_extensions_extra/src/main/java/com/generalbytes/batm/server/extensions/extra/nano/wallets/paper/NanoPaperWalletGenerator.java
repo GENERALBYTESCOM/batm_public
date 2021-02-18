@@ -15,7 +15,7 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.nano.wallets.paperwallet;
+package com.generalbytes.batm.server.extensions.extra.nano.wallets.paper;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageOutputStream;
@@ -26,7 +26,6 @@ import java.io.*;
 import java.security.NoSuchAlgorithmException;
 import java.util.Hashtable;
 
-import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.IPaperWallet;
 import com.generalbytes.batm.server.extensions.IPaperWalletGenerator;
 import com.google.zxing.BarcodeFormat;
@@ -44,37 +43,35 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class NanoPaperWalletGenerator implements IPaperWalletGenerator {
-    private static final Logger log = LoggerFactory.getLogger("batm.master.extensions.NanoPaperWalletGenerator");
-    private static final String MESSAGE = "We have attached a QR code with your address. Please use your QR code to add more funds to your account. Your address is ";
+
+    private static final Logger log = LoggerFactory.getLogger(NanoPaperWalletGenerator.class);
+
+    private static final String ADDR_URI_SCHEME = "nano:";
+    private static final int QR_SIZE = 400;
+    private static final String MESSAGE = "We have attached a QR code with your address. Please use your QR code to " +
+        "add more funds to your account. Your address is ";
+
 
     @Override
     public IPaperWallet generateWallet(String cryptoCurrency, String oneTimePassword, String userLanguage,
             boolean shouldBeVanity) {
-        final int imagesize = 400;
-        NanoPaperWallet paperwallet = new NanoPaperWallet();
+        // Create private key and address
         HexData privateKey;
         try {
             privateKey = WalletUtil.generateRandomKey();
         } catch (NoSuchAlgorithmException e) {
-            log.error("Could not generate paper wallet", e);
+            log.error("Could not generate private key", e);
             return null;
         }
-        NanoAccount account = NanoAccount.fromPrivateKey(privateKey);
-        String address = account.toAddress();
-        byte[] image = generateQR("nano:" + address, imagesize);
+        String address = NanoAccount.fromPrivateKey(privateKey).toAddress();
 
-        paperwallet.setCryptoCurrency(CryptoCurrency.NANO.getCode());
-        paperwallet.setMessage(MESSAGE + address);
-        paperwallet.setFileExtension("png");
-        paperwallet.setAddress(address);
-        paperwallet.setContentType("image/png");
-        paperwallet.setContent(image);
-        paperwallet.setPrivateKey(privateKey.toHexString());
-        return paperwallet;
+        // Return paper wallet with QR
+        byte[] image = generateQR(ADDR_URI_SCHEME + address, QR_SIZE);
+        return new NanoPaperWallet(address, privateKey.toHexString(), MESSAGE, image);
     }
 
-    public byte[] generateQR(String text, int size) {
-        Hashtable hintMap = new Hashtable();
+    public static byte[] generateQR(String text, int size) {
+        Hashtable<EncodeHintType, ErrorCorrectionLevel> hintMap = new Hashtable<>();
         hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
         try {
             QRCodeWriter qrCodeWriter = new QRCodeWriter();
@@ -101,34 +98,10 @@ public class NanoPaperWalletGenerator implements IPaperWalletGenerator {
             ImageIO.write(image, "png", stream);
             stream.close();
             return baos.toByteArray();
-        } catch (WriterException e) {
-            log.error("Error", e);
-        } catch (IOException e) {
-            log.error("Error", e);
+        } catch (WriterException | IOException e) {
+            log.error("Couldn't create paper wallet QR.", e);
         }
         return null;
     }
 
-/*    public static void main(String[] args) {
-        NanoPaperWalletGenerator paperWalletGenerator = new NanoPaperWalletGenerator();
-        IPaperWallet paperWallet = paperWalletGenerator.generateWallet(CryptoCurrency.NANO.getCode(), "", "", false);
-
-        byte[] publicKeyQR = paperWallet.getContent();
-        ByteArrayInputStream bis = new ByteArrayInputStream(publicKeyQR);
-        try {
-            BufferedImage bImage = ImageIO.read(bis);
-            ImageIO.write(bImage, "png", new File("public_key.png"));
-
-            byte[] privateKeyQR = paperWalletGenerator.generateQR(paperWallet.getPrivateKey(), 400);
-            ByteArrayInputStream bisPrivate = new ByteArrayInputStream(privateKeyQR);
-            BufferedImage bImage1 = ImageIO.read(bisPrivate);
-            ImageIO.write(bImage1, "png", new File("private_key.png"));
-
-            System.out.println("images created");
-        } catch (IOException e) {
-            System.out.println(e.toString());
-            return;
-        }
-    }
-*/
 }

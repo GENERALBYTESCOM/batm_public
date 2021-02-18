@@ -17,53 +17,52 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.nano;
 
-import com.generalbytes.batm.common.currencies.CryptoCurrency;
-import com.generalbytes.batm.server.extensions.extra.common.PollingPaymentSupport;
-import com.generalbytes.batm.server.extensions.payment.PaymentRequest;
-import com.generalbytes.batm.server.extensions.payment.ReceivedAmount;
-import com.generalbytes.batm.server.extensions.extra.nano.wallets.nano_node.NanoRPCWallet;
-import com.generalbytes.batm.server.extensions.extra.nano.test.PRS;
-import com.generalbytes.batm.server.extensions.payment.IPaymentRequestListener;
-import com.generalbytes.batm.server.extensions.payment.IPaymentRequestSpecification;
-import com.generalbytes.batm.server.extensions.payment.IPaymentSupport;
 import com.generalbytes.batm.server.extensions.IGeneratesNewDepositCryptoAddress;
 import com.generalbytes.batm.server.extensions.IQueryableWallet;
-
-import java.math.BigDecimal;
-import java.util.concurrent.TimeUnit;
-
+import com.generalbytes.batm.server.extensions.extra.common.PollingPaymentSupport;
+import com.generalbytes.batm.server.extensions.extra.nano.wallets.node.NanoNodeWallet;
+import com.generalbytes.batm.server.extensions.extra.nano.wallets.node.NanoWSClient;
+import com.generalbytes.batm.server.extensions.payment.IPaymentRequestListener;
+import com.generalbytes.batm.server.extensions.payment.IPaymentRequestSpecification;
+import com.generalbytes.batm.server.extensions.payment.PaymentRequest;
+import com.generalbytes.batm.server.extensions.payment.ReceivedAmount;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import uk.oczadly.karl.jnano.model.HexData;
+import uk.oczadly.karl.jnano.model.NanoAmount;
 
+import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
+/**
+ * PaymentSupport utilising both RPC polling and websocket notifications
+ */
 public class NanoPaymentSupport extends PollingPaymentSupport {
+
     private static final Logger log = LoggerFactory.getLogger(NanoPaymentSupport.class);
+
+    /** Context info for websocket payment requests. */
+    private final Map<PaymentRequest, PaymentRequestContext> wsRequestContexts = new ConcurrentHashMap<>();
+
 
     @Override
     protected long getPollingPeriodMillis() {
-        return TimeUnit.MILLISECONDS.toMillis(200);
+        return 500;
     }
 
     @Override
     protected long getPollingInitialDelayMillis() {
-        return TimeUnit.MILLISECONDS.toMillis(500);
+        return 1000;
     }
 
     @Override
     protected String getCryptoCurrency() {
-        return CryptoCurrency.NANO.getCode();
+        return NanoExtension.CURRENCY_CODE;
     }
 
-    /**
-     * Server calls this method to create request for payment. Payment When this
-     * method is called your {@link IPaymentSupport} implementation should start
-     * listening for payments on address. This method creates and registers the
-     * payment request.
-     * {@link IPaymentSupport#registerPaymentRequest(PaymentRequest)} is called as
-     * part of this method.
-     *
-     * @param spec
-     * @return
-     */
     @Override
     public PaymentRequest createPaymentRequest(IPaymentRequestSpecification spec) {
         if (!(spec.getWallet() instanceof IGeneratesNewDepositCryptoAddress)) {
@@ -74,91 +73,154 @@ public class NanoPaymentSupport extends PollingPaymentSupport {
             throw new IllegalArgumentException("Wallet '" + spec.getWallet().getClass() + "' does not implement "
                     + IQueryableWallet.class.getSimpleName());
         }
-        if (spec.getTotal().stripTrailingZeros().scale() > 30) {
-            throw new IllegalArgumentException("NANO has maximum of 30 decimals");
-        }
+        NanoAmount.valueOfNano(spec.getTotal()); // Assert value is valid (throws exception)
         return super.createPaymentRequest(spec);
     }
 
     @Override
+    public void registerPaymentRequest(PaymentRequest request) {
+        // Register in websocket client (if supported by wallet)
+        if (request.getWallet() instanceof NanoNodeWallet) {
+            NanoWSClient wsClient = ((NanoNodeWallet)request.getWallet()).getWebSocketClient();
+            if (wsClient != null) {
+                PaymentRequestContext requestContext = new PaymentRequestContext(request, wsClient);
+                wsRequestContexts.put(request, requestContext);
+                wsClient.registerPaymentRequest(request, new DepositHandler(requestContext));
+            } else {
+                log.debug("Using RPC polling for request as the wallet doesnt support websockets. {}", request);
+            }
+        } else {
+            log.debug("Using wallet polling for request as the wallet isnt a NanoNodeWallet. {}", request);
+        }
+
+        // Register in polling support
+        super.registerPaymentRequest(request);
+    }
+
+    @Override
     protected void poll(PaymentRequest request) {
+        // Skip polling if using websockets
+        if (wsRequestContexts.containsKey(request)) return;
+
+        // Poll with RPC
         try {
-            IQueryableWallet wallet = (IQueryableWallet) request.getWallet();
-            ReceivedAmount receivedAmount = wallet.getReceivedAmount(request.getAddress(), request.getCryptoCurrency());
-            System.out.print(receivedAmount.getTotalAmountReceived());
-            BigDecimal totalReceived = receivedAmount.getTotalAmountReceived();
-            int confirmations = receivedAmount.getConfirmations();
-            if (totalReceived.compareTo(BigDecimal.ZERO) == 0) {
-                return;
-            }
+            // Fetch total amount
+            IQueryableWallet wallet = (IQueryableWallet)request.getWallet();
+            ReceivedAmount received = wallet.getReceivedAmount(request.getAddress(), request.getCryptoCurrency());
+            BigDecimal receivedAmount = received.getTotalAmountReceived();
 
-            if (totalReceived.compareTo(request.getAmount()) < 0) {
-                log.info("Received amount ({}) does not match the requested amount ({}), {}", totalReceived,
-                        request.getAmount(), request);
-                return;
+            // Update request state (if value changed)
+            if (request.getTxValue().compareTo(receivedAmount) != 0) {
+                request.setTxValue(receivedAmount);
+                updateRequestState(request, received.getConfirmations());
             }
+        } catch (Exception e) {
+            log.error("Couldn't poll payment with RPC.", e);
+        }
+    }
 
-            if (request.getState() == PaymentRequest.STATE_NEW) {
-                log.info("Received: {}, amounts matches. {}", totalReceived, request);
-                request.setTxValue(totalReceived);
+    /**
+     * Override to allow state to be re-fired more than once.
+     * Also expire websocket requests upon completion or timeout.
+     * */
+    @Override
+    protected void setState(PaymentRequest request, int newState) {
+        // Only allow re-fires for SEEN states
+        int previousState = request.getState();
+        if (newState == previousState && newState != PaymentRequest.STATE_SEEN_TRANSACTION)
+            return;
+
+        log.debug("Transaction state changed: {} -> {}, {}", previousState, newState, request);
+        request.setState(newState);
+
+        // Expire websocket if supported and a final state
+        if (!isActiveState(newState)) {
+            PaymentRequestContext context = wsRequestContexts.get(request);
+            if (context != null)
+                context.finalizeWsRequest();
+        }
+
+        // Notify listener
+        IPaymentRequestListener listener = request.getListener();
+        if (listener != null)
+            listener.stateChanged(request, previousState, request.getState());
+    }
+
+    private void updateRequestState(PaymentRequest request, int confirmations) {
+        // Ignore if state already finalized
+        if (!isActiveState(request.getState())) return;
+
+        log.debug("Updating request state.");
+        BigDecimal received = request.getTxValue();
+        if (received.compareTo(BigDecimal.ZERO) >= 0) {
+            // Change state (or re-fire for more amounts)
+            if (request.getState() == PaymentRequest.STATE_NEW ||
+                    request.getState() == PaymentRequest.STATE_SEEN_TRANSACTION) {
                 setState(request, PaymentRequest.STATE_SEEN_TRANSACTION);
             }
-
-            if (confirmations > 0) {
-                if (request.getState() == PaymentRequest.STATE_SEEN_TRANSACTION) {
-                    log.info("Transaction confirmed. {}", request);
-                    setState(request, PaymentRequest.STATE_SEEN_IN_BLOCK_CHAIN);
-                }
+            // Final confirmation state
+            if (confirmations > 0 && request.getState() == PaymentRequest.STATE_SEEN_TRANSACTION
+                        && received.compareTo(request.getAmount()) >= 0) {
+                log.info("Transaction confirmed. Total amount received: {}", received);
+                setState(request, PaymentRequest.STATE_SEEN_IN_BLOCK_CHAIN);
                 updateNumberOfConfirmations(request, confirmations);
+            } else {
+                updateNumberOfConfirmations(request, 0);
             }
-
-        } catch (Exception e) {
-            log.error("", e);
         }
     }
 
-/*   public static void main(String[] args) {
-        // You need to have node running: i.e.: nano_node --daemon with rpc enabled
+    private static boolean isActiveState(int state) {
+        return state == PaymentRequest.STATE_NEW || state == PaymentRequest.STATE_SEEN_TRANSACTION;
+    }
 
-        try {
-            NanoRPCWallet wallet = new NanoRPCWallet("http://[::1]:7076", "", "");
-            NanoPaymentSupport ps = new NanoPaymentSupport();
-            ps.init(null);
-            String description = "Just a test";
-            long requestPaymentValidSeconds = 60 * 15; // 15 mins
-            PRS spec = new PRS(CryptoCurrency.NANO.getCode(), description, requestPaymentValidSeconds, false, wallet);
-            // Enter a new address which hasn't had any nano sent to it
-            spec.addOutput("nano_3pszk9xf4mogtf8yebwurjcyhbtscun4hq596sxym7roxwt9gy8ieou1jj9i",
-                    new BigDecimal("0.00001"));
 
-            PaymentRequest pr = ps.createPaymentRequest(spec);
-            System.out.println(pr);
-            pr.setListener(new IPaymentRequestListener() {
-                @Override
-                public void stateChanged(PaymentRequest request, int previousState, int newState) {
-                    System.out.println("stateChanged = " + request + " previousState: " + previousState + " newState: "
-                            + newState);
-                }
+    /** Handles incoming deposits from the WebSocket. */
+    private class DepositHandler implements NanoWSClient.DepositListener {
+        private final PaymentRequestContext context;
 
-                @Override
-                public void numberOfConfirmationsChanged(PaymentRequest request, int numberOfConfirmations,
-                        IPaymentRequestListener.Direction direction) {
-                    System.out.println("numberOfConfirmationsChanged = " + request + " numberOfConfirmations: "
-                            + numberOfConfirmations + " direction: " + direction);
-                }
+        public DepositHandler(PaymentRequestContext requestContext) {
+            this.context = requestContext;
+        }
 
-                @Override
-                public void refundSent(PaymentRequest request, String toAddress, String cryptoCurrency,
-                        BigDecimal amount) {
-                    // Not supported
-                }
-            });
-            System.out.println("Waiting for transfer");
+        @Override
+        public void onDeposit(HexData hash, NanoAmount amount) {
+            context.addDeposit(hash, amount.getAsNano());
+        }
 
-            Thread.sleep(20 * 60 * 1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        @Override
+        public void onSocketDisconnect() {
+            context.finalizeWsRequest();
         }
     }
-*/
+
+    /** Contains additional state information about an active payment request. */
+    private class PaymentRequestContext {
+        private final PaymentRequest request;
+        private final NanoWSClient wsClient;
+        private final Set<HexData> confirmedHashes = new HashSet<>();
+        private volatile boolean isWsActive = true;
+
+        public PaymentRequestContext(PaymentRequest request, NanoWSClient wsClient) {
+            this.request = request;
+            this.wsClient = wsClient;
+        }
+
+
+        public synchronized void addDeposit(HexData hash, BigDecimal amount) {
+            if (isWsActive && confirmedHashes.add(hash)) {
+                request.setTxValue(request.getTxValue().add(amount));
+                request.setIncomingTransactionHash(hash.toHexString());
+                updateRequestState(request, 1);
+            }
+        }
+
+        public synchronized void finalizeWsRequest() {
+            log.debug("Finalizing websocket request {}", request);
+            isWsActive = false;
+            wsRequestContexts.remove(request);
+            wsClient.expirePaymentRequest(request);
+        }
+    }
+
 }

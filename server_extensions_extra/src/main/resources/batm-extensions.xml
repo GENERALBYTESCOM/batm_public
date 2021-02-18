@@ -1576,11 +1576,17 @@
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.nano.NanoExtension" >
         <wallet prefix="nano_node" name="Nano">
-            <param name="protocol" />
-            <param name="host" />
-            <param name="port" />
+            <param name="rpcProtocol" />
+            <param name="rpcHost" />
+            <param name="rpcPort" />
+            <param name="websocketProtocol" />
+            <param name="websocketHost" />
+            <param name="websocketPort" />
             <param name="walletId" />
-            <param name="address" />
+            <param name="walletAddress" />
+            <help>Protocol for RPC may be either http or https</help>
+            <help>Protocol for Websocket may be either ws or wss</help>
+            <help>Leave websocket parameters blank to use only RPC calls.</help>
             <cryptocurrency>NANO</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="NANO" file="nano.png"/>

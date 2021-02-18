@@ -18,17 +18,15 @@
 package com.generalbytes.batm.server.extensions.extra.nano;
 
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
-import uk.oczadly.karl.jnano.model.NanoAccount;
 
 public class NanoAddressValidator implements ICryptoAddressValidator {
 
     @Override
     public boolean isAddressValid(String address) {
-        // Only accepting nano_ prefixed addresses
-        if (address.startsWith("nano_")) {
-            String[] prefixes = new String[] { "nano" };
-            return NanoAccount.isValid(address, prefixes);
-        } else {
+        if (address == null) return false;
+        try {
+            return NanoUtil.parseAddressRaw(address).isValidNano(); // Accept nano or xrb prefixes
+        } catch (IllegalArgumentException e) {
             return false;
         }
     }
@@ -42,4 +40,5 @@ public class NanoAddressValidator implements ICryptoAddressValidator {
     public boolean mustBeBase58Address() {
         return false;
     }
+
 }

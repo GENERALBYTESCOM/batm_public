@@ -24,10 +24,11 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.binance.B
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.coingecko.CoinGeckoRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.coinpaprika.CoinPaprikaRateSource;
 import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.CoinmarketcapRateSource;
-import com.generalbytes.batm.server.extensions.extra.nano.wallets.nano_node.NanoRPCWallet;
-import com.generalbytes.batm.server.extensions.extra.nano.wallets.paperwallet.NanoPaperWalletGenerator;
+import com.generalbytes.batm.server.extensions.extra.nano.wallets.node.NanoRPCClient;
+import com.generalbytes.batm.server.extensions.extra.nano.wallets.node.NanoNodeWallet;
+import com.generalbytes.batm.server.extensions.extra.nano.wallets.node.NanoWSClient;
+import com.generalbytes.batm.server.extensions.extra.nano.wallets.paper.NanoPaperWalletGenerator;
 import com.generalbytes.batm.server.extensions.AbstractExtension;
-import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
 import com.generalbytes.batm.server.extensions.IPaperWalletGenerator;
@@ -36,16 +37,20 @@ import com.generalbytes.batm.server.extensions.IWallet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.math.BigDecimal;
+import java.net.URI;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
 public class NanoExtension extends AbstractExtension {
+
     private static final Logger log = LoggerFactory.getLogger(NanoExtension.class);
 
+    public static final String CURRENCY_CODE = CryptoCurrency.NANO.getCode();
     private static final ICryptoCurrencyDefinition DEFINITION = new NanoDefinition();
-    public static final String CURRENCY = CryptoCurrency.NANO.getCode();
+
+
 
     @Override
     public String getName() {
@@ -59,44 +64,66 @@ public class NanoExtension extends AbstractExtension {
                 StringTokenizer st = new StringTokenizer(walletLogin, ":");
                 String walletType = st.nextToken();
                 if ("nano_node".equalsIgnoreCase(walletType)) {
-                    // "nano_node:protocol:ip:port:wallet:address"
+                    /*
+                     * ORDER OF CONFIGURATION PARAMETERS (split by colon):
+                     * 0 | "nano_node" (protocol name)
+                     * 1 | RPC protocol (http/https)
+                     * 2 | RPC IP or host
+                     * 3 | RPC port
+                     * 4 | Websocket protocol (ws/wss)
+                     * 5 | Websocket IP or host
+                     * 6 | Websocket port
+                     * 7 | Hot wallet ID
+                     * 8 | Hot wallet address
+                     */
 
-                    String protocol = st.nextToken();
 
+                    // RPC CLIENT
+                    String rpcProtocol = st.nextToken();
                     // Do special handling of ipv6 loopback address which has the delimiter
-                    String hostname = st.nextToken();
-                    if (hostname.equals("[")) {
-                        st.nextToken(); // Just skip over it
-                        hostname = "[::1]";
+                    String rpcHost = st.nextToken();
+                    if (rpcHost.equals("[")) {
+                        st.nextToken();
+                        rpcHost = "[::1]";
                     }
+                    int rpcPort = Integer.parseInt(st.nextToken());
 
-                    int port = Integer.parseInt(st.nextToken());
-                    String walletId = "";
-                    if (st.hasMoreTokens()) {
+                    // WEBSOCKET CLIENT
+                    String wsProtocol = st.nextToken();
+                    String wsHost = st.nextToken();
+                    if (wsHost.equals("[")) {
+                        st.nextToken();
+                        wsHost = "[::1]";
+                    }
+                    String wsPortStr = st.nextToken();
+                    int wsPort = wsPortStr.isEmpty() ? -1 : Integer.parseInt(wsPortStr);
+
+                    // WALLET & ACCOUNT
+                    String walletId = null, account = null;
+                    if (st.hasMoreTokens())
                         walletId = st.nextToken();
-                    }
-                    String account = "";
-                    if (st.hasMoreTokens()) {
+                    if (st.hasMoreTokens())
                         account = st.nextToken();
-                    }
 
-                    if (protocol != null && hostname != null && walletId != null && account != null) {
-                        String rpcURL = protocol + "://" + hostname + ":" + port;
-                        return new NanoRPCWallet(rpcURL, walletId, account);
+
+                    NanoRPCClient rpcClient = new NanoRPCClient(new URL(rpcProtocol, rpcHost, rpcPort, ""));
+                    NanoWSClient wsClient = null;
+                    if (!wsProtocol.isEmpty() && !wsHost.isEmpty() && wsPort != -1) {
+                        wsClient = new NanoWSClient(new URI(wsProtocol, "", wsHost, wsPort, "", "", ""));
                     }
+                    return new NanoNodeWallet(rpcClient, wsClient, walletId, account);
                 }
             }
         } catch (Exception e) {
-            log.error("", e);
+            log.error("Couldn't create wallet.", e);
         }
         return null;
     }
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (CryptoCurrency.NANO.getCode().equalsIgnoreCase(cryptoCurrency)) {
+        if (CURRENCY_CODE.equalsIgnoreCase(cryptoCurrency))
             return new NanoAddressValidator();
-        }
         return null;
     }
 
@@ -144,8 +171,8 @@ public class NanoExtension extends AbstractExtension {
 
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
-        Set<String> result = new HashSet<String>();
-        result.add(CURRENCY);
+        Set<String> result = new HashSet<>();
+        result.add(CURRENCY_CODE);
         return result;
     }
 
@@ -158,9 +185,9 @@ public class NanoExtension extends AbstractExtension {
 
     @Override
     public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency) {
-        if (CryptoCurrency.NANO.getCode().equalsIgnoreCase(cryptoCurrency)) {
+        if (CURRENCY_CODE.equalsIgnoreCase(cryptoCurrency))
             return new NanoPaperWalletGenerator();
-        }
         return null;
     }
+
 }

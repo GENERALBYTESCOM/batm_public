@@ -22,7 +22,7 @@ import com.generalbytes.batm.server.extensions.payment.IPaymentOutput;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-public class PO implements IPaymentOutput {
+class PO implements IPaymentOutput {
 
     private String address;
     private BigDecimal amount;
