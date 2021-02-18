@@ -6,16 +6,23 @@ group = projectGroup
 version = projectVersion
 
 jar {
+    from {
+        (configurations.runtimeClasspath - configurations.projectDependency).collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    } {
+        exclude "META-INF/*.SF"
+        exclude "META-INF/*.DSA"
+        exclude "META-INF/*.RSA"
+    }
     baseName 'batm_server_extensions_extra'
     archiveName "${baseName}.${extension}"
 }
 
 configurations {
     artifactOnly
-    runtimeNoArtifact {
-        extendsFrom compile
-    }
-
+    projectDependency
+    compile.extendsFrom(projectDependency)
     // handle Github (e.g. community) vs GENERAL BYTES dichotomy
     generalBytesCompile
     githubCompile
@@ -32,8 +39,8 @@ artifacts {
 }
 
 dependencies {
-    compile project(':server_extensions_api')
-    compile project(':currencies')
+    projectDependency project(':server_extensions_api')
+    projectDependency project(':currencies')
     compile(group: 'com.github.Polve', name: 'JavaBitcoindRpcClient', version: javaBitcoindRpcVersion)
     compile(group: 'org.slf4j', name: 'slf4j-api', version: '1.7.28')
     compile(group: 'com.github.mmazi', name: 'rescu', version: '2.0.2')
