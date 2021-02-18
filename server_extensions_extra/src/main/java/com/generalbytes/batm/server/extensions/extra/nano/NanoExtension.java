@@ -90,13 +90,8 @@ public class NanoExtension extends AbstractExtension {
 
                     // WEBSOCKET CLIENT
                     String wsProtocol = st.nextToken();
-                    String wsHost = st.nextToken();
-                    if (wsHost.equals("[")) {
-                        st.nextToken();
-                        wsHost = "[::1]";
-                    }
-                    String wsPortStr = st.nextToken();
-                    int wsPort = wsPortStr.isEmpty() ? -1 : Integer.parseInt(wsPortStr);
+                    String wsHost = nextTokenAsHostname(st);
+                    int wsPort = Integer.parseInt(st.nextToken());
 
                     // WALLET & ACCOUNT
                     String walletId = null, account = null;
@@ -108,9 +103,9 @@ public class NanoExtension extends AbstractExtension {
 
                     NanoRPCClient rpcClient = new NanoRPCClient(new URL(rpcProtocol, rpcHost, rpcPort, ""));
                     NanoWSClient wsClient = null;
-                    if (!wsProtocol.isEmpty() && !wsHost.isEmpty() && wsPort != -1) {
+                    if (wsPort > 0)
                         wsClient = new NanoWSClient(new URI(wsProtocol, "", wsHost, wsPort, "", "", ""));
-                    }
+
                     return new NanoNodeWallet(rpcClient, wsClient, walletId, account);
                 }
             }
@@ -118,6 +113,16 @@ public class NanoExtension extends AbstractExtension {
             log.error("Couldn't create wallet.", e);
         }
         return null;
+    }
+
+    // Fix for ipv6 loopback addresses
+    private static String nextTokenAsHostname(StringTokenizer tokenizer) {
+        String token = tokenizer.nextToken();
+        if (token.equals("[")) {
+            tokenizer.nextToken(); // skip
+            return "[::1]";
+        }
+        return token;
     }
 
     @Override

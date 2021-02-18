@@ -1584,9 +1584,7 @@
             <param name="websocketPort" />
             <param name="walletId" />
             <param name="walletAddress" />
-            <help>Protocol for RPC may be either http or https</help>
-            <help>Protocol for Websocket may be either ws or wss</help>
-            <help>Leave websocket parameters blank to use only RPC calls.</help>
+            <help>Protocol for RPC may be either http or https, WebSocket may be ws or wss. WebSocket may be ignored by using port 0.</help>
             <cryptocurrency>NANO</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="NANO" file="nano.png"/>
