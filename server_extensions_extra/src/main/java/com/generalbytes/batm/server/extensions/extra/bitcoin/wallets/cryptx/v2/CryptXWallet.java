@@ -3,6 +3,7 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryptx.v2;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.Converters;
 import com.generalbytes.batm.server.extensions.IWallet;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryptx.v2.dto.Balance;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryptx.v2.dto.CryptXException;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryptx.v2.dto.CryptXSendTransactionRequest;
 import okhttp3.HttpUrl;
@@ -19,6 +20,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import static com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryptx.v2.ICryptXAPI.*;
+
 public class CryptXWallet implements IWallet {
 
     private static final Logger log = LoggerFactory.getLogger(CryptXWallet.class);
@@ -27,10 +30,23 @@ public class CryptXWallet implements IWallet {
     protected String walletId;
     protected String url;
     protected static final Integer readTimeout = 90 * 1000;
+    private int priority;
 
-    public CryptXWallet(String scheme, String host, int port, String token, String walletId) {
+    public CryptXWallet(String scheme, String host, int port, String token, String walletId, String priority) {
         this.walletId = walletId;
         this.url = new HttpUrl.Builder().scheme(scheme).host(host).port(port).build().toString();
+
+        if (priority == null) {
+            this.priority = 2;
+        } else if (PRIORITY_LOW.equalsIgnoreCase(priority.trim())) {
+            this.priority = 24;
+        } else if (PRIORITY_MEDIUM.equalsIgnoreCase(priority.trim())) {
+            this.priority = 8;
+        } else if (PRIORITY_HIGH.equalsIgnoreCase(priority.trim())) {
+            this.priority = 2;
+        } else {
+            this.priority = 2;
+        }
 
         ClientConfig config = new ClientConfig();
         config.setHttpReadTimeout(readTimeout);
@@ -43,7 +59,7 @@ public class CryptXWallet implements IWallet {
 
     @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
-        CryptXSendTransactionRequest sendTransactionRequest = new CryptXSendTransactionRequest(destinationAddress, toMinorUnit(cryptoCurrency, amount), description);
+        CryptXSendTransactionRequest sendTransactionRequest = new CryptXSendTransactionRequest(destinationAddress, toMinorUnit(cryptoCurrency, amount), description, priority);
         try {
             Map<String, Object> response = api.sendTransaction(cryptoCurrency.toLowerCase(), this.walletId, sendTransactionRequest);
             return (String) response.get("txid");
@@ -68,7 +84,8 @@ public class CryptXWallet implements IWallet {
         }
         cryptoCurrency = cryptoCurrency.toLowerCase();
         try {
-            final Map<String, Object> wallet = api.getWallet(cryptoCurrency, this.walletId);
+            String apiCryptocurrency = getAPICryptocurrency(cryptoCurrency);
+            final Map<String, Object> wallet = api.getWallet(apiCryptocurrency, this.walletId, false);
             return (String) wallet.get("defaultAddress");
         } catch (HttpStatusIOException hse) {
             log.debug("getCryptoAddress error: {}", hse.getHttpBody());
@@ -88,6 +105,7 @@ public class CryptXWallet implements IWallet {
         coins.add(CryptoCurrency.LTC.getCode());
         coins.add(CryptoCurrency.BCH.getCode());
         coins.add(CryptoCurrency.ETH.getCode());
+        coins.add(CryptoCurrency.USDT.getCode());
 
         coins.add(CryptoCurrency.TBTC.getCode());
         coins.add(CryptoCurrency.TLTC.getCode());
@@ -113,11 +131,14 @@ public class CryptXWallet implements IWallet {
         cryptoCurrency = cryptoCurrency.toLowerCase();
 
         try {
-            final Map<String, Object> wallet = api.getWallet(cryptoCurrency, this.walletId);
+            final Balance balance = api.getWalletBalance(cryptoCurrency, this.walletId, false);
+            if (balance == null) {
+                return null;
+            }
 
-            Map balanceObj = (Map) wallet.get("balance");
-            Object spendableBalance = balanceObj.get("spendableBalance");
-            return toMajorUnit(cryptoCurrency, (String) spendableBalance);
+            BigInteger spendableBalance = balance.getSpendableBalance();
+
+            return toMajorUnit(cryptoCurrency, spendableBalance.toString());
         } catch (HttpStatusIOException hse) {
             log.debug("getCryptoBalance error: {}", hse.getHttpBody());
         } catch (CryptXException e) {
@@ -127,6 +148,13 @@ public class CryptXWallet implements IWallet {
         }
 
         return null;
+    }
+
+    public String getAPICryptocurrency(String cryptoCurrency) {
+        if (cryptoCurrency.equalsIgnoreCase(CryptoCurrency.USDT.getCode())) {
+            return CryptoCurrency.ETH.getCode();
+        }
+        return cryptoCurrency;
     }
 
     private String toMinorUnit(String cryptoCurrency, BigDecimal amount) {
@@ -144,6 +172,8 @@ public class CryptXWallet implements IWallet {
                 case TETH:
                 case ETH:
                     return amount.multiply(Converters.ETH).toBigInteger().toString();
+                case USDT:
+                    return amount.multiply(Converters.USDT).toBigInteger().toString();
                 default:
                     return amount.toBigInteger().toString();
             }
@@ -165,6 +195,8 @@ public class CryptXWallet implements IWallet {
             case TETH:
             case ETH:
                 return new BigDecimal(bigIntegerAmount).movePointLeft(18);
+            case USDT:
+                return new BigDecimal(bigIntegerAmount).movePointLeft(6);
             default:
                 throw new IllegalArgumentException("Unsupported crypto currency");
         }

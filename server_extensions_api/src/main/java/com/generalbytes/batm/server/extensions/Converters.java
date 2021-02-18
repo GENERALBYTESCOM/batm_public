@@ -25,9 +25,9 @@ public class Converters {
     public static final BigDecimal BTC = BigDecimal.valueOf(Math.pow(10, 8));
     public static final BigDecimal LTC = BigDecimal.valueOf(Math.pow(10, 8));
     public static final BigDecimal ETH = BigDecimal.valueOf(Math.pow(10, 18));
+    public static final BigDecimal USDT = BigDecimal.valueOf(Math.pow(10, 6));
 
     public static final BigDecimal TBCH = BigDecimal.valueOf(Math.pow(10, 8));
     public static final BigDecimal TBTC = BigDecimal.valueOf(Math.pow(10, 8));
     public static final BigDecimal TLTC = BigDecimal.valueOf(Math.pow(10, 8));
-    public static final BigDecimal TETH = BigDecimal.valueOf(Math.pow(10, 18));
 }
