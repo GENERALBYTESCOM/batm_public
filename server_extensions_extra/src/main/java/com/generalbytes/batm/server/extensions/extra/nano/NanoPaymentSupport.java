@@ -28,34 +28,42 @@ import com.generalbytes.batm.server.extensions.payment.PaymentRequest;
 import com.generalbytes.batm.server.extensions.payment.ReceivedAmount;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.oczadly.karl.jnano.model.HexData;
 import uk.oczadly.karl.jnano.model.NanoAmount;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * PaymentSupport utilising both RPC polling and websocket notifications
  */
 public class NanoPaymentSupport extends PollingPaymentSupport {
 
+    private static final long POLL_PERIOD_MS = 500; // 500 ms
+
+    /** Multiplier of POLL_PERIOD_MS, used when WebSocket is active. */
+    private static final int POLL_SKIP_CYCLES = 30; // 15 sec
+
+
     private static final Logger log = LoggerFactory.getLogger(NanoPaymentSupport.class);
 
-    /** Context info for websocket payment requests. */
-    private final Map<PaymentRequest, PaymentRequestContext> wsRequestContexts = new ConcurrentHashMap<>();
+    /** Context info for payment requests. */
+    private final Map<PaymentRequest, PaymentRequestContext> requestContexts = new ConcurrentHashMap<>();
+    private final ExecutorService pollExecutor = Executors.newFixedThreadPool(2);
 
 
     @Override
     protected long getPollingPeriodMillis() {
-        return 500;
+        return POLL_PERIOD_MS;
     }
 
     @Override
     protected long getPollingInitialDelayMillis() {
-        return 1000;
+        return 0;
     }
 
     @Override
@@ -79,19 +87,25 @@ public class NanoPaymentSupport extends PollingPaymentSupport {
 
     @Override
     public void registerPaymentRequest(PaymentRequest request) {
-        // Register in websocket client (if supported by wallet)
+        // Request websocket notifications (if supported by wallet)
+        PaymentRequestContext requestContext = null;
         if (request.getWallet() instanceof NanoNodeWallet) {
             NanoWSClient wsClient = ((NanoNodeWallet)request.getWallet()).getWebSocketClient();
             if (wsClient != null) {
-                PaymentRequestContext requestContext = new PaymentRequestContext(request, wsClient);
-                wsRequestContexts.put(request, requestContext);
-                wsClient.registerPaymentRequest(request, new DepositHandler(requestContext));
+                final PaymentRequestContext context = new PaymentRequestContext(request, wsClient);
+                wsClient.requestPaymentNotifications(request, (hash, amount) -> poll(context, true));
+                requestContext = context;
             } else {
-                log.debug("Using RPC polling for request as the wallet doesnt support websockets. {}", request);
+                log.debug("Using RPC polling for request as the wallet doesn't support websockets. {}", request);
             }
         } else {
-            log.debug("Using wallet polling for request as the wallet isnt a NanoNodeWallet. {}", request);
+            log.debug("Using wallet polling for request as the wallet isn't a NanoNodeWallet. {}", request);
         }
+
+        // Register context
+        if (requestContext == null)
+            requestContext = new PaymentRequestContext(request, null);
+        requestContexts.put(request, requestContext);
 
         // Register in polling support
         super.registerPaymentRequest(request);
@@ -99,23 +113,37 @@ public class NanoPaymentSupport extends PollingPaymentSupport {
 
     @Override
     protected void poll(PaymentRequest request) {
-        // Skip polling if using websockets
-        if (wsRequestContexts.containsKey(request)) return;
+        PaymentRequestContext context = requestContexts.get(request);
+        if (context != null) {
+            // Submit to an executor to prevent requests from stacking up
+            pollExecutor.submit(() -> poll(context, false));
+        } else {
+            log.warn("Unknown PaymentRequest was supplied to poll() {}", request);
+        }
+    }
 
-        // Poll with RPC
-        try {
-            // Fetch total amount
-            IQueryableWallet wallet = (IQueryableWallet)request.getWallet();
-            ReceivedAmount received = wallet.getReceivedAmount(request.getAddress(), request.getCryptoCurrency());
-            BigDecimal receivedAmount = received.getTotalAmountReceived();
+    public void poll(PaymentRequestContext context, boolean force) {
+        PaymentRequest request = context.request;
+        if (context.shouldPoll(force)) {
+            // Acquire lock (block and wait for forced poll requests)
+            if (context.acquireLock(force)) {
+                try {
+                    log.debug("Polling (forced: {}) {}", force, request);
 
-            // Update request state (if value changed)
-            if (request.getTxValue().compareTo(receivedAmount) != 0) {
-                request.setTxValue(receivedAmount);
-                updateRequestState(request, received.getConfirmations());
+                    // Fetch total amount
+                    IQueryableWallet wallet = (IQueryableWallet)request.getWallet();
+                    ReceivedAmount received = wallet.getReceivedAmount(request.getAddress(), request.getCryptoCurrency());
+
+                    // Update request state
+                    updateRequestState(request, received.getTotalAmountReceived(), received.getConfirmations());
+                } catch (Exception e) {
+                    log.error("Couldn't poll payment with RPC.", e);
+                } finally {
+                    context.pollLock.unlock();
+                }
+            } else {
+                log.debug("Skipping poll call as another is in progress {}", request);
             }
-        } catch (Exception e) {
-            log.error("Couldn't poll payment with RPC.", e);
         }
     }
 
@@ -126,80 +154,63 @@ public class NanoPaymentSupport extends PollingPaymentSupport {
     @Override
     protected void setState(PaymentRequest request, int newState) {
         // Only allow re-fires for SEEN states
-        int previousState = request.getState();
-        if (newState == previousState && newState != PaymentRequest.STATE_SEEN_TRANSACTION)
+        int prevState = request.getState();
+        if (newState == prevState && newState != PaymentRequest.STATE_SEEN_TRANSACTION)
             return;
 
-        log.debug("Transaction state changed: {} -> {}, {}", previousState, newState, request);
         request.setState(newState);
+        log.debug("Transaction state changed: {} -> {}, {}", prevState, newState, request);
 
         // Expire websocket if supported and a final state
-        if (!isActiveState(newState)) {
-            PaymentRequestContext context = wsRequestContexts.get(request);
+        if (isStateFinished(newState)) {
+            PaymentRequestContext context = requestContexts.get(request);
             if (context != null)
-                context.finalizeWsRequest();
+                context.finalizeRequest();
         }
 
         // Notify listener
         IPaymentRequestListener listener = request.getListener();
         if (listener != null)
-            listener.stateChanged(request, previousState, request.getState());
+            listener.stateChanged(request, prevState, request.getState());
     }
 
-    private void updateRequestState(PaymentRequest request, int confirmations) {
-        // Ignore if state already finalized
-        if (!isActiveState(request.getState())) return;
+    private void updateRequestState(PaymentRequest request, BigDecimal totalReceived, int confirmations) {
+        if (!isStateFinished(request.getState()) && request.getTxValue().compareTo(totalReceived) != 0) {
+            log.debug("Updating request state.");
+            request.setTxValue(totalReceived);
 
-        log.debug("Updating request state.");
-        BigDecimal received = request.getTxValue();
-        if (received.compareTo(BigDecimal.ZERO) >= 0) {
-            // Change state (or re-fire for more amounts)
-            if (request.getState() == PaymentRequest.STATE_NEW ||
-                    request.getState() == PaymentRequest.STATE_SEEN_TRANSACTION) {
-                setState(request, PaymentRequest.STATE_SEEN_TRANSACTION);
+            if (totalReceived.compareTo(BigDecimal.ZERO) >= 0) {
+                // Change state if new
+                if (request.getState() == PaymentRequest.STATE_NEW)
+                    setState(request, PaymentRequest.STATE_SEEN_TRANSACTION);
+
+                // Final confirmation state
+                if (confirmations > 0 && request.getState() == PaymentRequest.STATE_SEEN_TRANSACTION
+                    && totalReceived.compareTo(request.getAmount()) >= 0) {
+                    log.info("Transaction confirmed. Total amount received: {}", totalReceived);
+                    setState(request, PaymentRequest.STATE_SEEN_IN_BLOCK_CHAIN);
+                    updateNumberOfConfirmations(request, confirmations);
+                } else {
+                    setState(request, PaymentRequest.STATE_SEEN_TRANSACTION); // Re-fire state
+                    updateNumberOfConfirmations(request, 0);
+                }
             }
-            // Final confirmation state
-            if (confirmations > 0 && request.getState() == PaymentRequest.STATE_SEEN_TRANSACTION
-                        && received.compareTo(request.getAmount()) >= 0) {
-                log.info("Transaction confirmed. Total amount received: {}", received);
-                setState(request, PaymentRequest.STATE_SEEN_IN_BLOCK_CHAIN);
-                updateNumberOfConfirmations(request, confirmations);
-            } else {
-                updateNumberOfConfirmations(request, 0);
-            }
+        } else {
+            log.warn("Couldn't update state as payment is already finalized. {}", request);
         }
     }
 
-    private static boolean isActiveState(int state) {
-        return state == PaymentRequest.STATE_NEW || state == PaymentRequest.STATE_SEEN_TRANSACTION;
+    private static boolean isStateFinished(int state) {
+        return state != PaymentRequest.STATE_NEW && state != PaymentRequest.STATE_SEEN_TRANSACTION;
     }
 
-
-    /** Handles incoming deposits from the WebSocket. */
-    private class DepositHandler implements NanoWSClient.DepositListener {
-        private final PaymentRequestContext context;
-
-        public DepositHandler(PaymentRequestContext requestContext) {
-            this.context = requestContext;
-        }
-
-        @Override
-        public void onDeposit(HexData hash, NanoAmount amount) {
-            context.addDeposit(hash, amount.getAsNano());
-        }
-
-        @Override
-        public void onSocketDisconnect() {
-            context.finalizeWsRequest();
-        }
-    }
 
     /** Contains additional state information about an active payment request. */
     private class PaymentRequestContext {
+        private final Lock pollLock = new ReentrantLock(); // Only allow one request poll at a time
         private final PaymentRequest request;
         private final NanoWSClient wsClient;
-        private final Set<HexData> confirmedHashes = new HashSet<>();
-        private volatile boolean isWsActive = true;
+        private volatile int pollCounter = POLL_SKIP_CYCLES; // First poll should succeed
 
         public PaymentRequestContext(PaymentRequest request, NanoWSClient wsClient) {
             this.request = request;
@@ -207,19 +218,31 @@ public class NanoPaymentSupport extends PollingPaymentSupport {
         }
 
 
-        public synchronized void addDeposit(HexData hash, BigDecimal amount) {
-            if (isWsActive && confirmedHashes.add(hash)) {
-                request.setTxValue(request.getTxValue().add(amount));
-                request.setIncomingTransactionHash(hash.toHexString());
-                updateRequestState(request, 1);
+        public synchronized boolean shouldPoll(boolean forced) {
+            if (forced || !isUsingWebSocket() || pollCounter++ >= POLL_SKIP_CYCLES) {
+                pollCounter = 0;
+                return true;
+            }
+            return false;
+        }
+
+        public boolean acquireLock(boolean force) {
+            if (force) {
+                pollLock.lock();
+                return true;
+            } else {
+                return pollLock.tryLock();
             }
         }
 
-        public synchronized void finalizeWsRequest() {
-            log.debug("Finalizing websocket request {}", request);
-            isWsActive = false;
-            wsRequestContexts.remove(request);
-            wsClient.expirePaymentRequest(request);
+        public boolean isUsingWebSocket() {
+            return wsClient != null && wsClient.isConnected();
+        }
+
+        public void finalizeRequest() {
+            log.debug("Finalizing payment request {}", request);
+            requestContexts.remove(request);
+            wsClient.endPaymentNotifications(request);
         }
     }
 

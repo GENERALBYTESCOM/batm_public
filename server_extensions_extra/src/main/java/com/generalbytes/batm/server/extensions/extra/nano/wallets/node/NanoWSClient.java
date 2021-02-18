@@ -49,15 +49,15 @@ public class NanoWSClient {
     }
 
 
-    public void registerPaymentRequest(PaymentRequest request, DepositListener listener) {
-        Set<NanoAccount> outputs = getOutputs(request);
+    public void requestPaymentNotifications(PaymentRequest request, DepositListener listener) {
+        Set<NanoAccount> outputs = getPaymentOutputs(request);
 
         // Register listeners
         for (NanoAccount account : outputs) {
-            if (blockListeners.put(account, listener) != null) {
+            if (blockListeners.put(account, listener) != null)
                 log.warn("Deposit address {} is already in listener map.", account);
-            }
         }
+
         // Update topic filter
         if (isConnected()) {
             client.getTopics().topicConfirmedBlocks().update(
@@ -65,12 +65,11 @@ public class NanoWSClient {
         }
     }
 
-    public void expirePaymentRequest(PaymentRequest request) {
-        Set<NanoAccount> accounts = getOutputs(request);
+    public void endPaymentNotifications(PaymentRequest request) {
+        Set<NanoAccount> accounts = getPaymentOutputs(request);
 
         // Remove listeners
-        for (NanoAccount account : accounts)
-            blockListeners.remove(account);
+        accounts.forEach(blockListeners::remove);
         // Remove from topic filter
         if (isConnected()) {
             client.getTopics().topicConfirmedBlocks().update(
@@ -78,7 +77,7 @@ public class NanoWSClient {
         }
     }
 
-    protected Set<NanoAccount> getOutputs(PaymentRequest request) {
+    protected static Set<NanoAccount> getPaymentOutputs(PaymentRequest request) {
         return request.getOutputs().stream()
                 .map(IPaymentOutput::getAddress)
                 .map(NanoUtil::parseAddress)
@@ -108,7 +107,6 @@ public class NanoWSClient {
 
     public interface DepositListener {
         void onDeposit(HexData hash, NanoAmount amount);
-        void onSocketDisconnect();
     }
 
     class ConfirmedBlockHandler implements TopicListener<TopicMessageConfirmation> {
@@ -144,14 +142,7 @@ public class NanoWSClient {
         @Override
         public void onClose(int code, String reason, boolean remote) {
             log.warn("Nano node websocket disconnected. Attempting to reconnect in {} ms.", RECONNECT_MS);
-
-            // Notify listeners (and expire)
-            for (DepositListener listener : blockListeners.values()) {
-                listenerExecutor.submit(listener::onSocketDisconnect);
-            }
-
-            // Launch reconnection thread
-            initConnection();
+            initConnection(); // Launch reconnection thread
         }
 
         @Override

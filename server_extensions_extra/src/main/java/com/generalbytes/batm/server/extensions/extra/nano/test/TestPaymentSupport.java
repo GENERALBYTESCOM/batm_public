@@ -17,7 +17,7 @@ import java.net.URL;
  */
 class TestPaymentSupport {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         try {
             // You need to have node running: i.e.: nano_node --daemon with rpc enabled
             NanoRPCClient rpcClient = new NanoRPCClient(new URL("http://[::1]:7076"));      // RPC
@@ -40,9 +40,11 @@ class TestPaymentSupport {
                 @Override
                 public void stateChanged(PaymentRequest request, int previousState, int newState) {
                     System.out.println("stateChanged | previousState: " + previousState + " newState: " + newState);
-                    System.out.println(request);
-                    if (newState == PaymentRequest.STATE_SEEN_IN_BLOCK_CHAIN)
-                        System.out.println("---------------\nTRANSACTION COMPLETED\n---------------");
+                    if (newState == PaymentRequest.STATE_SEEN_IN_BLOCK_CHAIN) {
+                        System.out.println("--------------------------------------");
+                        System.out.printf("TRANSACTION COMPLETED | Received %.6f%n", request.getTxValue());
+                        System.out.println("--------------------------------------");
+                    }
                 }
 
                 @Override
@@ -50,7 +52,6 @@ class TestPaymentSupport {
                                                          IPaymentRequestListener.Direction direction) {
                     System.out.println("numberOfConfirmationsChanged | numberOfConfirmations: "
                         + numberOfConfirmations + " direction: " + direction);
-                    System.out.println(request);
                 }
 
                 @Override
@@ -60,7 +61,7 @@ class TestPaymentSupport {
                 }
             });
 
-            System.out.println("Waiting for transfer...");
+            System.out.println("Waiting for transfer to " + testAccount);
             Thread.currentThread().join();
         } catch (Exception e) {
             e.printStackTrace();
