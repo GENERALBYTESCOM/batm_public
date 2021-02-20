@@ -51,7 +51,10 @@ public class NanoNodeWallet implements IWallet, IQueryableWallet, IGeneratesNewD
         this.rpcClient = rpcClient;
         this.wsClient = wsClient;
         this.walletId = walletId;
-        this.walletAccount = parseAddress(walletAccount);
+        this.walletAccount = walletAccount != null ? parseAddress(walletAccount) : null;
+
+        log.info("Created NanoNodeWallet instance. Using websocket: {}, using wallet: {}",
+                wsClient != null, walletId != null && walletAccount != null);
     }
 
 

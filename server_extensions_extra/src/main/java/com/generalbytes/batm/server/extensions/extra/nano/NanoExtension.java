@@ -41,14 +41,16 @@ import java.net.URI;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.StringJoiner;
 import java.util.StringTokenizer;
 
 public class NanoExtension extends AbstractExtension {
 
-    private static final Logger log = LoggerFactory.getLogger(NanoExtension.class);
-
+    public static final String WALLET_NAME = "nano_node";
     public static final String CURRENCY_CODE = CryptoCurrency.NANO.getCode();
     private static final ICryptoCurrencyDefinition DEFINITION = new NanoDefinition();
+
+    private static final Logger log = LoggerFactory.getLogger(NanoExtension.class);
 
 
 
@@ -61,52 +63,47 @@ public class NanoExtension extends AbstractExtension {
     public IWallet createWallet(String walletLogin, String tunnelPassword) {
         try {
             if (walletLogin != null && !walletLogin.trim().isEmpty()) {
-                StringTokenizer st = new StringTokenizer(walletLogin, ":");
-                String walletType = st.nextToken();
-                if ("nano_node".equalsIgnoreCase(walletType)) {
+                Tokenizer tokenizer = new Tokenizer(walletLogin.trim().split(":"));
+                if (WALLET_NAME.equalsIgnoreCase(tokenizer.next())) {
                     /*
                      * ORDER OF CONFIGURATION PARAMETERS (split by colon):
-                     * 0 | "nano_node" (protocol name)
-                     * 1 | RPC protocol (http/https)
-                     * 2 | RPC IP or host
-                     * 3 | RPC port
-                     * 4 | Websocket protocol (ws/wss)
-                     * 5 | Websocket IP or host
-                     * 6 | Websocket port
-                     * 7 | Hot wallet ID
-                     * 8 | Hot wallet address
+                     *
+                     *  0  "nano_node" (protocol name)
+                     *  1  Node IP or host
+                     *  2  RPC protocol (http/https)
+                     *  3  RPC port
+                     *  4  Websocket protocol (ws/wss)
+                     *  5  Websocket port
+                     *  6  Hot wallet ID
+                     *  7  Hot wallet account
                      */
 
-
-                    // RPC CLIENT
-                    String rpcProtocol = st.nextToken();
-                    // Do special handling of ipv6 loopback address which has the delimiter
-                    String rpcHost = st.nextToken();
-                    if (rpcHost.equals("[")) {
-                        st.nextToken();
-                        rpcHost = "[::1]";
+                    String nodeHost = tokenizer.next();
+                    if (nodeHost.startsWith("[")) {
+                        // IPv6 address
+                        StringJoiner sj = new StringJoiner(":");
+                        String str = nodeHost;
+                        do {
+                            sj.add(str);
+                        } while (!(str = tokenizer.next()).endsWith("]"));
+                        sj.add(str);
+                        nodeHost = sj.toString();
+                    } else if (nodeHost.isEmpty()) {
+                        nodeHost = "[::1]";
                     }
-                    int rpcPort = Integer.parseInt(st.nextToken());
+                    String rpcProtocol = tokenizer.next();
+                    int rpcPort = Integer.parseInt(tokenizer.next());
+                    String wsProtocol = tokenizer.next();
+                    String wsPortStr = tokenizer.next();
+                    int wsPort = wsPortStr.isEmpty() ? 0 : Integer.parseInt(wsPortStr);
+                    String walletId = tokenizer.hasNext() ? tokenizer.next() : null;
+                    String walletAccount = tokenizer.hasNext() ? tokenizer.next() : null;
 
-                    // WEBSOCKET CLIENT
-                    String wsProtocol = st.nextToken();
-                    String wsHost = nextTokenAsHostname(st);
-                    int wsPort = Integer.parseInt(st.nextToken());
-
-                    // WALLET & ACCOUNT
-                    String walletId = null, account = null;
-                    if (st.hasMoreTokens())
-                        walletId = st.nextToken();
-                    if (st.hasMoreTokens())
-                        account = st.nextToken();
-
-
-                    NanoRPCClient rpcClient = new NanoRPCClient(new URL(rpcProtocol, rpcHost, rpcPort, ""));
+                    NanoRPCClient rpcClient = new NanoRPCClient(new URL(rpcProtocol, nodeHost, rpcPort, ""));
                     NanoWSClient wsClient = null;
-                    if (wsPort > 0)
-                        wsClient = new NanoWSClient(new URI(wsProtocol, "", wsHost, wsPort, "", "", ""));
-
-                    return new NanoNodeWallet(rpcClient, wsClient, walletId, account);
+                    if (wsPort > 0 && !wsProtocol.isEmpty())
+                        wsClient = new NanoWSClient(new URI(wsProtocol, "", nodeHost, wsPort, "", "", ""));
+                    return new NanoNodeWallet(rpcClient, wsClient, walletId, walletAccount);
                 }
             }
         } catch (Exception e) {
@@ -193,6 +190,30 @@ public class NanoExtension extends AbstractExtension {
         if (CURRENCY_CODE.equalsIgnoreCase(cryptoCurrency))
             return new NanoPaperWalletGenerator(ctx, NanoUtil.ADDR_PREFIX, NanoUtil.ADDR_URI_PROTOCOL);
         return null;
+    }
+
+
+    /** Tokenizer allowing empty values and skipping. */
+    private static class Tokenizer {
+        private final String[] tokens;
+        private int tokenIndex = 0;
+
+        public Tokenizer(String[] tokens) {
+            this.tokens = tokens;
+        }
+
+
+        public String next() {
+            return tokens[tokenIndex++];
+        }
+
+        public boolean hasNext() {
+            return tokens.length > tokenIndex;
+        }
+
+        public void skip(int n) {
+            tokenIndex += n;
+        }
     }
 
 }
