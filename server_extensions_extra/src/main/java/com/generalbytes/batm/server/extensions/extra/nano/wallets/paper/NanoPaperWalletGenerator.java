@@ -55,19 +55,21 @@ public class NanoPaperWalletGenerator implements IPaperWalletGenerator {
     @Override
     public IPaperWallet generateWallet(String cryptoCurrency, String oneTimePassword, String userLanguage,
             boolean shouldBeVanity) {
-        // Create private key and address
-        HexData privateKey;
+        // Create seed, private key and address
+        HexData seed;
         try {
-            privateKey = WalletUtil.generateRandomKey();
+            seed = WalletUtil.generateRandomKey();
         } catch (NoSuchAlgorithmException e) {
-            log.error("Could not generate private key", e);
+            log.error("Couldn't generate paper wallet seed", e);
             return null;
         }
+        HexData privateKey = WalletUtil.deriveKeyFromSeed(seed);
         String address = NanoAccount.fromPrivateKey(privateKey).toAddress();
 
         // Return paper wallet with QR
         byte[] image = generateQR(ADDR_URI_SCHEME + address, QR_SIZE);
-        return new NanoPaperWallet(address, privateKey.toHexString(), MESSAGE, image);
+        String message = MESSAGE + address;
+        return new NanoPaperWallet(address, seed.toHexString(), message, image);
     }
 
     public static byte[] generateQR(String text, int size) {
