@@ -1,0 +1,6 @@
+<p>Your personal <font color="#4A90E2">Nano</font> account is <a href="nano:{address}"><code>{address}</code></a>,
+ please send funds to this address if you wish to top up your account. You can view your current balance and transaction
+ history <a href="https://nanocrawler.cc/explorer/account/{address}/history">on NanoCrawler</a>.</p>
+
+<p>Attached is a ZIP file containing your account and seed, encrypted using your one-time password. <strong>Do not
+ lose or give out your seed</strong>, as you will lose access to your funds.</p>

@@ -22,16 +22,17 @@ import com.generalbytes.batm.server.extensions.extra.nano.NanoExtension;
 
 public class NanoPaperWallet implements IPaperWallet {
 
-    private final String address;
-    private final String privateKey;
-    private final String message;
+    private final String address, privateKey, message, contentExt, contentType;
     private final byte[] content;
 
-    public NanoPaperWallet(String address, String privateKey, String message, byte[] qrContent) {
+    public NanoPaperWallet(String address, String privateKey, String message, String contentExt, String contentType,
+                           byte[] content) {
         this.address = address;
         this.privateKey = privateKey;
         this.message = message;
-        this.content = qrContent;
+        this.content = content;
+        this.contentExt = contentExt;
+        this.contentType = contentType;
     }
 
 
@@ -57,12 +58,12 @@ public class NanoPaperWallet implements IPaperWallet {
 
     @Override
     public String getFileExtension() {
-        return "png";
+        return contentExt;
     }
 
     @Override
     public String getContentType() {
-        return "image/png";
+        return contentType;
     }
 
     @Override

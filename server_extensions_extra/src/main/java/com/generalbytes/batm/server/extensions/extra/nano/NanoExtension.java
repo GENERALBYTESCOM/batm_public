@@ -191,7 +191,7 @@ public class NanoExtension extends AbstractExtension {
     @Override
     public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency) {
         if (CURRENCY_CODE.equalsIgnoreCase(cryptoCurrency))
-            return new NanoPaperWalletGenerator();
+            return new NanoPaperWalletGenerator(ctx, NanoUtil.ADDR_PREFIX, NanoUtil.ADDR_URI_PROTOCOL);
         return null;
     }
 

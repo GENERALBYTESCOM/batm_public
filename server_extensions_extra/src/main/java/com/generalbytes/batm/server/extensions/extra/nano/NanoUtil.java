@@ -10,13 +10,16 @@ import java.util.regex.Pattern;
  */
 public class NanoUtil {
 
+    public static final String ADDR_PREFIX = "nano";
+    public static final String ADDR_URI_PROTOCOL = "nano";
+
     /** Supports parsing of URI addresses */
-    private static final Pattern ADDR_PATTERN = Pattern.compile("^(?:nano:)?(\\w+)(?:\\?.+)?$");
+    private static final Pattern ADDR_PATTERN = Pattern.compile("^(?:" + ADDR_URI_PROTOCOL + ":)?(\\w+)(?:\\?.+)?$");
 
 
     /** Parses an address with the URI, and enforces the nano prefix. */
     public static NanoAccount parseAddress(String addr) {
-        return parseAddressRaw(addr).withPrefix("nano"); // Force nano prefix
+        return parseAddressRaw(addr).withPrefix(ADDR_PREFIX); // Force nano prefix
     }
 
     /** Parses an address, keeping the specified prefix. */
