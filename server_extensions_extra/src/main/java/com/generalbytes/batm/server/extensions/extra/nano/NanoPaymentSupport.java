@@ -20,6 +20,7 @@ package com.generalbytes.batm.server.extensions.extra.nano;
 import com.generalbytes.batm.server.extensions.IGeneratesNewDepositCryptoAddress;
 import com.generalbytes.batm.server.extensions.IQueryableWallet;
 import com.generalbytes.batm.server.extensions.extra.common.PollingPaymentSupport;
+import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.lnd.dto.Payment;
 import com.generalbytes.batm.server.extensions.extra.nano.wallets.node.NanoNodeWallet;
 import com.generalbytes.batm.server.extensions.extra.nano.wallets.node.NanoWSClient;
 import com.generalbytes.batm.server.extensions.payment.IPaymentRequestListener;
@@ -51,9 +52,14 @@ public class NanoPaymentSupport extends PollingPaymentSupport {
 
     private static final Logger log = LoggerFactory.getLogger(NanoPaymentSupport.class);
 
+    private final NanoCurrencySpecification currencySpec;
     /** Context info for payment requests. */
     private final Map<PaymentRequest, PaymentRequestContext> requestContexts = new ConcurrentHashMap<>();
     private final ExecutorService pollExecutor = Executors.newFixedThreadPool(2);
+
+    public NanoPaymentSupport(NanoCurrencySpecification currencySpec) {
+        this.currencySpec = currencySpec;
+    }
 
 
     @Override
@@ -68,7 +74,7 @@ public class NanoPaymentSupport extends PollingPaymentSupport {
 
     @Override
     protected String getCryptoCurrency() {
-        return NanoExtension.CURRENCY_CODE;
+        return currencySpec.getCurrencyCode();
     }
 
     @Override
@@ -93,7 +99,7 @@ public class NanoPaymentSupport extends PollingPaymentSupport {
             NanoWSClient wsClient = ((NanoNodeWallet)request.getWallet()).getWebSocketClient();
             if (wsClient != null) {
                 final PaymentRequestContext context = new PaymentRequestContext(request, wsClient);
-                wsClient.requestPaymentNotifications(request, (hash, amount) -> poll(context, true));
+                wsClient.requestPaymentNotifications(request.getOutputs(), (hash, amount) -> poll(context, true));
                 requestContext = context;
             } else {
                 log.debug("Using RPC polling for request as the wallet doesn't support websockets. {}", request);
@@ -164,8 +170,7 @@ public class NanoPaymentSupport extends PollingPaymentSupport {
         // Expire websocket if supported and a final state
         if (isStateFinished(newState)) {
             PaymentRequestContext context = requestContexts.get(request);
-            if (context != null)
-                context.finalizeRequest();
+            if (context != null) context.finalizeRequest();
         }
 
         // Notify listener
@@ -175,24 +180,27 @@ public class NanoPaymentSupport extends PollingPaymentSupport {
     }
 
     private void updateRequestState(PaymentRequest request, BigDecimal totalReceived, int confirmations) {
-        if (!isStateFinished(request.getState()) && request.getTxValue().compareTo(totalReceived) != 0) {
-            log.debug("Updating request state.");
-            request.setTxValue(totalReceived);
+        int initialState = request.getState();
+        if (!isStateFinished(initialState)) {
+            if (request.getTxValue().compareTo(totalReceived) != 0) {
+                log.debug("Updating request state, total received: {} with {} confs", totalReceived, confirmations);
+                request.setTxValue(totalReceived);
+                if (totalReceived.compareTo(BigDecimal.ZERO) >= 0) {
+                    // Change state if new
+                    if (request.getState() == PaymentRequest.STATE_NEW)
+                        setState(request, PaymentRequest.STATE_SEEN_TRANSACTION);
 
-            if (totalReceived.compareTo(BigDecimal.ZERO) >= 0) {
-                // Change state if new
-                if (request.getState() == PaymentRequest.STATE_NEW)
-                    setState(request, PaymentRequest.STATE_SEEN_TRANSACTION);
-
-                // Final confirmation state
-                if (confirmations > 0 && request.getState() == PaymentRequest.STATE_SEEN_TRANSACTION
-                    && totalReceived.compareTo(request.getAmount()) >= 0) {
-                    log.info("Transaction confirmed. Total amount received: {}", totalReceived);
-                    setState(request, PaymentRequest.STATE_SEEN_IN_BLOCK_CHAIN);
-                    updateNumberOfConfirmations(request, confirmations);
-                } else {
-                    setState(request, PaymentRequest.STATE_SEEN_TRANSACTION); // Re-fire state
-                    updateNumberOfConfirmations(request, 0);
+                    // Final confirmation state
+                    if (confirmations > 0 && request.getState() == PaymentRequest.STATE_SEEN_TRANSACTION
+                        && totalReceived.compareTo(request.getAmount()) >= 0) {
+                        log.info("Transaction confirmed. Total amount received: {}", totalReceived);
+                        setState(request, PaymentRequest.STATE_SEEN_IN_BLOCK_CHAIN);
+                        updateNumberOfConfirmations(request, confirmations);
+                    } else {
+                        if (initialState != PaymentRequest.STATE_NEW)
+                            setState(request, PaymentRequest.STATE_SEEN_TRANSACTION); // Re-fire state
+                        updateNumberOfConfirmations(request, 0);
+                    }
                 }
             }
         } else {
@@ -242,7 +250,7 @@ public class NanoPaymentSupport extends PollingPaymentSupport {
         public void finalizeRequest() {
             log.debug("Finalizing payment request {}", request);
             requestContexts.remove(request);
-            wsClient.endPaymentNotifications(request);
+            wsClient.endPaymentNotifications(request.getOutputs());
         }
     }
 

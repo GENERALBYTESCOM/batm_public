@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 
 public class NanoAddressValidatorTest {
 
-    private static final NanoAddressValidator VALIDATOR = new NanoAddressValidator();
+    private static final NanoAddressValidator VALIDATOR = new NanoAddressValidator(NanoExtension.CURRENCY_SPEC);
 
 
     @Test

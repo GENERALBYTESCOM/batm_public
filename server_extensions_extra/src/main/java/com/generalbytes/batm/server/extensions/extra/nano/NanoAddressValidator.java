@@ -21,11 +21,18 @@ import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 
 public class NanoAddressValidator implements ICryptoAddressValidator {
 
+    private final NanoCurrencySpecification spec;
+
+    public NanoAddressValidator(NanoCurrencySpecification spec) {
+        this.spec = spec;
+    }
+
+
     @Override
     public boolean isAddressValid(String address) {
         if (address == null) return false;
         try {
-            return NanoUtil.parseAddressRaw(address).isValidNano(); // Accept nano or xrb prefixes
+            return spec.isPrefixValid(spec.parseAddressRaw(address));
         } catch (IllegalArgumentException e) {
             return false;
         }

@@ -1,8 +1,7 @@
 package com.generalbytes.batm.server.extensions.extra.nano.wallets.node;
 
-import com.generalbytes.batm.server.extensions.extra.nano.NanoUtil;
+import com.generalbytes.batm.server.extensions.extra.nano.NanoCurrencySpecification;
 import com.generalbytes.batm.server.extensions.payment.IPaymentOutput;
-import com.generalbytes.batm.server.extensions.payment.PaymentRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.oczadly.karl.jnano.model.HexData;
@@ -19,6 +18,7 @@ import uk.oczadly.karl.jnano.websocket.topic.message.TopicMessageConfirmation;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -35,6 +35,7 @@ public class NanoWSClient {
 
     private static final Logger log = LoggerFactory.getLogger(NanoWSClient.class);
 
+    private final NanoCurrencySpecification currencySpec;
     private final URI uri;
     private volatile NanoWebSocketClient client;
     private volatile Thread reconnectThread;
@@ -43,14 +44,15 @@ public class NanoWSClient {
     private final ExecutorService listenerExecutor = Executors.newCachedThreadPool();
     private final Map<NanoAccount, DepositListener> blockListeners = new ConcurrentHashMap<>();
 
-    public NanoWSClient(URI uri) {
+    public NanoWSClient(NanoCurrencySpecification currencySpec, URI uri) {
+        this.currencySpec = currencySpec;
         this.uri = uri;
         initConnection();
     }
 
 
-    public void requestPaymentNotifications(PaymentRequest request, DepositListener listener) {
-        Set<NanoAccount> outputs = getPaymentOutputs(request);
+    public void requestPaymentNotifications(Collection<IPaymentOutput> addresses, DepositListener listener) {
+        Set<NanoAccount> outputs = parseOutputs(addresses);
 
         // Register listeners
         for (NanoAccount account : outputs) {
@@ -65,8 +67,8 @@ public class NanoWSClient {
         }
     }
 
-    public void endPaymentNotifications(PaymentRequest request) {
-        Set<NanoAccount> accounts = getPaymentOutputs(request);
+    public void endPaymentNotifications(Collection<IPaymentOutput> addresses) {
+        Set<NanoAccount> accounts = parseOutputs(addresses);
 
         // Remove listeners
         accounts.forEach(blockListeners::remove);
@@ -77,10 +79,10 @@ public class NanoWSClient {
         }
     }
 
-    protected static Set<NanoAccount> getPaymentOutputs(PaymentRequest request) {
-        return request.getOutputs().stream()
+    protected Set<NanoAccount> parseOutputs(Collection<IPaymentOutput> addresses) {
+        return addresses.stream()
                 .map(IPaymentOutput::getAddress)
-                .map(NanoUtil::parseAddress)
+                .map(currencySpec::parseAddress)
                 .collect(Collectors.toSet());
     }
 

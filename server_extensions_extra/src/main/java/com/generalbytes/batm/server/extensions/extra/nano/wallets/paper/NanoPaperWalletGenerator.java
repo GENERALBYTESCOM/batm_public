@@ -25,7 +25,7 @@ import com.generalbytes.batm.server.extensions.IExtensionContext;
 import com.generalbytes.batm.server.extensions.IPaperWallet;
 import com.generalbytes.batm.server.extensions.IPaperWalletGenerator;
 
-import com.generalbytes.batm.server.extensions.extra.nano.NanoUtil;
+import com.generalbytes.batm.server.extensions.extra.nano.NanoCurrencySpecification;
 import uk.oczadly.karl.jnano.util.WalletUtil;
 import uk.oczadly.karl.jnano.model.NanoAccount;
 import uk.oczadly.karl.jnano.model.HexData;
@@ -38,12 +38,11 @@ public class NanoPaperWalletGenerator implements IPaperWalletGenerator {
     private static final Logger log = LoggerFactory.getLogger(NanoPaperWalletGenerator.class);
 
 
-    private String addrPrefix, addrURI;
-    private IExtensionContext ctx;
+    private final NanoCurrencySpecification addrSpec;
+    private final IExtensionContext ctx;
 
-    public NanoPaperWalletGenerator(IExtensionContext ctx, String addrPrefix, String addrURI) {
-        this.addrPrefix = addrPrefix;
-        this.addrURI = addrURI;
+    public NanoPaperWalletGenerator(IExtensionContext ctx, NanoCurrencySpecification addrSpec) {
+        this.addrSpec = addrSpec;
         this.ctx = ctx;
     }
 
@@ -60,22 +59,23 @@ public class NanoPaperWalletGenerator implements IPaperWalletGenerator {
             return null;
         }
         HexData privateKey = WalletUtil.deriveKeyFromSeed(seed);
-        String address = NanoAccount.fromPrivateKey(privateKey).withPrefix(addrPrefix).toAddress();
+        NanoAccount account = NanoAccount.fromPrivateKey(privateKey).withPrefix(addrSpec.getAddressPrefix());
 
-        // Create email params
-        byte[] zip = ctx.createPaperWallet7ZIP(seed.toHexString(), addrURI + ":" + address,
+        // Create email content
+        byte[] zip = ctx.createPaperWallet7ZIP(seed.toHexString(), addrSpec.toUriAddress(account),
                 oneTimePassword, cryptoCurrency);
-        String message = createMessage(userLanguage, address);
+        String message = createMessage(userLanguage, account.toAddress());
 
         // Return paper wallet
-        return new NanoPaperWallet(address, seed.toHexString(), message, "zip", "application/zip", zip);
+        return new NanoPaperWallet(cryptoCurrency, account.toAddress(), seed.toHexString(),
+                message, "zip", "application/zip", zip);
     }
 
 
     public static String createMessage(String lang, String address) {
-        String message = getMessageResource(lang);
+        String message = readMessageTemplate(lang);
         if (message == null && !lang.equalsIgnoreCase("en")) {
-            message = getMessageResource("en"); // Try english fallback
+            message = readMessageTemplate("en"); // Try english fallback
             log.warn("No paper wallet message for language {}, using EN fallback.", lang);
         }
         if (message == null) {
@@ -85,7 +85,7 @@ public class NanoPaperWalletGenerator implements IPaperWalletGenerator {
         return message.replace("{address}", address);
     }
 
-    public static String getMessageResource(String lang) {
+    public static String readMessageTemplate(String lang) {
         String fileName = "paperwallet_msg_" + lang.toLowerCase() + ".txt";
         InputStream is = NanoPaperWalletGenerator.class.getResourceAsStream(fileName);
         if (is == null)

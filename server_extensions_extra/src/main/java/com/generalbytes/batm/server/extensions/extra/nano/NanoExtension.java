@@ -19,39 +19,31 @@ package com.generalbytes.batm.server.extensions.extra.nano;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
+import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.binance.BinanceComExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.binance.BinanceUsExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.coingecko.CoinGeckoRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.coinpaprika.CoinPaprikaRateSource;
 import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.CoinmarketcapRateSource;
-import com.generalbytes.batm.server.extensions.extra.nano.wallets.node.NanoRPCClient;
+import com.generalbytes.batm.server.extensions.extra.nano.util.StringTokenizerV2;
 import com.generalbytes.batm.server.extensions.extra.nano.wallets.node.NanoNodeWallet;
-import com.generalbytes.batm.server.extensions.extra.nano.wallets.node.NanoWSClient;
 import com.generalbytes.batm.server.extensions.extra.nano.wallets.paper.NanoPaperWalletGenerator;
-import com.generalbytes.batm.server.extensions.AbstractExtension;
-import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
-import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
-import com.generalbytes.batm.server.extensions.IPaperWalletGenerator;
-import com.generalbytes.batm.server.extensions.IRateSource;
-import com.generalbytes.batm.server.extensions.IWallet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.URI;
-import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.StringJoiner;
 import java.util.StringTokenizer;
 
 public class NanoExtension extends AbstractExtension {
 
-    public static final String WALLET_NAME = "nano_node";
-    public static final String CURRENCY_CODE = CryptoCurrency.NANO.getCode();
-    private static final ICryptoCurrencyDefinition DEFINITION = new NanoDefinition();
+    public static final NanoCurrencySpecification CURRENCY_SPEC =
+        new NanoCurrencySpecification(CryptoCurrency.NANO.getCode(), "nano", "nano", "xrb");
+
+    private static final String WALLET_NAME = "nano_node";
+    private static final ICryptoCurrencyDefinition DEFINITION = new NanoDefinition(CURRENCY_SPEC);
 
     private static final Logger log = LoggerFactory.getLogger(NanoExtension.class);
-
 
 
     @Override
@@ -63,47 +55,10 @@ public class NanoExtension extends AbstractExtension {
     public IWallet createWallet(String walletLogin, String tunnelPassword) {
         try {
             if (walletLogin != null && !walletLogin.trim().isEmpty()) {
-                Tokenizer tokenizer = new Tokenizer(walletLogin.trim().split(":"));
-                if (WALLET_NAME.equalsIgnoreCase(tokenizer.next())) {
-                    /*
-                     * ORDER OF CONFIGURATION PARAMETERS (split by colon):
-                     *
-                     *  0  "nano_node" (protocol name)
-                     *  1  Node IP or host
-                     *  2  RPC protocol (http/https)
-                     *  3  RPC port
-                     *  4  Websocket protocol (ws/wss)
-                     *  5  Websocket port
-                     *  6  Hot wallet ID
-                     *  7  Hot wallet account
-                     */
-
-                    String nodeHost = tokenizer.next();
-                    if (nodeHost.startsWith("[")) {
-                        // IPv6 address
-                        StringJoiner sj = new StringJoiner(":");
-                        String str = nodeHost;
-                        do {
-                            sj.add(str);
-                        } while (!(str = tokenizer.next()).endsWith("]"));
-                        sj.add(str);
-                        nodeHost = sj.toString();
-                    } else if (nodeHost.isEmpty()) {
-                        nodeHost = "[::1]";
-                    }
-                    String rpcProtocol = tokenizer.next();
-                    int rpcPort = Integer.parseInt(tokenizer.next());
-                    String wsProtocol = tokenizer.next();
-                    String wsPortStr = tokenizer.next();
-                    int wsPort = wsPortStr.isEmpty() ? 0 : Integer.parseInt(wsPortStr);
-                    String walletId = tokenizer.hasNext() ? tokenizer.next() : null;
-                    String walletAccount = tokenizer.hasNext() ? tokenizer.next() : null;
-
-                    NanoRPCClient rpcClient = new NanoRPCClient(new URL(rpcProtocol, nodeHost, rpcPort, ""));
-                    NanoWSClient wsClient = null;
-                    if (wsPort > 0 && !wsProtocol.isEmpty())
-                        wsClient = new NanoWSClient(new URI(wsProtocol, "", nodeHost, wsPort, "", "", ""));
-                    return new NanoNodeWallet(rpcClient, wsClient, walletId, walletAccount);
+                StringTokenizerV2 tokenizer = new StringTokenizerV2(walletLogin.trim().split(":"));
+                String walletName = tokenizer.next();
+                if (WALLET_NAME.equalsIgnoreCase(walletName)) {
+                    return NanoNodeWallet.create(CURRENCY_SPEC, tokenizer);
                 }
             }
         } catch (Exception e) {
@@ -112,20 +67,10 @@ public class NanoExtension extends AbstractExtension {
         return null;
     }
 
-    // Fix for ipv6 loopback addresses
-    private static String nextTokenAsHostname(StringTokenizer tokenizer) {
-        String token = tokenizer.nextToken();
-        if (token.equals("[")) {
-            tokenizer.nextToken(); // skip
-            return "[::1]";
-        }
-        return token;
-    }
-
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (CURRENCY_CODE.equalsIgnoreCase(cryptoCurrency))
-            return new NanoAddressValidator();
+        if (CURRENCY_SPEC.getCurrencyCode().equalsIgnoreCase(cryptoCurrency))
+            return new NanoAddressValidator(CURRENCY_SPEC);
         return null;
     }
 
@@ -174,7 +119,7 @@ public class NanoExtension extends AbstractExtension {
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<>();
-        result.add(CURRENCY_CODE);
+        result.add(CURRENCY_SPEC.getCurrencyCode());
         return result;
     }
 
@@ -187,33 +132,9 @@ public class NanoExtension extends AbstractExtension {
 
     @Override
     public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency) {
-        if (CURRENCY_CODE.equalsIgnoreCase(cryptoCurrency))
-            return new NanoPaperWalletGenerator(ctx, NanoUtil.ADDR_PREFIX, NanoUtil.ADDR_URI_PROTOCOL);
+        if (CURRENCY_SPEC.getCurrencyCode().equalsIgnoreCase(cryptoCurrency))
+            return new NanoPaperWalletGenerator(ctx, CURRENCY_SPEC);
         return null;
-    }
-
-
-    /** Tokenizer allowing empty values and skipping. */
-    private static class Tokenizer {
-        private final String[] tokens;
-        private int tokenIndex = 0;
-
-        public Tokenizer(String[] tokens) {
-            this.tokens = tokens;
-        }
-
-
-        public String next() {
-            return tokens[tokenIndex++];
-        }
-
-        public boolean hasNext() {
-            return tokens.length > tokenIndex;
-        }
-
-        public void skip(int n) {
-            tokenIndex += n;
-        }
     }
 
 }

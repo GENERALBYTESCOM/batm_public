@@ -18,15 +18,15 @@
 package com.generalbytes.batm.server.extensions.extra.nano.wallets.paper;
 
 import com.generalbytes.batm.server.extensions.IPaperWallet;
-import com.generalbytes.batm.server.extensions.extra.nano.NanoExtension;
 
 public class NanoPaperWallet implements IPaperWallet {
 
-    private final String address, privateKey, message, contentExt, contentType;
+    private final String currency, address, privateKey, message, contentExt, contentType;
     private final byte[] content;
 
-    public NanoPaperWallet(String address, String privateKey, String message, String contentExt, String contentType,
-                           byte[] content) {
+    public NanoPaperWallet(String currency, String address, String privateKey, String message, String contentExt,
+                           String contentType, byte[] content) {
+        this.currency = currency;
         this.address = address;
         this.privateKey = privateKey;
         this.message = message;
@@ -53,7 +53,7 @@ public class NanoPaperWallet implements IPaperWallet {
 
     @Override
     public String getCryptoCurrency() {
-        return NanoExtension.CURRENCY_CODE;
+        return currency;
     }
 
     @Override
