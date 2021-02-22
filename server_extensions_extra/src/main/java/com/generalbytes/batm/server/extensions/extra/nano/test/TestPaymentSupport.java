@@ -8,6 +8,9 @@ import com.generalbytes.batm.server.extensions.extra.nano.wallets.node.NanoNodeW
 import com.generalbytes.batm.server.extensions.extra.nano.wallets.node.NanoWSClient;
 import com.generalbytes.batm.server.extensions.payment.IPaymentRequestListener;
 import com.generalbytes.batm.server.extensions.payment.PaymentRequest;
+import uk.oczadly.karl.jnano.rpc.RpcQueryNode;
+import uk.oczadly.karl.jnano.rpc.request.node.RequestBlockCount;
+import uk.oczadly.karl.jnano.rpc.request.node.RequestVersion;
 
 import java.math.BigDecimal;
 import java.net.URI;
@@ -18,20 +21,19 @@ import java.net.URL;
  */
 class TestPaymentSupport {
 
-    private static final NanoCurrencySpecification ADDR_SPEC = NanoExtension.CURRENCY_SPEC;
-
-
     public static void main(String[] args) {
         try {
             // You need to have node running: i.e.: nano_node --daemon with rpc enabled
-            NanoRPCClient rpcClient = new NanoRPCClient(new URL("http://[::1]:7076"));          // RPC
-            NanoWSClient wsClient = new NanoWSClient(ADDR_SPEC, URI.create("ws://[::1]:7078")); // Websocket
+            String rpcHost = "http://[::1]:7076", wsHost = "ws://[::1]:7078";
             String testAccount = "nano_3zkzc8cf5jmgdtecxdd4jjajydcf988kswdhd3hymamk45773r6a5xen36kg";
-            BigDecimal testAmount = new BigDecimal("0.000003");
+            BigDecimal testAmount = new BigDecimal("0.000017");
 
 
             System.out.println("Running TestPaymentSupport");
-            NanoNodeWallet wallet = new NanoNodeWallet(ADDR_SPEC, rpcClient, wsClient, "", testAccount);
+            NanoCurrencySpecification addrSpec = NanoExtension.CURRENCY_SPEC;
+            NanoRPCClient rpcClient = new NanoRPCClient(new URL(rpcHost));
+            NanoWSClient wsClient = wsHost == null ? null : new NanoWSClient(addrSpec, URI.create(wsHost));
+            NanoNodeWallet wallet = new NanoNodeWallet(addrSpec, rpcClient, wsClient, "", testAccount);
             NanoPaymentSupport ps = new NanoPaymentSupport(NanoExtension.CURRENCY_SPEC);
             ps.init(null);
             String description = "Test txn";
@@ -44,8 +46,8 @@ class TestPaymentSupport {
             pr.setListener(new IPaymentRequestListener() {
                 @Override
                 public void stateChanged(PaymentRequest request, int previousState, int newState) {
-                    System.out.printf("stateChanged | received: %.6f, previousState: %d, newState: %d%n",
-                        request.getTxValue(), previousState, newState);
+                    System.out.printf("stateChanged | received: %.6f / %.6f, previousState: %d, newState: %d%n",
+                        request.getTxValue(), request.getAmount(), previousState, newState);
                     if (newState == PaymentRequest.STATE_SEEN_IN_BLOCK_CHAIN) {
                         System.out.println("--------------------------------------");
                         System.out.printf("TRANSACTION COMPLETED | Received %.6f%n", request.getTxValue());

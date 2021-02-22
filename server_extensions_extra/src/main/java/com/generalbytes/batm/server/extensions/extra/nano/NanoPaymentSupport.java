@@ -20,7 +20,6 @@ package com.generalbytes.batm.server.extensions.extra.nano;
 import com.generalbytes.batm.server.extensions.IGeneratesNewDepositCryptoAddress;
 import com.generalbytes.batm.server.extensions.IQueryableWallet;
 import com.generalbytes.batm.server.extensions.extra.common.PollingPaymentSupport;
-import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.lnd.dto.Payment;
 import com.generalbytes.batm.server.extensions.extra.nano.wallets.node.NanoNodeWallet;
 import com.generalbytes.batm.server.extensions.extra.nano.wallets.node.NanoWSClient;
 import com.generalbytes.batm.server.extensions.payment.IPaymentRequestListener;
@@ -250,7 +249,8 @@ public class NanoPaymentSupport extends PollingPaymentSupport {
         public void finalizeRequest() {
             log.debug("Finalizing payment request {}", request);
             requestContexts.remove(request);
-            wsClient.endPaymentNotifications(request.getOutputs());
+            if (wsClient != null)
+                wsClient.endPaymentNotifications(request.getOutputs());
         }
     }
 
