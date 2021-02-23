@@ -17,24 +17,27 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.nano.wallets.node;
 
-import java.net.URL;
-import java.util.UUID;
-import java.io.IOException;
-import java.math.BigInteger;
-
+import uk.oczadly.karl.jnano.model.HexData;
 import uk.oczadly.karl.jnano.model.NanoAccount;
 import uk.oczadly.karl.jnano.model.NanoAmount;
-import uk.oczadly.karl.jnano.model.HexData;
 import uk.oczadly.karl.jnano.rpc.RpcQueryNode;
 import uk.oczadly.karl.jnano.rpc.exception.RpcEntityNotFoundException;
+import uk.oczadly.karl.jnano.rpc.exception.RpcException;
 import uk.oczadly.karl.jnano.rpc.request.node.RequestAccountBalance;
-import uk.oczadly.karl.jnano.rpc.request.wallet.RequestSend;
-import uk.oczadly.karl.jnano.rpc.response.*;
-import uk.oczadly.karl.jnano.rpc.request.wallet.RequestAccountCreate;
 import uk.oczadly.karl.jnano.rpc.request.node.RequestAccountInfo;
 import uk.oczadly.karl.jnano.rpc.request.node.RequestBlockInfo;
 import uk.oczadly.karl.jnano.rpc.request.node.RequestPending;
-import uk.oczadly.karl.jnano.rpc.exception.RpcException;
+import uk.oczadly.karl.jnano.rpc.request.wallet.RequestAccountCreate;
+import uk.oczadly.karl.jnano.rpc.request.wallet.RequestSend;
+import uk.oczadly.karl.jnano.rpc.response.ResponseAccountInfo;
+import uk.oczadly.karl.jnano.rpc.response.ResponseBlockHash;
+import uk.oczadly.karl.jnano.rpc.response.ResponseBlockInfo;
+import uk.oczadly.karl.jnano.rpc.response.ResponsePending;
+
+import java.io.IOException;
+import java.math.BigInteger;
+import java.net.URL;
+import java.util.UUID;
 
 public class NanoRPCClient {
 
@@ -90,50 +93,12 @@ public class NanoRPCClient {
     }
 
 
-    public HexData sendFromWallet(String walletId, NanoAccount sourceAcc, NanoAccount destination, NanoAmount amount)
+    public String sendFromWallet(String walletId, NanoAccount sourceAcc, NanoAccount destination, NanoAmount amount)
             throws IOException, RpcException {
         ResponseBlockHash hash = rpc.processRequest(new RequestSend(
                 walletId, sourceAcc.toAddress(), destination.toAddress(), amount.getAsRaw(),
                 UUID.randomUUID().toString()));
-        return hash.getBlockHash();
+        return hash.getBlockHash().toHexString();
     }
-
-
-//    public static void main(String[] args) {
-//        // You need to have node running: i.e.: nano_node --daemon with rpc enabled as
-//        // well as a wallet set up.
-//
-//        try {
-//            NanoRPCClient client = new NanoRPCClient("http://[::1]:7076");
-//            String walletId = "2D74D34B4892288866EEE29AC3A233ADC6BB6EB8021ECE3EADC87F3FED1FACF3";
-//            String sourceAddress = "nano_15erffyd59fiy1muzwn7pkq37o197pixbz8gcjwpi8mwiuuxgqe7zy7uyw65";
-//            String destinationAddress = "nano_3pszk9xf4mogtf8yebwurjcyhbtscun4hq596sxym7roxwt9gy8ieou1jj9i";
-//
-//            BigInteger balance = client.getBalance(sourceAddress);
-//            BigDecimal amount = new BigDecimal("0.00001");
-//            String hash = client.sendFrom(walletId, sourceAddress, destinationAddress, amount);
-//
-//            ResponseBlockInfo blockInfo = client.getBlockInfo(new HexData(hash));
-//            if (blockInfo.getAmount().getAsNano().compareTo(amount) != 0) {
-//                System.out.println("Incorrect blockInfo response");
-//                return;
-//            }
-//
-//            if (balance.subtract(NanoAmount.valueOfNano(amount).getAsRaw())
-//                    .compareTo(client.getBalance(sourceAddress)) != 0) {
-//                System.out.println("Sending from wallet not working correctly");
-//                return;
-//            }
-//
-//            // Generate new crypto address
-//            client.newAccount(walletId);
-//
-//            System.out.println("Completed!");
-//        } catch (IOException e) {
-//            System.out.println(e.toString());
-//        } catch (RpcException e) {
-//            System.out.println(e.toString());
-//        }
-//    }
 
 }

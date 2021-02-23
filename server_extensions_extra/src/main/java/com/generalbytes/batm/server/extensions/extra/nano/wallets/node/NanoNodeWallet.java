@@ -89,9 +89,9 @@ public class NanoNodeWallet implements IWallet, IQueryableWallet, IGeneratesNewD
 
         log.info("Sending {} from node wallet {} to {}", nanoAmount, walletAccount, destinationAddress);
         try {
-            HexData hash = rpcClient.sendFromWallet(walletId, walletAccount, destination, nanoAmount);
+            String hash = rpcClient.sendFromWallet(walletId, walletAccount, destination, nanoAmount);
             log.debug("Sent funds, block hash = " + hash);
-            return hash.toHexString();
+            return hash;
         } catch (RpcException | IOException e) {
             log.error("Couldn't send coins.", e);
             return null;
