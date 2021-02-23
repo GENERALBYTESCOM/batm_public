@@ -28,7 +28,6 @@ import com.generalbytes.batm.server.extensions.payment.PaymentRequest;
 import com.generalbytes.batm.server.extensions.payment.ReceivedAmount;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.oczadly.karl.jnano.model.NanoAmount;
 
 import java.math.BigDecimal;
 import java.util.Map;
@@ -86,7 +85,10 @@ public class NanoPaymentSupport extends PollingPaymentSupport {
             throw new IllegalArgumentException("Wallet '" + spec.getWallet().getClass() + "' does not implement "
                     + IQueryableWallet.class.getSimpleName());
         }
-        NanoAmount.valueOfNano(spec.getTotal()); // Assert value is valid (throws exception)
+        // Assert amount is valid
+        if (spec.getTotal().stripTrailingZeros().scale() > 30) {
+            throw new IllegalArgumentException("Amount has too many decimal places (" + spec.getTotal() + ").");
+        }
         return super.createPaymentRequest(spec);
     }
 
