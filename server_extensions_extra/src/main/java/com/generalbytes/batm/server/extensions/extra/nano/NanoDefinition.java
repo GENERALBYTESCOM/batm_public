@@ -22,14 +22,17 @@ import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.payment.IPaymentSupport;
 
 public class NanoDefinition extends CryptoCurrencyDefinition {
-    private IPaymentSupport paymentSupport = new NanoPaymentSupport();
 
-    public NanoDefinition() {
+    private final IPaymentSupport paymentSupport;
+
+    public NanoDefinition(NanoCurrencySpecification spec) {
         super(CryptoCurrency.NANO.getCode(), "Nano", "nano", "https://nano.org");
+        this.paymentSupport = new NanoPaymentSupport(spec);
     }
 
     @Override
     public IPaymentSupport getPaymentSupport() {
         return paymentSupport;
     }
+
 }

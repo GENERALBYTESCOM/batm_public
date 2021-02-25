@@ -1576,11 +1576,16 @@
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.nano.NanoExtension" >
         <wallet prefix="nano_node" name="Nano">
-            <param name="protocol" />
-            <param name="host" />
-            <param name="port" />
+            <param name="nodeIP" />
+            <param name="rpcProtocol" />
+            <param name="rpcPort" />
+            <param name="websocketProtocol" />
+            <param name="websocketPort" />
             <param name="walletId" />
-            <param name="address" />
+            <param name="walletAccount" />
+            <help>Node IP is the host/IP of the RPC and websocket server. RPC protocol may be either http or https,
+                WebSocket may be ws or wss. WebSocket is optional, and can be ignored by using an empty port or
+                protocol value. Wallet ID is the 64-character hex identifier from the node's built-in wallet.</help>
             <cryptocurrency>NANO</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="NANO" file="nano.png"/>

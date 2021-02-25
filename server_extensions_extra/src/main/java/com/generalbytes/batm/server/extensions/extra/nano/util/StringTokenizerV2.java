@@ -15,37 +15,29 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.nano;
+package com.generalbytes.batm.server.extensions.extra.nano.util;
 
-import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
+/** Tokenizer allowing empty values and skipping. */
+public class StringTokenizerV2 {
 
-public class NanoAddressValidator implements ICryptoAddressValidator {
+    private final String[] tokens;
+    private int tokenIndex = 0;
 
-    private final NanoCurrencySpecification spec;
-
-    public NanoAddressValidator(NanoCurrencySpecification spec) {
-        this.spec = spec;
+    public StringTokenizerV2(String[] tokens) {
+        this.tokens = tokens;
     }
 
 
-    @Override
-    public boolean isAddressValid(String address) {
-        if (address == null) return false;
-        try {
-            return spec.isPrefixValid(spec.parseAddressRaw(address));
-        } catch (IllegalArgumentException e) {
-            return false;
-        }
+    public String next() {
+        return tokens[tokenIndex++];
     }
 
-    @Override
-    public boolean isPaperWalletSupported() {
-        return true;
+    public boolean hasNext() {
+        return tokens.length > tokenIndex;
     }
 
-    @Override
-    public boolean mustBeBase58Address() {
-        return false;
+    public void skip(int n) {
+        tokenIndex += n;
     }
 
 }

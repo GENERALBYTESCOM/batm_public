@@ -27,7 +27,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class PRS implements IPaymentRequestSpecification {
+class PRS implements IPaymentRequestSpecification {
 
     private String cryptoCurrency;
     private String description;
