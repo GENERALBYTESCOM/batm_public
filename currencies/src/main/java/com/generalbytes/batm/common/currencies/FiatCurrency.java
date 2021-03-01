@@ -37,6 +37,7 @@ public enum FiatCurrency {
     AUD("Australian dollar"),
     AZN("Azerbaijani manat"),
     BGN("Bulgarian lev"),
+    BAM("Bosnia and Herzegovina convertible mark"),
     BHD("Bahraini dinar"),
     BRL("Brazilian real"),
     BSD("Bahamian Dollar"),
