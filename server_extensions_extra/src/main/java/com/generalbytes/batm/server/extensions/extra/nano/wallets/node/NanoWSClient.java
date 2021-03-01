@@ -23,7 +23,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.oczadly.karl.jnano.model.HexData;
 import uk.oczadly.karl.jnano.model.NanoAccount;
-import uk.oczadly.karl.jnano.model.NanoAmount;
 import uk.oczadly.karl.jnano.model.block.StateBlock;
 import uk.oczadly.karl.jnano.model.block.StateBlockSubType;
 import uk.oczadly.karl.jnano.websocket.NanoWebSocketClient;
@@ -41,7 +40,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
 
 /**
  * @author Karl Oczadly
@@ -49,6 +47,7 @@ import java.util.stream.Collectors;
 public class NanoWSClient {
 
     private static final long RECONNECT_MS = 250;
+    private static final long TOPIC_UPDATE_TIMEOUT_MS = 5000;
 
     private static final Logger log = LoggerFactory.getLogger(NanoWSClient.class);
 
@@ -57,6 +56,7 @@ public class NanoWSClient {
     private volatile NanoWebSocketClient client;
     private volatile Thread reconnectThread;
     private final Object connLock = new Object();
+    private volatile boolean initializedSuccessfully; // False if couldn't subscribe to topics
 
     private final ExecutorService listenerExecutor = Executors.newCachedThreadPool();
     private final Map<NanoAccount, DepositListener> blockListeners = new ConcurrentHashMap<>();
@@ -68,8 +68,8 @@ public class NanoWSClient {
     }
 
 
-    public void requestPaymentNotifications(Collection<IPaymentOutput> addresses, DepositListener listener) {
-        Set<NanoAccount> outputs = parseOutputs(addresses);
+    public boolean requestPaymentNotifications(Collection<IPaymentOutput> addresses, DepositListener listener) {
+        Set<NanoAccount> outputs = currencySpec.parsePaymentOutputs(addresses);
 
         // Register listeners
         for (NanoAccount account : outputs) {
@@ -78,40 +78,60 @@ public class NanoWSClient {
         }
 
         // Update topic filter
-        if (isConnected()) {
-            client.getTopics().topicConfirmedBlocks().update(
-                    new TopicConfirmation.UpdateArgs().addAccountsFilter(new ArrayList<>(outputs)));
+        if (isOpen()) {
+            try {
+                boolean updated = client.getTopics().topicConfirmedBlocks().updateBlocking(TOPIC_UPDATE_TIMEOUT_MS,
+                        new TopicConfirmation.UpdateArgs().addAccountsFilter(new ArrayList<>(outputs)));
+
+                if (updated) {
+                    log.debug("Updated confirmation topic filter.");
+                } else {
+                    log.warn("Didn't receive ACK when subscribing to confirmations topic.");
+                    return false;
+                }
+            } catch (Exception e) {
+                log.warn("Couldn't add accounts to topic filter.", e);
+                return false;
+            }
         }
+        return true; // Will attempt to subscribe when WS opens
     }
 
     public void endPaymentNotifications(Collection<IPaymentOutput> addresses) {
-        Set<NanoAccount> accounts = parseOutputs(addresses);
+        Set<NanoAccount> accounts = currencySpec.parsePaymentOutputs(addresses);
 
         // Remove listeners
         accounts.forEach(blockListeners::remove);
         // Remove from topic filter
-        if (isConnected()) {
-            client.getTopics().topicConfirmedBlocks().update(
-                    new TopicConfirmation.UpdateArgs().removeAccountsFilter(new ArrayList<>(accounts)));
+        if (isOpen()) {
+            try {
+                client.getTopics().topicConfirmedBlocks().update(new TopicConfirmation.UpdateArgs()
+                    .removeAccountsFilter(new ArrayList<>(accounts)));
+            } catch (Exception e) {
+                log.warn("Couldn't remove accounts from topic filter.", e);
+            }
         }
     }
 
-    protected Set<NanoAccount> parseOutputs(Collection<IPaymentOutput> addresses) {
-        return addresses.stream()
-                .map(IPaymentOutput::getAddress)
-                .map(currencySpec::parseAddress)
-                .collect(Collectors.toSet());
-    }
-
     protected void initTopics() throws InterruptedException {
+        // Register handler
         client.getTopics().topicConfirmedBlocks().registerListener(new ConfirmedBlockHandler());
-        client.getTopics().topicConfirmedBlocks().subscribeBlocking(
-                new TopicConfirmation.SubArgs().filterAccounts(new ArrayList<>(blockListeners.keySet())));
+
+        // Subscribe to block confirmations
+        boolean subscribed;
+        do {
+            subscribed = client.getTopics().topicConfirmedBlocks().subscribeBlocking(TOPIC_UPDATE_TIMEOUT_MS,
+                    new TopicConfirmation.SubArgs().filterAccounts(new ArrayList<>(blockListeners.keySet())));
+            if (!subscribed)
+                log.warn("Didn't receive ACK when subscribing to confirmations topic. Retrying...");
+        } while (!subscribed);
+        log.debug("Subscribed to topic.");
     }
 
     private void initConnection() {
         synchronized (connLock) {
-            if (!isConnected() && (reconnectThread == null || !reconnectThread.isAlive())) {
+            if (!isOpen() && (reconnectThread == null || !reconnectThread.isAlive())) {
+                initializedSuccessfully = false;
                 reconnectThread = new Thread(new ReconnectThreadTask(), "Nano-WS-Reconnection-Thread");
                 reconnectThread.setDaemon(true);
                 reconnectThread.start();
@@ -119,13 +139,19 @@ public class NanoWSClient {
         }
     }
 
-    public boolean isConnected() {
+    /** True if open and initialized successfully. */
+    public boolean isActive() {
+        return isOpen() && initializedSuccessfully;
+    }
+
+    /** True if websocket has an open connection. */
+    private boolean isOpen() {
         return client != null && client.isOpen();
     }
 
 
     public interface DepositListener {
-        void onDeposit(HexData hash, NanoAmount amount);
+        void onDeposit(HexData hash);
     }
 
     class ConfirmedBlockHandler implements TopicListener<TopicMessageConfirmation> {
@@ -134,14 +160,23 @@ public class NanoWSClient {
             log.debug("New block confirmation from websocket ({})", message.getHash());
             if (message.getBlock() instanceof StateBlock) {
                 StateBlock sb = (StateBlock)message.getBlock();
+
+                // Find target account
+                NanoAccount account = null;
                 if (sb.getSubType() == StateBlockSubType.SEND) {
-                    NanoAccount destAccount = sb.getLink().asAccount();
-                    DepositListener listener = blockListeners.get(destAccount);
+                    account = sb.getLink().asAccount(); // Recipient (link)
+                } else if (sb.getSubType() == StateBlockSubType.RECEIVE) {
+                    account = sb.getAccount(); // Block owner
+                }
+
+                if (account != null) {
+                    // Notify listeners
+                    DepositListener listener = blockListeners.get(account);
                     if (listener != null) {
-                        log.debug("Notifying DepositListener of new block for account {}", destAccount);
-                        listenerExecutor.submit(() -> listener.onDeposit(message.getHash(), message.getAmount()));
+                        log.debug("Notifying DepositListener of new block {}", message.getHash());
+                        listenerExecutor.submit(() -> listener.onDeposit(message.getHash()));
                     } else {
-                        log.debug("No DepositListener registered.");
+                        log.warn("No DepositListener registered for account {} but received notification.", account);
                     }
                 }
             }
@@ -153,6 +188,7 @@ public class NanoWSClient {
         public void onOpen(int httpStatus) {
             try {
                 initTopics();
+                initializedSuccessfully = true;
             } catch (Exception e) {
                 log.warn("Failed to initialize websocket topic filters.", e);
             }
@@ -161,6 +197,7 @@ public class NanoWSClient {
         @Override
         public void onClose(int code, String reason, boolean remote) {
             log.warn("Nano node websocket disconnected. Attempting to reconnect in {} ms.", RECONNECT_MS);
+            initializedSuccessfully = false;
             initConnection(); // Launch reconnection thread
         }
 
@@ -190,9 +227,9 @@ public class NanoWSClient {
         }
 
         private boolean doConnect() {
-            if (!isConnected()) {
+            if (!isOpen()) {
                 synchronized (connLock) {
-                    if (!isConnected()) {
+                    if (!isOpen()) {
                         log.info("Attempting to connect to node websocket.");
                         client = new NanoWebSocketClient(uri);
                         client.setObserver(new SocketStateObserver());

@@ -46,7 +46,7 @@ class TestPaymentSupport {
              * A value totalling paymentValue should be sent to paymentAccount.
              */
             String rpcHost = "http://[::1]:7076", wsHost = "ws://[::1]:7078";
-            String paymentAccount = "nano_3zkzc8cf5jmgdtecxdd4jjajydcf988kswdhd3hymamk45773r6a5xen36kg";
+            String paymentAccount = "nano_3wbf3ojxic8rmaduob7mkn374zt9ro411d7piduduy9rm64ifzkb1qazwdpo";
             BigDecimal paymentValue = new BigDecimal("0.000017");
 
 
