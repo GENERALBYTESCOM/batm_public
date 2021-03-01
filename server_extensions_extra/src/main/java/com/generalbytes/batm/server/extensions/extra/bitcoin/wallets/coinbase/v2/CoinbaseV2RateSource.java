@@ -58,10 +58,11 @@ public class CoinbaseV2RateSource implements IRateSource{
 
     @Override
     public Set<String> getCryptoCurrencies() {
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         result.add(CryptoCurrency.BCH.getCode());
         result.add(CryptoCurrency.BTC.getCode());
         result.add(CryptoCurrency.LTC.getCode());
+        result.add(CryptoCurrency.ETC.getCode());
         result.add(CryptoCurrency.ETH.getCode());
         result.add(CryptoCurrency.DAI.getCode());
         result.add(CryptoCurrency.BIZZ.getCode());
