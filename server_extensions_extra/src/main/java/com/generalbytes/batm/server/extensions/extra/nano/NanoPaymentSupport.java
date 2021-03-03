@@ -43,10 +43,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class NanoPaymentSupport extends PollingPaymentSupport {
 
     private static final long POLL_PERIOD_MS = 500; // 500 ms
-
-    /** Multiplier of POLL_PERIOD_MS, used when WebSocket is active. */
-    private static final int POLL_SKIP_CYCLES = 30; // 15 sec
-
+    private static final int POLL_SKIP_COUNT = 30;  // 15 sec (multiplier of POLL_PERIOD_MS when using websockets)
 
     private static final Logger log = LoggerFactory.getLogger(NanoPaymentSupport.class);
 
@@ -54,6 +51,7 @@ public class NanoPaymentSupport extends PollingPaymentSupport {
     /** Context info for payment requests. */
     private final Map<PaymentRequest, PaymentRequestContext> requestContexts = new ConcurrentHashMap<>();
     private final ExecutorService pollExecutor = Executors.newFixedThreadPool(2);
+    private final ExecutorService subscribeExecutor = Executors.newFixedThreadPool(100);
 
     public NanoPaymentSupport(NanoCurrencySpecification currencySpec) {
         this.currencySpec = currencySpec;
@@ -99,14 +97,18 @@ public class NanoPaymentSupport extends PollingPaymentSupport {
         if (request.getWallet() instanceof NanoNodeWallet) {
             NanoWSClient wsClient = ((NanoNodeWallet)request.getWallet()).getWebSocketClient();
             if (wsClient != null) {
-                final PaymentRequestContext context = new PaymentRequestContext(request, wsClient);
-                wsClient.requestPaymentNotifications(request.getOutputs(), (hash, amount) -> poll(context, true));
-                requestContext = context;
+                requestContext = new PaymentRequestContext(request, wsClient);
+                final PaymentRequestContext fContext = requestContext; // Final for lambda
+                // Add the account(s) to the topic filter
+                subscribeExecutor.submit(() -> {
+                    fContext.wsRequestInitialized = wsClient.requestPaymentNotifications(request.getOutputs(),
+                            (hash) -> poll(fContext, true)); // Handle incoming transactions
+                });
             } else {
-                log.debug("Using RPC polling for request as the wallet doesn't support websockets. {}", request);
+                log.debug("Using RPC polling as the wallet doesn't have a websocket configured. {}", request);
             }
         } else {
-            log.debug("Using wallet polling for request as the wallet isn't a NanoNodeWallet. {}", request);
+            log.debug("Using wallet polling as the wallet isn't a NanoNodeWallet. {}", request);
         }
 
         // Register context
@@ -131,9 +133,9 @@ public class NanoPaymentSupport extends PollingPaymentSupport {
 
     public void poll(PaymentRequestContext context, boolean force) {
         PaymentRequest request = context.request;
-        if (context.shouldPoll(force)) {
+        if (!isStateFinished(request.getState()) && context.shouldPoll(force)) {
             // Acquire lock (block and wait for forced poll requests)
-            if (context.acquireLock(force)) {
+            if (context.acquirePollLock(force)) {
                 try {
                     log.debug("Polling (forced: {}) {}", force, request);
 
@@ -180,6 +182,7 @@ public class NanoPaymentSupport extends PollingPaymentSupport {
             listener.stateChanged(request, prevState, request.getState());
     }
 
+    /** Updates the current state of the payment request (if applicable) */
     private void updateRequestState(PaymentRequest request, BigDecimal totalReceived, int confirmations) {
         int initialState = request.getState();
         if (!isStateFinished(initialState)) {
@@ -219,7 +222,8 @@ public class NanoPaymentSupport extends PollingPaymentSupport {
         private final Lock pollLock = new ReentrantLock(); // Only allow one request poll at a time
         private final PaymentRequest request;
         private final NanoWSClient wsClient;
-        private volatile int pollCounter = POLL_SKIP_CYCLES; // First poll should succeed
+        private volatile int pollCounter = POLL_SKIP_COUNT; // First poll should succeed
+        private volatile boolean wsRequestInitialized = false;
 
         public PaymentRequestContext(PaymentRequest request, NanoWSClient wsClient) {
             this.request = request;
@@ -228,14 +232,14 @@ public class NanoPaymentSupport extends PollingPaymentSupport {
 
 
         public synchronized boolean shouldPoll(boolean forced) {
-            if (forced || !isUsingWebSocket() || pollCounter++ >= POLL_SKIP_CYCLES) {
+            if (forced || !isUsingWebSocket() || pollCounter++ >= POLL_SKIP_COUNT) {
                 pollCounter = 0;
                 return true;
             }
             return false;
         }
 
-        public boolean acquireLock(boolean force) {
+        public boolean acquirePollLock(boolean force) {
             if (force) {
                 pollLock.lock();
                 return true;
@@ -245,7 +249,7 @@ public class NanoPaymentSupport extends PollingPaymentSupport {
         }
 
         public boolean isUsingWebSocket() {
-            return wsClient != null && wsClient.isConnected();
+            return wsRequestInitialized && wsClient != null && wsClient.isActive();
         }
 
         public void finalizeRequest() {

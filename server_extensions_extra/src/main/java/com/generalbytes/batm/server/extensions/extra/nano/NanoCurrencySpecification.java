@@ -17,11 +17,15 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.nano;
 
+import com.generalbytes.batm.server.extensions.payment.IPaymentOutput;
 import uk.oczadly.karl.jnano.model.NanoAccount;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * @author Karl Oczadly
@@ -94,6 +98,13 @@ public class NanoCurrencySpecification {
 
     public String toUriAddress(NanoAccount account) {
         return (uri != null ? uri + ":" : "") + account.withPrefix(getAddressPrefix()).toAddress();
+    }
+
+    public Set<NanoAccount> parsePaymentOutputs(Collection<IPaymentOutput> addresses) {
+        return addresses.stream()
+            .map(IPaymentOutput::getAddress)
+            .map(this::parseAddress)
+            .collect(Collectors.toSet());
     }
 
 }
