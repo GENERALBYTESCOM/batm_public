@@ -696,12 +696,14 @@
             <param name="apikey"/>
             <param name="fiatcurrency"/>
             <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
         </exchange>
         <ratesource prefix="bitpandapro" name="Bitpanda Pro">
             <param name="fiatcurrency"/>
             <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
         </ratesource>
