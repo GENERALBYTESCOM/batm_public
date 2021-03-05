@@ -174,10 +174,16 @@ public class BlockIOWalletWithClientSideSigning implements IWallet, ICanSendMany
             // sum amounts for the same address - this wallet cannot send multiple amounts to the same address
             Map<String, BigDecimal> destinationAddressAmounts = transfers.stream()
                 .collect(Collectors.toMap(Transfer::getDestinationAddress, Transfer::getAmount, BigDecimal::add));
-            List<BigDecimal> amounts = destinationAddressAmounts.values().stream()
+
+            List<String> toAddresses = new ArrayList<>(destinationAddressAmounts.keySet());
+
+            // get values in the same order as toAddresses
+            // stream from list should be ordered, map.values() could potentially have different order
+            List<BigDecimal> amounts = toAddresses.stream()
+                .map(destinationAddressAmounts::get)
                 .map(amount -> amount.setScale(8, RoundingMode.FLOOR))
                 .collect(Collectors.toList());
-            List<String> toAddresses = new ArrayList<>(destinationAddressAmounts.keySet());
+
             log.info("{} calling withdraw {} to {}", getClass().getSimpleName(), amounts, toAddresses);
             List<String> fromLabels = fromLabel == null ? null : Collections.nCopies(toAddresses.size(), fromLabel);
             BlockIOResponseWithdrawalToBeSigned response = api.withdrawToAddressesToBeSigned(fromLabels, amounts, toAddresses, priority);
