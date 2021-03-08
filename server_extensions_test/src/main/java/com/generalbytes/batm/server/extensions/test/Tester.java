@@ -506,7 +506,7 @@ public class Tester {
 					System.err.println("Exchange returned NULL.");
 				}
 				final String depositAddress = e.getDepositAddress(selectedCryptoCurrency);
-				System.out.println("Deposit Address: " + depositAddress);
+                System.out.println("Deposit Address: " + depositAddress);
 				return;
 			}
 		}

@@ -1967,5 +1967,43 @@
         <cryptologo cryptocurrency="ILC" file="ilc.png"/>
         <cryptologo cryptocurrency="ILC" file="ilc.svg"/>
     </extension>
+        <extension class="com.generalbytes.batm.server.extensions.extra.ucacoin.UcacoinExtension" >
+        <wallet prefix="ucacoind" name="UCACOINd">
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="accountname" />
+            <cryptocurrency>UCA</cryptocurrency>
+        </wallet>
+        <wallet prefix="ucademo" name="Uca Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
+            <cryptocurrency>UCA</cryptocurrency>
+        </wallet>
+        <ratesource prefix="digifinexRateSource" name ="Digifinex Rate Source" >
+            <param name="fiatCurrency" />
+            <cryptocurrency>UCA</cryptocurrency>
+        </ratesource>
+        <ratesource prefix="bkexRateSource" name ="Bkex Rate Source" >
+            <param name="fiatCurrency" />
+            <cryptocurrency>UCA</cryptocurrency>
+        </ratesource>
+        <exchange prefix="digifinex" name="DigiFinex">
+            <param name="apikey"/>
+            <param name="secretkey"/>
+            <param name="fiatcurrency"/>
+            <cryptocurrency>UCA</cryptocurrency>
+        </exchange>
+        <exchange prefix="bkex" name="Bkex">
+            <param name="apikey"/>
+            <param name="secretkey"/>
+            <param name="fiatcurrency"/>
+            <cryptocurrency>UCA</cryptocurrency>
+        </exchange>
+        <cryptologo cryptocurrency="UCA" file="xpm.png"/>
+        <cryptologo cryptocurrency="UCA" file="xpm.svg"/>
+    </extension>
 
 </extensions>
