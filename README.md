@@ -38,7 +38,7 @@ Here is the list of some functionality that can be extended using Extensions API
 * **Implement support for different terrorist watch lists** - for more information, see the <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/main/java/com/generalbytes/batm/server/extensions/watchlist/IWatchList.java">IWatchList</a> interface.
 * **Implement support for a different AML provider** - for more information, see the <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/main/java/com/generalbytes/batm/server/extensions/aml/IAMLProvider.java">IAMLProvider</a> interface.
 * **Perform actions whenever a transaction on CAS is created or updated** - This is useful; for example, in those locales where you may need to notify the tax office about the transaction in realtime and print a unique tax office onetime id on the ticket printed by the BATM. For more information, see the <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/main/java/com/generalbytes/batm/server/extensions/ITransactionListener.java">ITransactionListener</a> interface.
-* **Implement a paper wallet generator for your crypto currency XYZ** - Do you want your BATM to be able print a paper wallet or write the transaction's private key on an NFC card? You will need to implement this interface. For more information, see the <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/main/java/com/generalbytes/batm/server/extensions/IPaperWalletGenerator.java">IPaperWalletGenerator</a> interface.
+* **Implement a paper wallet generator for your cryptocurrency XYZ** - Do you want your BATM to be able to print a paper wallet or write the transaction's private key on an NFC card? You will need to implement this interface. For more information, see the <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/main/java/com/generalbytes/batm/server/extensions/IPaperWalletGenerator.java">IPaperWalletGenerator</a> interface.
 * **Implement a fiat-to-fiat currency exchange rate provider** - Do you want CAS to use the fiat currency exchange rates provided by your local bank (or exchange) instead of the international market? For more information, see the <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/main/java/com/generalbytes/batm/server/extensions/IFiatExchangeRateProvider.java">IFiatExchangeRateProvider</a> interface.
 * **Send emails or SMSes from extension** - To notify your customer via SMS or email with custom messages, call the methods exposed by the <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/main/java/com/generalbytes/batm/server/extensions/IExtensionContext.java">IExtensionContext</a> interface.
 * **<a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/main/java/com/generalbytes/batm/server/extensions/IExtensionContext.java">ExtensionContext</a>** is your main entrypoint for interacting with CAS.
@@ -50,7 +50,7 @@ ExtensionContext may be called from any extension. A reference to ExtensionConte
 Content
 =======
 * **server_extensions_api** - contains the extension API that all extensions use to extend CAS' functionality.
-* **server_extensions_extra** - reference extension implementation that demonstrates BTC, LTC, CLOAK, DGB, DASH, HATCH, POT, VIA, BTX, SYS, FLASH, DOGE, NLG, ICG, NBT, GRS, MAX, BSD, MEC, BTDX, SUM, BURST, ECA, LINDA, $PAC, DAI, MKR, MUE, BAT and REP coin support functionality.
+* **server_extensions_extra** - reference extension implementation that demonstrates BTC, LTC, CLOAK, DGB, DASH, HATCH, POT, VIA, BTX, SYS, FLASH, DOGE, NLG, ICG, NBT, GRS, MAX, BSD, MEC, BTDX, NANO, SUM, BURST, ECA, LINDA, $PAC, DAI, MKR, MUE, BAT and REP coin support functionality.
 * **server_extensions_test** - contains tester for testing the extensions (CAS not required).
 
 Note for developers
@@ -64,14 +64,14 @@ Requirements:
 When you implement support for a new crypto-coin, please add it to **server_extensions_extra** - so that it may get into the default CAS installation pack for customers.
 Please use the appropriate Fork and Pull Request in the GitHub workflow when adding new functions, and bear in mind that your code will be reviewed prior to any merge with the master.
 
-When adding new cryptocurrency support, please remember to provide it's logo! This logo will later be downloaded by the BATM from CAS and displayed on the BATM screen. Both SVG and PNG logos are supported; however, only the SVG logo is used on newer BATM versions. A PNG logo is offered only for backward compatibility, and in the few cases where the SVG logo has an unusually large size.
+When adding new cryptocurrency support, please remember to provide its logo! This logo will later be downloaded by the BATM from CAS and displayed on the BATM screen. Both SVG and PNG logos are supported; however, only the SVG logo is used on newer BATM versions. A PNG logo is offered only for backward compatibility, and in the few cases where the SVG logo has an unusually large size.
 SVG logos must comply with following rules:
 1. SVG logos should not contain filters or bitmap images
 2. All SVG and PNG logos should be 120 x 120px. See other logos for examples.
 3. Preserve the unified BATM design: every SVG logo must contain the background from <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_extra/src/main/resources/template.svg">template.svg</a>. An example background can be found <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_extra/src/main/resources/lisk.svg">here</a>.
 
 
-After you implement the the extension make sure you test it with "Tester" (which you will find in **server_extensions_test**).
+After you implement the extension make sure you test it with "Tester" (which you will find in **server_extensions_test**).
 If you want to implement an extension that you don't want to share with the rest of the world, then create a separate module (e.g. server_extensions_mycompany) and use a different jar name (server_extensions_mycompany.jar).
 
 Build information

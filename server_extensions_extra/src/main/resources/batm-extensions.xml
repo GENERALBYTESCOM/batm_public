@@ -189,6 +189,7 @@
                 <cryptocurrency>LMY</cryptocurrency>
                 <cryptocurrency>HT</cryptocurrency>
                 <cryptocurrency>ZPAE</cryptocurrency>
+                <cryptocurrency>NANO</cryptocurrency>
             </ratesource>
             <ratesource prefix="stream365" name ="365.stream" >
                 <cryptocurrency>HBX</cryptocurrency>
@@ -334,6 +335,7 @@
             <cryptocurrency>XMR</cryptocurrency>
             <cryptocurrency>DASH</cryptocurrency>
             <cryptocurrency>NXT</cryptocurrency>
+            <cryptocurrency>NANO</cryptocurrency>
         </exchange>
         <cryptologo cryptocurrency="BTC" file="btc.png"/>
         <cryptologo cryptocurrency="BTC" file="btc.svg"/>
@@ -524,6 +526,7 @@
             <cryptocurrency>MEC</cryptocurrency>
             <cryptocurrency>MKR</cryptocurrency>
             <cryptocurrency>MUE</cryptocurrency>
+            <cryptocurrency>NANO</cryptocurrency>
             <cryptocurrency>NBT</cryptocurrency>
             <cryptocurrency>NLG</cryptocurrency>
             <cryptocurrency>NULS</cryptocurrency>
@@ -590,6 +593,7 @@
             <cryptocurrency>MEC</cryptocurrency>
             <cryptocurrency>MKR</cryptocurrency>
             <cryptocurrency>MUE</cryptocurrency>
+            <cryptocurrency>NANO</cryptocurrency>
             <cryptocurrency>NLG</cryptocurrency>
             <cryptocurrency>NULS</cryptocurrency>
             <cryptocurrency>NXT</cryptocurrency>
@@ -628,6 +632,7 @@
             <cryptocurrency>KMD</cryptocurrency>
             <cryptocurrency>LSK</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>NANO</cryptocurrency>
             <cryptocurrency>NULS</cryptocurrency>
             <cryptocurrency>REP</cryptocurrency>
             <cryptocurrency>SYS</cryptocurrency>
@@ -653,6 +658,7 @@
             <cryptocurrency>KMD</cryptocurrency>
             <cryptocurrency>LSK</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>NANO</cryptocurrency>
             <cryptocurrency>NULS</cryptocurrency>
             <cryptocurrency>REP</cryptocurrency>
             <cryptocurrency>SYS</cryptocurrency>
@@ -676,6 +682,7 @@
             <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>NANO</cryptocurrency>
             <cryptocurrency>USDT</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
         </exchange>
@@ -689,6 +696,7 @@
             <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>NANO</cryptocurrency>
             <cryptocurrency>USDT</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
         </ratesource>
@@ -1584,6 +1592,23 @@
             <cryptocurrency>ECA</cryptocurrency>
         </ratesource>
         <cryptologo cryptocurrency="ECA" file="eca.png"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.nano.NanoExtension" >
+        <wallet prefix="nano_node" name="Nano">
+            <param name="nodeIP" />
+            <param name="rpcProtocol" />
+            <param name="rpcPort" />
+            <param name="websocketProtocol" />
+            <param name="websocketPort" />
+            <param name="walletId" />
+            <param name="walletAccount" />
+            <help>Node IP is the host/IP of the RPC and websocket server. RPC protocol may be either http or https,
+                WebSocket may be ws or wss. WebSocket is optional, and can be ignored by using an empty port or
+                protocol value. Wallet ID is the 64-character hex identifier from the node's built-in wallet.</help>
+            <cryptocurrency>NANO</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="NANO" file="nano.png"/>
+        <cryptologo cryptocurrency="NANO" file="nano.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.linda.LindaExtension" >
         <wallet prefix="lindad" name="Lindad">

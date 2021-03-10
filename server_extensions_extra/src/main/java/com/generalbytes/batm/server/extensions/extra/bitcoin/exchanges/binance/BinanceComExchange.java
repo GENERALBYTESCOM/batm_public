@@ -51,6 +51,7 @@ public class BinanceComExchange extends BinanceExchange {
         SUPPORTED_CRYPTOS.add(CryptoCurrency.KMD.getCode());
         SUPPORTED_CRYPTOS.add(CryptoCurrency.LSK.getCode());
         SUPPORTED_CRYPTOS.add(CryptoCurrency.LTC.getCode());
+        SUPPORTED_CRYPTOS.add(CryptoCurrency.NANO.getCode());
         SUPPORTED_CRYPTOS.add(CryptoCurrency.NULS.getCode());
         SUPPORTED_CRYPTOS.add(CryptoCurrency.REP.getCode());
         SUPPORTED_CRYPTOS.add(CryptoCurrency.SYS.getCode());

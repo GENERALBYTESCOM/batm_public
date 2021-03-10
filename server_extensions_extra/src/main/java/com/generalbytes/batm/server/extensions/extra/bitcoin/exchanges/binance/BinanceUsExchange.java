@@ -41,6 +41,7 @@ public class BinanceUsExchange extends BinanceExchange {
         SUPPORTED_CRYPTOS.add(CryptoCurrency.BTC.getCode());
         SUPPORTED_CRYPTOS.add(CryptoCurrency.DASH.getCode());
         SUPPORTED_CRYPTOS.add(CryptoCurrency.DOGE.getCode());
+        SUPPORTED_CRYPTOS.add(CryptoCurrency.NANO.getCode());
         SUPPORTED_CRYPTOS.add(CryptoCurrency.ETH.getCode());
         SUPPORTED_CRYPTOS.add(CryptoCurrency.LTC.getCode());
         SUPPORTED_CRYPTOS.add(CryptoCurrency.USDT.getCode());

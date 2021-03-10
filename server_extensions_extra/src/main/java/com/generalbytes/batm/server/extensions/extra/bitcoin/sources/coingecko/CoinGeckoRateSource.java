@@ -74,6 +74,7 @@ public class CoinGeckoRateSource implements IRateSource {
         CRYPTOCURRENCIES.put(CryptoCurrency.MUE.getCode(), "monetaryunit");
         CRYPTOCURRENCIES.put(CryptoCurrency.NBT.getCode(), "ninsa-b-token");
         CRYPTOCURRENCIES.put(CryptoCurrency.NLG.getCode(), "gulden");
+        CRYPTOCURRENCIES.put(CryptoCurrency.NANO.getCode(), "nano");
         CRYPTOCURRENCIES.put(CryptoCurrency.NULS.getCode(), "nuls");
         CRYPTOCURRENCIES.put(CryptoCurrency.NXT.getCode(), "nxt");
         CRYPTOCURRENCIES.put(CryptoCurrency.POT.getCode(), "potcoin");
