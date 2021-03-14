@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import okhttp3.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -14,6 +16,8 @@ import java.util.concurrent.TimeUnit;
  * @author Karl Oczadly
  */
 public class NanoRpcClient {
+
+    private static final Logger log = LoggerFactory.getLogger(NanoRpcClient.class);
 
     private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
     private static final OkHttpClient HTTP_CLIENT = new OkHttpClient.Builder()
@@ -30,13 +34,12 @@ public class NanoRpcClient {
     /** Returns the total confirmed pocketed balance (zero if account isn't opened). */
     public BigInteger getBalanceConfirmed(String account) throws IOException, RpcException {
         // Get confirmed frontier hash (returned `balance` isn't guaranteed to be confirmed)
-        String frontier;
+        ObjectNode accountInfoResponse;
         try {
-            frontier = query(
+            accountInfoResponse = query(
                 JSON_MAPPER.createObjectNode()
                     .put("action",  "account_info")
-                    .put("account", account))
-                    .get("confirmation_height_frontier").asText();
+                    .put("account", account));
         } catch (RpcException e) {
             if ("Account not found".equals(e.getMessage())) {
                 return BigInteger.ZERO; // Account hasn't been opened
@@ -44,23 +47,31 @@ public class NanoRpcClient {
                 throw e;
             }
         }
+        if (accountInfoResponse.get("confirmation_height").asText().equals("0")) {
+            return BigInteger.ZERO; // Account has no confirmed blocks
+        }
+
         // Get balance of frontier block
         return new BigInteger(query(
             JSON_MAPPER.createObjectNode()
                 .put("action", "block_info")
-                .put("hash",   frontier))
+                .put("hash",   accountInfoResponse.get("confirmation_height_frontier").asText()))
                 .get("balance").asText());
     }
 
-    /** Returns pocketed + pending balance, including unconfirmed blocks. */
-    public BigInteger getTotalBalanceUnconfirmed(String account) throws IOException, RpcException {
+    /** Returns pocketed (+ pending) balance, including unconfirmed blocks. */
+    public BigInteger getBalanceUnconfirmed(String account, boolean includePending) throws IOException, RpcException {
         ObjectNode response = query(
             JSON_MAPPER.createObjectNode()
                 .put("action",  "account_balance")
                 .put("account", account));
-        // Return balance + pending
-        return new BigInteger(response.get("balance").asText())
-                .add(new BigInteger(response.get("pending").asText()));
+
+        BigInteger balance = new BigInteger(response.get("balance").asText());
+        if (includePending) {
+            return balance.add(new BigInteger(response.get("pending").asText()));
+        } else {
+            return balance;
+        }
     }
 
     /** Creates a new account in the given wallet. */
@@ -109,7 +120,9 @@ public class NanoRpcClient {
 
     private ObjectNode query(JsonNode json) throws IOException, RpcException {
         String jsonStr = JSON_MAPPER.writeValueAsString(json);
+        log.debug("Sending RPC request {}", json);
         String rawResponse = httpPost(jsonStr);
+        log.debug("Received RPC response: {}", rawResponse);
         JsonNode response = JSON_MAPPER.readTree(rawResponse);
         if (!response.isObject())
             throw new RpcException("Response is not a JSON object.");

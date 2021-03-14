@@ -25,9 +25,9 @@ public class NanoDefinition extends CryptoCurrencyDefinition {
 
     private final IPaymentSupport paymentSupport;
 
-    public NanoDefinition() {
+    public NanoDefinition(IPaymentSupport paymentSupport) {
         super(CryptoCurrency.NANO.getCode(), "Nano", "nano", "https://nano.org");
-        this.paymentSupport = null; //todo
+        this.paymentSupport = paymentSupport;
     }
 
     @Override

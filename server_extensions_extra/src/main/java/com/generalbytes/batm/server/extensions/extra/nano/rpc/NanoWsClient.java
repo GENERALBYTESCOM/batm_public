@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.nio.channels.NotYetConnectedException;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -50,19 +49,19 @@ public class NanoWsClient {
     }
 
 
-    public boolean addDepositListener(Set<String> addresses, DepositListener listener) {
-        addresses.forEach(addr -> activeListeners.put(addr, listener));
+    public boolean addDepositListener(String address, DepositListener listener) {
+        activeListeners.put(address, listener);
         // Update WS filter
         JsonNode options = JSON_MAPPER.createObjectNode()
-            .set("accounts_add", JSON_MAPPER.valueToTree(addresses));
+            .set("accounts_add", JSON_MAPPER.createArrayNode().add(address));
         return sendTopicRequest(ACTION_UPDATE, TOPIC_BLOCK_CONFIRMATIONS, options);
     }
 
-    public boolean removeDepositListener(Set<String> addresses) {
-        addresses.forEach(activeListeners::remove);
+    public boolean removeDepositListener(String address) {
+        activeListeners.remove(address);
         // Update WS filter
         JsonNode options = JSON_MAPPER.createObjectNode()
-            .set("accounts_del", JSON_MAPPER.valueToTree(addresses));
+            .set("accounts_del", JSON_MAPPER.createArrayNode().add(address));
         return sendTopicRequest(ACTION_UPDATE, TOPIC_BLOCK_CONFIRMATIONS, options);
     }
 

@@ -238,6 +238,7 @@
                 <cryptocurrency>MUE</cryptocurrency>
                 <cryptocurrency>NBT</cryptocurrency>
                 <cryptocurrency>NLG</cryptocurrency>
+                <cryptocurrency>NANO</cryptocurrency>
                 <cryptocurrency>NXT</cryptocurrency>
                 <cryptocurrency>POT</cryptocurrency>
                 <cryptocurrency>REP</cryptocurrency>
@@ -1594,18 +1595,18 @@
         <cryptologo cryptocurrency="ECA" file="eca.png"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.nano.NanoExtension" >
-        <wallet prefix="nano_node" name="Nano">
-            <param name="nodeIP" />
+        <wallet prefix="nano_node" name="nano-node Wallet (RPC)">
+            <param name="ip" />
             <param name="rpcProtocol" />
             <param name="rpcPort" />
-            <param name="websocketProtocol" />
-            <param name="websocketPort" />
-            <param name="walletId" />
-            <param name="walletAccount" />
-            <help>Node IP is the host/IP of the RPC and WebSocket server. RPC protocol may be either 'http' or 'https',
-                WebSocket may be 'ws' or 'wss'. WebSocket is optional, and can be ignored by using port number '0'.
-                Wallet ID is the 64-character identifier from the node's built-in wallet provider, and the hot wallet
-                account must be part of this wallet.</help>
+            <param name="wsProtocol" />
+            <param name="wsPort" />
+            <param name="wallet" />
+            <param name="account" />
+            <help>IP is the IP/host of the RPC and WebSocket server. RPC protocol may be either 'http' or 'https',
+                WebSocket may be 'ws' or 'wss'. WebSocket is optional, and may be ignored by using port '0'. Wallet ID
+                is the 64-character identifier from the node's built-in wallet provider, and the hot wallet account must
+                be part of this wallet.</help>
             <cryptocurrency>NANO</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="NANO" file="nano.png"/>
