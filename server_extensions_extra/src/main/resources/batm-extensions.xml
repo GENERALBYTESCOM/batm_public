@@ -1602,9 +1602,10 @@
             <param name="websocketPort" />
             <param name="walletId" />
             <param name="walletAccount" />
-            <help>Node IP is the host/IP of the RPC and websocket server. RPC protocol may be either http or https,
-                WebSocket may be ws or wss. WebSocket is optional, and can be ignored by using an empty port or
-                protocol value. Wallet ID is the 64-character hex identifier from the node's built-in wallet.</help>
+            <help>Node IP is the host/IP of the RPC and WebSocket server. RPC protocol may be either 'http' or 'https',
+                WebSocket may be 'ws' or 'wss'. WebSocket is optional, and can be ignored by using port number '0'.
+                Wallet ID is the 64-character identifier from the node's built-in wallet provider, and the hot wallet
+                account must be part of this wallet.</help>
             <cryptocurrency>NANO</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="NANO" file="nano.png"/>
