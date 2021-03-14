@@ -36,8 +36,7 @@ public class NanoRpcClient {
         // Get confirmed frontier hash (returned `balance` isn't guaranteed to be confirmed)
         ObjectNode accountInfoResponse;
         try {
-            accountInfoResponse = query(
-                JSON_MAPPER.createObjectNode()
+            accountInfoResponse = query(false, JSON_MAPPER.createObjectNode()
                     .put("action",  "account_info")
                     .put("account", account));
         } catch (RpcException e) {
@@ -52,8 +51,7 @@ public class NanoRpcClient {
         }
 
         // Get balance of frontier block
-        return new BigInteger(query(
-            JSON_MAPPER.createObjectNode()
+        return new BigInteger(query(false, JSON_MAPPER.createObjectNode()
                 .put("action", "block_info")
                 .put("hash",   accountInfoResponse.get("confirmation_height_frontier").asText()))
                 .get("balance").asText());
@@ -61,8 +59,7 @@ public class NanoRpcClient {
 
     /** Returns pocketed (+ pending) balance, including unconfirmed blocks. */
     public BigInteger getBalanceUnconfirmed(String account, boolean includePending) throws IOException, RpcException {
-        ObjectNode response = query(
-            JSON_MAPPER.createObjectNode()
+        ObjectNode response = query(false, JSON_MAPPER.createObjectNode()
                 .put("action",  "account_balance")
                 .put("account", account));
 
@@ -76,8 +73,7 @@ public class NanoRpcClient {
 
     /** Creates a new account in the given wallet. */
     public String newWalletAccount(String walletId) throws IOException, RpcException {
-        return query(
-            JSON_MAPPER.createObjectNode()
+        return query(false, JSON_MAPPER.createObjectNode()
                 .put("action", "account_create")
                 .put("wallet", walletId))
                 .get("account").asText();
@@ -86,8 +82,7 @@ public class NanoRpcClient {
     /** Sends the specified funds from the given wallet to the provided destination account. */
     public String sendFromWallet(String walletId, String sourceAcc, String destAcc, BigInteger amountRaw, String uid)
             throws IOException, RpcException {
-        return query(
-            JSON_MAPPER.createObjectNode()
+        return query(false, JSON_MAPPER.createObjectNode()
                 .put("action",      "send")
                 .put("wallet",      walletId)
                 .put("source",      sourceAcc)
@@ -99,8 +94,7 @@ public class NanoRpcClient {
 
     /** Creates an account from the given seed. */
     public String accountFromSeed(String seed, long index) throws IOException, RpcException {
-        return query(
-            JSON_MAPPER.createObjectNode()
+        return query(true, JSON_MAPPER.createObjectNode()
                 .put("action", "deterministic_key")
                 .put("seed",   seed)
                 .put("index",  index))
@@ -109,20 +103,22 @@ public class NanoRpcClient {
 
     /** Returns true if the address string is valid. */
     public boolean isAddressValid(String addr) throws IOException, RpcException {
-        return query(
-            JSON_MAPPER.createObjectNode()
+        return query(false, JSON_MAPPER.createObjectNode()
                 .put("action",  "validate_account_number")
                 .put("account", addr))
                 .get("valid").asInt() == 1;
     }
 
 
-
-    private ObjectNode query(JsonNode json) throws IOException, RpcException {
+    private ObjectNode query(boolean confidential, JsonNode json) throws IOException, RpcException {
         String jsonStr = JSON_MAPPER.writeValueAsString(json);
-        log.debug("Sending RPC request {}", json);
+        if (confidential) {
+            log.debug("Sending RPC request [REDACTED]");
+        } else {
+            log.debug("Sending RPC request {}", json);
+        }
         String rawResponse = httpPost(jsonStr);
-        log.debug("Received RPC response: {}", rawResponse);
+        if (!confidential) log.debug("Received RPC response: {}", rawResponse);
         JsonNode response = JSON_MAPPER.readTree(rawResponse);
         if (!response.isObject())
             throw new RpcException("Response is not a JSON object.");
