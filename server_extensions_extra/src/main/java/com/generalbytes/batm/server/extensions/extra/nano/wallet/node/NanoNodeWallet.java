@@ -53,17 +53,24 @@ public class NanoNodeWallet implements INanoRpcWallet, IGeneratesNewDepositCrypt
     }
 
     @Override
-    public void moveFundsToHotWallet(String depositAddress) {
+    public BigInteger sendAllFromWallet(String depositAddress, String destination) {
         try {
             BigInteger balance = rpcClient.getBalance(depositAddress).unconfBalance;
             if (!balance.equals(BigInteger.ZERO)) {
-                String hash = rpcClient.sendFromWallet(walletId, depositAddress, hotWalletAccount,
-                        balance, UUID.randomUUID().toString());
-                log.info("Moved {} to hot wallet, hash: {}", balance, hash);
+                String hash = rpcClient.sendFromWallet(walletId, depositAddress, destination,
+                    balance, UUID.randomUUID().toString());
+                log.info("Sent {} to {}, hash: {}", balance, destination, hash);
+                return balance;
             }
         } catch (IOException | NanoRpcClient.RpcException e) {
-            log.error("Couldn't send deposit wallet funds to hot wallet.", e);
+            log.error("Couldn't send deposit wallet funds.", e);
         }
+        return BigInteger.ZERO;
+    }
+
+    @Override
+    public BigInteger moveFundsToHotWallet(String depositAddress) {
+        return sendAllFromWallet(depositAddress, hotWalletAccount);
     }
 
     @Override
@@ -76,8 +83,7 @@ public class NanoNodeWallet implements INanoRpcWallet, IGeneratesNewDepositCrypt
             for (int i = 0; i < 5; i++) {
                 String account = rpcClient.newWalletAccount(walletId);
                 // Ensure account isn't in a used state
-                BigInteger balance = rpcClient.getBalance(account).confBalance;
-                if (balance.equals(BigInteger.ZERO) && !account.equalsIgnoreCase(hotWalletAccount)) {
+                if (!account.equalsIgnoreCase(hotWalletAccount) && !rpcClient.doesAccountExist(account)) {
                     return account;
                 } else {
                     log.warn("Deposit address {} already in use, trying another...", account);
@@ -101,7 +107,7 @@ public class NanoNodeWallet implements INanoRpcWallet, IGeneratesNewDepositCrypt
              */
             NanoRpcClient.BalanceResponse balance = rpcClient.getBalance(address);
             if (balance.confBalance.compareTo(BigInteger.ZERO) > 0)
-                return new ReceivedAmount(context.getUtil().amountFromRaw(balance.confBalance), 1);
+                return new ReceivedAmount(context.getUtil().amountFromRaw(balance.confBalance), Integer.MAX_VALUE);
             // No balance; return unconfirmed and pending blocks with confirmation 0
             BigInteger unconfTotal = balance.unconfBalance.add(balance.unconfPending);
             return new ReceivedAmount(context.getUtil().amountFromRaw(unconfTotal), 0);

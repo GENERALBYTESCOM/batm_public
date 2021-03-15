@@ -2,6 +2,7 @@ package com.generalbytes.batm.server.extensions.extra.nano.rpc;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import okhttp3.*;
 import org.slf4j.Logger;
@@ -10,6 +11,9 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -30,6 +34,48 @@ public class NanoRpcClient {
         this.url = url;
     }
 
+
+    public List<Block> getTransactionHistory(String account) throws IOException, RpcException {
+        try {
+            ArrayNode history = (ArrayNode)query(false,
+                JSON_MAPPER.createObjectNode()
+                    .put("action", "account_history")
+                    .put("account", account)
+                    .put("count", -1))
+                .get("history");
+            List<Block> blocks = new ArrayList<>(history.size());
+            for (JsonNode blockNode : history) {
+                ObjectNode block = (ObjectNode)blockNode;
+                blocks.add(new Block(
+                    block.get("type").asText(),
+                    block.get("account").asText(),
+                    new BigInteger(block.get("amount").asText())
+                ));
+            }
+            return blocks;
+        } catch (RpcException e) {
+            if ("Account not found".equals(e.getMessage())) {
+                return Collections.emptyList(); // Account hasn't been opened
+            }
+            throw e;
+        }
+    }
+
+    /** Returns true if the account exists and has at least 1 block. */
+    public boolean doesAccountExist(String account) throws IOException, RpcException {
+        try {
+            return query(false,
+                JSON_MAPPER.createObjectNode()
+                    .put("action", "account_block_count")
+                    .put("account", account))
+                .get("block_count").asInt() > 0;
+        } catch (RpcException e) {
+            if ("Account not found".equals(e.getMessage())) {
+                return false; // Account hasn't been opened
+            }
+            throw e;
+        }
+    }
 
     /** Returns the total confirmed pocketed balance (zero if account isn't opened). */
     public BalanceResponse getBalance(String account) throws IOException, RpcException {
@@ -151,6 +197,17 @@ public class NanoRpcClient {
             this.confBalance = confBalance;
             this.unconfBalance = unconfBalance;
             this.unconfPending = unconfPending;
+        }
+    }
+
+    public static class Block {
+        public final String type, account;
+        public final BigInteger amount;
+
+        private Block(String type, String account, BigInteger amount) {
+            this.type = type;
+            this.account = account;
+            this.amount = amount;
         }
     }
 

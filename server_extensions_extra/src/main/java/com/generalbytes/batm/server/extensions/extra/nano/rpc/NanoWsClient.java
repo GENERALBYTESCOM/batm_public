@@ -59,11 +59,13 @@ public class NanoWsClient {
     }
 
     public boolean endDepositWatcher(String address) {
-        activeListeners.remove(address);
-        // Update WS filter
-        JsonNode options = JSON_MAPPER.createObjectNode()
-            .set("accounts_del", JSON_MAPPER.createArrayNode().add(address));
-        return sendTopicRequest(ACTION_UPDATE, TOPIC_BLOCK_CONFIRMATIONS, options);
+        if (activeListeners.remove(address) != null) {
+            // Update WS filter
+            JsonNode options = JSON_MAPPER.createObjectNode()
+                .set("accounts_del", JSON_MAPPER.createArrayNode().add(address));
+            return sendTopicRequest(ACTION_UPDATE, TOPIC_BLOCK_CONFIRMATIONS, options);
+        }
+        return false;
     }
 
 

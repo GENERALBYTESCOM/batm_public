@@ -1,15 +1,19 @@
 package com.generalbytes.batm.server.extensions.extra.nano;
 
-import com.generalbytes.batm.server.extensions.IGeneratesNewDepositCryptoAddress;
 import com.generalbytes.batm.server.extensions.IQueryableWallet;
 import com.generalbytes.batm.server.extensions.extra.common.PollingPaymentSupport;
+import com.generalbytes.batm.server.extensions.extra.nano.rpc.NanoRpcClient;
 import com.generalbytes.batm.server.extensions.extra.nano.rpc.NanoWsClient;
 import com.generalbytes.batm.server.extensions.extra.nano.wallet.node.INanoRpcWallet;
 import com.generalbytes.batm.server.extensions.payment.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -29,12 +33,19 @@ public class NanoPaymentSupport extends PollingPaymentSupport {
     private static final long POLL_PERIOD = 750; // 750 ms
     private static final int POLL_SKIP_CYCLES = 20; // 15 sec (multiplier of POLL_PERIOD when using websockets)
 
-    private final NanoExtensionContext context;
+    private static final List<Integer> FINAL_STATES = Arrays.asList(
+        PaymentRequest.STATE_TRANSACTION_INVALID,
+        PaymentRequest.STATE_REMOVED,
+        PaymentRequest.STATE_SOMETHING_ARRIVED_AFTER_TIMEOUT,
+        PaymentRequest.STATE_TRANSACTION_TIMED_OUT
+    );
+
+    private final NanoExtensionContext currencyContext;
     private final Map<PaymentRequest, PaymentRequestContext> requests = new ConcurrentHashMap<>();
     private final ExecutorService threadPool = Executors.newCachedThreadPool();
 
-    public NanoPaymentSupport(NanoExtensionContext context) {
-        this.context = context;
+    public NanoPaymentSupport(NanoExtensionContext currencyContext) {
+        this.currencyContext = currencyContext;
     }
 
 
@@ -50,34 +61,42 @@ public class NanoPaymentSupport extends PollingPaymentSupport {
 
     @Override
     protected String getCryptoCurrency() {
-        return context.getCurrencyCode();
+        return currencyContext.getCurrencyCode();
     }
 
     @Override
     public PaymentRequest createPaymentRequest(IPaymentRequestSpecification spec) {
-        if (!(spec.getWallet() instanceof IGeneratesNewDepositCryptoAddress))
-            throw new IllegalArgumentException("Wallet '" + spec.getWallet().getClass() +
-                    "' does not implement IGeneratesNewDepositCryptoAddress");
-        if (!(spec.getWallet() instanceof IQueryableWallet))
-            throw new IllegalArgumentException("Wallet '" + spec.getWallet().getClass() +
-                    "' does not implement IQueryableWallet");
-        context.getUtil().validateAmount(spec.getTotal()); // Throws exception if amount is invalid
+        if (!currencyContext.getCurrencyCode().equalsIgnoreCase(spec.getCryptoCurrency()))
+            throw new IllegalArgumentException("Unsupported CryptoCurrency.");
+        if (!(spec.getWallet() instanceof INanoRpcWallet))
+            throw new IllegalArgumentException("Wallet " + spec.getWallet().getClass() + " does not implement INanoRpcWallet");
+        currencyContext.getUtil().validateAmount(spec.getTotal()); // Throws exception if amount is invalid
 
-        // Format addresses
-        for (IPaymentOutput output : spec.getOutputs()) {
-            output.setAddress(context.getUtil().parseAddress(output.getAddress()));
-        }
-        return super.createPaymentRequest(spec);
+        long validTillMillis = System.currentTimeMillis() + (spec.getValidInSeconds() * 1000);
+        String address = currencyContext.getUtil().parseAddress(spec.getOutputs().get(0).getAddress());
+        String refundAddr = spec.getTimeoutRefundAddress() == null ? null :
+                currencyContext.getUtil().parseAddress(spec.getTimeoutRefundAddress());
+
+        PaymentRequest request = new PaymentRequest(spec.getCryptoCurrency(), spec.getDescription(), validTillMillis,
+            address, spec.getTotal(), spec.getTolerance(),
+            spec.getRemoveAfterNumberOfConfirmationsOfIncomingTransaction(),
+            spec.getRemoveAfterNumberOfConfirmationsOfOutgoingTransaction(), spec.getWallet(),
+            refundAddr, spec.getOutputs(), spec.isDoNotForward(), null);
+
+        registerPaymentRequest(request);
+        return request;
     }
 
     @Override
     public void registerPaymentRequest(PaymentRequest request) {
+        INanoRpcWallet wallet = (INanoRpcWallet)request.getWallet();
+
         // Request websocket notifications (if supported by wallet)
-        PaymentRequestContext requestContext = new PaymentRequestContext(null);
+        PaymentRequestContext requestContext = new PaymentRequestContext(wallet, null);
         if (request.getWallet() instanceof INanoRpcWallet) {
             NanoWsClient wsClient = ((INanoRpcWallet)request.getWallet()).getWsClient();
             if (wsClient != null) {
-                requestContext = new PaymentRequestContext(wsClient);
+                requestContext = new PaymentRequestContext(wallet, wsClient);
                 final PaymentRequestContext fContext = requestContext; // Final for lambda
                 // Attempt to add the account to the topic filter
                 threadPool.submit(() -> {
@@ -136,38 +155,34 @@ public class NanoPaymentSupport extends PollingPaymentSupport {
         }
     }
 
-    /**
-     * Override to allow state to be re-fired more than once.
-     * Also expire websocket requests upon completion or timeout.
-     * */
     @Override
     protected void setState(PaymentRequest request, int newState) {
-        // Only allow re-fires for SEEN states
         int prevState = request.getState();
-        if (newState == prevState && newState != PaymentRequest.STATE_SEEN_TRANSACTION)
-            return;
+        if (newState == prevState) return;
 
         request.setState(newState);
         log.debug("Transaction state changed: {} -> {}, {}", prevState, newState, request);
 
         // Notify listener
         IPaymentRequestListener listener = request.getListener();
-        if (listener != null)
+        if (listener != null) {
             listener.stateChanged(request, prevState, request.getState());
+        }
+
+        if (!FINAL_STATES.contains(prevState) && newState == PaymentRequest.STATE_TRANSACTION_TIMED_OUT) {
+            // Payment timed out - process refund
+            processRefund(request, requests.get(request));
+        }
 
         // Finalize payment
-        if (request.isRemovalCondition()) {
+        if (FINAL_STATES.contains(prevState)) {
             PaymentRequestContext context = requests.get(request);
             if (context != null) {
-                log.debug("Finalizing payment request for address {}", request.getAddress());
+                log.debug("Stopping payment request for deposit address {}", request.getAddress());
                 requests.remove(request);
                 // End websocket watcher
                 if (context.wsClient != null) {
                     threadPool.submit(() -> context.wsClient.endDepositWatcher(request.getAddress()));
-                }
-                // Send all funds to hot wallet
-                if (request.getWallet() instanceof INanoRpcWallet) {
-                    ((INanoRpcWallet)request.getWallet()).moveFundsToHotWallet(request.getAddress());
                 }
             }
         }
@@ -176,23 +191,34 @@ public class NanoPaymentSupport extends PollingPaymentSupport {
     /** Updates the current state of the payment request (if applicable) */
     private void updateRequestState(PaymentRequest request, BigDecimal totalReceived, int confirmations) {
         int initialState = request.getState();
-        if (request.getTxValue().compareTo(totalReceived) != 0) {
+        if (request.getTxValue().compareTo(totalReceived) != 0 || confirmations >= 1) {
             log.debug("Updating request state, total received: {} with {} confs", totalReceived, confirmations);
             request.setTxValue(totalReceived);
-            if (totalReceived.compareTo(BigDecimal.ZERO) >= 0) {
+            PaymentRequestContext context = requests.get(request);
+            if (!request.wasAlreadyRefunded() && totalReceived.compareTo(BigDecimal.ZERO) >= 0) {
                 // Change state if new
                 if (request.getState() == PaymentRequest.STATE_NEW)
                     setState(request, PaymentRequest.STATE_SEEN_TRANSACTION);
 
-                // Final confirmation state
                 if (confirmations > 0 && request.getState() == PaymentRequest.STATE_SEEN_TRANSACTION
                     && totalReceived.compareTo(request.getAmount()) >= 0) {
-                    log.info("Transaction confirmed. Total amount received: {}", totalReceived);
-                    request.setRemovalConditionForIncomingTransaction();
-                    setState(request, PaymentRequest.STATE_SEEN_IN_BLOCK_CHAIN);
-                    updateNumberOfConfirmations(request, confirmations);
-                    setState(request, PaymentRequest.STATE_REMOVED);
+                    // Transaction confirmed
+                    if (totalReceived.subtract(request.getTolerance()).compareTo(request.getAmount()) <= 0) {
+                        // Within tolerance
+                        log.info("Transaction confirmed. Total amount received: {}", totalReceived);
+                        request.setRemovalConditionForIncomingTransaction();
+                        setState(request, PaymentRequest.STATE_SEEN_IN_BLOCK_CHAIN);
+                        updateNumberOfConfirmations(request, Integer.MAX_VALUE);
+                        setState(request, PaymentRequest.STATE_REMOVED);
+                        // Send all funds to hot wallet
+                        context.wallet.moveFundsToHotWallet(request.getAddress());
+                    } else {
+                        // Too many funds sent, refund
+                        setState(request, PaymentRequest.STATE_TRANSACTION_INVALID);
+                        processRefund(request, context);
+                    }
                 } else {
+                    // Not enough funds, or no confirmation
                     if (initialState != PaymentRequest.STATE_NEW)
                         setState(request, PaymentRequest.STATE_SEEN_TRANSACTION); // Re-fire state
                     updateNumberOfConfirmations(request, 0);
@@ -201,15 +227,52 @@ public class NanoPaymentSupport extends PollingPaymentSupport {
         }
     }
 
+    private void processRefund(PaymentRequest request, PaymentRequestContext context) {
+        if (!request.wasAlreadyRefunded() && context != null) {
+            log.debug("Attempting to process refund for request {}", request);
+            try {
+                // Find suitable refund account
+                String refundAddr = request.getTimeoutRefundAddress();
+                if (refundAddr == null) {
+                    List<NanoRpcClient.Block> blocks =
+                        context.wallet.getRpcClient().getTransactionHistory(request.getAddress());
+                    for (NanoRpcClient.Block block : blocks) {
+                        if (block.type.equals("receive")) {
+                            refundAddr = block.account;
+                        }
+                    }
+                }
+                if (refundAddr != null) {
+                    request.setAsAlreadyRefunded();
+                    // Process refund
+                    log.debug("Sending refund to {}", refundAddr);
+                    BigInteger amount = context.wallet.sendAllFromWallet(request.getAddress(), refundAddr);
+                    // Notify listener
+                    IPaymentRequestListener listener = request.getListener();
+                    if (listener != null) {
+                        listener.refundSent(request, refundAddr, request.getCryptoCurrency(),
+                                currencyContext.getUtil().amountFromRaw(amount));
+                    }
+                } else {
+                    log.warn("Couldn't process refund as no refund account was found.");
+                }
+            } catch (IOException | NanoRpcClient.RpcException e) {
+                log.error("Failed to process refund transaction", e);
+            }
+        }
+    }
+
 
     /** Contains additional state information about an active payment request. */
     private static class PaymentRequestContext {
+        private final INanoRpcWallet wallet;
         private final Lock pollLock = new ReentrantLock(); // Only allow one request poll at a time
         private final NanoWsClient wsClient;
         private volatile int pollCounter = POLL_SKIP_CYCLES; // First attempt should poll
         private volatile boolean wsRequestInitialized = false;
 
-        public PaymentRequestContext(NanoWsClient wsClient) {
+        public PaymentRequestContext(INanoRpcWallet wallet, NanoWsClient wsClient) {
+            this.wallet = wallet;
             this.wsClient = wsClient;
         }
 

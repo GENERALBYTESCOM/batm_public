@@ -47,17 +47,24 @@ public class TestPaymentSupport {
 
             Thread.sleep(2500);
 
-            PRS spec = new PRS(context.getCurrencyCode(), "Test txn", 60 * 15, 1, false, true, BigDecimal.ZERO,
-                    BigDecimal.ZERO, BigDecimal.ZERO, wallet);
+            PRS spec = new PRS(context.getCurrencyCode(), "Test txn", 60, 1, false, true, BigDecimal.ZERO,
+                    BigDecimal.ZERO, new BigDecimal("0.001"), wallet);
             spec.addOutput(paymentAccount, paymentValue);
             PaymentRequest pr = ps.createPaymentRequest(spec);
 
             pr.setListener(new IPaymentRequestListener() {
                 @Override
                 public void stateChanged(PaymentRequest request, int previousState, int newState) {
-                    System.out.printf("stateChanged | received: %.6f / %.6f, previousState: %d, newState: %d%n",
-                        request.getTxValue(), request.getAmount(), previousState, newState);
-                    if (newState == PaymentRequest.STATE_REMOVED) {
+                    System.out.printf("stateChanged | previousState: %d, newState: %d%n", previousState, newState);
+                }
+
+                @Override
+                public void numberOfConfirmationsChanged(PaymentRequest request, int numberOfConfirmations,
+                                                         IPaymentRequestListener.Direction direction) {
+                    System.out.printf("numberOfConfirmationsChanged | confs: %d | received: %.6f / %.6f%n",
+                        numberOfConfirmations, request.getTxValue(), request.getAmount());
+
+                    if (numberOfConfirmations >= 1) {
                         System.out.println("--------------------------------------");
                         System.out.printf("TRANSACTION COMPLETED | Received %.6f%n", request.getTxValue());
                         System.out.println("--------------------------------------");
@@ -65,16 +72,10 @@ public class TestPaymentSupport {
                 }
 
                 @Override
-                public void numberOfConfirmationsChanged(PaymentRequest request, int numberOfConfirmations,
-                                                         IPaymentRequestListener.Direction direction) {
-                    System.out.println("numberOfConfirmationsChanged | numberOfConfirmations: "
-                        + numberOfConfirmations + " | direction: " + direction);
-                }
-
-                @Override
                 public void refundSent(PaymentRequest request, String toAddress, String cryptoCurrency, BigDecimal amount) {
-                    // Not supported
-                    System.err.println("refundSent");
+                    System.out.println("--------------------------------------");
+                    System.out.printf("REFUNDED | Sent %.6f to %s%n", amount, toAddress);
+                    System.out.println("--------------------------------------");
                 }
             });
 
