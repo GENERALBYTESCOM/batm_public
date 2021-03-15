@@ -77,6 +77,10 @@ public class NanoExtension extends AbstractExtension {
                     NanoNodeWallet wallet = NanoNodeWallet.create(context, st);
                     context.setRpcClient(wallet.getRpcClient()); // Set global RPC client
                     return wallet;
+                } else if ("nano_demo".equalsIgnoreCase(walletName)) {
+                    String fiatCurrency = st.nextToken();
+                    String walletAddress = st.nextToken();
+                    return new DummyExchangeAndWalletAndSource(fiatCurrency, CRYPTO.getCode(), walletAddress);
                 }
             }
         } catch (Exception e) {

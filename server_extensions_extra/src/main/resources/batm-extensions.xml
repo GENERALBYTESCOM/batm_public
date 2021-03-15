@@ -1609,6 +1609,11 @@
                 wallet.</help>
             <cryptocurrency>NANO</cryptocurrency>
         </wallet>
+        <wallet prefix="nano_demo" name="Nano Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
+            <cryptocurrency>NANO</cryptocurrency>
+        </wallet>
         <cryptologo cryptocurrency="NANO" file="nano.png"/>
         <cryptologo cryptocurrency="NANO" file="nano.svg"/>
     </extension>
