@@ -70,11 +70,11 @@ public class NanoExtension extends AbstractExtension {
     public IWallet createWallet(String walletLogin, String tunnelPassword) {
         try {
             if (walletLogin != null && !walletLogin.trim().isEmpty()) {
-                StringTokenizer tokenizer = new StringTokenizer(walletLogin, ":");
-                String walletName = tokenizer.nextToken();
+                StringTokenizer st = new StringTokenizer(walletLogin, ":");
+                String walletName = st.nextToken();
 
                 if ("nano_node".equalsIgnoreCase(walletName)) {
-                    NanoNodeWallet wallet = NanoNodeWallet.create(context, tokenizer);
+                    NanoNodeWallet wallet = NanoNodeWallet.create(context, st);
                     context.setRpcClient(wallet.getRpcClient()); // Set global RPC client
                     return wallet;
                 }

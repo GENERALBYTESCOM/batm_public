@@ -175,10 +175,10 @@ public class NanoNodeWallet implements INanoRpcWallet, IGeneratesNewDepositCrypt
          *  0  Node IP/host
          *  1  RPC protocol (http/https)
          *  2  RPC port
-         *  3  Websocket protocol (ws/wss)
-         *  4  Websocket port
-         *  5  Hot wallet ID
-         *  6  Hot wallet account
+         *  3  Hot wallet ID
+         *  4  Hot wallet account
+         *  5  Websocket protocol (ws/wss)
+         *  6  Websocket port
          */
         String nodeHost = args.nextToken();
         if (nodeHost.equals("[")) {
@@ -188,13 +188,17 @@ public class NanoNodeWallet implements INanoRpcWallet, IGeneratesNewDepositCrypt
         }
         String rpcProtocol = args.nextToken().toLowerCase();
         int rpcPort = Integer.parseInt(args.nextToken());
-        String wsProtocol = args.nextToken().toLowerCase();
-        int wsPort = Integer.parseInt(args.nextToken());
+        URL rpcUrl = new URL(rpcProtocol, nodeHost, rpcPort, "");
+
         String walletId = args.nextToken().toUpperCase();
         String walletAccount = context.getUtil().parseAddress(args.nextToken());
 
-        URL rpcUrl = new URL(rpcProtocol, nodeHost, rpcPort, "");
-        URI wsUri = wsPort <= 0 ? null : new URI(wsProtocol, "", nodeHost, wsPort, "", "", "");
+        URI wsUri = null;
+        if (args.hasMoreElements()) {
+            String wsProtocol = args.nextToken().toLowerCase();
+            int wsPort = Integer.parseInt(args.nextToken());
+            wsUri = new URI(wsProtocol, "", nodeHost, wsPort, "", "", "");
+        }
 
         log.info("Using nano_node wallet: RPC: {}, WS: {}, Wallet ID: {}, Hot-wallet: {}",
                 rpcUrl, wsUri != null ? wsUri : "[not used]", walletId, walletAccount);

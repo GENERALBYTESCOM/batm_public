@@ -1595,18 +1595,18 @@
         <cryptologo cryptocurrency="ECA" file="eca.png"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.nano.NanoExtension" >
-        <wallet prefix="nano_node" name="nano-node Wallet (RPC)">
-            <param name="ip" />
-            <param name="rpcProtocol" />
-            <param name="rpcPort" />
-            <param name="wsProtocol" />
-            <param name="wsPort" />
+        <wallet prefix="nano_node" name="nano_node Wallet (RPC)">
+            <param name="rpc_ip" />
+            <param name="rpc_protocol" />
+            <param name="rpc_port" />
             <param name="wallet" />
             <param name="account" />
+            <param name="ws_protocol" />
+            <param name="ws_port" />
             <help>IP is the IP/host of the RPC and WebSocket server. RPC protocol may be either 'http' or 'https',
-                WebSocket may be 'ws' or 'wss'. WebSocket is optional, and may be ignored by using port '0'. Wallet ID
-                is the 64-character identifier from the node's built-in wallet provider, and the hot wallet account must
-                be part of this wallet.</help>
+                WebSocket may be 'ws' or 'wss'. WebSocket is optional, and may be ignored. Wallet ID is the 64-character
+                identifier from the node's built-in wallet provider, and the hot wallet account must be part of the
+                wallet.</help>
             <cryptocurrency>NANO</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="NANO" file="nano.png"/>
