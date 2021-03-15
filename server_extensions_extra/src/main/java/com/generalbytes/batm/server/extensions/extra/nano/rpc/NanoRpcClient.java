@@ -32,48 +32,43 @@ public class NanoRpcClient {
 
 
     /** Returns the total confirmed pocketed balance (zero if account isn't opened). */
-    public BigInteger getBalanceConfirmed(String account) throws IOException, RpcException {
-        // Get confirmed frontier hash (returned `balance` isn't guaranteed to be confirmed)
-        ObjectNode accountInfoResponse;
+    public BalanceResponse getBalance(String account) throws IOException, RpcException {
+        // Get account info (unconf balance + confirmation frontier)
+        ObjectNode accountInfo;
         try {
-            accountInfoResponse = query(false, JSON_MAPPER.createObjectNode()
+            accountInfo = query(false,
+                JSON_MAPPER.createObjectNode()
                     .put("action",  "account_info")
-                    .put("account", account));
+                    .put("account", account)
+                    .put("pending", true));
         } catch (RpcException e) {
             if ("Account not found".equals(e.getMessage())) {
-                return BigInteger.ZERO; // Account hasn't been opened
+                // Account hasn't been opened
+                return new BalanceResponse(BigInteger.ZERO, BigInteger.ZERO, BigInteger.ZERO);
             } else {
                 throw e;
             }
         }
-        if (accountInfoResponse.get("confirmation_height").asText().equals("0")) {
-            return BigInteger.ZERO; // Account has no confirmed blocks
-        }
+        BigInteger unconfBalance = new BigInteger(accountInfo.get("balance").asText());
+        BigInteger unconfPending = new BigInteger(accountInfo.get("pending").asText());
 
-        // Get balance of frontier block
-        return new BigInteger(query(false, JSON_MAPPER.createObjectNode()
+        if (accountInfo.get("confirmation_height").asText().equals("0")) {
+            // Account has no confirmed blocks
+            return new BalanceResponse(BigInteger.ZERO, unconfBalance, unconfPending);
+        }
+        // Get balance of frontier block (confirmed balance)
+        BigInteger confBalance = new BigInteger(query(false,
+            JSON_MAPPER.createObjectNode()
                 .put("action", "block_info")
-                .put("hash",   accountInfoResponse.get("confirmation_height_frontier").asText()))
+                .put("hash",   accountInfo.get("confirmation_height_frontier").asText()))
                 .get("balance").asText());
-    }
-
-    /** Returns pocketed (+ pending) balance, including unconfirmed blocks. */
-    public BigInteger getBalanceUnconfirmed(String account, boolean includePending) throws IOException, RpcException {
-        ObjectNode response = query(false, JSON_MAPPER.createObjectNode()
-                .put("action",  "account_balance")
-                .put("account", account));
-
-        BigInteger balance = new BigInteger(response.get("balance").asText());
-        if (includePending) {
-            return balance.add(new BigInteger(response.get("pending").asText()));
-        } else {
-            return balance;
-        }
+        return new BalanceResponse(confBalance, unconfBalance, unconfPending);
     }
 
     /** Creates a new account in the given wallet. */
     public String newWalletAccount(String walletId) throws IOException, RpcException {
-        return query(false, JSON_MAPPER.createObjectNode()
+        return query(false,
+            JSON_MAPPER.createObjectNode()
                 .put("action", "account_create")
                 .put("wallet", walletId))
                 .get("account").asText();
@@ -82,7 +77,8 @@ public class NanoRpcClient {
     /** Sends the specified funds from the given wallet to the provided destination account. */
     public String sendFromWallet(String walletId, String sourceAcc, String destAcc, BigInteger amountRaw, String uid)
             throws IOException, RpcException {
-        return query(false, JSON_MAPPER.createObjectNode()
+        return query(false,
+            JSON_MAPPER.createObjectNode()
                 .put("action",      "send")
                 .put("wallet",      walletId)
                 .put("source",      sourceAcc)
@@ -94,7 +90,8 @@ public class NanoRpcClient {
 
     /** Creates an account from the given seed. */
     public String accountFromSeed(String seed, long index) throws IOException, RpcException {
-        return query(true, JSON_MAPPER.createObjectNode()
+        return query(true,
+            JSON_MAPPER.createObjectNode()
                 .put("action", "deterministic_key")
                 .put("seed",   seed)
                 .put("index",  index))
@@ -103,7 +100,8 @@ public class NanoRpcClient {
 
     /** Returns true if the address string is valid. */
     public boolean isAddressValid(String addr) throws IOException, RpcException {
-        return query(false, JSON_MAPPER.createObjectNode()
+        return query(false,
+            JSON_MAPPER.createObjectNode()
                 .put("action",  "validate_account_number")
                 .put("account", addr))
                 .get("valid").asInt() == 1;
@@ -143,6 +141,16 @@ public class NanoRpcClient {
     public static class RpcException extends Exception {
         public RpcException(String message) {
             super(message);
+        }
+    }
+
+    public static class BalanceResponse {
+        public final BigInteger confBalance, unconfBalance, unconfPending;
+
+        public BalanceResponse(BigInteger confBalance, BigInteger unconfBalance, BigInteger unconfPending) {
+            this.confBalance = confBalance;
+            this.unconfBalance = unconfBalance;
+            this.unconfPending = unconfPending;
         }
     }
 

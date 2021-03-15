@@ -55,7 +55,7 @@ public class NanoNodeWallet implements INanoRpcWallet, IGeneratesNewDepositCrypt
     @Override
     public void moveFundsToHotWallet(String depositAddress) {
         try {
-            BigInteger balance = rpcClient.getBalanceUnconfirmed(depositAddress, false);
+            BigInteger balance = rpcClient.getBalance(depositAddress).unconfBalance;
             if (!balance.equals(BigInteger.ZERO)) {
                 String hash = rpcClient.sendFromWallet(walletId, depositAddress, hotWalletAccount,
                         balance, UUID.randomUUID().toString());
@@ -76,7 +76,7 @@ public class NanoNodeWallet implements INanoRpcWallet, IGeneratesNewDepositCrypt
             for (int i = 0; i < 5; i++) {
                 String account = rpcClient.newWalletAccount(walletId);
                 // Ensure account isn't in a used state
-                BigInteger balance = rpcClient.getBalanceConfirmed(account);
+                BigInteger balance = rpcClient.getBalance(account).confBalance;
                 if (balance.equals(BigInteger.ZERO) && !account.equalsIgnoreCase(hotWalletAccount)) {
                     return account;
                 } else {
@@ -96,17 +96,15 @@ public class NanoNodeWallet implements INanoRpcWallet, IGeneratesNewDepositCrypt
         address = context.getUtil().parseAddress(address);
         try {
             /*
-             * Check the confirmed balance.
              * TODO: Only including pocketed balance for now. This could be changed in the future if fork resolution
              *       issues are resolved, and would speed up deposit confirmation times.
              */
-            BigInteger balance = rpcClient.getBalanceConfirmed(address);
-            if (balance.compareTo(BigInteger.ZERO) > 0)
-                return new ReceivedAmount(context.getUtil().amountFromRaw(balance), 1);
-
+            NanoRpcClient.BalanceResponse balance = rpcClient.getBalance(address);
+            if (balance.confBalance.compareTo(BigInteger.ZERO) > 0)
+                return new ReceivedAmount(context.getUtil().amountFromRaw(balance.confBalance), 1);
             // No balance; return unconfirmed and pending blocks with confirmation 0
-            balance = rpcClient.getBalanceUnconfirmed(address, true);
-            return new ReceivedAmount(context.getUtil().amountFromRaw(balance), 0);
+            BigInteger unconfTotal = balance.unconfBalance.add(balance.unconfPending);
+            return new ReceivedAmount(context.getUtil().amountFromRaw(unconfTotal), 0);
         } catch (NanoRpcClient.RpcException | IOException e) {
             log.error("Couldn't retrieve balance for account {}.", address, e);
             return null;
@@ -135,8 +133,8 @@ public class NanoNodeWallet implements INanoRpcWallet, IGeneratesNewDepositCrypt
     @Override
     public BigDecimal getCryptoBalance(String cryptoCurrency) {
         try {
-            BigInteger balRaw = rpcClient.getBalanceConfirmed(hotWalletAccount);
-            return context.getUtil().amountFromRaw(balRaw);
+            return context.getUtil().amountFromRaw(
+                    rpcClient.getBalance(hotWalletAccount).confBalance);
         } catch (NanoRpcClient.RpcException | IOException e) {
             log.error("Couldn't retrieve balance of account {}.", hotWalletAccount, e);
             return null;
@@ -152,7 +150,6 @@ public class NanoNodeWallet implements INanoRpcWallet, IGeneratesNewDepositCrypt
 
         destinationAddress = context.getUtil().parseAddress(destinationAddress);
         BigInteger amountRaw = context.getUtil().amountToRaw(amount);
-
         log.info("Sending {} Nano from hot wallet to {}...", amount, destinationAddress);
         try {
             String hash = rpcClient.sendFromWallet(walletId, hotWalletAccount, destinationAddress,
