@@ -57,7 +57,7 @@ public class TestPaymentSupport {
                 public void stateChanged(PaymentRequest request, int previousState, int newState) {
                     System.out.printf("stateChanged | received: %.6f / %.6f, previousState: %d, newState: %d%n",
                         request.getTxValue(), request.getAmount(), previousState, newState);
-                    if (newState == PaymentRequest.STATE_SEEN_IN_BLOCK_CHAIN) {
+                    if (newState == PaymentRequest.STATE_REMOVED) {
                         System.out.println("--------------------------------------");
                         System.out.printf("TRANSACTION COMPLETED | Received %.6f%n", request.getTxValue());
                         System.out.println("--------------------------------------");

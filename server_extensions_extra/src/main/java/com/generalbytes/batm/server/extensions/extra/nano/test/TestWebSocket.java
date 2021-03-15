@@ -3,7 +3,6 @@ package com.generalbytes.batm.server.extensions.extra.nano.test;
 import com.generalbytes.batm.server.extensions.extra.nano.rpc.NanoWsClient;
 
 import java.net.URI;
-import java.util.Collections;
 
 /**
  * THIS CLASS MAY BE IGNORED.
@@ -16,7 +15,7 @@ public class TestWebSocket {
 
         Thread.sleep(2500);
 
-        wsClient.addDepositListener(
+        wsClient.addDepositWatcher(
                 "nano_3h5r5huudbj3mrmosha84oregs3k9wgi8cwbynbiajjmto1y9sys8yykjg1m",
                 () -> System.out.println("onDeposit CALLED!!!!!!"));
 

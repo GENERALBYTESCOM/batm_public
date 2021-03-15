@@ -81,7 +81,7 @@ public class NanoPaymentSupport extends PollingPaymentSupport {
                 final PaymentRequestContext fContext = requestContext; // Final for lambda
                 // Attempt to add the account to the topic filter
                 threadPool.submit(() -> {
-                    fContext.wsRequestInitialized = wsClient.addDepositListener(
+                    fContext.wsRequestInitialized = wsClient.addDepositWatcher(
                             request.getAddress(), () -> poll(request, fContext, true));
                 });
             } else {
@@ -163,7 +163,7 @@ public class NanoPaymentSupport extends PollingPaymentSupport {
                 requests.remove(request);
                 // End websocket watcher
                 if (context.wsClient != null) {
-                    threadPool.submit(() -> context.wsClient.removeDepositListener(request.getAddress()));
+                    threadPool.submit(() -> context.wsClient.endDepositWatcher(request.getAddress()));
                 }
                 // Send all funds to hot wallet
                 if (request.getWallet() instanceof INanoRpcWallet) {

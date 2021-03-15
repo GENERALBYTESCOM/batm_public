@@ -21,6 +21,7 @@ public class NanoWsClient {
 
     private static final Logger log = LoggerFactory.getLogger(NanoWsClient.class);
 
+    private static final int ACK_TIMEOUT_MS = 4000;
     private static final String ACTION_SUBSCRIBE = "subscribe";
     private static final String ACTION_UPDATE = "update";
     private static final String TOPIC_BLOCK_CONFIRMATIONS = "confirmation";
@@ -28,7 +29,7 @@ public class NanoWsClient {
     private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
 
     private final ReconnectingWebSocketClient wsClient;
-    private final ExecutorService handlerThreadPool = Executors.newCachedThreadPool();
+    private final ExecutorService handlerThreadPool = Executors.newFixedThreadPool(50);
     private final AtomicLong nextAckId = new AtomicLong();
     private final Map<Long, CountDownLatch> activeAckRequests = new ConcurrentHashMap<>();
     private final Map<String, DepositListener> activeListeners = new ConcurrentHashMap<>();
@@ -49,7 +50,7 @@ public class NanoWsClient {
     }
 
 
-    public boolean addDepositListener(String address, DepositListener listener) {
+    public boolean addDepositWatcher(String address, DepositListener listener) {
         activeListeners.put(address, listener);
         // Update WS filter
         JsonNode options = JSON_MAPPER.createObjectNode()
@@ -57,7 +58,7 @@ public class NanoWsClient {
         return sendTopicRequest(ACTION_UPDATE, TOPIC_BLOCK_CONFIRMATIONS, options);
     }
 
-    public boolean removeDepositListener(String address) {
+    public boolean endDepositWatcher(String address) {
         activeListeners.remove(address);
         // Update WS filter
         JsonNode options = JSON_MAPPER.createObjectNode()
@@ -115,7 +116,7 @@ public class NanoWsClient {
                 log.error("Couldn't construct request JSON.", e);
                 return false;
             }
-
+            // Send over WS
             log.debug("Sending WS request {}", reqJson);
             try {
                 wsClient.send(reqJson);
@@ -123,14 +124,13 @@ public class NanoWsClient {
                 log.debug("WS not connected, ignoring topic request.");
                 return false;
             }
-
-            // Await ack message
+            // Await ack response
             try {
-                if (latch.await(5000, TimeUnit.MILLISECONDS)) {
-                    log.debug("Request ack received (action = {}, topic = {})", action, topic);
+                if (latch.await(ACK_TIMEOUT_MS, TimeUnit.MILLISECONDS)) {
+                    log.debug("Request ack received (action={}, topic={})", action, topic);
                     return true;
                 } else {
-                    log.warn("No ack received (action = {}, topic = {})", action, topic);
+                    log.warn("Timeout waiting for ack (action={}, topic={})", action, topic);
                     return false;
                 }
             } catch (InterruptedException e) {
