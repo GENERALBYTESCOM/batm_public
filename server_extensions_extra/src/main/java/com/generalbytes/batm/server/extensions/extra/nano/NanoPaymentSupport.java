@@ -23,8 +23,8 @@ import java.util.concurrent.locks.ReentrantLock;
 
 /*
  * This payment support will utilise the websocket value if configured to reduce load on the RPC endpoint, and minimize
- * delays when processing and verifying deposits. If not provided by the wallet (either websocket is null, or wallet
- * doesn't implement INanoRpcWallet), then it will simply resort to standard RPC polling.
+ * delays when processing and verifying deposits. If not provided by the wallet (websocket is null, or cannot connect),
+ * then it will simply resort to standard RPC polling.
  */
 public class NanoPaymentSupport extends PollingPaymentSupport {
 
@@ -175,7 +175,7 @@ public class NanoPaymentSupport extends PollingPaymentSupport {
         }
 
         // Finalize payment
-        if (FINAL_STATES.contains(prevState)) {
+        if (FINAL_STATES.contains(newState)) {
             PaymentRequestContext context = requests.get(request);
             if (context != null) {
                 log.debug("Stopping payment request for deposit address {}", request.getAddress());
