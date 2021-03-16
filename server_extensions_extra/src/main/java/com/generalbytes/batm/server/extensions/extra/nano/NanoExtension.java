@@ -25,6 +25,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.binance.B
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.coingecko.CoinGeckoRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.coinpaprika.CoinPaprikaRateSource;
 import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.CoinmarketcapRateSource;
+import com.generalbytes.batm.server.extensions.extra.nano.wallet.demo.DemoWallet;
 import com.generalbytes.batm.server.extensions.extra.nano.wallet.node.NanoNodeWallet;
 import com.generalbytes.batm.server.extensions.extra.nano.wallet.paper.NanoPaperWalletGenerator;
 import org.slf4j.Logger;
@@ -80,7 +81,7 @@ public class NanoExtension extends AbstractExtension {
                 } else if ("nano_demo".equalsIgnoreCase(walletName)) {
                     String fiatCurrency = st.nextToken();
                     String walletAddress = st.nextToken();
-                    return new DummyExchangeAndWalletAndSource(fiatCurrency, CRYPTO.getCode(), walletAddress);
+                    return new DemoWallet(fiatCurrency, CRYPTO.getCode(), walletAddress);
                 }
             }
         } catch (Exception e) {
