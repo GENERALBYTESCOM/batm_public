@@ -357,11 +357,14 @@
         </exchange>
         <cryptologo cryptocurrency="BTC" file="btc.png"/>
         <cryptologo cryptocurrency="BTC" file="btc.svg"/>
+        <cryptologo cryptocurrency="ETC" file="etc.svg"/>
+        <cryptologo cryptocurrency="ETC" file="etc.png"/>
         <ratesource prefix="coinbasers" name="Coinbase.com Rate Source" >
             <param name="fiatcurrency" />
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>ETC</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>DAI</cryptocurrency>
             <cryptocurrency>BIZZ</cryptocurrency>
@@ -376,6 +379,7 @@
             <cryptocurrency buyonly="true">BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>DASH</cryptocurrency>
+            <cryptocurrency>ETC</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
@@ -390,6 +394,7 @@
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>DAI</cryptocurrency>
             <cryptocurrency>BIZZ</cryptocurrency>
+            <cryptocurrency>ETC</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
@@ -403,6 +408,7 @@
             <param name="paymentmethod" />
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>ETC</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>BAT</cryptocurrency>
@@ -710,12 +716,14 @@
             <param name="apikey"/>
             <param name="fiatcurrency"/>
             <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
         </exchange>
         <ratesource prefix="bitpandapro" name="Bitpanda Pro">
             <param name="fiatcurrency"/>
             <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
         </ratesource>

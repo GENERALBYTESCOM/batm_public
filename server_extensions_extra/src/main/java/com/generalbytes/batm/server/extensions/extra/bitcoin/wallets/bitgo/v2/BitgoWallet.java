@@ -42,6 +42,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -85,9 +86,11 @@ public class BitgoWallet implements IWallet, ICanSendMany {
     }
 
     private String getResultTxId(Map<String, Object> result) {
-        if (result != null && result.get("txid") instanceof String) {
+        Objects.requireNonNull(result, "Returned map is null");
+        if (result.get("txid") instanceof String) {
             return (String) result.get("txid");
         }
+        log.warn("txid not returned: {}", result);
         return null;
     }
 

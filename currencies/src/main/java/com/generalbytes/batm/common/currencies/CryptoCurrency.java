@@ -57,6 +57,7 @@ public enum CryptoCurrency {
     DOGE("DOGE"),
     ECA("Electra"),
     EFL("e-Gulden"),
+    ETC("Ethereum Classic"),
     ETH("Ethereum"),
     EURS("STASIS EURO"),
     FLASH("FLASH"),
