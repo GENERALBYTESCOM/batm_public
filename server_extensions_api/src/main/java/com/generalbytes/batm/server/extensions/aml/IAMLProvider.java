@@ -34,13 +34,16 @@ public interface IAMLProvider {
      * @param phoneNumberInternational Phone number in international format. (It begins with the country dialing code, for example "+1" for North America.)
      * @return Contact information about phone number holder.
      */
-    Contact getContactByPhoneNumber(String phoneNumberInternational);
+    IContactResponse getContactByPhoneNumber(String phoneNumberInternational);
 
     /**
      * Validate identity information against external system. For example to check that SSN belongs to a person with provided name.
      */
     IIdentityValidationResult validateIdentity(IIdentity identity);
 
-
+    /**
+     * Name of the aml provider.
+     */
+    String getName();
 
 }
