@@ -1,4 +1,4 @@
-package com.generalbytes.batm.onfido.data;
+package com.generalbytes.verification.data;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

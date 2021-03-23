@@ -1,7 +1,7 @@
-package com.generalbytes.batm.onfido.service;
+package com.generalbytes.verification.service;
 
-import com.generalbytes.batm.onfido.controller.RegisterNewApplicantReq;
-import com.generalbytes.batm.onfido.data.Applicant;
+import com.generalbytes.verification.controller.RegisterNewApplicantReq;
+import com.generalbytes.verification.data.Applicant;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;

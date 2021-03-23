@@ -1,4 +1,4 @@
-package com.generalbytes.batm.onfido.controller;
+package com.generalbytes.verification.controller;
 
 import lombok.Data;
 import lombok.NonNull;

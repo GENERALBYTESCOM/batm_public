@@ -10,7 +10,7 @@ function initOnfido(token) {
         onComplete: function(data) {
             console.log("onfido wizard finished. Notifying server.")
             let xhttp = new XMLHttpRequest()
-            xhttp.open("GET", "/onfido/submit/" + applicantId, true)
+            xhttp.open("GET", "/verification/submit/" + applicantId, true)
             xhttp.send()
         },
         steps: [
@@ -38,5 +38,5 @@ tokenReq.onreadystatechange = function () {
         initOnfido(this.responseText)
     }
 }
-tokenReq.open("GET", "/onfido/token/" + applicantId, true)
+tokenReq.open("GET", "/verification/token/" + applicantId, true)
 tokenReq.send()

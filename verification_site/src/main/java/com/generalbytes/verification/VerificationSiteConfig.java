@@ -1,4 +1,4 @@
-package com.generalbytes.batm.onfido;
+package com.generalbytes.verification;
 
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
@@ -18,7 +18,7 @@ import java.security.NoSuchAlgorithmException;
 
 @ComponentScan
 @Configuration
-public class ServerOnfidoConfig {
+public class VerificationSiteConfig {
 
     @Bean
     public RestTemplate restTemplate() throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {

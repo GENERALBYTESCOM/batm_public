@@ -1,7 +1,7 @@
-package com.generalbytes.batm.onfido.controller;
+package com.generalbytes.verification.controller;
 
-import com.generalbytes.batm.onfido.data.Applicant;
-import com.generalbytes.batm.onfido.service.ApplicantService;
+import com.generalbytes.verification.data.Applicant;
+import com.generalbytes.verification.service.ApplicantService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -17,14 +17,14 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Controller
-@RequestMapping(value = "/onfido")
-public class OnfidoWebController {
+@RequestMapping(value = "/verification")
+public class VerificationController {
 
     private final ApplicantService applicantService;
     private final RestTemplate restTemplate;
-    private static final Logger log = LoggerFactory.getLogger(OnfidoWebController.class);
+    private static final Logger log = LoggerFactory.getLogger(VerificationController.class);
 
-    public OnfidoWebController(ApplicantService applicantService, RestTemplate restTemplate) {
+    public VerificationController(ApplicantService applicantService, RestTemplate restTemplate) {
         this.applicantService = applicantService;
         this.restTemplate = restTemplate;
     }
