@@ -611,6 +611,7 @@
             <cryptocurrency>XRP</cryptocurrency>
             <cryptocurrency>TENT</cryptocurrency>
             <cryptocurrency>XZC</cryptocurrency>
+            <cryptocurrency>ADA</cryptocurrency>
         </ratesource>
         <exchange prefix="binancecom" name="Binance.com">
             <param name="apikey"/>
@@ -1966,6 +1967,18 @@
         </wallet>
         <cryptologo cryptocurrency="ILC" file="ilc.png"/>
         <cryptologo cryptocurrency="ILC" file="ilc.svg"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.cardano.CardanoExtension" >
+        <wallet prefix="cardano" name="Cardano">
+            <param name="protocol" />
+            <param name="host" />
+            <param name="port" />
+            <param name="wallet_id" />
+            <param name="wallet_passphrase" />
+            <cryptocurrency>ADA</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="ADA" file="cardano_ada.png"/>
+        <cryptologo cryptocurrency="ADA" file="cardano_ada.svg"/>
     </extension>
 
 </extensions>
