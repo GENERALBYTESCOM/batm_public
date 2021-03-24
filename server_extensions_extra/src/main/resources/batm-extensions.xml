@@ -1976,6 +1976,7 @@
             <param name="wallet_id" />
             <param name="wallet_passphrase" />
             <cryptocurrency>ADA</cryptocurrency>
+            <help>Use protocol http or https, host and port to connect to cardano-node API. Wallet ID and passphrase are mandatory to support wallet operations.</help>
         </wallet>
         <cryptologo cryptocurrency="ADA" file="cardano_ada.png"/>
         <cryptologo cryptocurrency="ADA" file="cardano_ada.svg"/>
