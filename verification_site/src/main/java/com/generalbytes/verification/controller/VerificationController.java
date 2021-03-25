@@ -29,12 +29,21 @@ public class VerificationController {
         this.restTemplate = restTemplate;
     }
 
+    /**
+     * Called by CAS to register new applicant with id and SDK token which is later used by website to authenticate to service provider.
+     * @param req
+     */
     @PostMapping(value = "/register", consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity register(@RequestBody RegisterNewApplicantReq req) {
         applicantService.addApplicant(req);
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Called by hosted website to retrieve SDK token for authentication with service provider.
+     * @param applicantId
+     * @return
+     */
     @GetMapping("/token/{applicant}")
     public ResponseEntity getSdkToken(@PathVariable("applicant") String applicantId) {
         Applicant applicant = applicantService.get(applicantId);
@@ -44,6 +53,10 @@ public class VerificationController {
         return ResponseEntity.status(NOT_FOUND).build();
     }
 
+    /**
+     * Called by hosted website when all documents and photos are uploaded and verification of these documents can begin.
+     * @param applicantId
+     */
     @GetMapping("/submit/{applicant}")
     public ResponseEntity submitCheck(@PathVariable("applicant") String applicantId) {
         Applicant applicant = applicantService.get(applicantId);

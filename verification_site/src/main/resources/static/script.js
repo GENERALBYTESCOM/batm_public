@@ -1,6 +1,26 @@
 const urlParams = new URLSearchParams(window.location.search)
 const applicantId = urlParams.get('a')
 
+var phrases = {}
+var locale = ""
+
+function loadLang(onCompleteF) {
+    var locale = urlParams.get('lang')
+    if (!locale) {
+        locale = "en_US"
+    }
+
+     // create script tag and call onComplete func when script is loaded
+    var script = document.createElement('script')
+    script.onload = function () {
+        phrases = langData
+        onCompleteF()
+    }
+    script.onerror = onCompleteF()
+    script.src = "i18n/lang." + locale + ".js"
+    document.head.appendChild(script)
+}
+
 function initOnfido(token) {
 
     Onfido.init({
@@ -13,18 +33,12 @@ function initOnfido(token) {
             xhttp.open("GET", "/verification/submit/" + applicantId, true)
             xhttp.send()
         },
+        language: {
+            locale: locale,
+            phrases: phrases
+        },
         steps: [
-            {
-                type: 'welcome',
-                options: {
-                    title: 'Verify Your Identity',
-                    nextButton: 'Next',
-                    descriptions: [
-                        "To buy crypto, we will need to verify your identity.",
-                        "It will only take a couple of minutes."
-                    ]
-                }
-            },
+            'welcome',
             'document',
             'face',
             'complete'
@@ -32,11 +46,15 @@ function initOnfido(token) {
     });
 }
 
-let tokenReq = new XMLHttpRequest()
-tokenReq.onreadystatechange = function () {
-    if (this.readyState == 4 && this.status == 200) {
-        initOnfido(this.responseText)
+function getToken() {
+    let tokenReq = new XMLHttpRequest()
+    tokenReq.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            initOnfido(this.responseText)
+        }
     }
+    tokenReq.open("GET", "/verification/token/" + applicantId, true)
+    tokenReq.send()
 }
-tokenReq.open("GET", "/verification/token/" + applicantId, true)
-tokenReq.send()
+
+loadLang(getToken)

@@ -90,3 +90,17 @@ How to run Tester
 ./gradlew :server_extensions_test:install
 ./server_extensions_test/build/install/server_extensions_test/bin/server_extensions_test
 ```
+
+verification-site
+=================
+It is standalone component that serves static verification website and little server that communicates with CAS.
+Before building and running, configure correctly your settings for HTTPS certificate (e.g. letsencrypt) in `application.properties`.
+
+It can be build with:
+```bash
+./gradlew clean build
+```
+this produces `verification-site-<version>.jar` into `build/libs` directory, and you can run it simply with:
+```bash
+java -jar verification_site-<ver>.jar
+```
