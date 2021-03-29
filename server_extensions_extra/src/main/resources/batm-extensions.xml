@@ -728,6 +728,12 @@
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
         </ratesource>
+        <cryptologo cryptocurrency="BNB" file="bnb.png"/>
+        <cryptologo cryptocurrency="BNB" file="bnb.svg"/>
+        <cryptologo cryptocurrency="KMD" file="kmd.png"/>
+        <cryptologo cryptocurrency="KMD" file="kmd.svg"/>
+        <cryptologo cryptocurrency="TRX" file="trx.png"/>
+        <cryptologo cryptocurrency="TRX" file="trx.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.bitcoincash.BitcoinCashExtension">
         <wallet prefix="bitcoincashd" name="BitcoinABC/BCHN Cash Core - bitcoind" >
