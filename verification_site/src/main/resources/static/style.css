@@ -14,4 +14,7 @@ button {
         position: relative;
         top: 10%;
     }
+    .onfido-sdk-ui-CountrySelector-custom__input {
+        height: auto !important;
+    }
 }
