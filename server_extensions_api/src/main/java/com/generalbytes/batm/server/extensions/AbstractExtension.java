@@ -21,6 +21,7 @@ import com.generalbytes.batm.server.extensions.aml.IAMLProvider;
 import com.generalbytes.batm.server.extensions.aml.IExternalIdentityProvider;
 import com.generalbytes.batm.server.extensions.aml.scoring.ITransactionScoringProvider;
 import com.generalbytes.batm.server.extensions.communication.ICommunicationProvider;
+import com.generalbytes.batm.server.extensions.communication.IPhoneLookupProvider;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.util.Set;
@@ -104,6 +105,11 @@ public abstract class AbstractExtension implements IExtension{
 
     @Override
     public Set<IAMLProvider> getAMLProviders() {
+        return null;
+    }
+
+    @Override
+    public Set<IPhoneLookupProvider> getPhoneLookupProviders() {
         return null;
     }
 
