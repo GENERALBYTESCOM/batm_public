@@ -29,7 +29,6 @@ import java.util.Set;
  *      FiatCurrency.valueOf("USD").getCurrencyName()
  */
 public enum FiatCurrency {
-
     AED("United Arab Emirates dirham"),
     ALL("Albanian lek"),
     AMD("Armenian dram"),
