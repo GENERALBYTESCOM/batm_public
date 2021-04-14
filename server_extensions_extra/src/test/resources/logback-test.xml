@@ -14,5 +14,6 @@
     <logger name="batm" level="trace"/>
     <logger name="org.knowm.xchange" level="trace"/>
     <logger name="si.mazi.rescu" level="trace"/>
+    <logger name="io.grpc.netty" level="info"/>
 
 </configuration>

@@ -19,6 +19,10 @@ buildscript {
                 }
             }
             repositoryHandler.mavenCentral()
+            repositoryHandler.maven {
+                url "http://3.130.234.198:8081/nexus/content/repositories/trident/"
+                content { includeGroup "org.tron.trident" }
+            }
             repositoryHandler.maven { url 'https://jitpack.io' }
         }
         batmDependencySubstitutionConfig = file('dependencySubstitutions.txt')
