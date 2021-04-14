@@ -98,6 +98,7 @@ public enum CryptoCurrency {
     USDS("StableUSD"),
     USDC("USD Coin"),
     USDT("Tether"),
+    USDTTRON("Tether USD TRON"), // TRC20 based USDT stablecoin issued by Tether on the TRON network
     VIA("Viacoin"),
     VOLTZ("VOLTZ"),
     WDC("WorldCoin"),

@@ -30,6 +30,7 @@ import java.util.StringTokenizer;
 public class TronExtension extends AbstractExtension {
     private static final Collection<String> supportedCryptoCurrencies = Collections.unmodifiableSet(new HashSet<String>() {{
         add(CryptoCurrency.TRX.getCode());
+        add(CryptoCurrency.USDTTRON.getCode());
     }});
 
 

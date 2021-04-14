@@ -267,6 +267,7 @@
                 <cryptocurrency>SYS</cryptocurrency>
                 <cryptocurrency>TKN</cryptocurrency>
                 <cryptocurrency>USDT</cryptocurrency>
+                <cryptocurrency>USDTTRON</cryptocurrency>
                 <cryptocurrency>VIA</cryptocurrency>
                 <cryptocurrency>WDC</cryptocurrency>
                 <cryptocurrency>XMR</cryptocurrency>
@@ -558,6 +559,7 @@
             <cryptocurrency>TRX</cryptocurrency>
             <cryptocurrency>USDS</cryptocurrency>
             <cryptocurrency>USDT</cryptocurrency>
+            <cryptocurrency>USDTTRON</cryptocurrency>
             <cryptocurrency>VIA</cryptocurrency>
             <cryptocurrency>VOLTZ</cryptocurrency>
             <cryptocurrency>WDC</cryptocurrency>
@@ -624,6 +626,7 @@
             <cryptocurrency>TRTL</cryptocurrency>
             <cryptocurrency>TRX</cryptocurrency>
             <cryptocurrency>USDT</cryptocurrency>
+            <cryptocurrency>USDTTRON</cryptocurrency>
             <cryptocurrency>VIA</cryptocurrency>
             <cryptocurrency>VOLTZ</cryptocurrency>
             <cryptocurrency>WDC</cryptocurrency>
@@ -2006,6 +2009,16 @@
         </wallet>
         <cryptologo cryptocurrency="ADA" file="cardano_ada.png"/>
         <cryptologo cryptocurrency="ADA" file="cardano_ada.svg"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.tron.TronExtension">
+        <wallet prefix="tridentTRC20_USDTTRON_6_TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t" name="Tron TRC20 Trident wallet - USDT">
+            <param name="apikey"/>
+            <param name="privatekey"/>
+            <help>apikey is obtained from trongrid.io. privatekey is 64 characters long hex string</help>
+            <cryptocurrency>USDTTRON</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="USDTTRON" file="usdttron.png"/>
+        <cryptologo cryptocurrency="USDTTRON" file="usdttron.svg"/>
     </extension>
 
 </extensions>
