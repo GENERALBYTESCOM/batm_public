@@ -17,6 +17,7 @@ public interface ICryptXAPI {
     String PRIORITY_LOW = "low";
     String PRIORITY_MEDIUM = "medium";
     String PRIORITY_HIGH = "high";
+    String PRIORITY_CUSTOM = "custom";
 
     @POST
     @Path("/{coin}/wallet/{walletId}/transaction")

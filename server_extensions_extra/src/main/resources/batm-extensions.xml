@@ -59,34 +59,54 @@
                 <help>This variant of the wallet generates new addresses for each transaction and does not forward payments from temporary address. Host should start with http:// or https://. num_blocks is an integer greater than 2.</help>
             </wallet>
             <wallet prefix="cryptx" name="CryptX Wallet System">
-                <sendtomany supported="false"/>
+                <sendtomany supported="true"/>
                 <tunnel supported="true"/>
                 <param name="host" />
                 <param name="port" />
                 <param name="token" />
                 <param name="wallet_id" />
+                <param name="passphrase"/>
                 <param name="priority" />
+                <param name="max_custom_price" />
+                <param name="max_custom_gas_limit" />
                 <cryptocurrency buyonly="true">BCH</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>USDT</cryptocurrency>
-                <help>Host should start with http:// or https://. You can specify optional parameter priority to increase the network fee paid in the given transaction. Options are low, medium, high and will try to get your transaction included into next 24, 8, or 2 blocks, respectively. If not specified, high priority will be used.</help>
+                <help>
+                    *host: https://api.cryptx.com/ (required) -
+                    port: (not required) - *token: generate Access tokens from CryptX Settings (required) -
+                    *walletid: find under [Wallet] > Settings > Wallet Info > Wallet ID (required) -
+                    passphrase: wallet password (not required) -
+                    priority: Select high, low, or custom. If custom, indicate number of blocks (e.g., custom:12), otherwise high priority (2 blocks) will be used by default (not required) -
+                    limit: gas limit - only for ETH, e.g., 50000 (not required)
+                </help>
             </wallet>
             <wallet prefix="cryptxnoforward" name="CryptX Wallet System (no forward)">
-                <sendtomany supported="false"/>
+                <sendtomany supported="true"/>
                 <tunnel supported="true"/>
                 <param name="host" />
                 <param name="port" />
                 <param name="token" />
                 <param name="wallet_id" />
+                <param name="passphrase"/>
                 <param name="priority" />
+                <param name="max_custom_rate" />
+                <param name="max_custom_gas_limit" />
                 <cryptocurrency buyonly="true">BCH</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>USDT</cryptocurrency>
-                <help>Host should start with http:// or https://. You can specify optional parameter priority to increase the network fee paid in the given transaction. Options are low, medium, high and will try to get your transaction included into next 24, 8, or 2 blocks, respectively. If not specified, high priority will be used.</help>
+                <help>
+                    *host: https://api.cryptx.com/ (required) -
+                    port: (not required) - *token: generate Access tokens from CryptX Settings (required) -
+                    *walletid: find under [Wallet] > Settings > Wallet Info > Wallet ID (required) -
+                    passphrase: wallet password (not required) -
+                    priority: Select high, low, or custom. If custom, indicate number of blocks (e.g., custom:12), otherwise high priority (2 blocks) will be used by default (not required) -
+                    limit: gas limit - only for ETH, e.g., 50000 (not required)
+                </help>
             </wallet>
             <ratesource prefix="btcfix" name ="Fix Price" >
                 <param name="price" />
@@ -611,6 +631,7 @@
             <cryptocurrency>XRP</cryptocurrency>
             <cryptocurrency>TENT</cryptocurrency>
             <cryptocurrency>XZC</cryptocurrency>
+            <cryptocurrency>ADA</cryptocurrency>
         </ratesource>
         <exchange prefix="binancecom" name="Binance.com">
             <param name="apikey"/>
@@ -707,6 +728,12 @@
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
         </ratesource>
+        <cryptologo cryptocurrency="BNB" file="bnb.png"/>
+        <cryptologo cryptocurrency="BNB" file="bnb.svg"/>
+        <cryptologo cryptocurrency="KMD" file="kmd.png"/>
+        <cryptologo cryptocurrency="KMD" file="kmd.svg"/>
+        <cryptologo cryptocurrency="TRX" file="trx.png"/>
+        <cryptologo cryptocurrency="TRX" file="trx.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.bitcoincash.BitcoinCashExtension">
         <wallet prefix="bitcoincashd" name="BitcoinABC/BCHN Cash Core - bitcoind" >
@@ -1966,6 +1993,19 @@
         </wallet>
         <cryptologo cryptocurrency="ILC" file="ilc.png"/>
         <cryptologo cryptocurrency="ILC" file="ilc.svg"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.cardano.CardanoExtension" >
+        <wallet prefix="cardano" name="Cardano">
+            <param name="protocol" />
+            <param name="host" />
+            <param name="port" />
+            <param name="wallet_id" />
+            <param name="wallet_passphrase" />
+            <cryptocurrency>ADA</cryptocurrency>
+            <help>Use protocol http or https, host and port to connect to cardano-node API. Wallet ID and passphrase are mandatory to support wallet operations.</help>
+        </wallet>
+        <cryptologo cryptocurrency="ADA" file="cardano_ada.png"/>
+        <cryptologo cryptocurrency="ADA" file="cardano_ada.svg"/>
     </extension>
 
 </extensions>

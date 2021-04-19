@@ -14,8 +14,8 @@ public class CryptXWithUniqueAddresses extends CryptXWallet implements IGenerate
 
     private static final Logger log = LoggerFactory.getLogger(CryptXWithUniqueAddresses.class);
 
-    public CryptXWithUniqueAddresses(String scheme, String host, int port, String token, String walletId, String priority) {
-        super(scheme, host, port, token, walletId, priority);
+    public CryptXWithUniqueAddresses(String scheme, String host, int port, String token, String walletId, String priority, String customFeePrice, String customGasLimit, String passphrase) {
+        super(scheme, host, port, token, walletId, priority, customFeePrice, customGasLimit, passphrase);
     }
 
     @Override
@@ -29,7 +29,7 @@ public class CryptXWithUniqueAddresses extends CryptXWallet implements IGenerate
         }
         cryptoCurrency = cryptoCurrency.toLowerCase();
         try {
-            CryptXCreateAddressRequest request = new CryptXCreateAddressRequest(label);
+            CryptXCreateAddressRequest request = new CryptXCreateAddressRequest(label, passphrase);
             String apiCryptocurrency = getAPICryptocurrency(cryptoCurrency);
             CryptoCurrency currency = CryptoCurrency.valueOfCode(apiCryptocurrency);
 

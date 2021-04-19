@@ -64,6 +64,7 @@ import java.util.*;
 import static com.generalbytes.batm.common.currencies.CryptoCurrency.USDT;
 import static com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitflyer.BitFlyerExchange.BITFLYER_COM_BASE_URL;
 import static com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitflyer.BitFlyerExchange.BITFLYER_JP_BASE_URL;
+import static com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryptx.v2.ICryptXAPI.*;
 
 public class BitcoinExtension extends AbstractExtension {
     private IExtensionContext ctx;
@@ -362,15 +363,47 @@ public class BitcoinExtension extends AbstractExtension {
                 }
                 String walletId = st.nextToken();
 
-                String priority = null;
-                if (st.hasMoreTokens()) {
-                    priority = st.nextToken();
-                }
+                String passphrase = null;
+	            String priority = null;
+
+	            if (st.hasMoreTokens()) {
+	                String nextToken = st.nextToken();
+	                if (!nextToken.equals(PRIORITY_LOW) && !nextToken.equals(PRIORITY_MEDIUM) &&
+                            !nextToken.equals(PRIORITY_HIGH) && !nextToken.equals(PRIORITY_CUSTOM)) {
+	                    passphrase = nextToken;
+	                    if (passphrase.isEmpty()) passphrase = null;
+
+	                    if (st.hasMoreTokens()) {
+	                        priority = st.nextToken();
+	                        if (priority.isEmpty()) priority = null;
+                        }
+
+                    } else {
+	                    priority = nextToken;
+                    }
+	            }
+
+	            String customFeePrice = null;
+	            if (priority != null && priority.equals(PRIORITY_CUSTOM) && st.hasMoreTokens()) {
+		            priority = null;
+		            customFeePrice = st.nextToken();
+		            if (customFeePrice.isEmpty()) {
+			            customFeePrice = null;
+		            }
+	            }
+
+	            String customGasLimit = null;
+	            if (st.hasMoreTokens()){
+		            customGasLimit = st.nextToken();
+		            if (customGasLimit.isEmpty()) {
+			            customGasLimit = null;
+		            }
+	            }
 
                 if ("cryptxnoforward".equalsIgnoreCase(walletType)) {
-                    return new CryptXWithUniqueAddresses(scheme, host, port, token, walletId, priority);
+                    return new CryptXWithUniqueAddresses(scheme, host, port, token, walletId, priority, customFeePrice, customGasLimit, passphrase);
                 }
-                return new CryptXWallet(scheme, host, port, token, walletId, priority);
+                return new CryptXWallet(scheme, host, port, token, walletId, priority, customFeePrice, customGasLimit, passphrase);
             }
         }
         } catch (Exception e) {

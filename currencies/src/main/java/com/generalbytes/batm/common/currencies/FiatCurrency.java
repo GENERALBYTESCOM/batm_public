@@ -29,15 +29,14 @@ import java.util.Set;
  *      FiatCurrency.valueOf("USD").getCurrencyName()
  */
 public enum FiatCurrency {
-
     AED("United Arab Emirates dirham"),
     ALL("Albanian lek"),
     AMD("Armenian dram"),
     ARS("Argentine peso"),
     AUD("Australian dollar"),
     AZN("Azerbaijani manat"),
-    BGN("Bulgarian lev"),
     BAM("Bosnia and Herzegovina convertible mark"),
+    BGN("Bulgarian lev"),
     BHD("Bahraini dinar"),
     BRL("Brazilian real"),
     BSD("Bahamian Dollar"),
@@ -70,6 +69,7 @@ public enum FiatCurrency {
     KRW("South Korean won"),
     KWD("Kuwaiti dinar"),
     KZT("Kazakhstani tenge"),
+    MDL("Moldovan leu"),
     MGA("Malagasy ariary"),
     MKD("Macedonian denar"),
     MXN("Mexican peso"),
