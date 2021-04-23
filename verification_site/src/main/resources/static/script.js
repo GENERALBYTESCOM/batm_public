@@ -1,12 +1,13 @@
 const urlParams = new URLSearchParams(window.location.search)
 const applicantId = urlParams.get('a')
+const supportedLanguages = ["cs", "en_US", "es_ES", "de_DE", "fr_FR"]
 
 var phrases = {}
 var locale = ""
 
 function loadLang(onCompleteF) {
-    var locale = urlParams.get('lang')
-    if (!locale) {
+    locale = urlParams.get('lang')
+    if (!locale || !supportedLanguages.includes(locale)) {
         locale = "en_US"
     }
 
