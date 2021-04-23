@@ -4,6 +4,14 @@ const supportedLanguages = ["cs", "en_US", "es_ES", "de_DE", "fr_FR"]
 
 var phrases = {}
 var locale = ""
+var baseUrl = getBaseUrl()
+
+// remove last part of url (html with params) and use rest as base
+function getBaseUrl() {
+    let pathArray = window.location.pathname.split("/")
+    pathArray.pop()
+    return pathArray.join("/")
+}
 
 function loadLang(onCompleteF) {
     locale = urlParams.get('lang')
@@ -31,7 +39,7 @@ function initOnfido(token) {
         onComplete: function(data) {
             console.log("onfido wizard finished. Notifying server.")
             let xhttp = new XMLHttpRequest()
-            xhttp.open("GET", "/verification/submit/" + applicantId, true)
+            xhttp.open("GET", baseUrl + "/verification/submit/" + applicantId, true)
             xhttp.send()
         },
         language: {
@@ -54,7 +62,7 @@ function getToken() {
             initOnfido(this.responseText)
         }
     }
-    tokenReq.open("GET", "/verification/token/" + applicantId, true)
+    tokenReq.open("GET", baseUrl + "/verification/token/" + applicantId, true)
     tokenReq.send()
 }
 
