@@ -23,15 +23,17 @@ public class BitGoSendManyRequest {
     public List<BitGoRecipient> recipients;
     public String walletPassphrase;
     public Integer numBlocks;
+    public String comment;
 
-    public BitGoSendManyRequest(List<BitGoRecipient> recipients, String walletPassphrase){
-      this(recipients, walletPassphrase, 2);
+    public BitGoSendManyRequest(List<BitGoRecipient> recipients, String walletPassphrase, String comment){
+      this(recipients, walletPassphrase, comment, 2);
     }
 
-    public BitGoSendManyRequest(List<BitGoRecipient> recipients, String walletPassphrase, Integer numBlocks) {
+    public BitGoSendManyRequest(List<BitGoRecipient> recipients, String walletPassphrase, String comment, Integer numBlocks) {
         this.recipients = recipients;
         this.walletPassphrase = walletPassphrase;
         this.numBlocks = numBlocks;
+        this.comment = comment;
     }
 
     public static class BitGoRecipient {
