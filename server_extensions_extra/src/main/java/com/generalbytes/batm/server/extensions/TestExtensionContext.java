@@ -253,4 +253,9 @@ public class TestExtensionContext implements IExtensionContext {
     public IApiAccess getAPIAccessByKey(String apiKey) {
         return null;
     }
+
+    @Override
+    public IDiscount createIdentityLinkedDiscount(String identityPublicId, String code, BigDecimal buyDiscount, BigDecimal sellDiscount, Date validityFrom, Date validityTill, Long maximumUsages, Long maximumUsagesPerIdentity, BigDecimal minimumTransactionAmount, BigDecimal totalLimit, String fiatCurrency) {
+        return null;
+    }
 }
