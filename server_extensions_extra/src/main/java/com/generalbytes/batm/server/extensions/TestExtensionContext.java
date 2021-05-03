@@ -255,7 +255,7 @@ public class TestExtensionContext implements IExtensionContext {
     }
 
     @Override
-    public IDiscount createIdentityLinkedDiscount(String identityPublicId, String code, BigDecimal buyDiscount, BigDecimal sellDiscount, Date validityFrom, Date validityTill, Long maximumUsages, Long maximumUsagesPerIdentity, BigDecimal minimumTransactionAmount, BigDecimal totalLimit, String fiatCurrency) {
+    public IDiscount createDiscount(String code, BigDecimal buyDiscount, BigDecimal sellDiscount, Date validityFrom, Date validityTill, Long maximumUsages, Long maximumUsagesPerIdentity, BigDecimal minimumTransactionAmount, BigDecimal totalLimit, String fiatCurrency, String linkedIdentityPublicId) {
         return null;
     }
 }

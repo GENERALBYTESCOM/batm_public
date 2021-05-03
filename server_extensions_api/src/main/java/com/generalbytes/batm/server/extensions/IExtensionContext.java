@@ -494,9 +494,8 @@ public interface IExtensionContext {
     IApiAccess getAPIAccessByKey(String apiKey);
 
     /**
-     * Creates Identity-linked Discount
+     * Creates Discount.
      *
-     * @param identityPublicId Public ID of an existing identity to be linked.
      * @param code Defined code to be used (upper-cased) or null for code to be generated.
      * @param buyDiscount
      * @param sellDiscount
@@ -507,7 +506,9 @@ public interface IExtensionContext {
      * @param minimumTransactionAmount
      * @param totalLimit
      * @param fiatCurrency in which currency are limit amounts
+     * @param linkedIdentityPublicId (Optional) Public ID of an existing identity to be linked to the Discount.
+     *
      * @return Newly created Discount details.
      */
-    IDiscount createIdentityLinkedDiscount(String identityPublicId, String code, BigDecimal buyDiscount, BigDecimal sellDiscount, Date validityFrom, Date validityTill, Long maximumUsages, Long maximumUsagesPerIdentity, BigDecimal minimumTransactionAmount, BigDecimal totalLimit, String fiatCurrency);
+    IDiscount createDiscount(String code, BigDecimal buyDiscount, BigDecimal sellDiscount, Date validityFrom, Date validityTill, Long maximumUsages, Long maximumUsagesPerIdentity, BigDecimal minimumTransactionAmount, BigDecimal totalLimit, String fiatCurrency, String linkedIdentityPublicId);
 }
