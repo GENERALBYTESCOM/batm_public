@@ -22,17 +22,19 @@ public class BitGoCoinRequest {
     private Integer amount;
     private String walletPassphrase;
     private Integer numBlocks;
+    private String comment;
 
 
-    public BitGoCoinRequest(String address, Integer amount, String walletPassphrase) {
-      this(address, amount, walletPassphrase, 2);
+    public BitGoCoinRequest(String address, Integer amount, String walletPassphrase, String comment) {
+      this(address, amount, walletPassphrase, comment, 2);
     }
 
-    public BitGoCoinRequest(String address, Integer amount, String walletPassphrase, Integer numBlocks) {
+    public BitGoCoinRequest(String address, Integer amount, String walletPassphrase, String comment, Integer numBlocks) {
         this.address = address;
         this.amount = amount;
         this.walletPassphrase = walletPassphrase;
         this.numBlocks = numBlocks;
+        this.comment = comment;
     }
 
     public String getAddress() {
@@ -65,5 +67,13 @@ public class BitGoCoinRequest {
 
     public Integer getNumBlocks() {
       return numBlocks;
+    }
+
+    public String getComment() {
+      return comment;
+    }
+
+    public void setComment(String comment){
+      this.comment = comment;
     }
 }
