@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public interface IDiscount {
+    public long getOrganizationId();
+
     public String getCode();
 
     public BigDecimal getBuyDiscount();
