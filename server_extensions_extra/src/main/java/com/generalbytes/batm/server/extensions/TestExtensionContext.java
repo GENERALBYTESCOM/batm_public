@@ -7,8 +7,8 @@ import com.generalbytes.batm.server.extensions.watchlist.WatchListQuery;
 import com.generalbytes.batm.server.extensions.watchlist.WatchListResult;
 
 import java.math.BigDecimal;
-import java.net.InetSocketAddress;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -255,7 +255,12 @@ public class TestExtensionContext implements IExtensionContext {
     }
 
     @Override
-    public IDiscount createDiscount(String code, BigDecimal buyDiscount, BigDecimal sellDiscount, Date validityFrom, Date validityTill, Long maximumUsages, Long maximumUsagesPerIdentity, BigDecimal minimumTransactionAmount, BigDecimal totalLimit, String fiatCurrency, String linkedIdentityPublicId) {
+    public IDiscount createDiscount(long organizationId, BigDecimal buyDiscount, BigDecimal sellDiscount, Date validityFrom, Date validityTill, Long maximumUsages, Long maximumUsagesPerIdentity, BigDecimal minimumTransactionAmount, BigDecimal totalLimit, String fiatCurrency, String code, String linkedIdentityPublicId) {
         return null;
+    }
+
+    @Override
+    public List<IOrganization> getOrganizations() {
+        return Collections.emptyList();
     }
 }

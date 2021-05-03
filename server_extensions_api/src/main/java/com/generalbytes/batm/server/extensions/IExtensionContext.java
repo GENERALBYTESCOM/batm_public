@@ -496,7 +496,7 @@ public interface IExtensionContext {
     /**
      * Creates Discount.
      *
-     * @param code Defined code to be used (upper-cased) or null for code to be generated.
+     * @param organizationId Id of the Organization for which the Discount to be created.
      * @param buyDiscount
      * @param sellDiscount
      * @param validityFrom
@@ -506,9 +506,17 @@ public interface IExtensionContext {
      * @param minimumTransactionAmount
      * @param totalLimit
      * @param fiatCurrency in which currency are limit amounts
+     * @param code (Optional) Defined code to be used (upper-cased) or null for code to be generated.
      * @param linkedIdentityPublicId (Optional) Public ID of an existing identity to be linked to the Discount.
      *
      * @return Newly created Discount details.
      */
-    IDiscount createDiscount(String code, BigDecimal buyDiscount, BigDecimal sellDiscount, Date validityFrom, Date validityTill, Long maximumUsages, Long maximumUsagesPerIdentity, BigDecimal minimumTransactionAmount, BigDecimal totalLimit, String fiatCurrency, String linkedIdentityPublicId);
+    IDiscount createDiscount(long organizationId, BigDecimal buyDiscount, BigDecimal sellDiscount, Date validityFrom, Date validityTill, Long maximumUsages, Long maximumUsagesPerIdentity, BigDecimal minimumTransactionAmount, BigDecimal totalLimit, String fiatCurrency, String code, String linkedIdentityPublicId);
+
+    /**
+     * Returns List of Organizations.
+     *
+     * @return List of Organizations.
+     */
+    List<IOrganization> getOrganizations();
 }
