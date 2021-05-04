@@ -1,6 +1,5 @@
 package com.generalbytes.batm.server.extensions;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
 
