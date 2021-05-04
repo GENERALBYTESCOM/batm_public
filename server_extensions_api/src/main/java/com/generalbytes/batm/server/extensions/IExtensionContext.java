@@ -496,7 +496,7 @@ public interface IExtensionContext {
     /**
      * Creates Discount.
      *
-     * @param organizationId Id of the Organization for which the Discount to be created.
+     * @param organization Organization for which the Discount to be created.
      * @param buyDiscount
      * @param sellDiscount
      * @param validityFrom
@@ -511,7 +511,7 @@ public interface IExtensionContext {
      *
      * @return Newly created Discount details.
      */
-    IDiscount createDiscount(long organizationId, BigDecimal buyDiscount, BigDecimal sellDiscount, Date validityFrom, Date validityTill, Long maximumUsages, Long maximumUsagesPerIdentity, BigDecimal minimumTransactionAmount, BigDecimal totalLimit, String fiatCurrency, String code, String linkedIdentityPublicId);
+    IDiscount createDiscount(IOrganization organization, BigDecimal buyDiscount, BigDecimal sellDiscount, Date validityFrom, Date validityTill, Long maximumUsages, Long maximumUsagesPerIdentity, BigDecimal minimumTransactionAmount, BigDecimal totalLimit, String fiatCurrency, String code, String linkedIdentityPublicId);
 
     /**
      * Returns List of Organizations.
