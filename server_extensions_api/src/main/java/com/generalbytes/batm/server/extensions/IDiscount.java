@@ -1,10 +1,11 @@
 package com.generalbytes.batm.server.extensions;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
 
 public interface IDiscount {
-    public long getOrganizationId();
+    public IOrganization getOrganization();
 
     public String getCode();
 
