@@ -816,6 +816,7 @@
             <cryptocurrency>DOGE</cryptocurrency>
         </wallet>
         <wallet prefix="dogecoind" name="Dogecoind">
+            <tunnel supported="true"/>
             <param name="protocol" />
             <param name="user" />
             <param name="password" />
