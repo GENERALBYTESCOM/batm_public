@@ -2,7 +2,7 @@ package com.generalbytes.batm.server.extensions.extra.ethereum.sources.stasis;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
-import com.generalbytes.batm.server.coinutil.DDOSUtils;
+import com.generalbytes.batm.server.extensions.util.net.RateLimiter;
 import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,9 +39,8 @@ public class StasisTickerRateSource implements IRateSourceAdvanced {
 
     @Override
     public BigDecimal calculateBuyPrice(String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount) {
-        DDOSUtils.waitForPossibleCall(getClass());
         try {
-            DDOSUtils.waitForPossibleCall(getClass());
+            RateLimiter.waitForPossibleCall(getClass());
 
             StasisTickerResponse ticker = api.getPrices();
             BigDecimal price = ticker.getEURS().getRate();
@@ -57,9 +56,8 @@ public class StasisTickerRateSource implements IRateSourceAdvanced {
 
     @Override
     public BigDecimal calculateSellPrice(String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount) {
-        DDOSUtils.waitForPossibleCall(getClass());
         try {
-            DDOSUtils.waitForPossibleCall(getClass());
+            RateLimiter.waitForPossibleCall(getClass());
 
             StasisTickerResponse ticker = api.getPrices();
             BigDecimal price = ticker.getEUR().getRate();

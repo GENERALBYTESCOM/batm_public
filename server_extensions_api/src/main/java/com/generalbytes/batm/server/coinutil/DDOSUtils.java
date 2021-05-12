@@ -23,6 +23,13 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @deprecated
+ * If a client calls this many times it could end up with many server threads being blocked on the synchronized block.
+ * Use {@link com.generalbytes.batm.server.extensions.util.net.RateLimiter} from server_extensions_extra instead
+ * to be able to fail the request if waiting would take too long.
+ */
+@Deprecated
 public class DDOSUtils {
 
     private static final Logger log = LoggerFactory.getLogger(DDOSUtils.class);

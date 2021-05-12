@@ -19,7 +19,7 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
-import com.generalbytes.batm.server.coinutil.DDOSUtils;
+import com.generalbytes.batm.server.extensions.util.net.RateLimiter;
 import com.generalbytes.batm.server.extensions.IExchangeAdvanced;
 import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
 import com.generalbytes.batm.server.extensions.ITask;
@@ -48,6 +48,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeoutException;
 
 public class CoinbaseExchange implements IRateSourceAdvanced, IExchangeAdvanced {
 
@@ -204,7 +205,7 @@ public class CoinbaseExchange implements IRateSourceAdvanced, IExchangeAdvanced 
             log.debug("getExchangeRate - " + priceType);
             String currencyPair = getCurrencyPair(cryptoCurrency, fiatCurrency);
             if (currencyPair != null) {
-                DDOSUtils.waitForPossibleCall(getClass());
+                RateLimiter.waitForPossibleCall(getClass());
                 CBPriceResponse priceResponse = api.getPrice(CB_VERSION, currencyPair, priceType);
                 if (priceResponse.errors == null) {
                     return new BigDecimal(priceResponse.data.amount);
@@ -222,7 +223,7 @@ public class CoinbaseExchange implements IRateSourceAdvanced, IExchangeAdvanced 
     public String getDepositAddress(String cryptoCurrency) {
         try {
             String coinBaseTime = getTime();
-            DDOSUtils.waitForPossibleCall(getClass());
+            RateLimiter.waitForPossibleCall(getClass());
             CBNewAddressResponse newAddressResponse = api.getNewAddress(CB_VERSION, apiKey, CoinbaseDigest.createInstance(secretKey), coinBaseTime, getAccountId(accountName, cryptoCurrency));
             if (newAddressResponse.errors == null) {
                 return newAddressResponse.data.address;
@@ -238,7 +239,7 @@ public class CoinbaseExchange implements IRateSourceAdvanced, IExchangeAdvanced 
     private String getMethodIdForCurrency(String currency, String payamentMethodName) {
         try {
             String coinBaseTime = getTime();
-            DDOSUtils.waitForPossibleCall(getClass());
+            RateLimiter.waitForPossibleCall(getClass());
             CBPaymentMethodsResponse paymentMethodsResponse = api.listPaymentMethods(CB_VERSION, apiKey, CoinbaseDigest.createInstance(secretKey), coinBaseTime);
             log.debug("getMethodIdForCurrency - Payment methods: {}", paymentMethodsResponse);
             if (paymentMethodsResponse.errors == null) {
@@ -268,7 +269,7 @@ public class CoinbaseExchange implements IRateSourceAdvanced, IExchangeAdvanced 
             sendCoinsRequest.amount = amount.toPlainString();
             sendCoinsRequest.currency = cryptoCurrency.toUpperCase();
             sendCoinsRequest.description = description;
-            DDOSUtils.waitForPossibleCall(getClass());
+            RateLimiter.waitForPossibleCall(getClass());
             CBSendCoinsResponse sendCoinsResponse = api.sendCoins(CB_VERSION, apiKey, CoinbaseDigest.createInstance(secretKey), coinBaseTime, getAccountId(accountName, cryptoCurrency), sendCoinsRequest);
             if (sendCoinsResponse.errors == null) {
                 return sendCoinsResponse.data.id;
@@ -284,7 +285,7 @@ public class CoinbaseExchange implements IRateSourceAdvanced, IExchangeAdvanced 
     private String getBuyStatus(String buyId, String cryptoCurrency) {
         try {
             String coinBaseTime = getTime();
-            DDOSUtils.waitForPossibleCall(getClass());
+            RateLimiter.waitForPossibleCall(getClass());
             CBOrderResponse orderResponse = api.getBuyOrder(CB_VERSION, apiKey, CoinbaseDigest.createInstance(secretKey), coinBaseTime, getAccountId(accountName, cryptoCurrency), buyId);
             if (orderResponse.errors == null) {
                 return orderResponse.data.status;
@@ -300,7 +301,7 @@ public class CoinbaseExchange implements IRateSourceAdvanced, IExchangeAdvanced 
     private String getSellStatus(String sellId, String cryptoCurrency) {
         try {
             String coinBaseTime = getTime();
-            DDOSUtils.waitForPossibleCall(getClass());
+            RateLimiter.waitForPossibleCall(getClass());
             CBOrderResponse orderResponse = api.getSellOrder(CB_VERSION, apiKey, CoinbaseDigest.createInstance(secretKey), coinBaseTime, getAccountId(accountName, cryptoCurrency), sellId);
             if (orderResponse.errors == null) {
                 return orderResponse.data.status;
@@ -385,7 +386,7 @@ public class CoinbaseExchange implements IRateSourceAdvanced, IExchangeAdvanced 
                     orderRequest.payment_method = methodId;
 
                     String coinBaseTime = getTime();
-                    DDOSUtils.waitForPossibleCall(getClass());
+                    RateLimiter.waitForPossibleCall(getClass());
                     CBOrderResponse orderResponse = api.buyCoins(CB_VERSION, apiKey, CoinbaseDigest.createInstance(secretKey), coinBaseTime, getAccountId(accountName, cryptoCurrency), orderRequest);
 
                     if (orderResponse.errors == null) {
@@ -487,7 +488,7 @@ public class CoinbaseExchange implements IRateSourceAdvanced, IExchangeAdvanced 
                     orderRequest.payment_method = methodId;
 
                     String coinBaseTime = getTime();
-                    DDOSUtils.waitForPossibleCall(getClass());
+                    RateLimiter.waitForPossibleCall(getClass());
                     CBOrderResponse orderResponse = api.sellCoins(CB_VERSION, apiKey, CoinbaseDigest.createInstance(secretKey), coinBaseTime, getAccountId(accountName, cryptoCurrency), orderRequest);
 
                     if (orderResponse.errors == null) {
@@ -555,7 +556,7 @@ public class CoinbaseExchange implements IRateSourceAdvanced, IExchangeAdvanced 
         }
     }
 
-    private CBAccount getAccount(String accountName, String currency) throws IOException {
+    private CBAccount getAccount(String accountName, String currency) throws IOException, TimeoutException {
         if (currency == null) {
             log.error("getAccount (1) - currency is null");
             return null;
@@ -592,11 +593,11 @@ public class CoinbaseExchange implements IRateSourceAdvanced, IExchangeAdvanced 
     /**
      * @return all accounts from the API using pagination
      */
-    private List<CBAccount> getAccounts() throws IOException {
+    private List<CBAccount> getAccounts() throws IOException, TimeoutException {
         LinkedList<CBAccount> accounts = new LinkedList<>();
         String startingAfter = null; // start pagination from the beginning
         do {
-            DDOSUtils.waitForPossibleCall(getClass());
+            RateLimiter.waitForPossibleCall(getClass());
             log.debug("Getting accounts, startingAfter: {}", startingAfter);
             CBAccountsResponse accountsResponse = api.getAccounts(CB_VERSION, apiKey, CoinbaseDigest.createInstance(secretKey), getTime(), startingAfter);
             if (accountsResponse.errors != null) {
@@ -616,7 +617,7 @@ public class CoinbaseExchange implements IRateSourceAdvanced, IExchangeAdvanced 
         return accounts;
     }
 
-    private String getAccountId(String accountName, String currency) throws IOException {
+    private String getAccountId(String accountName, String currency) throws IOException, TimeoutException {
         CBAccount account = getAccount(accountName, currency);
         return (account != null) ? account.id : null;
     }
@@ -651,7 +652,7 @@ public class CoinbaseExchange implements IRateSourceAdvanced, IExchangeAdvanced 
     private String getTime() {
         try {
             log.debug("getTime");
-            DDOSUtils.waitForPossibleCall(getClass());
+            RateLimiter.waitForPossibleCall(getClass());
             return String.valueOf(api.getTime(CB_VERSION).data.epoch);
 
         } catch (Exception e) {

@@ -18,13 +18,12 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
-import com.generalbytes.batm.server.coinutil.DDOSUtils;
+import com.generalbytes.batm.server.extensions.util.net.RateLimiter;
 import com.generalbytes.batm.server.extensions.IExchangeAdvanced;
 import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
 import com.generalbytes.batm.server.extensions.ITask;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.google.common.util.concurrent.RateLimiter;
 import org.knowm.xchange.Exchange;
 import org.knowm.xchange.ExchangeFactory;
 import org.knowm.xchange.ExchangeSpecification;
@@ -57,6 +56,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import static java.util.Comparator.comparing;
 
@@ -75,7 +75,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
 
     private final String name;
     protected final Logger log;
-    private final RateLimiter rateLimiter;
+    private final com.google.common.util.concurrent.RateLimiter rateLimiter;
     private final ExchangeSpecification exchangeSpecification;
 
     public XChangeExchange(ExchangeSpecification specification, String preferredFiatCurrency) {
@@ -84,7 +84,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
         String sslUri = exchangeSpecification.getSslUri();
         name = exchangeName + " (" + sslUri + ")"; // just for logging, do not setExchangeName() as it's used to load configuration json internally
         log = LoggerFactory.getLogger("batm.master.exchange." + exchangeName);
-        rateLimiter = RateLimiter.create(getAllowedCallsPerSecond());
+        rateLimiter = com.google.common.util.concurrent.RateLimiter.create(getAllowedCallsPerSecond());
         this.preferredFiatCurrency = preferredFiatCurrency;
     }
 
@@ -271,7 +271,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
 
             LimitOrder order = new LimitOrder(Order.OrderType.BID, getTradableAmount(amount, currencyPair), currencyPair, "", null, getTradablePrice(amount, asks));
             log.debug("order = {}", order);
-            DDOSUtils.waitForPossibleCall(getClass());
+            RateLimiter.waitForPossibleCall(getClass());
             String orderId = tradeService.placeLimitOrder(order);
             log.debug("orderId = {} {}", orderId, order);
 
@@ -310,8 +310,8 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
             if (orderProcessed) {
                 return orderId;
             }
-        } catch (IOException e) {
-            log.error(String.format("%s exchange purchase coins failed", name), e);
+        } catch (IOException | TimeoutException e) {
+            log.error("{} exchange purchase coins failed", name, e);
         }
         return null;
     }
@@ -412,7 +412,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
                 "", null, getTradablePrice(cryptoAmount, bids));
 
             log.debug("order: {}", order);
-            DDOSUtils.waitForPossibleCall(getClass());
+            RateLimiter.waitForPossibleCall(getClass());
             String orderId = tradeService.placeLimitOrder(order);
             log.debug("orderId = {} {}", orderId, order);
 
@@ -451,7 +451,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
             if (orderProcessed) {
                 return orderId;
             }
-        } catch (IOException e) {
+        } catch (IOException | TimeoutException e) {
             log.error("{} exchange sell coins failed", name, e);
         }
         return null;
@@ -752,7 +752,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
                     "", null, getTradablePrice(cryptoAmount, bids));
                 log.debug("order = {}", order);
 
-                DDOSUtils.waitForPossibleCall(getClass());
+                RateLimiter.waitForPossibleCall(getClass());
                 orderId = tradeService.placeLimitOrder(order);
                 log.debug("orderId = {} {}", orderId, order);
 
