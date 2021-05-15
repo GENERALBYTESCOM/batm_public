@@ -22,6 +22,7 @@ import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.coingecko.CoinGeckoRateSource;
 import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.CoinmarketcapRateSource;
+import com.generalbytes.batm.server.extensions.extra.ilcoin.sources.coinmarketinfo.CoinmarketinfoRateSource;
 import com.generalbytes.batm.server.extensions.extra.ilcoin.wallets.ilcoind.IlcoinRPCWallet;
 
 import java.util.HashSet;
@@ -100,6 +101,9 @@ public class IlcoinExtension extends AbstractExtension {
                     apiKey = st.nextToken();
                 }
                 return new CoinmarketcapRateSource(apiKey, preferredFiatCurrency);
+            } else if ("coinmarketinfo".equalsIgnoreCase(rsType)) {
+                String preferredFiatCurrency = st.hasMoreTokens() ? st.nextToken().toUpperCase() : FiatCurrency.USD.getCode();
+                return new CoinmarketinfoRateSource(preferredFiatCurrency);
             }
         }
         return null;

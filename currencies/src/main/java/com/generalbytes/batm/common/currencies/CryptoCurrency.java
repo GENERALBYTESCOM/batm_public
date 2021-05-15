@@ -102,6 +102,7 @@ public enum CryptoCurrency {
     VIA("Viacoin"),
     VOLTZ("VOLTZ"),
     WDC("WorldCoin"),
+    WILC("Wrapped ILCOIN"),
     XMR("Monero"),
     XORI("CHFToken"),
     TENT("Tent"),
