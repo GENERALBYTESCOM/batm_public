@@ -22,6 +22,7 @@ import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.IExchangeAdvanced;
 import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
 import com.generalbytes.batm.server.extensions.ITask;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.XChangeExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitflyer.dto.*;
 import com.generalbytes.batm.server.extensions.util.net.CompatSSLSocketFactory;
 import org.slf4j.Logger;
@@ -862,24 +863,27 @@ public class BitFlyerExchange implements IRateSourceAdvanced, IExchangeAdvanced 
         return response.message_id;
     }
 
-    private BigDecimal getMeasureCryptoAmount() {
+    private BigDecimal getMeasureCryptoAmount(String cryptoCurrency) {
+        if (CryptoCurrency.BTC.getCode().equals(cryptoCurrency)) {
+            return XChangeExchange.BTC_RATE_SOURCE_CRYPTO_AMOUNT;
+        }
         return new BigDecimal(5);
     }
 
     @Override
     public BigDecimal getExchangeRateForBuy(String cryptoCurrency, String fiatCurrency) {
-        BigDecimal result = calculateBuyPrice(cryptoCurrency, fiatCurrency, getMeasureCryptoAmount());
+        BigDecimal result = calculateBuyPrice(cryptoCurrency, fiatCurrency, getMeasureCryptoAmount(cryptoCurrency));
         if (result != null) {
-            return result.divide(getMeasureCryptoAmount(), 2, BigDecimal.ROUND_UP).stripTrailingZeros();
+            return result.divide(getMeasureCryptoAmount(cryptoCurrency), 2, BigDecimal.ROUND_UP).stripTrailingZeros();
         }
         return null;
     }
 
     @Override
     public BigDecimal getExchangeRateForSell(String cryptoCurrency, String fiatCurrency) {
-        BigDecimal result = calculateSellPrice(cryptoCurrency, fiatCurrency, getMeasureCryptoAmount());
+        BigDecimal result = calculateSellPrice(cryptoCurrency, fiatCurrency, getMeasureCryptoAmount(cryptoCurrency));
         if (result != null) {
-            return result.divide(getMeasureCryptoAmount(), 2, BigDecimal.ROUND_DOWN).stripTrailingZeros();
+            return result.divide(getMeasureCryptoAmount(cryptoCurrency), 2, BigDecimal.ROUND_DOWN).stripTrailingZeros();
         }
         return null;
     }
