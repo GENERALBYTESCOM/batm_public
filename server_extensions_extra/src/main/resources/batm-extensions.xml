@@ -2005,8 +2005,9 @@
             <param name="walletAddress" />
             <cryptocurrency>ILC</cryptocurrency>
         </wallet>
-        <ratesource prefix="coinmarketinfo" name ="https://coinmarketinfo.com/" >
+        <ratesource prefix="nomics" name ="https://nomics.com/" >
             <param name="fiatCurrency" />
+            <param name="nomicsApiKey"/>
             <cryptocurrency>ILC</cryptocurrency>
             <cryptocurrency>WILC</cryptocurrency>
         </ratesource>

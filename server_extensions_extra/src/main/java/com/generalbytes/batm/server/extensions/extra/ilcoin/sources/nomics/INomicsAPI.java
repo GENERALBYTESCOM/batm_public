@@ -15,15 +15,23 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.ilcoin.sources.coinmarketinfo;
+package com.generalbytes.batm.server.extensions.extra.ilcoin.sources.nomics;
 
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.List;
 
-class Data {
-    public BigDecimal price;
-}
-
-public class MarketResponse {
-    public boolean success;
-    public Data data;
+@Path("v1")
+@Produces(MediaType.APPLICATION_JSON)
+public interface INomicsAPI {
+    @GET
+    @Path("/currencies/ticker")
+    List<NomicsTickerResponse> getTicker(@QueryParam("key") String key, 
+                                         @QueryParam("ids") String ids, 
+                                         @QueryParam("convert") String convert) throws IOException;
 }
