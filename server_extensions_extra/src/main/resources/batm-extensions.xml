@@ -781,7 +781,7 @@
             <param name="signature" />
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
-            <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency buyonly="true">DAI</cryptocurrency>
             <cryptocurrency>BIZZ</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
