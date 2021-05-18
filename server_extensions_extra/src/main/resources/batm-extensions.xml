@@ -270,6 +270,7 @@
                 <cryptocurrency>USDTTRON</cryptocurrency>
                 <cryptocurrency>VIA</cryptocurrency>
                 <cryptocurrency>WDC</cryptocurrency>
+                <cryptocurrency>WILC</cryptocurrency>
                 <cryptocurrency>XMR</cryptocurrency>
                 <cryptocurrency>XPM</cryptocurrency>
                 <cryptocurrency>TENT</cryptocurrency>
@@ -1893,6 +1894,15 @@
         </wallet>
         <cryptologo cryptocurrency="USDT" file="usdt.png"/>
         <cryptologo cryptocurrency="USDT" file="usdt.svg"/>
+        <wallet prefix="infuraERC20_WILC_8_0xc98a910ede52e7d5308525845f19e17470dbccf7" name="Infura.io wallet - WILC">
+            <param name="projectId" />
+            <param name="mnemonic" />
+            <param name="gaslimit" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
+            <cryptocurrency>WILC</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="WILC" file="wilc.png"/>
+        <cryptologo cryptocurrency="WILC" file="wilc.svg"/>
         <!-- ADD your ERC20 tokens here. And don't forget to add cryptologos. -->
     </extension>
 
@@ -1995,6 +2005,12 @@
             <param name="walletAddress" />
             <cryptocurrency>ILC</cryptocurrency>
         </wallet>
+        <ratesource prefix="nomics" name ="https://nomics.com/" >
+            <param name="fiatCurrency" />
+            <param name="nomicsApiKey"/>
+            <cryptocurrency>ILC</cryptocurrency>
+            <cryptocurrency>WILC</cryptocurrency>
+        </ratesource>
         <cryptologo cryptocurrency="ILC" file="ilc.png"/>
         <cryptologo cryptocurrency="ILC" file="ilc.svg"/>
     </extension>
