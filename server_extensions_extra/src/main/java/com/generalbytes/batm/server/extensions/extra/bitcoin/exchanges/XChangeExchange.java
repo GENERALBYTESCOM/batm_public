@@ -239,9 +239,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
                 return accountService.withdrawFunds(new DefaultWithdrawFundsParams(new AddressWithTag(addressParts[0], addressParts[1]), exchangeCryptoCurrency, amount));
             }
         }
-
-        CurrencyPair pair = new CurrencyPair(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency), getPreferredFiatCurrency());
-        return accountService.withdrawFunds(exchangeCryptoCurrency, getTradableAmount(amount, pair), destinationAddress);
+        return accountService.withdrawFunds(exchangeCryptoCurrency, getWithdrawAmount(amount, cryptoCurrency), destinationAddress);
     }
 
     public String purchaseCoins(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
@@ -851,6 +849,18 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
      */
     protected BigDecimal getTradableAmount(BigDecimal cryptoAmount, CurrencyPair currencyPair) {
         return cryptoAmount;
+    }
+
+    /**
+     * @param cryptoAmount
+     * @param cryptoCurrency
+     * @return Adjusted crypto amount that is possible to be withdrawn on the exchange
+     * (e.g. rounded for the right precision that the exchange supports)
+     */
+    protected BigDecimal getWithdrawAmount(BigDecimal cryptoAmount, String cryptoCurrency) {
+        // call getTradableAmount by default and round cryptoAmount even when withdraw has no specific requirements for exchange
+        CurrencyPair pair = new CurrencyPair(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency), getPreferredFiatCurrency());
+        return getTradableAmount(cryptoAmount, pair);
     }
 
     @Override
