@@ -78,6 +78,8 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
     private final com.google.common.util.concurrent.RateLimiter rateLimiter;
     private final ExchangeSpecification exchangeSpecification;
 
+    public static final BigDecimal BTC_RATE_SOURCE_CRYPTO_AMOUNT = BigDecimal.ONE;
+
     public XChangeExchange(ExchangeSpecification specification, String preferredFiatCurrency) {
         exchangeSpecification = specification;
         String exchangeName = exchangeSpecification.getExchangeName();
@@ -470,6 +472,9 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
     }
 
     protected BigDecimal getRateSourceCryptoVolume(String cryptoCurrency) {
+        if (CryptoCurrency.BTC.getCode().equals(cryptoCurrency)) {
+            return BTC_RATE_SOURCE_CRYPTO_AMOUNT;
+        }
         return BigDecimal.TEN;
     }
 

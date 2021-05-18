@@ -26,6 +26,7 @@ import com.generalbytes.batm.server.extensions.util.net.RateLimiter;
 import com.generalbytes.batm.server.extensions.IExchangeAdvanced;
 import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
 import com.generalbytes.batm.server.extensions.ITask;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.XChangeExchange;
 import org.knowm.xchange.Exchange;
 import org.knowm.xchange.ExchangeSpecification;
 import org.knowm.xchange.bitfinex.BitfinexErrorAdapter;
@@ -697,25 +698,28 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
         }
     }
 
-    private BigDecimal getMeasureCryptoAmount() {
+    private BigDecimal getMeasureCryptoAmount(String cryptoCurrency) {
+        if (CryptoCurrency.BTC.getCode().equals(cryptoCurrency)) {
+            return XChangeExchange.BTC_RATE_SOURCE_CRYPTO_AMOUNT;
+        }
         return new BigDecimal(5);
     }
 
 
     @Override
     public BigDecimal getExchangeRateForBuy(String cryptoCurrency, String fiatCurrency) {
-        BigDecimal result = calculateBuyPrice(cryptoCurrency, fiatCurrency, getMeasureCryptoAmount());
+        BigDecimal result = calculateBuyPrice(cryptoCurrency, fiatCurrency, getMeasureCryptoAmount(cryptoCurrency));
         if (result != null) {
-            return result.divide(getMeasureCryptoAmount(), 2, BigDecimal.ROUND_UP);
+            return result.divide(getMeasureCryptoAmount(cryptoCurrency), 2, BigDecimal.ROUND_UP);
         }
         return null;
     }
 
     @Override
     public BigDecimal getExchangeRateForSell(String cryptoCurrency, String fiatCurrency) {
-        BigDecimal result = calculateSellPrice(cryptoCurrency, fiatCurrency, getMeasureCryptoAmount());
+        BigDecimal result = calculateSellPrice(cryptoCurrency, fiatCurrency, getMeasureCryptoAmount(cryptoCurrency));
         if (result != null) {
-            return result.divide(getMeasureCryptoAmount(), 2, BigDecimal.ROUND_DOWN);
+            return result.divide(getMeasureCryptoAmount(cryptoCurrency), 2, BigDecimal.ROUND_DOWN);
         }
         return null;
     }
