@@ -69,7 +69,9 @@ public class BitFlyerExchange implements IRateSourceAdvanced, IExchangeAdvanced 
     private void initConstants(String baseUrl) {
         if (baseUrl.equals(BITFLYER_COM_BASE_URL)) {
             FIAT_CURRENCIES.add(FiatCurrency.USD.getCode());
+            FIAT_CURRENCIES.add(FiatCurrency.EUR.getCode());
             PRODUCT_CODES.add(CryptoCurrency.BTC.getCode() + "_" + FiatCurrency.USD.getCode());
+            PRODUCT_CODES.add(CryptoCurrency.BTC.getCode() + "_" + FiatCurrency.EUR.getCode());
         }
         if (baseUrl.equals(BITFLYER_JP_BASE_URL)) {
             FIAT_CURRENCIES.add(FiatCurrency.JPY.getCode());
