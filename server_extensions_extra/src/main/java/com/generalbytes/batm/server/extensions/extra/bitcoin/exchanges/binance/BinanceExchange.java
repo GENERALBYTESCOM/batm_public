@@ -41,6 +41,8 @@ import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public abstract class BinanceExchange extends XChangeExchange {
 
@@ -137,6 +139,12 @@ public abstract class BinanceExchange extends XChangeExchange {
         }
     }
 
+    @Override
+    protected BigDecimal getWithdrawAmount(BigDecimal cryptoAmount, String cryptoCurrency) {
+        BigDecimal minWithdrawStep = getWithdrawalMinStep(cryptoCurrency);
+        return minWithdrawStep != null ? getAmountRoundedToMinStep(cryptoAmount, minWithdrawStep) : cryptoAmount;
+    }
+
     protected BigDecimal getAmountRoundedToMinStep(BigDecimal cryptoAmount, BigDecimal minStep) {
         return cryptoAmount.divideToIntegralValue(minStep).multiply(minStep);
     }
@@ -150,4 +158,40 @@ public abstract class BinanceExchange extends XChangeExchange {
         return super.sendCoins(destinationAddress, withdrawalAmount, cryptoCurrency, description);
     }
 
+    protected abstract Set<SupportedCryptoCurrency> getSupportedCryptoCurrencies();
+
+    @Override
+    public Set<String> getCryptoCurrencies() {
+        return getSupportedCryptoCurrencies().stream().map(SupportedCryptoCurrency::getCryptoCurrency).collect(Collectors.toSet());
+    }
+
+    protected BigDecimal getWithdrawalMinStep(String cryptoCurrency) {
+        return getSupportedCryptoCurrencies().stream()
+            .filter(c -> c.getCryptoCurrency().equals(cryptoCurrency))
+            .findFirst()
+            .map(SupportedCryptoCurrency::getWithdrawalMinStep)
+            .orElse(null);
+    }
+
+    protected static class SupportedCryptoCurrency {
+        private String cryptoCurrency;
+        private BigDecimal withdrawalMinStep;
+
+        public SupportedCryptoCurrency(String cryptoCurrency) {
+            this(cryptoCurrency, new BigDecimal("0.00000001"));
+        }
+
+        public SupportedCryptoCurrency(String cryptoCurrency, BigDecimal withdrawalMinStep) {
+            this.cryptoCurrency = cryptoCurrency;
+            this.withdrawalMinStep = withdrawalMinStep;
+        }
+
+        public String getCryptoCurrency() {
+            return cryptoCurrency;
+        }
+
+        public BigDecimal getWithdrawalMinStep() {
+            return withdrawalMinStep;
+        }
+    }
 }
