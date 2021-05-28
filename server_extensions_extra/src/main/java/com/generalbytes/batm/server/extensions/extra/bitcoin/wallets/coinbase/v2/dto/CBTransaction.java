@@ -18,25 +18,23 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto;
 
 /**
- * Created by b00lean on 23.7.17.
+ * Created by b00lean on 30.7.17.
  */
 
-public class CBAccount implements CBPaginatedItem {
+public class CBTransaction implements CBPaginatedItem {
     private String id;
-    private String address;
-    private String name;
-    private boolean primary;
-    private boolean ready;
     private String type;
-    private String currency;
-    private CBBalance balance;
-    private CBBalance native_balance;
-
+    private String status;
+    private CBBalance amount;
+    private CBBalance native_amount;
+    private String description;
     private String created_at;
     private String updated_at;
-    private String network;
     private String resource;
     private String resource_path;
+    private CBNetwork network;
+    private CBFrom from;
+    private CBDetails details;
 
     @Override
     public String getId() {
@@ -47,20 +45,44 @@ public class CBAccount implements CBPaginatedItem {
         this.id = id;
     }
 
-    public String getAddress() {
-        return address;
+    public String getType() {
+        return type;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public String getName() {
-        return name;
+    public String getStatus() {
+        return status;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public CBBalance getAmount() {
+        return amount;
+    }
+
+    public void setAmount(CBBalance amount) {
+        this.amount = amount;
+    }
+
+    public CBBalance getNative_amount() {
+        return native_amount;
+    }
+
+    public void setNative_amount(CBBalance native_amount) {
+        this.native_amount = native_amount;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getCreated_at() {
@@ -79,14 +101,6 @@ public class CBAccount implements CBPaginatedItem {
         this.updated_at = updated_at;
     }
 
-    public String getNetwork() {
-        return network;
-    }
-
-    public void setNetwork(String network) {
-        this.network = network;
-    }
-
     public String getResource() {
         return resource;
     }
@@ -103,51 +117,37 @@ public class CBAccount implements CBPaginatedItem {
         this.resource_path = resource_path;
     }
 
-    public boolean isPrimary() {
-        return primary;
+    public CBNetwork getNetwork() {
+        return network;
     }
 
-    public void setPrimary(boolean primary) {
-        this.primary = primary;
+    public void setNetwork(CBNetwork network) {
+        this.network = network;
     }
 
-    public boolean isReady() {
-        return ready;
+    public CBFrom getFrom() {
+        return from;
     }
 
-    public void setReady(boolean ready) {
-        this.ready = ready;
+    public void setFrom(CBFrom from) {
+        this.from = from;
     }
 
-    public String getType() {
-        return type;
+    public CBDetails getDetails() {
+        return details;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setDetails(CBDetails details) {
+        this.details = details;
     }
 
-    public String getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(String currency) {
-        this.currency = currency;
-    }
-
-    public CBBalance getBalance() {
-        return balance;
-    }
-
-    public void setBalance(CBBalance balance) {
-        this.balance = balance;
-    }
-
-    public CBBalance getNative_balance() {
-        return native_balance;
-    }
-
-    public void setNative_balance(CBBalance native_balance) {
-        this.native_balance = native_balance;
+    @Override
+    public String toString() {
+        return "CBTransaction{" +
+            "type='" + type + '\'' +
+            ", status='" + status + '\'' +
+            ", amount=" + amount +
+            ", created_at='" + created_at + '\'' +
+            '}';
     }
 }

@@ -23,9 +23,9 @@ import java.util.List;
  * Created by b00lean on 23.7.17.
  */
 
-public class CBAccountsResponse extends CBResponse{
+public class CBPaginatedResponse<T extends CBPaginatedItem> extends CBResponse {
     private CBPagination pagination;
-    private List<CBAccount> data;
+    private List<T> data;
 
     public CBPagination getPagination() {
         return pagination;
@@ -35,11 +35,11 @@ public class CBAccountsResponse extends CBResponse{
         this.pagination = pagination;
     }
 
-    public List<CBAccount> getData() {
+    public List<T> getData() {
         return data;
     }
 
-    public void setData(List<CBAccount> data) {
+    public void setData(List<T> data) {
         this.data = data;
     }
 }

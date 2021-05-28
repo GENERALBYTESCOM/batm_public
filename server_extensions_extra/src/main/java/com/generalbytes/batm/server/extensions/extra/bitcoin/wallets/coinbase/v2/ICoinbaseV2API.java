@@ -17,12 +17,14 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2;
 
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBAccount;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBAccountResponse;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBAccountsResponse;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBAddress;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBAddressesResponse;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBCreateAddressRequest;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBCreateAddressResponse;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBExchangeRatesResponse;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBPaginatedResponse;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBSendRequest;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBSendResponse;
 
@@ -36,6 +38,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBTransaction;
 import si.mazi.rescu.ParamsDigest;
 
 /**
@@ -51,13 +54,13 @@ public interface ICoinbaseV2API {
 
     @GET
     @Path("/accounts")
-    CBAccountsResponse getAccounts(@HeaderParam("CB-ACCESS-KEY") String apiKey,
-                                   @HeaderParam("CB-VERSION") String apiVersion,
-                                   @HeaderParam("CB-ACCESS-SIGN") ParamsDigest digest,
-                                   @HeaderParam("CB-ACCESS-TIMESTAMP") long timestamp,
-                                   // order of QueryParams here is important because of the CBDigest signature
-                                   @QueryParam("limit") int limit,
-                                   @QueryParam("starting_after") String startingAfter);
+    CBPaginatedResponse<CBAccount> getAccounts(@HeaderParam("CB-ACCESS-KEY") String apiKey,
+                                               @HeaderParam("CB-VERSION") String apiVersion,
+                                               @HeaderParam("CB-ACCESS-SIGN") ParamsDigest digest,
+                                               @HeaderParam("CB-ACCESS-TIMESTAMP") long timestamp,
+                                               // order of QueryParams here is important because of the CBDigest signature
+                                               @QueryParam("limit") int limit,
+                                               @QueryParam("starting_after") String startingAfter);
 
     @GET
     @Path("/accounts/{account_id}")
@@ -96,5 +99,27 @@ public interface ICoinbaseV2API {
                         @PathParam("account_id") String accountId,
                         CBSendRequest sendRequest);
 
+    @GET
+    @Path("/accounts/{account_id}/addresses/{address_id}/transactions")
+    CBPaginatedResponse<CBTransaction> getAddressTransactions(@HeaderParam("CB-ACCESS-KEY") String apiKey,
+                                                              @HeaderParam("CB-VERSION") String apiVersion,
+                                                              @HeaderParam("CB-ACCESS-SIGN") ParamsDigest digest,
+                                                              @HeaderParam("CB-ACCESS-TIMESTAMP") long timestamp,
+                                                              @PathParam("account_id") String accountId,
+                                                              @PathParam("address_id") String addressId,
+                                                              // order of QueryParams here is important because of the CBDigest signature
+                                                              @QueryParam("limit") int limit,
+                                                              @QueryParam("starting_after") String startingAfter);
+
+    @GET
+    @Path("/accounts/{account_id}/addresses")
+    CBPaginatedResponse<CBAddress> getAddresses(@HeaderParam("CB-ACCESS-KEY") String apiKey,
+                                                @HeaderParam("CB-VERSION") String apiVersion,
+                                                @HeaderParam("CB-ACCESS-SIGN") ParamsDigest digest,
+                                                @HeaderParam("CB-ACCESS-TIMESTAMP") long timestamp,
+                                                @PathParam("account_id") String accountId,
+                                                // order of QueryParams here is important because of the CBDigest signature
+                                                @QueryParam("limit") int limit,
+                                                @QueryParam("starting_after") String startingAfter);
 
 }

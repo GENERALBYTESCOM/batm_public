@@ -21,9 +21,10 @@ import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBAccount;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBAccountResponse;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBAccountsResponse;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBAddress;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBAddressesResponse;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBPaginatedItem;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBPaginatedResponse;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBSendRequest;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBSendResponse;
 import org.slf4j.Logger;
@@ -39,6 +40,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 /**
  * Created by b00lean on 23.7.17.
@@ -100,28 +102,10 @@ public class CoinbaseWalletV2 implements IWallet {
      * @return all accounts from the API using pagination
      */
     private List<CBAccount> getAccounts() {
-        LinkedList<CBAccount> accounts = new LinkedList<>();
-        String startingAfter = null; // start pagination from the beginning
-        do {
-            log.debug("Getting accounts, startingAfter: {}", startingAfter);
+        return paginate(startingAfter -> {
             long timeStamp = getTimestamp();
-            CBAccountsResponse accountsResponse = api.getAccounts(apiKey, API_VERSION, CBDigest.createInstance(apiSecret, timeStamp), timeStamp, 100, startingAfter);
-
-            if (accountsResponse.getErrors() != null) {
-                throw new IllegalStateException(accountsResponse.getErrorMessages());
-            }
-            if (accountsResponse.getWarnings() != null) {
-                log.warn("getAccounts warning: {}", accountsResponse.getWarnings());
-            }
-            startingAfter = null;
-            if (accountsResponse.getData() != null && accountsResponse.getData().size() > 0) {
-                accounts.addAll(accountsResponse.getData());
-                if (accountsResponse.getPagination() != null && accountsResponse.getPagination().getNext_uri() != null) {
-                    startingAfter = accounts.getLast().getId();
-                }
-            }
-        } while (startingAfter != null);
-        return accounts;
+            return api.getAccounts(apiKey, API_VERSION, CBDigest.createInstance(apiSecret, timeStamp), timeStamp, 100, startingAfter);
+        });
     }
 
     private String getAccountId(String accountName, String cryptoCurrency) {
@@ -256,6 +240,37 @@ public class CoinbaseWalletV2 implements IWallet {
         }
         return null; //some error happened
     }
+
+
+    /**
+     * Calls the function with the id of the last item as the "startingAfter" parameter until all pages are loaded
+     */
+    protected <T extends CBPaginatedItem> List<T> paginate(Function<String, CBPaginatedResponse<T>> function) {
+        LinkedList<T> items = new LinkedList<>();
+        String startingAfter = null; // start pagination from the beginning
+        do {
+            log.trace("Getting items, startingAfter: {}", startingAfter);
+            CBPaginatedResponse<T> response = function.apply(startingAfter);
+
+            if (response.getWarnings() != null) {
+                log.warn(response.getWarnings().toString());
+            }
+
+            if (response.getErrors() != null) {
+                throw new IllegalStateException(response.getErrorMessages());
+            }
+
+            startingAfter = null;
+            if (response.getData() != null && response.getData().size() > 0) {
+                items.addAll(response.getData());
+                if (response.getPagination() != null && response.getPagination().getNext_uri() != null) {
+                    startingAfter = items.getLast().getId();
+                }
+            }
+        } while (startingAfter != null);
+        return items;
+    }
+
 
 //    public static void main(String[] args) {
 //        ServerUtil.setLoggerLevel("si.mazi.rescu","trace");

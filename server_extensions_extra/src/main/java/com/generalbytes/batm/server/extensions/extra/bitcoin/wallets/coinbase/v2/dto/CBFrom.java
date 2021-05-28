@@ -17,37 +17,27 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto;
 
-import java.math.BigDecimal;
-
 /**
- * Created by b00lean on 23.7.17.
+ * Created by b00lean on 30.7.17.
  */
 
-public class CBBalance {
-    private BigDecimal amount;
-    private String currency;
+public class CBFrom {
+    private String resource;
+    private String id;
 
-    public BigDecimal getAmount() {
-        return amount;
+    public String getResource() {
+        return resource;
     }
 
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
+    public void setResource(String resource) {
+        this.resource = resource;
     }
 
-    public String getCurrency() {
-        return currency;
+    public String getId() {
+        return id;
     }
 
-    public void setCurrency(String currency) {
-        this.currency = currency;
-    }
-
-    @Override
-    public String toString() {
-        return "CBBalance{" +
-            "amount=" + amount +
-            ", currency='" + currency + '\'' +
-            '}';
+    public void setId(String id) {
+        this.id = id;
     }
 }
