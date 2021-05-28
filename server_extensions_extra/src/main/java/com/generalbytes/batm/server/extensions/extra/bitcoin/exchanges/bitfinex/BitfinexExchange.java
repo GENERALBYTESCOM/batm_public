@@ -28,14 +28,8 @@ import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
 import com.generalbytes.batm.server.extensions.ITask;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.XChangeExchange;
 import org.knowm.xchange.Exchange;
+import org.knowm.xchange.ExchangeFactory;
 import org.knowm.xchange.ExchangeSpecification;
-import org.knowm.xchange.bitfinex.BitfinexErrorAdapter;
-import org.knowm.xchange.bitfinex.dto.BitfinexException;
-import org.knowm.xchange.bitfinex.service.BitfinexAccountService;
-import org.knowm.xchange.bitfinex.service.BitfinexMarketDataService;
-import org.knowm.xchange.bitfinex.v1.dto.account.BitfinexDepositAddressRequest;
-import org.knowm.xchange.bitfinex.v1.dto.account.BitfinexDepositAddressResponse;
-import org.knowm.xchange.bitfinex.v1.dto.marketdata.BitfinexDepth;
 import org.knowm.xchange.currency.Currency;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.Order;
@@ -106,74 +100,13 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
         this(null, null, preferredFiatCurrency);
     }
 
-    // Hotfix https://github.com/knowm/XChange/issues/3459
-    // remove when fixed in upstream
-    private static class HofixBitfinexExchange extends org.knowm.xchange.bitfinex.BitfinexExchange {
-        private static class HotfixBitfinexMarketDataService extends BitfinexMarketDataService {
-            public HotfixBitfinexMarketDataService(Exchange exchange) {
-                super(exchange);
-            }
-
-            @Override
-            public BitfinexDepth getBitfinexOrderBook(String pair, Integer limitBids, Integer limitAsks)
-                throws IOException {
-                // v2 api uses "t" prefix for currency pairs but it was used to call v1 API too so it failed with unknown pair exception
-                if (pair.startsWith("t")) {
-                    pair = pair.substring(1);
-                }
-                return super.getBitfinexOrderBook(pair, limitBids, limitAsks);
-            }
-        }
-
-        @Override
-        protected void initServices() {
-            super.initServices();
-            this.marketDataService = new HotfixBitfinexMarketDataService(this);
-
-            // WORKAROUND for BCH deposit - remove after released in upstream
-            // https://github.com/knowm/XChange/pull/3507
-            this.accountService = new BitfinexAccountService(this) {
-
-
-                @Override
-                public String requestDepositAddress(Currency currency, String... arguments) throws IOException {
-                    try {
-                        final BitfinexDepositAddressResponse response =
-                            requestDepositAddressRaw(currency.getCurrencyCode());
-                        return response.getAddress();
-                    } catch (BitfinexException e) {
-                        throw BitfinexErrorAdapter.adapt(e);
-                    }
-                }
-
-                @Override
-                public BitfinexDepositAddressResponse requestDepositAddressRaw(String currency) throws IOException {
-                    if (!currency.equalsIgnoreCase("BCH")) {
-                        return super.requestDepositAddressRaw(currency);
-                    }
-
-                    String type = "bab"; // bitcoin cash (ABC)
-
-                    return bitfinex.requestDeposit(
-                        apiKey,
-                        payloadCreator,
-                        signatureCreator,
-                        new BitfinexDepositAddressRequest(
-                            String.valueOf(exchange.getNonceFactory().createValue()), type, "exchange", 0));
-                }
-            };
-        }
-    }
-
-    ////// WORKAROUND END ////////
-
     private synchronized Exchange getExchange() {
         if (this.exchange == null) {
-            ExchangeSpecification bfxSpec = new HofixBitfinexExchange().getDefaultExchangeSpecification();
+            ExchangeSpecification bfxSpec = new org.knowm.xchange.bitfinex.BitfinexExchange().getDefaultExchangeSpecification();
             bfxSpec.setApiKey(this.apiKey);
             bfxSpec.setSecretKey(this.apiSecret);
             bfxSpec.setShouldLoadRemoteMetaData(false);
-            this.exchange = new HofixBitfinexExchange();
+            this.exchange = ExchangeFactory.INSTANCE.createExchange(bfxSpec);
             exchange.applySpecification(bfxSpec);
         }
         return this.exchange;
