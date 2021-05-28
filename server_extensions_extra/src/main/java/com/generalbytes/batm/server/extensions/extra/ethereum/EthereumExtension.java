@@ -30,6 +30,7 @@ import com.generalbytes.batm.server.extensions.extra.ethereum.erc20.dai.DaiDefin
 import com.generalbytes.batm.server.extensions.extra.ethereum.sources.stasis.StasisTickerRateSource;
 import com.generalbytes.batm.server.extensions.extra.ethereum.stream365.Stream365;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Set;
@@ -89,8 +90,13 @@ public class EthereumExtension extends AbstractExtension{
                 if (st.hasMoreTokens()) {
                     gasLimit = new BigInteger(st.nextToken());
                 }
+                BigDecimal gasPriceMultiplier = BigDecimal.ONE;
+                if (st.hasMoreTokens()) {
+                    gasPriceMultiplier = new BigDecimal(st.nextToken());
+                }
+
                 if (projectId != null && passwordOrMnemonic != null) {
-                    return new ERC20Wallet(projectId, passwordOrMnemonic, tokenSymbol, tokenDecimalPlaces, contractAddress, gasLimit);
+                    return new ERC20Wallet(projectId, passwordOrMnemonic, tokenSymbol, tokenDecimalPlaces, contractAddress, gasLimit, gasPriceMultiplier);
                 }
             }
         }
