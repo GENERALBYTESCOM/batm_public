@@ -181,14 +181,16 @@ public class CoinbaseWalletV2 implements IWallet {
     protected String getNetworkName(String cryptoCurrency) {
         if (CryptoCurrency.BTC.getCode().equalsIgnoreCase(cryptoCurrency)) {
             return "bitcoin";
-        }else if (CryptoCurrency.LTC.getCode().equalsIgnoreCase(cryptoCurrency)){
+        } else if (CryptoCurrency.LTC.getCode().equalsIgnoreCase(cryptoCurrency)) {
             return "litecoin";
-        }else if (CryptoCurrency.ETH.getCode().equalsIgnoreCase(cryptoCurrency)
+        } else if (CryptoCurrency.ETH.getCode().equalsIgnoreCase(cryptoCurrency)
             || CryptoCurrency.BAT.getCode().equalsIgnoreCase(cryptoCurrency)
             || CryptoCurrency.DAI.getCode().equalsIgnoreCase(cryptoCurrency)
-            || CryptoCurrency.BIZZ.getCode().equalsIgnoreCase(cryptoCurrency)){
+            || CryptoCurrency.BIZZ.getCode().equalsIgnoreCase(cryptoCurrency)) {
             return "ethereum";
-        }else if (CryptoCurrency.BCH.getCode().equalsIgnoreCase(cryptoCurrency)){
+        } else if (CryptoCurrency.ETC.getCode().equalsIgnoreCase(cryptoCurrency)) {
+            return "ethereum_classic";
+        } else if (CryptoCurrency.BCH.getCode().equalsIgnoreCase(cryptoCurrency)) {
             return "bitcoincash";
         } else if (CryptoCurrency.DASH.getCode().equalsIgnoreCase(cryptoCurrency)) {
             return "dash";

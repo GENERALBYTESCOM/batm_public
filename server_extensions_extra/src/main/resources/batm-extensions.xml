@@ -240,6 +240,7 @@
                 <cryptocurrency>ECA</cryptocurrency>
                 <cryptocurrency>EFL</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
+                <cryptocurrency>ETC</cryptocurrency>
                 <cryptocurrency>FLASH</cryptocurrency>
                 <cryptocurrency>FTO</cryptocurrency>
                 <cryptocurrency>GRS</cryptocurrency>
@@ -381,7 +382,7 @@
             <cryptocurrency buyonly="true">BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>DASH</cryptocurrency>
-            <cryptocurrency>ETC</cryptocurrency>
+            <cryptocurrency buyonly="true">ETC</cryptocurrency>
             <cryptocurrency buyonly="true">ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
@@ -2053,6 +2054,8 @@
         </wallet>
         <cryptologo cryptocurrency="USDTTRON" file="usdttron.png"/>
         <cryptologo cryptocurrency="USDTTRON" file="usdttron.svg"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.ethereumclassic.EthereumClassicExtension">
     </extension>
 
 </extensions>
