@@ -47,7 +47,6 @@ dependencies {
     compile(group: 'org.knowm.xchange', name: 'xchange-core', version: '5.0.8')
     compile(group: 'org.knowm.xchange', name: 'xchange-bitfinex', version: '5.0.8')
     compile(group: 'org.knowm.xchange', name: 'xchange-binance', version: '5.0.8')
-    compile(group: 'org.knowm.xchange', name: 'xchange-itbit', version: '5.0.8')
     compile(group: 'org.knowm.xchange', name: 'xchange-bittrex', version: '5.0.8')
     compile(group: 'org.knowm.xchange', name: 'xchange-hitbtc', version: '5.0.8')
     compile(group: 'org.knowm.xchange', name: 'xchange-dvchain', version: '5.0.8')
