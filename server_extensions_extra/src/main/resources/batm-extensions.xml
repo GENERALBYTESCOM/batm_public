@@ -162,10 +162,6 @@
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>BAY</cryptocurrency>
             </ratesource>
-            <ratesource prefix="itbit" name ="itBit.com Exchange" >
-                <param name="fiatcurrency" />
-                <cryptocurrency>BTC</cryptocurrency>
-            </ratesource>
             <ratesource prefix="coinmarketcap" name ="CoinMarketCap.com" >
                 <param name="fiatcurrency" />
                 <param name="api_key" />
@@ -327,14 +323,6 @@
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>BAY</cryptocurrency>
-            </exchange>
-            <exchange prefix="itbit" name="itBit.com Exchange">
-                <param name="userId" />
-                <param name="accountId" />
-                <param name="apikey" />
-                <param name="apisecret" />
-                <param name="fiatcurrency" />
-                <cryptocurrency>BTC</cryptocurrency>
             </exchange>
             <exchange prefix="dvchain" name="DV Chain Exchange">
                 <param name="secretKey" />
