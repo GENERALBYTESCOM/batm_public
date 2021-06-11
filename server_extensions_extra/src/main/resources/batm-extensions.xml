@@ -822,6 +822,37 @@
         <cryptologo cryptocurrency="DOGE" file="doge.png"/>
         <cryptologo cryptocurrency="DOGE" file="doge.svg"/>
     </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.newyorkcoin.NewYorkCoinExtension" >
+        <wallet prefix="newyorkcoind" name="Newyorkcoind">
+            <tunnel supported="true"/>
+            <sendtomany supported="true"/>
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="label" />
+            <cryptocurrency>NYC</cryptocurrency>
+        </wallet>
+        <wallet prefix="Newyorkcoindnoforward" name="Newyorkcoind (no forward)">
+            <tunnel supported="true"/>
+            <sendtomany supported="true"/>
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <cryptocurrency>NYC</cryptocurrency>
+            <help>This variant generates new addresses for each transaction and does not forward payments from temporary address</help>
+        </wallet>
+        <ratesource prefix="nycfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>NYC</cryptocurrency>
+            <help>USD is default fiat currency.</help>
+        </ratesource>
+        <cryptologo cryptocurrency="NYC" file="nyc.png"/>
+        <cryptologo cryptocurrency="NYC" file="nyc.svg"/>
+    </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.flashcoin.FlashcoinExtension" >
         <wallet prefix="flashcoind" name="Flashcoind">
             <param name="protocol" />
