@@ -21,6 +21,8 @@ import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.coingecko.CoinGeckoRateSource;
+import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.CoinmarketcapRateSource;
 import com.generalbytes.batm.server.extensions.extra.newyorkcoin.wallets.newyorkcoind.NewyorkcoindRPCWallet;
 import com.generalbytes.batm.server.extensions.extra.newyorkcoin.wallets.newyorkcoind.NewyorkcoindUniqueAddressRPCWallet;
 import org.slf4j.Logger;
@@ -90,9 +92,22 @@ public class NewyorkcoinExtension extends AbstractExtension{
     public IRateSource createRateSource(String sourceLogin) {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(sourceLogin,":");
-            String exchangeType = st.nextToken();
+            String rsType = st.nextToken();
 
-            if ("nycfix".equalsIgnoreCase(exchangeType)) {
+            if ("coingecko".equalsIgnoreCase(rsType)) {
+                String preferredFiatCurrency = st.hasMoreTokens() ? st.nextToken().toUpperCase() : FiatCurrency.USD.getCode();
+                return new CoinGeckoRateSource(preferredFiatCurrency);
+            } else if ("coinmarketcap".equalsIgnoreCase(rsType)) {
+                String preferredFiatCurrency = FiatCurrency.USD.getCode();
+                String apiKey = null;
+                if (st.hasMoreTokens()) {
+                    preferredFiatCurrency = st.nextToken().toUpperCase();
+                }
+                if (st.hasMoreTokens()) {
+                    apiKey = st.nextToken();
+                }
+                return new CoinmarketcapRateSource(apiKey, preferredFiatCurrency);
+            } else if ("nycfix".equalsIgnoreCase(exchangeType)) {
                 BigDecimal rate = BigDecimal.ZERO;
                 if (st.hasMoreTokens()) {
                     try {
@@ -106,7 +121,6 @@ public class NewyorkcoinExtension extends AbstractExtension{
                 }
                 return new FixPriceRateSource(rate,preferedFiatCurrency);
             }
-
         }
         return null;
     }
