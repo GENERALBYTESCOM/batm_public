@@ -80,7 +80,7 @@ public class NewyorkcoinExtension extends AbstractExtension{
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (CryptoCurrency.LTC.getCode().equalsIgnoreCase(cryptoCurrency)) {
+        if (CryptoCurrency.NYC.getCode().equalsIgnoreCase(cryptoCurrency)) {
             return new NewyorkcoinAddressValidator();
         }
         return null;
@@ -92,7 +92,7 @@ public class NewyorkcoinExtension extends AbstractExtension{
             StringTokenizer st = new StringTokenizer(sourceLogin,":");
             String exchangeType = st.nextToken();
 
-            if ("ltcfix".equalsIgnoreCase(exchangeType)) {
+            if ("nycfix".equalsIgnoreCase(exchangeType)) {
                 BigDecimal rate = BigDecimal.ZERO;
                 if (st.hasMoreTokens()) {
                     try {
@@ -113,7 +113,7 @@ public class NewyorkcoinExtension extends AbstractExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(CryptoCurrency.LTC.getCode());
+        result.add(CryptoCurrency.NYC.getCode());
         return result;
     }
 }

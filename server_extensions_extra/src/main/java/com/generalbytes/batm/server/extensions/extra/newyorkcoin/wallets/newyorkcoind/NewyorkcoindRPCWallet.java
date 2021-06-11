@@ -22,6 +22,6 @@ import com.generalbytes.batm.server.extensions.extra.common.RPCWallet;
 
 public class NewyorkcoindRPCWallet extends RPCWallet {
     public NewyorkcoindRPCWallet(String rpcURL, String label) {
-        super(rpcURL, label, CryptoCurrency.LTC.getCode());
+        super(rpcURL, label, CryptoCurrency.NYC.getCode());
     }
 }
