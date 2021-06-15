@@ -15,21 +15,22 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.ethereum.erc20.bizz;
+package com.generalbytes.batm.server.extensions.extra.ethereum;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.extra.common.QueryableWalletPaymentSupport;
 
 import java.util.concurrent.TimeUnit;
 
-public class BizzPaymentSupport extends QueryableWalletPaymentSupport {
+public class EthPaymentSupport extends QueryableWalletPaymentSupport {
+
     @Override
     protected String getCryptoCurrency() {
-        return CryptoCurrency.BIZZ.getCode();
+        return CryptoCurrency.ETH.getCode();
     }
 
     protected long getPollingPeriodMillis() {
-        return TimeUnit.MINUTES.toMillis(4);
+        return TimeUnit.SECONDS.toMillis(120);
     }
 
     protected long getPollingInitialDelayMillis() {

@@ -15,25 +15,32 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.ethereum.erc20.bizz;
+package com.generalbytes.batm.server.extensions.extra.ethereumclassic;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
-import com.generalbytes.batm.server.extensions.extra.common.QueryableWalletPaymentSupport;
+import com.generalbytes.batm.server.extensions.AbstractExtension;
+import com.generalbytes.batm.server.extensions.CryptoCurrencyDefinition;
+import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
 
-import java.util.concurrent.TimeUnit;
+import java.util.Collections;
+import java.util.Set;
 
-public class BizzPaymentSupport extends QueryableWalletPaymentSupport {
+public class EthereumClassicExtension extends AbstractExtension{
+    private static final CryptoCurrencyDefinition ETC_CRYPTOCURRENCY_DEFINITION = new EtcDefinition();
+
     @Override
-    protected String getCryptoCurrency() {
-        return CryptoCurrency.BIZZ.getCode();
+    public String getName() {
+        return "BATM Ethereum Classic extension";
     }
 
-    protected long getPollingPeriodMillis() {
-        return TimeUnit.MINUTES.toMillis(4);
+    @Override
+    public Set<String> getSupportedCryptoCurrencies() {
+        return Collections.singleton(CryptoCurrency.ETC.getCode());
     }
 
-    protected long getPollingInitialDelayMillis() {
-        return TimeUnit.SECONDS.toMillis(60);
+    @Override
+    public Set<ICryptoCurrencyDefinition> getCryptoCurrencyDefinitions() {
+        return Collections.singleton(ETC_CRYPTOCURRENCY_DEFINITION);
     }
 
 }

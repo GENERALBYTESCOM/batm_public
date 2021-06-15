@@ -38,6 +38,7 @@ import java.util.StringTokenizer;
 
 public class EthereumExtension extends AbstractExtension{
     private static final CryptoCurrencyDefinition DAI_CRYPTOCURRENCY_DEFINITION = new DaiDefinition();
+    private static final CryptoCurrencyDefinition ETH_CRYPTOCURRENCY_DEFINITION = new EthDefinition();
     private static final CryptoCurrencyDefinition BIZZ_CRYPTOCURRENCY_DEFINITION = new BizzDefinition();
 
     @Override
@@ -146,6 +147,7 @@ public class EthereumExtension extends AbstractExtension{
     public Set<ICryptoCurrencyDefinition> getCryptoCurrencyDefinitions() {
         Set<ICryptoCurrencyDefinition> result = new HashSet<>();
         result.add(DAI_CRYPTOCURRENCY_DEFINITION);
+        result.add(ETH_CRYPTOCURRENCY_DEFINITION);
         result.add(BIZZ_CRYPTOCURRENCY_DEFINITION);
         return result;
     }

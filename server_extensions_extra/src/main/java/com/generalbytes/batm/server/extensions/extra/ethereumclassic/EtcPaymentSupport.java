@@ -15,31 +15,26 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto;
+package com.generalbytes.batm.server.extensions.extra.ethereumclassic;
 
-import java.util.List;
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.server.extensions.extra.common.QueryableWalletPaymentSupport;
 
-/**
- * Created by b00lean on 23.7.17.
- */
+import java.util.concurrent.TimeUnit;
 
-public class CBAccountsResponse extends CBResponse{
-    private CBPagination pagination;
-    private List<CBAccount> data;
+public class EtcPaymentSupport extends QueryableWalletPaymentSupport {
 
-    public CBPagination getPagination() {
-        return pagination;
+    @Override
+    protected String getCryptoCurrency() {
+        return CryptoCurrency.ETC.getCode();
     }
 
-    public void setPagination(CBPagination pagination) {
-        this.pagination = pagination;
+    protected long getPollingPeriodMillis() {
+        return TimeUnit.MINUTES.toMillis(10);
     }
 
-    public List<CBAccount> getData() {
-        return data;
+    protected long getPollingInitialDelayMillis() {
+        return TimeUnit.SECONDS.toMillis(60);
     }
 
-    public void setData(List<CBAccount> data) {
-        this.data = data;
-    }
 }
