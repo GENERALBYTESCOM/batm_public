@@ -39,6 +39,11 @@ public interface IExtension {
     void init(IExtensionContext ctx);
 
     /**
+     * This method is called before the Extension is unloaded.
+     */
+    void deinit();
+
+    /**
      * Returns the name of the extension.
      * @return
      */
