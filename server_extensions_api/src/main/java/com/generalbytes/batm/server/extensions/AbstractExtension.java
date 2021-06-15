@@ -29,7 +29,7 @@ import java.util.Set;
 /**
  * This class serves as an optional parent for extensions.
  */
-public abstract class AbstractExtension implements IExtension{
+public abstract class AbstractExtension implements IExtension {
     protected IExtensionContext ctx;
 
     @Override
@@ -37,6 +37,9 @@ public abstract class AbstractExtension implements IExtension{
         this.ctx = ctx;
     }
 
+    @Override
+    public void deinit() {
+    }
 
     @Override
     public Set<ICryptoCurrencyDefinition> getCryptoCurrencyDefinitions() {
