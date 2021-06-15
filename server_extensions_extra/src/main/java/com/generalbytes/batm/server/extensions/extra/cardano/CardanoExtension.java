@@ -1,6 +1,8 @@
 package com.generalbytes.batm.server.extensions.extra.cardano;
 
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.AbstractExtension;
+import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.cardano.wallets.CardanoWallet;
 
@@ -31,6 +33,14 @@ public class CardanoExtension extends AbstractExtension {
                     return new CardanoWallet(protocol, host, port, walletId, passphrase);
                 }
             }
+        }
+        return null;
+    }
+
+    @Override
+    public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
+        if (CryptoCurrency.ADA.getCode().equalsIgnoreCase(cryptoCurrency)) {
+            return new CardanoAddressValidator();
         }
         return null;
     }

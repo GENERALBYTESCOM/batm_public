@@ -19,6 +19,7 @@ package com.generalbytes.batm.server.extensions.extra.litecoin;
 
 import com.generalbytes.batm.server.coinutil.AddressFormatException;
 import com.generalbytes.batm.server.coinutil.Base58;
+import com.generalbytes.batm.server.coinutil.Bech32;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

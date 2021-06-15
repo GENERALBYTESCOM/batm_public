@@ -17,7 +17,6 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.bitcoincash;
 
-import com.generalbytes.batm.server.coinutil.Bech32;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 
 public class BitcoinCashAddressValidator implements ICryptoAddressValidator {
