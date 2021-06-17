@@ -88,7 +88,12 @@ public final class BitpandaProExchange implements IExchangeAdvanced, IRateSource
         CryptoCurrency.BTC.getCode(),
         CryptoCurrency.ETH.getCode(),
         CryptoCurrency.XRP.getCode(),
-        CryptoCurrency.DOGE.getCode()
+        CryptoCurrency.DOGE.getCode(),
+        CryptoCurrency.USDT.getCode(),
+        CryptoCurrency.ADA.getCode(),
+        CryptoCurrency.LTC.getCode(),
+        CryptoCurrency.BCH.getCode(),
+        CryptoCurrency.TRX.getCode()
     );
     // from https://api.exchange.bitpanda.com/public/v1/instruments
     private static final Map<String, Integer> INSTRUMENT_AMOUNT_PRECISION = ImmutableMap.<String, Integer>builder()
@@ -100,6 +105,11 @@ public final class BitpandaProExchange implements IExchangeAdvanced, IRateSource
         .put("XRP_CHF", 0)
         .put("BTC_GBP", 5)
         .put("DOGE_EUR", 0)
+        .put("LTC_EUR", 5)
+        .put("USDT_EUR", 2)
+        .put("ADA_EUR", 3)
+        .put("BCH_EUR", 5)
+        .put("TRX_EUR", 1)
         .build()
     ;
 

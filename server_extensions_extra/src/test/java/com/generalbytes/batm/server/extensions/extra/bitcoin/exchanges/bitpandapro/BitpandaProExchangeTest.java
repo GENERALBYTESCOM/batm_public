@@ -1,7 +1,13 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitpandapro;
 
+import static com.generalbytes.batm.common.currencies.CryptoCurrency.ADA;
+import static com.generalbytes.batm.common.currencies.CryptoCurrency.BCH;
 import static com.generalbytes.batm.common.currencies.CryptoCurrency.BTC;
+import static com.generalbytes.batm.common.currencies.CryptoCurrency.DOGE;
 import static com.generalbytes.batm.common.currencies.CryptoCurrency.ETH;
+import static com.generalbytes.batm.common.currencies.CryptoCurrency.LTC;
+import static com.generalbytes.batm.common.currencies.CryptoCurrency.TRX;
+import static com.generalbytes.batm.common.currencies.CryptoCurrency.USDT;
 import static com.generalbytes.batm.common.currencies.CryptoCurrency.XRP;
 import static com.generalbytes.batm.common.currencies.FiatCurrency.CHF;
 import static com.generalbytes.batm.common.currencies.FiatCurrency.EUR;
@@ -54,8 +60,8 @@ public class BitpandaProExchangeTest {
 
     @Test
     public void shouldFetchCryptoBalances() {
-        Stream.of(BTC, ETH, XRP).forEach(currency -> {
-            final BigDecimal balance = subject.getCryptoBalance(BTC.getCode());
+        Stream.of(BTC, ETH, XRP, ADA, USDT, TRX, BCH, DOGE, LTC ).forEach(currency -> {
+            final BigDecimal balance = subject.getCryptoBalance(currency.getCode());
             assertNotNull("getCryptoBalance(" + currency + ")", balance);
             assertTrue("negative balance", balance.compareTo(BigDecimal.ZERO) >= 0);
         });
