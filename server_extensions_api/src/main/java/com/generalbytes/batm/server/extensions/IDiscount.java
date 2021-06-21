@@ -35,4 +35,6 @@ public interface IDiscount {
     public Date getCreatedAt();
 
     public String getLinkedIdentityPublicId();
+
+    public boolean isFirstTransactionOnly();
 }
