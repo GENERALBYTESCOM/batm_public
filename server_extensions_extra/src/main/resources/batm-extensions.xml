@@ -2022,6 +2022,7 @@
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.cardano.CardanoExtension" >
         <wallet prefix="cardano" name="Cardano">
+            <tunnel supported="true"/>
             <param name="protocol" />
             <param name="host" />
             <param name="port" />
