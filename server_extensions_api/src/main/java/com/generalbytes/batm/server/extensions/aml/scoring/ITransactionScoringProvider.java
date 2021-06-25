@@ -24,7 +24,10 @@ import java.util.Collection;
  */
 public interface ITransactionScoringProvider {
 
-    ScoringResult scoreCryptoAddress(String cryptoAddress, String cryptoCurrency);
+    /**
+     * @param identityPublicId identity Public ID or null if identity is not known (anonymous transaction)
+     */
+    ScoringResult scoreCryptoAddress(String cryptoAddress, String cryptoCurrency, String identityPublicId);
 
     /**
      * @param transactionId  on-chain transaction id (hash)
