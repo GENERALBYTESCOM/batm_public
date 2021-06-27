@@ -53,6 +53,7 @@ public enum CryptoCurrency {
     DAI("Dai"),
     BIZZ("BIZZCOIN"),
     DASH("Dash"),
+    DDB("Discount Distributors Bahamas"),
     DEX("DEX"),
     DGB("DigiByte"),
     DOGE("DOGE"),
