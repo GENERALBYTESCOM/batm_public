@@ -643,6 +643,7 @@
             <cryptocurrency>LSK</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>NULS</cryptocurrency>
+            <cryptocurrency>PAXG</cryptocurrency>
             <cryptocurrency>REP</cryptocurrency>
             <cryptocurrency>SYS</cryptocurrency>
             <cryptocurrency>TRX</cryptocurrency>
@@ -668,6 +669,7 @@
             <cryptocurrency>LSK</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>NULS</cryptocurrency>
+            <cryptocurrency>PAXG</cryptocurrency>
             <cryptocurrency>REP</cryptocurrency>
             <cryptocurrency>SYS</cryptocurrency>
             <cryptocurrency>TRX</cryptocurrency>
@@ -690,6 +692,7 @@
             <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>PAXG</cryptocurrency>
             <cryptocurrency>USDT</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
         </exchange>
@@ -703,6 +706,7 @@
             <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>PAXG</cryptocurrency>
             <cryptocurrency>USDT</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
         </ratesource>
@@ -1713,9 +1717,6 @@
             <param name="fiatCurrency" />
             <param name="coinmarketcapApiKey"/>
             <cryptocurrency>LSK</cryptocurrency>
-            <cryptocurrency>BTC</cryptocurrency>
-            <cryptocurrency>LTC</cryptocurrency>
-            <cryptocurrency>ETH</cryptocurrency>
         </ratesource>
         <cryptologo cryptocurrency="LSK" file="lisk.png"/>
         <cryptologo cryptocurrency="LSK" file="lisk.svg"/>
@@ -1909,6 +1910,16 @@
         </wallet>
         <cryptologo cryptocurrency="WILC" file="wilc.png"/>
         <cryptologo cryptocurrency="WILC" file="wilc.svg"/>
+        <wallet prefix="infuraERC20_PAXG_18_0x45804880de22913dafe09f4980848ece6ecbaf78" name="Infura.io wallet - PAXG">
+            <param name="projectId" />
+            <param name="mnemonic" />
+            <param name="gaslimit" />
+            <param name="gasPriceMultiplier" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
+            <cryptocurrency>PAXG</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="PAXG" file="paxg.png"/>
+        <cryptologo cryptocurrency="PAXG" file="paxg.svg"/>
         <!-- ADD your ERC20 tokens here. And don't forget to add cryptologos. -->
     </extension>
 
