@@ -511,10 +511,9 @@ public interface IExtensionContext {
     List<IOrganization> getOrganizations();
 
     /**
-     * Triggers Surveillance Photo Capture aka Collect Photo.
+     * Triggers Surveillance Photo Capture aka Collect Photo on specified Terminals.
      *
-     * @param terminalSerialNumber Terminal serial number.
-     *
+     * @param terminalSerialNumbers Terminal serial numbers.
      */
-    boolean triggerCollectPhoto(String terminalSerialNumber);
+    boolean triggerCollectPhoto(List<String> terminalSerialNumbers);
 }

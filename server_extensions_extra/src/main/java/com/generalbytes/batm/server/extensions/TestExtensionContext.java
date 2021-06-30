@@ -265,7 +265,7 @@ public class TestExtensionContext implements IExtensionContext {
     }
 
     @Override
-    public boolean triggerCollectPhoto(String terminalSerialNumber) {
+    public boolean triggerCollectPhoto(List<String> terminalSerialNumbers) {
         return false;
     }
 }
