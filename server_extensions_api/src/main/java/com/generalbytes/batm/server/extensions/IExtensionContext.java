@@ -514,6 +514,7 @@ public interface IExtensionContext {
      * Triggers Surveillance Photo Capture aka Collect Photo on specified Terminals.
      *
      * @param terminalSerialNumbers Terminal serial numbers.
+     * @return True only if collectPhoto was successfully requested on all of the specified terminals.
      */
     boolean triggerCollectPhoto(List<String> terminalSerialNumbers);
 }
