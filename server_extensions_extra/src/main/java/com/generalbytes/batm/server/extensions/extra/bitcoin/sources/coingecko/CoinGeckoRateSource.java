@@ -76,6 +76,7 @@ public class CoinGeckoRateSource implements IRateSource {
         CRYPTOCURRENCIES.put(CryptoCurrency.NLG.getCode(), "gulden");
         CRYPTOCURRENCIES.put(CryptoCurrency.NULS.getCode(), "nuls");
         CRYPTOCURRENCIES.put(CryptoCurrency.NXT.getCode(), "nxt");
+        CRYPTOCURRENCIES.put(CryptoCurrency.PAXG.getCode(), "pax-gold");
         CRYPTOCURRENCIES.put(CryptoCurrency.POT.getCode(), "potcoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.REP.getCode(), "augur");
         CRYPTOCURRENCIES.put(CryptoCurrency.SMART.getCode(), "smartcash");
