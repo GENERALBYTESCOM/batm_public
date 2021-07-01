@@ -263,4 +263,9 @@ public class TestExtensionContext implements IExtensionContext {
     public List<IOrganization> getOrganizations() {
         return Collections.emptyList();
     }
+
+    @Override
+    public boolean triggerCollectPhoto(List<String> terminalSerialNumbers) {
+        return false;
+    }
 }
