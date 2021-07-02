@@ -4,7 +4,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public enum SlpToken {
+public enum SlpToken {    
+    SPICE(8, "4de69e374a8ed21cbddd47f2338cc0f479dc58daa2bbe11cd604ca488eca0ddf"),
     DDB(2, "a7055d2d258cbdd66728edc843b0088eb68785411f6eaaf5c88a725f69a8f346"),
     ;
 
