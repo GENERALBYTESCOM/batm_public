@@ -30,6 +30,7 @@ import com.generalbytes.batm.server.extensions.extra.ethereum.erc20.dai.DaiDefin
 import com.generalbytes.batm.server.extensions.extra.ethereum.sources.stasis.StasisTickerRateSource;
 import com.generalbytes.batm.server.extensions.extra.ethereum.stream365.Stream365;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Set;
@@ -37,6 +38,7 @@ import java.util.StringTokenizer;
 
 public class EthereumExtension extends AbstractExtension{
     private static final CryptoCurrencyDefinition DAI_CRYPTOCURRENCY_DEFINITION = new DaiDefinition();
+    private static final CryptoCurrencyDefinition ETH_CRYPTOCURRENCY_DEFINITION = new EthDefinition();
     private static final CryptoCurrencyDefinition BIZZ_CRYPTOCURRENCY_DEFINITION = new BizzDefinition();
 
     @Override
@@ -61,6 +63,7 @@ public class EthereumExtension extends AbstractExtension{
         result.add(CryptoCurrency.EURS.getCode());
         result.add(CryptoCurrency.USDT.getCode());
         result.add(CryptoCurrency.ZPAE.getCode());
+        result.add(CryptoCurrency.PAXG.getCode());
         return result;
     }
 
@@ -89,8 +92,13 @@ public class EthereumExtension extends AbstractExtension{
                 if (st.hasMoreTokens()) {
                     gasLimit = new BigInteger(st.nextToken());
                 }
+                BigDecimal gasPriceMultiplier = BigDecimal.ONE;
+                if (st.hasMoreTokens()) {
+                    gasPriceMultiplier = new BigDecimal(st.nextToken());
+                }
+
                 if (projectId != null && passwordOrMnemonic != null) {
-                    return new ERC20Wallet(projectId, passwordOrMnemonic, tokenSymbol, tokenDecimalPlaces, contractAddress, gasLimit);
+                    return new ERC20Wallet(projectId, passwordOrMnemonic, tokenSymbol, tokenDecimalPlaces, contractAddress, gasLimit, gasPriceMultiplier);
                 }
             }
         }
@@ -140,6 +148,7 @@ public class EthereumExtension extends AbstractExtension{
     public Set<ICryptoCurrencyDefinition> getCryptoCurrencyDefinitions() {
         Set<ICryptoCurrencyDefinition> result = new HashSet<>();
         result.add(DAI_CRYPTOCURRENCY_DEFINITION);
+        result.add(ETH_CRYPTOCURRENCY_DEFINITION);
         result.add(BIZZ_CRYPTOCURRENCY_DEFINITION);
         return result;
     }

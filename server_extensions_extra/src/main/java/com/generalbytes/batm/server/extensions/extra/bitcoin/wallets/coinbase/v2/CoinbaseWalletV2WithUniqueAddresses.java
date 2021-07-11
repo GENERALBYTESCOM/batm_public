@@ -18,15 +18,22 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2;
 
 import com.generalbytes.batm.server.extensions.IGeneratesNewDepositCryptoAddress;
+import com.generalbytes.batm.server.extensions.IQueryableWallet;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBAddress;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBBalance;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBCreateAddressRequest;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBCreateAddressResponse;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBTransaction;
+import com.generalbytes.batm.server.extensions.payment.ReceivedAmount;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
-public class CoinbaseWalletV2WithUniqueAddresses extends CoinbaseWalletV2 implements IGeneratesNewDepositCryptoAddress {
+public class CoinbaseWalletV2WithUniqueAddresses extends CoinbaseWalletV2 implements IGeneratesNewDepositCryptoAddress, IQueryableWallet {
     private static final Logger log = LoggerFactory.getLogger(CoinbaseWalletV2WithUniqueAddresses.class);
 
     public CoinbaseWalletV2WithUniqueAddresses(String apiKey, String apiSecret, String accountName) {
@@ -45,7 +52,7 @@ public class CoinbaseWalletV2WithUniqueAddresses extends CoinbaseWalletV2 implem
         if (addressesResponse != null && addressesResponse.getData() != null) {
             CBAddress address = addressesResponse.getData();
             String network = getNetworkName(cryptoCurrency);
-            if (network == null || !address.getNetwork().equalsIgnoreCase(network)) {
+            if (!address.getNetwork().equalsIgnoreCase(network)) {
                 log.warn("network does not match");
                 return null;
             }
@@ -55,5 +62,74 @@ public class CoinbaseWalletV2WithUniqueAddresses extends CoinbaseWalletV2 implem
             log.error("generateNewDepositCryptoAddress - " + addressesResponse.getErrorMessages());
         }
         return null;
+    }
+
+    @Override
+    public ReceivedAmount getReceivedAmount(String address, String cryptoCurrency) {
+        if (!getCryptoCurrencies().contains(cryptoCurrency)) {
+            log.error("Wallet supports only {}, not {}", getCryptoCurrencies(), cryptoCurrency);
+            return ReceivedAmount.ZERO;
+        }
+        initIfNeeded(cryptoCurrency);
+
+        String addressId = getAddressId(address, cryptoCurrency);
+        List<CBTransaction> transactions = getReceivedTransactions(addressId, cryptoCurrency);
+        log.trace("Received transactions: {}", transactions);
+        int confirmations = getConfirmations(transactions);
+        BigDecimal amount = getAmount(transactions);
+        return new ReceivedAmount(amount, confirmations);
+    }
+
+    private BigDecimal getAmount(List<CBTransaction> transactions) {
+        return transactions.stream()
+            .map(CBTransaction::getAmount)
+            .map(CBBalance::getAmount)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    private int getConfirmations(List<CBTransaction> transactions) {
+        if (transactions.isEmpty()) {
+            return 0;
+        }
+        if (transactions.stream().allMatch(t -> "completed".equals(t.getStatus()))) {
+            log.trace("All transactions completed");
+            return 999;
+        }
+        return 0;
+    }
+
+    private List<CBTransaction> getReceivedTransactions(String addressId, String cryptoCurrency) {
+        return getTransactions(addressId, cryptoCurrency).stream()
+            .filter(t -> "send".equals(t.getType()))
+            .filter(t -> "pending".equals(t.getStatus())
+                || "completed".equals(t.getStatus()))
+            .filter(t -> t.getAmount() != null && t.getAmount().getCurrency().equals(cryptoCurrency))
+            .collect(Collectors.toList());
+    }
+
+    private String getAddressId(String address, String cryptoCurrency) {
+        return getAddresses(cryptoCurrency).stream()
+            .filter(a -> a.getAddress().equals(address))
+            .findAny()
+            .map(CBAddress::getId)
+            .orElseThrow(() -> new IllegalStateException("Address '" + address + "' not found"));
+    }
+
+    private List<CBTransaction> getTransactions(String addressId, String cryptoCurrency) {
+        return paginate(startingAfter -> {
+            long timeStamp = getTimestamp();
+            CBDigest digest = CBDigest.createInstance(apiSecret, timeStamp);
+            String accountId = accountIds.get(cryptoCurrency);
+            return api.getAddressTransactions(apiKey, API_VERSION, digest, timeStamp, accountId, addressId, 100, startingAfter);
+        });
+    }
+
+    private List<CBAddress> getAddresses(String cryptoCurrency) {
+        return paginate(startingAfter -> {
+            long timeStamp = getTimestamp();
+            CBDigest digest = CBDigest.createInstance(apiSecret, timeStamp);
+            String accountId = accountIds.get(cryptoCurrency);
+            return api.getAddresses(apiKey, API_VERSION, digest, timeStamp, accountId, 100, startingAfter);
+        });
     }
 }

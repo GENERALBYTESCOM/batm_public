@@ -39,7 +39,7 @@ import java.util.concurrent.TimeUnit;
 
 public abstract class PollingPaymentSupport implements IPaymentSupport {
     protected static final Logger log = LoggerFactory.getLogger(PollingPaymentSupport.class);
-    private static final long MAXIMUM_WATCHING_TIME_MILLIS = TimeUnit.DAYS.toMillis(1);
+    private static final long MAXIMUM_WATCHING_TIME_MILLIS = TimeUnit.DAYS.toMillis(2);
     private static final long REMOVE_REQUESTS_AFTER_MILLIS = TimeUnit.MINUTES.toMillis(5);
 
     private final List<Integer> stopPollingStates = Arrays.asList(

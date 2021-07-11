@@ -493,4 +493,28 @@ public interface IExtensionContext {
      */
     IApiAccess getAPIAccessByKey(String apiKey);
 
+    /**
+     * Creates Discount.
+     *
+     * @param organization Organization for which the Discount to be created.
+     * @param discountSpec Discount specification.
+     *
+     * @return Newly created Discount details.
+     */
+    IDiscount createDiscount(IOrganization organization, DiscountSpec discountSpec);
+
+    /**
+     * Returns List of Organizations.
+     *
+     * @return List of Organizations.
+     */
+    List<IOrganization> getOrganizations();
+
+    /**
+     * Triggers Surveillance Photo Capture aka Collect Photo on specified Terminals.
+     *
+     * @param terminalSerialNumbers Terminal serial numbers.
+     * @return True only if collectPhoto was successfully requested on all of the specified terminals.
+     */
+    boolean triggerCollectPhoto(List<String> terminalSerialNumbers);
 }

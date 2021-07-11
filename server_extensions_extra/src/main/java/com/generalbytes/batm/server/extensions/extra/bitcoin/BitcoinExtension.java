@@ -32,7 +32,6 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbasep
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coingi.CoingiExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.dvchain.DVChainExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.hitbtc.HitbtcExchange;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.itbit.ItBitExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.enigma.EnigmaExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.poloniex.PoloniexExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.bitcoinpay.BitcoinPayPP;
@@ -64,6 +63,7 @@ import java.util.*;
 import static com.generalbytes.batm.common.currencies.CryptoCurrency.USDT;
 import static com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitflyer.BitFlyerExchange.BITFLYER_COM_BASE_URL;
 import static com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitflyer.BitFlyerExchange.BITFLYER_JP_BASE_URL;
+import static com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryptx.v2.ICryptXAPI.*;
 
 public class BitcoinExtension extends AbstractExtension {
     private IExtensionContext ctx;
@@ -97,16 +97,6 @@ public class BitcoinExtension extends AbstractExtension {
                 String apiKey = paramTokenizer.nextToken();
                 String apiSecret = paramTokenizer.nextToken();
                 return new BittrexExchange(apiKey, apiSecret);
-            } else if ("itbit".equalsIgnoreCase(prefix)) {
-                String preferredFiatCurrency = FiatCurrency.USD.getCode();
-                String userId = paramTokenizer.nextToken();
-                String accountId = paramTokenizer.nextToken();
-                String clientKey = paramTokenizer.nextToken();
-                String clientSecret = paramTokenizer.nextToken();
-                if (paramTokenizer.hasMoreTokens()) {
-                    preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase();
-                }
-                return new ItBitExchange(userId, accountId, clientKey, clientSecret, preferredFiatCurrency);
             } else if ("hitbtc".equalsIgnoreCase(prefix)) {
                 String preferredFiatCurrency = FiatCurrency.USD.getCode();
                 String apiKey = paramTokenizer.nextToken();
@@ -362,15 +352,47 @@ public class BitcoinExtension extends AbstractExtension {
                 }
                 String walletId = st.nextToken();
 
-                String priority = null;
-                if (st.hasMoreTokens()) {
-                    priority = st.nextToken();
-                }
+                String passphrase = null;
+	            String priority = null;
+
+	            if (st.hasMoreTokens()) {
+	                String nextToken = st.nextToken();
+	                if (!nextToken.equals(PRIORITY_LOW) && !nextToken.equals(PRIORITY_MEDIUM) &&
+                            !nextToken.equals(PRIORITY_HIGH) && !nextToken.equals(PRIORITY_CUSTOM)) {
+	                    passphrase = nextToken;
+	                    if (passphrase.isEmpty()) passphrase = null;
+
+	                    if (st.hasMoreTokens()) {
+	                        priority = st.nextToken();
+	                        if (priority.isEmpty()) priority = null;
+                        }
+
+                    } else {
+	                    priority = nextToken;
+                    }
+	            }
+
+	            String customFeePrice = null;
+	            if (priority != null && priority.equals(PRIORITY_CUSTOM) && st.hasMoreTokens()) {
+		            priority = null;
+		            customFeePrice = st.nextToken();
+		            if (customFeePrice.isEmpty()) {
+			            customFeePrice = null;
+		            }
+	            }
+
+	            String customGasLimit = null;
+	            if (st.hasMoreTokens()){
+		            customGasLimit = st.nextToken();
+		            if (customGasLimit.isEmpty()) {
+			            customGasLimit = null;
+		            }
+	            }
 
                 if ("cryptxnoforward".equalsIgnoreCase(walletType)) {
-                    return new CryptXWithUniqueAddresses(scheme, host, port, token, walletId, priority);
+                    return new CryptXWithUniqueAddresses(scheme, host, port, token, walletId, priority, customFeePrice, customGasLimit, passphrase);
                 }
-                return new CryptXWallet(scheme, host, port, token, walletId, priority);
+                return new CryptXWallet(scheme, host, port, token, walletId, priority, customFeePrice, customGasLimit, passphrase);
             }
         }
         } catch (Exception e) {
@@ -381,6 +403,9 @@ public class BitcoinExtension extends AbstractExtension {
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
+        if (CryptoCurrency.BNB.getCode().equalsIgnoreCase(cryptoCurrency)) {
+            return new BinanceCoinAddressValidator();
+        }
         return null; // no BTC address validator in open source version so far (It is present in
                      // built-in extension)
     }
@@ -440,12 +465,6 @@ public class BitcoinExtension extends AbstractExtension {
                 return new BityRateSource(preferredFiatCurrency);
             } else if ("mrcoin".equalsIgnoreCase(rsType)) {
                 return new MrCoinRateSource();
-            } else if ("itbit".equalsIgnoreCase(rsType)) {
-                String preferredFiatCurrency = FiatCurrency.USD.getCode();
-                if (st.hasMoreTokens()) {
-                    preferredFiatCurrency = st.nextToken().toUpperCase();
-                }
-                return new ItBitExchange(preferredFiatCurrency);
             }else if ("coinbasers".equalsIgnoreCase(rsType)) {
                 String preferredFiatCurrency = FiatCurrency.USD.getCode();
                 if (st.hasMoreTokens()) {

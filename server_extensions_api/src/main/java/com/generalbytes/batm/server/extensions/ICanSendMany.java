@@ -41,10 +41,18 @@ public interface ICanSendMany {
     class Transfer {
         private final String destinationAddress;
         private final BigDecimal amount;
+        private final String batchUID;
 
         public Transfer(String destinationAddress, BigDecimal amount) {
             this.destinationAddress = destinationAddress;
             this.amount = amount;
+            this.batchUID = null;
+        }
+
+        public Transfer(String destinationAddress, BigDecimal amount, String batchUID) {
+            this.destinationAddress = destinationAddress;
+            this.amount = amount;
+            this.batchUID = batchUID;
         }
 
         public String getDestinationAddress() {
@@ -53,6 +61,10 @@ public interface ICanSendMany {
 
         public BigDecimal getAmount() {
             return amount;
+        }
+
+        public String getBatchUID() {
+            return batchUID;
         }
 
         @Override

@@ -1,0 +1,22 @@
+html,
+body {
+    height: 100%;
+    margin: 0;
+}
+
+body,
+button {
+    -webkit-font-smoothing: antialiased;
+}
+
+.custom__input,
+.onfido-sdk-ui-CountrySelector-custom__input{
+    height: auto !important;
+}
+
+@media (min-width: 30em) {
+    #onfido-mount {
+        position: relative;
+        top: 10%;
+    }
+}

@@ -21,7 +21,7 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v
  * Created by b00lean on 23.7.17.
  */
 
-public class CBAccount {
+public class CBAccount implements CBPaginatedItem {
     private String id;
     private String address;
     private String name;
@@ -38,6 +38,7 @@ public class CBAccount {
     private String resource;
     private String resource_path;
 
+    @Override
     public String getId() {
         return id;
     }

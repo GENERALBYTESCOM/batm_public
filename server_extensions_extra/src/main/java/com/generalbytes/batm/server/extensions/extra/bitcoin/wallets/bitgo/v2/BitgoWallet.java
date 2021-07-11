@@ -99,7 +99,7 @@ public class BitgoWallet implements IWallet, ICanSendMany {
         List<BitGoRecipient> recipients = transfers.stream()
             .map(transfer -> new BitGoRecipient(transfer.getDestinationAddress(), toSatoshis(transfer.getAmount(), cryptoCurrency)))
             .collect(Collectors.toList());
-        final BitGoSendManyRequest request = new BitGoSendManyRequest(recipients, walletPassphrase, this.numBlocks);
+        final BitGoSendManyRequest request = new BitGoSendManyRequest(recipients, walletPassphrase, description, this.numBlocks);
         try {
             return getResultTxId(api.sendMany(cryptoCurrency.toLowerCase(), this.walletId, request));
         } catch (HttpStatusIOException hse) {
@@ -114,7 +114,7 @@ public class BitgoWallet implements IWallet, ICanSendMany {
 
     @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
-        final BitGoCoinRequest request = new BitGoCoinRequest(destinationAddress, toSatoshis(amount, cryptoCurrency), walletPassphrase, this.numBlocks);
+        final BitGoCoinRequest request = new BitGoCoinRequest(destinationAddress, toSatoshis(amount, cryptoCurrency), walletPassphrase, description, this.numBlocks);
         try {
             return getResultTxId(api.sendCoins(cryptoCurrency.toLowerCase(), this.walletId, request));
         } catch (HttpStatusIOException hse) {
@@ -211,7 +211,7 @@ public class BitgoWallet implements IWallet, ICanSendMany {
 
     @Override
     public BigDecimal getCryptoBalance(String cryptoCurrency) {
-        if(cryptoCurrency == null) {
+        if (cryptoCurrency == null) {
             cryptoCurrency = getPreferredCryptoCurrency();
         }
         if (!getCryptoCurrencies().contains(cryptoCurrency)) {
@@ -220,30 +220,34 @@ public class BitgoWallet implements IWallet, ICanSendMany {
         cryptoCurrency = cryptoCurrency.toLowerCase();
         try {
             final Map<String, Object> response = api.getWalletById(cryptoCurrency, walletId);
-            if(response == null || response.isEmpty()) {
+            if (response == null || response.isEmpty()) {
                 return null;
             }
 
-            Object balanceObject = response.get("balance");
-            if(balanceObject == null || !(balanceObject instanceof Integer)) {
+            Object balanceObject = response.get("balanceString");
+            if(balanceObject == null) {
+                // fallback to older balance for backward compatibility only
+                balanceObject = response.get("balance");
+            }
+            if (balanceObject == null) {
                 return null;
             }
 
-            Integer balance = (Integer)balanceObject;
+            BigDecimal balance = new BigDecimal(balanceObject.toString());
             if (CryptoCurrency.BTC.getCode().equals(cryptoCurrency.toUpperCase())) {
-                return BigDecimal.valueOf(balance.intValue()).divide(Converters.BTC);
+                return balance.divide(Converters.BTC);
             } else if (CryptoCurrency.LTC.getCode().equals(cryptoCurrency.toUpperCase())) {
-                return BigDecimal.valueOf(balance.intValue()).divide(Converters.LTC);
+                return balance.divide(Converters.LTC);
             } else if (CryptoCurrency.BCH.getCode().equals(cryptoCurrency.toUpperCase())) {
-                return BigDecimal.valueOf(balance.intValue()).divide(Converters.BCH);
+                return balance.divide(Converters.BCH);
             } else if (CryptoCurrency.TBTC.getCode().equals(cryptoCurrency.toUpperCase())) {
-                return BigDecimal.valueOf(balance.intValue()).divide(Converters.TBTC);
+                return balance.divide(Converters.TBTC);
             } else if (CryptoCurrency.TLTC.getCode().equals(cryptoCurrency.toUpperCase())) {
-                return BigDecimal.valueOf(balance.intValue()).divide(Converters.TLTC);
+                return balance.divide(Converters.TLTC);
             } else if (CryptoCurrency.TBCH.getCode().equals(cryptoCurrency.toUpperCase())) {
-                return BigDecimal.valueOf(balance.intValue()).divide(Converters.TBCH);
+                return balance.divide(Converters.TBCH);
             }
-            return BigDecimal.valueOf(balance.intValue()).divide(new BigDecimal(1));
+            return balance.divide(new BigDecimal(1));
         } catch (HttpStatusIOException hse) {
             log.debug("getCryptoBalance error: {}", hse.getHttpBody());
         } catch (ErrorResponseException e) {

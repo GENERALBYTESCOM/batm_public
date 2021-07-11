@@ -21,6 +21,7 @@ import com.generalbytes.batm.server.extensions.aml.IAMLProvider;
 import com.generalbytes.batm.server.extensions.aml.IExternalIdentityProvider;
 import com.generalbytes.batm.server.extensions.aml.scoring.ITransactionScoringProvider;
 import com.generalbytes.batm.server.extensions.communication.ICommunicationProvider;
+import com.generalbytes.batm.server.extensions.communication.IPhoneLookupProvider;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.util.Set;
@@ -28,7 +29,7 @@ import java.util.Set;
 /**
  * This class serves as an optional parent for extensions.
  */
-public abstract class AbstractExtension implements IExtension{
+public abstract class AbstractExtension implements IExtension {
     protected IExtensionContext ctx;
 
     @Override
@@ -36,6 +37,9 @@ public abstract class AbstractExtension implements IExtension{
         this.ctx = ctx;
     }
 
+    @Override
+    public void deinit() {
+    }
 
     @Override
     public Set<ICryptoCurrencyDefinition> getCryptoCurrencyDefinitions() {
@@ -104,6 +108,11 @@ public abstract class AbstractExtension implements IExtension{
 
     @Override
     public Set<IAMLProvider> getAMLProviders() {
+        return null;
+    }
+
+    @Override
+    public Set<IPhoneLookupProvider> getPhoneLookupProviders() {
         return null;
     }
 

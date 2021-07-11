@@ -7,8 +7,8 @@ import com.generalbytes.batm.server.extensions.watchlist.WatchListQuery;
 import com.generalbytes.batm.server.extensions.watchlist.WatchListResult;
 
 import java.math.BigDecimal;
-import java.net.InetSocketAddress;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -252,5 +252,20 @@ public class TestExtensionContext implements IExtensionContext {
     @Override
     public IApiAccess getAPIAccessByKey(String apiKey) {
         return null;
+    }
+
+    @Override
+    public IDiscount createDiscount(IOrganization organization, DiscountSpec discountSpec) {
+        return null;
+    }
+
+    @Override
+    public List<IOrganization> getOrganizations() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public boolean triggerCollectPhoto(List<String> terminalSerialNumbers) {
+        return false;
     }
 }

@@ -18,6 +18,7 @@
 package com.generalbytes.batm.server.extensions;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.server.coinutil.DDOSUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,18 +38,19 @@ public class DummyExchangeAndWalletAndSource implements IExchange, IWallet, IRat
     private static final String BTC_WALLET_ADDRESS = "18nB5x3zxF26MuA89yNcnkS9qs33KNwLFu";
     private static final String XMR_WALLET_ADDRESS = "dc3c48b1577d25eb4ce56b266bcf7aab6b27c28a0ba305d8dfebff52e6f6f757";
     private static final String LTC_WALLET_ADDRESS = "LZRi2YvS3cR4Pc3hQkAxqYLKRXEjjxZdd5"; //safe
-    private String fiatCurrency;
-    private String cryptoCurrency;
+    private final String fiatCurrency;
+    private final String cryptoCurrency;
     private final boolean simulateFailure;
+    private final int simulateBlock;
     private String walletAddress;
 
     private static final Logger log = LoggerFactory.getLogger("batm_public.server_extensions_api.DummyExchangeAndWalletAndSource");
 
     public DummyExchangeAndWalletAndSource(String fiatCurrency, String cryptoCurrency, String walletAddress) throws IllegalArgumentException {
-        this(fiatCurrency, cryptoCurrency, false, walletAddress);
+        this(fiatCurrency, cryptoCurrency, false, 0, walletAddress);
     }
 
-    public DummyExchangeAndWalletAndSource(String fiatCurrency, String cryptoCurrency, boolean simulateFailure, String walletAddress) throws IllegalArgumentException {
+    public DummyExchangeAndWalletAndSource(String fiatCurrency, String cryptoCurrency, boolean simulateFailure, int simulateBlock, String walletAddress) throws IllegalArgumentException {
         if (fiatCurrency == null || cryptoCurrency == null) {
             throw new NullPointerException("Fiat and crypto currency has to be specified.");
         }
@@ -72,6 +74,7 @@ public class DummyExchangeAndWalletAndSource implements IExchange, IWallet, IRat
         this.cryptoCurrency = cryptoCurrency;
         this.fiatCurrency = fiatCurrency;
         this.simulateFailure = simulateFailure;
+        this.simulateBlock = simulateBlock;
     }
 
     @Override
@@ -95,11 +98,13 @@ public class DummyExchangeAndWalletAndSource implements IExchange, IWallet, IRat
 
     @Override
     public BigDecimal getCryptoBalance(String cryptoCurrency) {
+        block();
         return WALLET_BALANCE;
     }
 
     @Override
     public BigDecimal getFiatBalance(String fiatCurrency) {
+        block();
         if (this.fiatCurrency.equalsIgnoreCase(fiatCurrency)) {
             return EXCHANGE_BALANCE;
         }else{
@@ -109,6 +114,7 @@ public class DummyExchangeAndWalletAndSource implements IExchange, IWallet, IRat
 
     @Override
     public String purchaseCoins(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
+        block();
         if (cryptoCurrency.equalsIgnoreCase(this.cryptoCurrency) && fiatCurrencyToUse.equalsIgnoreCase(this.fiatCurrency)) {
             log.info(String.format("S1%s-DummyExchangeWallet: purchasing coins S2%s", this.cryptoCurrency, amount));
             return "true";
@@ -120,23 +126,27 @@ public class DummyExchangeAndWalletAndSource implements IExchange, IWallet, IRat
 
     @Override
     public String sellCoins(BigDecimal cryptoAmount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
+        block();
         return getSellTransactionId();
     }
 
     @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
+        block();
         log.info("{}-DummyExchangeWallet: sending coins to {} {}", this.cryptoCurrency, destinationAddress, amount);
         return getSendTransactionId();
     }
 
     @Override
     public String sendMany(Collection<Transfer> transfers, String cryptoCurrency, String description) {
+        block();
         log.info("{}-DummyExchangeWallet: sendMany: {} {}", this.cryptoCurrency, transfers, description);
         return getSendTransactionId();
     }
 
     @Override
     public String getDepositAddress(String cryptoCurrency) {
+        block();
         return getAddress(cryptoCurrency);
     }
 
@@ -161,12 +171,14 @@ public class DummyExchangeAndWalletAndSource implements IExchange, IWallet, IRat
 
     @Override
     public BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency) {
+        block();
         log.debug(String.format("S1%s-DummyExchangeWallet: exchange rate is S2%s", this.cryptoCurrency, EXCHANGE_RATE));
         return EXCHANGE_RATE;
     }
 
     @Override
     public String getCryptoAddress(String cryptoCurrency) {
+        block();
         return getAddress(cryptoCurrency);
 
     }
@@ -177,10 +189,25 @@ public class DummyExchangeAndWalletAndSource implements IExchange, IWallet, IRat
     }
 
     private String getSellTransactionId() {
-        return simulateFailure ? null : String.format("22222222222222222222222222222222222222222222222222222222%08x", new Random().nextInt());
+        if (simulateFailure) {
+            log.debug("Simulated failure");
+            return null;
+        }
+        return String.format("22222222222222222222222222222222222222222222222222222222%08x", new Random().nextInt());
     }
 
     private String getSendTransactionId() {
-        return simulateFailure ? null : String.format("11111111111111111111111111111111111111111111111111111111%08x", new Random().nextInt());
+        if (simulateFailure) {
+            log.debug("Simulated failure");
+            return null;
+        }
+        return String.format("11111111111111111111111111111111111111111111111111111111%08x", new Random().nextInt());
+    }
+
+    private void block() {
+        if (simulateBlock > 0) {
+            long millis = DDOSUtils.waitForPossibleCall(getClass(), simulateBlock);
+            log.info("Blocked for {} ms", millis);
+        }
     }
 }

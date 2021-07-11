@@ -35,6 +35,7 @@ import java.util.Set;
  */
 public enum CryptoCurrency {
 
+    ADA("Cardano Ada"),
     ANON("ANON"),
     AQUA("Aquachain"),
     ANT("Aragon Network Token"),
@@ -84,6 +85,7 @@ public enum CryptoCurrency {
     NLG("NLG"),
     NXT("Nxt"),
     PAC("$PAC", "PACcoin"),
+    PAXG("Paxos Gold"),
     POT("PotCoin"),
     REP("Augur"),
     SMART("SmartCash"),
@@ -98,9 +100,11 @@ public enum CryptoCurrency {
     USDS("StableUSD"),
     USDC("USD Coin"),
     USDT("Tether"),
+    USDTTRON("Tether USD TRON"), // TRC20 based USDT stablecoin issued by Tether on the TRON network
     VIA("Viacoin"),
     VOLTZ("VOLTZ"),
     WDC("WorldCoin"),
+    WILC("Wrapped ILCOIN"),
     XMR("Monero"),
     XORI("CHFToken"),
     TENT("Tent"),

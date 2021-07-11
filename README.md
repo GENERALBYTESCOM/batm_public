@@ -90,3 +90,49 @@ How to run Tester
 ./gradlew :server_extensions_test:install
 ./server_extensions_test/build/install/server_extensions_test/bin/server_extensions_test
 ```
+
+verification-site
+=================
+It is standalone component that serves static verification website and little server that communicates with CAS.
+Its build around Onfido web SDK. If you need make any modifications to appearance or verification behavior please refer to [this](https://github.com/onfido/onfido-sdk-ui) documentation first.
+
+It can be build with:
+```bash
+./gradlew clean build
+```
+this produces `verification-site-<version>.jar` into `build/libs` directory, and you can run it simply with:
+```bash
+java -jar verification_site-<ver>.jar
+```
+
+By default, verification-site runs on port 8443. You should change it and most importantly configure HTTPS. Here is how to do it with [letsencrypt](https://letsencrypt.org/):
+1. download letsenrypt [certbot](https://github.com/certbot/certbot)
+    ```bash
+    git clone https://github.com/certbot/certbot
+    ```
+
+2. generate certificate for your domain with letsenrypt
+    ```bash
+    ./certbot-auto certonly -a standalone -d example.com -d www.example.com
+    ```
+
+3. convert it to PKCS12 format for Spring Boot
+    ```bash
+    cd /etc/letsencrypt/live/example.com
+    openssl pkcs12 -export -in fullchain.pem -inkey privkey.pem -out keystore.p12 -name tomcat -CAfile chain.pem -caname root
+    ```
+
+4. configure your application
+    - edit [application.properties](verification_site/src/main/resources/application.properties) before building application as follows:
+        ```bash
+        server.port=443
+        security.require-ssl=true
+        server.ssl.key-store=/etc/letsencrypt/live/example.com/keystore.p12
+        server.ssl.key-store-password=<your-password>
+        server.ssl.keyStoreType=PKCS12
+        server.ssl.keyAlias=tomcat
+        ```
+    - or you can pass these parameters in run command as follows:
+        ```bash
+        java -jar verification_site-<ver>.jar --server.port=443 --security.require-ssl=true --server.ssl.key-store=/etc/letsencrypt/live/example.com/keystore.p12 --server.ssl.key-store-password=<your-password> --server.ssl.keyStoreType=PKCS12 --server.ssl.keyAlias=tomcat
+        ```

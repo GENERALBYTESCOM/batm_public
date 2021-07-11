@@ -42,4 +42,12 @@ public class CBBalance {
     public void setCurrency(String currency) {
         this.currency = currency;
     }
+
+    @Override
+    public String toString() {
+        return "CBBalance{" +
+            "amount=" + amount +
+            ", currency='" + currency + '\'' +
+            '}';
+    }
 }

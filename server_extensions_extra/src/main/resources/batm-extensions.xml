@@ -40,7 +40,7 @@
                 <cryptocurrency buyonly="true">BCH</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
-                <cryptocurrency>ETH</cryptocurrency><!--BitGo’s Ethereum wallets are only available to BitGo Enterprise customers-->
+                <cryptocurrency buyonly="true">ETH</cryptocurrency><!--BitGo’s Ethereum wallets are only available to BitGo Enterprise customers-->
                 <help>Host should start with http:// or https://. num_blocks is an integer greater than 2.</help>
             </wallet>
             <wallet prefix="bitgonoforward" name="BitGo Wallet (no forward)">
@@ -55,38 +55,58 @@
                 <cryptocurrency buyonly="true">BCH</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
-                <cryptocurrency>ETH</cryptocurrency><!--BitGo’s Ethereum wallets are only available to BitGo Enterprise customers-->
+                <cryptocurrency buyonly="true">ETH</cryptocurrency><!--BitGo’s Ethereum wallets are only available to BitGo Enterprise customers-->
                 <help>This variant of the wallet generates new addresses for each transaction and does not forward payments from temporary address. Host should start with http:// or https://. num_blocks is an integer greater than 2.</help>
             </wallet>
             <wallet prefix="cryptx" name="CryptX Wallet System">
-                <sendtomany supported="false"/>
+                <sendtomany supported="true"/>
                 <tunnel supported="true"/>
                 <param name="host" />
                 <param name="port" />
                 <param name="token" />
                 <param name="wallet_id" />
+                <param name="passphrase"/>
                 <param name="priority" />
+                <param name="max_custom_price" />
+                <param name="max_custom_gas_limit" />
                 <cryptocurrency buyonly="true">BCH</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
-                <cryptocurrency>ETH</cryptocurrency>
+                <cryptocurrency buyonly="true">ETH</cryptocurrency>
                 <cryptocurrency>USDT</cryptocurrency>
-                <help>Host should start with http:// or https://. You can specify optional parameter priority to increase the network fee paid in the given transaction. Options are low, medium, high and will try to get your transaction included into next 24, 8, or 2 blocks, respectively. If not specified, high priority will be used.</help>
+                <help>
+                    *host: https://api.cryptx.com/ (required) -
+                    port: (not required) - *token: generate Access tokens from CryptX Settings (required) -
+                    *walletid: find under [Wallet] > Settings > Wallet Info > Wallet ID (required) -
+                    passphrase: wallet password (not required) -
+                    priority: Select high, low, or custom. If custom, indicate number of blocks (e.g., custom:12), otherwise high priority (2 blocks) will be used by default (not required) -
+                    limit: gas limit - only for ETH, e.g., 50000 (not required)
+                </help>
             </wallet>
             <wallet prefix="cryptxnoforward" name="CryptX Wallet System (no forward)">
-                <sendtomany supported="false"/>
+                <sendtomany supported="true"/>
                 <tunnel supported="true"/>
                 <param name="host" />
                 <param name="port" />
                 <param name="token" />
                 <param name="wallet_id" />
+                <param name="passphrase"/>
                 <param name="priority" />
+                <param name="max_custom_rate" />
+                <param name="max_custom_gas_limit" />
                 <cryptocurrency buyonly="true">BCH</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
-                <cryptocurrency>ETH</cryptocurrency>
+                <cryptocurrency buyonly="true">ETH</cryptocurrency>
                 <cryptocurrency>USDT</cryptocurrency>
-                <help>Host should start with http:// or https://. You can specify optional parameter priority to increase the network fee paid in the given transaction. Options are low, medium, high and will try to get your transaction included into next 24, 8, or 2 blocks, respectively. If not specified, high priority will be used.</help>
+                <help>
+                    *host: https://api.cryptx.com/ (required) -
+                    port: (not required) - *token: generate Access tokens from CryptX Settings (required) -
+                    *walletid: find under [Wallet] > Settings > Wallet Info > Wallet ID (required) -
+                    passphrase: wallet password (not required) -
+                    priority: Select high, low, or custom. If custom, indicate number of blocks (e.g., custom:12), otherwise high priority (2 blocks) will be used by default (not required) -
+                    limit: gas limit - only for ETH, e.g., 50000 (not required)
+                </help>
             </wallet>
             <ratesource prefix="btcfix" name ="Fix Price" >
                 <param name="price" />
@@ -141,10 +161,6 @@
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>BAY</cryptocurrency>
-            </ratesource>
-            <ratesource prefix="itbit" name ="itBit.com Exchange" >
-                <param name="fiatcurrency" />
-                <cryptocurrency>BTC</cryptocurrency>
             </ratesource>
             <ratesource prefix="coinmarketcap" name ="CoinMarketCap.com" >
                 <param name="fiatcurrency" />
@@ -221,6 +237,7 @@
                 <cryptocurrency>ECA</cryptocurrency>
                 <cryptocurrency>EFL</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
+                <cryptocurrency>ETC</cryptocurrency>
                 <cryptocurrency>FLASH</cryptocurrency>
                 <cryptocurrency>FTO</cryptocurrency>
                 <cryptocurrency>GRS</cryptocurrency>
@@ -249,8 +266,10 @@
                 <cryptocurrency>SYS</cryptocurrency>
                 <cryptocurrency>TKN</cryptocurrency>
                 <cryptocurrency>USDT</cryptocurrency>
+                <cryptocurrency>USDTTRON</cryptocurrency>
                 <cryptocurrency>VIA</cryptocurrency>
                 <cryptocurrency>WDC</cryptocurrency>
+                <cryptocurrency>WILC</cryptocurrency>
                 <cryptocurrency>XMR</cryptocurrency>
                 <cryptocurrency>XPM</cryptocurrency>
                 <cryptocurrency>TENT</cryptocurrency>
@@ -308,14 +327,6 @@
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>BAY</cryptocurrency>
             </exchange>
-            <exchange prefix="itbit" name="itBit.com Exchange">
-                <param name="userId" />
-                <param name="accountId" />
-                <param name="apikey" />
-                <param name="apisecret" />
-                <param name="fiatcurrency" />
-                <cryptocurrency>BTC</cryptocurrency>
-            </exchange>
             <exchange prefix="dvchain" name="DV Chain Exchange">
                 <param name="secretKey" />
                 <cryptocurrency>BTC</cryptocurrency>
@@ -362,8 +373,8 @@
             <cryptocurrency buyonly="true">BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>DASH</cryptocurrency>
-            <cryptocurrency>ETC</cryptocurrency>
-            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency buyonly="true">ETC</cryptocurrency>
+            <cryptocurrency buyonly="true">ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
             <help>accountname parameter is optional</help>
@@ -542,6 +553,7 @@
             <cryptocurrency>TRX</cryptocurrency>
             <cryptocurrency>USDS</cryptocurrency>
             <cryptocurrency>USDT</cryptocurrency>
+            <cryptocurrency>USDTTRON</cryptocurrency>
             <cryptocurrency>VIA</cryptocurrency>
             <cryptocurrency>VOLTZ</cryptocurrency>
             <cryptocurrency>WDC</cryptocurrency>
@@ -609,6 +621,7 @@
             <cryptocurrency>TRTL</cryptocurrency>
             <cryptocurrency>TRX</cryptocurrency>
             <cryptocurrency>USDT</cryptocurrency>
+            <cryptocurrency>USDTTRON</cryptocurrency>
             <cryptocurrency>VIA</cryptocurrency>
             <cryptocurrency>VOLTZ</cryptocurrency>
             <cryptocurrency>WDC</cryptocurrency>
@@ -616,6 +629,7 @@
             <cryptocurrency>XRP</cryptocurrency>
             <cryptocurrency>TENT</cryptocurrency>
             <cryptocurrency>XZC</cryptocurrency>
+            <cryptocurrency>ADA</cryptocurrency>
         </ratesource>
         <exchange prefix="binancecom" name="Binance.com">
             <param name="apikey"/>
@@ -635,6 +649,7 @@
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>NANO</cryptocurrency>
             <cryptocurrency>NULS</cryptocurrency>
+            <cryptocurrency>PAXG</cryptocurrency>
             <cryptocurrency>REP</cryptocurrency>
             <cryptocurrency>SYS</cryptocurrency>
             <cryptocurrency>TRX</cryptocurrency>
@@ -661,6 +676,7 @@
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>NANO</cryptocurrency>
             <cryptocurrency>NULS</cryptocurrency>
+            <cryptocurrency>PAXG</cryptocurrency>
             <cryptocurrency>REP</cryptocurrency>
             <cryptocurrency>SYS</cryptocurrency>
             <cryptocurrency>TRX</cryptocurrency>
@@ -684,6 +700,7 @@
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>NANO</cryptocurrency>
+            <cryptocurrency>PAXG</cryptocurrency>
             <cryptocurrency>USDT</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
         </exchange>
@@ -698,6 +715,7 @@
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>NANO</cryptocurrency>
+            <cryptocurrency>PAXG</cryptocurrency>
             <cryptocurrency>USDT</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
         </ratesource>
@@ -716,6 +734,12 @@
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
         </ratesource>
+        <cryptologo cryptocurrency="BNB" file="bnb.png"/>
+        <cryptologo cryptocurrency="BNB" file="bnb.svg"/>
+        <cryptologo cryptocurrency="KMD" file="kmd.png"/>
+        <cryptologo cryptocurrency="KMD" file="kmd.svg"/>
+        <cryptologo cryptocurrency="TRX" file="trx.png"/>
+        <cryptologo cryptocurrency="TRX" file="trx.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.bitcoincash.BitcoinCashExtension">
         <wallet prefix="bitcoincashd" name="BitcoinABC/BCHN Cash Core - bitcoind" >
@@ -745,7 +769,7 @@
             <param name="address" />
             <param name="secret" />
             <param name="signature" />
-            <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency buyonly="true">BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>DAI</cryptocurrency>
             <cryptocurrency>BIZZ</cryptocurrency>
@@ -759,9 +783,9 @@
             <param name="signature" />
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
-            <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency buyonly="true">DAI</cryptocurrency>
             <cryptocurrency>BIZZ</cryptocurrency>
-            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency buyonly="true">ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <help>Telr Cash is a non-custodial, stablecoin "hot" wallet with access to over 100+ cryptos.</help>
         </wallet>
@@ -795,6 +819,7 @@
             <cryptocurrency>DOGE</cryptocurrency>
         </wallet>
         <wallet prefix="dogecoind" name="Dogecoind">
+            <tunnel supported="true"/>
             <param name="protocol" />
             <param name="user" />
             <param name="password" />
@@ -1724,9 +1749,6 @@
             <param name="fiatCurrency" />
             <param name="coinmarketcapApiKey"/>
             <cryptocurrency>LSK</cryptocurrency>
-            <cryptocurrency>BTC</cryptocurrency>
-            <cryptocurrency>LTC</cryptocurrency>
-            <cryptocurrency>ETH</cryptocurrency>
         </ratesource>
         <cryptologo cryptocurrency="LSK" file="lisk.png"/>
         <cryptologo cryptocurrency="LSK" file="lisk.svg"/>
@@ -1736,14 +1758,15 @@
             <param name="projectId" />
             <param name="mnemonic" />
             <help>Mnemonic should be 24 words delimited by spaces</help>
-            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency buyonly="true">ETH</cryptocurrency>
         </wallet>
         <wallet prefix="infuraERC20_DAI_18_0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359" name="Infura.io wallet - DAI">
             <!-- Hint: infuraERC20_TOKENSYMBOL_DECIMALPLACES_CONTRACTADDRESS -->
             <param name="projectId" />
             <param name="mnemonic" />
             <param name="gaslimit" />
-            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
+            <param name="gasPriceMultiplier" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
             <cryptocurrency buyonly="true">DAI</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="DAI" file="dai.png"/>
@@ -1754,7 +1777,8 @@
             <param name="projectId" />
             <param name="mnemonic" />
             <param name="gaslimit" />
-            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
+            <param name="gasPriceMultiplier" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
             <cryptocurrency buyonly="true">BIZZ</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="BIZZ" file="bizz.png"/>
@@ -1764,7 +1788,8 @@
             <param name="projectId" />
             <param name="mnemonic" />
             <param name="gaslimit" />
-            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
+            <param name="gasPriceMultiplier" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
             <cryptocurrency>MKR</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="MKR" file="mkr.png"/>
@@ -1773,7 +1798,8 @@
             <param name="projectId" />
             <param name="mnemonic" />
             <param name="gaslimit" />
-            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
+            <param name="gasPriceMultiplier" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
             <cryptocurrency>BAT</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="BAT" file="bat.png"/>
@@ -1782,7 +1808,8 @@
             <param name="projectId" />
             <param name="mnemonic" />
             <param name="gaslimit" />
-            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
+            <param name="gasPriceMultiplier" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
             <cryptocurrency>REP</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="REP" file="rep.png"/>
@@ -1791,7 +1818,8 @@
             <param name="projectId" />
             <param name="mnemonic" />
             <param name="gaslimit" />
-            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
+            <param name="gasPriceMultiplier" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
             <cryptocurrency>JOB</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="JOB" file="jobchain.png"/>
@@ -1800,7 +1828,8 @@
             <param name="projectId" />
             <param name="mnemonic" />
             <param name="gaslimit" />
-            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
+            <param name="gasPriceMultiplier" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
             <cryptocurrency>LMY</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="LMY" file="lunchmoney.png"/>
@@ -1809,7 +1838,8 @@
             <param name="projectId" />
             <param name="mnemonic" />
             <param name="gaslimit" />
-            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
+            <param name="gasPriceMultiplier" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
             <cryptocurrency>ANT</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="ANT" file="ant.png"/>
@@ -1818,7 +1848,8 @@
             <param name="projectId" />
             <param name="mnemonic" />
             <param name="gaslimit" />
-            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
+            <param name="gasPriceMultiplier" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
             <cryptocurrency>HBX</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="HBX" file="hbx.svg"/>
@@ -1826,7 +1857,8 @@
             <param name="projectId" />
             <param name="mnemonic" />
             <param name="gaslimit" />
-            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
+            <param name="gasPriceMultiplier" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
             <cryptocurrency>VOLTZ</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="VOLTZ" file="voltz.svg"/>
@@ -1834,7 +1866,8 @@
             <param name="projectId" />
             <param name="mnemonic" />
             <param name="gaslimit" />
-            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
+            <param name="gasPriceMultiplier" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
             <cryptocurrency>THBX</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="THBX" file="thbx.svg"/>
@@ -1842,7 +1875,8 @@
             <param name="projectId" />
             <param name="mnemonic" />
             <param name="gaslimit" />
-            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
+            <param name="gasPriceMultiplier" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
             <cryptocurrency>MUSD</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="MUSD" file="musd.svg"/>
@@ -1862,7 +1896,8 @@
           <param name="projectId" />
           <param name="mnemonic" />
           <param name="gaslimit" />
-          <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
+          <param name="gasPriceMultiplier" />
+          <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
           <cryptocurrency>USDS</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="USDS" file="usds.png"/>
@@ -1871,7 +1906,8 @@
             <param name="projectId" />
             <param name="mnemonic" />
             <param name="gaslimit" />
-            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
+            <param name="gasPriceMultiplier" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
             <cryptocurrency>HT</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="HT" file="ht.png"/>
@@ -1880,7 +1916,8 @@
             <param name="projectId" />
             <param name="mnemonic" />
             <param name="gaslimit" />
-            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
+            <param name="gasPriceMultiplier" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
             <cryptocurrency>ZPAE</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="ZPAE" file="zpae.png"/>
@@ -1889,11 +1926,32 @@
             <param name="projectId" />
             <param name="mnemonic" />
             <param name="gaslimit" />
-            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional</help>
+            <param name="gasPriceMultiplier" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
             <cryptocurrency>USDT</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="USDT" file="usdt.png"/>
         <cryptologo cryptocurrency="USDT" file="usdt.svg"/>
+        <wallet prefix="infuraERC20_WILC_8_0xc98a910ede52e7d5308525845f19e17470dbccf7" name="Infura.io wallet - WILC">
+            <param name="projectId" />
+            <param name="mnemonic" />
+            <param name="gaslimit" />
+            <param name="gasPriceMultiplier" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
+            <cryptocurrency>WILC</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="WILC" file="wilc.png"/>
+        <cryptologo cryptocurrency="WILC" file="wilc.svg"/>
+        <wallet prefix="infuraERC20_PAXG_18_0x45804880de22913dafe09f4980848ece6ecbaf78" name="Infura.io wallet - PAXG">
+            <param name="projectId" />
+            <param name="mnemonic" />
+            <param name="gaslimit" />
+            <param name="gasPriceMultiplier" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
+            <cryptocurrency>PAXG</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="PAXG" file="paxg.png"/>
+        <cryptologo cryptocurrency="PAXG" file="paxg.svg"/>
         <!-- ADD your ERC20 tokens here. And don't forget to add cryptologos. -->
     </extension>
 
@@ -1996,8 +2054,40 @@
             <param name="walletAddress" />
             <cryptocurrency>ILC</cryptocurrency>
         </wallet>
+        <ratesource prefix="nomics" name ="https://nomics.com/" >
+            <param name="fiatCurrency" />
+            <param name="nomicsApiKey"/>
+            <cryptocurrency>ILC</cryptocurrency>
+            <cryptocurrency>WILC</cryptocurrency>
+        </ratesource>
         <cryptologo cryptocurrency="ILC" file="ilc.png"/>
         <cryptologo cryptocurrency="ILC" file="ilc.svg"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.cardano.CardanoExtension" >
+        <wallet prefix="cardano" name="Cardano">
+            <tunnel supported="true"/>
+            <param name="protocol" />
+            <param name="host" />
+            <param name="port" />
+            <param name="wallet_id" />
+            <param name="wallet_passphrase" />
+            <cryptocurrency>ADA</cryptocurrency>
+            <help>Use protocol http or https, host and port to connect to cardano-node API. Wallet ID and passphrase are mandatory to support wallet operations.</help>
+        </wallet>
+        <cryptologo cryptocurrency="ADA" file="cardano_ada.png"/>
+        <cryptologo cryptocurrency="ADA" file="cardano_ada.svg"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.tron.TronExtension">
+        <wallet prefix="tridentTRC20_USDTTRON_6_TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t" name="Tron TRC20 Trident wallet - USDT">
+            <param name="apikey"/>
+            <param name="privatekey"/>
+            <help>apikey is obtained from trongrid.io. privatekey is 64 characters long hex string</help>
+            <cryptocurrency>USDTTRON</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="USDTTRON" file="usdttron.png"/>
+        <cryptologo cryptocurrency="USDTTRON" file="usdttron.svg"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.ethereumclassic.EthereumClassicExtension">
     </extension>
 
 </extensions>

@@ -20,6 +20,7 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.binance;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,7 +28,7 @@ public class BinanceUsExchange extends BinanceExchange {
     private static final String SSL_URI = "https://api.binance.us/";
 
     private static final Set<String> SUPPORTED_FIATS = new HashSet<>();
-    private static final Set<String> SUPPORTED_CRYPTOS = new HashSet<>();
+    private static final Set<SupportedCryptoCurrency> SUPPORTED_CRYPTOS = new HashSet<>();
 
     static {
         SUPPORTED_FIATS.add(FiatCurrency.USD.getCode());
@@ -35,17 +36,18 @@ public class BinanceUsExchange extends BinanceExchange {
         SUPPORTED_FIATS.add(CryptoCurrency.USDC.getCode());
         SUPPORTED_FIATS.add(CryptoCurrency.USDT.getCode());
 
-        SUPPORTED_CRYPTOS.add(CryptoCurrency.BAT.getCode());
-        SUPPORTED_CRYPTOS.add(CryptoCurrency.BCH.getCode());
-        SUPPORTED_CRYPTOS.add(CryptoCurrency.BNB.getCode());
-        SUPPORTED_CRYPTOS.add(CryptoCurrency.BTC.getCode());
-        SUPPORTED_CRYPTOS.add(CryptoCurrency.DASH.getCode());
-        SUPPORTED_CRYPTOS.add(CryptoCurrency.DOGE.getCode());
-        SUPPORTED_CRYPTOS.add(CryptoCurrency.NANO.getCode());
-        SUPPORTED_CRYPTOS.add(CryptoCurrency.ETH.getCode());
-        SUPPORTED_CRYPTOS.add(CryptoCurrency.LTC.getCode());
-        SUPPORTED_CRYPTOS.add(CryptoCurrency.USDT.getCode());
-        SUPPORTED_CRYPTOS.add(CryptoCurrency.XRP.getCode());
+        SUPPORTED_CRYPTOS.add(new SupportedCryptoCurrency(CryptoCurrency.BAT.getCode()));
+        SUPPORTED_CRYPTOS.add(new SupportedCryptoCurrency(CryptoCurrency.BCH.getCode()));
+        SUPPORTED_CRYPTOS.add(new SupportedCryptoCurrency(CryptoCurrency.BNB.getCode()));
+        SUPPORTED_CRYPTOS.add(new SupportedCryptoCurrency(CryptoCurrency.BTC.getCode()));
+        SUPPORTED_CRYPTOS.add(new SupportedCryptoCurrency(CryptoCurrency.DASH.getCode()));
+        SUPPORTED_CRYPTOS.add(new SupportedCryptoCurrency(CryptoCurrency.DOGE.getCode()));
+        SUPPORTED_CRYPTOS.add(new SupportedCryptoCurrency(CryptoCurrency.ETH.getCode()));
+        SUPPORTED_CRYPTOS.add(new SupportedCryptoCurrency(CryptoCurrency.LTC.getCode()));
+        SUPPORTED_CRYPTOS.add(new SupportedCryptoCurrency(CryptoCurrency.NANO.getCode()));
+        SUPPORTED_CRYPTOS.add(new SupportedCryptoCurrency(CryptoCurrency.PAXG.getCode()));
+        SUPPORTED_CRYPTOS.add(new SupportedCryptoCurrency(CryptoCurrency.USDT.getCode(), new BigDecimal("0.000001")));
+        SUPPORTED_CRYPTOS.add(new SupportedCryptoCurrency(CryptoCurrency.XRP.getCode(), new BigDecimal("0.000001")));
     }
 
     public BinanceUsExchange(String preferredFiatCurrency) {
@@ -62,7 +64,7 @@ public class BinanceUsExchange extends BinanceExchange {
     }
 
     @Override
-    public Set<String> getCryptoCurrencies() {
+    public Set<SupportedCryptoCurrency> getSupportedCryptoCurrencies() {
        return SUPPORTED_CRYPTOS;
     }
 }

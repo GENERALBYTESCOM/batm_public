@@ -79,6 +79,7 @@ public class CoinPaprikaRateSource implements IRateSource {
         CRYPTOCURRENCIES.put(CryptoCurrency.NLG.getCode(), "nlg-gulden");
         CRYPTOCURRENCIES.put(CryptoCurrency.NULS.getCode(), "nuls-nuls");
         CRYPTOCURRENCIES.put(CryptoCurrency.NXT.getCode(), "nxt-nxt");
+        CRYPTOCURRENCIES.put(CryptoCurrency.PAXG.getCode(), "paxg-pax-gold");
         CRYPTOCURRENCIES.put(CryptoCurrency.POT.getCode(), "pot-potcoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.REP.getCode(), "rep-augur");
         CRYPTOCURRENCIES.put(CryptoCurrency.SMART.getCode(), "smart-smartcash");
@@ -90,6 +91,7 @@ public class CoinPaprikaRateSource implements IRateSource {
         CRYPTOCURRENCIES.put(CryptoCurrency.TKN.getCode(), "tkn-tokencard");
         CRYPTOCURRENCIES.put(CryptoCurrency.TRX.getCode(), "trx-tron");
         CRYPTOCURRENCIES.put(CryptoCurrency.USDT.getCode(), "usdt-tether");
+        CRYPTOCURRENCIES.put(CryptoCurrency.USDTTRON.getCode(), "usdt-tether"); // using USDT for rate source
         CRYPTOCURRENCIES.put(CryptoCurrency.VIA.getCode(), "via-viacoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.VOLTZ.getCode(), "voltz-voltz");
         CRYPTOCURRENCIES.put(CryptoCurrency.WDC.getCode(), "wdc-worldcoin");

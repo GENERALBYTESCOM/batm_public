@@ -22,6 +22,7 @@ import com.generalbytes.batm.server.extensions.aml.IAMLProvider;
 import com.generalbytes.batm.server.extensions.aml.IExternalIdentityProvider;
 import com.generalbytes.batm.server.extensions.aml.scoring.ITransactionScoringProvider;
 import com.generalbytes.batm.server.extensions.communication.ICommunicationProvider;
+import com.generalbytes.batm.server.extensions.communication.IPhoneLookupProvider;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.util.Set;
@@ -36,6 +37,11 @@ public interface IExtension {
      * @param ctx
      */
     void init(IExtensionContext ctx);
+
+    /**
+     * This method is called before the Extension is unloaded.
+     */
+    void deinit();
 
     /**
      * Returns the name of the extension.
@@ -153,6 +159,12 @@ public interface IExtension {
      * @return
      */
     Set<IAMLProvider> getAMLProviders();
+
+    /**
+     * Optionally returns phone lookup providers that can be used to find information about phone number.
+     * @return
+     */
+    Set<IPhoneLookupProvider> getPhoneLookupProviders();
 
     /**
      * @param transactionScoringProviderParamValues colon-separated list of parameters for the provider connection.

@@ -77,6 +77,7 @@ public class CoinGeckoRateSource implements IRateSource {
         CRYPTOCURRENCIES.put(CryptoCurrency.NANO.getCode(), "nano");
         CRYPTOCURRENCIES.put(CryptoCurrency.NULS.getCode(), "nuls");
         CRYPTOCURRENCIES.put(CryptoCurrency.NXT.getCode(), "nxt");
+        CRYPTOCURRENCIES.put(CryptoCurrency.PAXG.getCode(), "pax-gold");
         CRYPTOCURRENCIES.put(CryptoCurrency.POT.getCode(), "potcoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.REP.getCode(), "augur");
         CRYPTOCURRENCIES.put(CryptoCurrency.SMART.getCode(), "smartcash");
@@ -86,6 +87,7 @@ public class CoinGeckoRateSource implements IRateSource {
         CRYPTOCURRENCIES.put(CryptoCurrency.TKN.getCode(), "tokencard");
         CRYPTOCURRENCIES.put(CryptoCurrency.TRX.getCode(), "tron");
         CRYPTOCURRENCIES.put(CryptoCurrency.USDT.getCode(), "tether");
+        CRYPTOCURRENCIES.put(CryptoCurrency.USDTTRON.getCode(), "tether"); // using USDT for rate source
         CRYPTOCURRENCIES.put(CryptoCurrency.USDS.getCode(), "stableusd");
         CRYPTOCURRENCIES.put(CryptoCurrency.VIA.getCode(), "viacoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.VOLTZ.getCode(), "voltz");
