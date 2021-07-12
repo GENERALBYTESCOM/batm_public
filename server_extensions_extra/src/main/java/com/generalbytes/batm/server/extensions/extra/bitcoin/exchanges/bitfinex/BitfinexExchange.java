@@ -40,7 +40,7 @@ import org.knowm.xchange.dto.marketdata.Ticker;
 import org.knowm.xchange.dto.trade.LimitOrder;
 import org.knowm.xchange.dto.trade.MarketOrder;
 import org.knowm.xchange.dto.trade.OpenOrders;
-import org.knowm.xchange.exceptions.ExchangeException;
+import org.knowm.xchange.exceptions.CurrencyPairNotValidException;
 import org.knowm.xchange.service.account.AccountService;
 import org.knowm.xchange.service.marketdata.MarketDataService;
 import org.knowm.xchange.service.trade.TradeService;
@@ -155,10 +155,13 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
     private BigDecimal getExchangeRateLastSync(String cryptoCurrency, String cashCurrency) {
         MarketDataService marketDataService = getExchange().getMarketDataService();
+        CurrencyPair currencyPair = new CurrencyPair(getExchangeSpecificSymbol(cryptoCurrency), getExchangeSpecificSymbol(cashCurrency));
         try {
             RateLimiter.waitForPossibleCall(getClass());
-            Ticker ticker = marketDataService.getTicker(new CurrencyPair(getExchangeSpecificSymbol(cryptoCurrency), getExchangeSpecificSymbol(cashCurrency)));
+            Ticker ticker = marketDataService.getTicker(currencyPair);
             return ticker.getLast();
+        } catch (CurrencyPairNotValidException e) {
+            log.warn("Currency pair not valid: {}, {}", currencyPair, e.getMessage());
         } catch (IOException | TimeoutException e) {
             log.error("Error", e);
         }
@@ -281,6 +284,8 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
             if (orderProcessed) {
                 return orderId;
             }
+        } catch (CurrencyPairNotValidException e) {
+            log.warn("Currency pair not valid: {}, {}", currencyPair, e.getMessage());
         } catch (IOException | TimeoutException e) {
             log.error("Bitfinex exchange (purchaseCoins) failed", e);
         }
@@ -289,8 +294,6 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
     @Override
     public ITask createPurchaseCoinsTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
-        CurrencyPair currencyPair = new CurrencyPair(getExchangeSpecificSymbol(cryptoCurrency), getExchangeSpecificSymbol(fiatCurrencyToUse));
-
         if (!getCryptoCurrencies().contains(cryptoCurrency)) {
             return null;
         }
@@ -371,6 +374,8 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
             if (orderProcessed) {
                 return orderId;
             }
+        } catch (CurrencyPairNotValidException e) {
+            log.warn("Currency pair not valid: {}, {}", currencyPair, e.getMessage());
         } catch (IOException | TimeoutException e) {
             log.error("Bitfinex exchange (sellCoins) failed", e);
         }
@@ -409,11 +414,10 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
             log.info("Calling Bitfinex exchange (purchase " + amount + " " + cryptoCurrency + ")");
             AccountService accountService = getExchange().getAccountService();
             TradeService tradeService = getExchange().getTradeService();
+            CurrencyPair currencyPair = new CurrencyPair(getExchangeSpecificSymbol(cryptoCurrency), getExchangeSpecificSymbol(fiatCurrencyToUse));
 
             try {
                 log.debug("AccountInfo as String: " + accountService.getAccountInfo().toString());
-
-                CurrencyPair currencyPair = new CurrencyPair(getExchangeSpecificSymbol(cryptoCurrency), getExchangeSpecificSymbol(fiatCurrencyToUse));
 
                 MarketOrder order = new MarketOrder(Order.OrderType.BID, amount, currencyPair);
                 log.debug("marketOrder = " + order);
@@ -426,6 +430,8 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
                 } catch (InterruptedException e) {
                     log.error("Error", e);
                 }
+            } catch (CurrencyPairNotValidException e) {
+                log.warn("Currency pair not valid: {}, {}", currencyPair, e.getMessage());
             } catch (IOException e) {
                 log.error("Bitfinex exchange (purchaseCoins) failed", e);
             } catch (Throwable e) {
@@ -532,11 +538,10 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
             log.info("Calling Bitfinex exchange (sell " + cryptoAmount + " " + cryptoCurrency + ")");
             AccountService accountService = getExchange().getAccountService();
             TradeService tradeService = getExchange().getTradeService();
+            CurrencyPair currencyPair = new CurrencyPair(getExchangeSpecificSymbol(cryptoCurrency), getExchangeSpecificSymbol(fiatCurrencyToUse));
 
             try {
                 log.debug("AccountInfo as String: " + accountService.getAccountInfo().toString());
-
-                CurrencyPair currencyPair = new CurrencyPair(getExchangeSpecificSymbol(cryptoCurrency), getExchangeSpecificSymbol(fiatCurrencyToUse));
 
                 MarketOrder order = new MarketOrder(Order.OrderType.ASK, cryptoAmount, currencyPair);
                 log.debug("marketOrder = " + order);
@@ -549,6 +554,8 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
                 } catch (InterruptedException e) {
                     log.error("Error", e);
                 }
+            } catch (CurrencyPairNotValidException e) {
+                log.warn("Currency pair not valid: {}, {}", currencyPair, e.getMessage());
             } catch (IOException e) {
                 log.error("Bitfinex exchange (sellCoins) failed", e);
             } catch (Throwable e) {
@@ -693,10 +700,8 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
                 log.debug("Called Bitfinex exchange for BUY rate: " + cryptoCurrency + fiatCurrency + " = " + tradableLimit);
                 return tradableLimit.multiply(cryptoAmount);
             }
-        } catch (ExchangeException e) {
-            log.error("Error", e);
-        } catch (IOException e) {
-            log.error("Error", e);
+        } catch (CurrencyPairNotValidException e) {
+            log.warn("Currency pair not valid: {}, {}", currencyPair, e.getMessage());
         } catch (Throwable e) {
             log.error("Error", e);
         }
@@ -740,10 +745,8 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
                 log.debug("Called Bitfinex exchange for SELL rate: " + cryptoCurrency + fiatCurrency + " = " + tradableLimit);
                 return tradableLimit.multiply(cryptoAmount);
             }
-        } catch (ExchangeException e) {
-            log.error("Error", e);
-        } catch (IOException e) {
-            log.error("Error", e);
+        } catch (CurrencyPairNotValidException e) {
+            log.warn("Currency pair not valid: {}, {}", currencyPair, e.getMessage());
         } catch (Throwable e) {
             log.error("Error", e);
         }
