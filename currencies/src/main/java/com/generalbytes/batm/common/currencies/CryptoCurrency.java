@@ -91,6 +91,7 @@ public enum CryptoCurrency {
     SPICE("Spice"),
     START("Startcoin"),
     SUM("Sumcoin"),
+    SUNCASH("SunCash")
     SYS("Syscoin"),
     THBX("DigitalThaiBaht"),
     TKN("TokenCard"),
