@@ -132,7 +132,7 @@ public interface IIdentityPiece {
     /**
      * Identity contact province, used with TYPE_PERSONAL_INFORMATION
      *
-     * @return contact province or null
+     * @return contact province (e.g. a state in the US) or null
      */
     String getContactProvince();
 

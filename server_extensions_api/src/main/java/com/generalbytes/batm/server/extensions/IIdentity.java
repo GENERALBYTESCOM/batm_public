@@ -62,13 +62,13 @@ public interface IIdentity {
     /**
      * Identity state, one of the following:
      * <ul>
-     *      <li>STATE_NOT_REGISTERED = 0 - "Not Registered"</li>
-     *      <li>STATE_REGISTERED = 1 - "Registered"</li>
-     *      <li>STATE_TO_BE_REGISTERED = 2 - "Awaiting Registration"</li>
-     *      <li>STATE_PROHIBITED = 3 - "Rejected"</li>
-     *      <li>STATE_ANONYMOUS = 4 - "Anonymous"</li>
-     *      <li>STATE_PROHIBITED_TO_BE_REGISTERED = 5 - "Rejected Wants To Be Registered"</li>
-     *      <li>STATE_TO_BE_VERIFIED = 6 - "Awaiting Verification"</li>
+     *      <li>{@link IIdentity#STATE_NOT_REGISTERED} = 0 - "Not Registered"</li>
+     *      <li>{@link IIdentity#STATE_REGISTERED} = 1 - "Registered"</li>
+     *      <li>{@link IIdentity#STATE_TO_BE_REGISTERED} = 2 - "Awaiting Registration"</li>
+     *      <li>{@link IIdentity#STATE_PROHIBITED} = 3 - "Rejected"</li>
+     *      <li>{@link IIdentity#STATE_ANONYMOUS} = 4 - "Anonymous"</li>
+     *      <li>{@link IIdentity#STATE_PROHIBITED_TO_BE_REGISTERED} = 5 - "Rejected Wants To Be Registered"</li>
+     *      <li>{@link IIdentity#STATE_TO_BE_VERIFIED} = 6 - "Awaiting Verification"</li>
      * </ul>
      *
      * @return int value representing current identity state.
@@ -78,8 +78,8 @@ public interface IIdentity {
     /**
      * Identity type, one of the following:
      * <ul>
-     *     <li>TYPE_INTERNAL = 0; - must not be instantiated by extension</li>
-     *     <li>TYPE_EXTERNAL = 1 -this identity was created externally (by extension)</li>
+     *     <li>{@link IIdentity#TYPE_INTERNAL} = 0 - must not be instantiated by extension</li>
+     *     <li>{@link IIdentity#TYPE_EXTERNAL} = 1 -this identity was created externally (by extension)</li>
      * </ul>
      *
      * @return int value representing type, if not provided defaults to TYPE_INTERNAL
