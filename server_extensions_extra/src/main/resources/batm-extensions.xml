@@ -837,7 +837,7 @@
             <param name="label" />
             <cryptocurrency>NYC</cryptocurrency>
         </wallet>
-        <wallet prefix="Newyorkcoindnoforward" name="Newyorkcoind (no forward)">
+        <wallet prefix="newyorkcoindnoforward" name="Newyorkcoind (no forward)">
             <tunnel supported="true"/>
             <sendtomany supported="true"/>
             <param name="protocol" />
