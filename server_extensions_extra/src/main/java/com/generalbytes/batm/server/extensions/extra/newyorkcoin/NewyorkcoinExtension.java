@@ -94,6 +94,20 @@ public class NewyorkcoinExtension extends AbstractExtension{
             StringTokenizer st = new StringTokenizer(sourceLogin,":");
             String rsType = st.nextToken();
 
+            
+            } else if ("nycfix".equalsIgnoreCase(exchangeType)) {
+                BigDecimal rate = BigDecimal.ZERO;
+                if (st.hasMoreTokens()) {
+                    try {
+                        rate = new BigDecimal(st.nextToken());
+                    } catch (Throwable e) {
+                    }
+                }
+                String preferedFiatCurrency = FiatCurrency.USD.getCode();
+                if (st.hasMoreTokens()) {
+                    preferedFiatCurrency = st.nextToken().toUpperCase();
+                }
+                return new FixPriceRateSource(rate,preferedFiatCurrency);
 
             }
         }
