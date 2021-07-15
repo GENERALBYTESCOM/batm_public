@@ -20,6 +20,9 @@ package com.generalbytes.batm.server.extensions;
 
 import java.util.Date;
 
+/**
+ * Note entry related to some {@link IIdentity}.
+ */
 public interface IIdentityNote {
 
     /**

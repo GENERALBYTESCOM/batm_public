@@ -19,6 +19,9 @@ package com.generalbytes.batm.server.extensions;
 
 import java.util.Date;
 
+/**
+ * Person is an entity involved in your BATM network. Can be perceived as a person related to a user account
+ */
 public interface IPerson {
     String getFirstname();
     String getLastname();
