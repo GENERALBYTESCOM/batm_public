@@ -230,6 +230,7 @@
                 <cryptocurrency>DAI</cryptocurrency>
                 <cryptocurrency>BIZZ</cryptocurrency>
                 <cryptocurrency>DASH</cryptocurrency>
+                <cryptocurrency>DDB</cryptocurrency>
                 <cryptocurrency>DEX</cryptocurrency>
                 <cryptocurrency>DGB</cryptocurrency>
                 <cryptocurrency>DOGE</cryptocurrency>
@@ -261,6 +262,7 @@
                 <cryptocurrency>SPICE</cryptocurrency>
                 <cryptocurrency>START</cryptocurrency>
                 <cryptocurrency>SUM</cryptocurrency>
+                <cryptocurrency>SUNCASH</cryptocurrency>
                 <cryptocurrency>SYS</cryptocurrency>
                 <cryptocurrency>TKN</cryptocurrency>
                 <cryptocurrency>USDT</cryptocurrency>
@@ -2002,10 +2004,16 @@
             <param name="host" />
             <param name="port" />
             <cryptocurrency>SPICE</cryptocurrency>
+            <cryptocurrency>DDB</cryptocurrency>
+            <cryptocurrency>SUNCASH</cryptocurrency>
         </wallet>
         <!-- See https://github.com/kosinusbch/slp-token-icons for token logos -->
         <cryptologo cryptocurrency="SPICE" file="spice.png"/>
         <cryptologo cryptocurrency="SPICE" file="spice.svg"/>
+        <cryptologo cryptocurrency="DDB" file="ddb.png"/>
+        <cryptologo cryptocurrency="DDB" file="ddb.svg"/>
+        <cryptologo cryptocurrency="SUNCASH" file="suncash.png"/>
+        <cryptologo cryptocurrency="SUNCASH" file="suncash.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.ilcoin.IlcoinExtension" >
         <wallet prefix="ilcoind" name="ILCoin">
