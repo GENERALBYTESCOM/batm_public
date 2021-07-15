@@ -21,6 +21,9 @@ package com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.IWallet;
 
+import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.dto.BlockIOResponseAddresses;
+import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.dto.BlockIOResponseBalance;
+import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.dto.BlockIOResponseWithdrawal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

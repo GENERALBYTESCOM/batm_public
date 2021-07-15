@@ -16,37 +16,51 @@
  *
  ************************************************************************************/
 
-package com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio;
+package com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.dto;
 
-public class BlockIOResponseVerify {
+public class BlockIOResponseAddresses {
     private String status;
     private BlockIOData data;
 
-    public BlockIOResponseVerify() {
+    public BlockIOResponseAddresses() {
     }
 
     public class BlockIOData {
-        private boolean is_valid;
+        private String network;
+        private BlockIOAddress[] addresses;
 
-        public boolean isIs_valid() {
-            return is_valid;
+        public BlockIOData() {
         }
 
-        public void setIs_valid(boolean is_valid) {
-            this.is_valid = is_valid;
+        public String getNetwork() {
+            return network;
+        }
+
+        public BlockIOAddress[] getAddresses() {
+            return addresses;
+        }
+
+        public void setNetwork(String network) {
+            this.network = network;
+        }
+
+        public void setAddresses(BlockIOAddress[] addresses) {
+            this.addresses = addresses;
         }
     }
+
+
 
     public String getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
     public BlockIOData getData() {
         return data;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public void setData(BlockIOData data) {
