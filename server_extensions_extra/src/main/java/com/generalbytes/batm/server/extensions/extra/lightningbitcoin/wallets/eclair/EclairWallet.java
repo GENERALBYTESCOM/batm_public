@@ -22,6 +22,7 @@ import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.Ab
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.dto.Channel;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.dto.ErrorResponseException;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.dto.Invoice;
+import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.dto.ReceivedInfo;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.dto.SentInfo;
 import com.generalbytes.batm.server.extensions.ThrowingSupplier;
 import okhttp3.HttpUrl;
@@ -73,7 +74,7 @@ public class EclairWallet extends AbstractLightningWallet {
 
         List<SentInfo> sentInfo = callChecked(() -> api.getSentInfoByPaymentHash(invoice.paymentHash));
 
-        if (sentInfo.stream().filter(i -> i.status == SentInfo.Status.SUCCEEDED).findAny().isPresent()) {
+        if (sentInfo.stream().anyMatch(i -> i.status.type == SentInfo.Status.Type.sent)) {
             log.info("Invoice already paid");
             return null;
         }
@@ -85,12 +86,18 @@ public class EclairWallet extends AbstractLightningWallet {
 
             SentInfo sentInfo2 = callChecked(() -> api.getSentInfoById(paymentId).get(0));
 
-            switch (sentInfo2.status) {
-                case FAILED:
-                    log.error("Payment failed: id={}, paymentHash={}", sentInfo2.id, sentInfo2.paymentHash);
+            switch (sentInfo2.status.type) {
+                case failed:
+                    log.error("Payment failed: {}", sentInfo2);
                     return null;
-                case SUCCEEDED:
+                case sent:
+                    log.error("Payment sent: {}", sentInfo2);
                     return sentInfo2.paymentHash;
+                case pending:
+                    log.error("Payment pending: {}", sentInfo2);
+                    continue;
+                default:
+                    throw new IllegalArgumentException("Unsupported SentInfo.Status.Type");
             }
         }
         log.error("Payment result unknown; paymentId={}", paymentId);
@@ -151,7 +158,7 @@ public class EclairWallet extends AbstractLightningWallet {
     public BigDecimal getReceivedAmount(String destinationAddress, String cryptoCurrency) {
         return callChecked(cryptoCurrency, () -> {
             try {
-                return mSatToBitcoin(api.getReceivedInfoByInvoice(destinationAddress).amount);
+                return getReceivedAmount(api.getReceivedInfoByInvoice(destinationAddress));
             } catch (ErrorResponseException e) {
                 if (e.error.equals("Not found")) {
                     return BigDecimal.ZERO;
@@ -159,6 +166,18 @@ public class EclairWallet extends AbstractLightningWallet {
                 throw e;
             }
         });
+    }
+
+    private BigDecimal getReceivedAmount(ReceivedInfo receivedInfo) {
+        switch (receivedInfo.status.type) {
+            case received:
+                return mSatToBitcoin(receivedInfo.status.amount);
+            case pending:
+            case expired:
+                return BigDecimal.ZERO;
+            default:
+                throw new IllegalArgumentException("Unsupported ReceivedInfo.Status.Type");
+        }
     }
 
     @Override
