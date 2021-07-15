@@ -37,7 +37,7 @@ public class NewyorkcoinExtension extends AbstractExtension{
 
     @Override
     public String getName() {
-        return "BATM Newyorkcoin extension";
+        return "BATM NewYorkCoin extension";
     }
 
     @Override
@@ -92,10 +92,9 @@ public class NewyorkcoinExtension extends AbstractExtension{
     public IRateSource createRateSource(String sourceLogin) {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(sourceLogin,":");
-            String rsType = st.nextToken();
+            String exchangeType = st.nextToken();
 
-            
-            } else if ("nycfix".equalsIgnoreCase(exchangeType)) {
+            if ("nycfix".equalsIgnoreCase(exchangeType)) {
                 BigDecimal rate = BigDecimal.ZERO;
                 if (st.hasMoreTokens()) {
                     try {
@@ -108,8 +107,8 @@ public class NewyorkcoinExtension extends AbstractExtension{
                     preferedFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new FixPriceRateSource(rate,preferedFiatCurrency);
-
             }
+
         }
         return null;
     }
