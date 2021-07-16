@@ -16,6 +16,7 @@ import si.mazi.rescu.HttpStatusIOException;
 import si.mazi.rescu.RestProxyFactory;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -24,6 +25,7 @@ import java.util.Set;
 public class CardanoWallet implements IWallet {
     private static final Logger log = LoggerFactory.getLogger(CardanoWallet.class);
     private static final String CRYPTO_CURRENCY = CryptoCurrency.ADA.getCode();
+    private static final int ADA_TO_LOVELACE_SCALE = 6; //Used to convert BigDecimal amount to int amount and back
 
     private final CardanoWalletApi api;
     private final String walletId;
@@ -74,7 +76,8 @@ public class CardanoWallet implements IWallet {
         try {
             Wallet wallet = api.getWallet(walletId);
             Balance balance = wallet.getBalance();
-            return balance.getAvailable().getQuantity();
+            Long quantity = balance.getAvailable().getQuantity();
+            return BigDecimal.valueOf(quantity).movePointLeft(ADA_TO_LOVELACE_SCALE);
         } catch (HttpStatusIOException hse) {
             log.debug("getCryptoBalance - error HTTP code: {}, HTTP content: {}", hse.getHttpStatusCode(), hse.getHttpBody());
         } catch (Exception e) {
@@ -99,8 +102,11 @@ public class CardanoWallet implements IWallet {
     }
 
     private CreateTransactionRequest createTransactionRequest(String destinationAddress, BigDecimal quantity) {
+        quantity = quantity.setScale(ADA_TO_LOVELACE_SCALE, RoundingMode.FLOOR);
+        long quantityInLovelace = quantity.movePointRight(ADA_TO_LOVELACE_SCALE).longValue();
+
         Amount amount = new Amount();
-        amount.setQuantity(quantity);
+        amount.setQuantity(quantityInLovelace);
         amount.setUnit("lovelace");
 
         Payment payment = new Payment();
