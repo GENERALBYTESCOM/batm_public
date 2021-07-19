@@ -159,23 +159,6 @@ public class LndWallet extends AbstractLightningWallet {
     }
 
     @Override
-    public boolean canSend(String invoice, BigDecimal amount, String cryptoCurrency) {
-        PaymentRequest paymentRequest = callChecked(cryptoCurrency, () -> api.decodePaymentRequest(invoice));
-        if (paymentRequest == null) {
-            return false;
-        }
-
-        List<RouteResponse.Route> routes = callChecked(cryptoCurrency, () -> api.getRoute(paymentRequest.destination, bitcoinToSat(amount)).routes);
-        if (routes == null || routes.isEmpty()) {
-            return false;
-        }
-
-        List<String> route = routes.get(0).hops.stream().map(h -> h.pub_key).collect(Collectors.toList());
-        log.debug("Route for {} {} to {}: {}", amount, cryptoCurrency, invoice, route);
-        return route != null && !route.isEmpty();
-    }
-
-    @Override
     protected <T> T callChecked(ThrowingSupplier<T> supplier) {
         try {
             return supplier.get();
