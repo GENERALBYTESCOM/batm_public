@@ -25,7 +25,6 @@ import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.ln
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.lnd.dto.Invoice;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.lnd.dto.Payment;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.lnd.dto.PaymentRequest;
-import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.lnd.dto.RouteResponse;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.lnd.dto.SendPaymentResponse;
 import com.generalbytes.batm.server.coinutil.CoinUnit;
 import com.generalbytes.batm.server.extensions.util.net.HexStringCertTrustManager;
@@ -156,23 +155,6 @@ public class LndWallet extends AbstractLightningWallet {
                 channel.setRemoteNodeAlias(aliasesByPubKey.get(channel.getRemoteNodeId()));
             }
         }
-    }
-
-    @Override
-    public boolean canSend(String invoice, BigDecimal amount, String cryptoCurrency) {
-        PaymentRequest paymentRequest = callChecked(cryptoCurrency, () -> api.decodePaymentRequest(invoice));
-        if (paymentRequest == null) {
-            return false;
-        }
-
-        List<RouteResponse.Route> routes = callChecked(cryptoCurrency, () -> api.getRoute(paymentRequest.destination, CoinUnit.bitcoinToSat(amount)).routes);
-        if (routes == null || routes.isEmpty()) {
-            return false;
-        }
-
-        List<String> route = routes.get(0).hops.stream().map(h -> h.pub_key).collect(Collectors.toList());
-        log.debug("Route for {} {} to {}: {}", amount, cryptoCurrency, invoice, route);
-        return route != null && !route.isEmpty();
     }
 
     @Override

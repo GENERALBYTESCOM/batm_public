@@ -130,13 +130,6 @@ public class EclairWallet extends AbstractLightningWallet {
     }
 
     @Override
-    public boolean canSend(String invoice, BigDecimal amount, String cryptoCurrency) {
-        List<String> route = callChecked(cryptoCurrency, () -> api.findRoute(invoice, CoinUnit.bitcoinToMSat(amount)));
-        log.debug("Route for {} {} to {}: {}", amount, cryptoCurrency, invoice, route);
-        return route != null && !route.isEmpty();
-    }
-
-    @Override
     public BigDecimal getCryptoBalance(String cryptoCurrency) {
         return callChecked(cryptoCurrency, () -> {
             List<? extends ILightningChannel> channels = getChannels();

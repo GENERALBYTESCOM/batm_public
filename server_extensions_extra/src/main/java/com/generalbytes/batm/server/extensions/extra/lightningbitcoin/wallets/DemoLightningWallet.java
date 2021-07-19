@@ -32,11 +32,6 @@ public class DemoLightningWallet extends AbstractLightningWallet {
     }
 
     @Override
-    public boolean canSend(String invoice, BigDecimal amount, String cryptoCurrency) {
-        return true;
-    }
-
-    @Override
     public BigDecimal getCryptoBalance(String cryptoCurrency) {
         return BigDecimal.TEN;
     }
