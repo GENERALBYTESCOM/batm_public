@@ -16,6 +16,8 @@
 
 package com.generalbytes.batm.server.coinutil;
 
+import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Locale;
 
@@ -97,6 +99,44 @@ public class Bech32 {
         return ret;
     }
 
+    /**
+     * Re-arrange data from `fromBits` into groups of `toBits`, and pad with zeroes at the end if needed.
+     */
+    private static byte[] convertBits(byte[] data, int frombits, int tobits, boolean pad) {
+        int acc = 0;
+        int bits = 0;
+        ByteArrayOutputStream ret = new ByteArrayOutputStream();
+
+        int maxv = (1 << tobits) - 1;
+
+        for (byte value : data) {
+            if (value < 0 || (value >> frombits) != 0) {
+                throw new IllegalArgumentException(String.format("invalid data range : %d (frombits=%d)", value, frombits));
+            }
+
+            acc = (acc << frombits) | value;
+            bits += frombits;
+            while (bits >= tobits) {
+                bits -= tobits;
+                ret.write((acc >> bits) & maxv);
+            }
+        }
+        if (pad) {
+            if (bits > 0) {
+                ret.write((acc << (tobits - bits)) & maxv);
+            }
+        } else if (bits >= frombits) {
+            throw new IllegalArgumentException("illegal zero padding");
+        } else if (((acc << (tobits - bits)) & maxv) != 0) {
+            throw new IllegalArgumentException("non-zero padding");
+        }
+        return ret.toByteArray();
+    }
+
+    public static String encodeString(String hrp, String data) {
+        return encode(hrp, convertBits(data.getBytes(StandardCharsets.UTF_8), 8, 5, true));
+    }
+
     /** Encode a Bech32 string. */
     public static String encode(final Bech32Data bech32) {
         return encode(bech32.hrp, bech32.data);
@@ -123,6 +163,22 @@ public class Bech32 {
             sb.append(CHARSET.charAt(b));
         }
         return sb.toString();
+    }
+
+    public static Bech32Data decodeAddress(final String str) throws AddressFormatException {
+        Bech32Data bech32Data = decodeUnlimitedLength(str);
+        byte[] bytes = Arrays.copyOfRange(bech32Data.data, 1, bech32Data.data.length);
+        byte[] converted = convertBits(bytes, 5, 8, false);
+        return new Bech32Data(bech32Data.hrp, converted);
+    }
+
+    public static String decodeString(String hrp, String str) throws AddressFormatException {
+        Bech32Data bech32Data = decodeUnlimitedLength(str);
+        byte[] converted = convertBits(bech32Data.data, 5, 8, false);
+        if (!bech32Data.hrp.equals(hrp)) {
+            throw new AddressFormatException(String.format("HRP does not match: %s != %s", bech32Data.hrp, hrp));
+        }
+        return new String(converted, StandardCharsets.US_ASCII);
     }
 
     /** Decode a Bech32 string. */
