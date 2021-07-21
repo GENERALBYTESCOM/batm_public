@@ -99,14 +99,6 @@ public class LightningBitcoinExtension extends AbstractExtension {
     }
 
     @Override
-    public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (CryptoCurrency.LBTC.getCode().equalsIgnoreCase(cryptoCurrency)) {
-            return new LightningBitcoinAddressValidator();
-        }
-        return null;
-    }
-
-    @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<>();
         result.add(CryptoCurrency.LBTC.getCode());
