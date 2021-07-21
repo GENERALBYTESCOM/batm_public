@@ -40,6 +40,11 @@ public class TestExtensionContext implements IExtensionContext {
     }
 
     @Override
+    public ITransactionDetails findTransactionByTransactionUUIDAndType(String uuid, int type) {
+        return null;
+    }
+
+    @Override
     public List<ITransactionDetails> findAllTransactionsByIdentityId(String publicIdentityId) {
         return null;
     }

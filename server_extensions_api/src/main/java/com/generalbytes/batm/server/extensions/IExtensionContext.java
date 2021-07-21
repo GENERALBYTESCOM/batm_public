@@ -69,6 +69,8 @@ public interface IExtensionContext {
      */
     ITransactionDetails findTransactionByTransactionId(String remoteOrLocalTransactionId);
 
+    ITransactionDetails findTransactionByTransactionUUIDAndType(String uuid, int type);
+
     /**
      * Finds and returns transactions performed by identity
      * @param publicIdentityId
