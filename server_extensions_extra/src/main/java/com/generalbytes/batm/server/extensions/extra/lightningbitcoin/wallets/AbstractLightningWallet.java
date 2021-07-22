@@ -30,8 +30,6 @@ import java.util.Set;
 
 public abstract class AbstractLightningWallet implements ILightningWallet, ILightningWalletInformation {
     private static final Logger log = LoggerFactory.getLogger(AbstractLightningWallet.class);
-    private static final int SATOSHI = 8;
-    private static final int MILLI = 3;
 
     @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, BigDecimal fee, String cryptoCurrency, String description) {
@@ -42,22 +40,6 @@ public abstract class AbstractLightningWallet implements ILightningWallet, ILigh
     public String getCryptoAddress(String cryptoCurrency) {
         validateCryptoCurrency(cryptoCurrency);
         return getPubKey();
-    }
-
-    protected BigDecimal satToBitcoin(Long amountMsat) {
-        return new BigDecimal(amountMsat).movePointLeft(SATOSHI);
-    }
-
-    protected Long bitcoinToSat(BigDecimal amount) {
-        return amount.movePointRight(SATOSHI).longValue();
-    }
-
-    protected BigDecimal mSatToBitcoin(Long amountMsat) {
-        return new BigDecimal(amountMsat).movePointLeft(MILLI + SATOSHI);
-    }
-
-    protected Long bitcoinToMSat(BigDecimal amount) {
-        return amount.movePointRight(MILLI + SATOSHI).longValue();
     }
 
     protected void sleep(long millis) {
