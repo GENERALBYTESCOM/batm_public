@@ -84,6 +84,7 @@ public enum CryptoCurrency {
     NBT("NuBits"),
     NLG("NLG"),
     NXT("Nxt"),
+    NYC("NewYorkCoin"),
     PAC("$PAC", "PACcoin"),
     PAXG("Paxos Gold"),
     POT("PotCoin"),
