@@ -96,11 +96,11 @@ public class BitgoWallet implements IWallet, ICanSendMany {
 
     @Override
     public String sendMany(Collection<Transfer> transfers, String cryptoCurrency, String description) {
-        List<BitGoRecipient> recipients = transfers.stream()
-            .map(transfer -> new BitGoRecipient(transfer.getDestinationAddress(), toSatoshis(transfer.getAmount(), cryptoCurrency)))
-            .collect(Collectors.toList());
-        final BitGoSendManyRequest request = new BitGoSendManyRequest(recipients, walletPassphrase, description, this.numBlocks);
         try {
+            List<BitGoRecipient> recipients = transfers.stream()
+                .map(transfer -> new BitGoRecipient(transfer.getDestinationAddress(), toSatoshis(transfer.getAmount(), cryptoCurrency)))
+                .collect(Collectors.toList());
+            final BitGoSendManyRequest request = new BitGoSendManyRequest(recipients, walletPassphrase, description, this.numBlocks);
             return getResultTxId(api.sendMany(cryptoCurrency.toLowerCase(), this.walletId, request));
         } catch (HttpStatusIOException hse) {
             log.debug("send coins error - HttpStatusIOException, error message: {}, HTTP code: {}, HTTP content: {}", hse.getMessage(), hse.getHttpStatusCode(), hse.getHttpBody());
@@ -114,8 +114,8 @@ public class BitgoWallet implements IWallet, ICanSendMany {
 
     @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
-        final BitGoCoinRequest request = new BitGoCoinRequest(destinationAddress, toSatoshis(amount, cryptoCurrency), walletPassphrase, description, this.numBlocks);
         try {
+            final BitGoCoinRequest request = new BitGoCoinRequest(destinationAddress, toSatoshis(amount, cryptoCurrency), walletPassphrase, description, this.numBlocks);
             return getResultTxId(api.sendCoins(cryptoCurrency.toLowerCase(), this.walletId, request));
         } catch (HttpStatusIOException hse) {
             log.debug("send coins error - HttpStatusIOException, error message: {}, HTTP code: {}, HTTP content: {}", hse.getMessage(), hse.getHttpStatusCode(), hse.getHttpBody());
@@ -128,26 +128,24 @@ public class BitgoWallet implements IWallet, ICanSendMany {
     }
 
     private int toSatoshis(BigDecimal amount, String cryptoCurrency) {
-        try {
-            switch (CryptoCurrency.valueOfCode(cryptoCurrency)) {
-                case BTC:
-                    return amount.multiply(Converters.BTC).intValue();
-                case LTC:
-                    return amount.multiply(Converters.LTC).intValue();
-                case BCH:
-                    return amount.multiply(Converters.BCH).intValue();
+        switch (CryptoCurrency.valueOfCode(cryptoCurrency)) {
+            case BTC:
+                return amount.multiply(Converters.BTC).intValue();
+            case LTC:
+                return amount.multiply(Converters.LTC).intValue();
+            case BCH:
+                return amount.multiply(Converters.BCH).intValue();
+            case ETH:
+                return amount.multiply(Converters.ETH).intValue();
 
-                case TBTC:
-                    return amount.multiply(Converters.TBTC).intValue();
-                case TLTC:
-                    return amount.multiply(Converters.TLTC).intValue();
-                case TBCH:
-                    return amount.multiply(Converters.TBCH).intValue();
-                default:
-                    return amount.intValue();
-            }
-        } catch (IllegalArgumentException e) {
-            return amount.intValue();
+            case TBTC:
+                return amount.multiply(Converters.TBTC).intValue();
+            case TLTC:
+                return amount.multiply(Converters.TLTC).intValue();
+            case TBCH:
+                return amount.multiply(Converters.TBCH).intValue();
+            default:
+                throw new IllegalArgumentException(cryptoCurrency + " not supported");
         }
     }
 
@@ -240,6 +238,8 @@ public class BitgoWallet implements IWallet, ICanSendMany {
                 return balance.divide(Converters.LTC);
             } else if (CryptoCurrency.BCH.getCode().equals(cryptoCurrency.toUpperCase())) {
                 return balance.divide(Converters.BCH);
+            } else if (CryptoCurrency.ETH.getCode().equals(cryptoCurrency.toUpperCase())) {
+                return balance.divide(Converters.ETH);
             } else if (CryptoCurrency.TBTC.getCode().equals(cryptoCurrency.toUpperCase())) {
                 return balance.divide(Converters.TBTC);
             } else if (CryptoCurrency.TLTC.getCode().equals(cryptoCurrency.toUpperCase())) {
@@ -247,7 +247,8 @@ public class BitgoWallet implements IWallet, ICanSendMany {
             } else if (CryptoCurrency.TBCH.getCode().equals(cryptoCurrency.toUpperCase())) {
                 return balance.divide(Converters.TBCH);
             }
-            return balance.divide(new BigDecimal(1));
+            log.error("{} not supported", cryptoCurrency);
+            return null;
         } catch (HttpStatusIOException hse) {
             log.debug("getCryptoBalance error: {}", hse.getHttpBody());
         } catch (ErrorResponseException e) {
