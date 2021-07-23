@@ -25,7 +25,7 @@ import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.ec
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.dto.ReceivedInfo;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.dto.SentInfo;
 import com.generalbytes.batm.server.extensions.ThrowingSupplier;
-import com.generalbytes.batm.server.extensions.util.CoinUnit;
+import com.generalbytes.batm.server.coinutil.CoinUnit;
 import okhttp3.HttpUrl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

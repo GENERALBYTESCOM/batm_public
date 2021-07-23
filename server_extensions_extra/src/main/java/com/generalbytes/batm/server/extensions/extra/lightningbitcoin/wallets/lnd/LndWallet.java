@@ -27,7 +27,7 @@ import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.ln
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.lnd.dto.PaymentRequest;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.lnd.dto.RouteResponse;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.lnd.dto.SendPaymentResponse;
-import com.generalbytes.batm.server.extensions.util.CoinUnit;
+import com.generalbytes.batm.server.coinutil.CoinUnit;
 import com.generalbytes.batm.server.extensions.util.net.HexStringCertTrustManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

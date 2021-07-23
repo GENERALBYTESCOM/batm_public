@@ -1,4 +1,4 @@
-package com.generalbytes.batm.server.extensions.util;
+package com.generalbytes.batm.server.coinutil;
 
 import org.junit.Assert;
 import org.junit.Test;
