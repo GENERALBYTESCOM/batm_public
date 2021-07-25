@@ -26,6 +26,7 @@ import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.ethereum.erc20.ERC20Wallet;
 import com.generalbytes.batm.server.extensions.extra.ethereum.erc20.bizz.BizzDefinition;
+import com.generalbytes.batm.server.extensions.extra.ethereum.erc20.btbs.BtbsDefinition;
 import com.generalbytes.batm.server.extensions.extra.ethereum.erc20.dai.DaiDefinition;
 import com.generalbytes.batm.server.extensions.extra.ethereum.sources.stasis.StasisTickerRateSource;
 import com.generalbytes.batm.server.extensions.extra.ethereum.stream365.Stream365;
@@ -40,6 +41,7 @@ public class EthereumExtension extends AbstractExtension{
     private static final CryptoCurrencyDefinition DAI_CRYPTOCURRENCY_DEFINITION = new DaiDefinition();
     private static final CryptoCurrencyDefinition ETH_CRYPTOCURRENCY_DEFINITION = new EthDefinition();
     private static final CryptoCurrencyDefinition BIZZ_CRYPTOCURRENCY_DEFINITION = new BizzDefinition();
+    private static final CryptoCurrencyDefinition BTBS_CRYPTOCURRENCY_DEFINITION = new BtbsDefinition();
 
     @Override
     public String getName() {
@@ -56,6 +58,7 @@ public class EthereumExtension extends AbstractExtension{
         result.add(CryptoCurrency.MKR.getCode());
         result.add(CryptoCurrency.DAI.getCode());
         result.add(CryptoCurrency.BIZZ.getCode());
+        result.add(CryptoCurrency.BTBS.getCode());
         result.add(CryptoCurrency.HBX.getCode());
         result.add(CryptoCurrency.VOLTZ.getCode());
         result.add(CryptoCurrency.THBX.getCode());
@@ -150,6 +153,7 @@ public class EthereumExtension extends AbstractExtension{
         result.add(DAI_CRYPTOCURRENCY_DEFINITION);
         result.add(ETH_CRYPTOCURRENCY_DEFINITION);
         result.add(BIZZ_CRYPTOCURRENCY_DEFINITION);
+        result.add(BTBS_CRYPTOCURRENCY_DEFINITION);
         return result;
     }
 
