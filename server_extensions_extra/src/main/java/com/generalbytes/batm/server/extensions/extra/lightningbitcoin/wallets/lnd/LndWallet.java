@@ -90,7 +90,7 @@ public class LndWallet extends AbstractLightningWallet {
             log.warn("SendPayment failed: {}", paymentResponse.payment_error);
             return null;
         }
-        return paymentResponse.payment_hash;
+        return paymentResponse.payment_preimage;
 
     }
 

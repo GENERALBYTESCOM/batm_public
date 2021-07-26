@@ -93,7 +93,7 @@ public class EclairWallet extends AbstractLightningWallet {
                     return null;
                 case sent:
                     log.error("Payment sent: {}", sentInfo2);
-                    return sentInfo2.paymentHash;
+                    return sentInfo2.status.paymentPreimage;
                 case pending:
                     log.error("Payment pending: {}", sentInfo2);
                     continue;
