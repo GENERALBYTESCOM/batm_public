@@ -33,6 +33,7 @@ public interface ITransactionDetails {
     int STATUS_BUY_IN_PROGRESS = 0;
     int STATUS_BUY_COMPLETED = 1;
     int STATUS_BUY_ERROR = 2;
+    int STATUS_BUY_CANCELED = 3;
 
 
     //Sell states

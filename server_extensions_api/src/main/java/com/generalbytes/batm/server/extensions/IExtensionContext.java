@@ -20,6 +20,7 @@ package com.generalbytes.batm.server.extensions;
 import com.generalbytes.batm.server.extensions.exceptions.BuyException;
 import com.generalbytes.batm.server.extensions.exceptions.CashbackException;
 import com.generalbytes.batm.server.extensions.exceptions.SellException;
+import com.generalbytes.batm.server.extensions.exceptions.UpdateException;
 import com.generalbytes.batm.server.extensions.watchlist.WatchListQuery;
 import com.generalbytes.batm.server.extensions.watchlist.WatchListResult;
 
@@ -87,6 +88,15 @@ public interface IExtensionContext {
      * @return
      */
     List<ITransactionDetails> findTransactions(String terminalSerialNumber, Date serverTimeFrom, Date serverTimeTo, String previousRID, boolean includeBanknotes);
+
+    /**
+     * @param rid    remote transaction ID of the transaction to be updated
+     * @param status new status to be set or null to keep it unmodified
+     * @param detail detail message to be appended if there already is a detail set. Null to keep it unmodified
+     * @return modified transaction details
+     * @throws UpdateException if the update was not successful
+     */
+    ITransactionDetails updateTransaction(String rid, int status, String detail) throws UpdateException;
 
     /**
      * Finds person by chat user id
