@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 public class DemoLightningWallet extends AbstractLightningWallet {
@@ -26,7 +26,9 @@ public class DemoLightningWallet extends AbstractLightningWallet {
 
     @Override
     public List<? extends ILightningChannel> getChannels() {
-        return Collections.singletonList(new DemoLightningChannel());
+        return Arrays.asList(
+            new DemoLightningChannel(10_00000000_000L, 20_00000000_000L),
+            new DemoLightningChannel(50_000L, 20000_000L));
     }
 
     @Override
@@ -60,6 +62,15 @@ public class DemoLightningWallet extends AbstractLightningWallet {
     }
 
     private class DemoLightningChannel implements ILightningChannel {
+
+        private final long balanceMsat;
+        private final long capacityMsat;
+
+        private DemoLightningChannel(long balanceMsat, long capacityMsat) {
+            this.balanceMsat = balanceMsat;
+            this.capacityMsat = capacityMsat;
+        }
+
         @Override
         public String getShortChannelId() {
             return "111111x222x0";
@@ -97,12 +108,12 @@ public class DemoLightningWallet extends AbstractLightningWallet {
 
         @Override
         public long getBalanceMsat() {
-            return (long) 10e11;
+            return balanceMsat;
         }
 
         @Override
         public long getCapacityMsat() {
-            return (long) 20e11;
+            return capacityMsat;
         }
     }
 }
