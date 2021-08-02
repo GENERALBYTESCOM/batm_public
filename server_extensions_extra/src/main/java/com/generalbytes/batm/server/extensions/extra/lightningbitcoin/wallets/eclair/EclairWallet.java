@@ -68,11 +68,6 @@ public class EclairWallet extends AbstractLightningWallet {
 
         log.info("Paying {} to invoice {}", amount, invoice);
 
-        if (invoice.amount != null) {
-            log.info("Invoices with amount not supported");
-            return null;
-        }
-
         List<SentInfo> sentInfo = callChecked(() -> api.getSentInfoByPaymentHash(invoice.paymentHash));
 
         if (sentInfo.stream().anyMatch(i -> i.status.type == SentInfo.Status.Type.sent)) {

@@ -66,14 +66,7 @@ public class LndWallet extends AbstractLightningWallet {
     @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
 
-        PaymentRequest paymentRequest = callChecked(cryptoCurrency, () -> api.decodePaymentRequest(destinationAddress));
-
-        log.info("Paying {} to invoice {}", amount, paymentRequest);
-
-        if (paymentRequest.num_satoshis != null) {
-            log.info("Invoices with amount not supported");
-            return null;
-        }
+        log.info("Paying {} to invoice {}", amount, destinationAddress);
 
         Payment payment = new Payment();
         payment.amt = CoinUnit.bitcoinToSat(amount).toString();
