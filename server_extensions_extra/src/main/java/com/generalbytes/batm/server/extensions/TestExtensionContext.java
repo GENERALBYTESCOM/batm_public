@@ -225,6 +225,11 @@ public class TestExtensionContext implements IExtensionContext {
     }
 
     @Override
+    public IWallet findBuyWallet(String terminalSerialNumber, String cryptoCurrency) {
+        return null;
+    }
+
+    @Override
     public List<ICryptoConfiguration> findCryptoConfigurationsByTerminalSerialNumbers(List<String> serialNumbers) {
         return null;
     }

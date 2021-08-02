@@ -438,6 +438,14 @@ public interface IExtensionContext {
     SimpleDateFormat getTimeFormatByPerson(IPerson person);
 
     /**
+     * Gets a wallet instance from terminal's Crypto Settings of the given crypto currency
+     * @param terminalSerialNumber
+     * @param cryptoCurrency
+     * @return
+     */
+    IWallet findBuyWallet(String terminalSerialNumber, String cryptoCurrency);
+
+    /**
      * Returns crypto configurations used by terminals of specified serial numbers.
      * @param serialNumbers
      * @return
