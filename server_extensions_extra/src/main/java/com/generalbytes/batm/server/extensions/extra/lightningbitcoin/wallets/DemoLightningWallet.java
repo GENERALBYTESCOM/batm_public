@@ -12,14 +12,22 @@ import java.util.List;
 
 public class DemoLightningWallet extends AbstractLightningWallet {
     private static final Logger log = LoggerFactory.getLogger(LndWallet.class);
+    private final boolean simulateFailure;
+
+    public DemoLightningWallet(boolean simulateFailure) {
+        this.simulateFailure = simulateFailure;
+    }
 
     @Override
     public BigDecimal getReceivedAmount(String invoice, String cryptoCurrency) {
-        return BigDecimal.ONE;
+        return simulateFailure ? null : BigDecimal.ONE;
     }
 
     @Override
     public String getInvoice(BigDecimal cryptoAmount, String cryptoCurrency, Long paymentValidityInSec, String description) {
+        if (simulateFailure) {
+            return null;
+        }
         // zero amount expired invoice
         return "lnbc1pszzddupp58sz67nzrdegvuxlspz5yt8kw5fkexdke9jjmqtqwtwnkrzu6l2wqdqu2askcmr9wssx7e3q2dshgmmndp5scqzpgxqyz5vqsp5zkszu3wx2zvudsjfvdmqwkw9fvvlxqsehhqzk3fmycuqfnnc78lq9qy9qsq4pgjvc87m76kf8zwhjkrxjhxjwj22axmnfc39nvz4hekcpw289esgxaythlpujj9js24nsv9nv7djsp7pddsud46f2544yl5ksyrlcgqjr4e53";
     }
@@ -38,6 +46,9 @@ public class DemoLightningWallet extends AbstractLightningWallet {
 
     @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
+        if (simulateFailure) {
+            return null;
+        }
         return "123456";
     }
 

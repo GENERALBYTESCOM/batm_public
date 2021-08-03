@@ -100,7 +100,8 @@ public class LightningBitcoinExtension extends AbstractExtension {
                     }
                     return new LndWallet(url, macaroon, cert);
                 } else if ("lbtcdemo".equalsIgnoreCase(walletType)) {
-                    return new DemoLightningWallet();
+                    boolean simulateFailure = st.hasMoreTokens() && st.nextToken().equals("fail");
+                    return new DemoLightningWallet(simulateFailure);
                 }
             }
         } catch (Exception e) {
