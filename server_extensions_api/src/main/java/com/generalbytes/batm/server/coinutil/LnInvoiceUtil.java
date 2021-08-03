@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 public class LnInvoiceUtil {
 
-    private static final Pattern invoicePattern = Pattern.compile("^lnbc((?<amount>\\d+)(?<multiplier>[munp])?)?1.*");
+    private static final Pattern invoicePattern = Pattern.compile("lnbc((?<amount>\\d+)(?<multiplier>[munp])?)?1[^1\\s]+");
 
     /**
      * Parses invoice amount according to
@@ -60,5 +60,24 @@ public class LnInvoiceUtil {
             default:
                 throw new IllegalArgumentException("Invalid multiplier: " + multiplier);
         }
+    }
+
+    /**
+     * Finds LN invoice in the provided input string and returns it.
+     * For example for input = "aaa bbb lnbc1xxx ccc" it will return "lnbc1xxx"
+     * It will only return the first invoice found in the input.
+     *
+     * @return the invoice if it was found. null for null input or if no invoice is found
+     */
+    public String findInvoice(String input) {
+        if (input == null) {
+            return null;
+        }
+
+        Matcher matcher = invoicePattern.matcher(input);
+        if (matcher.find()) {
+            return matcher.group();
+        }
+        return null;
     }
 }
