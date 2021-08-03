@@ -24,12 +24,14 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import java.math.BigDecimal;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 @Path("/")
 @Produces(MediaType.APPLICATION_JSON)
 public class LnurlRestService implements IRestService {
     private static final Logger log = LoggerFactory.getLogger(LnurlRestService.class);
     private static final String LBTC = CryptoCurrency.LBTC.getCode();
+    private static final long WITHDRAW_EXPIRY_HOURS = 3 * 24;
 
     private final LnInvoiceUtil lnInvoiceUtil = new LnInvoiceUtil();
     private final LnurlUtil lnurlUtil = new LnurlUtil();
@@ -129,8 +131,8 @@ public class LnurlRestService implements IRestService {
             throw new LnurlRestServiceException();
         }
 
-        log.info("Transaction {} found, {} {}, status: {}, errorCode: {}, terminal SN: {}",
-            trx.getRemoteTransactionId(), trx.getCryptoAmount(), trx.getCryptoCurrency(), trx.getStatus(), trx.getErrorCode(), trx.getTerminalSerialNumber());
+        log.info("Transaction {} found, {} {}, status: {}, errorCode: {}, terminal SN: {}, server time: {}",
+            trx.getRemoteTransactionId(), trx.getCryptoAmount(), trx.getCryptoCurrency(), trx.getStatus(), trx.getErrorCode(), trx.getTerminalSerialNumber(), trx.getServerTime());
 
         if (!trx.getRemoteTransactionId().equals(rid)
             || trx.getCryptoAmount().compareTo(BigDecimal.ZERO) <= 0
@@ -140,6 +142,12 @@ public class LnurlRestService implements IRestService {
             throw new LnurlRestServiceException();
         }
 
+        long millis = System.currentTimeMillis() - trx.getServerTime().getTime();
+        long hours = TimeUnit.HOURS.convert(millis, TimeUnit.MILLISECONDS);
+        if (hours >= WITHDRAW_EXPIRY_HOURS) {
+            log.error("Transaction too old: {}h, rid: {}", hours, rid);
+            throw new LnurlRestServiceException("Expired");
+        }
 
         if (trx.getStatus() != ITransactionDetails.STATUS_BUY_IN_PROGRESS) {
             if (trx.getStatus() == ITransactionDetails.STATUS_BUY_COMPLETED) {
