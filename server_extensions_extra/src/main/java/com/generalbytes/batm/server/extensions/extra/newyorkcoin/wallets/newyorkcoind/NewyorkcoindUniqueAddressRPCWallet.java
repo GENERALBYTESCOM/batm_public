@@ -15,41 +15,12 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
+package com.generalbytes.batm.server.extensions.extra.newyorkcoin.wallets.newyorkcoind;
 
-package com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio;
+import com.generalbytes.batm.server.extensions.IGeneratesNewDepositCryptoAddress;
 
-public class BlockIOResponseVerify {
-    private String status;
-    private BlockIOData data;
-
-    public BlockIOResponseVerify() {
-    }
-
-    public class BlockIOData {
-        private boolean is_valid;
-
-        public boolean isIs_valid() {
-            return is_valid;
-        }
-
-        public void setIs_valid(boolean is_valid) {
-            this.is_valid = is_valid;
-        }
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public BlockIOData getData() {
-        return data;
-    }
-
-    public void setData(BlockIOData data) {
-        this.data = data;
+public class NewyorkcoindUniqueAddressRPCWallet extends NewyorkcoindRPCWallet implements IGeneratesNewDepositCryptoAddress {
+    public NewyorkcoindUniqueAddressRPCWallet(String rpcURL) {
+        super(rpcURL, ""); // label is used only for reusing the same address
     }
 }

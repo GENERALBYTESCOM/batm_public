@@ -22,8 +22,10 @@ import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.Ab
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.dto.Channel;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.dto.ErrorResponseException;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.dto.Invoice;
+import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.dto.ReceivedInfo;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.dto.SentInfo;
 import com.generalbytes.batm.server.extensions.ThrowingSupplier;
+import com.generalbytes.batm.server.coinutil.CoinUnit;
 import okhttp3.HttpUrl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,11 +75,11 @@ public class EclairWallet extends AbstractLightningWallet {
 
         List<SentInfo> sentInfo = callChecked(() -> api.getSentInfoByPaymentHash(invoice.paymentHash));
 
-        if (sentInfo.stream().filter(i -> i.status == SentInfo.Status.SUCCEEDED).findAny().isPresent()) {
+        if (sentInfo.stream().anyMatch(i -> i.status.type == SentInfo.Status.Type.sent)) {
             log.info("Invoice already paid");
             return null;
         }
-        Long amountMsat = bitcoinToMSat(amount);
+        Long amountMsat = CoinUnit.bitcoinToMSat(amount);
         String paymentId = callChecked(() -> api.payInvoice(destinationAddress, amountMsat));
 
         for (int millis = 0; millis < API_POLL_MAX; millis += API_POLL_INTERVAL) {
@@ -85,12 +87,18 @@ public class EclairWallet extends AbstractLightningWallet {
 
             SentInfo sentInfo2 = callChecked(() -> api.getSentInfoById(paymentId).get(0));
 
-            switch (sentInfo2.status) {
-                case FAILED:
-                    log.error("Payment failed: id={}, paymentHash={}", sentInfo2.id, sentInfo2.paymentHash);
+            switch (sentInfo2.status.type) {
+                case failed:
+                    log.error("Payment failed: {}", sentInfo2);
                     return null;
-                case SUCCEEDED:
-                    return sentInfo2.paymentHash;
+                case sent:
+                    log.error("Payment sent: {}", sentInfo2);
+                    return sentInfo2.status.paymentPreimage;
+                case pending:
+                    log.error("Payment pending: {}", sentInfo2);
+                    continue;
+                default:
+                    throw new IllegalArgumentException("Unsupported SentInfo.Status.Type");
             }
         }
         log.error("Payment result unknown; paymentId={}", paymentId);
@@ -99,7 +107,7 @@ public class EclairWallet extends AbstractLightningWallet {
 
     @Override
     public String getInvoice(BigDecimal cryptoAmount, String cryptoCurrency, Long paymentValidityInSec, String description) {
-        return callChecked(cryptoCurrency, () -> api.createInvoice(bitcoinToMSat(cryptoAmount), description, paymentValidityInSec).serialized);
+        return callChecked(cryptoCurrency, () -> api.createInvoice(CoinUnit.bitcoinToMSat(cryptoAmount), description, paymentValidityInSec).serialized);
     }
 
     private Map<String, String> channelAliases = null;
@@ -123,7 +131,7 @@ public class EclairWallet extends AbstractLightningWallet {
 
     @Override
     public boolean canSend(String invoice, BigDecimal amount, String cryptoCurrency) {
-        List<String> route = callChecked(cryptoCurrency, () -> api.findRoute(invoice, bitcoinToMSat(amount)));
+        List<String> route = callChecked(cryptoCurrency, () -> api.findRoute(invoice, CoinUnit.bitcoinToMSat(amount)));
         log.debug("Route for {} {} to {}: {}", amount, cryptoCurrency, invoice, route);
         return route != null && !route.isEmpty();
     }
@@ -139,7 +147,7 @@ public class EclairWallet extends AbstractLightningWallet {
                 + " Capacity sat: " + ch.getCapacityMsat()
             ).forEach(log::info);
 
-            return mSatToBitcoin(channels.stream()
+            return CoinUnit.mSatToBitcoin(channels.stream()
                 .mapToLong(ILightningChannel::getBalanceMsat)
                 .max().orElse(0l));
         });
@@ -151,7 +159,7 @@ public class EclairWallet extends AbstractLightningWallet {
     public BigDecimal getReceivedAmount(String destinationAddress, String cryptoCurrency) {
         return callChecked(cryptoCurrency, () -> {
             try {
-                return mSatToBitcoin(api.getReceivedInfoByInvoice(destinationAddress).amount);
+                return getReceivedAmount(api.getReceivedInfoByInvoice(destinationAddress));
             } catch (ErrorResponseException e) {
                 if (e.error.equals("Not found")) {
                     return BigDecimal.ZERO;
@@ -159,6 +167,18 @@ public class EclairWallet extends AbstractLightningWallet {
                 throw e;
             }
         });
+    }
+
+    private BigDecimal getReceivedAmount(ReceivedInfo receivedInfo) {
+        switch (receivedInfo.status.type) {
+            case received:
+                return CoinUnit.mSatToBitcoin(receivedInfo.status.amount);
+            case pending:
+            case expired:
+                return BigDecimal.ZERO;
+            default:
+                throw new IllegalArgumentException("Unsupported ReceivedInfo.Status.Type");
+        }
     }
 
     @Override

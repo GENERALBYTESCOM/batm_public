@@ -16,7 +16,7 @@
  *
  ************************************************************************************/
 
-package com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio;
+package com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.dto;
 
 public class BlockIOAddress {
     private int user_id;

@@ -19,7 +19,21 @@ package com.generalbytes.batm.server.extensions;
 
 import java.math.BigDecimal;
 
+/**
+ * Cash limit of a transaction.
+ */
 public interface ILimit {
+    /**
+     * Limit currency
+     *
+     * @return currency code
+     */
     String getCurrency();
+
+    /**
+     * Limit amount
+     *
+     * @return limit for given currency
+     */
     BigDecimal getAmount();
 }

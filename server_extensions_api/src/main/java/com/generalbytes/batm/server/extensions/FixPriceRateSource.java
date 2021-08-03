@@ -21,12 +21,11 @@ import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class FixPriceRateSource implements IRateSource {
 
+    private static final BigDecimal MAX_ALLOWED_PRICE_VALUE = new BigDecimal("9999999999.9999999999");
     private static final Set<String> FIAT_CURRENCIES = FiatCurrency.getCodes();
     private static final Set<String> CRYPTO_CURRENCIES = CryptoCurrency.getCodes();
     private final BigDecimal rate;
@@ -34,6 +33,9 @@ public class FixPriceRateSource implements IRateSource {
     private String preferredFiatCurrency = FiatCurrency.USD.getCode();
 
     public FixPriceRateSource(BigDecimal rate, String preferredFiatCurrency) {
+        if (rate.compareTo(MAX_ALLOWED_PRICE_VALUE) > 0) {
+            rate = null;
+        }
         this.rate = rate;
 
         if (FIAT_CURRENCIES.contains(preferredFiatCurrency.toUpperCase())) {

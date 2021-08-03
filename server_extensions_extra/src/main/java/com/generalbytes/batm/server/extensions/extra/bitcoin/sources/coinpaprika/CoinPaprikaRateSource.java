@@ -76,6 +76,7 @@ public class CoinPaprikaRateSource implements IRateSource {
         CRYPTOCURRENCIES.put(CryptoCurrency.MKR.getCode(), "mkr-maker");
         CRYPTOCURRENCIES.put(CryptoCurrency.MUE.getCode(), "mue-monetaryunit");
         CRYPTOCURRENCIES.put(CryptoCurrency.NANO.getCode(), "nano-nano");
+        CRYPTOCURRENCIES.put(CryptoCurrency.NYC.getCode(), "nyc-newyorkcoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.NLG.getCode(), "nlg-gulden");
         CRYPTOCURRENCIES.put(CryptoCurrency.NULS.getCode(), "nuls-nuls");
         CRYPTOCURRENCIES.put(CryptoCurrency.NXT.getCode(), "nxt-nxt");

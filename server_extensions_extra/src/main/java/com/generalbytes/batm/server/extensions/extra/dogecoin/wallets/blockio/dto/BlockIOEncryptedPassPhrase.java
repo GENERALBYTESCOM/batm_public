@@ -15,16 +15,15 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
+package com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.dto;
 
-package com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio;
-
-public class BlockIOSigner {
-    String signer_address;
-    String signer_public_key; //in hex
-    String signed_data; //in hex
-
-    public BlockIOSigner() {
+public class BlockIOEncryptedPassPhrase {
+    public BlockIOEncryptedPassPhrase() {
     }
+
+    String signer_address;
+    String signer_public_key;//in hex
+    String passphrase;//something
 
     public String getSigner_address() {
         return signer_address;
@@ -42,20 +41,20 @@ public class BlockIOSigner {
         this.signer_public_key = signer_public_key;
     }
 
-    public String getSigned_data() {
-        return signed_data;
+    public String getPassphrase() {
+        return passphrase;
     }
 
-    public void setSigned_data(String signed_data) {
-        this.signed_data = signed_data;
+    public void setPassphrase(String passphrase) {
+        this.passphrase = passphrase;
     }
 
     @Override
     public String toString() {
-        return "BlockIOSigner{" +
+        return "BlockIOEncryptedPassPhrase{" +
             "signer_address='" + signer_address + '\'' +
             ", signer_public_key='" + signer_public_key + '\'' +
-            ", signed_data='" + signed_data + '\'' +
+            ", passphrase='" + passphrase + '\'' +
             '}';
     }
 }

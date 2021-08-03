@@ -19,5 +19,38 @@ package com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.e
 
 public class ReceivedInfo {
     public String paymentHash;
-    public Long amount;
+    public String paymentPreimage;
+    public String paymentType;
+    public Status status;
+
+    public static class Status {
+
+        public Long amount;
+        public Long receivedAt;
+        public Type type;
+
+        public enum Type {
+            // see CustomTypeHints at https://github.com/ACINQ/eclair/blob/master/eclair-core/src/main/scala/fr/acinq/eclair/json/JsonSerializers.scala#L353
+            pending, received, expired;
+        }
+
+        @Override
+        public String toString() {
+            return "Status{" +
+                "amount=" + amount +
+                ", receivedAt=" + receivedAt +
+                ", type=" + type +
+                '}';
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "ReceivedInfo{" +
+            "status=" + status +
+            ", paymentHash='" + paymentHash + '\'' +
+            ", paymentPreimage='" + paymentPreimage + '\'' +
+            ", paymentType='" + paymentType + '\'' +
+            '}';
+    }
 }

@@ -16,18 +16,18 @@
  *
  ************************************************************************************/
 
-package com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio;
+package com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.dto;
 
-public class BlockIOResponseNewAddress {
+public class BlockIOResponseAddresses {
     private String status;
     private BlockIOData data;
 
-    public BlockIOResponseNewAddress() {
+    public BlockIOResponseAddresses() {
     }
 
     public class BlockIOData {
         private String network;
-        private String address;
+        private BlockIOAddress[] addresses;
 
         public BlockIOData() {
         }
@@ -36,16 +36,16 @@ public class BlockIOResponseNewAddress {
             return network;
         }
 
-        public String getAddress() {
-            return address;
+        public BlockIOAddress[] getAddresses() {
+            return addresses;
         }
 
         public void setNetwork(String network) {
             this.network = network;
         }
 
-        public void setAddress(String address) {
-            this.address = address;
+        public void setAddresses(BlockIOAddress[] addresses) {
+            this.addresses = addresses;
         }
     }
 

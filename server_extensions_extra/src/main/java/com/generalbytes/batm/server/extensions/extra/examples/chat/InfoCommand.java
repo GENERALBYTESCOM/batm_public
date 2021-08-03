@@ -742,6 +742,10 @@ public class InfoCommand extends AbstractChatCommnad{
                 return "REGISTERED";
             case IIdentity.STATE_TO_BE_REGISTERED:
                 return "AWAITING REGISTRATION";
+            case IIdentity.STATE_PROHIBITED_TO_BE_REGISTERED:
+                return "REJECTED WANTS TO BE REGISTERED";
+            case IIdentity.STATE_TO_BE_VERIFIED:
+                return "AWAITING VERIFICATION";
         }
         return "UNKNOWN";
     }

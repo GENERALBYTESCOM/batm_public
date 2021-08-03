@@ -1,16 +1,14 @@
 package com.generalbytes.batm.server.extensions.extra.cardano.wallets.dto;
 
-import java.math.BigDecimal;
-
 public class Amount {
-    private BigDecimal quantity;
+    private Long quantity;
     private String unit;
 
-    public BigDecimal getQuantity() {
+    public Long getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(BigDecimal quantity) {
+    public void setQuantity(Long quantity) {
         this.quantity = quantity;
     }
 
