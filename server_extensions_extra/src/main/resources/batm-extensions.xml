@@ -917,6 +917,12 @@
         <cryptologo cryptocurrency="LTC" file="ltc.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.lightningbitcoin.LightningBitcoinExtension" >
+        <wallet prefix="walletofsatoshi" name="Wallet of Satoshi">
+            <!--  Create a new account and get api token and secret with: `curl -XPOST https://www.livingroomofsatoshi.com/api/v1/wallet/account`-->
+            <param name="apiToken" />
+            <param name="apiSecret" />
+            <cryptocurrency>LBTC</cryptocurrency>
+        </wallet>
         <wallet prefix="eclair" name="eclair">
             <tunnel supported="true"/>
             <param name="scheme" />

@@ -82,7 +82,7 @@ public abstract class AbstractLightningWallet implements ILightningWallet, ILigh
 
     protected <T> T callChecked(String cryptoCurrency, ThrowingSupplier<T> supplier) {
         validateCryptoCurrency(cryptoCurrency);
-        return callChecked(() -> supplier.get());
+        return callChecked(supplier);
     }
 
 }
