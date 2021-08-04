@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 import java.util.Properties;
 
 public class LnurlUtil {
@@ -19,6 +20,8 @@ public class LnurlUtil {
         if (baseUrl == null) {
             return null;
         }
+        Objects.requireNonNull(rid, "RID cannot be null");
+        Objects.requireNonNull(uuid, "UUID cannot be null");
         String milliSats = Long.toString(CoinUnit.bitcoinToMSat(cryptoAmount));
         String lnurl = Bech32.encodeString("lnurl", baseUrl + "/" + WITHDRAW_PATH
             + "?uuid=" + uuid
@@ -31,6 +34,8 @@ public class LnurlUtil {
         if (baseUrl == null) {
             return null;
         }
+        Objects.requireNonNull(rid, "RID cannot be null");
+        Objects.requireNonNull(uuid, "UUID cannot be null");
         return baseUrl + "/" + WITHDRAW_CONFIRM_PATH
             + "?uuid=" + uuid
             + "&rid=" + rid;

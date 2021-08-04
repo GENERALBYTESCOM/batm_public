@@ -78,7 +78,7 @@ public class LndWallet extends AbstractLightningWallet {
             return null;
         }
 
-        if (paymentResponse.payment_error != null) {
+        if (paymentResponse.payment_preimage == null) {
             log.warn("SendPayment failed: {}", paymentResponse.payment_error);
             return null;
         }

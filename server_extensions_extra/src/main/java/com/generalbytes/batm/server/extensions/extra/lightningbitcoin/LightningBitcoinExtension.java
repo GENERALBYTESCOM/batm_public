@@ -76,7 +76,7 @@ public class LightningBitcoinExtension extends AbstractExtension {
                         return new EclairWallet(scheme, host, port, password);
                     }
                 } else if ("lnd".equalsIgnoreCase(walletType)) {
-                    // echo 127.0.0.1:8080:`xxd -ps -u -c10000 ~/.lnd/data/chain/bitcoin/mainnet/admin.macaroon`:`xxd -ps -u -c10000 ~/.lnd/tls.cert`
+                    // echo https://127.0.0.1:8080/:`xxd -ps -u -c10000 ~/.lnd/data/chain/bitcoin/mainnet/admin.macaroon`:`xxd -ps -u -c10000 ~/.lnd/tls.cert`
                     // scheme://host:port/:macaroon:[cert]
                     // scheme://host/path/:macaroon:[cert]
                     // scheme://host:port/path:macaroon:[cert]
