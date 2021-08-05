@@ -6,12 +6,12 @@ public class Order {
     public int status;
     public int type_trade;
     public String pair;
-    public double volume;
-    public double volume_done;
-    public double rate;
-    public double price;
+    public String volume;
+    public String volume_done;
+    public String rate;
+    public String price;
     public long time_create;
     public long time_done;
-    public double price_done;
+    public String price_done;
 
 }
