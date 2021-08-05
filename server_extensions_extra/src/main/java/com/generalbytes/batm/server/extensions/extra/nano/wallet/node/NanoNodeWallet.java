@@ -105,7 +105,7 @@ public class NanoNodeWallet implements INanoRpcWallet, IGeneratesNewDepositCrypt
              * TODO: Only including pocketed balance for now. This could be changed in the future if fork resolution
              *       issues are resolved, and would speed up deposit confirmation times.
              */
-            NanoRpcClient.BalanceResponse balance = rpcClient.getBalance(address);
+            NanoRpcClient.AccountBalance balance = rpcClient.getBalance(address);
             if (balance.confBalance.compareTo(BigInteger.ZERO) > 0)
                 return new ReceivedAmount(context.getUtil().amountFromRaw(balance.confBalance), Integer.MAX_VALUE);
             // No balance; return unconfirmed and pending blocks with confirmation 0

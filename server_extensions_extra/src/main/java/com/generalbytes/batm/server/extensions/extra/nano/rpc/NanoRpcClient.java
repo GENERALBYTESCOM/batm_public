@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author Karl Oczadly
+ * Performs RPC queries to an external node through the HTTP/JSON interface.
  */
 public class NanoRpcClient {
 
@@ -37,7 +37,7 @@ public class NanoRpcClient {
 
     public List<Block> getTransactionHistory(String account) throws IOException, RpcException {
         try {
-            ArrayNode history = (ArrayNode)query(false,
+            ArrayNode history = (ArrayNode)query(
                 JSON_MAPPER.createObjectNode()
                     .put("action", "account_history")
                     .put("account", account)
@@ -61,10 +61,10 @@ public class NanoRpcClient {
         }
     }
 
-    /** Returns true if the account exists and has at least 1 block. */
+    /** Returns true if the account has at least 1 block. */
     public boolean doesAccountExist(String account) throws IOException, RpcException {
         try {
-            return query(false,
+            return query(
                 JSON_MAPPER.createObjectNode()
                     .put("action", "account_block_count")
                     .put("account", account))
@@ -78,11 +78,11 @@ public class NanoRpcClient {
     }
 
     /** Returns the total confirmed pocketed balance (zero if account isn't opened). */
-    public BalanceResponse getBalance(String account) throws IOException, RpcException {
+    public AccountBalance getBalance(String account) throws IOException, RpcException {
         // Get account info (unconf balance + confirmation frontier)
         ObjectNode accountInfo;
         try {
-            accountInfo = query(false,
+            accountInfo = query(
                 JSON_MAPPER.createObjectNode()
                     .put("action",  "account_info")
                     .put("account", account)
@@ -90,7 +90,7 @@ public class NanoRpcClient {
         } catch (RpcException e) {
             if ("Account not found".equals(e.getMessage())) {
                 // Account hasn't been opened
-                return new BalanceResponse(BigInteger.ZERO, BigInteger.ZERO, BigInteger.ZERO);
+                return new AccountBalance(BigInteger.ZERO, BigInteger.ZERO, BigInteger.ZERO);
             } else {
                 throw e;
             }
@@ -100,20 +100,20 @@ public class NanoRpcClient {
 
         if (accountInfo.get("confirmation_height").asText().equals("0")) {
             // Account has no confirmed blocks
-            return new BalanceResponse(BigInteger.ZERO, unconfBalance, unconfPending);
+            return new AccountBalance(BigInteger.ZERO, unconfBalance, unconfPending);
         }
         // Get balance of frontier block (confirmed balance)
-        BigInteger confBalance = new BigInteger(query(false,
+        BigInteger confBalance = new BigInteger(query(
             JSON_MAPPER.createObjectNode()
                 .put("action", "block_info")
                 .put("hash",   accountInfo.get("confirmation_height_frontier").asText()))
                 .get("balance").asText());
-        return new BalanceResponse(confBalance, unconfBalance, unconfPending);
+        return new AccountBalance(confBalance, unconfBalance, unconfPending);
     }
 
     /** Creates a new account in the given wallet. */
     public String newWalletAccount(String walletId) throws IOException, RpcException {
-        return query(false,
+        return query(
             JSON_MAPPER.createObjectNode()
                 .put("action", "account_create")
                 .put("wallet", walletId))
@@ -123,7 +123,7 @@ public class NanoRpcClient {
     /** Sends the specified funds from the given wallet to the provided destination account. */
     public String sendFromWallet(String walletId, String sourceAcc, String destAcc, BigInteger amountRaw, String uid)
             throws IOException, RpcException {
-        return query(false,
+        return query(
             JSON_MAPPER.createObjectNode()
                 .put("action",      "send")
                 .put("wallet",      walletId)
@@ -134,41 +134,22 @@ public class NanoRpcClient {
                 .get("block").asText();
     }
 
-    /** Creates an account from the given seed. */
-    public String accountFromSeed(String seed, long index) throws IOException, RpcException {
-        return query(true,
-            JSON_MAPPER.createObjectNode()
-                .put("action", "deterministic_key")
-                .put("seed",   seed)
-                .put("index",  index))
-                .get("account").asText();
-    }
 
-    /** Returns true if the address string is valid. */
-    public boolean isAddressValid(String addr) throws IOException, RpcException {
-        return query(false,
-            JSON_MAPPER.createObjectNode()
-                .put("action",  "validate_account_number")
-                .put("account", addr))
-                .get("valid").asInt() == 1;
-    }
-
-
-    private ObjectNode query(boolean confidential, JsonNode json) throws IOException, RpcException {
+    private ObjectNode query(JsonNode json) throws IOException, RpcException {
         String jsonStr = JSON_MAPPER.writeValueAsString(json);
-        if (confidential) {
-            log.debug("Sending RPC request [REDACTED]");
-        } else {
-            log.debug("Sending RPC request {}", json);
-        }
+        log.debug("Sending RPC request {}", json);
+
         String rawResponse = httpPost(jsonStr);
-        if (!confidential) log.debug("Received RPC response: {}", rawResponse);
+        log.debug("Received RPC response: {}", rawResponse);
         JsonNode response = JSON_MAPPER.readTree(rawResponse);
-        if (!response.isObject())
+        if (!response.isObject()) {
             throw new RpcException("Response is not a JSON object.");
+        }
+
         ObjectNode responseJson = (ObjectNode)response;
-        if (responseJson.has("error"))
+        if (responseJson.has("error")) {
             throw new RpcException(responseJson.get("error").asText());
+        }
         return responseJson;
     }
 
@@ -190,10 +171,10 @@ public class NanoRpcClient {
         }
     }
 
-    public static class BalanceResponse {
+    public static class AccountBalance {
         public final BigInteger confBalance, unconfBalance, unconfPending;
 
-        public BalanceResponse(BigInteger confBalance, BigInteger unconfBalance, BigInteger unconfPending) {
+        public AccountBalance(BigInteger confBalance, BigInteger unconfBalance, BigInteger unconfPending) {
             this.confBalance = confBalance;
             this.unconfBalance = unconfBalance;
             this.unconfPending = unconfPending;

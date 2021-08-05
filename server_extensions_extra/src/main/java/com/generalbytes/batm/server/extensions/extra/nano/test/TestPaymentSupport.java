@@ -3,7 +3,7 @@ package com.generalbytes.batm.server.extensions.extra.nano.test;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.TestExtensionContext;
 import com.generalbytes.batm.server.extensions.extra.dash.test.PRS;
-import com.generalbytes.batm.server.extensions.extra.nano.NanoCurrencyUtil;
+import com.generalbytes.batm.server.extensions.extra.nano.util.NanoUtil;
 import com.generalbytes.batm.server.extensions.extra.nano.NanoExtensionContext;
 import com.generalbytes.batm.server.extensions.extra.nano.NanoPaymentSupport;
 import com.generalbytes.batm.server.extensions.extra.nano.rpc.NanoRpcClient;
@@ -18,7 +18,7 @@ import java.net.URL;
 
 /**
  * THIS CLASS MAY BE IGNORED.
- * It's only purpose is to test and help during development.
+ * Its only purpose is to test and help during development.
  */
 public class TestPaymentSupport {
 
@@ -29,7 +29,8 @@ public class TestPaymentSupport {
              * WebSocket host may be null if using RPC polling only.
              * A value totalling paymentValue should be sent to the account printed in console.
              */
-            String rpcHost = "http://[::1]:7076", wsHost = "ws://[::1]:7078";
+            String rpcHost = "http://[::1]:7076";
+            String wsHost = "ws://[::1]:7078"; // May be null
             String walletId = "C6DFB1E6B2AAA97247BA5A434BB2795F5FC4D68EE0FBEDCD21C72027880596C7";
             String walletAccount = "nano_3h5r5huudbj3mrmosha84oregs3k9wgi8cwbynbiajjmto1y9sys8yykjg1m";
             BigDecimal paymentValue = new BigDecimal("0.01");
@@ -39,7 +40,7 @@ public class TestPaymentSupport {
             NanoRpcClient rpcClient = new NanoRpcClient(new URL(rpcHost));
             NanoWsClient wsClient = wsHost == null ? null : new NanoWsClient(URI.create(wsHost));
             NanoExtensionContext context = new NanoExtensionContext(
-                    CryptoCurrency.NANO, new TestExtensionContext(), NanoCurrencyUtil.NANO);
+                    CryptoCurrency.NANO, new TestExtensionContext(), NanoUtil.NANO);
             NanoNodeWallet wallet = new NanoNodeWallet(context, rpcClient, wsClient, walletId, walletAccount);
             NanoPaymentSupport ps = new NanoPaymentSupport(context);
             ps.init(null);

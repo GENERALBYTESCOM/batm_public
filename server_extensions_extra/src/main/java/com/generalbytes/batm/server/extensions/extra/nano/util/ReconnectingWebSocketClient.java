@@ -1,4 +1,4 @@
-package com.generalbytes.batm.server.extensions.extra.nano.rpc;
+package com.generalbytes.batm.server.extensions.extra.nano.util;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;

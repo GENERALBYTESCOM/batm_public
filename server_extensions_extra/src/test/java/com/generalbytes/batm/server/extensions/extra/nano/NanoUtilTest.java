@@ -1,5 +1,6 @@
 package com.generalbytes.batm.server.extensions.extra.nano;
 
+import com.generalbytes.batm.server.extensions.extra.nano.util.NanoUtil;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -11,9 +12,9 @@ import static org.junit.Assert.fail;
 /**
  * @author Karl Oczadly
  */
-public class NanoCurrencyUtilTest {
+public class NanoUtilTest {
 
-    static final NanoCurrencyUtil UTIL = NanoCurrencyUtil.NANO;
+    static final NanoUtil UTIL = NanoUtil.NANO;
     static final String ACCOUNT = "nano_34qjpc8t1u6wnb584pc4iwsukwa8jhrobpx4oea5gbaitnqafm6qsgoacpiz";
 
 

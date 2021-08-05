@@ -30,8 +30,8 @@ public class NanoPaymentSupport extends PollingPaymentSupport {
 
     private static final Logger log = LoggerFactory.getLogger(NanoPaymentSupport.class);
 
-    private static final long POLL_PERIOD = 750; // 750 ms
-    private static final int POLL_SKIP_CYCLES = 20; // 15 sec (multiplier of POLL_PERIOD when using websockets)
+    private static final long POLL_PERIOD = 750; // 750ms
+    private static final int POLL_SKIP_CYCLES = 26; // 19.5s (multiplier of POLL_PERIOD when websocket is active)
 
     private static final List<Integer> FINAL_STATES = Arrays.asList(
         PaymentRequest.STATE_TRANSACTION_INVALID,

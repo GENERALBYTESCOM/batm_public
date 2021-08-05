@@ -6,7 +6,7 @@ import java.net.URI;
 
 /**
  * THIS CLASS MAY BE IGNORED.
- * It's only purpose is to test and help during development.
+ * Its only purpose is to test and help during development.
  */
 public class TestWebSocket {
 
@@ -17,7 +17,7 @@ public class TestWebSocket {
 
         wsClient.addDepositWatcher(
                 "nano_3h5r5huudbj3mrmosha84oregs3k9wgi8cwbynbiajjmto1y9sys8yykjg1m",
-                () -> System.out.println("onDeposit CALLED!!!!!!"));
+                () -> System.out.println("onDeposit() CALLED"));
 
         Thread.currentThread().join();
     }

@@ -2,23 +2,22 @@ package com.generalbytes.batm.server.extensions.extra.nano;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.IExtensionContext;
-import com.generalbytes.batm.server.extensions.extra.nano.rpc.NanoRpcClient;
+import com.generalbytes.batm.server.extensions.extra.nano.util.NanoUtil;
 
 /**
  * Contains various contextual information for the Nano extension.
  */
 public class NanoExtensionContext {
 
-    private volatile NanoRpcClient rpcClient = null;
     private final CryptoCurrency currency;
     private final IExtensionContext extensionContext;
-    private final NanoCurrencyUtil nanoCurrencyUtil;
+    private final NanoUtil nanoUtil;
 
     public NanoExtensionContext(CryptoCurrency currency, IExtensionContext extensionContext,
-                                NanoCurrencyUtil nanoCurrencyUtil) {
+                                NanoUtil nanoUtil) {
         this.currency = currency;
         this.extensionContext = extensionContext;
-        this.nanoCurrencyUtil = nanoCurrencyUtil;
+        this.nanoUtil = nanoUtil;
     }
 
 
@@ -26,21 +25,12 @@ public class NanoExtensionContext {
         return currency.getCode();
     }
 
-    public NanoRpcClient getRpcClient() {
-        return rpcClient;
-    }
-
-    public void setRpcClient(NanoRpcClient rpcClient) {
-        if (rpcClient != null)
-            this.rpcClient = rpcClient;
-    }
-
     public IExtensionContext getExtensionContext() {
         return extensionContext;
     }
 
-    public NanoCurrencyUtil getUtil() {
-        return nanoCurrencyUtil;
+    public NanoUtil getUtil() {
+        return nanoUtil;
     }
 
 }

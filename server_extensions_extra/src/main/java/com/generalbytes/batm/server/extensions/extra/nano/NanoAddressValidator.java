@@ -37,33 +37,18 @@ public class NanoAddressValidator implements ICryptoAddressValidator {
 
     @Override
     public boolean isAddressValid(String address) {
-        String parsedAddr;
         try {
-            parsedAddr = context.getUtil().parseAddress(address);
-        } catch (IllegalArgumentException e) {
-            return false; // Didn't match basic regex pattern
-        }
-
-        NanoRpcClient rpcClient = context.getRpcClient();
-        if (rpcClient == null) {
-            // RPC not configured - assume valid (note: checksum is NOT validated!)
-            log.debug("Blindly assuming Nano account {} is valid.", parsedAddr);
+            // Will throw exception if format doesn't match
+            context.getUtil().parseAddress(address);
             return true;
-        } else {
-            // Validate on node
-            try {
-                return rpcClient.isAddressValid(parsedAddr);
-            } catch (IOException | NanoRpcClient.RpcException e) {
-                // Hopefully shouldn't happen. Address may be valid, but we'll assume it isn't for this case.
-                log.warn("Couldn't validate nano address over RPC.", e);
-                return false;
-            }
+        } catch (IllegalArgumentException e) {
+            return false;
         }
     }
 
     @Override
     public boolean isPaperWalletSupported() {
-        return true;
+        return false;
     }
 
     @Override

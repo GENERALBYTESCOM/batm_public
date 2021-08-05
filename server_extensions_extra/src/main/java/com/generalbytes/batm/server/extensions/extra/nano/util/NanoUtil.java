@@ -1,22 +1,17 @@
-package com.generalbytes.batm.server.extensions.extra.nano;
-
-import com.generalbytes.batm.server.extensions.payment.IPaymentOutput;
+package com.generalbytes.batm.server.extensions.extra.nano.util;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * @author Karl Oczadly
  */
-public class NanoCurrencyUtil {
+public class NanoUtil {
 
-    public static final NanoCurrencyUtil NANO = new NanoCurrencyUtil(30, "nano", "nano", "xrb");
+    public static final NanoUtil NANO = new NanoUtil(30, "nano", "nano", "xrb");
 
     /*
      * Allows basic validation of address, omitting URI scheme and query arguments if provided.
@@ -35,7 +30,7 @@ public class NanoCurrencyUtil {
      * @param addrUriScheme the uri scheme (eg: {@code nano})
      * @param addrPrefixes  a set of address prefixes, the first being the default (eg: {@code xrb})
      */
-    public NanoCurrencyUtil(int unitExp, String addrUriScheme, String... addrPrefixes) {
+    public NanoUtil(int unitExp, String addrUriScheme, String... addrPrefixes) {
         this.unitExp = unitExp;
         this.uriScheme = addrUriScheme;
         this.defaultPrefix = addrPrefixes[0];

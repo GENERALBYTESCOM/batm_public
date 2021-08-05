@@ -25,9 +25,9 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.binance.B
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.coingecko.CoinGeckoRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.coinpaprika.CoinPaprikaRateSource;
 import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.CoinmarketcapRateSource;
+import com.generalbytes.batm.server.extensions.extra.nano.util.NanoUtil;
 import com.generalbytes.batm.server.extensions.extra.nano.wallet.demo.DemoWallet;
 import com.generalbytes.batm.server.extensions.extra.nano.wallet.node.NanoNodeWallet;
-import com.generalbytes.batm.server.extensions.extra.nano.wallet.paper.NanoPaperWalletGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,12 +40,6 @@ import java.util.StringTokenizer;
  *
  * The NanoExtensionContext object which is passed around contains various different objects relating to the
  * cryptocurrency being used, including the crypto code identifier, address format and standard unit denomination.
- *
- * The context object also contains a reference to a globally-used NanoRpcClient instance. This is optionally
- * defined when the end user configures a nano_node wallet — if this is not defined, then certain actions will
- * become unavailable (or resort to less desirable fallbacks). This is a (messy) necessity due to the dependency
- * constraints put in place, so operations such as paper wallet generation and address validation must be processed
- * externally on an RPC endpoint.
  */
 public class NanoExtension extends AbstractExtension {
 
@@ -53,7 +47,7 @@ public class NanoExtension extends AbstractExtension {
 
     public static final CryptoCurrency CRYPTO = CryptoCurrency.NANO;
 
-    private volatile NanoExtensionContext context = new NanoExtensionContext(CRYPTO, ctx, NanoCurrencyUtil.NANO);
+    private volatile NanoExtensionContext context = new NanoExtensionContext(CRYPTO, ctx, NanoUtil.NANO);
 
 
     @Override
@@ -64,7 +58,7 @@ public class NanoExtension extends AbstractExtension {
     @Override
     public void init(IExtensionContext ctx) {
         super.init(ctx);
-        this.context = new NanoExtensionContext(CRYPTO, ctx, NanoCurrencyUtil.NANO);
+        this.context = new NanoExtensionContext(CRYPTO, ctx, NanoUtil.NANO);
     }
 
     @Override
@@ -75,9 +69,7 @@ public class NanoExtension extends AbstractExtension {
                 String walletName = st.nextToken();
 
                 if ("nano_node".equalsIgnoreCase(walletName)) {
-                    NanoNodeWallet wallet = NanoNodeWallet.create(context, st);
-                    context.setRpcClient(wallet.getRpcClient()); // Set global RPC client
-                    return wallet;
+                    return NanoNodeWallet.create(context, st);
                 } else if ("nano_demo".equalsIgnoreCase(walletName)) {
                     String fiatCurrency = st.nextToken();
                     String walletAddress = st.nextToken();
@@ -128,13 +120,6 @@ public class NanoExtension extends AbstractExtension {
     @Override
     public Set<ICryptoCurrencyDefinition> getCryptoCurrencyDefinitions() {
         return Collections.singleton(new NanoDefinition(new NanoPaymentSupport(context)));
-    }
-
-    @Override
-    public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency) {
-        if (CRYPTO.getCode().equalsIgnoreCase(cryptoCurrency))
-            return new NanoPaperWalletGenerator(context);
-        return null;
     }
 
 

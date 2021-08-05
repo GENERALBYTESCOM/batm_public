@@ -1,6 +1,7 @@
 package com.generalbytes.batm.server.extensions.extra.nano;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.server.extensions.extra.nano.util.NanoUtil;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -11,7 +12,7 @@ import static org.junit.Assert.*;
 public class NanoAddressValidatorTest {
 
     private static final NanoAddressValidator VALIDATOR = new NanoAddressValidator(
-            new NanoExtensionContext(CryptoCurrency.NANO, null, NanoCurrencyUtil.NANO));
+            new NanoExtensionContext(CryptoCurrency.NANO, null, NanoUtil.NANO));
 
 
     @Test
