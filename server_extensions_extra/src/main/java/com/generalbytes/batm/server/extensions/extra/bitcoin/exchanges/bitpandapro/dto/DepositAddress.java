@@ -3,7 +3,7 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitpanda
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * An existing or new deposit address for crypto currencies.
+ * An existing or new deposit address for cryptocurrencies.
  */
 public class DepositAddress {
     @JsonProperty("address")

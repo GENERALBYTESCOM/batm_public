@@ -16,7 +16,7 @@ Architecture
 
 Overview
 ========
-Operators frequently request new features to be added to our BATM Server (CAS). Typically, the requests are for adding support for "crypto currency XYZ" or "digital asset exchange XY".
+Operators frequently request new features to be added to our BATM Server (CAS). Typically, the requests are for adding support for "cryptocurrency XYZ" or "digital asset exchange XY".
 
 The purpose of this project is to give operators the desired power to add features themselves by **extending** CAS via this published **Extensions** mechanism.
 
@@ -33,12 +33,12 @@ Here is the list of some functionality that can be extended using Extensions API
 * **Implement support for different cryptocurrency wallets** - for more information, see the <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/main/java/com/generalbytes/batm/server/extensions/IWallet.java">IWallet</a> interface.
 * **Implement support for different cryptocurrency exchanges** - for more information, see the <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/main/java/com/generalbytes/batm/server/extensions/IExchange.java">IExchange</a> interface.
 * **Implement support for different cryptocurrency rate tickers** - for more information, see the <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/main/java/com/generalbytes/batm/server/extensions/IRateSource.java">IRateSource</a> interface.
-* **Implement support for different cryptocurrency payment processors** - ( payment processor is a company that processes payments for you. For more information, see the <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/main/java/com/generalbytes/batm/server/extensions/IPaymentProcessor.java">IPaymentProcessor</a> interface.
+* **Implement support for different cryptocurrency payment processors** (a company that processes payments for you) - for more information, see the <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/main/java/com/generalbytes/batm/server/extensions/IPaymentProcessor.java">IPaymentProcessor</a> interface.
 * **Implement support for payments by your cryptocurrency** - for more information, see the <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/main/java/com/generalbytes/batm/server/extensions/payment/IPaymentSupport.java">IPaymentSupport</a> interface.
 * **Implement support for different terrorist watch lists** - for more information, see the <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/main/java/com/generalbytes/batm/server/extensions/watchlist/IWatchList.java">IWatchList</a> interface.
 * **Implement support for a different AML provider** - for more information, see the <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/main/java/com/generalbytes/batm/server/extensions/aml/IAMLProvider.java">IAMLProvider</a> interface.
 * **Perform actions whenever a transaction on CAS is created or updated** - This is useful; for example, in those locales where you may need to notify the tax office about the transaction in realtime and print a unique tax office onetime id on the ticket printed by the BATM. For more information, see the <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/main/java/com/generalbytes/batm/server/extensions/ITransactionListener.java">ITransactionListener</a> interface.
-* **Implement a paper wallet generator for your crypto currency XYZ** - Do you want your BATM to be able print a paper wallet or write the transaction's private key on an NFC card? You will need to implement this interface. For more information, see the <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/main/java/com/generalbytes/batm/server/extensions/IPaperWalletGenerator.java">IPaperWalletGenerator</a> interface.
+* **Implement a paper wallet generator for your cryptocurrency XYZ** - Do you want your BATM to be able print a paper wallet or write the transaction's private key on an NFC card? You will need to implement this interface. For more information, see the <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/main/java/com/generalbytes/batm/server/extensions/IPaperWalletGenerator.java">IPaperWalletGenerator</a> interface.
 * **Implement a fiat-to-fiat currency exchange rate provider** - Do you want CAS to use the fiat currency exchange rates provided by your local bank (or exchange) instead of the international market? For more information, see the <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/main/java/com/generalbytes/batm/server/extensions/IFiatExchangeRateProvider.java">IFiatExchangeRateProvider</a> interface.
 * **Send emails or SMSes from extension** - To notify your customer via SMS or email with custom messages, call the methods exposed by the <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/main/java/com/generalbytes/batm/server/extensions/IExtensionContext.java">IExtensionContext</a> interface.
 * **<a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/main/java/com/generalbytes/batm/server/extensions/IExtensionContext.java">ExtensionContext</a>** is your main entrypoint for interacting with CAS.
@@ -82,7 +82,7 @@ cp server_extensions_extra/build/libs/batm_server_extensions_extra.jar /batm/app
 ```
 Note that on startup, CAS scans the: <code>/batm/app/master/extensions/</code> folder for all files that have the .jar extension.
 
-If you happen to add new crypto currency in CryptoCurrency class in currencies module then don't forget to make sure that you copy your version of currencies-1.0.XX-SNAPSHOT.jar to /batm/app/master/lib
+If you happen to add new cryptocurrency in CryptoCurrency class in currencies module then don't forget to make sure that you copy your version of currencies-1.0.XX-SNAPSHOT.jar to /batm/app/master/lib
 
 How to run Tester
 ==========

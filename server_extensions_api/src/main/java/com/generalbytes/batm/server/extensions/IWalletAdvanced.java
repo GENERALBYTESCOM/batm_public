@@ -20,7 +20,7 @@ package com.generalbytes.batm.server.extensions;
 
 import java.math.BigDecimal;
 
-public interface IWalletAdvanced extends IWallet{
+public interface IWalletAdvanced extends IWallet {
     /**
      * Commands wallet to send coins from wallet to a different address. Description contains remote transaction id
      * @param destinationAddress
@@ -30,7 +30,7 @@ public interface IWalletAdvanced extends IWallet{
      * @param description
      * @return - method must return non-null string. If it returns null it will be considered as error. Usually txid is returned and stored in server's database.
      */
-    String sendCoins(String destinationAddress, BigDecimal amount, BigDecimal fee ,String cryptoCurrency, String description); //returns txid
+    String sendCoins(String destinationAddress, BigDecimal amount, BigDecimal fee, String cryptoCurrency, String description); //returns txid
 
     /**
      * Returns optional additional information about wallet.
