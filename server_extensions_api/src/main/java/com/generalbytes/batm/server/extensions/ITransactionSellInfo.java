@@ -58,7 +58,7 @@ public interface ITransactionSellInfo {
     BigDecimal getCryptoAmount();
 
     /**
-     * Crypto currency code (BTC, ETH etc)
+     * Cryptocurrency code (BTC, ETH etc)
      * @return
      */
     String getCryptoCurrency() ;

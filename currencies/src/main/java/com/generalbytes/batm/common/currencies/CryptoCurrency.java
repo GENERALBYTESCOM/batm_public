@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Crypto Currences
+ * Cryptocurrencies
  *
  * Usage e.g.:
  *      CryptoCurrency.USD.getCurrencyName()
