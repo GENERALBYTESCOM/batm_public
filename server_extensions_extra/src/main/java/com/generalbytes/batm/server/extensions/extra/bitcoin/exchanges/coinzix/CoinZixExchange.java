@@ -298,10 +298,10 @@ public class CoinZixExchange implements IRateSourceAdvanced, IExchangeAdvanced {
     private BigDecimal getTradablePrice(BigDecimal cryptoAmount, List<OrderBookPrice> bidsOrAsksSorted) throws IOException {
         BigDecimal total = BigDecimal.ZERO;
         for (OrderBookPrice order : bidsOrAsksSorted) {
-            total = total.add(new BigDecimal(Double.toString(order.volume)));
+            total = total.add(new BigDecimal(order.volume));
             if (cryptoAmount.compareTo(total) <= 0) {
                 log.debug("tradablePrice: {}", order.rate);
-                return new BigDecimal(Double.toString(order.rate));
+                return new BigDecimal(order.rate);
             }
         }
         throw new IOException("tradable price not available");
