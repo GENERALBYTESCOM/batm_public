@@ -56,7 +56,6 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
     private Exchange exchange = null;
     private String apiKey;
     private String apiSecret;
-    private Exchange exchangeCustom = null; //TODO: BATM-2327 remove this field
 
     private static final HashMap<String,BigDecimal> rateAmounts = new HashMap<String, BigDecimal>();
     private static HashMap<String,Long> rateTimes = new HashMap<String, Long>();
@@ -79,18 +78,6 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
             this.exchange = ExchangeFactory.INSTANCE.createExchange(bfxSpec);
         }
         return this.exchange;
-    }
-
-    //TODO: BATM-2327 remove this method
-    private synchronized Exchange getExchangeCustom() throws TimeoutException {
-        if (this.exchangeCustom == null) {
-            RateLimiter.waitForPossibleCall(getClass());
-            ExchangeSpecification bfxSpec = new BittrexExchangeCustom().getDefaultExchangeSpecification();
-            bfxSpec.setApiKey(this.apiKey);
-            bfxSpec.setSecretKey(this.apiSecret);
-            this.exchangeCustom = ExchangeFactory.INSTANCE.createExchange(bfxSpec);
-        }
-        return this.exchangeCustom;
     }
 
     @Override
@@ -144,7 +131,7 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
         log.info("Calling Bittrex exchange (withdrawal destination: " + destinationAddress + " amount: " + amount + " " + cryptoCurrency + ")");
 
         try {
-            AccountService accountService = getExchangeCustom().getAccountService();
+            AccountService accountService = getExchange().getAccountService();
             RateLimiter.waitForPossibleCall(getClass());
             String result = accountService.withdrawFunds(Currency.getInstance(cryptoCurrency), amount, destinationAddress);
             log.info("Bittrex exchange (withdrawFunds) finished with result: {}", result);

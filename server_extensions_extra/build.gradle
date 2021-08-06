@@ -31,6 +31,10 @@ artifacts {
     artifactOnly jar
 }
 
+ext {
+    xchangeVersion = '5.0.10'
+}
+
 dependencies {
     compile project(':server_extensions_api')
     compile project(':currencies')
@@ -44,16 +48,16 @@ dependencies {
     compile(group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.9')
     compile(group: 'com.google.guava', name: 'guava', version: '27.0.1-android')
     compile(group: 'com.google.zxing', name: 'core', version: '2.3.0')
-    compile(group: 'org.knowm.xchange', name: 'xchange-core', version: '5.0.8')
-    compile(group: 'org.knowm.xchange', name: 'xchange-bitfinex', version: '5.0.8')
-    compile(group: 'org.knowm.xchange', name: 'xchange-binance', version: '5.0.8')
-    compile(group: 'org.knowm.xchange', name: 'xchange-bittrex', version: '5.0.8')
-    compile(group: 'org.knowm.xchange', name: 'xchange-hitbtc', version: '5.0.8')
-    compile(group: 'org.knowm.xchange', name: 'xchange-dvchain', version: '5.0.8')
-    compile(group: 'org.knowm.xchange', name: 'xchange-coinbasepro', version: '5.0.8')
-    compile(group: 'org.knowm.xchange', name: 'xchange-coingi', version: '5.0.8')
-    compile(group: 'org.knowm.xchange', name: 'xchange-enigma', version: '5.0.8')
-    compile(group: 'org.knowm.xchange', name: 'xchange-poloniex', version: '5.0.8')
+    compile(group: 'org.knowm.xchange', name: 'xchange-core', version: xchangeVersion)
+    compile(group: 'org.knowm.xchange', name: 'xchange-bitfinex', version: xchangeVersion)
+    compile(group: 'org.knowm.xchange', name: 'xchange-binance', version: xchangeVersion)
+    compile(group: 'org.knowm.xchange', name: 'xchange-bittrex', version: xchangeVersion)
+    compile(group: 'org.knowm.xchange', name: 'xchange-hitbtc', version: xchangeVersion)
+    compile(group: 'org.knowm.xchange', name: 'xchange-dvchain', version: xchangeVersion)
+    compile(group: 'org.knowm.xchange', name: 'xchange-coinbasepro', version: xchangeVersion)
+    compile(group: 'org.knowm.xchange', name: 'xchange-coingi', version: xchangeVersion)
+    compile(group: 'org.knowm.xchange', name: 'xchange-enigma', version: xchangeVersion)
+    compile(group: 'org.knowm.xchange', name: 'xchange-poloniex', version: xchangeVersion)
     compile(group: 'org.web3j', name: 'core', version: '3.6.0')
     compile(group: 'org.web3j', name: 'crypto', version: '3.6.0')
     compile(group: 'org.web3j', name: 'utils', version: '3.6.0')
