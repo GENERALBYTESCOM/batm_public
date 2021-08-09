@@ -17,9 +17,7 @@ public class LnurlUtil {
     // some wallets will display the hostname, e.g. <hostname> is taking too long to pay [...] please contact <hostname>.
 
     public String getLnurlQrcode(String rid, String uuid, BigDecimal cryptoAmount) {
-        if (baseUrl == null) {
-            return null;
-        }
+        Objects.requireNonNull(baseUrl, "LNURL Base URL must be configured");
         Objects.requireNonNull(rid, "RID cannot be null");
         Objects.requireNonNull(uuid, "UUID cannot be null");
         String milliSats = Long.toString(CoinUnit.bitcoinToMSat(cryptoAmount));
@@ -31,9 +29,7 @@ public class LnurlUtil {
     }
 
     public String getConfirmCallbackUrl(String uuid, String rid) {
-        if (baseUrl == null) {
-            return null;
-        }
+        Objects.requireNonNull(baseUrl, "LNURL Base URL must be configured");
         Objects.requireNonNull(rid, "RID cannot be null");
         Objects.requireNonNull(uuid, "UUID cannot be null");
         return baseUrl + "/" + WITHDRAW_CONFIRM_PATH
