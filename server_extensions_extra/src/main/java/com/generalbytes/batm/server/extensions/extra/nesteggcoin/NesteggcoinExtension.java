@@ -32,8 +32,8 @@ import java.math.BigDecimal;
 import java.net.InetSocketAddress;
 import java.util.*;
 
-public class NesteggExtension extends AbstractExtension{
-    private static final Logger log = LoggerFactory.getLogger(NesteggExtension.class);
+public class NesteggcoinExtension extends AbstractExtension{
+    private static final Logger log = LoggerFactory.getLogger(NesteggcoinExtension.class);
 
     @Override
     public String getName() {
@@ -83,7 +83,7 @@ public class NesteggExtension extends AbstractExtension{
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
         if (CryptoCurrency.EGG.getCode().equalsIgnoreCase(cryptoCurrency)) {
-            return new NesteggAddressValidator();
+            return new NesteggcoinAddressValidator();
         }
         return null;
     }

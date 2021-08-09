@@ -25,8 +25,8 @@ import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class NesteggAddressValidator implements ICryptoAddressValidator {
-    private static final Logger log = LoggerFactory.getLogger("batm.master.extensions.NesteggAddressValidator");
+public class NesteggcoinAddressValidator implements ICryptoAddressValidator {
+    private static final Logger log = LoggerFactory.getLogger("batm.master.extensions.NesteggcoinAddressValidator");
     @Override
     public boolean isAddressValid(String address) {
         if (address.startsWith("R")) {
