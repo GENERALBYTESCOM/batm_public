@@ -29,7 +29,7 @@ public class NesteggcoinAddressValidator implements ICryptoAddressValidator {
     private static final Logger log = LoggerFactory.getLogger("batm.master.extensions.NesteggcoinAddressValidator");
     @Override
     public boolean isAddressValid(String address) {
-        if (address.startsWith("R")) {
+        if (address.startsWith("E")) {
             try {
                 Base58.decodeToBigInteger(address);
                 Base58.decodeChecked(address);
