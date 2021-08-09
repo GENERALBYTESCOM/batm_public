@@ -930,7 +930,12 @@
             <param name="url" />
             <param name="macaroon" />
             <param name="cert" />
-            <help>URL starts with https://, may contain a port number and must end with '/'. Macaroon and cert are hex encoded files admin.macaroon and tls.cert. Cert parameter is not mandatory if trusted authority signed cert is used.</help>
+            <param name="feeLimit" />
+            <help>URL starts with https://, may contain a port number and must end with '/'.
+                Macaroon and cert are hex encoded files admin.macaroon and tls.cert.
+                Cert parameter is not mandatory if trusted authority signed cert is used.
+                feeLimit could be fixed in sats (e.g. "10") or percentage (e.g. "0.1%"), default: 0.
+            </help>
             <cryptocurrency>LBTC</cryptocurrency>
         </wallet>
         <wallet prefix="lbtcdemo" name="Bitcoin Lightning Network Demo Wallet">
