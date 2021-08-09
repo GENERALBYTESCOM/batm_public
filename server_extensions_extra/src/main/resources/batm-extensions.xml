@@ -67,7 +67,7 @@
                 <param name="wallet_id" />
                 <param name="passphrase"/>
                 <param name="priority" />
-                <param name="max_custom_price" />
+                <param name="max_custom_fee" />
                 <param name="max_custom_gas_limit" />
                 <cryptocurrency buyonly="true">BCH</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>
@@ -79,7 +79,8 @@
                     port: (not required) - *token: generate Access tokens from CryptX Settings (required) -
                     *walletid: find under [Wallet] > Settings > Wallet Info > Wallet ID (required) -
                     passphrase: wallet password (not required) -
-                    priority: Select high, low, or custom. If custom, indicate number of blocks (e.g., custom:12), otherwise high priority (2 blocks) will be used by default (not required) -
+                    priority: Select "high" (2 blocks, default), "medium" (8 blocks), "low" (24 blocks), or "custom" -
+                    max_custom_fee: fee rate (in s/vByte for bitcoin, gas price for ethereum) when "custom" priority is set (instead of estimating one using blocks) -
                     limit: gas limit - only for ETH, e.g., 50000 (not required)
                 </help>
             </wallet>
@@ -92,7 +93,7 @@
                 <param name="wallet_id" />
                 <param name="passphrase"/>
                 <param name="priority" />
-                <param name="max_custom_rate" />
+                <param name="max_custom_fee" />
                 <param name="max_custom_gas_limit" />
                 <cryptocurrency buyonly="true">BCH</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>
@@ -104,7 +105,8 @@
                     port: (not required) - *token: generate Access tokens from CryptX Settings (required) -
                     *walletid: find under [Wallet] > Settings > Wallet Info > Wallet ID (required) -
                     passphrase: wallet password (not required) -
-                    priority: Select high, low, or custom. If custom, indicate number of blocks (e.g., custom:12), otherwise high priority (2 blocks) will be used by default (not required) -
+                    priority: Select high (2 blocks, default), medium (8 blocks), low (24 blocks), or custom -
+                    max_custom_fee: fee rate in s/vByte when "custom" priority is set (instead of estimating one using blocks) -
                     limit: gas limit - only for ETH, e.g., 50000 (not required)
                 </help>
             </wallet>
