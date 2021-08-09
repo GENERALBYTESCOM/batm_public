@@ -23,8 +23,8 @@ import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.coingecko.CoinGeckoRateSource;
 import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.CoinmarketcapRateSource;
-import com.generalbytes.batm.server.extensions.extra.nesteggcoin.wallets.nesteggd.NesteggdRPCWallet;
-import com.generalbytes.batm.server.extensions.extra.nesteggcoin.wallets.nesteggd.NesteggdUniqueAddressRPCWallet;
+import com.generalbytes.batm.server.extensions.extra.nesteggcoin.wallets.newyorkcoind.NesteggcoindRPCWallet;
+import com.generalbytes.batm.server.extensions.extra.nesteggcoin.wallets.newyorkcoind.NesteggcoindUniqueAddressRPCWallet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,7 +67,7 @@ public class NesteggcoinExtension extends AbstractExtension{
 
                 if (protocol != null && username != null && password != null && hostname !=null && label != null) {
                     String rpcURL = protocol +"://" + username +":" + password + "@" + hostname +":" + port;
-                    if ("nesteggdnoforward".equalsIgnoreCase(walletType)) {
+                    if ("newyorkcoindnoforward".equalsIgnoreCase(walletType)) {
                         return new NesteggdUniqueAddressRPCWallet(rpcURL);
                     }
                     return new NesteggdRPCWallet(rpcURL, label);
@@ -94,7 +94,7 @@ public class NesteggcoinExtension extends AbstractExtension{
             StringTokenizer st = new StringTokenizer(sourceLogin,":");
             String exchangeType = st.nextToken();
 
-            if ("eggfix".equalsIgnoreCase(exchangeType)) {
+            if ("nycfix".equalsIgnoreCase(exchangeType)) {
                 BigDecimal rate = BigDecimal.ZERO;
                 if (st.hasMoreTokens()) {
                     try {
