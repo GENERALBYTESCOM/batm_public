@@ -23,8 +23,8 @@ import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.coingecko.CoinGeckoRateSource;
 import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.CoinmarketcapRateSource;
-import com.generalbytes.batm.server.extensions.extra.nesteggcoin.wallets.nesteggd.NesteggcoindRPCWallet;
-import com.generalbytes.batm.server.extensions.extra.nesteggcoin.wallets.nesteggd.NesteggcoindUniqueAddressRPCWallet;
+import com.generalbytes.batm.server.extensions.extra.nesteggcoin.wallets.nesteggd.NesteggdRPCWallet;
+import com.generalbytes.batm.server.extensions.extra.nesteggcoin.wallets.nesteggd.NesteggdUniqueAddressRPCWallet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
