@@ -866,7 +866,7 @@
         <cryptologo cryptocurrency="NYC" file="nyc.png"/>
         <cryptologo cryptocurrency="NYC" file="nyc.svg"/>
     </extension>
-    <extension class="com.generalbytes.batm.server.extensions.extra.nesteggcoin.NestEggCoinExtension" >
+    <extension class="com.generalbytes.batm.server.extensions.extra.nesteggcoin.NesteggCoinExtension" >
         <wallet prefix="nesteggd" name="Nesteggd">
             <tunnel supported="true"/>
             <sendtomany supported="true"/>
