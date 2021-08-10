@@ -1,4 +1,4 @@
-package com.generalbytes.batm.server.extensions.extra.nano.test;
+package com.generalbytes.batm.server.extensions.extra.nano.dev;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.extra.nano.util.NanoUtil;
@@ -6,6 +6,7 @@ import com.generalbytes.batm.server.extensions.extra.nano.NanoExtensionContext;
 import com.generalbytes.batm.server.extensions.extra.nano.rpc.NanoRpcClient;
 import com.generalbytes.batm.server.extensions.extra.nano.wallet.node.NanoNodeWallet;
 import com.generalbytes.batm.server.extensions.payment.ReceivedAmount;
+import org.junit.Ignore;
 
 import java.math.BigDecimal;
 import java.net.URL;
@@ -15,6 +16,7 @@ import java.util.UUID;
  * THIS CLASS MAY BE IGNORED.
  * Its only purpose is to test and help during development.
  */
+@Ignore
 public class TestNodeWallet {
 
     public static void main(String[] args) throws Exception {

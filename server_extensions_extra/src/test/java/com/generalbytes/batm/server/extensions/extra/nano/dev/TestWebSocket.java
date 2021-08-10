@@ -1,6 +1,7 @@
-package com.generalbytes.batm.server.extensions.extra.nano.test;
+package com.generalbytes.batm.server.extensions.extra.nano.dev;
 
 import com.generalbytes.batm.server.extensions.extra.nano.rpc.NanoWsClient;
+import org.junit.Ignore;
 
 import java.net.URI;
 
@@ -8,6 +9,7 @@ import java.net.URI;
  * THIS CLASS MAY BE IGNORED.
  * Its only purpose is to test and help during development.
  */
+@Ignore
 public class TestWebSocket {
 
     public static void main(String[] args) throws Exception {
