@@ -90,29 +90,6 @@ public class NanoExtension extends AbstractExtension {
     }
 
     @Override
-    public IRateSource createRateSource(String sourceLogin) {
-        if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
-            StringTokenizer st = new StringTokenizer(sourceLogin, ":");
-            String sourceType = st.nextToken();
-
-            if ("coinmarketcap".equalsIgnoreCase(sourceType)) {
-                String preferredCurrency = getPreferredCurrency(st, FiatCurrency.USD);
-                String apiKey = st.hasMoreTokens() ? st.nextToken() : null;
-                return new CoinmarketcapRateSource(apiKey, preferredCurrency);
-            } else if ("coingecko".equalsIgnoreCase(sourceType)) {
-                return new CoinGeckoRateSource(getPreferredCurrency(st, FiatCurrency.USD));
-            } else if ("coinpaprika".equalsIgnoreCase(sourceType)) {
-                return new CoinPaprikaRateSource(getPreferredCurrency(st, FiatCurrency.USD));
-            } else if ("binancecom".equalsIgnoreCase(sourceType)) {
-                return new BinanceComExchange(getPreferredCurrency(st, FiatCurrency.EUR));
-            } else if ("binanceus".equalsIgnoreCase(sourceType)) {
-                return new BinanceUsExchange(getPreferredCurrency(st, FiatCurrency.USD));
-            }
-        }
-        return null;
-    }
-
-    @Override
     public Set<String> getSupportedCryptoCurrencies() {
         return Collections.singleton(CRYPTO.getCode());
     }
@@ -120,11 +97,6 @@ public class NanoExtension extends AbstractExtension {
     @Override
     public Set<ICryptoCurrencyDefinition> getCryptoCurrencyDefinitions() {
         return Collections.singleton(new NanoDefinition(new NanoPaymentSupport(context)));
-    }
-
-
-    public static String getPreferredCurrency(StringTokenizer tokenizer, FiatCurrency defaultVal) {
-        return tokenizer.hasMoreTokens() ? tokenizer.nextToken().toUpperCase() : defaultVal.getCode();
     }
 
 }
