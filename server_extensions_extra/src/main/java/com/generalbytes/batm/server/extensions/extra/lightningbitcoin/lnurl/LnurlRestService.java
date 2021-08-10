@@ -183,9 +183,10 @@ public class LnurlRestService implements IRestService {
      */
     private void payInvoice(String invoice, String rid, BigDecimal cryptoAmount, IWallet wallet) throws RuntimeException {
         try {
+            extensionContext.updateTransaction(rid, null, invoice);
             String sendingId = sendCoins(invoice, rid, cryptoAmount, wallet);
             log.info("Invoice paid, setting transaction as COMPLETED, rid: {}, sendingId: {}", rid, sendingId);
-            extensionContext.updateTransaction(rid, ITransactionDetails.STATUS_BUY_COMPLETED, invoice + " " + sendingId);
+            extensionContext.updateTransaction(rid, ITransactionDetails.STATUS_BUY_COMPLETED, sendingId);
         } catch (RuntimeException | UpdateException e) {
             try {
                 log.warn("Marking transaction as failed, rid: {}", rid);

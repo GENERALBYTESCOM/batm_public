@@ -96,7 +96,7 @@ public interface IExtensionContext {
      * @return modified transaction details
      * @throws UpdateException if the update was not successful
      */
-    ITransactionDetails updateTransaction(String rid, int status, String detail) throws UpdateException;
+    ITransactionDetails updateTransaction(String rid, Integer status, String detail) throws UpdateException;
 
     /**
      * Finds person by chat user id

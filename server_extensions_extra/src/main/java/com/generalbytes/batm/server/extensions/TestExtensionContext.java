@@ -55,7 +55,7 @@ public class TestExtensionContext implements IExtensionContext {
         return null;
     }
     @Override
-    public ITransactionDetails updateTransaction(String rid, int status, String detail) throws UpdateException {
+    public ITransactionDetails updateTransaction(String rid, Integer status, String detail) throws UpdateException {
         return null;
     }
 
