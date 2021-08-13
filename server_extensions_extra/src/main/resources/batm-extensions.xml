@@ -732,6 +732,16 @@
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
         </ratesource>
+        <exchange prefix="coinzix" name="Coinzix">
+            <param name="token"/>
+            <param name="secret"/>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+        </exchange>
+        <ratesource prefix="coinzix" name="Coinzix">
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+        </ratesource>
         <cryptologo cryptocurrency="BNB" file="bnb.png"/>
         <cryptologo cryptocurrency="BNB" file="bnb.svg"/>
         <cryptologo cryptocurrency="KMD" file="kmd.png"/>
