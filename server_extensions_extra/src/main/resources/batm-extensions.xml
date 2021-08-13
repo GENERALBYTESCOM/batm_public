@@ -871,7 +871,7 @@
             <tunnel supported="true"/>
             <sendtomany supported="true"/>
             <param name="protocol" />
-            <param name="user" />
+            <param name="username" />
             <param name="password" />
             <param name="host" />
             <param name="port" />
@@ -882,7 +882,7 @@
             <tunnel supported="true"/>
             <sendtomany supported="true"/>
             <param name="protocol" />
-            <param name="user" />
+            <param name="username" />
             <param name="password" />
             <param name="host" />
             <param name="port" />
