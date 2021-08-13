@@ -49,7 +49,7 @@ public class NewyorkcoinExtension extends AbstractExtension{
 
             if ("newyorkcoind".equalsIgnoreCase(walletType)
                 || "newyorkcoindnoforward".equalsIgnoreCase(walletType)) {
-                //"newyorkcoind:protocol:user:password:ip:port:accountname"
+                //"newyorkcoind:protocol:username:password:ip:port:accountname"
 
                 String protocol = st.nextToken();
                 String username = st.nextToken();
