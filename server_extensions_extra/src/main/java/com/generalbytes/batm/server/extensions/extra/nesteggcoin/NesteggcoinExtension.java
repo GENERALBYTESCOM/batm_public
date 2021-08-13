@@ -67,7 +67,7 @@ public class NesteggcoinExtension extends AbstractExtension{
 
                 if (protocol != null && username != null && password != null && hostname !=null && label != null) {
                     String rpcURL = protocol +"://" + username +":" + password + "@" + hostname +":" + port;
-                    if ("newyorkcoindnoforward".equalsIgnoreCase(walletType)) {
+                    if ("nesteggdnoforward".equalsIgnoreCase(walletType)) {
                         return new NesteggdUniqueAddressRPCWallet(rpcURL);
                     }
                     return new NesteggdRPCWallet(rpcURL, label);
