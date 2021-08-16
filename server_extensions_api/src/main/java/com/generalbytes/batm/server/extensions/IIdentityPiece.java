@@ -146,14 +146,14 @@ public interface IIdentityPiece {
     /**
      * Country of identity document issuing jurisdiction, used with TYPE_PERSONAL_INFORMATION
      *
-     * @return contact country or null
+     * @return issuing jurisdiction country or null
      */
     String getIssuingJurisdictionCountry();
 
     /**
      * Province of identity document issuing jurisdiction, used with TYPE_PERSONAL_INFORMATION
      *
-     * @return contact province (e.g. a state in the US) or null
+     * @return issuing jurisdiction province (e.g. a state in the US) or null
      */
     String getIssuingJurisdictionProvince();
 
