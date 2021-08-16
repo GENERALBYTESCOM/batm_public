@@ -144,6 +144,20 @@ public interface IIdentityPiece {
     String getContactZIP();
 
     /**
+     * Country of identity document issuing jurisdiction, used with TYPE_PERSONAL_INFORMATION
+     *
+     * @return contact country or null
+     */
+    String getIssuingJurisdictionCountry();
+
+    /**
+     * Province of identity document issuing jurisdiction, used with TYPE_PERSONAL_INFORMATION
+     *
+     * @return contact province (e.g. a state in the US) or null
+     */
+    String getIssuingJurisdictionProvince();
+
+    /**
      * ID card number, used with TYPE_PERSONAL_INFORMATION
      *
      * @return identity's id card number if known
