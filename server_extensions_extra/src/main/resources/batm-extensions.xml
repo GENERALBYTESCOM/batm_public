@@ -281,6 +281,7 @@
                 <cryptocurrency>TENT</cryptocurrency>
                 <cryptocurrency>XZC</cryptocurrency>
                 <cryptocurrency>ZPAE</cryptocurrency>
+                <cryptocurrency>TAT2</cryptocurrency>
                 <help>USD is default fiat currency.</help>
             </ratesource>
             <ratesource prefix="bitflyer" name="BitFlyer.jp Rate Source" >
@@ -2019,6 +2020,16 @@
         </wallet>
         <cryptologo cryptocurrency="USDT" file="usdt.png"/>
         <cryptologo cryptocurrency="USDT" file="usdt.svg"/>
+        <wallet prefix="infuraERC20_TAT2_6_0x960773318c1aeab5da6605c49266165af56435fa" name="Infura.io wallet - TAT2">
+            <param name="projectId" />
+            <param name="mnemonic" />
+            <param name="gaslimit" />
+            <param name="gasPriceMultiplier" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
+            <cryptocurrency>TAT2</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="TAT2" file="tat2.png"/>
+        <cryptologo cryptocurrency="TAT2" file="tat2.svg"/>
         <wallet prefix="infuraERC20_WILC_8_0xc98a910ede52e7d5308525845f19e17470dbccf7" name="Infura.io wallet - WILC">
             <param name="projectId" />
             <param name="mnemonic" />

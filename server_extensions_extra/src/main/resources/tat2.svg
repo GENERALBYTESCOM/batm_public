@@ -1,0 +1,22 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+ "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+ width="250.000000pt" height="250.000000pt" viewBox="0 0 250.000000 250.000000"
+ preserveAspectRatio="xMidYMid meet">
+<metadata>
+Created by Patrick B.
+</metadata>
+<svg height="250" width="250">
+  <circle cx="125" cy="125" r="110" fill="#ffb301" />
+</svg>
+<g transform="translate(0.000000,250.000000) scale(0.100000,-0.100000)"
+fill="#000000" stroke="none">
+<path d="M502 1608 l3 -123 135 -2 c74 -1 134 -4 133 -7 -2 -3 -3 -125 -3
+-271 l0 -265 -55 0 -55 0 0 -115 0 -115 168 2 167 3 5 240 5 239 130 -184 130
+-185 75 0 74 0 121 177 c66 98 125 186 132 195 10 14 12 -33 12 -232 l0 -250
+160 -3 161 -2 0 109 0 110 -47 3 -48 3 -3 398 -2 397 -119 0 -119 0 -148 -242
+c-81 -134 -158 -260 -171 -281 l-24 -39 -105 154 -105 153 101 3 100 3 0 124
+0 125 -405 0 -406 0 3 -122z"/>
+</g>
+</svg>

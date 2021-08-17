@@ -119,6 +119,7 @@ public enum CryptoCurrency {
     MUE("MonetaryUnit"),
     XPM("Primecoin"),
     ZPAE("ZelaaPayAE"),
+    TAT2("TattooMoney"),
 
     TBCH("test BCH"),
     TBTC("test BTC"),
