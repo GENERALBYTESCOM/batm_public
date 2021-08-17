@@ -191,6 +191,7 @@
                 <cryptocurrency>BTX</cryptocurrency>
                 <cryptocurrency>BTCP</cryptocurrency>
                 <cryptocurrency>EFL</cryptocurrency>
+                <cryptocurrency>EGG</cryptocurrency>
                 <cryptocurrency>BSD</cryptocurrency>
                 <cryptocurrency>BTDX</cryptocurrency>
                 <cryptocurrency>MEC</cryptocurrency>
@@ -525,6 +526,7 @@
             <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency>ECA</cryptocurrency>
             <cryptocurrency>EFL</cryptocurrency>
+            <cryptocurrency>EGG</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>FLASH</cryptocurrency>
             <cryptocurrency>FTO</cryptocurrency>
@@ -594,6 +596,7 @@
             <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency>ECA</cryptocurrency>
             <cryptocurrency>EFL</cryptocurrency>
+            <cryptocurrency>EGG</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>FLASH</cryptocurrency>
             <cryptocurrency>FTO</cryptocurrency>
@@ -883,6 +886,37 @@
         </ratesource>
         <cryptologo cryptocurrency="NYC" file="nyc.png"/>
         <cryptologo cryptocurrency="NYC" file="nyc.svg"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.nesteggcoin.NesteggCoinExtension" >
+        <wallet prefix="nesteggd" name="Nesteggd">
+            <tunnel supported="true"/>
+            <sendtomany supported="true"/>
+            <param name="protocol" />
+            <param name="username" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="label" />
+            <cryptocurrency>EGG</cryptocurrency>
+        </wallet>
+        <wallet prefix="nesteggnoforward" name="Nesteggd (no forward)">
+            <tunnel supported="true"/>
+            <sendtomany supported="true"/>
+            <param name="protocol" />
+            <param name="username" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <cryptocurrency>EGG</cryptocurrency>
+            <help>This variant generates new addresses for each transaction and does not forward payments from temporary address</help>
+        </wallet>
+        <ratesource prefix="eggfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>EGG</cryptocurrency>
+            <help>USD is default fiat currency.</help>
+        </ratesource>
+        <cryptologo cryptocurrency="EGG" file="egg.png"/>
+        <cryptologo cryptocurrency="EGG" file="egg.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.flashcoin.FlashcoinExtension" >
         <wallet prefix="flashcoind" name="Flashcoind">
