@@ -25,6 +25,7 @@ import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.ec
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.dto.ReceivedInfo;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.dto.SentInfo;
 import com.generalbytes.batm.server.extensions.ThrowingSupplier;
+import com.generalbytes.batm.server.coinutil.CoinUnit;
 import okhttp3.HttpUrl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,7 +79,7 @@ public class EclairWallet extends AbstractLightningWallet {
             log.info("Invoice already paid");
             return null;
         }
-        Long amountMsat = bitcoinToMSat(amount);
+        Long amountMsat = CoinUnit.bitcoinToMSat(amount);
         String paymentId = callChecked(() -> api.payInvoice(destinationAddress, amountMsat));
 
         for (int millis = 0; millis < API_POLL_MAX; millis += API_POLL_INTERVAL) {
@@ -92,7 +93,7 @@ public class EclairWallet extends AbstractLightningWallet {
                     return null;
                 case sent:
                     log.error("Payment sent: {}", sentInfo2);
-                    return sentInfo2.paymentHash;
+                    return sentInfo2.status.paymentPreimage;
                 case pending:
                     log.error("Payment pending: {}", sentInfo2);
                     continue;
@@ -106,7 +107,7 @@ public class EclairWallet extends AbstractLightningWallet {
 
     @Override
     public String getInvoice(BigDecimal cryptoAmount, String cryptoCurrency, Long paymentValidityInSec, String description) {
-        return callChecked(cryptoCurrency, () -> api.createInvoice(bitcoinToMSat(cryptoAmount), description, paymentValidityInSec).serialized);
+        return callChecked(cryptoCurrency, () -> api.createInvoice(CoinUnit.bitcoinToMSat(cryptoAmount), description, paymentValidityInSec).serialized);
     }
 
     private Map<String, String> channelAliases = null;
@@ -130,7 +131,7 @@ public class EclairWallet extends AbstractLightningWallet {
 
     @Override
     public boolean canSend(String invoice, BigDecimal amount, String cryptoCurrency) {
-        List<String> route = callChecked(cryptoCurrency, () -> api.findRoute(invoice, bitcoinToMSat(amount)));
+        List<String> route = callChecked(cryptoCurrency, () -> api.findRoute(invoice, CoinUnit.bitcoinToMSat(amount)));
         log.debug("Route for {} {} to {}: {}", amount, cryptoCurrency, invoice, route);
         return route != null && !route.isEmpty();
     }
@@ -146,7 +147,7 @@ public class EclairWallet extends AbstractLightningWallet {
                 + " Capacity sat: " + ch.getCapacityMsat()
             ).forEach(log::info);
 
-            return mSatToBitcoin(channels.stream()
+            return CoinUnit.mSatToBitcoin(channels.stream()
                 .mapToLong(ILightningChannel::getBalanceMsat)
                 .max().orElse(0l));
         });
@@ -171,7 +172,7 @@ public class EclairWallet extends AbstractLightningWallet {
     private BigDecimal getReceivedAmount(ReceivedInfo receivedInfo) {
         switch (receivedInfo.status.type) {
             case received:
-                return mSatToBitcoin(receivedInfo.status.amount);
+                return CoinUnit.mSatToBitcoin(receivedInfo.status.amount);
             case pending:
             case expired:
                 return BigDecimal.ZERO;

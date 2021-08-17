@@ -27,8 +27,8 @@ import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.ln
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.lnd.dto.PaymentRequest;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.lnd.dto.RouteResponse;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.lnd.dto.SendPaymentResponse;
+import com.generalbytes.batm.server.coinutil.CoinUnit;
 import com.generalbytes.batm.server.extensions.util.net.HexStringCertTrustManager;
-import okhttp3.HttpUrl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import si.mazi.rescu.ClientConfig;
@@ -49,10 +49,17 @@ public class LndWallet extends AbstractLightningWallet {
     private static final Logger log = LoggerFactory.getLogger(LndWallet.class);
 
     private final String url;
+    private final String feeLimit;
     private final LndAPI api;
 
-    public LndWallet(String url, String macaroon, String certHexString) throws GeneralSecurityException {
+    /**
+     * @param feeLimit maximum fee allowed in satoshis when sending the payment (e.g. "10")
+     *                 or percentage of the payment's amount used as the maximum fee allowed when sending the payment (e.g. "1%")
+     *                 or null for default: 0
+     */
+    public LndWallet(String url, String macaroon, String certHexString, String feeLimit) throws GeneralSecurityException {
         this.url = url;
+        this.feeLimit = feeLimit;
         final ClientConfig config = new ClientConfig();
         config.addDefaultParam(HeaderParam.class, "Grpc-Metadata-macaroon", macaroon);
         if(certHexString != null) {
@@ -69,7 +76,6 @@ public class LndWallet extends AbstractLightningWallet {
 
         PaymentRequest paymentRequest = callChecked(cryptoCurrency, () -> api.decodePaymentRequest(destinationAddress));
 
-        log.info("Paying {} to invoice {}", amount, paymentRequest);
 
         if (paymentRequest.num_satoshis != null) {
             log.info("Invoices with amount not supported");
@@ -77,8 +83,11 @@ public class LndWallet extends AbstractLightningWallet {
         }
 
         Payment payment = new Payment();
-        payment.amt = bitcoinToSat(amount).toString();
+        payment.amt = CoinUnit.bitcoinToSat(amount).toString();
         payment.payment_request = destinationAddress;
+        payment.fee_limit = getFeeLimit(feeLimit);
+
+        log.info("Sending payment: {}", payment);
         SendPaymentResponse paymentResponse = callChecked(() -> api.sendPayment(payment));
 
         if (paymentResponse == null) {
@@ -90,14 +99,27 @@ public class LndWallet extends AbstractLightningWallet {
             log.warn("SendPayment failed: {}", paymentResponse.payment_error);
             return null;
         }
-        return paymentResponse.payment_hash;
+        return paymentResponse.payment_preimage;
 
+    }
+
+    private Payment.FeeLimit getFeeLimit(String fee) {
+        if (fee == null) {
+            return null;
+        }
+        Payment.FeeLimit feeLimit = new Payment.FeeLimit();
+        if (fee.contains("%")) {
+            feeLimit.percent = fee.replace("%", "");
+        } else {
+            feeLimit.fixed = fee;
+        }
+        return feeLimit;
     }
 
     @Override
     public String getInvoice(BigDecimal cryptoAmount, String cryptoCurrency, Long paymentValidityInSec, String description) {
         Invoice invoice = new Invoice();
-        invoice.value = bitcoinToSat(cryptoAmount);
+        invoice.value = CoinUnit.bitcoinToSat(cryptoAmount);
         invoice.memo = description;
         invoice.expiry = paymentValidityInSec;
         return callChecked(cryptoCurrency, () -> api.addInvoice(invoice).payment_request);
@@ -105,7 +127,7 @@ public class LndWallet extends AbstractLightningWallet {
 
     @Override
     public BigDecimal getCryptoBalance(String cryptoCurrency) {
-        return callChecked(cryptoCurrency, () -> satToBitcoin(api.getBalance().getBalance()));
+        return callChecked(cryptoCurrency, () -> CoinUnit.satToBitcoin(api.getBalance().getBalance()));
     }
 
     @Override
@@ -122,7 +144,7 @@ public class LndWallet extends AbstractLightningWallet {
             PaymentRequest paymentRequest = api.decodePaymentRequest(destinationAddress);
             Invoice invoice = api.getInvoice(paymentRequest.payment_hash);
             if (invoice.settled) {
-                return mSatToBitcoin(Long.parseLong(invoice.amt_paid_msat));
+                return CoinUnit.mSatToBitcoin(Long.parseLong(invoice.amt_paid_msat));
             }
             return BigDecimal.ZERO;
         });
@@ -165,7 +187,7 @@ public class LndWallet extends AbstractLightningWallet {
             return false;
         }
 
-        List<RouteResponse.Route> routes = callChecked(cryptoCurrency, () -> api.getRoute(paymentRequest.destination, bitcoinToSat(amount)).routes);
+        List<RouteResponse.Route> routes = callChecked(cryptoCurrency, () -> api.getRoute(paymentRequest.destination, CoinUnit.bitcoinToSat(amount)).routes);
         if (routes == null || routes.isEmpty()) {
             return false;
         }

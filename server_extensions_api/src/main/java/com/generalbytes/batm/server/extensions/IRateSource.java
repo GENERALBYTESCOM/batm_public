@@ -27,7 +27,7 @@ import java.util.Set;
  */
 public interface IRateSource {
     /**
-     * This method returns list of supported crypto currencies
+     * This method returns list of supported cryptocurrencies
      * @return
      */
     Set<String> getCryptoCurrencies();

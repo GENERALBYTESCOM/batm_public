@@ -23,7 +23,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 /**
- * PaymentRequest is created and maintained by implementation of @{@link IPaymentSupport} of particular crypto currency based on @{@link IPaymentRequestSpecification}
+ * PaymentRequest is created and maintained by implementation of @{@link IPaymentSupport} of particular cryptocurrency based on @{@link IPaymentRequestSpecification}
  * PaymentRequest is then used by server to allow withdrawals or start selling coins on exchange
  *
  */

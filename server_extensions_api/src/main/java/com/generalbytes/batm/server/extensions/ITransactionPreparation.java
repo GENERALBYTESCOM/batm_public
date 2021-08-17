@@ -75,7 +75,7 @@ public interface ITransactionPreparation {
 
 
     /**
-     * Crypto currency code (BTC, ETH etc)
+     * Cryptocurrency code (BTC, ETH etc)
      *
      * @return
      */
