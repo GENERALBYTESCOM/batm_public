@@ -208,6 +208,7 @@
                 <cryptocurrency>LMY</cryptocurrency>
                 <cryptocurrency>HT</cryptocurrency>
                 <cryptocurrency>ZPAE</cryptocurrency>
+                <cryptocurrency>NANO</cryptocurrency>
             </ratesource>
             <ratesource prefix="stream365" name ="365.stream" >
                 <cryptocurrency>HBX</cryptocurrency>
@@ -258,6 +259,7 @@
                 <cryptocurrency>MUE</cryptocurrency>
                 <cryptocurrency>NBT</cryptocurrency>
                 <cryptocurrency>NLG</cryptocurrency>
+                <cryptocurrency>NANO</cryptocurrency>
                 <cryptocurrency>NXT</cryptocurrency>
                 <cryptocurrency>POT</cryptocurrency>
                 <cryptocurrency>REP</cryptocurrency>
@@ -350,6 +352,7 @@
             <cryptocurrency>XMR</cryptocurrency>
             <cryptocurrency>DASH</cryptocurrency>
             <cryptocurrency>NXT</cryptocurrency>
+            <cryptocurrency>NANO</cryptocurrency>
         </exchange>
         <cryptologo cryptocurrency="BTC" file="btc.png"/>
         <cryptologo cryptocurrency="BTC" file="btc.svg"/>
@@ -540,6 +543,7 @@
             <cryptocurrency>MEC</cryptocurrency>
             <cryptocurrency>MKR</cryptocurrency>
             <cryptocurrency>MUE</cryptocurrency>
+            <cryptocurrency>NANO</cryptocurrency>
             <cryptocurrency>NBT</cryptocurrency>
             <cryptocurrency>NLG</cryptocurrency>
             <cryptocurrency>NULS</cryptocurrency>
@@ -608,6 +612,7 @@
             <cryptocurrency>MEC</cryptocurrency>
             <cryptocurrency>MKR</cryptocurrency>
             <cryptocurrency>MUE</cryptocurrency>
+            <cryptocurrency>NANO</cryptocurrency>
             <cryptocurrency>NLG</cryptocurrency>
             <cryptocurrency>NULS</cryptocurrency>
             <cryptocurrency>NXT</cryptocurrency>
@@ -649,6 +654,7 @@
             <cryptocurrency>KMD</cryptocurrency>
             <cryptocurrency>LSK</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>NANO</cryptocurrency>
             <cryptocurrency>NULS</cryptocurrency>
             <cryptocurrency>PAXG</cryptocurrency>
             <cryptocurrency>REP</cryptocurrency>
@@ -675,6 +681,7 @@
             <cryptocurrency>KMD</cryptocurrency>
             <cryptocurrency>LSK</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>NANO</cryptocurrency>
             <cryptocurrency>NULS</cryptocurrency>
             <cryptocurrency>PAXG</cryptocurrency>
             <cryptocurrency>REP</cryptocurrency>
@@ -699,6 +706,7 @@
             <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>NANO</cryptocurrency>
             <cryptocurrency>PAXG</cryptocurrency>
             <cryptocurrency>USDT</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
@@ -713,6 +721,7 @@
             <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>NANO</cryptocurrency>
             <cryptocurrency>PAXG</cryptocurrency>
             <cryptocurrency>USDT</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
@@ -1662,6 +1671,29 @@
             <cryptocurrency>ECA</cryptocurrency>
         </ratesource>
         <cryptologo cryptocurrency="ECA" file="eca.png"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.nano.NanoExtension" >
+        <wallet prefix="nano_node" name="nano_node Wallet (RPC)">
+            <param name="rpc_ip" />
+            <param name="rpc_protocol" />
+            <param name="rpc_port" />
+            <param name="wallet" />
+            <param name="account" />
+            <param name="ws_protocol" />
+            <param name="ws_port" />
+            <help>IP is the IP/host of the RPC and WebSocket server. RPC protocol may be either 'http' or 'https',
+                WebSocket may be 'ws' or 'wss'. WebSocket is optional, and may be ignored. Wallet ID is the 64-character
+                identifier from the node's built-in wallet provider, and the hot wallet account must be part of the
+                wallet.</help>
+            <cryptocurrency>NANO</cryptocurrency>
+        </wallet>
+        <wallet prefix="nano_demo" name="Nano Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
+            <cryptocurrency>NANO</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="NANO" file="nano.png"/>
+        <cryptologo cryptocurrency="NANO" file="nano.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.linda.LindaExtension" >
         <wallet prefix="lindad" name="Lindad">
