@@ -106,10 +106,13 @@ public class ERC20Wallet implements IWallet{
                 return null; //deprecated
             }
         };
-        contract = ERC20Interface.load(contractAddress, w, credentials, gasProvider);
+        contract = ERC20Interface.load(contractAddress.toLowerCase(), w, credentials, gasProvider);
     }
 
     public BigInteger getTransferGasEstimate(String to, BigDecimal tokens) {
+        if (to != null) {
+            to = to.toLowerCase();
+        }
         final Function function = new Function(
             ERC20Interface.FUNC_TRANSFER,
             Arrays.asList(new org.web3j.abi.datatypes.Address(to), new org.web3j.abi.datatypes.generated.Uint256(convertFromBigDecimal(tokens))),
@@ -196,6 +199,10 @@ public class ERC20Wallet implements IWallet{
         if (!getCryptoCurrencies().contains(cryptoCurrency)) {
             log.error("ERC20 wallet error: unknown cryptocurrency.");
             return null;
+        }
+
+        if (destinationAddress != null) {
+            destinationAddress = destinationAddress.toLowerCase();
         }
 
         BigDecimal cryptoBalance = getCryptoBalance(cryptoCurrency);
