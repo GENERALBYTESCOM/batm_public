@@ -43,6 +43,7 @@ public enum CryptoCurrency {
     BCH("Bitcoin Cash"),
     BNB("BinanceCoin"),
     BSD("BitSend"),
+    BTBS("BitBase"),
     BTC("Bitcoin"),
     BTCP("Bitcoin Private"),
     BTDX("Bitcloud"),

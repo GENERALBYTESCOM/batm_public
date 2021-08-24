@@ -72,6 +72,7 @@
                 <cryptocurrency buyonly="true">BCH</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
+                <cryptocurrency buyonly="true">BTBS</cryptocurrency>
                 <cryptocurrency buyonly="true">ETH</cryptocurrency>
                 <cryptocurrency>USDT</cryptocurrency>
                 <help>
@@ -226,6 +227,7 @@
                 <cryptocurrency>BAT</cryptocurrency>
                 <cryptocurrency>BCH</cryptocurrency>
                 <cryptocurrency>BSD</cryptocurrency>
+                <cryptocurrency>BTBS</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>BTCP</cryptocurrency>
                 <cryptocurrency>BTDX</cryptocurrency>
@@ -1871,6 +1873,16 @@
         <cryptologo cryptocurrency="BIZZ" file="bizz.png"/>
         <cryptologo cryptocurrency="BIZZ" file="bizz.svg"/>
 
+        <wallet prefix="infuraERC20_BTBS_18_0x32e6c34cd57087abbd59b5a4aecc4cb495924356" name="Infura.io wallet - BTBS">
+            <param name="projectId" />
+            <param name="mnemonic" />
+            <param name="gaslimit" />
+            <param name="gasPriceMultiplier" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
+            <cryptocurrency>BTBS</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="BTBS" file="btbs.png"/>
+        <cryptologo cryptocurrency="BTBS" file="btbs.svg"/>
         <wallet prefix="infuraERC20_MKR_18_0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2" name="Infura.io wallet - MKR">
             <param name="projectId" />
             <param name="mnemonic" />
