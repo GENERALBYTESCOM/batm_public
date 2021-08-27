@@ -244,7 +244,6 @@
                 <cryptocurrency>HATCH</cryptocurrency>
                 <cryptocurrency>HT</cryptocurrency>
                 <cryptocurrency>ILC</cryptocurrency>
-                <cryptocurrency>JMEL</cryptocurrency>
                 <cryptocurrency>JOB</cryptocurrency>
                 <cryptocurrency>LEO</cryptocurrency>
                 <cryptocurrency>LINDA</cryptocurrency>
@@ -1996,7 +1995,6 @@
             <cryptocurrency>SPICE</cryptocurrency>
             <cryptocurrency>DDB</cryptocurrency>
             <cryptocurrency>SUNCASH</cryptocurrency>
-            <cryptocurrency>JMEL</cryptocurrency>
         </wallet>
         <!-- See https://github.com/kosinusbch/slp-token-icons for token logos -->
         <cryptologo cryptocurrency="SPICE" file="spice.png"/>
@@ -2005,8 +2003,6 @@
         <cryptologo cryptocurrency="DDB" file="ddb.svg"/>
         <cryptologo cryptocurrency="SUNCASH" file="suncash.png"/>
         <cryptologo cryptocurrency="SUNCASH" file="suncash.svg"/>
-        <cryptologo cryptocurrency="JMEL" file="jmel.png"/>
-        <cryptologo cryptocurrency="JMEL" file="jmel.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.ilcoin.IlcoinExtension" >
         <wallet prefix="ilcoind" name="ILCoin">
