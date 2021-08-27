@@ -38,7 +38,9 @@ public abstract class BinanceExchange extends XChangeExchange {
     }
 
     private static ExchangeSpecification getDefaultSpecification(String sslUri) {
-        ExchangeSpecification spec = new org.knowm.xchange.binance.BinanceExchange().getDefaultExchangeSpecification();
+        //TODO: BATM-2471 Use original commented code
+//        ExchangeSpecification spec = new org.knowm.xchange.binance.BinanceExchange().getDefaultExchangeSpecification();
+        ExchangeSpecification spec = new CustomBinanceExchange().getDefaultExchangeSpecification();
         spec.setSslUri(sslUri);
         spec.setShouldLoadRemoteMetaData(true); // true is default, but make sure it loads current withdraw fees
         return spec;
