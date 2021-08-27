@@ -46,7 +46,7 @@ dependencies {
     compile(group: 'com.google.zxing', name: 'core', version: '2.3.0')
     compile(group: 'org.knowm.xchange', name: 'xchange-core', version: '5.0.8')
     compile(group: 'org.knowm.xchange', name: 'xchange-bitfinex', version: '5.0.8')
-    compile(group: 'org.knowm.xchange', name: 'xchange-binance', version: '5.0.8')
+    compile(group: 'org.knowm.xchange', name: 'xchange-binance', version: '5.0.10')
     compile(group: 'org.knowm.xchange', name: 'xchange-bittrex', version: '5.0.8')
     compile(group: 'org.knowm.xchange', name: 'xchange-hitbtc', version: '5.0.8')
     compile(group: 'org.knowm.xchange', name: 'xchange-dvchain', version: '5.0.8')
