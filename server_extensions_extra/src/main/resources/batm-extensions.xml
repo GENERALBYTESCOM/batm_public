@@ -996,8 +996,9 @@
             <cryptocurrency>LBTC</cryptocurrency>
         </wallet>
         <wallet prefix="lbtcdemo" name="Bitcoin Lightning Network Demo Wallet">
-            <help>For testing use only</help>
             <cryptocurrency>LBTC</cryptocurrency>
+            <param name="simulate_sending_failure" />
+            <help>For testing use only, simulate_sending_failure could be set to "fail" to simulate error while sending coins</help>
         </wallet>
         <cryptologo cryptocurrency="LBTC" file="lbtc.png"/>
         <cryptologo cryptocurrency="LBTC" file="lbtc.svg"/>

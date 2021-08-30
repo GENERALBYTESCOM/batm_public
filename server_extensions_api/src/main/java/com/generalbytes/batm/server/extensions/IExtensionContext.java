@@ -20,6 +20,7 @@ package com.generalbytes.batm.server.extensions;
 import com.generalbytes.batm.server.extensions.exceptions.BuyException;
 import com.generalbytes.batm.server.extensions.exceptions.CashbackException;
 import com.generalbytes.batm.server.extensions.exceptions.SellException;
+import com.generalbytes.batm.server.extensions.exceptions.UpdateException;
 import com.generalbytes.batm.server.extensions.watchlist.WatchListQuery;
 import com.generalbytes.batm.server.extensions.watchlist.WatchListResult;
 
@@ -69,6 +70,8 @@ public interface IExtensionContext {
      */
     ITransactionDetails findTransactionByTransactionId(String remoteOrLocalTransactionId);
 
+    ITransactionDetails findTransactionByTransactionUUIDAndType(String uuid, int type);
+
     /**
      * Finds and returns transactions performed by identity
      * @param publicIdentityId
@@ -85,6 +88,15 @@ public interface IExtensionContext {
      * @return
      */
     List<ITransactionDetails> findTransactions(String terminalSerialNumber, Date serverTimeFrom, Date serverTimeTo, String previousRID, boolean includeBanknotes);
+
+    /**
+     * @param rid    remote transaction ID of the transaction to be updated
+     * @param status new status to be set or null to keep it unmodified
+     * @param detail detail message to be appended if there already is a detail set. Null to keep it unmodified
+     * @return modified transaction details
+     * @throws UpdateException if the update was not successful
+     */
+    ITransactionDetails updateTransaction(String rid, Integer status, String detail) throws UpdateException;
 
     /**
      * Finds person by chat user id
@@ -424,6 +436,14 @@ public interface IExtensionContext {
      * @return
      */
     SimpleDateFormat getTimeFormatByPerson(IPerson person);
+
+    /**
+     * Gets a wallet instance from terminal's Crypto Settings of the given crypto currency
+     * @param terminalSerialNumber
+     * @param cryptoCurrency
+     * @return
+     */
+    IWallet findBuyWallet(String terminalSerialNumber, String cryptoCurrency);
 
     /**
      * Returns crypto configurations used by terminals of specified serial numbers.

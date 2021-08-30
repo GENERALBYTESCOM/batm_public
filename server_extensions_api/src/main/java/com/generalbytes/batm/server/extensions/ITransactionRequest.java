@@ -94,6 +94,7 @@ public interface ITransactionRequest {
 
     /**
      * Destination address where the coins were sent to or where the coins were supposed to be sent to.
+     * null for LBTC (Lightning network)
      * @return
      */
     String getCryptoAddress();

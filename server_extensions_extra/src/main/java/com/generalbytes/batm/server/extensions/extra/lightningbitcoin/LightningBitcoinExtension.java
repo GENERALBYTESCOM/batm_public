@@ -19,9 +19,11 @@ package com.generalbytes.batm.server.extensions.extra.lightningbitcoin;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.AbstractExtension;
-import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
+import com.generalbytes.batm.server.extensions.IExtensionContext;
+import com.generalbytes.batm.server.extensions.IRestService;
 import com.generalbytes.batm.server.extensions.IWallet;
+import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.lnurl.LnurlRestService;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.DemoLightningWallet;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.EclairWallet;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.lnd.LndWallet;
@@ -30,7 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.Set;
 import java.util.StringTokenizer;
 
@@ -38,6 +40,15 @@ public class LightningBitcoinExtension extends AbstractExtension {
     private static final Logger log = LoggerFactory.getLogger(LightningBitcoinExtension.class);
 
     private static final ICryptoCurrencyDefinition DEFINITION = new LightningBitcoinDefinition();
+    public static final IRestService LNURL_REST_SERVICE = new LnurlRestService();
+
+    private static IExtensionContext ctx = null;
+
+    @Override
+    public void init(IExtensionContext ctx) {
+        super.init(ctx);
+        LightningBitcoinExtension.ctx = ctx;
+    }
 
     @Override
     public String getName() {
@@ -65,7 +76,7 @@ public class LightningBitcoinExtension extends AbstractExtension {
                         return new EclairWallet(scheme, host, port, password);
                     }
                 } else if ("lnd".equalsIgnoreCase(walletType)) {
-                    // echo 127.0.0.1:8080:`xxd -ps -u -c10000 ~/.lnd/data/chain/bitcoin/mainnet/admin.macaroon`:`xxd -ps -u -c10000 ~/.lnd/tls.cert`
+                    // echo https://127.0.0.1:8080/:`xxd -ps -u -c10000 ~/.lnd/data/chain/bitcoin/mainnet/admin.macaroon`:`xxd -ps -u -c10000 ~/.lnd/tls.cert`
                     // scheme://host:port/:macaroon:[cert]
                     // scheme://host/path/:macaroon:[cert]
                     // scheme://host:port/path:macaroon:[cert]
@@ -90,7 +101,8 @@ public class LightningBitcoinExtension extends AbstractExtension {
                     String feeLimit = st.hasMoreTokens() ? st.nextToken() : null;
                     return new LndWallet(url, macaroon, cert, feeLimit);
                 } else if ("lbtcdemo".equalsIgnoreCase(walletType)) {
-                    return new DemoLightningWallet();
+                    boolean simulateFailure = st.hasMoreTokens() && st.nextToken().equals("fail");
+                    return new DemoLightningWallet(simulateFailure);
                 }
             }
         } catch (Exception e) {
@@ -100,24 +112,21 @@ public class LightningBitcoinExtension extends AbstractExtension {
     }
 
     @Override
-    public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (CryptoCurrency.LBTC.getCode().equalsIgnoreCase(cryptoCurrency)) {
-            return new LightningBitcoinAddressValidator();
-        }
-        return null;
-    }
-
-    @Override
     public Set<String> getSupportedCryptoCurrencies() {
-        Set<String> result = new HashSet<>();
-        result.add(CryptoCurrency.LBTC.getCode());
-        return result;
+        return Collections.singleton(CryptoCurrency.LBTC.getCode());
     }
 
     @Override
     public Set<ICryptoCurrencyDefinition> getCryptoCurrencyDefinitions() {
-        Set<ICryptoCurrencyDefinition> result = new HashSet<>();
-        result.add(DEFINITION);
-        return result;
+        return Collections.singleton(DEFINITION);
+    }
+
+    @Override
+    public Set<IRestService> getRestServices() {
+        return Collections.singleton(LNURL_REST_SERVICE);
+    }
+
+    public static IExtensionContext getExtensionContext() {
+        return ctx;
     }
 }

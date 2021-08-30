@@ -15,29 +15,19 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.lightningbitcoin;
+package com.generalbytes.batm.server.extensions.exceptions;
 
-import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
+public class UpdateException extends Exception {
 
-public class LightningBitcoinAddressValidator implements ICryptoAddressValidator {
-
-    @Override
-    public boolean isAddressValid(String address) {
-        // Human readable part looks like lnbc[amount]1 and always ends with 1.
-        // Amount can be something like 10p (10 pico-bitcoin = 10 millisatoshi).
-        // 1s are not allowed in the rest of the invoice
-        return address != null
-            && address.startsWith("lnbc")
-            && address.lastIndexOf("1") == 4;
+    public UpdateException() {
+        super();
     }
 
-    @Override
-    public boolean isPaperWalletSupported() {
-        return false;
+    public UpdateException(String message) {
+        super(message);
     }
 
-    @Override
-    public boolean mustBeBase58Address() {
-        return false;
+    public UpdateException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

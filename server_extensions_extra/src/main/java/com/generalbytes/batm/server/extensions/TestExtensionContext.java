@@ -3,6 +3,7 @@ package com.generalbytes.batm.server.extensions;
 import com.generalbytes.batm.server.extensions.exceptions.BuyException;
 import com.generalbytes.batm.server.extensions.exceptions.CashbackException;
 import com.generalbytes.batm.server.extensions.exceptions.SellException;
+import com.generalbytes.batm.server.extensions.exceptions.UpdateException;
 import com.generalbytes.batm.server.extensions.watchlist.WatchListQuery;
 import com.generalbytes.batm.server.extensions.watchlist.WatchListResult;
 
@@ -40,12 +41,21 @@ public class TestExtensionContext implements IExtensionContext {
     }
 
     @Override
+    public ITransactionDetails findTransactionByTransactionUUIDAndType(String uuid, int type) {
+        return null;
+    }
+
+    @Override
     public List<ITransactionDetails> findAllTransactionsByIdentityId(String publicIdentityId) {
         return null;
     }
 
     @Override
     public List<ITransactionDetails> findTransactions(String terminalSerialNumber, Date serverTimeFrom, Date serverTimeTo, String previousRID, boolean includeBanknotes) {
+        return null;
+    }
+    @Override
+    public ITransactionDetails updateTransaction(String rid, Integer status, String detail) throws UpdateException {
         return null;
     }
 
@@ -211,6 +221,11 @@ public class TestExtensionContext implements IExtensionContext {
 
     @Override
     public SimpleDateFormat getTimeFormatByPerson(IPerson person) {
+        return null;
+    }
+
+    @Override
+    public IWallet findBuyWallet(String terminalSerialNumber, String cryptoCurrency) {
         return null;
     }
 
