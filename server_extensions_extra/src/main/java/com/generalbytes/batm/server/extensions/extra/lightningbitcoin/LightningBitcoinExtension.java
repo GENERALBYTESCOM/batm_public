@@ -27,6 +27,7 @@ import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.lnurl.Lnur
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.DemoLightningWallet;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.EclairWallet;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.lnd.LndWallet;
+import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.walletofsatoshi.WalletOfSatoshiWallet;
 import okhttp3.HttpUrl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,6 +104,12 @@ public class LightningBitcoinExtension extends AbstractExtension {
                 } else if ("lbtcdemo".equalsIgnoreCase(walletType)) {
                     boolean simulateFailure = st.hasMoreTokens() && st.nextToken().equals("fail");
                     return new DemoLightningWallet(simulateFailure);
+                } else if ("walletofsatoshi".equalsIgnoreCase(walletType)) {
+                    String apiToken = st.nextToken();
+                    String apiSecret = st.nextToken();
+                    if (apiToken != null && apiSecret != null) {
+                        return new WalletOfSatoshiWallet(apiToken, apiSecret);
+                    }
                 }
             }
         } catch (Exception e) {
