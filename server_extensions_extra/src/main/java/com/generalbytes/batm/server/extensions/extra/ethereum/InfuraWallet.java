@@ -112,6 +112,9 @@ public class InfuraWallet implements IWallet{
             return null;
         }
 
+        if (destinationAddress != null) {
+            destinationAddress = destinationAddress.toLowerCase();
+        }
         try {
             log.info("InfuraWallet - sending {} {} from {} to {}", amount, cryptoCurrency, credentials.getAddress(), destinationAddress);
             BigInteger weiValue = Convert.toWei(amount, ETHER).toBigIntegerExact();

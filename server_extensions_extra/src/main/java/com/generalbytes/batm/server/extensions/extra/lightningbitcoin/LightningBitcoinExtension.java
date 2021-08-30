@@ -98,7 +98,8 @@ public class LightningBitcoinExtension extends AbstractExtension {
                         log.error("macaroon param missing");
                         return null;
                     }
-                    return new LndWallet(url, macaroon, cert);
+                    String feeLimit = st.hasMoreTokens() ? st.nextToken() : null;
+                    return new LndWallet(url, macaroon, cert, feeLimit);
                 } else if ("lbtcdemo".equalsIgnoreCase(walletType)) {
                     boolean simulateFailure = st.hasMoreTokens() && st.nextToken().equals("fail");
                     return new DemoLightningWallet(simulateFailure);

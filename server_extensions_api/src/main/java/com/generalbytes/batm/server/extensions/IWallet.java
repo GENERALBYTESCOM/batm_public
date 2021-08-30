@@ -22,7 +22,7 @@ import java.math.BigDecimal;
 import java.util.Set;
 
 /**
- * IWallet is accessed by server to manipulate with funds (typically crypto currency)
+ * IWallet is accessed by server to manipulate with funds (typically cryptocurrency)
  */
 public interface IWallet {
     /**

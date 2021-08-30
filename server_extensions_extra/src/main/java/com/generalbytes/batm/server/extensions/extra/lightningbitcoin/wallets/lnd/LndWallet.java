@@ -48,10 +48,17 @@ public class LndWallet extends AbstractLightningWallet {
     private static final Logger log = LoggerFactory.getLogger(LndWallet.class);
 
     private final String url;
+    private final String feeLimit;
     private final LndAPI api;
 
-    public LndWallet(String url, String macaroon, String certHexString) throws GeneralSecurityException {
+    /**
+     * @param feeLimit maximum fee allowed in satoshis when sending the payment (e.g. "10")
+     *                 or percentage of the payment's amount used as the maximum fee allowed when sending the payment (e.g. "1%")
+     *                 or null for default: 0
+     */
+    public LndWallet(String url, String macaroon, String certHexString, String feeLimit) throws GeneralSecurityException {
         this.url = url;
+        this.feeLimit = feeLimit;
         final ClientConfig config = new ClientConfig();
         config.addDefaultParam(HeaderParam.class, "Grpc-Metadata-macaroon", macaroon);
         if(certHexString != null) {
@@ -71,6 +78,9 @@ public class LndWallet extends AbstractLightningWallet {
         Payment payment = new Payment();
         payment.amt = CoinUnit.bitcoinToSat(amount).toString();
         payment.payment_request = destinationAddress;
+        payment.fee_limit = getFeeLimit(feeLimit);
+
+        log.info("Sending payment: {}", payment);
         SendPaymentResponse paymentResponse = callChecked(() -> api.sendPayment(payment));
 
         if (paymentResponse == null) {
@@ -84,6 +94,19 @@ public class LndWallet extends AbstractLightningWallet {
         }
         return paymentResponse.payment_preimage;
 
+    }
+
+    private Payment.FeeLimit getFeeLimit(String fee) {
+        if (fee == null) {
+            return null;
+        }
+        Payment.FeeLimit feeLimit = new Payment.FeeLimit();
+        if (fee.contains("%")) {
+            feeLimit.percent = fee.replace("%", "");
+        } else {
+            feeLimit.fixed = fee;
+        }
+        return feeLimit;
     }
 
     @Override

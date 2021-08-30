@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Crypto Currences
+ * Cryptocurrencies
  *
  * Usage e.g.:
  *      CryptoCurrency.USD.getCurrencyName()
@@ -43,6 +43,7 @@ public enum CryptoCurrency {
     BCH("Bitcoin Cash"),
     BNB("BinanceCoin"),
     BSD("BitSend"),
+    BTBS("BitBase"),
     BTC("Bitcoin"),
     BTCP("Bitcoin Private"),
     BTDX("Bitcloud"),
@@ -59,6 +60,7 @@ public enum CryptoCurrency {
     DOGE("DOGE"),
     ECA("Electra"),
     EFL("e-Gulden"),
+    EGG("NestEgg Coin"),
     ETC("Ethereum Classic"),
     ETH("Ethereum"),
     EURS("STASIS EURO"),
@@ -81,6 +83,7 @@ public enum CryptoCurrency {
     MEC("Megacoin"),
     MKR("Maker"),
     MUSD("MovexUSD"),
+    NANO("Nano"),
     NBT("NuBits"),
     NLG("NLG"),
     NXT("Nxt"),

@@ -67,11 +67,12 @@
                 <param name="wallet_id" />
                 <param name="passphrase"/>
                 <param name="priority" />
-                <param name="max_custom_price" />
+                <param name="max_custom_fee" />
                 <param name="max_custom_gas_limit" />
                 <cryptocurrency buyonly="true">BCH</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
+                <cryptocurrency buyonly="true">BTBS</cryptocurrency>
                 <cryptocurrency buyonly="true">ETH</cryptocurrency>
                 <cryptocurrency>USDT</cryptocurrency>
                 <help>
@@ -79,7 +80,8 @@
                     port: (not required) - *token: generate Access tokens from CryptX Settings (required) -
                     *walletid: find under [Wallet] > Settings > Wallet Info > Wallet ID (required) -
                     passphrase: wallet password (not required) -
-                    priority: Select high, low, or custom. If custom, indicate number of blocks (e.g., custom:12), otherwise high priority (2 blocks) will be used by default (not required) -
+                    priority: Select "high" (2 blocks, default), "medium" (8 blocks), "low" (24 blocks), or "custom" -
+                    max_custom_fee: fee rate (in s/vByte for bitcoin, gas price for ethereum) when "custom" priority is set (instead of estimating one using blocks) -
                     limit: gas limit - only for ETH, e.g., 50000 (not required)
                 </help>
             </wallet>
@@ -92,7 +94,7 @@
                 <param name="wallet_id" />
                 <param name="passphrase"/>
                 <param name="priority" />
-                <param name="max_custom_rate" />
+                <param name="max_custom_fee" />
                 <param name="max_custom_gas_limit" />
                 <cryptocurrency buyonly="true">BCH</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>
@@ -104,7 +106,8 @@
                     port: (not required) - *token: generate Access tokens from CryptX Settings (required) -
                     *walletid: find under [Wallet] > Settings > Wallet Info > Wallet ID (required) -
                     passphrase: wallet password (not required) -
-                    priority: Select high, low, or custom. If custom, indicate number of blocks (e.g., custom:12), otherwise high priority (2 blocks) will be used by default (not required) -
+                    priority: Select high (2 blocks, default), medium (8 blocks), low (24 blocks), or custom -
+                    max_custom_fee: fee rate in s/vByte when "custom" priority is set (instead of estimating one using blocks) -
                     limit: gas limit - only for ETH, e.g., 50000 (not required)
                 </help>
             </wallet>
@@ -189,6 +192,7 @@
                 <cryptocurrency>BTX</cryptocurrency>
                 <cryptocurrency>BTCP</cryptocurrency>
                 <cryptocurrency>EFL</cryptocurrency>
+                <cryptocurrency>EGG</cryptocurrency>
                 <cryptocurrency>BSD</cryptocurrency>
                 <cryptocurrency>BTDX</cryptocurrency>
                 <cryptocurrency>MEC</cryptocurrency>
@@ -206,6 +210,7 @@
                 <cryptocurrency>LMY</cryptocurrency>
                 <cryptocurrency>HT</cryptocurrency>
                 <cryptocurrency>ZPAE</cryptocurrency>
+                <cryptocurrency>NANO</cryptocurrency>
             </ratesource>
             <ratesource prefix="stream365" name ="365.stream" >
                 <cryptocurrency>HBX</cryptocurrency>
@@ -222,6 +227,7 @@
                 <cryptocurrency>BAT</cryptocurrency>
                 <cryptocurrency>BCH</cryptocurrency>
                 <cryptocurrency>BSD</cryptocurrency>
+                <cryptocurrency>BTBS</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>BTCP</cryptocurrency>
                 <cryptocurrency>BTDX</cryptocurrency>
@@ -256,6 +262,7 @@
                 <cryptocurrency>MUE</cryptocurrency>
                 <cryptocurrency>NBT</cryptocurrency>
                 <cryptocurrency>NLG</cryptocurrency>
+                <cryptocurrency>NANO</cryptocurrency>
                 <cryptocurrency>NXT</cryptocurrency>
                 <cryptocurrency>POT</cryptocurrency>
                 <cryptocurrency>REP</cryptocurrency>
@@ -348,6 +355,7 @@
             <cryptocurrency>XMR</cryptocurrency>
             <cryptocurrency>DASH</cryptocurrency>
             <cryptocurrency>NXT</cryptocurrency>
+            <cryptocurrency>NANO</cryptocurrency>
         </exchange>
         <cryptologo cryptocurrency="BTC" file="btc.png"/>
         <cryptologo cryptocurrency="BTC" file="btc.svg"/>
@@ -520,6 +528,7 @@
             <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency>ECA</cryptocurrency>
             <cryptocurrency>EFL</cryptocurrency>
+            <cryptocurrency>EGG</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>FLASH</cryptocurrency>
             <cryptocurrency>FTO</cryptocurrency>
@@ -538,6 +547,7 @@
             <cryptocurrency>MEC</cryptocurrency>
             <cryptocurrency>MKR</cryptocurrency>
             <cryptocurrency>MUE</cryptocurrency>
+            <cryptocurrency>NANO</cryptocurrency>
             <cryptocurrency>NBT</cryptocurrency>
             <cryptocurrency>NLG</cryptocurrency>
             <cryptocurrency>NULS</cryptocurrency>
@@ -588,6 +598,7 @@
             <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency>ECA</cryptocurrency>
             <cryptocurrency>EFL</cryptocurrency>
+            <cryptocurrency>EGG</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>FLASH</cryptocurrency>
             <cryptocurrency>FTO</cryptocurrency>
@@ -606,6 +617,7 @@
             <cryptocurrency>MEC</cryptocurrency>
             <cryptocurrency>MKR</cryptocurrency>
             <cryptocurrency>MUE</cryptocurrency>
+            <cryptocurrency>NANO</cryptocurrency>
             <cryptocurrency>NLG</cryptocurrency>
             <cryptocurrency>NULS</cryptocurrency>
             <cryptocurrency>NXT</cryptocurrency>
@@ -647,6 +659,7 @@
             <cryptocurrency>KMD</cryptocurrency>
             <cryptocurrency>LSK</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>NANO</cryptocurrency>
             <cryptocurrency>NULS</cryptocurrency>
             <cryptocurrency>PAXG</cryptocurrency>
             <cryptocurrency>REP</cryptocurrency>
@@ -673,6 +686,7 @@
             <cryptocurrency>KMD</cryptocurrency>
             <cryptocurrency>LSK</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>NANO</cryptocurrency>
             <cryptocurrency>NULS</cryptocurrency>
             <cryptocurrency>PAXG</cryptocurrency>
             <cryptocurrency>REP</cryptocurrency>
@@ -697,6 +711,7 @@
             <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>NANO</cryptocurrency>
             <cryptocurrency>PAXG</cryptocurrency>
             <cryptocurrency>USDT</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
@@ -711,6 +726,7 @@
             <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>NANO</cryptocurrency>
             <cryptocurrency>PAXG</cryptocurrency>
             <cryptocurrency>USDT</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
@@ -729,6 +745,16 @@
             <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
+        </ratesource>
+        <exchange prefix="coinzix" name="Coinzix">
+            <param name="token"/>
+            <param name="secret"/>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+        </exchange>
+        <ratesource prefix="coinzix" name="Coinzix">
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
         </ratesource>
         <cryptologo cryptocurrency="BNB" file="bnb.png"/>
         <cryptologo cryptocurrency="BNB" file="bnb.svg"/>
@@ -863,6 +889,37 @@
         <cryptologo cryptocurrency="NYC" file="nyc.png"/>
         <cryptologo cryptocurrency="NYC" file="nyc.svg"/>
     </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.nesteggcoin.NesteggCoinExtension" >
+        <wallet prefix="nesteggd" name="Nesteggd">
+            <tunnel supported="true"/>
+            <sendtomany supported="true"/>
+            <param name="protocol" />
+            <param name="username" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="label" />
+            <cryptocurrency>EGG</cryptocurrency>
+        </wallet>
+        <wallet prefix="nesteggnoforward" name="Nesteggd (no forward)">
+            <tunnel supported="true"/>
+            <sendtomany supported="true"/>
+            <param name="protocol" />
+            <param name="username" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <cryptocurrency>EGG</cryptocurrency>
+            <help>This variant generates new addresses for each transaction and does not forward payments from temporary address</help>
+        </wallet>
+        <ratesource prefix="eggfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>EGG</cryptocurrency>
+            <help>USD is default fiat currency.</help>
+        </ratesource>
+        <cryptologo cryptocurrency="EGG" file="egg.png"/>
+        <cryptologo cryptocurrency="EGG" file="egg.svg"/>
+    </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.flashcoin.FlashcoinExtension" >
         <wallet prefix="flashcoind" name="Flashcoind">
             <param name="protocol" />
@@ -930,7 +987,12 @@
             <param name="url" />
             <param name="macaroon" />
             <param name="cert" />
-            <help>URL starts with https://, may contain a port number and must end with '/'. Macaroon and cert are hex encoded files admin.macaroon and tls.cert. Cert parameter is not mandatory if trusted authority signed cert is used.</help>
+            <param name="feeLimit" />
+            <help>URL starts with https://, may contain a port number and must end with '/'.
+                Macaroon and cert are hex encoded files admin.macaroon and tls.cert.
+                Cert parameter is not mandatory if trusted authority signed cert is used.
+                feeLimit could be fixed in sats (e.g. "10") or percentage (e.g. "0.1%"), default: 0.
+            </help>
             <cryptocurrency>LBTC</cryptocurrency>
         </wallet>
         <wallet prefix="lbtcdemo" name="Bitcoin Lightning Network Demo Wallet">
@@ -1647,6 +1709,29 @@
         </ratesource>
         <cryptologo cryptocurrency="ECA" file="eca.png"/>
     </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.nano.NanoExtension" >
+        <wallet prefix="nano_node" name="nano_node Wallet (RPC)">
+            <param name="rpc_ip" />
+            <param name="rpc_protocol" />
+            <param name="rpc_port" />
+            <param name="wallet" />
+            <param name="account" />
+            <param name="ws_protocol" />
+            <param name="ws_port" />
+            <help>IP is the IP/host of the RPC and WebSocket server. RPC protocol may be either 'http' or 'https',
+                WebSocket may be 'ws' or 'wss'. WebSocket is optional, and may be ignored. Wallet ID is the 64-character
+                identifier from the node's built-in wallet provider, and the hot wallet account must be part of the
+                wallet.</help>
+            <cryptocurrency>NANO</cryptocurrency>
+        </wallet>
+        <wallet prefix="nano_demo" name="Nano Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
+            <cryptocurrency>NANO</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="NANO" file="nano.png"/>
+        <cryptologo cryptocurrency="NANO" file="nano.svg"/>
+    </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.linda.LindaExtension" >
         <wallet prefix="lindad" name="Lindad">
             <param name="protocol" />
@@ -1789,6 +1874,16 @@
         <cryptologo cryptocurrency="BIZZ" file="bizz.png"/>
         <cryptologo cryptocurrency="BIZZ" file="bizz.svg"/>
 
+        <wallet prefix="infuraERC20_BTBS_18_0x32e6c34cd57087abbd59b5a4aecc4cb495924356" name="Infura.io wallet - BTBS">
+            <param name="projectId" />
+            <param name="mnemonic" />
+            <param name="gaslimit" />
+            <param name="gasPriceMultiplier" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
+            <cryptocurrency>BTBS</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="BTBS" file="btbs.png"/>
+        <cryptologo cryptocurrency="BTBS" file="btbs.svg"/>
         <wallet prefix="infuraERC20_MKR_18_0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2" name="Infura.io wallet - MKR">
             <param name="projectId" />
             <param name="mnemonic" />

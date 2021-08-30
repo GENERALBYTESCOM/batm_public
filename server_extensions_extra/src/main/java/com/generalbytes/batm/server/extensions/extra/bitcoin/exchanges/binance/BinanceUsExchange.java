@@ -44,6 +44,7 @@ public class BinanceUsExchange extends BinanceExchange {
         SUPPORTED_CRYPTOS.add(new SupportedCryptoCurrency(CryptoCurrency.DOGE.getCode()));
         SUPPORTED_CRYPTOS.add(new SupportedCryptoCurrency(CryptoCurrency.ETH.getCode()));
         SUPPORTED_CRYPTOS.add(new SupportedCryptoCurrency(CryptoCurrency.LTC.getCode()));
+        SUPPORTED_CRYPTOS.add(new SupportedCryptoCurrency(CryptoCurrency.NANO.getCode()));
         SUPPORTED_CRYPTOS.add(new SupportedCryptoCurrency(CryptoCurrency.PAXG.getCode()));
         SUPPORTED_CRYPTOS.add(new SupportedCryptoCurrency(CryptoCurrency.USDT.getCode(), new BigDecimal("0.000001")));
         SUPPORTED_CRYPTOS.add(new SupportedCryptoCurrency(CryptoCurrency.XRP.getCode(), new BigDecimal("0.000001")));

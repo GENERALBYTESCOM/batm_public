@@ -110,7 +110,7 @@ public class CoinmarketcapAPITest {
     }
 
     /**
-     * Method getQuoteByCurrencySymbolAndFiatCurrencyTest() checks the quotes for particular crypto currency
+     * Method getQuoteByCurrencySymbolAndFiatCurrencyTest() checks the quotes for particular cryptocurrency
      * and for particular fiat currency and makes sure that data is provided.
      */
     @Test
