@@ -15,20 +15,35 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.lightningbitcoin;
+package com.generalbytes.batm.server.extensions.extra.nano;
 
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
+import com.generalbytes.batm.server.extensions.extra.nano.rpc.NanoRpcClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class LightningBitcoinAddressValidator implements ICryptoAddressValidator {
+import java.io.IOException;
+
+public class NanoAddressValidator implements ICryptoAddressValidator {
+
+    private static final Logger log = LoggerFactory.getLogger(NanoAddressValidator.class);
+
+    private final NanoExtensionContext context;
+
+    public NanoAddressValidator(NanoExtensionContext context) {
+        this.context = context;
+    }
+
 
     @Override
     public boolean isAddressValid(String address) {
-        // Human readable part looks like lnbc[amount]1 and always ends with 1.
-        // Amount can be something like 10p (10 pico-bitcoin = 10 millisatoshi).
-        // 1s are not allowed in the rest of the invoice
-        return address != null
-            && address.startsWith("lnbc")
-            && address.lastIndexOf("1") == 4;
+        try {
+            // Will throw exception if format doesn't match
+            context.getUtil().parseAddress(address);
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
     }
 
     @Override
@@ -40,4 +55,5 @@ public class LightningBitcoinAddressValidator implements ICryptoAddressValidator
     public boolean mustBeBase58Address() {
         return false;
     }
+
 }

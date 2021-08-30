@@ -85,4 +85,21 @@ public class LnInvoiceUtilTest {
         Assert.assertEquals("sub-millisatoshi amount", e.getMessage());
     }
 
+    @Test
+    public void find() {
+        Assert.assertEquals("lnbc2500000001p1pvjluez", util.findInvoice("aaaa bbbb lnbc2500000001p1pvjluez cccc dddd"));
+        Assert.assertEquals("lnbc2500000001p1pvjluez", util.findInvoice("lnbc2500000001p1pvjluez"));
+        Assert.assertEquals("lnbc2500000001p1pvjluez", util.findInvoice("  \t lnbc2500000001p1pvjluez    \n\t"));
+        Assert.assertEquals("lnbc1p1aaaa", util.findInvoice("  \t lnbc1p1aaaa    \n\t lnbc2p1bbb"));
+    }
+
+    @Test
+    public void findNull() {
+        Assert.assertNull(util.findInvoice(null));
+        Assert.assertNull(util.findInvoice(""));
+        Assert.assertNull(util.findInvoice("    \t    "));
+        Assert.assertNull(util.findInvoice("     aaaaaaa   "));
+        Assert.assertNull(util.findInvoice("lntb2500000001p1pvjl"));
+        Assert.assertNull(util.findInvoice("lnbc250000000x1pvjluez"));
+    }
 }

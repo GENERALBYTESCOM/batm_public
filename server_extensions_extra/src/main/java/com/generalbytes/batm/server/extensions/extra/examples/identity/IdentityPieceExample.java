@@ -167,6 +167,16 @@ class IdentityPieceExample implements IIdentityPiece {
     }
 
     @Override
+    public String getIssuingJurisdictionCountry() {
+        return null;
+    }
+
+    @Override
+    public String getIssuingJurisdictionProvince() {
+        return null;
+    }
+
+    @Override
     public String getIdCardNumber() {
         return idCardNumber;
     }

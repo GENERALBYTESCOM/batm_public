@@ -49,17 +49,17 @@ public interface ITransactionBuyInfo {
     String getCashCurrency();
 
     /**
-     * @return Crypto currency amount
+     * @return Cryptocurrency amount
      */
     BigDecimal getCryptoAmount();
 
     /**
-     * @return crypto currency code (e.g. BTC, LTC, ...)
+     * @return cryptocurrency code (e.g. BTC, LTC, ...)
      */
     String getCryptoCurrency();
 
     /**
-     * @return destination crypto currency address
+     * @return destination cryptocurrency address
      */
     String getCryptoAddress();
 

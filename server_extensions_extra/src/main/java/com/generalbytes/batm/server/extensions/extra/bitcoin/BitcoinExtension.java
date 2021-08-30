@@ -30,6 +30,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bittrex.B
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.CoinbaseExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbasepro.CoinbaseProExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coingi.CoingiExchange;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinzix.CoinZixExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.dvchain.DVChainExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.hitbtc.HitbtcExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.enigma.EnigmaExchange;
@@ -196,6 +197,10 @@ public class BitcoinExtension extends AbstractExtension {
                     preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase();
                 }
                 return new PoloniexExchange(key, secret, preferredFiatCurrency);
+            } else if ("coinzix".equalsIgnoreCase(prefix)) {
+                String token = paramTokenizer.nextToken();
+                String secret = paramTokenizer.nextToken();
+                return new CoinZixExchange(token, secret);
             }
         }
         return null;
@@ -544,6 +549,8 @@ public class BitcoinExtension extends AbstractExtension {
                     preferredFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new PoloniexExchange(preferredFiatCurrency);
+            } else if ("coinzix".equals(rsType)) {
+                return new CoinZixExchange();
             }
         }
         return null;

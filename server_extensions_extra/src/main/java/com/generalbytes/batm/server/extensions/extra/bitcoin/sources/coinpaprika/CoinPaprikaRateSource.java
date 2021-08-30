@@ -60,6 +60,7 @@ public class CoinPaprikaRateSource implements IRateSource {
         CRYPTOCURRENCIES.put(CryptoCurrency.DOGE.getCode(), "doge-dogecoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.ECA.getCode(), "eca-electra");
         CRYPTOCURRENCIES.put(CryptoCurrency.EFL.getCode(), "efl-e-gulden");
+        CRYPTOCURRENCIES.put(CryptoCurrency.EGG.getCode(), "egg-nestegg-coin");
         CRYPTOCURRENCIES.put(CryptoCurrency.ETH.getCode(), "eth-ethereum");
         CRYPTOCURRENCIES.put(CryptoCurrency.FLASH.getCode(), "flash-flash");
         CRYPTOCURRENCIES.put(CryptoCurrency.FTO.getCode(), "fto-futurocoin");
@@ -75,6 +76,7 @@ public class CoinPaprikaRateSource implements IRateSource {
         CRYPTOCURRENCIES.put(CryptoCurrency.MEC.getCode(), "mec-megacoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.MKR.getCode(), "mkr-maker");
         CRYPTOCURRENCIES.put(CryptoCurrency.MUE.getCode(), "mue-monetaryunit");
+        CRYPTOCURRENCIES.put(CryptoCurrency.NANO.getCode(), "nano-nano");
         CRYPTOCURRENCIES.put(CryptoCurrency.NYC.getCode(), "nyc-newyorkcoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.NLG.getCode(), "nlg-gulden");
         CRYPTOCURRENCIES.put(CryptoCurrency.NULS.getCode(), "nuls-nuls");

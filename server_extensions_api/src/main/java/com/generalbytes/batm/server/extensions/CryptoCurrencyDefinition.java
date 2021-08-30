@@ -20,7 +20,7 @@ package com.generalbytes.batm.server.extensions;
 import com.generalbytes.batm.server.extensions.payment.IPaymentSupport;
 
 /**
- * This class is used to define crypto currency
+ * This class is used to define cryptocurrency
  */
 public class CryptoCurrencyDefinition implements ICryptoCurrencyDefinition {
     private String symbol;

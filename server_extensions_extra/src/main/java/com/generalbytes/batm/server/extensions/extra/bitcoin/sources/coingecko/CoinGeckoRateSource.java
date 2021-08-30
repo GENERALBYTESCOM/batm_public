@@ -57,6 +57,7 @@ public class CoinGeckoRateSource implements IRateSource {
         CRYPTOCURRENCIES.put(CryptoCurrency.DOGE.getCode(), "dogecoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.ECA.getCode(), "electra");
         CRYPTOCURRENCIES.put(CryptoCurrency.EFL.getCode(), "electronicgulden");
+        CRYPTOCURRENCIES.put(CryptoCurrency.EGG.getCode(), "nestegg-coin");
         CRYPTOCURRENCIES.put(CryptoCurrency.ETH.getCode(), "ethereum");
         CRYPTOCURRENCIES.put(CryptoCurrency.FLASH.getCode(), "flash");
         CRYPTOCURRENCIES.put(CryptoCurrency.FTO.getCode(), "futurocoin");
@@ -75,6 +76,7 @@ public class CoinGeckoRateSource implements IRateSource {
         CRYPTOCURRENCIES.put(CryptoCurrency.NYC.getCode(), "newyorkcoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.NBT.getCode(), "ninsa-b-token");
         CRYPTOCURRENCIES.put(CryptoCurrency.NLG.getCode(), "gulden");
+        CRYPTOCURRENCIES.put(CryptoCurrency.NANO.getCode(), "nano");
         CRYPTOCURRENCIES.put(CryptoCurrency.NULS.getCode(), "nuls");
         CRYPTOCURRENCIES.put(CryptoCurrency.NXT.getCode(), "nxt");
         CRYPTOCURRENCIES.put(CryptoCurrency.PAXG.getCode(), "pax-gold");

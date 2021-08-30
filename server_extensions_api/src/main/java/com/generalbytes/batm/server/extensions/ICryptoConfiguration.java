@@ -27,13 +27,13 @@ public interface ICryptoConfiguration {
     String getName();
 
     /**
-     * Crypto currency for which is following configuration valid.
+     * Cryptocurrency for which is following configuration valid.
      * @return
      */
     String getCryptoCurrency();
 
     /**
-     * Unit in which you prefer to display crypto currency amount to human
+     * Unit in which you prefer to display cryptocurrency amount to human
      * @return
      */
     String getCryptoCurrencyUnit();

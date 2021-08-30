@@ -43,5 +43,15 @@ public class Payment {
          * The fee limit expressed as a percentage of the payment amount
          */
         public String percent;
+
+        @Override
+        public String toString() {
+            return "FeeLimit{" + fixed + " sat fixed, " + percent + "%}";
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Payment{" + amt + " sat, fee limit: " + fee_limit + " to " + payment_request + '}';
     }
 }

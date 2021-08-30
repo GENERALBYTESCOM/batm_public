@@ -87,13 +87,14 @@ public interface ITransactionRequest {
     BigDecimal getCryptoAmount();
 
     /**
-     * Crypto currency code (BTC, ETH etc)
+     * Cryptocurrency code (BTC, ETH etc)
      * @return
      */
     String getCryptoCurrency();
 
     /**
      * Destination address where the coins were sent to or where the coins were supposed to be sent to.
+     * null for LBTC (Lightning network)
      * @return
      */
     String getCryptoAddress();

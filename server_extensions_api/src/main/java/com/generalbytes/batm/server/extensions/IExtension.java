@@ -28,7 +28,7 @@ import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 import java.util.Set;
 
 /**
- * This class provides information to the server about the available crypto currencies and represents
+ * This class provides information to the server about the available cryptocurrencies and represents
  * the single point for creating objects later used for manipulating with the coins of supported cryptocurrencies
  */
 public interface IExtension {
@@ -50,14 +50,14 @@ public interface IExtension {
     String getName();
 
     /**
-     * Returns list of crypto currencies that this extension supports
+     * Returns list of cryptocurrencies that this extension supports
      * @return
      */
     Set<String> getSupportedCryptoCurrencies();
 
     /**
-     * Extension can optionally provide crypto currency definitions.
-     * Crypto currency definition must exist if you want to have a support for two way ATM and Point of sale terminal for your crypto currency
+     * Extension can optionally provide cryptocurrency definitions.
+     * Cryptocurrency definition must exist if you want to have a support for two way ATM and Point of sale terminal for your cryptocurrency
      * Only one @{@link ICryptoCurrencyDefinition} can exist in whole server.
      * @return
      */
