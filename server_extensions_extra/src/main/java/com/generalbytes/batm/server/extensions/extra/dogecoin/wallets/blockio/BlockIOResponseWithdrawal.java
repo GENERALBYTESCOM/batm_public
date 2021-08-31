@@ -16,7 +16,7 @@
  *
  ************************************************************************************/
 
-package com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.dto;
+package com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio;
 
 public class BlockIOResponseWithdrawal {
     private String status;

@@ -17,16 +17,6 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio;
 
-import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.dto.BlockIOResponseAddresses;
-import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.dto.BlockIOResponseBalance;
-import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.dto.BlockIOResponseNewAddress;
-import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.dto.BlockIOResponsePrepareTransaction;
-import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.dto.BlockIOResponseWithdrawal;
-import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.dto.BlockIOResponseWithdrawalToBeSigned;
-import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.dto.BlockIORequestSubmitTransaction;
-import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.dto.BlockIOResponseSubmitTransaction;
-
-import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -63,37 +53,19 @@ public interface IBlockIO {
     BlockIOResponseBalance getAddressBalance(@QueryParam("labels") List<String> labels) throws IOException;
 
     @GET
-    @Path("prepare_transaction")
-    BlockIOResponsePrepareTransaction prepareTransaction(
-        @QueryParam("from_labels") List<String> fromLabels,
-        @QueryParam("amounts") List<BigDecimal> amounts,
-        @QueryParam("to_addresses") List<String> toAddresses,
-        @QueryParam("priority") String priority
-    );
-
-    @POST
-    @Path("submit_transaction")
-    @Consumes(MediaType.APPLICATION_JSON)
-    BlockIOResponseSubmitTransaction submitTransaction(BlockIORequestSubmitTransaction request);
-
-    @GET
     @Path("withdraw")
-    @Deprecated
     BlockIOResponseWithdrawal withdraw(@QueryParam("pin") String pin, @QueryParam("amount") String amount, @QueryParam("payment_address") String payment_address, @QueryParam("priority") String priority) throws IOException;
 
     @POST
     @Path("sign_and_finalize_withdrawal")
-    @Deprecated
     BlockIOResponseWithdrawal signAndFinalizeWithdrawal(@FormParam("signature_data") String signedDataInJson) throws IOException;
 
     @GET
     @Path("withdraw")
-    @Deprecated
     BlockIOResponseWithdrawalToBeSigned withdrawToAddressesToBeSigned(@QueryParam("from_labels") List<String> fromLabels, @QueryParam("amounts") List<BigDecimal> amounts, @QueryParam("to_addresses") List<String> toAddresses, @QueryParam("priority") String priority) throws IOException;
 
     @GET
     @Path("withdraw")
-    @Deprecated
     BlockIOResponseWithdrawalToBeSigned withdrawToBeSigned(@QueryParam("amount") String amount, @QueryParam("payment_address") String payment_address, @QueryParam("priority") String priority) throws IOException;
 
 }

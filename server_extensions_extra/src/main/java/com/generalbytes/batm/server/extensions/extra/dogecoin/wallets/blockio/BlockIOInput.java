@@ -15,15 +15,15 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.dto;
+package com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio;
 
 import java.util.Arrays;
 
 public class BlockIOInput {
-    private int input_no;
-    private int signatures_needed;
-    private String data_to_sign; //in hex
-    private BlockIOSigner[] signers;
+    int input_no;
+    int signatures_needed;
+    String data_to_sign; //in hex
+    BlockIOSigner[] signers;
 
     public BlockIOInput() {
     }

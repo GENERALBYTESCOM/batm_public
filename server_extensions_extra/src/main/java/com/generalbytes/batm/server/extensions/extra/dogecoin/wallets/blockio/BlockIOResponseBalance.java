@@ -15,7 +15,7 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.dto;
+package com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio;
 
 public class BlockIOResponseBalance {
     private String status;

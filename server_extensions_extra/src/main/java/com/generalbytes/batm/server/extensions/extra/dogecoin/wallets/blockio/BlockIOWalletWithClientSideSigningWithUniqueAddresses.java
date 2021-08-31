@@ -18,7 +18,6 @@
 package com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio;
 
 import com.generalbytes.batm.server.extensions.IGeneratesNewDepositCryptoAddress;
-import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.dto.BlockIOResponseNewAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import si.mazi.rescu.HttpStatusIOException;
