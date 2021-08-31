@@ -25,10 +25,10 @@ import si.mazi.rescu.HttpStatusIOException;
 
 import java.util.Random;
 
-public class BlockIOWalletWithUniqueAddresses extends BlockIOWallet implements IGeneratesNewDepositCryptoAddress {
-    private static final Logger log = LoggerFactory.getLogger(BlockIOWalletWithUniqueAddresses.class);
+public class BlockIOWalletWithClientSideSigningWithUniqueAddresses extends BlockIOWalletWithClientSideSigning implements IGeneratesNewDepositCryptoAddress {
+    private static final Logger log = LoggerFactory.getLogger(BlockIOWalletWithClientSideSigningWithUniqueAddresses.class);
 
-    public BlockIOWalletWithUniqueAddresses(String apiKey, String pin, String priority, String fromLabel) {
+    public BlockIOWalletWithClientSideSigningWithUniqueAddresses(String apiKey, String pin, String priority, String fromLabel) {
         super(apiKey, pin, priority, fromLabel);
     }
 
