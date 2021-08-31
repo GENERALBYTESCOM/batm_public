@@ -19,74 +19,56 @@
 package com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
-import com.generalbytes.batm.server.extensions.ICanSendMany;
 import com.generalbytes.batm.server.extensions.IWallet;
-import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.dto.BlockIOAddress;
-import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.dto.BlockIORequestSubmitTransaction;
-import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.dto.BlockIOResponseAddresses;
-import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.dto.BlockIOResponseBalance;
-import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.dto.BlockIOResponsePrepareTransaction;
-import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.dto.BlockIOResponseSubmitTransaction;
-import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.dto.BlockIOTransaction;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import si.mazi.rescu.ClientConfig;
-import si.mazi.rescu.HttpStatusIOException;
 import si.mazi.rescu.RestProxyFactory;
 
 import javax.ws.rs.QueryParam;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.security.Security;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 
-import static com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.IBlockIO.*;
+import static com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.IBlockIO.PRIORITY_HIGH;
+import static com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.IBlockIO.PRIORITY_LOW;
+import static com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.IBlockIO.PRIORITY_MEDIUM;
 
-public class BlockIOWallet implements IWallet, ICanSendMany {
-    private static final Logger log = LoggerFactory.getLogger("batm.master.extensions.BlockIOWallet2");
+/**
+ * @deprecated Use {@link BlockIOWalletWithClientSideSigning}
+ */
+@Deprecated
+public class BlockIOWallet implements IWallet {
+    private static final Logger log = LoggerFactory.getLogger("batm.master.extensions.BlockIOWallet");
+    private String pin;
+    private String priority;
 
-    private final String priority;
-    private final String fromLabel;
-    private final BlockIOSignService signService;
+    private IBlockIO api;
 
-    protected IBlockIO api;
-
-    static {
-        Security.addProvider(new BouncyCastleProvider());
-    }
-
-    public BlockIOWallet(String apiKey, String pin, String priority, String fromLabel) {
+    public BlockIOWallet(String apiKey, String pin, String priority) {
+        this.pin = pin;
         if (priority == null) {
             this.priority = PRIORITY_LOW;
         } else if (PRIORITY_LOW.equalsIgnoreCase(priority.trim())) {
             this.priority = PRIORITY_LOW;
-        } else if (PRIORITY_MEDIUM.equalsIgnoreCase(priority.trim())) {
+        }
+        else if (PRIORITY_MEDIUM.equalsIgnoreCase(priority.trim())) {
             this.priority = PRIORITY_MEDIUM;
-        } else if (PRIORITY_HIGH.equalsIgnoreCase(priority.trim())) {
+        }
+        else if (PRIORITY_HIGH.equalsIgnoreCase(priority.trim())) {
             this.priority = PRIORITY_HIGH;
         } else {
             this.priority = PRIORITY_LOW;
         }
-
-        this.fromLabel = fromLabel;
-
         ClientConfig config = new ClientConfig();
         config.addDefaultParam(QueryParam.class, "api_key", apiKey);
         api = RestProxyFactory.createProxy(IBlockIO.class, "https://block.io", config);
-        signService = new BlockIOSignService(pin);
     }
 
     @Override
     public Set<String> getCryptoCurrencies() {
-        Set<String> result = new HashSet<>();
+        Set<String> result = new HashSet<String>();
         result.add(CryptoCurrency.BTC.getCode());
         result.add(CryptoCurrency.LTC.getCode());
         result.add(CryptoCurrency.DOGE.getCode());
@@ -105,20 +87,11 @@ public class BlockIOWallet implements IWallet, ICanSendMany {
         }
         try {
             BlockIOResponseAddresses response = api.getAddresses();
-            if (response != null && response.getData() != null && response.getData().getAddresses() != null && response.getData().getAddresses().length > 0) {
-                if (fromLabel != null) {
-                    for (BlockIOAddress address : response.getData().getAddresses()) {
-                        if (fromLabel.equals(address.getLabel())) {
-                            return address.getAddress();
-                        }
-                    }
-                }
+            if (response != null && response.getData() != null && response.getData().getAddresses() != null && response.getData().getAddresses().length> 0) {
                 return response.getData().getAddresses()[0].getAddress();
             }
-        } catch (HttpStatusIOException e) {
-            log.error("HTTP error in getCryptoAddress: {}", e.getHttpBody());
-        } catch (Exception e) {
-            log.error("Error", e);
+        }catch (Throwable t) {
+            log.error("Error", t);
         }
 
         return null;
@@ -131,56 +104,12 @@ public class BlockIOWallet implements IWallet, ICanSendMany {
             return null;
         }
         try {
-            List<String> labels = fromLabel != null ? Collections.singletonList(fromLabel) : Collections.emptyList();
-            BlockIOResponseBalance response = api.getAddressBalance(labels);
-            if (response != null && response.getData() != null && response.getData().getAvailable_balance() != null) {
+            BlockIOResponseBalance response = api.getBalance();
+            if (response != null && response.getData() != null && response.getData().getAvailable_balance() != null ) {
                 return new BigDecimal(response.getData().getAvailable_balance());
             }
-        } catch (HttpStatusIOException e) {
-            log.error("HTTP error in getCryptoBalance: {}", e.getHttpBody());
-        } catch (Exception e) {
-            log.error("Error", e);
-        }
-
-        return null;
-    }
-
-    @Override
-    public String sendMany(Collection<Transfer> transfers, String cryptoCurrency, String description) {
-        if (!getCryptoCurrencies().contains(cryptoCurrency)) {
-            return null;
-        }
-        try {
-            // sum amounts for the same address - this wallet cannot send multiple amounts to the same address
-            Map<String, BigDecimal> destinationAddressAmounts = transfers.stream()
-                .collect(Collectors.toMap(Transfer::getDestinationAddress, Transfer::getAmount, BigDecimal::add));
-
-            List<String> toAddresses = new ArrayList<>(destinationAddressAmounts.keySet());
-
-            // get values in the same order as toAddresses
-            // stream from list should be ordered, map.values() could potentially have different order
-            List<BigDecimal> amounts = toAddresses.stream()
-                .map(destinationAddressAmounts::get)
-                .map(amount -> amount.setScale(8, RoundingMode.FLOOR))
-                .collect(Collectors.toList());
-
-            log.info("{} calling withdraw {} to {}", getClass().getSimpleName(), amounts, toAddresses);
-            List<String> fromLabels = fromLabel == null ? null : Collections.nCopies(toAddresses.size(), fromLabel);
-
-            BlockIOResponsePrepareTransaction response = api.prepareTransaction(fromLabels, amounts, toAddresses, priority);
-
-            BlockIOTransaction transaction = signService.createAndSignTransaction(response);
-            BlockIORequestSubmitTransaction request = new BlockIORequestSubmitTransaction(transaction);
-            BlockIOResponseSubmitTransaction submitResponse = api.submitTransaction(request);
-
-            if ("success".equals(submitResponse.getStatus()) && submitResponse.getData() != null) {
-                return submitResponse.getData().getTxid();
-            }
-            return null;
-        } catch (HttpStatusIOException e) {
-            log.error("HTTP error in sendCoins: {}", e.getHttpBody());
-        } catch (Exception e) {
-            log.error("Error", e);
+        }catch (Throwable t) {
+            log.error("Error", t);
         }
 
         return null;
@@ -188,7 +117,29 @@ public class BlockIOWallet implements IWallet, ICanSendMany {
 
     @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
-        return sendMany(Collections.singleton(new Transfer(destinationAddress, amount)), cryptoCurrency, description);
+        if (!getCryptoCurrencies().contains(cryptoCurrency)) {
+            return null;
+        }
+        try {
+            BlockIOResponseWithdrawal response = api.withdraw(pin, amount.toPlainString(), destinationAddress, priority);
+            if (response != null && response.getStatus() != null && "success".equalsIgnoreCase(response.getStatus()) && response.getData() != null && response.getData().getTxid() !=null) {
+                return response.getData().getTxid();
+            }
+        }catch (Throwable t) {
+            log.error("Error", t);
+        }
+
+        return null;
     }
+
+//    public static void main(String[] args) {
+//        final BlockIOWallet blockIOWallet = new BlockIOWallet("xxxx", "xxxx", "medium");
+//        final BigDecimal ltc = blockIOWallet.getCryptoBalance("LTC");
+//        System.out.println("ltc = " + ltc);
+//        String address = blockIOWallet.getCryptoAddress("LTC");
+//        System.out.println("address = " + address);
+//        String s = blockIOWallet.sendCoins("LSYi8VQjbR3LAAdqkd4jSzj3Ci5B9Pryvk", new BigDecimal("0.01"), "LTC", "blabla");
+//        System.out.println("s = " + s);
+//    }
 
 }

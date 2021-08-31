@@ -25,8 +25,8 @@ import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.IWallet;
-import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.BlockIOWallet;
-import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.BlockIOWalletWithUniqueAddresses;
+import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.BlockIOWalletWithClientSideSigning;
+import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.BlockIOWalletWithClientSideSigningWithUniqueAddresses;
 import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.dogecoind.DogecoindRPCWallet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,7 +64,7 @@ public class DogecoinExtension extends AbstractExtension {
                     if (st.hasMoreTokens()) {
                         fromLabel = st.nextToken();
                     }
-                    return new BlockIOWallet(apikey, pin, priority, fromLabel);
+                    return new BlockIOWalletWithClientSideSigning(apikey, pin, priority, fromLabel);
 
                 } else if ("blockionoforward".equalsIgnoreCase(walletType)) {
                     String apikey = st.nextToken();
@@ -77,7 +77,7 @@ public class DogecoinExtension extends AbstractExtension {
                     if (st.hasMoreTokens()) {
                         fromLabel = st.nextToken();
                     }
-                    return new BlockIOWalletWithUniqueAddresses(apikey,pin, priority, fromLabel);
+                    return new BlockIOWalletWithClientSideSigningWithUniqueAddresses(apikey,pin, priority, fromLabel);
 
                 } else if ("dogecoind".equalsIgnoreCase(walletType)) {
                     //"dogecoind:protocol:user:password:ip:port:accountname"
