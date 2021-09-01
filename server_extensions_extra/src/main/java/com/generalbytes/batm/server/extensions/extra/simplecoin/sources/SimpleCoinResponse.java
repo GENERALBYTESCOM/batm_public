@@ -6,7 +6,6 @@ public class SimpleCoinResponse {
 
     private BigDecimal rate;
 
-
     public BigDecimal getRate() {
         return rate;
     }

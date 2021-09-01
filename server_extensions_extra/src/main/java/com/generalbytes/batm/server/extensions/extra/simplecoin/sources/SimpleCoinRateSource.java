@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2020 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2021 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -34,14 +34,12 @@ public class SimpleCoinRateSource implements IRateSource {
 
     private static final Logger log = LoggerFactory.getLogger(SimpleCoinRateSource.class);
 
-
-    private String preferedFiatCurrency = FiatCurrency.USD.getCode();
+    private String preferedFiatCurrency;
     private ISimpleCoinApi api;
 
-    private static HashMap<String, BigDecimal> rateAmounts = new HashMap<String, BigDecimal>();
-    private static HashMap<String, Long> rateTimes = new HashMap<String, Long>();
+    private static HashMap<String, BigDecimal> rateAmounts = new HashMap<>();
+    private static HashMap<String, Long> rateTimes = new HashMap<>();
     private static final long MAXIMUM_ALLOWED_TIME_OFFSET = 30 * 1000; //30sec
-
 
     public SimpleCoinRateSource(String preferedFiatCurrency) {
         if (preferedFiatCurrency == null) {
@@ -53,7 +51,7 @@ public class SimpleCoinRateSource implements IRateSource {
 
     @Override
     public Set<String> getFiatCurrencies() {
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         result.add(FiatCurrency.CZK.getCode());
         result.add(FiatCurrency.USD.getCode());
         return result;
@@ -77,7 +75,9 @@ public class SimpleCoinRateSource implements IRateSource {
         if (!(CryptoCurrency.BTC.getCode().equalsIgnoreCase(cryptoCurrency))) {
             return null;
         }
-        if (!(FiatCurrency.USD.getCode().equalsIgnoreCase(fiatCurrency) || FiatCurrency.CZK.getCode().equalsIgnoreCase(fiatCurrency)) || (FiatCurrency.EUR.getCode().equalsIgnoreCase(fiatCurrency))) {
+        if (!(FiatCurrency.USD.getCode().equalsIgnoreCase(fiatCurrency)
+            || FiatCurrency.CZK.getCode().equalsIgnoreCase(fiatCurrency))
+            || (FiatCurrency.EUR.getCode().equalsIgnoreCase(fiatCurrency))) {
             return null;
         }
 
@@ -86,7 +86,6 @@ public class SimpleCoinRateSource implements IRateSource {
             BigDecimal amount = rateAmounts.get(key);
             if (amount == null) {
                 BigDecimal result = getExchangeRateLastSync(cryptoCurrency, fiatCurrency);
-//                log.debug("Called SimpleCoin exchange for rate: " + key + " = " + result);
                 log.debug("Called SimpleCoin currency rate for: {} = {}", key, result);
                 rateAmounts.put(key, result);
                 rateTimes.put(key, now + MAXIMUM_ALLOWED_TIME_OFFSET);
@@ -115,8 +114,7 @@ public class SimpleCoinRateSource implements IRateSource {
 
         if (fiatCryptoResponse != null && fiatCryptoResponse.getError() == null && "ok".equalsIgnoreCase(fiatCryptoResponse.getStatus())) {
             SimpleCoinResponse response = fiatCryptoResponse.getResponse();
-            log.debug("Ocekavana Hodnota je: " + response.getRate());
-            return response.getRate(); // Overit jestli neni null
+            return response.getRate();
         } else {
             if (fiatCryptoResponse.getError() != null) {
                 log.debug("API SimpleCoin error: " + fiatCryptoResponse.getError());
@@ -124,6 +122,4 @@ public class SimpleCoinRateSource implements IRateSource {
         }
         return null;
     }
-
 }
-

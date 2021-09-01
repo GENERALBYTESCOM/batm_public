@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2015-2016 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2021 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -16,7 +16,6 @@
  *
  ************************************************************************************/
 
-
 package com.generalbytes.batm.server.extensions.extra.simplecoin.sources;
 
 import javax.ws.rs.GET;
@@ -25,24 +24,18 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-// https://server.simplecoin.eu/v1/ticker/market?from=EUR&to=BTC
 @Path("/")
 @Produces(MediaType.APPLICATION_JSON)
+
 public interface ISimpleCoinApi {
 
+    /**
+     * URL API described on "https://client.simplecoin.eu/cs/post/ticker-end-point-to-get-current-price"
+     * @param fromCurrency e.g. USD
+     * @param toCurrency e.g. BTC
+     * @return  returned rate in JSON format
+     */
     @GET
     @Path("/v1/ticker/market")
-    public FiatCryptoResponse returnRate(@QueryParam("from") String fromCurrency, @QueryParam("to") String toCurrency);
+    FiatCryptoResponse returnRate(@QueryParam("from") String fromCurrency, @QueryParam("to") String toCurrency);
 }
-
-/*
-    {
-      "status": "ok",
-      "response": {
-        "rate": 6647.187084914325,
-        "rate_inverse": 0.000150439575
-      },
-      "error": null,
-      "error_code": null
-    }
- */

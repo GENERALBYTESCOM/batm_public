@@ -41,9 +41,4 @@ public class SimpleCoinExtension extends AbstractExtension {
         result.add(CryptoCurrency.BTC.getCode());
         return result;
     }
-
 }
-
-
-
-
