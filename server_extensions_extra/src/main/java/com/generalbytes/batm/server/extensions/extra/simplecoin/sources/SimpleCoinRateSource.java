@@ -104,7 +104,7 @@ public class SimpleCoinRateSource implements IRateSource {
 
     private BigDecimal prepareExchangeRate(String cryptoCurrency, String fiatCurrency, String key, long now) {
         BigDecimal result = getExchangeRateLastSync(cryptoCurrency, fiatCurrency);
-        log.debug("Called simplecoin.eu exchange for rate: {} = {}", key , result);
+        log.warn("Called simplecoin.eu exchange for rate: {} = {}", key , result);
         rateAmounts.put(key, result);
         rateTimes.put(key, now + MAXIMUM_ALLOWED_TIME_OFFSET);
         return result;
@@ -119,7 +119,7 @@ public class SimpleCoinRateSource implements IRateSource {
             return response.getRate();
         } else {
             if (fiatCryptoResponse.getError() != null) {
-                log.debug("API SimpleCoin error: " + fiatCryptoResponse.getError());
+                log.warn("API SimpleCoin error: " + fiatCryptoResponse.getError());
             }
         }
         return null;

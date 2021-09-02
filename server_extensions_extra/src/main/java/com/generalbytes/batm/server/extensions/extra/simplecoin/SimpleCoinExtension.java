@@ -37,8 +37,12 @@ public class SimpleCoinExtension extends AbstractExtension {
 
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         result.add(CryptoCurrency.BTC.getCode());
+        result.add(CryptoCurrency.BCH.getCode());
+        result.add(CryptoCurrency.ETH.getCode());
+        result.add(CryptoCurrency.LTC.getCode());
+        result.add(CryptoCurrency.XRP.getCode());
         return result;
     }
 }
