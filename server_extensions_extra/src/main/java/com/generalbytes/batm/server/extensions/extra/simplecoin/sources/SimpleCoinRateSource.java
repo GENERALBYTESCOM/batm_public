@@ -111,7 +111,9 @@ public class SimpleCoinRateSource implements IRateSource {
     }
 
     private BigDecimal getExchangeRateLastSync(String cryptoCurrency, String fiatCurrency) {
-
+        if (!CryptoCurrency.BTC.getCode().equalsIgnoreCase(cryptoCurrency)) {
+            return null; //unsupported currency
+        }
         FiatCryptoResponse fiatCryptoResponse = api.returnRate(fiatCurrency, cryptoCurrency);
 
         if (fiatCryptoResponse != null && fiatCryptoResponse.getError() == null && "ok".equalsIgnoreCase(fiatCryptoResponse.getStatus())) {
