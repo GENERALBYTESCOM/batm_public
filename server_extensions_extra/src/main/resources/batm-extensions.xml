@@ -2196,6 +2196,11 @@
             <help>apikey is obtained from trongrid.io. privatekey is 64 characters long hex string</help>
             <cryptocurrency>USDTTRON</cryptocurrency>
         </wallet>
+        <wallet prefix="usdttrondemo" name="Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
+            <cryptocurrency>USDTTRON</cryptocurrency>
+        </wallet>
         <cryptologo cryptocurrency="USDTTRON" file="usdttron.png"/>
         <cryptologo cryptocurrency="USDTTRON" file="usdttron.svg"/>
     </extension>
