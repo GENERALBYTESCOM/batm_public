@@ -15,7 +15,7 @@ public class SimpleCoinExtension extends AbstractExtension {
 
     @Override
     public String getName() {
-        return "SimpleCoin RateSource extension";
+        return "SimpleCoin RateSource extension2";
     }
 
     @Override

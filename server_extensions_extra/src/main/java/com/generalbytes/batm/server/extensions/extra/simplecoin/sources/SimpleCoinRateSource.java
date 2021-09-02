@@ -54,6 +54,7 @@ public class SimpleCoinRateSource implements IRateSource {
         Set<String> result = new HashSet<>();
         result.add(FiatCurrency.CZK.getCode());
         result.add(FiatCurrency.USD.getCode());
+        result.add(FiatCurrency.EUR.getCode());
         return result;
     }
 
@@ -66,44 +67,47 @@ public class SimpleCoinRateSource implements IRateSource {
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<>();
         result.add(CryptoCurrency.BTC.getCode());
+        result.add(CryptoCurrency.BCH.getCode());
+        result.add(CryptoCurrency.ETH.getCode());
+        result.add(CryptoCurrency.LTC.getCode());
+        result.add(CryptoCurrency.XRP.getCode());
         return result;
     }
 
     @Override
     public synchronized BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency) {
-        String key = cryptoCurrency + "_" + fiatCurrency;
-        if (!(CryptoCurrency.BTC.getCode().equalsIgnoreCase(cryptoCurrency))) {
+
+        if (!getCryptoCurrencies().contains(cryptoCurrency)) {
             return null;
         }
-        if (!(FiatCurrency.USD.getCode().equalsIgnoreCase(fiatCurrency)
-            || FiatCurrency.CZK.getCode().equalsIgnoreCase(fiatCurrency))
-            || (FiatCurrency.EUR.getCode().equalsIgnoreCase(fiatCurrency))) {
+
+        if (!getFiatCurrencies().contains(fiatCurrency)) {
             return null;
         }
 
         synchronized (rateAmounts) {
             long now = System.currentTimeMillis();
+            String key = cryptoCurrency + "_" + fiatCurrency;
             BigDecimal amount = rateAmounts.get(key);
             if (amount == null) {
-                BigDecimal result = getExchangeRateLastSync(cryptoCurrency, fiatCurrency);
-                log.debug("Called SimpleCoin currency rate for: {} = {}", key, result);
-                rateAmounts.put(key, result);
-                rateTimes.put(key, now + MAXIMUM_ALLOWED_TIME_OFFSET);
-                return result;
+                return prepareExchangeRate(cryptoCurrency, fiatCurrency, key, now);
             } else {
                 Long expirationTime = rateTimes.get(key);
                 if (expirationTime > now) {
                     return rateAmounts.get(key);
                 } else {
-                    //do the job;
-                    BigDecimal result = getExchangeRateLastSync(cryptoCurrency, fiatCurrency);
-                    log.debug("Called simplecoin.eu exchange for rate: {} = {}", key , result);
-                    rateAmounts.put(key, result);
-                    rateTimes.put(key, now + MAXIMUM_ALLOWED_TIME_OFFSET);
-                    return result;
+                    return prepareExchangeRate(cryptoCurrency, fiatCurrency, key, now);
                 }
             }
         }
+    }
+
+    private BigDecimal prepareExchangeRate(String cryptoCurrency, String fiatCurrency, String key, long now) {
+        BigDecimal result = getExchangeRateLastSync(cryptoCurrency, fiatCurrency);
+        log.debug("Called simplecoin.eu exchange for rate: {} = {}", key , result);
+        rateAmounts.put(key, result);
+        rateTimes.put(key, now + MAXIMUM_ALLOWED_TIME_OFFSET);
+        return result;
     }
 
     private BigDecimal getExchangeRateLastSync(String cryptoCurrency, String fiatCurrency) {
