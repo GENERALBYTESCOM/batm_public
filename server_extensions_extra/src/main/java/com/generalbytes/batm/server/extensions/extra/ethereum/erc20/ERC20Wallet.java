@@ -121,6 +121,10 @@ public class ERC20Wallet implements IWallet{
         Transaction tx = Transaction.createEthCallTransaction(credentials.getAddress(), contract.getContractAddress(), FunctionEncoder.encode(function));
         try {
             EthEstimateGas estimateGas = w.ethEstimateGas(tx).send();
+            if (estimateGas.hasError()) {
+                log.error("Error getting gas estimate: {}", estimateGas.getError().getMessage());
+                return null;
+            }
             return estimateGas.getAmountUsed();
         } catch (IOException e) {
             log.error("Error", e);
