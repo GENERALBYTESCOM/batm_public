@@ -25,6 +25,7 @@ import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.request.Transaction;
+import org.web3j.protocol.core.methods.response.EthEstimateGas;
 import org.web3j.protocol.core.methods.response.EthGetBalance;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
@@ -32,6 +33,7 @@ import org.web3j.tx.RawTransactionManager;
 import org.web3j.tx.Transfer;
 import org.web3j.utils.Convert;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashSet;
@@ -117,10 +119,9 @@ public class InfuraWallet implements IWallet{
         }
         try {
             log.info("InfuraWallet - sending {} {} from {} to {}", amount, cryptoCurrency, credentials.getAddress(), destinationAddress);
-            BigInteger weiValue = Convert.toWei(amount, ETHER).toBigIntegerExact();
             Transfer transfer = new Transfer(w, new RawTransactionManager(w, credentials));
-            Transaction transaction = Transaction.createEtherTransaction(credentials.getAddress(), null, null, null, destinationAddress, weiValue);
-            BigInteger gasLimit = w.ethEstimateGas(transaction).send().getAmountUsed();
+            BigInteger gasLimit = getGasLimit(destinationAddress, amount);
+            if (gasLimit == null) return null;
             BigInteger gasPrice = transfer.requestCurrentGasPrice();
             log.info("InfuraWallet - gasPrice: {} gasLimit: {}", gasPrice, gasLimit);
 
@@ -135,6 +136,16 @@ public class InfuraWallet implements IWallet{
             log.error("Error sending coins.", e);
         }
         return null;
+    }
+
+    private BigInteger getGasLimit(String destinationAddress, BigDecimal amount) throws IOException {
+        BigInteger weiValue = Convert.toWei(amount, ETHER).toBigIntegerExact();
+        Transaction transaction = Transaction.createEtherTransaction(credentials.getAddress(), null, null, null, destinationAddress, weiValue);
+        EthEstimateGas estimateGas = w.ethEstimateGas(transaction).send();
+        if (estimateGas.hasError()) {
+            throw new IOException("Error getting gas limit estimate: " + estimateGas.getError().getMessage());
+        }
+        return estimateGas.getAmountUsed();
     }
 
 }
