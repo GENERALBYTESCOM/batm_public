@@ -48,6 +48,7 @@ public class NanoExtension extends AbstractExtension {
     public static final CryptoCurrency CRYPTO = CryptoCurrency.NANO;
 
     private volatile NanoExtensionContext context = new NanoExtensionContext(CRYPTO, ctx, NanoUtil.NANO);
+    private Set<ICryptoCurrencyDefinition> cryptoCurrencyDefinitions;
 
 
     @Override
@@ -59,6 +60,7 @@ public class NanoExtension extends AbstractExtension {
     public void init(IExtensionContext ctx) {
         super.init(ctx);
         this.context = new NanoExtensionContext(CRYPTO, ctx, NanoUtil.NANO);
+        this.cryptoCurrencyDefinitions = Collections.singleton(new NanoDefinition(new NanoPaymentSupport(context)));
     }
 
     @Override
@@ -96,7 +98,7 @@ public class NanoExtension extends AbstractExtension {
 
     @Override
     public Set<ICryptoCurrencyDefinition> getCryptoCurrencyDefinitions() {
-        return Collections.singleton(new NanoDefinition(new NanoPaymentSupport(context)));
+        return cryptoCurrencyDefinitions;
     }
 
 }
