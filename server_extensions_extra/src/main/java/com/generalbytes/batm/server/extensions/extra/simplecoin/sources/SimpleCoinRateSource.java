@@ -29,7 +29,6 @@ import java.util.Set;
 
 public class SimpleCoinRateSource implements IRateSourceAdvanced {
     private static final Logger log = LoggerFactory.getLogger(SimpleCoinRateSource.class);
-    private String preferedFiatCurrency;
     private ISimpleCoinApi api;
     private static HashMap<String, BigDecimal> rateAmounts = new HashMap<>();
     private static HashMap<String, Long> rateTimes = new HashMap<>();
