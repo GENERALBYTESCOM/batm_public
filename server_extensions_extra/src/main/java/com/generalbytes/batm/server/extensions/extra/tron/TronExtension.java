@@ -19,6 +19,7 @@ package com.generalbytes.batm.server.extensions.extra.tron;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.AbstractExtension;
+import com.generalbytes.batm.server.extensions.DummyExchangeAndWalletAndSource;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.IWallet;
 
@@ -55,6 +56,15 @@ public class TronExtension extends AbstractExtension {
                 String tronProApiKey = st.nextToken();
                 String hexPrivateKey = st.nextToken();
                 return new TRC20Wallet(tronProApiKey, hexPrivateKey, tokenSymbol, tokenDecimalPlaces, contractAddress);
+            } else if ("usdttrondemo".equalsIgnoreCase(walletType)) {
+                String fiatCurrency = st.nextToken();
+                String walletAddress = "";
+                if (st.hasMoreTokens()) {
+                    walletAddress = st.nextToken();
+                }
+                if (fiatCurrency != null && walletAddress != null) {
+                    return new DummyExchangeAndWalletAndSource(fiatCurrency, CryptoCurrency.USDTTRON.getCode(), walletAddress);
+                }
             }
         }
         return null;
