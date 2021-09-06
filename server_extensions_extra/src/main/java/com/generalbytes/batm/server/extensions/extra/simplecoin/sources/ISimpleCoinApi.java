@@ -15,7 +15,6 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-
 package com.generalbytes.batm.server.extensions.extra.simplecoin.sources;
 
 import javax.ws.rs.GET;
@@ -26,14 +25,13 @@ import javax.ws.rs.core.MediaType;
 
 @Path("/")
 @Produces(MediaType.APPLICATION_JSON)
-
 public interface ISimpleCoinApi {
-
     /**
      * URL API described on "https://client.simplecoin.eu/cs/post/ticker-end-point-to-get-current-price"
+     *
      * @param fromCurrency e.g. USD
-     * @param toCurrency e.g. BTC
-     * @return  returned rate in JSON format
+     * @param toCurrency   e.g. BTC
+     * @return returned rate in JSON format
      */
     @GET
     @Path("/v1/ticker/market")

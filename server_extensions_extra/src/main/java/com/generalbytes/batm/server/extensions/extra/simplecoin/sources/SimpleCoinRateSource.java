@@ -15,76 +15,101 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-
 package com.generalbytes.batm.server.extensions.extra.simplecoin.sources;
 
-import com.generalbytes.batm.common.currencies.CryptoCurrency;
-import com.generalbytes.batm.common.currencies.FiatCurrency;
-import com.generalbytes.batm.server.extensions.IRateSource;
+import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
+import com.generalbytes.batm.server.extensions.util.net.RateLimiter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import si.mazi.rescu.RestProxyFactory;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Set;
 
-public class SimpleCoinRateSource implements IRateSource {
-
+public class SimpleCoinRateSource implements IRateSourceAdvanced {
     private static final Logger log = LoggerFactory.getLogger(SimpleCoinRateSource.class);
-
     private String preferedFiatCurrency;
     private ISimpleCoinApi api;
-
     private static HashMap<String, BigDecimal> rateAmounts = new HashMap<>();
     private static HashMap<String, Long> rateTimes = new HashMap<>();
     private static final long MAXIMUM_ALLOWED_TIME_OFFSET = 30 * 1000; //30sec
+    private SupportedCurrencies supportedCurrencies;
 
-    public SimpleCoinRateSource(String preferedFiatCurrency) {
-        if (preferedFiatCurrency == null) {
-            preferedFiatCurrency = FiatCurrency.USD.getCode();
-        }
-        this.preferedFiatCurrency = preferedFiatCurrency;
+    public SimpleCoinRateSource(SupportedCurrencies currencies) {
+        this.supportedCurrencies = currencies;
         api = RestProxyFactory.createProxy(ISimpleCoinApi.class, "https://server.simplecoin.eu");
     }
 
     @Override
+    public BigDecimal getExchangeRateForBuy(String cryptoCurrency, String fiatCurrency) {
+        return calculateBuyPrice(cryptoCurrency, fiatCurrency, BigDecimal.ONE);
+    }
+
+    @Override
+    public BigDecimal calculateBuyPrice(String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount) {
+        try {
+            RateLimiter.waitForPossibleCall(getClass());
+            FiatCryptoResponse ticker = api.returnRate(fiatCurrency, cryptoCurrency); // sequence for buying crypto (e.g. from=CZK to=BTC)
+            BigDecimal price = ticker.getResponse().getRate();// for buying attribute rate
+            log.warn("Called buy rate: {}{} = {}", cryptoCurrency, fiatCurrency, price);
+            return price;
+
+        } catch (Throwable e) {
+            log.warn("Error", e);
+        }
+        return null;
+    }
+
+    @Override
+    public BigDecimal getExchangeRateForSell(String cryptoCurrency, String fiatCurrency) {
+        return calculateSellPrice(cryptoCurrency, fiatCurrency, BigDecimal.ONE);
+    }
+
+    @Override
+    public BigDecimal calculateSellPrice(String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount) {
+        try {
+            RateLimiter.waitForPossibleCall(getClass());
+            FiatCryptoResponse ticker = api.returnRate(cryptoCurrency, fiatCurrency); // sequence for selling crypto (e.g. from=BTC to=CZK)
+            BigDecimal price = ticker.getResponse().getRate_inverse(); // for selling rate_inverse
+            log.warn("Called sell rate: {}{} = {}", cryptoCurrency, fiatCurrency, price);
+            return price;
+
+        } catch (Throwable e) {
+            log.warn("Error", e);
+        }
+        return null;
+    }
+
+    @Override
     public Set<String> getFiatCurrencies() {
-        Set<String> result = new HashSet<>();
-        result.add(FiatCurrency.CZK.getCode());
-        result.add(FiatCurrency.USD.getCode());
-        result.add(FiatCurrency.EUR.getCode());
-        return result;
+        return supportedCurrencies.getSupportedFiatCurrency();
     }
 
     @Override
     public String getPreferredFiatCurrency() {
-        return preferedFiatCurrency;
+        return supportedCurrencies.getPreferredFiatCurrency();
     }
 
     @Override
     public Set<String> getCryptoCurrencies() {
-        Set<String> result = new HashSet<>();
-        result.add(CryptoCurrency.BTC.getCode());
-        result.add(CryptoCurrency.BCH.getCode());
-        result.add(CryptoCurrency.ETH.getCode());
-        result.add(CryptoCurrency.LTC.getCode());
-        result.add(CryptoCurrency.XRP.getCode());
-        return result;
+        return supportedCurrencies.getSupportedCryptoCurrency();
+    }
+
+    private boolean isCurrencySupported(String cryptoCurrency, String fiatCurrency) {
+        if (supportedCurrencies.isCryptoSupported(cryptoCurrency)
+            && supportedCurrencies.isFiatSupported(fiatCurrency)) {
+            return true;
+        }
+        log.debug("Unsupported currency");
+        return false;
     }
 
     @Override
     public synchronized BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency) {
-
-        if (!getCryptoCurrencies().contains(cryptoCurrency)) {
+        if (!isCurrencySupported(cryptoCurrency, fiatCurrency)) {
             return null;
         }
-
-        if (!getFiatCurrencies().contains(fiatCurrency)) {
-            return null;
-        }
-
         synchronized (rateAmounts) {
             long now = System.currentTimeMillis();
             String key = cryptoCurrency + "_" + fiatCurrency;
@@ -104,16 +129,14 @@ public class SimpleCoinRateSource implements IRateSource {
 
     private BigDecimal prepareExchangeRate(String cryptoCurrency, String fiatCurrency, String key, long now) {
         BigDecimal result = getExchangeRateLastSync(cryptoCurrency, fiatCurrency);
-        log.warn("Called simplecoin.eu exchange for rate: {} = {}", key , result);
+        log.warn("Called simplecoin.eu exchange for rate: {} = {}", key, result);
         rateAmounts.put(key, result);
         rateTimes.put(key, now + MAXIMUM_ALLOWED_TIME_OFFSET);
         return result;
     }
 
     private BigDecimal getExchangeRateLastSync(String cryptoCurrency, String fiatCurrency) {
-
         FiatCryptoResponse fiatCryptoResponse = api.returnRate(fiatCurrency, cryptoCurrency);
-
         if (fiatCryptoResponse != null && fiatCryptoResponse.getError() == null && "ok".equalsIgnoreCase(fiatCryptoResponse.getStatus())) {
             SimpleCoinResponse response = fiatCryptoResponse.getResponse();
             return response.getRate();

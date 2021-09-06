@@ -813,7 +813,7 @@
         </wallet>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.simplecoin.SimpleCoinExtension" >
-        <ratesource prefix="simplecoin" name="SimpleCoin rate">
+        <ratesource prefix="simplecoin" name="SimpleCoin.cz">
             <param name="fiatcurrency" />
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>BCH</cryptocurrency>
