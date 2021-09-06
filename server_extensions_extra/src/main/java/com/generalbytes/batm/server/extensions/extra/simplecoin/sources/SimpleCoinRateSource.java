@@ -100,7 +100,7 @@ public class SimpleCoinRateSource implements IRateSourceAdvanced {
             && supportedCurrencies.isFiatSupported(fiatCurrency)) {
             return true;
         }
-        log.debug("Unsupported currency");
+        log.debug("Unsupported currencies {} - {}", cryptoCurrency, fiatCurrency);
         return false;
     }
 
