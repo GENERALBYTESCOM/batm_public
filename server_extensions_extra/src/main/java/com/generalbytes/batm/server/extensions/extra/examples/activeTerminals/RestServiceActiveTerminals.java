@@ -42,7 +42,7 @@ public class RestServiceActiveTerminals {
     /**
      * Method helps collect terminals with a same Morphis API Access in CAS
      *
-     * @param api_key
+     * @param api_key - Morphis api_key
      * @return List<ITerminal>
      */
     private List<ITerminal> getTerminalsByApiKey(IApiAccess api_key) {
@@ -60,7 +60,7 @@ public class RestServiceActiveTerminals {
     /**
      * Method filters terminals with long ping delay
      *
-     * @param terminal
+     * @param terminal - Iterminal terminal
      * @return boolean
      */
     private boolean isFresh(ITerminal terminal) {
