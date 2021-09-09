@@ -24,7 +24,7 @@ public class RestServiceActiveTerminals {
     @Produces(MediaType.APPLICATION_JSON)
     /**
      * https://192.168.51.152:7743/extensions/example/active/terminals
-     * Returns list of active terminals ( active = pingDelay <  min ).
+     * Returns list of active terminals ( active = pingDelay < 5 min ).
      */
     public Object terminals(@QueryParam("api_key") String apiKey) {
         try {

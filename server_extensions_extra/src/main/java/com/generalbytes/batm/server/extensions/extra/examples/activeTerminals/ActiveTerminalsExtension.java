@@ -18,7 +18,7 @@ public class ActiveTerminalsExtension extends AbstractExtension {
 
     @Override
     public String getName() {
-        return "RestService to get list of active Terminals";
+        return "RestService to get list of terminals with ping delay < 5 min";
     }
 
     @Override
