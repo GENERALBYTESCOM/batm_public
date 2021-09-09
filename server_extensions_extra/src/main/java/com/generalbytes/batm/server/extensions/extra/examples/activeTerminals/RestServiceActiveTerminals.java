@@ -14,9 +14,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * REST service implementation class that uses JSR-000311 JAX-RS
- */
 @Path("/")
 public class RestServiceActiveTerminals {
     private static final Logger log = LoggerFactory.getLogger("batm.master.extensions.activeTerminals.ActiveTerminalsExtension");
@@ -27,7 +24,7 @@ public class RestServiceActiveTerminals {
     @Produces(MediaType.APPLICATION_JSON)
     /**
      * https://192.168.51.152:7743/extensions/example/active/terminals
-     * Returns list of terminals and their locations plus other information. https://localhost:7743/extensions/example/active/terminals
+     * Returns list of active terminals ( active = pingDelay <  min ).
      */
     public Object terminals(@QueryParam("api_key") String apiKey) {
         try {
