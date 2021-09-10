@@ -1,5 +1,6 @@
 package com.generalbytes.batm.server.extensions.extra.examples.activeTerminals;
 
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.generalbytes.batm.server.extensions.IApiAccess;
 import com.generalbytes.batm.server.extensions.ITerminal;
 import org.slf4j.Logger;
@@ -13,43 +14,40 @@ import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.Response;
 
-@Path("/")
+@Path("/terminals")
 public class RestServiceActiveTerminals {
     private static final Logger log = LoggerFactory.getLogger("batm.master.extensions.activeTerminals.ActiveTerminalsExtension");
-    private static long pingDelay = 300000; // 300000 ms = 5min
+    private static long pingDelay = 1000 * 60 * 5;
 
     @GET
-    @Path("/terminals")
+    @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
-    /**
-     * https://192.168.51.152:7743/extensions/example/active/terminals
+    /*
+     * https://localhost:7743/extensions/example/active/terminals
      * Returns list of active terminals ( active = pingDelay < 5 min ).
      */
     public Object terminals(@QueryParam("api_key") String apiKey) {
-        try {
-            IApiAccess api_key = ActiveTerminalsExtension.getExtensionContext().getAPIAccessByKey(apiKey);
-            if (api_key != null) {
-                List<ITerminal> terminals = getTerminalsByApiKey(api_key);
-                return terminals;
-            }
-        } catch (Throwable e) {
-            log.debug("Wrong access to active terminals RestApi ", e);
+        IApiAccess iApiAccess = ActiveTerminalsExtension.getExtensionContext().getAPIAccessByKey(apiKey);
+        if (iApiAccess != null) {
+            return getTerminalsByApiKey(iApiAccess);
         }
-        return "wrong api key";
+        return Response.status(HttpServletResponse.SC_UNAUTHORIZED).entity("Unauthorized response").build();
     }
 
     /**
      * Method helps collect terminals with a same Morphis API Access in CAS
      *
-     * @param api_key - Morphis api_key
+     * @param iApiAccess - Morphis API key
      * @return List<ITerminal>
      */
-    private List<ITerminal> getTerminalsByApiKey(IApiAccess api_key) {
-        Collection terminalsCollection = api_key.getTerminalSerialNumbers();
+    private List<ITerminal> getTerminalsByApiKey(IApiAccess iApiAccess) {
+        Collection<String> terminalsCollection = iApiAccess.getTerminalSerialNumbers();
         List<ITerminal> filteredTerminals = new ArrayList<>();
         terminalsCollection.forEach(terminalSerial -> {
-            ITerminal terminal = ActiveTerminalsExtension.getExtensionContext().findTerminalBySerialNumber(terminalSerial.toString());
+            ITerminal terminal = ActiveTerminalsExtension.getExtensionContext().findTerminalBySerialNumber(terminalSerial);
             if (isFresh(terminal)) {
                 filteredTerminals.add(terminal);
             }
@@ -66,7 +64,7 @@ public class RestServiceActiveTerminals {
     private boolean isFresh(ITerminal terminal) {
         long now = System.currentTimeMillis();
         if (terminal.getLastPingAt() != null
-            && (terminal.getLastPingAt().getTime() + pingDelay) > now) { // 300000 ms = 5 min
+            && (terminal.getLastPingAt().getTime() + pingDelay) > now) {
             return true;
         }
         return false;

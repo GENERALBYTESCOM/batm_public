@@ -14,17 +14,18 @@ import java.util.Set;
  * You need to enable it in batm-extensions.xml
  */
 public class ActiveTerminalsExtension extends AbstractExtension {
-    private static IExtensionContext ctx;
 
-    @Override
-    public String getName() {
-        return "RestService to get list of terminals with ping delay < 5 min";
-    }
+    public static IExtensionContext ctx;
 
     @Override
     public void init(IExtensionContext ctx) {
         super.init(ctx);
         this.ctx = ctx;
+    }
+
+    @Override
+    public String getName() {
+        return "RestService to get list of terminals with ping delay < 5 min";
     }
 
     @Override
