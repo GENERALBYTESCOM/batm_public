@@ -105,7 +105,7 @@ public class LnurlRestService implements IRestService {
             Objects.requireNonNull(rid, "rid cannot be null");
             Objects.requireNonNull(invoice, "invoice cannot be null");
 
-            synchronized (uuid.intern()) { // do not allow withdrawing the same transaction multiple times in parallel
+            synchronized (LnurlUtil.getLock(rid)) { // do not allow withdrawing the same transaction multiple times in parallel; the lock has to be shared between LNURL-withdraw and LNURL-pay using NFC
                 ITransactionDetails transaction = findTransaction(uuid, rid);
                 validateInvoice(invoice, transaction.getCryptoAmount());
                 IWallet wallet = getWallet(transaction.getTerminalSerialNumber());

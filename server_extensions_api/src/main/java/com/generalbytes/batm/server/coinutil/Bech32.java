@@ -102,7 +102,7 @@ public class Bech32 {
     /**
      * Re-arrange data from `fromBits` into groups of `toBits`, and pad with zeroes at the end if needed.
      */
-    private static byte[] convertBits(byte[] data, int frombits, int tobits, boolean pad) {
+    public static byte[] convertBits(byte[] data, int frombits, int tobits, boolean pad) {
         int acc = 0;
         int bits = 0;
         ByteArrayOutputStream ret = new ByteArrayOutputStream();
