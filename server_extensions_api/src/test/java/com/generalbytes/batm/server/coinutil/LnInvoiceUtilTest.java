@@ -6,7 +6,7 @@ import org.junit.Test;
 import java.math.BigDecimal;
 
 public class LnInvoiceUtilTest {
-    private LnInvoiceUtil util = new LnInvoiceUtil();
+    private final LnInvoiceUtil util = new LnInvoiceUtil();
 
     private void assertEquals(BigDecimal expected, BigDecimal actual) {
         Assert.assertTrue("expected: " + expected + ", actual: " + actual, expected.compareTo(actual) == 0);
