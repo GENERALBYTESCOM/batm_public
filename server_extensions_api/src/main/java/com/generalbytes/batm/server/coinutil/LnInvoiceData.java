@@ -7,6 +7,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This class implements LN invoice data part as specified here:
+ * https://github.com/lightningnetwork/lightning-rfc/blob/38abac62065172c00722dca10e7d3fc3049afd72/11-payment-encoding.md#data-part
+ * For the human readable part (HRP; invoice amount) see {@link LnInvoiceUtil}
+ */
 public class LnInvoiceData {
 
     private final int timestamp;
