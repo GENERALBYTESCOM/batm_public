@@ -17,6 +17,7 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.binance;
 
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.XChangeExchange;
 import org.knowm.xchange.ExchangeSpecification;
 import org.knowm.xchange.currency.CurrencyPair;
@@ -24,6 +25,7 @@ import org.knowm.xchange.dto.account.AccountInfo;
 import org.knowm.xchange.dto.account.Wallet;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -93,6 +95,9 @@ public abstract class BinanceExchange extends XChangeExchange {
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
         BigDecimal withdrawalFee = getWithdrawalFee(cryptoCurrency);
         BigDecimal withdrawalAmount = amount.add(withdrawalFee);
+        if (CryptoCurrency.XRP.getCode().equals(cryptoCurrency)) {
+            amount = amount.setScale(6, RoundingMode.FLOOR);
+        }
         log.info("Withdrawing {} + {} withdrawal fee = {} {}", amount, withdrawalFee, withdrawalAmount, cryptoCurrency);
 
         return super.sendCoins(destinationAddress, withdrawalAmount, cryptoCurrency, description);
