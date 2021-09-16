@@ -22,6 +22,7 @@ public interface ILocation {
     String getContactAddress();
     String getCity();
     String getCountry();
+    String getCountryIso2();
     String getProvince();
     String getZip();
     String getDescription();

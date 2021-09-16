@@ -154,6 +154,15 @@ public interface IExtensionContext {
     List<IIdentity> findIdentityByPhoneNumber(String phoneNumber, String countryName);
 
     /**
+     * Finds and returns identity based on provided phone number. If you don't specify country then number has to be in international format (leading +countrycode is required)
+     *
+     * @param phoneNumber phone number
+     * @param countryCode ISO 3166 Alpha-2 code
+     * @return List of found IIdentity
+     */
+    List<IIdentity> findIdentitiesByPhoneNumber(String phoneNumber, String countryCode);
+
+    /**
      * @param documentNumber
      * @return identities with the provided document (ID, passport, ... ) number. Empty list if nothing is found, never null.
      */

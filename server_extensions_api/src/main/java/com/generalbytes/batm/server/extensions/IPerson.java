@@ -30,6 +30,7 @@ public interface IPerson {
     String getContactAddress();
     String getContactCity();
     String getContactCountry();
+    String getContactCountryIso2();
     String getContactProvince();
     String getContactZIP();
     String getQrcodeId();

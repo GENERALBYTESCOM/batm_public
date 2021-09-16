@@ -95,6 +95,11 @@ public class TestExtensionContext implements IExtensionContext {
     }
 
     @Override
+    public List<IIdentity> findIdentitiesByPhoneNumber(String phoneNumber, String countryCode) {
+        return null;
+    }
+
+    @Override
     public List<IIdentity> findIdentitiesByDocumentNumber(String documentNumber) {
         return null;
     }
