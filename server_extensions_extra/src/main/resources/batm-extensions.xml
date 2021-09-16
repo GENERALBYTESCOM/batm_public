@@ -812,6 +812,16 @@
             <help>Telr Cash is a non-custodial, stablecoin "hot" wallet with access to over 100+ cryptos.</help>
         </wallet>
     </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.simplecoin.SimpleCoinExtension" >
+        <ratesource prefix="simplecoin" name="SimpleCoin.cz">
+            <param name="fiatcurrency" />
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>XRP</cryptocurrency>
+        </ratesource>
+    </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.dogecoin.DogecoinExtension">
         <wallet prefix="blockio" name="Block.io Wallet">
             <sendtomany supported="true"/>
