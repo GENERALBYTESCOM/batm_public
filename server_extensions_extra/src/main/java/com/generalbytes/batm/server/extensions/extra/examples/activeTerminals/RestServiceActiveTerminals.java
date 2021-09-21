@@ -1,6 +1,5 @@
 package com.generalbytes.batm.server.extensions.extra.examples.activeTerminals;
 
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.generalbytes.batm.server.extensions.IApiAccess;
 import com.generalbytes.batm.server.extensions.ITerminal;
 import org.slf4j.Logger;
@@ -22,13 +21,12 @@ public class RestServiceActiveTerminals {
     private static final Logger log = LoggerFactory.getLogger("batm.master.extensions.activeTerminals.ActiveTerminalsExtension");
     private static long pingDelay = 1000 * 60 * 5;
 
-    @GET
-    @Path("/")
-    @Produces(MediaType.APPLICATION_JSON)
     /*
      * https://localhost:7743/extensions/example/active/terminals
      * Returns list of active terminals ( active = pingDelay < 5 min ).
      */
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
     public Object terminals(@QueryParam("api_key") String apiKey) {
         IApiAccess iApiAccess = ActiveTerminalsExtension.getExtensionContext().getAPIAccessByKey(apiKey);
         if (iApiAccess != null) {
@@ -44,11 +42,11 @@ public class RestServiceActiveTerminals {
      * @return List<ITerminal>
      */
     private List<ITerminal> getTerminalsByApiKey(IApiAccess iApiAccess) {
-        Collection<String> terminalsCollection = iApiAccess.getTerminalSerialNumbers();
+        Collection<String> terminals = iApiAccess.getTerminalSerialNumbers();
         List<ITerminal> filteredTerminals = new ArrayList<>();
-        terminalsCollection.forEach(terminalSerial -> {
+        terminals.forEach(terminalSerial -> {
             ITerminal terminal = ActiveTerminalsExtension.getExtensionContext().findTerminalBySerialNumber(terminalSerial);
-            if (isFresh(terminal)) {
+            if (isOnline(terminal)) {
                 filteredTerminals.add(terminal);
             }
         });
@@ -61,13 +59,10 @@ public class RestServiceActiveTerminals {
      * @param terminal - Iterminal terminal
      * @return boolean
      */
-    private boolean isFresh(ITerminal terminal) {
+    private boolean isOnline(ITerminal terminal) {
         long now = System.currentTimeMillis();
-        if (terminal.getLastPingAt() != null
-            && (terminal.getLastPingAt().getTime() + pingDelay) > now) {
-            return true;
-        }
-        return false;
+        return terminal.getLastPingAt() != null
+            && (terminal.getLastPingAt().getTime() + pingDelay) > now;
     }
 
 }
