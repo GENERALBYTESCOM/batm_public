@@ -130,6 +130,13 @@ public interface IIdentityPiece {
     String getContactCountry();
 
     /**
+     * Identity contact country ISO 3166 Alpha-2 code, used with TYPE_PERSONAL_INFORMATION
+     *
+     * @return contact country ISO code or null
+     */
+    String getContactCountryIso2();
+
+    /**
      * Identity contact province, used with TYPE_PERSONAL_INFORMATION
      *
      * @return contact province (e.g. a state in the US) or null
@@ -146,7 +153,7 @@ public interface IIdentityPiece {
     /**
      * Country of identity document issuing jurisdiction, used with TYPE_PERSONAL_INFORMATION
      *
-     * @return issuing jurisdiction country or null
+     * @return issuing jurisdiction country ISO 3166 Alpha-2 code or null
      */
     String getIssuingJurisdictionCountry();
 

@@ -645,7 +645,7 @@ public class InfoCommand extends AbstractChatCommnad{
             }
         } else if (phoneNumber != null) {
             IPerson person = ctx.findPersonByChatId(conversation.getSenderUserId());
-            List<IIdentity> identities = ctx.findIdentityByPhoneNumber(phoneNumber, person.getContactCountry());
+            List<IIdentity> identities = ctx.findIdentitiesByPhoneNumber(phoneNumber, person.getContactCountryIso2());
             if (identities == null) {
                 conversation.sendText("Identity was not found by phone number.");
             } else {

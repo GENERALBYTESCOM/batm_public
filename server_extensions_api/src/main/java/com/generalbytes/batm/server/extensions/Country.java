@@ -17,6 +17,9 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Country identifiers.
  *
@@ -158,7 +161,7 @@ public enum Country {
     LT("LT", "LTU", "Lithuania"),
     LU("LU", "LUX", "Luxembourg"),
     MO("MO", "MAC", "Macao"),
-    MK("MK", "MKD", "Macedonia"),
+    MK("MK", "MKD", "North Macedonia"),
     MG("MG", "MDG", "Madagascar"),
     MW("MW", "MWI", "Malawi"),
     MY("MY", "MYS", "Malaysia"),
@@ -311,5 +314,24 @@ public enum Country {
      */
     public String getCountryName() {
         return countryName;
+    }
+
+    private final static Map<String, Country> values;
+
+    static {
+        values = new HashMap<>();
+        for (Country country : Country.values()) {
+            values.put(country.name(), country);
+        }
+    }
+
+    /**
+     * Custom implementation of Country#valueOf, method doesn't throw IllegalArgumentException for unknown name.
+     *
+     * @param name Country#name
+     * @return Country or null if name is unknown.
+     */
+    public static Country value(String name) {
+        return values.get(name);
     }
 }
