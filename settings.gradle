@@ -3,4 +3,5 @@ include ':server_extensions_extra'
 include ':server_extensions_test'
 include ':currencies'
 include ':batm_ssh_tunnel'
+include 'operators_sample_website'
 
