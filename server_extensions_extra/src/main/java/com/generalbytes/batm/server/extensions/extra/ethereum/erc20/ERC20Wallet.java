@@ -20,118 +20,48 @@ package com.generalbytes.batm.server.extensions.extra.ethereum.erc20;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.ethereum.EtherUtils;
 import com.generalbytes.batm.server.extensions.extra.ethereum.erc20.generated.ERC20Interface;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.web3j.abi.FunctionEncoder;
-import org.web3j.abi.datatypes.Function;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
-import org.web3j.protocol.core.methods.request.Transaction;
-import org.web3j.protocol.core.methods.response.EthEstimateGas;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
-import org.web3j.tx.ManagedTransaction;
-import org.web3j.tx.gas.ContractGasProvider;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.RoundingMode;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 
 public class ERC20Wallet implements IWallet{
-    private String tokenSymbol;
-    private int tokenDecimalPlaces;
-    private ERC20Interface contract;
-
-    private Credentials credentials;
-    private Web3j w;
+    private final String contractAddress;
+    private final String tokenSymbol;
+    private final int tokenDecimalPlaces;
+    private final Credentials credentials;
+    private final Web3j w;
+    private final BigInteger fixedGasLimit;
+    private final BigDecimal gasPriceMultiplier;
+    private final ERC20Interface noGasContract;
 
     private static final Logger log = LoggerFactory.getLogger(ERC20Wallet.class);
 
-    public ERC20Wallet(String projectId, String mnemonicOrPassword, String tokenSymbol, int tokenDecimalPlaces, String contractAddress, BigInteger gasLimit, BigDecimal gasPriceMultiplier) {
+    public ERC20Wallet(String projectId, String mnemonicOrPassword, String tokenSymbol, int tokenDecimalPlaces, String contractAddress, BigInteger fixedGasLimit, BigDecimal gasPriceMultiplier) {
         this.tokenSymbol = tokenSymbol;
         this.tokenDecimalPlaces = tokenDecimalPlaces;
-
-        credentials = initCredentials(mnemonicOrPassword);
-        w = Web3j.build(new HttpService("https://mainnet.infura.io/v3/" + projectId));
-        ContractGasProvider gasProvider = new ContractGasProvider() {
-            @Override
-            public BigInteger getGasPrice(String contractFunc) {
-                try {
-                    BigInteger gasPrice = w.ethGasPrice().send().getGasPrice();
-                    BigInteger gasPriceMultiplied = new BigDecimal(gasPrice).multiply(gasPriceMultiplier).toBigInteger();
-                    log.info("gas price: {} * {} = {}, contract function: {}", gasPrice, gasPriceMultiplier, gasPriceMultiplied, contractFunc);
-                    return gasPriceMultiplied;
-                } catch (IOException e) {
-                    log.error("error getting gas price, using default", e);
-                    return ManagedTransaction.GAS_PRICE;
-                }
-            }
-
-            @Override
-            public BigInteger getGasPrice() {
-                return null; // not called
-            }
-
-            @Override
-            public BigInteger getGasLimit(String contractFunc) {
-                if (ERC20Interface.FUNC_TRANSFER.equals(contractFunc)) {
-                    if (gasLimit == null) {
-                        //get gas estimate for the transaction
-                        BigInteger transferGasEstimate = getTransferGasEstimate(credentials.getAddress(), new BigDecimal("1"));
-                        //Make gas limit 10% higher than estimate just to be safe
-                        BigInteger gasLimit = new BigDecimal(transferGasEstimate).multiply(new BigDecimal("1.1")).setScale(0, RoundingMode.UP).toBigInteger();
-                        log.debug("Calculated gasLimit is: " + gasLimit);
-                        return gasLimit;
-                    } else {
-                        log.debug("Using fixed gasLimit: " + gasLimit);
-                        return gasLimit;
-                    }
-                } else {
-                    return null;
-                }
-            }
-
-            @Override
-            public BigInteger getGasLimit() {
-                return null; //deprecated
-            }
-        };
-        contract = ERC20Interface.load(contractAddress.toLowerCase(), w, credentials, gasProvider);
+        this.contractAddress = contractAddress.toLowerCase();
+        this.fixedGasLimit = fixedGasLimit;
+        this.gasPriceMultiplier = gasPriceMultiplier;
+        this.credentials = initCredentials(mnemonicOrPassword);
+        this.w = Web3j.build(new HttpService("https://mainnet.infura.io/v3/" + projectId));
+        this.noGasContract = ERC20Interface.load(this.contractAddress, w, credentials, DummyContractGasProvider.INSTANCE);
     }
 
-    public BigInteger getTransferGasEstimate(String to, BigDecimal tokens) {
-        if (to != null) {
-            to = to.toLowerCase();
-        }
-        final Function function = new Function(
-            ERC20Interface.FUNC_TRANSFER,
-            Arrays.asList(new org.web3j.abi.datatypes.Address(to), new org.web3j.abi.datatypes.generated.Uint256(convertFromBigDecimal(tokens))),
-            Collections.emptyList());
-
-        Transaction tx = Transaction.createEthCallTransaction(credentials.getAddress(), contract.getContractAddress(), FunctionEncoder.encode(function));
-        try {
-            EthEstimateGas estimateGas = w.ethEstimateGas(tx).send();
-            if (estimateGas.hasError()) {
-                log.error("Error getting gas estimate: {}", estimateGas.getError().getMessage());
-                return null;
-            }
-            return estimateGas.getAmountUsed();
-        } catch (IOException e) {
-            log.error("Error", e);
-        }
-        return null;
+    private ERC20Interface getContract(String destinationAddress, BigInteger tokensAmount) {
+        ERC20ContractGasProvider contractGasProvider = new ERC20ContractGasProvider(contractAddress, credentials.getAddress(), destinationAddress, tokensAmount, fixedGasLimit, gasPriceMultiplier, w);
+        return ERC20Interface.load(this.contractAddress, w, credentials, contractGasProvider);
     }
-
 
     private BigDecimal convertToBigDecimal(BigInteger value) {
         if (value == null) {
@@ -187,7 +117,7 @@ public class ERC20Wallet implements IWallet{
         }
 
         try {
-            BigInteger amount = contract.balanceOf(credentials.getAddress()).send();
+            BigInteger amount = noGasContract.balanceOf(credentials.getAddress()).send();
             if (amount != null) {
                 return convertToBigDecimal(amount);
             }
@@ -216,14 +146,16 @@ public class ERC20Wallet implements IWallet{
         }
 
         try {
-            log.info("ERC20 sending coins from " + credentials.getAddress() + " using smart contract " + contract.getContractAddress() + " to: " + destinationAddress + " " + amount + " " + cryptoCurrency);
-            CompletableFuture<TransactionReceipt> future = contract.transfer(destinationAddress, convertFromBigDecimal(amount)).sendAsync();
-            //We give the transaction 10 seconds
-            TransactionReceipt receipt = future.get(10, TimeUnit.SECONDS);
-            log.debug("ERC20 receipt = " + receipt);
+            log.info("ERC20 sending coins from " + credentials.getAddress() + " using smart contract " + contractAddress + " to: " + destinationAddress + " " + amount + " " + cryptoCurrency);
+            BigInteger tokens = convertFromBigDecimal(amount);
+            TransactionReceipt receipt = getContract(destinationAddress, tokens)
+                .transfer(destinationAddress, tokens)
+                .sendAsync()
+                .get(10, TimeUnit.SECONDS);
+            log.debug("ERC20 receipt: {}", receipt);
             return receipt.getTransactionHash();
         } catch (TimeoutException e) {
-            return "info_in_future"; //error probably will not happen as we waited already 20 seconds.
+            return "info_in_future"; // the response is really slow, this can happen but the transaction can succeed anyway
         } catch (Exception e) {
             log.error("Error sending coins.", e);
         }
