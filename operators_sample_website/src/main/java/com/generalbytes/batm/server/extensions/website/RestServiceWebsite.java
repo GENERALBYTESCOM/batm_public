@@ -28,7 +28,7 @@ public class RestServiceWebsite {
      * @return list of terminals that have specified cash available for sell transactions.
      */
     @GET
-    @Path("/terminals_with_available_cash")
+    @Path("/terminals-with-available-cash")
     @Produces(MediaType.APPLICATION_JSON)
     public Object terminalsWithAvailableCash(@QueryParam("amount") BigDecimal amount, @QueryParam("fiat_currency") String fiatCurrency, @QueryParam("api_key") String apiKey) {
 
@@ -57,13 +57,13 @@ public class RestServiceWebsite {
     }
 
     /**
-     * https://localhost:7743/extensions/website/sell_crypto
+     * https://localhost:7743/extensions/website/sell-crypto
      * Method creates sell transaction
      * @param apiKey Morphis API key
      * @return ITransactionSellInfo
      */
     @GET
-    @Path("/sell_crypto")
+    @Path("/sell-crypto")
     @Produces(MediaType.APPLICATION_JSON)
     public Object sellCrypto(@QueryParam("api_key") String apiKey, @QueryParam("serial_number") String serialNumber, @QueryParam("fiat_amount") BigDecimal fiatAmount, @QueryParam("fiat_currency") String fiatCurrency, @QueryParam("crypto_amount") BigDecimal cryptoAmount, @QueryParam("crypto_currency") String cryptoCurrency, @QueryParam("identity_public_id") String identityPublicId, @QueryParam("discount_code") String discountCode) {
 
