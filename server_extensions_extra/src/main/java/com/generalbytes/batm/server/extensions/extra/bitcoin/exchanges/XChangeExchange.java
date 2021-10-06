@@ -244,6 +244,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
         return accountService.withdrawFunds(exchangeCryptoCurrency, getWithdrawAmount(amount, cryptoCurrency), destinationAddress);
     }
 
+    @Override
     public String purchaseCoins(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
         if (cryptoCurrency == null || fiatCurrencyToUse == null) {
             return null;

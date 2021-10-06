@@ -26,4 +26,9 @@ public interface IRateSourceAdvanced extends IRateSource {
 
     BigDecimal calculateBuyPrice(String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount);
     BigDecimal calculateSellPrice(String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount);
+
+    @Override
+    default BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency) {
+        throw new UnsupportedOperationException("getExchangeRateLast should not be needed when IRateSourceAdvanced is implemented");
+    }
 }

@@ -23,6 +23,7 @@ import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.binance.BinanceComExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.binance.BinanceUsExchange;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitbuy.BitbuyExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitfinex.BitfinexExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitflyer.BitFlyerExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitpandapro.BitpandaProExchange;
@@ -81,8 +82,8 @@ public class BitcoinExtension extends AbstractExtension {
     }
 
     @Override
-    public IExchange createExchange(String paramString) // (Bitstamp is in built-in extension)
-    {
+    public IExchange createExchange(String paramString) {
+        try {
         if ((paramString != null) && (!paramString.trim().isEmpty())) {
             StringTokenizer paramTokenizer = new StringTokenizer(paramString, ":");
             String prefix = paramTokenizer.nextToken();
@@ -201,7 +202,18 @@ public class BitcoinExtension extends AbstractExtension {
                 String token = paramTokenizer.nextToken();
                 String secret = paramTokenizer.nextToken();
                 return new CoinZixExchange(token, secret);
+            } else if ("bitbuy".equalsIgnoreCase(prefix)) {
+                String apiKey = paramTokenizer.nextToken();
+                String apiSecret = paramTokenizer.nextToken();
+                String preferredFiatCurrency = FiatCurrency.CAD.getCode();
+                if (paramTokenizer.hasMoreTokens()) {
+                    preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase();
+                }
+                return new BitbuyExchange(apiKey, apiSecret, preferredFiatCurrency);
             }
+        }
+        } catch (Exception e) {
+            log.warn("createExchange failed", e);
         }
         return null;
     }
@@ -423,7 +435,7 @@ public class BitcoinExtension extends AbstractExtension {
 
     @Override
     public IRateSource createRateSource(String sourceLogin) {
-        //NOTE: (Bitstamp is in built-in extension)
+        try {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(sourceLogin, ":");
             String rsType = st.nextToken();
@@ -551,7 +563,18 @@ public class BitcoinExtension extends AbstractExtension {
                 return new PoloniexExchange(preferredFiatCurrency);
             } else if ("coinzix".equals(rsType)) {
                 return new CoinZixExchange();
+            } else if ("bitbuy".equalsIgnoreCase(rsType)) {
+                String apiKey = st.nextToken();
+                String apiSecret = st.nextToken();
+                String preferredFiatCurrency = FiatCurrency.CAD.getCode();
+                if (st.hasMoreTokens()) {
+                    preferredFiatCurrency = st.nextToken().toUpperCase();
+                }
+                return new BitbuyExchange(apiKey, apiSecret, preferredFiatCurrency);
             }
+        }
+        } catch (Exception e) {
+            log.warn("createRateSource failed", e);
         }
         return null;
     }
