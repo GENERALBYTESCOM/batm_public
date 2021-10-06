@@ -6,10 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
@@ -24,22 +21,23 @@ public class RestServiceWebsite {
 
     /**
      * https://localhost:7743/extensions/website/terminals_with_available_cash
+     *
      * @param apiKey Morphis API key
      * @return list of terminals that have specified cash available for sell transactions.
      */
     @GET
     @Path("/terminals-with-available-cash")
     @Produces(MediaType.APPLICATION_JSON)
-    public Object terminalsWithAvailableCash(@QueryParam("amount") BigDecimal amount, @QueryParam("fiat_currency") String fiatCurrency, @QueryParam("api_key") String apiKey) {
-
-        if (checkSecurity(apiKey)) {
-            return Response.status(HttpServletResponse.SC_UNAUTHORIZED).entity("Unauthorized response").build();
-        }
-        if (amount == null || fiatCurrency == null) {
-            return Response.status(HttpServletResponse.SC_BAD_REQUEST).entity("Missing parameter amount or fiat_currency").build();
-        }
+    public Object terminalsWithAvailableCash(@QueryParam("amount") BigDecimal amount, @QueryParam("fiat_currency") String fiatCurrency, @HeaderParam("api_key") String apiKey) {
 
         try {
+            this.checkSecurity(apiKey);
+            if (amount == null) {
+                this.responseBadRequest("amount");
+            }
+            if (fiatCurrency == null) {
+                this.responseBadRequest("fiat_currency");
+            }
             List<String> serialNumbers = SellExtensions.getExtensionContext().findTerminalsWithAvailableCashForSell(amount, fiatCurrency, null);
             List<ITerminal> filteredTerminals = new ArrayList<>();
             for (String serialNumber : serialNumbers) {
@@ -49,37 +47,49 @@ public class RestServiceWebsite {
                 }
             }
             return filteredTerminals;
-
+        } catch (NullApiKeyException e) {
+            return this.responseInvalidApiKey();
         } catch (Throwable e) {
             log.error("Error - terminals with available cash", e);
         }
-        return Response.status(HttpServletResponse.SC_INTERNAL_SERVER_ERROR).entity("ERROR").build();
+        return this.responseInternalServerError();
     }
 
     /**
      * https://localhost:7743/extensions/website/sell-crypto
      * Method creates sell transaction
+     *
      * @param apiKey Morphis API key
      * @return ITransactionSellInfo
      */
     @GET
     @Path("/sell-crypto")
     @Produces(MediaType.APPLICATION_JSON)
-    public Object sellCrypto(@QueryParam("api_key") String apiKey, @QueryParam("serial_number") String serialNumber, @QueryParam("fiat_amount") BigDecimal fiatAmount, @QueryParam("fiat_currency") String fiatCurrency, @QueryParam("crypto_amount") BigDecimal cryptoAmount, @QueryParam("crypto_currency") String cryptoCurrency, @QueryParam("identity_public_id") String identityPublicId, @QueryParam("discount_code") String discountCode) {
-
-        if (checkSecurity(apiKey)) {
-            return Response.status(HttpServletResponse.SC_UNAUTHORIZED).entity("Unauthorized response").build();
-        }
-        if (serialNumber == null || fiatAmount == null || fiatCurrency == null || cryptoAmount == null || cryptoCurrency == null) {
-            return Response.status(HttpServletResponse.SC_BAD_REQUEST).entity("Missing parameter").build();
-        }
+    public Object sellCrypto(@HeaderParam("api_key") String apiKey, @QueryParam("serial_number") String serialNumber, @QueryParam("fiat_amount") BigDecimal fiatAmount, @QueryParam("fiat_currency") String fiatCurrency, @QueryParam("crypto_amount") BigDecimal cryptoAmount, @QueryParam("crypto_currency") String cryptoCurrency, @QueryParam("identity_public_id") String identityPublicId, @QueryParam("discount_code") String discountCode) {
 
         try {
+            this.checkSecurity(apiKey);
+            if (serialNumber == null) {
+                this.responseBadRequest("serial_number");
+            }
+            if (fiatAmount == null) {
+                this.responseBadRequest("fiat_amount");
+            }
+            if (fiatCurrency == null) {
+                this.responseBadRequest("fiat_currency");
+            }
+            if (cryptoCurrency == null) {
+                this.responseBadRequest("crypto_currency");
+            }
             return SellExtensions.getExtensionContext().sellCrypto(serialNumber, fiatAmount, fiatCurrency, cryptoAmount, cryptoCurrency, identityPublicId, discountCode);
+
+        } catch (NullApiKeyException e) {
+            return this.responseInvalidApiKey();
+
         } catch (Throwable e) {
             log.error("Error - sell crypto", e);
         }
-        return Response.status(HttpServletResponse.SC_INTERNAL_SERVER_ERROR).entity("ERROR").build();
+        return this.responseInternalServerError();
     }
 
     /**
@@ -90,24 +100,26 @@ public class RestServiceWebsite {
     @GET
     @Path("/status")
     @Produces(MediaType.APPLICATION_JSON)
-    public Object status(@QueryParam("api_key") String apiKey, @QueryParam("transaction_id") String transactionId) {
+    public Object status(@HeaderParam("api_key") String apiKey, @QueryParam("transaction_id") String transactionId) {
 
-        if (checkSecurity(apiKey)) {
-            return Response.status(HttpServletResponse.SC_UNAUTHORIZED).entity("Unauthorized response").build();
-        }
-        if (transactionId == null) {
-            return Response.status(HttpServletResponse.SC_BAD_REQUEST).entity("Missing parameter transaction_id").build();
-        }
+
         try {
+            this.checkSecurity(apiKey);
+            if (transactionId == null) {
+                return Response.status(HttpServletResponse.SC_BAD_REQUEST).entity("{ \"error\": \"Missing parameter transaction_id\" }").build();
+            }
             return SellExtensions.getExtensionContext().findTransactionByTransactionId(transactionId).getStatus();
+        } catch (NullApiKeyException e) {
+            return this.responseInvalidApiKey();
         } catch (Throwable e) {
             log.error("Error - status", e);
         }
-        return Response.status(HttpServletResponse.SC_INTERNAL_SERVER_ERROR).entity("ERROR").build();
+        return this.responseInternalServerError();
     }
 
     /**
      * https://localhost:7743/extensions/website/terminals
+     *
      * @param apiKey Morphis API key
      * @return list of active terminals ( active = pingDelay < 5 min ).
      */
@@ -116,20 +128,20 @@ public class RestServiceWebsite {
     @Produces(MediaType.APPLICATION_JSON)
     public Object terminals(@QueryParam("api_key") String apiKey) {
 
-        if (checkSecurity(apiKey)) {
-            return Response.status(HttpServletResponse.SC_UNAUTHORIZED).entity("Unauthorized response").build();
-        }
         try {
-            IApiAccess iApiAccess = SellExtensions.getExtensionContext().getAPIAccessByKey(apiKey);
+            IApiAccess iApiAccess = this.checkSecurity(apiKey);
             return getTerminalsByApiKey(iApiAccess);
+        } catch (NullApiKeyException e) {
+            return this.responseInvalidApiKey();
         } catch (Throwable e) {
             log.error("Error - terminals", e);
         }
-        return Response.status(HttpServletResponse.SC_INTERNAL_SERVER_ERROR).entity("ERROR").build();
+        return this.responseInternalServerError();
     }
 
     /**
      * Method helps collect terminals with a same Morphis API Access in CAS
+     *
      * @param iApiAccess - Morphis API key
      * @return List<ITerminal>
      */
@@ -147,6 +159,7 @@ public class RestServiceWebsite {
 
     /**
      * Method filters terminals with long ping delay
+     *
      * @param terminal - Iterminal terminal
      * @return boolean
      */
@@ -158,9 +171,25 @@ public class RestServiceWebsite {
 
     /**
      * @param apiKey - Morphis API key
-     * @return boolean
+     * @return IApiAccess - Authenticated API key
      */
-    private boolean checkSecurity(String apiKey) {
-        return apiKey == null || SellExtensions.getExtensionContext().getAPIAccessByKey(apiKey) == null;
+    private IApiAccess checkSecurity(String apiKey) throws NullApiKeyException {
+        IApiAccess iApiAccess = SellExtensions.getExtensionContext().getAPIAccessByKey(apiKey);
+        if (iApiAccess == null) {
+            throw new NullApiKeyException();
+        }
+        return iApiAccess;
+    }
+
+    private Response responseBadRequest(String paramName) {
+        return Response.status(HttpServletResponse.SC_BAD_REQUEST).entity("{ \"error\": \"Parameters " + paramName + " can't be null\"}").build();
+    }
+
+    private Response responseInvalidApiKey() {
+        return Response.status(HttpServletResponse.SC_UNAUTHORIZED).entity("{ \"error\": \"Invalid api key\" }").build();
+    }
+
+    private Response responseInternalServerError() {
+        return Response.status(HttpServletResponse.SC_INTERNAL_SERVER_ERROR).entity("{ \"error\": \"Internal server error\" }").build();
     }
 }
