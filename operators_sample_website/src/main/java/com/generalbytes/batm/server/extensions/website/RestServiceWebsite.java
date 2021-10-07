@@ -28,7 +28,8 @@ public class RestServiceWebsite {
     @GET
     @Path("/terminals-with-available-cash")
     @Produces(MediaType.APPLICATION_JSON)
-    public Object terminalsWithAvailableCash(@QueryParam("amount") BigDecimal amount, @QueryParam("fiat_currency") String fiatCurrency, @HeaderParam("api_key") String apiKey) {
+    public Object terminalsWithAvailableCash(@HeaderParam("x_api_key") String apiKey, @QueryParam("amount") BigDecimal amount, @QueryParam("fiat_currency")
+        String fiatCurrency) {
 
         try {
             this.checkSecurity(apiKey);
@@ -52,7 +53,7 @@ public class RestServiceWebsite {
         } catch (Throwable e) {
             log.error("Error - terminals with available cash", e);
         }
-        return this.responseInternalServerError();
+        return this.responseExpectationFailed();
     }
 
     /**
@@ -65,7 +66,10 @@ public class RestServiceWebsite {
     @GET
     @Path("/sell-crypto")
     @Produces(MediaType.APPLICATION_JSON)
-    public Object sellCrypto(@HeaderParam("api_key") String apiKey, @QueryParam("serial_number") String serialNumber, @QueryParam("fiat_amount") BigDecimal fiatAmount, @QueryParam("fiat_currency") String fiatCurrency, @QueryParam("crypto_amount") BigDecimal cryptoAmount, @QueryParam("crypto_currency") String cryptoCurrency, @QueryParam("identity_public_id") String identityPublicId, @QueryParam("discount_code") String discountCode) {
+    public Object sellCrypto(@HeaderParam("x_api_key") String apiKey, @QueryParam("serial_number") String serialNumber,
+                             @QueryParam("fiat_amount") BigDecimal fiatAmount, @QueryParam("fiat_currency") String fiatCurrency,
+                             @QueryParam("crypto_amount") BigDecimal cryptoAmount, @QueryParam("crypto_currency") String cryptoCurrency,
+                             @QueryParam("identity_public_id") String identityPublicId, @QueryParam("discount_code") String discountCode) {
 
         try {
             this.checkSecurity(apiKey);
@@ -89,18 +93,18 @@ public class RestServiceWebsite {
         } catch (Throwable e) {
             log.error("Error - sell crypto", e);
         }
-        return this.responseInternalServerError();
+        return this.responseExpectationFailed();
     }
 
     /**
-     * @param apiKey Morphis API key
+     * @param apiKey        Morphis API key
      * @param transactionId - Id of created transaction from sell_crypto
      * @return number with status of the transaction
      */
     @GET
     @Path("/status")
     @Produces(MediaType.APPLICATION_JSON)
-    public Object status(@HeaderParam("api_key") String apiKey, @QueryParam("transaction_id") String transactionId) {
+    public Object status(@HeaderParam("x_api_key") String apiKey, @QueryParam("transaction_id") String transactionId) {
 
 
         try {
@@ -114,7 +118,7 @@ public class RestServiceWebsite {
         } catch (Throwable e) {
             log.error("Error - status", e);
         }
-        return this.responseInternalServerError();
+        return this.responseExpectationFailed();
     }
 
     /**
@@ -126,7 +130,7 @@ public class RestServiceWebsite {
     @GET
     @Path("/terminals")
     @Produces(MediaType.APPLICATION_JSON)
-    public Object terminals(@QueryParam("api_key") String apiKey) {
+    public Object terminals(@HeaderParam("x_api_key") String apiKey) {
 
         try {
             IApiAccess iApiAccess = this.checkSecurity(apiKey);
@@ -136,7 +140,7 @@ public class RestServiceWebsite {
         } catch (Throwable e) {
             log.error("Error - terminals", e);
         }
-        return this.responseInternalServerError();
+        return this.responseExpectationFailed();
     }
 
     /**
@@ -182,14 +186,14 @@ public class RestServiceWebsite {
     }
 
     private Response responseBadRequest(String paramName) {
-        return Response.status(HttpServletResponse.SC_BAD_REQUEST).entity("{ \"error\": \"Parameters " + paramName + " can't be null\"}").build();
+        return Response.status(HttpServletResponse.SC_BAD_REQUEST).entity("{ \"error\": \"Parameter " + paramName + " can't be null\"}").build();
     }
 
     private Response responseInvalidApiKey() {
-        return Response.status(HttpServletResponse.SC_UNAUTHORIZED).entity("{ \"error\": \"Invalid api key\" }").build();
+        return Response.status(HttpServletResponse.SC_UNAUTHORIZED).entity("{ \"error\": \"Invalid x-api-key\" }").build();
     }
 
-    private Response responseInternalServerError() {
-        return Response.status(HttpServletResponse.SC_INTERNAL_SERVER_ERROR).entity("{ \"error\": \"Internal server error\" }").build();
+    private Response responseExpectationFailed() {
+        return Response.status(HttpServletResponse.SC_EXPECTATION_FAILED).entity("{ \"error\": \"Expectation failed\" }").build();
     }
 }
