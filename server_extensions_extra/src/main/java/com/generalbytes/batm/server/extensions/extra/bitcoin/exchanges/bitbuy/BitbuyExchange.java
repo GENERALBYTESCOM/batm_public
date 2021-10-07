@@ -69,7 +69,7 @@ public class BitbuyExchange implements IExchangeAdvanced, IRateSourceAdvanced {
     }
 
     private boolean isCryptoCurrencySupported(String currency) {
-        if (!getCryptoCurrencies().contains(currency)) {
+        if (currency == null || !getCryptoCurrencies().contains(currency)) {
             log.debug("doesn't support cryptocurrency '{}'", currency);
             return false;
         }
@@ -77,7 +77,7 @@ public class BitbuyExchange implements IExchangeAdvanced, IRateSourceAdvanced {
     }
 
     private boolean isFiatCurrencySupported(String currency) {
-        if (!getFiatCurrencies().contains(currency)) {
+        if (currency == null || !getFiatCurrencies().contains(currency)) {
             log.debug("doesn't support fiat currency '{}'", currency);
             return false;
         }
@@ -112,9 +112,6 @@ public class BitbuyExchange implements IExchangeAdvanced, IRateSourceAdvanced {
 
     @Override
     public String getDepositAddress(String cryptoCurrency) {
-        if (cryptoCurrency == null) {
-            return null;
-        }
         if (!isCryptoCurrencySupported(cryptoCurrency)) {
             return null;
         }
@@ -143,13 +140,7 @@ public class BitbuyExchange implements IExchangeAdvanced, IRateSourceAdvanced {
     }
 
     private ITask createOrderTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, OrderSide orderSide) {
-        if (cryptoCurrency == null || fiatCurrencyToUse == null) {
-            return null;
-        }
-        if (!isCryptoCurrencySupported(cryptoCurrency)) {
-            return null;
-        }
-        if (!isFiatCurrencySupported(fiatCurrencyToUse)) {
+        if (!isCryptoCurrencySupported(cryptoCurrency) || !isFiatCurrencySupported(fiatCurrencyToUse)) {
             return null;
         }
         return new OrderTask(amount, cryptoCurrency, fiatCurrencyToUse, orderSide);
@@ -193,13 +184,7 @@ public class BitbuyExchange implements IExchangeAdvanced, IRateSourceAdvanced {
     }
 
     private BigDecimal calculatePrice(String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount, OrderSide orderSide) {
-        if (cryptoCurrency == null || fiatCurrency == null) {
-            return null;
-        }
-        if (!isCryptoCurrencySupported(cryptoCurrency)) {
-            return null;
-        }
-        if (!isFiatCurrencySupported(fiatCurrency)) {
+        if (!isCryptoCurrencySupported(cryptoCurrency) || !isFiatCurrencySupported(fiatCurrency)) {
             return null;
         }
         return call("calculate " + orderSide + " price", () -> api.quoteOrder(new QuoteRequest(cryptoAmount, getMarketSymbol(cryptoCurrency, fiatCurrency), orderSide, OrderType.LIMIT)).fillPrice.multiply(cryptoAmount));
