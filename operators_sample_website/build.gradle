@@ -48,9 +48,3 @@ dependencyVerifications {
     }
     configuration project.configurations.githubCompile
 }
-
-test {
-    testLogging {
-
-    }
-}
