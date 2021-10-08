@@ -125,7 +125,7 @@ verifyModule 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.31:ad6acd219b468a532ac
 verifyModule 'org.jetbrains.kotlin:kotlin-stdlib:1.3.31:f38c84326543e66ed4895b20fb3ea0fca527fd5a040e1f49d0946ecf3d2b3b23'
 verifyModule 'org.jetbrains:annotations:13.0:ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478'
 verifyModule 'org.json:json:20180130:3eddf6d9d50e770650e62abe62885f4393aa911430ecde73ebafb1ffd2cfad16'
-verifyModule 'org.knowm.xchange:xchange-binance:5.0.11:16bf38e72d0a1d032511bff7c0e75ef21249f3a285fae3f1f1a4699b25a387f7'
+verifyModule 'org.knowm.xchange:xchange-binance:5.0.10:e1f1edfc8f93f4858c983f94e7bd685d3729f2e9638db5fc17ffd1fded08f70b'
 verifyModule 'org.knowm.xchange:xchange-bitfinex:5.0.10:21129825f39c8399f4a2c25380c56ca4b939760af44531261295de213287823d'
 verifyModule 'org.knowm.xchange:xchange-bittrex:5.0.10:f9d3c8f4301c1b17e74d7e7430e34703b8f4ff183f48f9e7cb363581cf56986c'
 verifyModule 'org.knowm.xchange:xchange-coinbasepro:5.0.10:9b08863d34fa8fcd55bfeac4a6248f108ab4fc08262762f393665696316a3380'

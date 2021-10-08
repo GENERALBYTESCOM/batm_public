@@ -32,4 +32,3 @@ substitute module: 'org.bouncycastle:bcprov-jdk15on', versions: ['1.54', '1.60',
 substitute module: 'org.codehaus.mojo:animal-sniffer-annotations', versions: ['1.17'], toVersion: '1.18'
 substitute module: 'org.json:json', versions: ['20140107'], toVersion: '20180130'
 substitute module: 'org.slf4j:slf4j-api', versions: ['1.7.20', '1.7.21', '1.7.25', '1.7.30', '1.7.32', '1.8.0-beta4'], toVersion: '1.7.28'
-substitute module: 'org.knowm.xchange:xchange-core', versions: ['5.0.11'], toVersion: '5.0.10'
