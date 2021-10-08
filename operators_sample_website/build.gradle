@@ -51,6 +51,6 @@ dependencyVerifications {
 
 test {
     testLogging {
-        showStandardStreams = false
+
     }
 }

@@ -28,16 +28,17 @@ public class RestServiceWebsite {
     @GET
     @Path("/terminals-with-available-cash")
     @Produces(MediaType.APPLICATION_JSON)
-    public Object terminalsWithAvailableCash(@HeaderParam("x_api_key") String apiKey, @QueryParam("amount") BigDecimal amount, @QueryParam("fiat_currency")
+    public Object terminalsWithAvailableCash(@HeaderParam("X-Api-Key") String apiKey, @QueryParam("amount") BigDecimal amount,
+                                             @QueryParam("fiat_currency")
         String fiatCurrency) {
 
         try {
-            this.checkSecurity(apiKey);
+            checkSecurity(apiKey);
             if (amount == null) {
-                this.responseBadRequest("amount");
+                responseInvalidParameter("amount");
             }
             if (fiatCurrency == null) {
-                this.responseBadRequest("fiat_currency");
+                responseInvalidParameter("fiat_currency");
             }
             List<String> serialNumbers = SellExtensions.getExtensionContext().findTerminalsWithAvailableCashForSell(amount, fiatCurrency, null);
             List<ITerminal> filteredTerminals = new ArrayList<>();
@@ -48,12 +49,12 @@ public class RestServiceWebsite {
                 }
             }
             return filteredTerminals;
-        } catch (NullApiKeyException e) {
-            return this.responseInvalidApiKey();
+        } catch (AuthenticationException e) {
+            return responseInvalidApiKey();
         } catch (Throwable e) {
             log.error("Error - terminals with available cash", e);
         }
-        return this.responseExpectationFailed();
+        return responseInternalServerError();
     }
 
     /**
@@ -66,34 +67,34 @@ public class RestServiceWebsite {
     @GET
     @Path("/sell-crypto")
     @Produces(MediaType.APPLICATION_JSON)
-    public Object sellCrypto(@HeaderParam("x_api_key") String apiKey, @QueryParam("serial_number") String serialNumber,
+    public Object sellCrypto(@HeaderParam("X-Api-Key") String apiKey, @QueryParam("serial_number") String serialNumber,
                              @QueryParam("fiat_amount") BigDecimal fiatAmount, @QueryParam("fiat_currency") String fiatCurrency,
                              @QueryParam("crypto_amount") BigDecimal cryptoAmount, @QueryParam("crypto_currency") String cryptoCurrency,
                              @QueryParam("identity_public_id") String identityPublicId, @QueryParam("discount_code") String discountCode) {
 
         try {
-            this.checkSecurity(apiKey);
+            checkSecurity(apiKey);
             if (serialNumber == null) {
-                this.responseBadRequest("serial_number");
+                responseInvalidParameter("serial_number");
             }
             if (fiatAmount == null) {
-                this.responseBadRequest("fiat_amount");
+                responseInvalidParameter("fiat_amount");
             }
             if (fiatCurrency == null) {
-                this.responseBadRequest("fiat_currency");
+                responseInvalidParameter("fiat_currency");
             }
             if (cryptoCurrency == null) {
-                this.responseBadRequest("crypto_currency");
+                responseInvalidParameter("crypto_currency");
             }
             return SellExtensions.getExtensionContext().sellCrypto(serialNumber, fiatAmount, fiatCurrency, cryptoAmount, cryptoCurrency, identityPublicId, discountCode);
 
-        } catch (NullApiKeyException e) {
-            return this.responseInvalidApiKey();
+        } catch (AuthenticationException e) {
+            return responseInvalidApiKey();
 
         } catch (Throwable e) {
             log.error("Error - sell crypto", e);
         }
-        return this.responseExpectationFailed();
+        return responseInternalServerError();
     }
 
     /**
@@ -104,21 +105,20 @@ public class RestServiceWebsite {
     @GET
     @Path("/status")
     @Produces(MediaType.APPLICATION_JSON)
-    public Object status(@HeaderParam("x_api_key") String apiKey, @QueryParam("transaction_id") String transactionId) {
-
+    public Object status(@HeaderParam("X-Api-Key") String apiKey, @QueryParam("transaction_id") String transactionId) {
 
         try {
-            this.checkSecurity(apiKey);
+            checkSecurity(apiKey);
             if (transactionId == null) {
                 return Response.status(HttpServletResponse.SC_BAD_REQUEST).entity("{ \"error\": \"Missing parameter transaction_id\" }").build();
             }
             return SellExtensions.getExtensionContext().findTransactionByTransactionId(transactionId).getStatus();
-        } catch (NullApiKeyException e) {
-            return this.responseInvalidApiKey();
+        } catch (AuthenticationException e) {
+            return responseInvalidApiKey();
         } catch (Throwable e) {
             log.error("Error - status", e);
         }
-        return this.responseExpectationFailed();
+        return responseInternalServerError();
     }
 
     /**
@@ -130,17 +130,17 @@ public class RestServiceWebsite {
     @GET
     @Path("/terminals")
     @Produces(MediaType.APPLICATION_JSON)
-    public Object terminals(@HeaderParam("x_api_key") String apiKey) {
+    public Object terminals(@HeaderParam("X-Api-Key") String apiKey) {
 
         try {
-            IApiAccess iApiAccess = this.checkSecurity(apiKey);
+            IApiAccess iApiAccess = checkSecurity(apiKey);
             return getTerminalsByApiKey(iApiAccess);
-        } catch (NullApiKeyException e) {
-            return this.responseInvalidApiKey();
+        } catch (AuthenticationException e) {
+            return responseInvalidApiKey();
         } catch (Throwable e) {
             log.error("Error - terminals", e);
         }
-        return this.responseExpectationFailed();
+        return responseInternalServerError();
     }
 
     /**
@@ -177,23 +177,23 @@ public class RestServiceWebsite {
      * @param apiKey - Morphis API key
      * @return IApiAccess - Authenticated API key
      */
-    private IApiAccess checkSecurity(String apiKey) throws NullApiKeyException {
+    private IApiAccess checkSecurity(String apiKey) throws AuthenticationException {
         IApiAccess iApiAccess = SellExtensions.getExtensionContext().getAPIAccessByKey(apiKey);
         if (iApiAccess == null) {
-            throw new NullApiKeyException();
+            throw new AuthenticationException("Authentication failed");
         }
         return iApiAccess;
     }
 
-    private Response responseBadRequest(String paramName) {
+    private Response responseInvalidParameter(String paramName) {
         return Response.status(HttpServletResponse.SC_BAD_REQUEST).entity("{ \"error\": \"Parameter " + paramName + " can't be null\"}").build();
     }
 
     private Response responseInvalidApiKey() {
-        return Response.status(HttpServletResponse.SC_UNAUTHORIZED).entity("{ \"error\": \"Invalid x-api-key\" }").build();
+        return Response.status(HttpServletResponse.SC_UNAUTHORIZED).entity("{ \"error\": \"Invalid X-Api-Key\" }").build();
     }
 
-    private Response responseExpectationFailed() {
-        return Response.status(HttpServletResponse.SC_EXPECTATION_FAILED).entity("{ \"error\": \"Expectation failed\" }").build();
+    private Response responseInternalServerError() {
+        return Response.status(HttpServletResponse.SC_INTERNAL_SERVER_ERROR).entity("{ \"error\": \"Internal server error\" }").build();
     }
 }
