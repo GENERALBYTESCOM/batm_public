@@ -70,6 +70,8 @@ dependencies {
     compile(group: 'com.nexmo', name: 'client', version: '5.5.0')       // sms provider
     implementation group: 'org.bitcoinj', name: 'bitcoinj-core', version: '0.15.10'
     implementation group: 'com.github.dogecoin', name: 'libdohj', version: '7e68d7e19b6c28f231418d56fc2ee542e9e40ed5'
+    compile (group: 'org.xrpl', name: 'xrpl4j-model', version:'2.1.0')
+    compile (group: 'org.xrpl', name: 'xrpl4j-keypairs', version:'2.1.0')
 
     compile(group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.63')
 

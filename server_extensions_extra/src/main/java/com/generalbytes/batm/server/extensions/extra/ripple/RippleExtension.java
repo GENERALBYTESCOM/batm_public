@@ -63,6 +63,14 @@ public class RippleExtension extends AbstractExtension{
     }
 
     @Override
+    public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency) {
+        if (CryptoCurrency.XRP.getCode().equals(cryptoCurrency)) {
+            return new RippleWalletGenerator(ctx);
+        }
+        return null;
+    }
+
+    @Override
     public IRateSource createRateSource(String sourceLogin) {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(sourceLogin,":");
