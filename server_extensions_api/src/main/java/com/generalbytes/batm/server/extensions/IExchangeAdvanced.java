@@ -44,4 +44,16 @@ public interface IExchangeAdvanced extends IExchange{
      * @return
      */
     ITask createSellCoinsTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description);
+
+    // not needed to be implemented because when IExchangeAdvanced is implemented these methods from IExchange should be never called
+    @Override
+    default String purchaseCoins(BigDecimal cryptoAmount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
+        throw new UnsupportedOperationException("purchaseCoins should not be needed when IExchangeAdvanced is implemented");
+    }
+
+    @Override
+    default String sellCoins(BigDecimal cryptoAmount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
+        throw new UnsupportedOperationException("sellCoins should not be needed when IExchangeAdvanced is implemented");
+    }
+
 }
