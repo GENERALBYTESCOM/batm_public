@@ -193,7 +193,7 @@ public class RestServiceWebsite {
 
     private Response responseInvalidParameter(List<String> params) {
         Map<String, List<String>> map = new HashMap<>();
-        map.put("Error - missing parameter", params);
+        map.put("missingParameter", params);
         return Response.status(HttpServletResponse.SC_BAD_REQUEST).entity(createJsonString(map)).build();
     }
 
