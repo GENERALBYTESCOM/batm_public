@@ -2,6 +2,7 @@ package com.generalbytes.batm.server.extensions.website;
 
 import com.generalbytes.batm.server.extensions.IApiAccess;
 import com.generalbytes.batm.server.extensions.ITerminal;
+import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,9 +11,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Path("/")
 public class RestServiceWebsite {
@@ -29,21 +28,24 @@ public class RestServiceWebsite {
     @Path("/terminals-with-available-cash")
     @Produces(MediaType.APPLICATION_JSON)
     public Object terminalsWithAvailableCash(@HeaderParam("X-Api-Key") String apiKey, @QueryParam("amount") BigDecimal amount,
-                                             @QueryParam("fiat_currency")
-        String fiatCurrency) {
+                                             @QueryParam("fiat_currency") String fiatCurrency) {
 
         try {
             checkSecurity(apiKey);
+            List<String> params = new ArrayList<>();
             if (amount == null) {
-                responseInvalidParameter("amount");
+                params.add("amount");
             }
-            if (fiatCurrency == null) {
-                responseInvalidParameter("fiat_currency");
+            if (fiatCurrency == null || fiatCurrency.trim().isEmpty()) {
+                params.add("fiat_currency");
             }
-            List<String> serialNumbers = SellExtensions.getExtensionContext().findTerminalsWithAvailableCashForSell(amount, fiatCurrency, null);
+            if (params.size() > 0) {
+                return responseInvalidParameter(params);
+            }
+            List<String> serialNumbers = SellExtension.getExtensionContext().findTerminalsWithAvailableCashForSell(amount, fiatCurrency, null);
             List<ITerminal> filteredTerminals = new ArrayList<>();
             for (String serialNumber : serialNumbers) {
-                ITerminal terminal = SellExtensions.getExtensionContext().findTerminalBySerialNumber(serialNumber);
+                ITerminal terminal = SellExtension.getExtensionContext().findTerminalBySerialNumber(serialNumber);
                 if (isOnline(terminal)) {
                     filteredTerminals.add(terminal);
                 }
@@ -74,19 +76,23 @@ public class RestServiceWebsite {
 
         try {
             checkSecurity(apiKey);
-            if (serialNumber == null) {
-                responseInvalidParameter("serial_number");
+            List<String> params = new ArrayList<>();
+            if (serialNumber == null || serialNumber.trim().isEmpty()) {
+                params.add("serial_number");
             }
             if (fiatAmount == null) {
-                responseInvalidParameter("fiat_amount");
+                params.add("fiat_amount");
             }
-            if (fiatCurrency == null) {
-                responseInvalidParameter("fiat_currency");
+            if (fiatCurrency == null || fiatCurrency.trim().isEmpty()) {
+                params.add("fiat_currency");
             }
-            if (cryptoCurrency == null) {
-                responseInvalidParameter("crypto_currency");
+            if (cryptoCurrency == null || cryptoCurrency.trim().isEmpty()) {
+                params.add("crypto_currency");
             }
-            return SellExtensions.getExtensionContext().sellCrypto(serialNumber, fiatAmount, fiatCurrency, cryptoAmount, cryptoCurrency, identityPublicId, discountCode);
+            if (params.size() > 0) {
+                return responseInvalidParameter(params);
+            }
+            return SellExtension.getExtensionContext().sellCrypto(serialNumber, fiatAmount, fiatCurrency, cryptoAmount, cryptoCurrency, identityPublicId, discountCode);
 
         } catch (AuthenticationException e) {
             return responseInvalidApiKey();
@@ -112,7 +118,7 @@ public class RestServiceWebsite {
             if (transactionId == null) {
                 return Response.status(HttpServletResponse.SC_BAD_REQUEST).entity("{ \"error\": \"Missing parameter transaction_id\" }").build();
             }
-            return SellExtensions.getExtensionContext().findTransactionByTransactionId(transactionId).getStatus();
+            return SellExtension.getExtensionContext().findTransactionByTransactionId(transactionId).getStatus();
         } catch (AuthenticationException e) {
             return responseInvalidApiKey();
         } catch (Throwable e) {
@@ -153,7 +159,7 @@ public class RestServiceWebsite {
         Collection<String> terminals = iApiAccess.getTerminalSerialNumbers();
         List<ITerminal> filteredTerminals = new ArrayList<>();
         terminals.forEach(terminalSerial -> {
-            ITerminal terminal = SellExtensions.getExtensionContext().findTerminalBySerialNumber(terminalSerial);
+            ITerminal terminal = SellExtension.getExtensionContext().findTerminalBySerialNumber(terminalSerial);
             if (isOnline(terminal)) {
                 filteredTerminals.add(terminal);
             }
@@ -178,22 +184,33 @@ public class RestServiceWebsite {
      * @return IApiAccess - Authenticated API key
      */
     private IApiAccess checkSecurity(String apiKey) throws AuthenticationException {
-        IApiAccess iApiAccess = SellExtensions.getExtensionContext().getAPIAccessByKey(apiKey);
+        IApiAccess iApiAccess = SellExtension.getExtensionContext().getAPIAccessByKey(apiKey);
         if (iApiAccess == null) {
             throw new AuthenticationException("Authentication failed");
         }
         return iApiAccess;
     }
 
-    private Response responseInvalidParameter(String paramName) {
-        return Response.status(HttpServletResponse.SC_BAD_REQUEST).entity("{ \"error\": \"Parameter " + paramName + " can't be null\"}").build();
+    private Response responseInvalidParameter(List<String> params) {
+        Map<String, List<String>> map = new HashMap<>();
+        map.put("Error - missing parameter", params);
+        return Response.status(HttpServletResponse.SC_BAD_REQUEST).entity(createJsonString(map)).build();
     }
 
     private Response responseInvalidApiKey() {
-        return Response.status(HttpServletResponse.SC_UNAUTHORIZED).entity("{ \"error\": \"Invalid X-Api-Key\" }").build();
+        Map<String, String> map = new HashMap<>();
+        map.put("error", "Invalid X-Api-Key");
+        return Response.status(HttpServletResponse.SC_UNAUTHORIZED).entity(createJsonString(map)).build();
     }
 
     private Response responseInternalServerError() {
-        return Response.status(HttpServletResponse.SC_INTERNAL_SERVER_ERROR).entity("{ \"error\": \"Internal server error\" }").build();
+        Map<String, String> map = new HashMap<>();
+        map.put("error", "Internal server error");
+        return Response.status(HttpServletResponse.SC_INTERNAL_SERVER_ERROR).entity(createJsonString(map)).build();
+    }
+
+    private String createJsonString(Map map) {
+        Gson converter = new Gson();
+        return converter.toJson(map);
     }
 }

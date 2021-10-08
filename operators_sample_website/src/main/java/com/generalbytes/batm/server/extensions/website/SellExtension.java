@@ -14,7 +14,7 @@ import java.util.Set;
  * You need to enable it in batm-extensions.xml
  */
 
-public class SellExtensions extends AbstractExtension {
+public class SellExtension extends AbstractExtension {
 
     public static IExtensionContext ctx;
 
