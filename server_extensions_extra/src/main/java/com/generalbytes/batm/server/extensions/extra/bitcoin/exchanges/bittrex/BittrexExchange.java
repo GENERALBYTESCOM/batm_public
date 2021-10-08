@@ -443,12 +443,13 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
     }
 
     class PurchaseCoinsTask implements ITask {
-        private long MAXIMUM_TIME_TO_WAIT_FOR_ORDER_TO_FINISH = 5 * 60 * 60 * 1000; //5 hours
+        private static final long MAXIMUM_TIME_TO_WAIT_FOR_ORDER_TO_FINISH = 5 * 60 * 60 * 1000; //5 hours
 
-        private BigDecimal amount;
-        private String cryptoCurrency;
-        private String fiatCurrencyToUse;
-        private String description;
+        private final BigDecimal amount;
+        private final String cryptoCurrency;
+        private final String fiatCurrencyToUse;
+        private final String description;
+        private final long checkTillTime;
 
         private String orderId;
         private String result;
@@ -459,6 +460,7 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
             this.cryptoCurrency = cryptoCurrency;
             this.fiatCurrencyToUse = fiatCurrencyToUse;
             this.description = description;
+            this.checkTillTime = System.currentTimeMillis() + MAXIMUM_TIME_TO_WAIT_FOR_ORDER_TO_FINISH;
         }
 
         @Override
@@ -502,7 +504,6 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
             }
             // get open orders
             boolean orderProcessed = false;
-            long checkTillTime = System.currentTimeMillis() + MAXIMUM_TIME_TO_WAIT_FOR_ORDER_TO_FINISH;
             if (System.currentTimeMillis() > checkTillTime) {
                 log.debug("Giving up on waiting for trade " + orderId + " to complete");
                 finished = true;
@@ -567,12 +568,13 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
     }
 
     class SellCoinsTask implements ITask {
-        private long MAXIMUM_TIME_TO_WAIT_FOR_ORDER_TO_FINISH = 5 * 60 * 60 * 1000; //5 hours
+        private static final long MAXIMUM_TIME_TO_WAIT_FOR_ORDER_TO_FINISH = 5 * 60 * 60 * 1000; //5 hours
 
-        private BigDecimal cryptoAmount;
-        private String cryptoCurrency;
-        private String fiatCurrencyToUse;
-        private String description;
+        private final BigDecimal cryptoAmount;
+        private final String cryptoCurrency;
+        private final String fiatCurrencyToUse;
+        private final String description;
+        private final long checkTillTime;
 
         private String orderId;
         private String result;
@@ -583,6 +585,7 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
             this.cryptoCurrency = cryptoCurrency;
             this.fiatCurrencyToUse = fiatCurrencyToUse;
             this.description = description;
+            this.checkTillTime = System.currentTimeMillis() + MAXIMUM_TIME_TO_WAIT_FOR_ORDER_TO_FINISH;
         }
 
         @Override
@@ -628,7 +631,6 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
             }
             // get open orders
             boolean orderProcessed = false;
-            long checkTillTime = System.currentTimeMillis() + MAXIMUM_TIME_TO_WAIT_FOR_ORDER_TO_FINISH;
             if (System.currentTimeMillis() > checkTillTime) {
                 log.debug("Giving up on waiting for trade " + orderId + " to complete");
                 finished = true;
