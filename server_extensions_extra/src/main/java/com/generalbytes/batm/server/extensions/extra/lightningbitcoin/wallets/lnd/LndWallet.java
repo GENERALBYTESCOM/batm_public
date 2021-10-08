@@ -64,6 +64,8 @@ public class LndWallet extends AbstractLightningWallet {
         if(certHexString != null) {
             config.setSslSocketFactory(HexStringCertTrustManager.getSslSocketFactory(certHexString));
         }
+        config.setHttpConnTimeout(30_000);
+        config.setHttpReadTimeout(45_000);
         this.api = RestProxyFactory.createProxy(LndAPI.class, url, config);
     }
 
