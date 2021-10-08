@@ -881,6 +881,8 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
 
     protected BigDecimal getWithdrawalFee(String cryptoCurrency) {
         Currency exchangeCryptoCurrency = Currency.getInstance(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency));
-        return exchange.getExchangeMetaData().getCurrencies().get(exchangeCryptoCurrency).getWithdrawalFee();
+        BigDecimal withdrawalFee = exchange.getExchangeMetaData().getCurrencies().get(exchangeCryptoCurrency).getWithdrawalFee();
+        log.info("Withdrawal fee: {} {}", withdrawalFee, cryptoCurrency);
+        return withdrawalFee;
     }
 }

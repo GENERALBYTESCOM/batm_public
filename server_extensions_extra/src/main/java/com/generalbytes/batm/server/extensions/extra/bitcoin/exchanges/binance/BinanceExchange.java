@@ -92,13 +92,11 @@ public abstract class BinanceExchange extends XChangeExchange {
     @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
         BigDecimal withdrawalFee = getWithdrawalFee(cryptoCurrency);
-        BigDecimal withdrawalAmount = amount.add(withdrawalFee);
+        amount = amount.add(withdrawalFee);
         if (CryptoCurrency.XRP.getCode().equals(cryptoCurrency)) {
             amount = amount.setScale(6, RoundingMode.FLOOR);
         }
-        log.info("Withdrawing {} + {} withdrawal fee = {} {}", amount, withdrawalFee, withdrawalAmount, cryptoCurrency);
-
-        return super.sendCoins(destinationAddress, withdrawalAmount, cryptoCurrency, description);
+        return super.sendCoins(destinationAddress, amount, cryptoCurrency, description);
     }
 
     protected abstract Set<SupportedCryptoCurrency> getSupportedCryptoCurrencies();
