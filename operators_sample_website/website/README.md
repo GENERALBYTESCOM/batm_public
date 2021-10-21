@@ -1,65 +1,146 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+<p align="center"><a href="https://generalbytes.com" target="_blank"><img src="https://www.generalbytes.com/cdn-4s78g/images/common/logo/GENERAL_BYTES.svg" width="200" alt="gbLogo"></a></p>
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+<p align="center">`
+<a href="https://github.com/GENERALBYTESCOM/batm_public"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status" ></a>
+`</p>
 
-## About Laravel
+## Operators sample website
+<img src="./public/assets/img/homePage.png?raw=true" width="500" alt="homePage">
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Overview
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+**The Operators Sample Website (OSW) is a web application written in PHP and based on the Laravel 8 framework. The application helps your clients pre-arrange the crypto selling process on your General Bytes BATMThree or BATMFour terminals.**
+<p align="center"><a href="https://www.generalbytes.com/en/products/batmfour" target="_blank"><img src="https://www.generalbytes.com/res/crc-30765327/configurator/20210602191011/355x1029/f-Sinc/q90/batm4_dispenser_and_without_cc_reader_and_with_nfc.png" width="200" alt="BATMFour"></a></p>
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-## Learning Laravel
+Advantages of the OSW:
+* On the website, your clients can check the list of available terminals ready to sell their selected cryptocurrency for the required fiat amount.
+* After selecting the preferred terminal, cryptocurrency and fiat amounts, our OSW immediately generates a QR code (account number) for sending crypto. So...you don't have to spend time in front of a terminal waiting for payment acceptance.
+* OSW shows you the transaction status.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Installation on UBUNTU 20.04 server:
 
-## Laravel Sponsors
+** Install PHP & Nginx :**
+```bash
+$ sudo apt install -y php-mbstring php-xml php-fpm php-zip php-common php-cli unzip curl nginx
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+** Install composer: **
+```bash
+$ sudo curl -s https://getcomposer.org/installer | php
+```
+* Move the composer file to the /usr/local/bin path
+```bash
+$ sudo mv composer.phar /usr/local/bin/composer 
+```
+* Assign execute permission
+```bash
+$ sudo chmod +x   /usr/local/bin/composer
+```
+* Check composer installation
+```bash
+$ composer --version
+```
 
-### Premium Partners
+** Install OperatorsSampleWebsite package **
+```bash
+$ composer require GeneralBytes/OperatorsSampleWebsite
+```
+* Navigate to installed folder website and update composer dependecies
+```bash
+$ composer update
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[CMS Max](https://www.cmsmax.com/)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+* Setup constants for CAS url, API_KEY, Banknote denomination and min fiat amount in an interface file IGbCasRestServices.php
+* **path:** Website/App/GBlib/Repositories/IGbCasRestServices.php
 
-## Contributing
+<img src="./public/assets/img/IGbCasRestServices.png?raw=true" width="500" alt="interface"/>
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+* Check api key in your CAS
 
-## Code of Conduct
+<img src="./public/assets/img/apiKey.png?raw=true" width="500" alt="apiKey">
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
-## Security Vulnerabilities
+** Configure Nginx **
+```bash
+  $ sudo chmod -R 755 /var/www/html/example
+  $ sudo chown -R www-data:www-data /var/www/html/example
+```
+* Create an Nginx configuration file
+```bash
+$ sudo nano /etc/nginx/sites-available/example
+```
+* configuration
+```bash
+     server {
+        listen 80;
+        server_name yourservername.com;
+        root /var/www/html/gbapp/public;
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+        add_header X-Frame-Options "SAMEORIGIN";
+      add_header X-Content-Type-Options "nosniff";
 
-## License
+        index index.php;
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+        charset utf-8;
+
+        location / {
+                try_files $uri $uri/ /index.php?$query_string;
+        }
+
+       location = /favicon.ico { access_log off; log_not_found off; }
+       location = /robots.txt  { access_log off; log_not_found off; }
+       error_page 404 /index.php;
+
+       location ~ \.php$ {
+        fastcgi_pass unix:/var/run/php/php8.0-fpm.sock;
+        include snippets/fastcgi-php.conf;
+        include fastcgi_params;
+ 
+       location ~ /\.(?!well-known).* {
+       deny all;
+       }
+    }
+```
+* Enable configuration
+```bash
+$ sudo ln -s /etc/nginx/sites-available/example /etc/nginx/sites-enabled/
+```
+* Restart Nginx
+  $ sudo ln -s /etc/nginx/sites-available/example /etc/nginx/sites-enabled/
+```bash
+  $ sudo systemctl restart nginx
+```
+* Now your website should work  - yourservername.com
+
+## User manual
+* Visit your new Website and select sell button
+
+<img src="./public/assets/img/homePage.png?raw=true" width="500" alt="homePage">
+
+* Fill out amount and select currencies
+
+<img src="./public/assets/img/sellAmountFiatCrypto.png?raw=true" width="500" alt="sellAmountFiatCrypto">
+
+* Select terminal with available cash
+
+<img src="./public/assets/img/terminalsWithAvailableCash.png?raw=true" width="500" alt="terminalsWithAvailableCash">
+
+* Take a photo of the QR code and make a transaction from your crypto wallet
+
+<img src="./public/assets/img/createSellTransaction.png?raw=true" width="500" alt="createSellTransaction">
+
+* Visit the selected terminal to withdraw your fiat currency
+
+<p align="center"><a href="https://www.generalbytes.com/en/products/batmthree" target="_blank"><img src="https://www.generalbytes.com/res/crc-2631124927/products/images/1920x1080/q90/f-Sinc/602845-cg-114-na-image-182.webp" width="400" alt="BATMThree"></a></p>
+
+
+
+
+
+
+
+
+
+
