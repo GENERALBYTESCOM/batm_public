@@ -51,7 +51,6 @@ $ composer require GeneralBytes/OperatorsSampleWebsite
 ```bash
 $ composer update
 ```
-
 * Setup constants for CAS url, API_KEY, Banknote denomination and min fiat amount in an interface file IGbCasRestServices.php
 * **path:** Website/App/GBlib/Repositories/IGbCasRestServices.php
 
