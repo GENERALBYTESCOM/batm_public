@@ -116,6 +116,7 @@ $ sudo nano /etc/nginx/sites-available/example
 ```bash
 $ sudo ln -s /etc/nginx/sites-available/example /etc/nginx/sites-enabled/
 ```
+
 * Restart Nginx
   $ sudo ln -s /etc/nginx/sites-available/example /etc/nginx/sites-enabled/
 ```bash
