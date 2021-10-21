@@ -45,12 +45,22 @@ $ composer --version
 
 ** Install OperatorsSampleWebsite package **
 ```bash
-$ composer require GeneralBytes/OperatorsSampleWebsite
+$ git clone https://github.com/GENERALBYTESCOM/batm_public.git
 ```
-* Navigate to installed folder website and update composer dependecies
+* Navigate to installed folder website /operators_sample_website/website and update composer dependecies
 ```bash
 $ composer update
 ```
+* Update laravel setup
+```bash
+$ php artisan config:clear
+$ php artisan key:generate
+```
+* Check your installation on devel server and click on url http://127.0.0.1:8000
+```bash
+$ php artisan serve
+```
+
 * Setup constants for CAS url, API_KEY, Banknote denomination and min fiat amount in an interface file IGbCasRestServices.php
 * **path:** Website/App/GBlib/Repositories/IGbCasRestServices.php
 
