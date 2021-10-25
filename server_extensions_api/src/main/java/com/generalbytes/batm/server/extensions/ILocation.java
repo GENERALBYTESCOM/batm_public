@@ -29,4 +29,5 @@ public interface ILocation {
     String getGpsLat();
     String getGpsLon();
     String getTimeZone();
+    String getPublicId();
 }

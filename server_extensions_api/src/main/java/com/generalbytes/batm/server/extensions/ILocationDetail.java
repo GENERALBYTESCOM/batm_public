@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2020 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2021 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -15,11 +15,23 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-
 package com.generalbytes.batm.server.extensions;
 
-/**
- * Note entry related to some {@link IIdentity}.
- */
-public interface IIdentityNote extends INote {
+import java.util.List;
+
+public interface ILocationDetail extends ILocation {
+
+    IPerson getContactPerson();
+
+    IOrganization getOrganization();
+
+    Integer getCashCollectionDays();
+
+    String getCashCollectionCompany();
+
+    List<INote> getNotes();
+
+    Integer getTerminalCapacity();
+
+    List<IOpeningHours> getOpeningHours();
 }
