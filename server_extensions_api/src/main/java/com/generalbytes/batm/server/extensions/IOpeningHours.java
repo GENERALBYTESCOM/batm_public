@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2020 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2021 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -15,11 +15,46 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-
 package com.generalbytes.batm.server.extensions;
 
-/**
- * Note entry related to some {@link IIdentity}.
- */
-public interface IIdentityNote extends INote {
+import java.util.Date;
+
+public interface IOpeningHours {
+
+    /**
+     *  Day of the week
+     */
+    OpeningDay getDay();
+
+    /**
+     * Opening time
+     */
+    Date getFrom();
+
+    /**
+     * Closing time
+     */
+    Date getTo();
+
+    /**
+     * True if the day is scheduled for a cash withdrawal.
+     */
+    boolean isCashCollectionDay();
+
+    enum OpeningDay {
+        /**
+         * Used for the first version of the opening hours.
+         * Opening hours are not defined for each day separately.
+         */
+        EVERY,
+
+        MON,
+        TUE,
+        WED,
+        THU,
+        FRI,
+        SAT,
+        SUN
+    }
+
 }

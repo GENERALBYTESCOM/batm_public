@@ -546,4 +546,26 @@ public interface IExtensionContext {
      * @return True only if collectPhoto was successfully requested on all of the specified terminals.
      */
     boolean triggerCollectPhoto(List<String> terminalSerialNumbers);
+
+    /**
+     * Returns detail of Location.
+     * @param locationPublicId - public id of queried Location
+     * @return detail of location
+     */
+    ILocationDetail getLocationByPublicId(String locationPublicId);
+
+    /**
+     * Updates Location.
+     * @param publicId - public id of updated Location
+     * @param location - new state of location to be set
+     * @return updated location
+     */
+    ILocation updateLocationById(String publicId, ILocationDetail location);
+
+    /**
+     * Creates new Location.
+     * @param location - Location to be create
+     * @return created location
+     */
+    ILocation addLocation(ILocationDetail location);
 }
