@@ -21,9 +21,24 @@ import java.util.Date;
 
 public interface IOpeningHours {
 
+    /**
+     *  Day of the week
+     */
     OpeningDay getDay();
+
+    /**
+     * Opening time
+     */
     Date getFrom();
+
+    /**
+     * Closing time
+     */
     Date getTo();
+
+    /**
+     * True if the day is scheduled for a cash withdrawal.
+     */
     boolean isCashCollectionDay();
 
     enum OpeningDay {

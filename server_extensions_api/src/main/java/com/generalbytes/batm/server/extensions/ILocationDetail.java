@@ -19,17 +19,33 @@ package com.generalbytes.batm.server.extensions;
 
 import java.util.List;
 
+/**
+ * Extends ILocation by the remaining attributes to cover the complete functionality of Location.
+ */
 public interface ILocationDetail extends ILocation {
 
     IPerson getContactPerson();
 
+    /**
+     * The organization to which the location belongs.
+     */
     IOrganization getOrganization();
 
     String getCashCollectionCompany();
 
+    /**
+     * @return - list of location notes
+     */
     List<INote> getNotes();
 
+    /**
+     * TerminalCapacity represents how many terminals are allowed to be deployed to this location at the same time.
+     * Locations without free capacity are not shown in terminal location selections.
+     */
     Integer getTerminalCapacity();
 
+    /**
+     * @return - Records about openening hours. Each record represents one day of the week.
+     */
     List<IOpeningHours> getOpeningHours();
 }
