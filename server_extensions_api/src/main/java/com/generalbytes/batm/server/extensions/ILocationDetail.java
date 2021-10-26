@@ -25,8 +25,6 @@ public interface ILocationDetail extends ILocation {
 
     IOrganization getOrganization();
 
-    Integer getCashCollectionDays();
-
     String getCashCollectionCompany();
 
     List<INote> getNotes();

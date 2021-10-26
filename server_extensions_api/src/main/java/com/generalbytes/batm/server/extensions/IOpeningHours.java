@@ -24,6 +24,7 @@ public interface IOpeningHours {
     OpeningDay getDay();
     Date getFrom();
     Date getTo();
+    boolean isCashCollectionDay();
 
     enum OpeningDay {
         /**
