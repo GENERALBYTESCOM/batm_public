@@ -20,17 +20,28 @@ package com.generalbytes.batm.server.extensions.watchlist;
 
 import java.io.Serializable;
 
-
-public class WatchListMatch implements Serializable{
+public class WatchListMatch implements Serializable {
     private int score;
     private String details;
-    private String matchedWatchListName;
+    private String watchlistCode;
+    private String watchlistName;
+    private String partyId;
 
+    /**
+     * @deprecated Will be removed in future. Use
+     *   WatchListMatch(int score, String details, String watchlistCode, String watchlistName, String partyId) instead.
+     */
+    @Deprecated
+    public WatchListMatch(int score, String details, String watchlistName) {
+        this(score, details, null, watchlistName, null);
+    }
 
-    public WatchListMatch(int score, String details, String matchedWatchListName) {
+    public WatchListMatch(int score, String details, String watchlistCode, String watchlistName, String partyId) {
         this.score = score;
         this.details = details;
-        this.matchedWatchListName = matchedWatchListName;
+        this.watchlistCode = watchlistCode;
+        this.watchlistName = watchlistName;
+        this.partyId = partyId;
     }
 
     public int getScore() {
@@ -41,8 +52,24 @@ public class WatchListMatch implements Serializable{
         return details;
     }
 
+    public String getWatchlistCode() {
+        return watchlistCode;
+    }
+
+    public String getWatchlistName() {
+        return watchlistName;
+    }
+
+    /**
+     * @deprecated Will be removed in future. Direct replacement is getWatchlistName().
+     */
+    @Deprecated
     public String getMatchedWatchListName() {
-        return matchedWatchListName;
+        return watchlistName;
+    }
+
+    public String getPartyId() {
+        return partyId;
     }
 
     @Override
@@ -50,7 +77,9 @@ public class WatchListMatch implements Serializable{
         return "WatchlistMatch{" +
                 "score=" + score +
                 ", details='" + details + '\'' +
-                ", matchedWatchListName=" + matchedWatchListName +
+                ", watchlistCode=" + watchlistCode +
+                ", matchedWatchListName=" + watchlistName +
+                ", partyId=" + partyId +
                 '}';
     }
 }

@@ -55,7 +55,7 @@ public abstract class AbstractWatchList<T extends IParsedSanctions> implements I
             final ArrayList<WatchListMatch> matches = new ArrayList<>();
             for (Match match : result) {
                 final String partyIndex = sanctions.getPartyIndexByPartyId(match.getPartyId());
-                matches.add(new WatchListMatch(match.getScore(), "Matched " + sanctionDesc + " Number: " + match.getPartyId() + " partyIndex: " + partyIndex + ". For more details click <a href='" + detailUrl + "'>here</a>.", getName()));
+                matches.add(new WatchListMatch(match.getScore(), "Matched " + sanctionDesc + " Number: " + match.getPartyId() + " partyIndex: " + partyIndex + ". For more details click <a href='" + detailUrl + "'>here</a>.", getId(), getName(), match.getPartyId()));
             }
             return new WatchListResult(matches);
         }
