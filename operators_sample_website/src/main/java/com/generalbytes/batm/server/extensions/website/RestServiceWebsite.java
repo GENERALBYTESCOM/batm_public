@@ -1,5 +1,6 @@
 package com.generalbytes.batm.server.extensions.website;
 
+import com.generalbytes.batm.server.extensions.ThirdPartyType;
 import com.generalbytes.batm.server.extensions.IApiAccess;
 import com.generalbytes.batm.server.extensions.ITerminal;
 import com.google.gson.Gson;
@@ -180,11 +181,11 @@ public class RestServiceWebsite {
     }
 
     /**
-     * @param apiKey - Morphis API key
+     * @param apiKey - key generated in Third Party / Operators sample website (OSW)
      * @return IApiAccess - Authenticated API key
      */
     private IApiAccess checkSecurity(String apiKey) throws AuthenticationException {
-        IApiAccess iApiAccess = SellExtension.getExtensionContext().getAPIAccessByKey(apiKey);
+        IApiAccess iApiAccess = SellExtension.getExtensionContext().getAPIAccessByKey(apiKey, ThirdPartyType.OSW);
         if (iApiAccess == null) {
             throw new AuthenticationException("Authentication failed");
         }

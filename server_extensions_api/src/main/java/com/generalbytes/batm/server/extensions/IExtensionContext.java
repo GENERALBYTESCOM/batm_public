@@ -518,9 +518,10 @@ public interface IExtensionContext {
     /**
      * Authenticate API key
      * @param apiKey apiKey to search for
+     * @param code Enum of the ThirdParty extension type e.g. morphis, osw, everytrade
      * @return null if token is not found or is not valid
      */
-    IApiAccess getAPIAccessByKey(String apiKey);
+    IApiAccess getAPIAccessByKey(String apiKey, ThirdPartyType code);
 
     /**
      * Creates Discount.

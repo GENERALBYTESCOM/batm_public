@@ -270,7 +270,7 @@ public class TestExtensionContext implements IExtensionContext {
     }
 
     @Override
-    public IApiAccess getAPIAccessByKey(String apiKey) {
+    public IApiAccess getAPIAccessByKey(String apiKey, ThirdPartyType type) {
         return null;
     }
 
