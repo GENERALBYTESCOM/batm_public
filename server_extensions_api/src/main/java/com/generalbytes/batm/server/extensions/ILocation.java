@@ -17,6 +17,9 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions;
 
+/**
+ * Basic attributes od Location.
+ */
 public interface ILocation {
     String getName();
     String getContactAddress();
@@ -29,4 +32,5 @@ public interface ILocation {
     String getGpsLat();
     String getGpsLon();
     String getTimeZone();
+    String getPublicId();
 }

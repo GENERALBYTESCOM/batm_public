@@ -288,4 +288,19 @@ public class TestExtensionContext implements IExtensionContext {
     public boolean triggerCollectPhoto(List<String> terminalSerialNumbers) {
         return false;
     }
+
+    @Override
+    public ILocationDetail getLocationByPublicId(String locationPublicId) {
+        return null;
+    }
+
+    @Override
+    public ILocation updateLocationById(String publicId, ILocationDetail location) {
+        return null;
+    }
+
+    @Override
+    public ILocation addLocation(ILocationDetail location) {
+        return null;
+    }
 }
