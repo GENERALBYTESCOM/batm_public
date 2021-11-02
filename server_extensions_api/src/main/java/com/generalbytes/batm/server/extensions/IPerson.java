@@ -23,6 +23,7 @@ import java.util.Date;
  * Person is an entity involved in your BATM network. Can be perceived as a person related to a user account
  */
 public interface IPerson {
+    Long getId();
     String getFirstname();
     String getLastname();
     String getContactEmail();

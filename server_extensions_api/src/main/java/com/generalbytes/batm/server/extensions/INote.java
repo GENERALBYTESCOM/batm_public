@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2020 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2021 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -18,8 +18,41 @@
 
 package com.generalbytes.batm.server.extensions;
 
+import java.util.Date;
+
 /**
- * Note entry related to some {@link IIdentity}.
+ * Note entry related to some {@link IIdentity} or {@link ILocation}.
  */
-public interface IIdentityNote extends INote {
+public interface INote {
+
+    /**
+     * @return note ID
+     */
+    Long getId();
+
+    /**
+     * @return content of the note
+     */
+    String getText();
+
+    /**
+     * @return time of create the note
+     */
+    Date getCreatedAt();
+
+    /**
+     * @return time of delete the note
+     */
+    Date getDeletedAt();
+
+    /**
+     * @return name of the user who created the note
+     */
+    String getUserName();
+
+    /**
+     * @return true if note is marked as deleted
+     */
+    boolean isDeleted();
+
 }
