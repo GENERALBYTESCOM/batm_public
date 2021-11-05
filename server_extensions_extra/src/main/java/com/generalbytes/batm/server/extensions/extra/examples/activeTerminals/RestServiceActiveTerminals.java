@@ -1,6 +1,6 @@
 package com.generalbytes.batm.server.extensions.extra.examples.activeTerminals;
 
-import com.generalbytes.batm.server.extensions.ThirdPartyType;
+import com.generalbytes.batm.server.extensions.ApiAccessType;
 import com.generalbytes.batm.server.extensions.IApiAccess;
 import com.generalbytes.batm.server.extensions.ITerminal;
 import org.slf4j.Logger;
@@ -25,12 +25,12 @@ public class RestServiceActiveTerminals {
     /*
      * https://localhost:7743/extensions/example/active/terminals
      * Returns list of active terminals ( active = pingDelay < 5 min ).
-     * apiKey generated in ThirdParty/Morphis
+     * apiKey key generated in CAS / Third Party / Morphis
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Object terminals(@QueryParam("api_key") String apiKey) {
-        IApiAccess iApiAccess = ActiveTerminalsExtension.getExtensionContext().getAPIAccessByKey(apiKey, ThirdPartyType.MORPHIS.getCode());
+        IApiAccess iApiAccess = ActiveTerminalsExtension.getExtensionContext().getAPIAccessByKey(apiKey, ApiAccessType.MORPHIS);
         if (iApiAccess != null) {
             return getTerminalsByApiKey(iApiAccess);
         }
