@@ -2096,6 +2096,7 @@
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.TransactionExtension" />-->
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.ProfitOverrideExtension" />-->
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.identity.IdentityExampleExtension" />-->
+    <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.location.LocationExampleExtension" />-->
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.identity.ExternalIdentityExampleExtension" />-->
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.watchlists.WatchlistExtension" />-->
     <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.rest.RESTExampleExtension" />-->

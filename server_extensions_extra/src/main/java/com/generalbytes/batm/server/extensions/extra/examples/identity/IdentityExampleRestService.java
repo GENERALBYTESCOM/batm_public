@@ -67,7 +67,7 @@ public class IdentityExampleRestService {
     }
 
     @POST
-    @Path("/register")
+    @Path("/register2")
     @Produces(MediaType.APPLICATION_JSON)
     public String register(@FormParam("fiatCurrency") String fiatCurrency, @FormParam("externalId") String externalId,
                            @FormParam("limit") BigDecimal limit, @FormParam("discount") BigDecimal discount,
