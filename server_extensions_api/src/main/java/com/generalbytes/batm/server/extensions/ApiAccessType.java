@@ -1,7 +1,7 @@
 package com.generalbytes.batm.server.extensions;
 
 /**
- * Third party extension type
+ * Third party api access type
  */
 public enum ApiAccessType {
 
