@@ -26,7 +26,7 @@ public class CaWatchListTest {
         assertEquals(1, result.getMatches().size());
 
         final WatchListMatch match = result.getMatches().iterator().next();
-        assertEquals(caWatchList.getName(), match.getMatchedWatchListName());
+        assertEquals(caWatchList.getName(), match.getWatchlistName());
         assertEquals(100, match.getScore());
         assertTrue(match.getDetails().contains("Number: Zimbabwe/26"));
         assertTrue(match.getDetails().contains("partyIndex: Zimbabwe/26"));

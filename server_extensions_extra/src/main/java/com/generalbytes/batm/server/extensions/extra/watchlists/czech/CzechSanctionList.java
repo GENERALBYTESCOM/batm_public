@@ -92,7 +92,7 @@ public class CzechSanctionList implements IWatchList{
             final ArrayList<WatchListMatch> matches = new ArrayList<>();
             for (Match match : result) {
                 final String partyIndex = sanctions.getPartyIndexByPartyId(match.getPartyId());
-                matches.add(new WatchListMatch(match.getScore(),"Matched Czech Sanction list. PartyIndex: "+ partyIndex + ".",getName()));
+                matches.add(new WatchListMatch(match.getScore(), "Matched Czech Sanction list. PartyIndex: " + partyIndex + ".", getId(), getName(), match.getPartyId()));
             }
             return new WatchListResult(matches);
         }
