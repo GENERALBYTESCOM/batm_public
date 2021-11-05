@@ -26,7 +26,7 @@ public class EUSanctionsListTest {
         assertEquals(1, result.getMatches().size());
 
         final WatchListMatch match = result.getMatches().iterator().next();
-        assertEquals(euSanctionsList.getName(), match.getMatchedWatchListName());
+        assertEquals(euSanctionsList.getName(), match.getWatchlistName());
         assertEquals(100, match.getScore());
         assertTrue(match.getDetails().contains("Number: 391"));
         assertTrue(match.getDetails().contains("partyIndex: 391"));

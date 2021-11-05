@@ -64,7 +64,7 @@ public class CaWatchList extends AbstractWatchList<ParsedSanctions> {
 
     @Override
     protected boolean checkParsing(File xmlFile) {
-        log.debug("Parsing " + xmlFile.getAbsolutePath() + "...");
+        log.debug("Parsing {}...", xmlFile.getAbsolutePath());
         try {
             JAXBContext jc = JAXBContext.newInstance(DataSet.class);
 
