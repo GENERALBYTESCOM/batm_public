@@ -7,6 +7,9 @@ import java.util.Set;
  */
 public interface IParsedSanctions {
 
+    char CHAR_NON_BREAKING_SPACE = 0x00a0;
+    char CHAR_SPACE = 0x0020;
+
     /**
      * Search for match in provided watch list by subject's name.
      *
@@ -23,4 +26,11 @@ public interface IParsedSanctions {
      * @return partyIndex according to implementation
      */
     String getPartyIndexByPartyId(String partyId);
+
+    default String getTrimmedNonNullString(String input) {
+        if (input == null) {
+            return "";
+        }
+        return input.trim();
+    }
 }
