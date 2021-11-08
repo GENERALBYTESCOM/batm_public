@@ -88,9 +88,12 @@ public class ParsedSanctions implements IParsedSanctions {
     private String getPartyId(Record item) {
         String country = fixCountryName(item.getCountry());
         String partyId = country + "/";
-        String schedule = item.getSchedule().replaceAll("[^0-9]+", ".").replaceAll("\\.+$|^\\.+", "");
-        if (!schedule.isEmpty()) {
-            partyId += schedule + "-";
+        String schedule = item.getSchedule();
+        if (schedule != null && !schedule.isEmpty()) {
+            schedule = schedule.replaceAll("[^0-9]+", ".").replaceAll("\\.+$|^\\.+", "");
+            if (!schedule.isEmpty()) {
+                partyId += schedule + "-";
+            }
         }
         partyId += item.getItem();
         return partyId;
@@ -102,7 +105,7 @@ public class ParsedSanctions implements IParsedSanctions {
         if (country.length() > longestCountryNameLength) {
             country = country.replaceFirst("^[^(]*\\((.*)\\).*$", "$1");
         }
-        return country.toLowerCase();
+        return country;
     }
 
     private boolean containsSubstring(String substring, String input) {
