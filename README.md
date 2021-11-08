@@ -52,7 +52,9 @@ Content
 * **server_extensions_api** - contains the extension API that all extensions use to extend CAS' functionality.
 * **server_extensions_extra** - reference extension implementation that demonstrates BTC, LTC, CLOAK, DGB, DASH, HATCH, POT, VIA, BTX, SYS, FLASH, DOGE, NLG, ICG, NBT, GRS, MAX, BSD, MEC, BTDX, NANO, SUM, BURST, ECA, LINDA, $PAC, DAI, MKR, BTBS, MUE, BAT and REP coin support functionality.
 * **server_extensions_test** - contains tester for testing the extensions (CAS not required).
-* **operators_sample_website** -- <a href="https://github.com/GENERALBYTESCOM/batm_public/tree/master/operators_sample_website">The OSW</a> is our new WebApp written in PHP and based on the Laravel framework and its RestServices.
+* **operators_sample_website** - <a href="https://github.com/GENERALBYTESCOM/batm_public/tree/master/operators_sample_website">The OSW</a> is our new WebApp written in PHP and based on the Laravel framework and its RestServices. The application helps your clients pre-arrange the crypto selling process on your General Bytes BATMThree or BATMFour terminals.
+<img src="./operators_sample_website/website/public/assets/img/homePage.png?raw=true" width="300" alt="homePage">
+
 
 
 Note for developers
