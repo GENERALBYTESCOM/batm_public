@@ -137,6 +137,7 @@ public interface IExtensionContext {
      */
     List<IIdentity> findIdentitiesByPhoneNumber(String phoneNumber);
 
+    List<IIdentitySimple> findIdentitiesByPhoneNumberSimple(String phoneNumber);
 
     /**
      * Finds and returns all identities of given state)

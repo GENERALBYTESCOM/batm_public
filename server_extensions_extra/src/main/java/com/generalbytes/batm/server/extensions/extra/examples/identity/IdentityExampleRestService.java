@@ -21,6 +21,7 @@ import com.generalbytes.batm.server.extensions.IExtensionContext;
 import com.generalbytes.batm.server.extensions.IIdentity;
 import com.generalbytes.batm.server.extensions.IIdentityNote;
 import com.generalbytes.batm.server.extensions.IIdentityPiece;
+import com.generalbytes.batm.server.extensions.IIdentitySimple;
 import com.generalbytes.batm.server.extensions.ILimit;
 import com.generalbytes.batm.server.extensions.IRemainingLimit;
 import com.generalbytes.batm.server.extensions.PhoneNumberQueryResult;
