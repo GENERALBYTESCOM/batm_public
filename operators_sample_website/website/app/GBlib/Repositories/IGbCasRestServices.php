@@ -5,7 +5,7 @@ namespace App\GBlib\Repositories;
 interface IGbCasRestServices
 {
 
-    const CAS_URL = 'https://192.168.51.117:7743'; // your Crypto application server url
+    const CAS_URL = 'https://127.0.0.1:7743'; // your Crypto application server url
     const API_KEY = 'PM2TB2IMBVIREBI3C3TIPBUK7CB2BOVAS'; // your Morphis - CAS Api Key
 
     /*
