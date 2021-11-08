@@ -159,7 +159,7 @@ public class ParsedSanctions implements IParsedSanctions {
 
     @Override
     public Set<Match> search(String firstName, String lastName) {
-        String trimmedLastName = getTrimmedNonNullString(firstName);
+        String trimmedLastName = getTrimmedNonNullString(lastName);
         String trimmedFirstName = getTrimmedNonNullString(firstName);
 
         Set<Match> matchedParties = new HashSet<>();
