@@ -26,18 +26,18 @@ public class ParsedSanctions implements IParsedSanctions {
         firstName = getTrimmedNonNullString(firstName);
         lastName = getTrimmedNonNullString(lastName);
 
-        Set<String> candidateParties = new HashSet<>();
         Set<Match> matchedParties = new HashSet<>();
 
         if (firstName.isEmpty()) {
             if (!lastName.isEmpty()) {
                 //search just against last names
-                for (Record record : records) {
-                    if (lastName.equalsIgnoreCase(getTrimmedNonNullString(record.getLastName()))) {
-                        matchedParties.add(new Match(getPartyId(record), 100));
+                for (Record item : records) {
+                    if (lastName.equalsIgnoreCase(getTrimmedNonNullString(item.getLastName()))) {
+                        matchedParties.add(new Match(getPartyId(item), 100));
+                        continue;
                     }
-                    if (containsSubstring(lastName, record.getAliases())) {
-                        matchedParties.add(new Match(getPartyId(record), 50));
+                    if (containsSubstring(lastName, item.getAliases())) {
+                        matchedParties.add(new Match(getPartyId(item), 50));
                     }
                 }
             } else {
@@ -46,24 +46,26 @@ public class ParsedSanctions implements IParsedSanctions {
             }
         } else {
             //search against lastname and firstname
-            for (Record record : records) {
-                if (lastName.equalsIgnoreCase(getTrimmedNonNullString(record.getLastName()))) {
-                    if (firstName.equalsIgnoreCase(record.getGivenName()) || containsSubstring(firstName, record.getGivenName())) {
-                        matchedParties.add(new Match(getPartyId(record), 100));
+            Set<Record> candidateRecords = new HashSet<>();
+            for (Record item : records) {
+                if (lastName.equalsIgnoreCase(getTrimmedNonNullString(item.getLastName()))) {
+                    if (firstName.equalsIgnoreCase(item.getGivenName()) || containsSubstring(firstName, item.getGivenName())) {
+                        matchedParties.add(new Match(getPartyId(item), 100));
                     } else {
-                        candidateParties.add(getPartyId(record));
+                        candidateRecords.add(item);
                     }
+                    continue;
                 }
-                if (containsSubstring(lastName, record.getAliases())) {
-                    candidateParties.add(getPartyId(record));
+                if (containsSubstring(lastName, item.getAliases())) {
+                    candidateRecords.add(item);
                 }
             }
 
             if (matchedParties.isEmpty()) {
                 //neither first name nor last name matched
                 //so lets report at least lastname matches with 50% score/confidence
-                for (String candidateParty : candidateParties) {
-                    matchedParties.add(new Match(candidateParty, 50));
+                for (Record item : candidateRecords) {
+                    matchedParties.add(new Match(getPartyId(item), 50));
                 }
             }
         }
@@ -75,15 +77,35 @@ public class ParsedSanctions implements IParsedSanctions {
         return partyId;
     }
 
-    private String getTrimmedNonNullString(String input) {
+    @Override
+    public String getTrimmedNonNullString(String input) {
         if (input == null) {
             return "";
         }
-        return input.replaceAll("\u00a0", "").trim();
+        return input.replace(CHAR_NON_BREAKING_SPACE, CHAR_SPACE).trim();
     }
 
-    private String getPartyId(Record record) {
-        return record.getCountry() + "/" + record.getItem();
+    private String getPartyId(Record item) {
+        String country = fixCountryName(item.getCountry());
+        String partyId = country + "/";
+        String schedule = item.getSchedule();
+        if (schedule != null && !schedule.isEmpty()) {
+            schedule = schedule.replaceAll("[^0-9]+", ".").replaceAll("\\.+$|^\\.+", "");
+            if (!schedule.isEmpty()) {
+                partyId += schedule + "-";
+            }
+        }
+        partyId += item.getItem();
+        return partyId;
+    }
+
+    private String fixCountryName(String countryRaw) {
+        String country = countryRaw.split("/")[0].trim();
+        int longestCountryNameLength = 57;
+        if (country.length() > longestCountryNameLength) {
+            country = country.replaceFirst("^[^(]*\\((.*)\\).*$", "$1");
+        }
+        return country;
     }
 
     private boolean containsSubstring(String substring, String input) {

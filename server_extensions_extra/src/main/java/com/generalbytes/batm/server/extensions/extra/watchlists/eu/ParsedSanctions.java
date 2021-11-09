@@ -46,68 +46,83 @@ public class ParsedSanctions implements IParsedSanctions {
 
     @Override
     public Set<Match> search(String firstName, String lastName) {
-        if (firstName == null) {
-            firstName = "";
-        }
-        if (lastName == null) {
-            lastName = "";
-        }
-
-        lastName = lastName.trim();
-        firstName = firstName.trim();
-
-        Set<String> candidateParties = new HashSet<>();
-        Set<Match> matchedParties = new HashSet<>();
+        firstName = getTrimmedNonNullString(firstName);
+        lastName = getTrimmedNonNullString(lastName);
 
         if (firstName.isEmpty()) {
-            if (!lastName.isEmpty()) {
-                //search just against last names
-                for (NameAliasType alias : aliases) {
-                    if (alias.getLastName().trim().equalsIgnoreCase(lastName)) {
-                        matchedParties.add(new Match(alias.getLogicalId() + "", 100));
-                    } else if (alias.getWholeName().trim().equalsIgnoreCase(lastName)) {
-                        matchedParties.add(new Match(alias.getLogicalId() + "", 100));
-                    }
-                }
-            }else {
-                //only entity name
-                return matchedParties;
-            }
-        }else {
-            //search against lastname and firstname
-            for (NameAliasType alias : aliases) {
-                boolean addedMatch = false;
-                //check against whole name
-                if (!alias.getWholeName().trim().isEmpty()) {
-                    if (alias.getWholeName().equalsIgnoreCase(firstName + " " + lastName)) {
-                        matchedParties.add(new Match(alias.getLogicalId() + "", 100));
-                        addedMatch = true;
-                    } else if (alias.getWholeName().equalsIgnoreCase(lastName)) {
-                        matchedParties.add(new Match(alias.getLogicalId() + "", 50));
-                        addedMatch = true;
-                    }
-                }
-                //check against lastname and first name
-                if (!addedMatch) {
-                    if (!(alias.getFirstName().trim().isEmpty() && alias.getLastName().trim().isEmpty())) { // if both are not empty
-                        if (alias.getLastName().trim().equalsIgnoreCase(lastName)) {
-                            if (alias.getFirstName().trim().equalsIgnoreCase(firstName)) {
-                                //ok seems like we have a winner
-                                matchedParties.add(new Match(alias.getLogicalId() + "", 100));
-                            } else {
-                                candidateParties.add(alias.getLogicalId() + "");
-                            }
-                        }
-                    }
-                }
-            }
+            return searchAgainstLastNameOnly(lastName);
+        } else {
+            return searchAgainstFullName(firstName, lastName);
+        }
+    }
 
-            if (matchedParties.isEmpty()) {
-                //both first name and last name didn't match
-                //so lets report at least lastname matches with 50% score/confidence
-                for (String candidateParty : candidateParties) {
-                    matchedParties.add(new Match(candidateParty,50));
+    private Set<Match> searchAgainstFullName(String firstName, String lastName) {
+        Set<String> candidateParties = new HashSet<>();
+        Set<Match> matchedParties = new HashSet<>();
+        for (NameAliasType alias : aliases) {
+            String trimmedAliasWholeName = alias.getWholeName().trim();
+            if (!trimmedAliasWholeName.isEmpty()) {
+                int score = checkAgainstWholeName(firstName, lastName, trimmedAliasWholeName);
+                if (score > 0) {
+                    matchedParties.add(new Match(alias.getLogicalId() + "", score));
+                    continue;
                 }
+            }
+            checkAgainstFirstAndLastName(firstName, lastName, candidateParties, matchedParties, alias);
+        }
+
+        return finalizeMatches(candidateParties, matchedParties);
+    }
+
+    private int checkAgainstWholeName(String firstName, String lastName, String trimmedAliasWholeName) {
+        int score = 0;
+        if (trimmedAliasWholeName.equalsIgnoreCase(firstName + " " + lastName)) {
+            score = 100;
+        } else if (trimmedAliasWholeName.equalsIgnoreCase(lastName)) {
+            score = 50;
+        }
+        return score;
+    }
+
+    private void checkAgainstFirstAndLastName(String firstName, String lastName, Set<String> candidateParties, Set<Match> matchedParties, NameAliasType alias) {
+        String trimmedAliasLastName = alias.getLastName().trim();
+        String trimmedAliasFirstName = alias.getFirstName().trim();
+        if (
+            !(trimmedAliasFirstName.isEmpty() && trimmedAliasLastName.isEmpty()) // if neither are empty
+            && trimmedAliasLastName.equalsIgnoreCase(lastName)
+        ) {
+            if (trimmedAliasFirstName.equalsIgnoreCase(firstName)) {
+                //ok seems like we have a winner
+                matchedParties.add(new Match(alias.getLogicalId() + "", 100));
+            } else {
+                candidateParties.add(alias.getLogicalId() + "");
+            }
+        }
+    }
+
+    private Set<Match> finalizeMatches(Set<String> candidateParties, Set<Match> matchedParties) {
+        if (matchedParties.isEmpty()) {
+            //both first name and last name didn't match
+            //so lets report at least lastname matches with 50% score/confidence
+            for (String candidateParty : candidateParties) {
+                matchedParties.add(new Match(candidateParty, 50));
+            }
+        }
+        return matchedParties;
+    }
+
+    private Set<Match> searchAgainstLastNameOnly(String lastName) {
+        Set<Match> matchedParties = new HashSet<>();
+        if (lastName.isEmpty()) {
+            return matchedParties;
+        }
+        //search just against last names
+        for (NameAliasType alias : aliases) {
+            if (
+                alias.getLastName().trim().equalsIgnoreCase(lastName)
+                || alias.getWholeName().trim().equalsIgnoreCase(lastName)
+            ) {
+                matchedParties.add(new Match(alias.getLogicalId() + "", 100));
             }
         }
         return matchedParties;

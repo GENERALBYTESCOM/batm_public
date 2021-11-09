@@ -159,60 +159,46 @@ public class ParsedSanctions implements IParsedSanctions {
 
     @Override
     public Set<Match> search(String firstName, String lastName) {
-        if (firstName == null) {
-            firstName = "";
-        }
-        if (lastName == null) {
-            lastName = "";
-        }
+        String trimmedLastName = getTrimmedNonNullString(lastName);
+        String trimmedFirstName = getTrimmedNonNullString(firstName);
 
-        lastName = lastName.trim();
-        firstName = firstName.trim();
-
-        Set<String> candidateParties = new HashSet<>();
         Set<Match> matchedParties = new HashSet<>();
+        Set<String> candidateParties = new HashSet<>();
 
-
-        if (firstName.isEmpty()) {
-            //search just against last names
-            List<ParsedNamePart> parsedNameParts = nameParts.get(TYPE_LAST_NAME);
-            if (parsedNameParts != null) {
-                for (ParsedNamePart namePart : parsedNameParts) {
-                    if (namePart.getValue().trim().equalsIgnoreCase(lastName)) {
-                        matchedParties.add(new Match(namePart.getPartyId(), 100));
-                    }
+        // begin with last name
+        List<ParsedNamePart> parsedNameParts = nameParts.get(TYPE_LAST_NAME);
+        if (parsedNameParts != null) {
+            for (ParsedNamePart namePart : parsedNameParts) {
+                if (namePart.getValue().trim().equalsIgnoreCase(trimmedLastName)) {
+                    candidateParties.add(namePart.getPartyId());
                 }
             }
-        } else {
-            //search against lastname and firstname
-            List<ParsedNamePart> parsedNameParts = nameParts.get(TYPE_LAST_NAME);
-            if (parsedNameParts != null) {
-                for (ParsedNamePart namePart : parsedNameParts) {
-                    if (namePart.getValue().trim().equalsIgnoreCase(lastName)) {
-                        candidateParties.add(namePart.getPartyId());
-                    }
+        }
+        if (trimmedFirstName.isEmpty()) { // only last name filled in -> w
+            for (String partyId : candidateParties) {
+                matchedParties.add(new Match(partyId, 100));
+            }
+            return matchedParties;
+        }
+
+        // continue with first name
+        parsedNameParts = nameParts.get(TYPE_FIRST_NAME);
+        if (parsedNameParts != null) {
+            for (ParsedNamePart namePart : parsedNameParts) {
+                if (
+                    candidateParties.contains(namePart.getPartyId())
+                    && namePart.getValue().trim().equalsIgnoreCase(trimmedFirstName)
+                ) { //ok seems like we have a winner
+                    matchedParties.add(new Match(namePart.getPartyId(), 100));
                 }
             }
+        }
 
-
-            parsedNameParts = nameParts.get(TYPE_FIRST_NAME);
-            if (parsedNameParts != null) {
-                for (ParsedNamePart namePart : parsedNameParts) {
-                    if (candidateParties.contains(namePart.getPartyId())) {
-                        if (namePart.getValue().trim().equalsIgnoreCase(firstName)) {
-                            //ok seems like we have a winner
-                            matchedParties.add(new Match(namePart.getPartyId(), 100));
-                        }
-                    }
-                }
-            }
-
-            if (matchedParties.size() == 0) {
-                //both first name and last name didn't match
-                //so lets report at least lastname matches with 50% score/confidence
-                for (String candidateParty : candidateParties) {
-                    matchedParties.add(new Match(candidateParty, 50));
-                }
+        if (matchedParties.isEmpty()) {
+            //both first name and last name didn't match
+            //so lets report at least lastname matches with 50% score/confidence
+            for (String partyId : candidateParties) {
+                matchedParties.add(new Match(partyId, 50));
             }
         }
         return matchedParties;

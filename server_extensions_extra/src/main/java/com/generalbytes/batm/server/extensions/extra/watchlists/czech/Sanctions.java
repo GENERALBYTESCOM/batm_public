@@ -17,6 +17,7 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.watchlists.czech;
 
+import com.generalbytes.batm.server.extensions.extra.watchlists.IParsedSanctions;
 import com.generalbytes.batm.server.extensions.extra.watchlists.Match;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Sanctions {
+public class Sanctions implements IParsedSanctions {
     private List<Record> records = new ArrayList<>();
     private static final int INDIVIDUAL = 0;
     private static final int ENTITY = 1;
@@ -118,17 +119,15 @@ public class Sanctions {
         records.add(new Record("E18","http://www.mfcr.cz/cps/rde/xbcr/mfcr/NV_88_2009.pdf","Ulster Defence Association/Ulster Freedom Fighters, UDA/UFF, Ulsterské obranné sdružení/Ulsterští bojovníci za svobodu"));
     }
     public Set<Match> search(String entityName) {
-        Set<Match> matchedParties = new HashSet<Match>();
+        Set<Match> matchedParties = new HashSet<>();
 
         entityName = entityName.trim();
-        for (int i = 0; i < records.size(); i++) {
-            Record record = records.get(i);
-            if (record.type == ENTITY) {
-                String[] names = record.names;
-                for (int j = 0; j < names.length; j++) {
-                    String name = names[j];
+        for (Record item : records) {
+            if (item.type == ENTITY) {
+                String[] names = item.names;
+                for (String name : names) {
                     if (name.trim().equalsIgnoreCase(entityName)) {
-                        matchedParties.add(new Match(record.id,100));
+                        matchedParties.add(new Match(item.id,100));
                         break;
                     }
                 }
@@ -138,48 +137,38 @@ public class Sanctions {
     }
 
     public Set<Match> search(String firstName, String lastName) {
-        if (firstName == null) {
-            firstName = "";
-        }
-        if (lastName == null) {
-            lastName = "";
-        }
-        lastName = lastName.trim();
-        firstName = firstName.trim();
+        firstName = getTrimmedNonNullString(firstName);
+        lastName = getTrimmedNonNullString(lastName);
 
-        Set<String> candidateParties = new HashSet<String>();
-        Set<Match> matchedParties = new HashSet<Match>();
-
+        Set<String> candidateParties = new HashSet<>();
+        Set<Match> matchedParties = new HashSet<>();
 
         if (firstName.isEmpty()) {
             //search just against last names
 
-            for (int i = 0; i < records.size(); i++) {
-                Record record = records.get(i);
-                if (record.type == INDIVIDUAL && record.lastName.trim().equalsIgnoreCase(lastName)) {
-                    matchedParties.add(new Match(record.id,100));
+            for (Record item : records) {
+                if (item.type == INDIVIDUAL && item.lastName.trim().equalsIgnoreCase(lastName)) {
+                    matchedParties.add(new Match(item.id,100));
                 }
             }
         }else {
             //search against lastname and firstname
-            for (int i = 0; i < records.size(); i++) {
-                Record record = records.get(i);
-                if (record.type == INDIVIDUAL && record.lastName.trim().equalsIgnoreCase(lastName)) {
-                    candidateParties.add(record.id);
+            for (Record item : records) {
+                if (item.type == INDIVIDUAL && item.lastName.trim().equalsIgnoreCase(lastName)) {
+                    candidateParties.add(item.id);
                 }
             }
 
-            for (int i = 0; i < records.size(); i++) {
-                Record record = records.get(i);
-                if (record.type == INDIVIDUAL && record.firstName.trim().equalsIgnoreCase(firstName)) {
-                    if (candidateParties.contains(record.id)) {
+            for (Record item : records) {
+                if (item.type == INDIVIDUAL && item.firstName.trim().equalsIgnoreCase(firstName)) {
+                    if (candidateParties.contains(item.id)) {
                         //ok seems like we have a winner
-                        matchedParties.add(new Match(record.id,100));
+                        matchedParties.add(new Match(item.id,100));
                     }
                 }
             }
 
-            if (matchedParties.size() == 0) {
+            if (matchedParties.isEmpty()) {
                 //both first name and last name didn't match
                 //so lets report at least lastname matches with 50% score/confidence
                 for (String candidateParty : candidateParties) {
