@@ -32,5 +32,9 @@ public class CaWatchListTest {
         assertEquals("Zimbabwe/26", match.getPartyId());
         assertTrue(match.getDetails().contains("Number: Zimbabwe/26"));
         assertTrue(match.getDetails().contains("partyIndex: Zimbabwe/26"));
+
+        final WatchListResult scheduleNumberPartyIdResult = caWatchList.search(new WatchListQuery("Jumah", "Al-Ahmad"));
+        final WatchListMatch scheduleNumberPartyIdMatch = scheduleNumberPartyIdResult.getMatches().iterator().next();
+        assertEquals("Syria/2-60", scheduleNumberPartyIdMatch.getPartyId());
     }
 }
