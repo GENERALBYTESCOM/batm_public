@@ -20,7 +20,12 @@ package com.generalbytes.batm.server.extensions;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public interface IIdentitySimple {
+/**
+ * Representation of Identity. Identity is your customer, or more specifically, the detail about your customer.
+ * Every transaction is initiated by an Identity, but how you treat that information is determined by your requirements.
+ * This interface represents only basic attributes. To obtain all entity data including related collections see {@link IIdentity}.
+ */
+public interface IIdentityBase {
 
     int STATE_NOT_REGISTERED = 0;
     int STATE_REGISTERED = 1;
@@ -145,11 +150,9 @@ public interface IIdentitySimple {
     boolean isWatchListBanned();
 
     /**
-     * Deprecated, use {@link IIdentity#getNotes()} instead.
+     * Returns organization to which identity belongs.
      *
-     * @return Single note related to identity
+     * @return {@link IOrganization}
      */
-    @Deprecated
-    String getNote();
-
+    IOrganization getOrganization();
 }

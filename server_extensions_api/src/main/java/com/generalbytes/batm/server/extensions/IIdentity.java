@@ -23,7 +23,7 @@ import java.util.List;
  * Representation of Identity. Identity is your customer, or more specifically, the detail about your customer.
  * Every transaction is initiated by an Identity, but how you treat that information is determined by your requirements.
  */
-public interface IIdentity extends IIdentitySimple {
+public interface IIdentity extends IIdentityBase {
 
 
     /**
@@ -130,9 +130,10 @@ public interface IIdentity extends IIdentitySimple {
     String getConfigurationCashCurrency();
 
     /**
-     * Returns organization to which identity belongs.
+     * Deprecated, use {@link IIdentity#getNotes()} instead.
      *
-     * @return {@link IOrganization}
+     * @return Single note related to identity
      */
-    IOrganization getOrganization();
+    @Deprecated
+    String getNote();
 }

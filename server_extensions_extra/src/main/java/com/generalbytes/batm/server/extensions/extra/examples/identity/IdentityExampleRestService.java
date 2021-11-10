@@ -21,7 +21,7 @@ import com.generalbytes.batm.server.extensions.IExtensionContext;
 import com.generalbytes.batm.server.extensions.IIdentity;
 import com.generalbytes.batm.server.extensions.IIdentityNote;
 import com.generalbytes.batm.server.extensions.IIdentityPiece;
-import com.generalbytes.batm.server.extensions.IIdentitySimple;
+import com.generalbytes.batm.server.extensions.IIdentityBase;
 import com.generalbytes.batm.server.extensions.ILimit;
 import com.generalbytes.batm.server.extensions.IRemainingLimit;
 import com.generalbytes.batm.server.extensions.PhoneNumberQueryResult;
@@ -67,17 +67,6 @@ public class IdentityExampleRestService {
                            @FormParam("contactCity") String contactCity, @FormParam("contactAddress") String contactAddress,
                            @FormParam("dateOfBirth") String dateOfBirth, @FormParam("occupation") String occupation,
                            @FormParam("ssn") String ssn) throws ParseException {
-
-        return registerInner(fiatCurrency, externalId, limit, discount, terminalSerialNumber, note, phoneNumber,
-            firstName, lastName, emailAddress, idCardNumber, documentValidToYYYYMMDD, contactZIP, contactCountry, contactCountryIso2,
-            contactProvince, contactCity, contactAddress, dateOfBirth, occupation, ssn);
-    }
-
-    public String registerInner(String fiatCurrency, String externalId, BigDecimal limit, BigDecimal discount,
-                                String terminalSerialNumber, String note, String phoneNumber, String firstName,
-                                String lastName, String emailAddress, String idCardNumber, String documentValidToYYYYMMDD,
-                                String contactZIP, String contactCountry, String contactCountryIso2, String contactProvince,
-                                String contactCity, String contactAddress, String dateOfBirth, String occupation, String ssn) throws ParseException {
 
         IExtensionContext ctx = IdentityExampleExtension.getExtensionContext();
         List<ILimit> limits = Arrays.asList(new LimitExample(fiatCurrency, limit));
@@ -159,10 +148,10 @@ public class IdentityExampleRestService {
         return ctx.getIdentityRemainingLimits(fiatCurrency, terminalSerialNumber, identityPublicId);
     }
 
-    // curl -k -XPOST https://localhost:7743/extensions/identity-example/findidentitiesbyphonenumber?phoneNumber=%2B420608123555
-    // curl -k -XPOST https://localhost:7743/extensions/identity-example/findidentitiesbyphonenumber?phoneNumber=608123555&country=CZ
+    // curl -k -XPOST https://localhost:7743/extensions/identity-example/find-identities-by-phone-number?phoneNumber=%2B420608123555
+    // curl -k -XPOST https://localhost:7743/extensions/identity-example/find-identities-by-phone-number?phoneNumber=608123555&country=CZ
     @POST
-    @Path("/findidentitiesbyphonenumber")
+    @Path("/find-identities-by-phone-number")
     @Produces(MediaType.APPLICATION_JSON)
     public List<IIdentity> findIdentitiesByPhoneNumber(@QueryParam("phoneNumber") String phoneNumber, @QueryParam("country") String country) {
         IExtensionContext ctx = IdentityExampleExtension.getExtensionContext();
@@ -184,22 +173,22 @@ public class IdentityExampleRestService {
         return identities;
     }
 
-    // curl -k -XPOST https://localhost:7743/extensions/identity-example/findidentitiesbyphonenumbersimple?phoneNumber=%2B420608123555
-    // curl -k -XPOST https://localhost:7743/extensions/identity-example/findidentitiesbyphonenumbersimple?phoneNumber=608123555&country=CZ
+    // curl -k -XPOST https://localhost:7743/extensions/identity-example/find-identities-base-by-phone-number?phoneNumber=%2B420608123555
+    // curl -k -XPOST https://localhost:7743/extensions/identity-example/find-identities-base-by-phone-number?phoneNumber=608123555&country=CZ
     @POST
-    @Path("/findidentitiesbyphonenumbersimple")
+    @Path("/find-identities-base-by-phone-number")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<IIdentitySimple> findIdentitiesByPhoneNumberSimple(@QueryParam("phoneNumber") String phoneNumber, @QueryParam("country") String country) {
+    public List<IIdentityBase> findIdentitiesBaseByPhoneNumber(@QueryParam("phoneNumber") String phoneNumber, @QueryParam("country") String country) {
         IExtensionContext ctx = IdentityExampleExtension.getExtensionContext();
 
-        log.debug("Call findIdentitiesByPhoneNumberSimple phoneNumber='{}' country='{}'", phoneNumber, country);
+        log.debug("Call findIdentitiesBaseByPhoneNumber phoneNumber='{}' country='{}'", phoneNumber, country);
 
         long before = System.nanoTime();
-        List<IIdentitySimple> identities;
+        List<IIdentityBase> identities;
         if (country == null) {
-            identities = ctx.findIdentitiesByPhoneNumberSimple(phoneNumber);
+            identities = ctx.findIdentitiesBaseByPhoneNumber(phoneNumber);
         } else {
-            identities = ctx.findIdentitiesByPhoneNumberSimple(phoneNumber, country);
+            identities = ctx.findIdentitiesBaseByPhoneNumber(phoneNumber, country);
         }
         long after = System.nanoTime();
         long duration = TimeUnit.NANOSECONDS.toMillis(after - before);

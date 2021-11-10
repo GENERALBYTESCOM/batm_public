@@ -140,9 +140,9 @@ public interface IExtensionContext {
     /**
      * Finds and returns identity based on provided phone number. This number has to be in international format (leading +countrycode is required)
      * @param phoneNumber
-     * @return List of simplified identities (with only basic attributes without collections)
+     * @return List of identities (with only basic attributes without related data represented by collections)
      */
-    List<IIdentitySimple> findIdentitiesByPhoneNumberSimple(String phoneNumber);
+    List<IIdentityBase> findIdentitiesBaseByPhoneNumber(String phoneNumber);
 
     /**
      * Finds and returns all identities of given state)
@@ -173,9 +173,9 @@ public interface IExtensionContext {
      *
      * @param phoneNumber phone number
      * @param countryCode ISO 3166 Alpha-2 code
-     * @return List of simplified identities (with only basic attributes without collections)
+     * @return List of identities (with only basic attributes without related data represented by collections)
      */
-    List<IIdentitySimple> findIdentitiesByPhoneNumberSimple(String phoneNumber, String countryCode);
+    List<IIdentityBase> findIdentitiesBaseByPhoneNumber(String phoneNumber, String countryCode);
 
     /**
      * @param documentNumber
