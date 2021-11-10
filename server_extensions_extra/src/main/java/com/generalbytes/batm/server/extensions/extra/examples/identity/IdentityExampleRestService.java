@@ -25,11 +25,14 @@ import com.generalbytes.batm.server.extensions.IIdentitySimple;
 import com.generalbytes.batm.server.extensions.ILimit;
 import com.generalbytes.batm.server.extensions.IRemainingLimit;
 import com.generalbytes.batm.server.extensions.PhoneNumberQueryResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -40,33 +43,15 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 @Path("/")
 public class IdentityExampleRestService {
 
+    private static final Logger log = LoggerFactory.getLogger(IdentityExampleRestService.class);
+
     // Uncomment this example in ***batm-extensions.xml*** and call it for example with:
     // curl -k -XPOST https://localhost:7743/extensions/identity-example/register -d "terminalSerialNumber=BT102239&externalId=EXTID0001&fiatCurrency=USD&limit=1000000&discount=100&phoneNumber=+12065550100&firstName=Chuck&lastName=Norris&emailAddress=chucknorrisfans@hotmail.com&idCardNumber=123456&contactZIP=77868&contactCountry=United States&contactProvince=TX&contactCity=Navasota&contactAddress=4360 Lone Wolf Ranch Road&dateOfBirth=12/31/1999"
-
-    @POST
-    @Path("/register")
-    @Produces(MediaType.APPLICATION_JSON)
-    public String register(@FormParam("fiatCurrency") String fiatCurrency, @FormParam("externalId") String externalId,
-                           @FormParam("limit") BigDecimal limit, @FormParam("discount") BigDecimal discount,
-                           @FormParam("terminalSerialNumber") String terminalSerialNumber, @FormParam("note") String note,
-                           @FormParam("phoneNumber") String phoneNumber, @FormParam("firstName") String firstName,
-                           @FormParam("lastName") String lastName, @FormParam("emailAddress") String emailAddress,
-                           @FormParam("idCardNumber") String idCardNumber, @FormParam("documentValidToYYYYMMDD") String documentValidToYYYYMMDD,
-                           @FormParam("contactZIP") String contactZIP,
-                           @FormParam("contactCountry") String contactCountry, @FormParam("contactCountryIso2") String contactCountryIso2,
-                           @FormParam("contactProvince") String contactProvince,
-                           @FormParam("contactCity") String contactCity, @FormParam("contactAddress") String contactAddress,
-                           @FormParam("dateOfBirth") String dateOfBirth) throws ParseException {
-
-        return registerInner(fiatCurrency, externalId, limit, discount, terminalSerialNumber, note, phoneNumber,
-            firstName, lastName, emailAddress, idCardNumber, documentValidToYYYYMMDD, contactZIP, contactCountry, contactCountryIso2,
-            contactProvince, contactCity, contactAddress, dateOfBirth, null, null);
-    }
-
     @POST
     @Path("/register")
     @Produces(MediaType.APPLICATION_JSON)
@@ -87,7 +72,6 @@ public class IdentityExampleRestService {
             firstName, lastName, emailAddress, idCardNumber, documentValidToYYYYMMDD, contactZIP, contactCountry, contactCountryIso2,
             contactProvince, contactCity, contactAddress, dateOfBirth, occupation, ssn);
     }
-
 
     public String registerInner(String fiatCurrency, String externalId, BigDecimal limit, BigDecimal discount,
                                 String terminalSerialNumber, String note, String phoneNumber, String firstName,
@@ -173,6 +157,55 @@ public class IdentityExampleRestService {
         IExtensionContext ctx = IdentityExampleExtension.getExtensionContext();
 
         return ctx.getIdentityRemainingLimits(fiatCurrency, terminalSerialNumber, identityPublicId);
+    }
+
+    // curl -k -XPOST https://localhost:7743/extensions/identity-example/findidentitiesbyphonenumber?phoneNumber=%2B420608123555
+    // curl -k -XPOST https://localhost:7743/extensions/identity-example/findidentitiesbyphonenumber?phoneNumber=608123555&country=CZ
+    @POST
+    @Path("/findidentitiesbyphonenumber")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<IIdentity> findIdentitiesByPhoneNumber(@QueryParam("phoneNumber") String phoneNumber, @QueryParam("country") String country) {
+        IExtensionContext ctx = IdentityExampleExtension.getExtensionContext();
+
+        log.debug("Call findIdentitiesByPhoneNumber phoneNumber='{}' country='{}'", phoneNumber, country);
+
+        long before = System.nanoTime();
+        List<IIdentity> identities;
+        if (country == null) {
+            identities = ctx.findIdentitiesByPhoneNumber(phoneNumber);
+        } else {
+            identities = ctx.findIdentitiesByPhoneNumber(phoneNumber, country);
+        }
+
+        long after = System.nanoTime();
+        long duration = TimeUnit.NANOSECONDS.toMillis(after - before);
+        log.debug("Found {} identities for phone number '{}' in {} milliseconds", identities.size(), phoneNumber, duration);
+
+        return identities;
+    }
+
+    // curl -k -XPOST https://localhost:7743/extensions/identity-example/findidentitiesbyphonenumbersimple?phoneNumber=%2B420608123555
+    // curl -k -XPOST https://localhost:7743/extensions/identity-example/findidentitiesbyphonenumbersimple?phoneNumber=608123555&country=CZ
+    @POST
+    @Path("/findidentitiesbyphonenumbersimple")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<IIdentitySimple> findIdentitiesByPhoneNumberSimple(@QueryParam("phoneNumber") String phoneNumber, @QueryParam("country") String country) {
+        IExtensionContext ctx = IdentityExampleExtension.getExtensionContext();
+
+        log.debug("Call findIdentitiesByPhoneNumberSimple phoneNumber='{}' country='{}'", phoneNumber, country);
+
+        long before = System.nanoTime();
+        List<IIdentitySimple> identities;
+        if (country == null) {
+            identities = ctx.findIdentitiesByPhoneNumberSimple(phoneNumber);
+        } else {
+            identities = ctx.findIdentitiesByPhoneNumberSimple(phoneNumber, country);
+        }
+        long after = System.nanoTime();
+        long duration = TimeUnit.NANOSECONDS.toMillis(after - before);
+        log.debug("Found {} identities for phone number '{}' in {} milliseconds", identities.size(), phoneNumber, duration);
+
+        return identities;
     }
 
 }

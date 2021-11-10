@@ -85,6 +85,11 @@ public class TestExtensionContext implements IExtensionContext {
     }
 
     @Override
+    public List<IIdentitySimple> findIdentitiesByPhoneNumberSimple(String phoneNumber) {
+        return null;
+    }
+
+    @Override
     public List<IIdentity> findAllIdentitiesByState(int state) {
         return null;
     }
@@ -96,6 +101,11 @@ public class TestExtensionContext implements IExtensionContext {
 
     @Override
     public List<IIdentity> findIdentitiesByPhoneNumber(String phoneNumber, String countryCode) {
+        return null;
+    }
+
+    @Override
+    public List<IIdentitySimple> findIdentitiesByPhoneNumberSimple(String phoneNumber, String countryCode) {
         return null;
     }
 
