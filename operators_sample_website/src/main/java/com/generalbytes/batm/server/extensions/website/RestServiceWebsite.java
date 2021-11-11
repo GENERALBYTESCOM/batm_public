@@ -1,5 +1,6 @@
 package com.generalbytes.batm.server.extensions.website;
 
+import com.generalbytes.batm.server.extensions.ApiAccessType;
 import com.generalbytes.batm.server.extensions.IApiAccess;
 import com.generalbytes.batm.server.extensions.ITerminal;
 import com.google.gson.Gson;
@@ -21,7 +22,7 @@ public class RestServiceWebsite {
     /**
      * https://localhost:7743/extensions/website/terminals_with_available_cash
      *
-     * @param apiKey Morphis API key
+     * @param apiKey - key generated in CAS / Third Party / Operators sample website (OSW)
      * @return list of terminals that have specified cash available for sell transactions.
      */
     @GET
@@ -63,7 +64,7 @@ public class RestServiceWebsite {
      * https://localhost:7743/extensions/website/sell-crypto
      * Method creates sell transaction
      *
-     * @param apiKey Morphis API key
+     * @param apiKey - key generated in CAS / Third Party / Operators sample website (OSW)
      * @return ITransactionSellInfo
      */
     @GET
@@ -104,7 +105,7 @@ public class RestServiceWebsite {
     }
 
     /**
-     * @param apiKey        Morphis API key
+     * @param apiKey - key generated in CAS / Third Party / Operators sample website (OSW)
      * @param transactionId - Id of created transaction from sell_crypto
      * @return number with status of the transaction
      */
@@ -130,7 +131,7 @@ public class RestServiceWebsite {
     /**
      * https://localhost:7743/extensions/website/terminals
      *
-     * @param apiKey Morphis API key
+     * @param apiKey - key generated in CAS / Third Party / Operators sample website (OSW)
      * @return list of active terminals ( active = pingDelay < 5 min ).
      */
     @GET
@@ -150,9 +151,9 @@ public class RestServiceWebsite {
     }
 
     /**
-     * Method helps collect terminals with a same Morphis API Access in CAS
+     * Method helps collect terminals with a same ThirdParty/Operators sample website API Access in CAS
      *
-     * @param iApiAccess - Morphis API key
+     * @param iApiAccess - ThirdParty API key
      * @return List<ITerminal>
      */
     private List<ITerminal> getTerminalsByApiKey(IApiAccess iApiAccess) {
@@ -180,11 +181,11 @@ public class RestServiceWebsite {
     }
 
     /**
-     * @param apiKey - Morphis API key
+     * @param apiKey - key generated in CAS / Third Party / Operators sample website (OSW)
      * @return IApiAccess - Authenticated API key
      */
     private IApiAccess checkSecurity(String apiKey) throws AuthenticationException {
-        IApiAccess iApiAccess = SellExtension.getExtensionContext().getAPIAccessByKey(apiKey);
+        IApiAccess iApiAccess = SellExtension.getExtensionContext().getAPIAccessByKey(apiKey, ApiAccessType.OSW);
         if (iApiAccess == null) {
             throw new AuthenticationException("Authentication failed");
         }
