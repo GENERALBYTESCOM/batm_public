@@ -25,6 +25,8 @@ public interface IExternalIdentity {
     int STATE_PROHIBITED                    = 3;
     int STATE_ANONYMOUS                     = 4;
     int STATE_PROHIBITED_TO_BE_REGISTERED   = 5;
+    int STATE_TO_BE_VERIFIED                = 6;
+    int STATE_RESTRICTED                    = 7;
 
     String getId();
     int getState();

@@ -34,6 +34,7 @@ public interface IIdentityBase {
     int STATE_ANONYMOUS = 4;
     int STATE_PROHIBITED_TO_BE_REGISTERED = 5;
     int STATE_TO_BE_VERIFIED = 6;
+    int STATE_RESTRICTED = 7;
 
     int TYPE_INTERNAL = 0; //must not be instantiated by extension
     int TYPE_EXTERNAL = 1; //this identity was created externally
@@ -69,6 +70,7 @@ public interface IIdentityBase {
      *      <li>{@link IIdentity#STATE_ANONYMOUS} = 4 - "Anonymous"</li>
      *      <li>{@link IIdentity#STATE_PROHIBITED_TO_BE_REGISTERED} = 5 - "Rejected Wants To Be Registered"</li>
      *      <li>{@link IIdentity#STATE_TO_BE_VERIFIED} = 6 - "Awaiting Verification"</li>
+     *      <li>{@link IIdentity#STATE_RESTRICTED} = 7 - "Restricted"</li>
      * </ul>
      *
      * @return int value representing current identity state.
