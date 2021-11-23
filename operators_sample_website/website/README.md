@@ -55,7 +55,7 @@ $ sudo apt install git-all
 $ git clone https://github.com/GENERALBYTESCOM/batm_public.git
 ```
 
-* Navigate to installed folder website /operators_sample_website/website and update composer dependecies
+* Navigate to installed folder website /operators_sample_website/website and update composer dependencies
 ```bash
 $ composer update
 ```
