@@ -8,7 +8,7 @@ public class CryptXCreateAddressRequest {
 
     private AddressType addressType;
 
-    private String passphrase;
+    private String password;
 
     public enum AddressFormat {
         LEGACY,
@@ -22,9 +22,9 @@ public class CryptXCreateAddressRequest {
         DEPOSIT
     }
 
-    public CryptXCreateAddressRequest(String name, String passphrase) {
+    public CryptXCreateAddressRequest(String name, String password) {
         this.name = name;
-        this.passphrase = passphrase;
+        this.password = password;
         this.addressFormat = AddressFormat.P2SH_SEGWIT;
         this.addressType = AddressType.DEPOSIT;
     }
@@ -53,12 +53,12 @@ public class CryptXCreateAddressRequest {
         this.addressType = addressType;
     }
 
-    public String getPassphrase() {
-        return passphrase;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPassphrase(String passphrase) {
-        this.passphrase = passphrase;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
 }
