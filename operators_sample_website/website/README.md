@@ -9,7 +9,7 @@
 
 ## Overview
 
-**The Operators Sample Website (OSW) is a web application written in PHP and based on the Laravel 8 framework. The application helps your clients pre-arrange the crypto selling process on your General Bytes BATMThree or BATMFour terminals.**
+**The Operators Sample Website (OSW) is a sample web application that demonstrates how operators can enable their customers initiate sell transactions online via operator's website and later visit two-way BATMThree or BATMFour ATM when cash is ready for withdrawal.**
 <p align="center"><a href="https://www.generalbytes.com/en/products/batmfour" target="_blank"><img src="https://www.generalbytes.com/res/crc-30765327/configurator/20210602191011/355x1029/f-Sinc/q90/batm4_dispenser_and_without_cc_reader_and_with_nfc.png" width="200" alt="BATMFour"></a></p>
 
 
