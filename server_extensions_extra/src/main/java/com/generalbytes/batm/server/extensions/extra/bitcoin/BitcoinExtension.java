@@ -369,15 +369,15 @@ public class BitcoinExtension extends AbstractExtension {
                 }
                 String walletId = st.nextToken();
 
-                String passphrase = null;
+                String password = null;
 	            String priority = null;
 
 	            if (st.hasMoreTokens()) {
 	                String nextToken = st.nextToken();
 	                if (!nextToken.equals(PRIORITY_LOW) && !nextToken.equals(PRIORITY_MEDIUM) &&
                             !nextToken.equals(PRIORITY_HIGH) && !nextToken.equals(PRIORITY_CUSTOM)) {
-	                    passphrase = nextToken;
-	                    if (passphrase.isEmpty()) passphrase = null;
+	                    password = nextToken;
+	                    if (password.isEmpty()) password = null;
 
 	                    if (st.hasMoreTokens()) {
 	                        priority = st.nextToken();
@@ -407,9 +407,9 @@ public class BitcoinExtension extends AbstractExtension {
 	            }
 
                 if ("cryptxnoforward".equalsIgnoreCase(walletType)) {
-                    return new CryptXWithUniqueAddresses(scheme, host, port, token, walletId, priority, customFeePrice, customGasLimit, passphrase);
+                    return new CryptXWithUniqueAddresses(scheme, host, port, token, walletId, priority, customFeePrice, customGasLimit, password);
                 }
-                return new CryptXWallet(scheme, host, port, token, walletId, priority, customFeePrice, customGasLimit, passphrase);
+                return new CryptXWallet(scheme, host, port, token, walletId, priority, customFeePrice, customGasLimit, password);
             }
         }
         } catch (Exception e) {

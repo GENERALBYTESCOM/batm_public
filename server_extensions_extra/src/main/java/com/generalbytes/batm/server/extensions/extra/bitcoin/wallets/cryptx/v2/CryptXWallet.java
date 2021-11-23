@@ -33,13 +33,13 @@ public class CryptXWallet implements IWallet, ICanSendMany {
     protected String url;
     protected static final Integer readTimeout = 90 * 1000;
     private int priority;
-    protected String passphrase;
+    protected String password;
 
-    public CryptXWallet(String scheme, String host, int port, String token, String walletId, String priority, String customFeePrice, String customGasLimit, String passphrase) {
+    public CryptXWallet(String scheme, String host, int port, String token, String walletId, String priority, String customFeePrice, String customGasLimit, String password) {
         this.walletId = walletId;
         this.customFeePrice = customFeePrice;
         this.customGasLimit = customGasLimit;
-        this.passphrase = passphrase;
+        this.password = password;
         this.url = new HttpUrl.Builder().scheme(scheme).host(host).port(port).build().toString();
 
         if (priority == null) {
@@ -67,13 +67,13 @@ public class CryptXWallet implements IWallet, ICanSendMany {
         List<CryptXSendTransactionRequest.AddressValuePair> addressList = transfers.stream()
                 .map(transfer -> new CryptXSendTransactionRequest.AddressValuePair(transfer.getDestinationAddress(), toMinorUnit(cryptoCurrency, transfer.getAmount())))
                 .collect(Collectors.toList());
-        CryptXSendTransactionRequest sendTransactionRequest = new CryptXSendTransactionRequest(addressList, description, priority, customFeePrice, customGasLimit, passphrase);
+        CryptXSendTransactionRequest sendTransactionRequest = new CryptXSendTransactionRequest(addressList, description, priority, customFeePrice, customGasLimit, password);
         return sendCryptXTransaction(cryptoCurrency, sendTransactionRequest);
     }
 
     @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
-        CryptXSendTransactionRequest sendTransactionRequest = new CryptXSendTransactionRequest(destinationAddress, toMinorUnit(cryptoCurrency, amount), description, priority, customFeePrice, customGasLimit, passphrase);
+        CryptXSendTransactionRequest sendTransactionRequest = new CryptXSendTransactionRequest(destinationAddress, toMinorUnit(cryptoCurrency, amount), description, priority, customFeePrice, customGasLimit, password);
         return sendCryptXTransaction(cryptoCurrency, sendTransactionRequest);
     }
 
@@ -161,30 +161,30 @@ public class CryptXWallet implements IWallet, ICanSendMany {
         return cryptoCurrency;
     }
 
-    private String toMinorUnit(String cryptoCurrency, BigDecimal amount) {
+    private BigInteger toMinorUnit(String cryptoCurrency, BigDecimal amount) {
         try {
             switch (CryptoCurrency.valueOfCode(cryptoCurrency)) {
                 case TBTC:
                 case BTC:
-                    return amount.multiply(Converters.BTC).toBigInteger().toString();
+                    return amount.multiply(Converters.BTC).toBigInteger();
                 case TLTC:
                 case LTC:
-                    return amount.multiply(Converters.LTC).toBigInteger().toString();
+                    return amount.multiply(Converters.LTC).toBigInteger();
                 case TBCH:
                 case BCH:
-                    return amount.multiply(Converters.BCH).toBigInteger().toString();
+                    return amount.multiply(Converters.BCH).toBigInteger();
                 case TETH:
                 case ETH:
-                    return amount.multiply(Converters.ETH).toBigInteger().toString();
+                    return amount.multiply(Converters.ETH).toBigInteger();
                 case BTBS:
-                    return amount.multiply(Converters.BTBS).toBigInteger().toString();
+                    return amount.multiply(Converters.BTBS).toBigInteger();
                 case USDT:
-                    return amount.multiply(Converters.USDT).toBigInteger().toString();
+                    return amount.multiply(Converters.USDT).toBigInteger();
                 default:
-                    return amount.toBigInteger().toString();
+                    return amount.toBigInteger();
             }
         } catch (IllegalArgumentException e) {
-            return amount.toBigInteger().toString();
+            return amount.toBigInteger();
         }
     }
 
@@ -235,7 +235,7 @@ public class CryptXWallet implements IWallet, ICanSendMany {
         return customGasLimit;
     }
 
-    public String getPassphrase() {
-        return passphrase;
+    public String getPassword() {
+        return password;
     }
 }
