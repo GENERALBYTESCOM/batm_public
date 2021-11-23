@@ -6,7 +6,7 @@ interface IGbCasRestServices
 {
 
     const CAS_URL = 'https://127.0.0.1:7743'; // your Crypto application server url
-    const API_KEY = 'PM2TB2IMBVIREBI3C3TIPBUK7CB2BOVAS'; // your Morphis - CAS Api Key
+    const API_KEY = 'XXXXXXXXXXXXXXXXXXXXXXXXXXX'; // operators sample website API Access - CAS/Third Party/Operator`s sample website
 
     /*
      * Path to your RestServices placed on

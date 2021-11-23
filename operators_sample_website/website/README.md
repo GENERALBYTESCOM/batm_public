@@ -23,7 +23,10 @@ Advantages of the OSW:
 
 ** Install PHP & Nginx :**
 ```bash
-$ sudo apt install -y php-mbstring php-xml php-fpm php-zip php-common php-cli unzip curl nginx
+$ sudo add-apt-repository ppa:ondrej/php
+$ sudo apt-get update
+$ sudo apt-get install php8.0
+$ sudo apt install -y php8.0-mbstring php8.0-xml php8.0-zip php8.0-mysql php8.0-common php8.0-cli unzip curl nginx
 ```
 
 ** Install composer: **
@@ -43,20 +46,21 @@ $ sudo chmod +x   /usr/local/bin/composer
 $ composer --version
 ```
 
+** Install git: **
+```bash
+$ sudo apt install git-all
+```
 ** Install OperatorsSampleWebsite package **
 ```bash
 $ git clone https://github.com/GENERALBYTESCOM/batm_public.git
 ```
+
 * Navigate to installed folder website /operators_sample_website/website and update composer dependecies
 ```bash
 $ composer update
 ```
-* Update laravel setup
-```bash
-$ php artisan config:clear
-$ php artisan key:generate
-```
-* Check your installation on devel server and click on url http://127.0.0.1:8000
+
+* Check your installation on devel server and open in browser link http://127.0.0.1:8000
 ```bash
 $ php artisan serve
 ```
