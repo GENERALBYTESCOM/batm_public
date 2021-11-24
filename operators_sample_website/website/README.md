@@ -93,7 +93,7 @@ $ sudo nano /etc/nginx/sites-available/osw.conf
         root /var/www/html/batm_public/operators_sample_website/website/public;
 
         add_header X-Frame-Options "SAMEORIGIN";
-      add_header X-Content-Type-Options "nosniff";
+        add_header X-Content-Type-Options "nosniff";
 
         index index.php;
 
@@ -103,24 +103,29 @@ $ sudo nano /etc/nginx/sites-available/osw.conf
                 try_files $uri $uri/ /index.php?$query_string;
         }
 
-       location = /favicon.ico { access_log off; log_not_found off; }
-       location = /robots.txt  { access_log off; log_not_found off; }
-       error_page 404 /index.php;
+        location = /favicon.ico { access_log off; log_not_found off; }
+        location = /robots.txt  { access_log off; log_not_found off; }
+        error_page 404 /index.php;
 
-       location ~ \.php$ {
-        fastcgi_pass unix:/var/run/php/php8.0-fpm.sock;
-        include snippets/fastcgi-php.conf;
-        include fastcgi_params;
+        location ~ \.php$ {
+          fastcgi_pass unix:/var/run/php/php8.0-fpm.sock;
+          include snippets/fastcgi-php.conf;
+          include fastcgi_params;
  
-       location ~ /\.(?!well-known).* {
-       deny all;
+          location ~ /\.(?!well-known).* {
+            deny all;
+          }
        }
-      }
     }
 ```
 * Enable configuration
 ```bash
 $ sudo ln -s /etc/nginx/sites-available/osw.conf /etc/nginx/sites-enabled/
+```
+
+* Set yourservername.com on Ubuntu server
+```bash
+$ sudo nano /etc/hosts
 ```
 
 * Restart Nginx
