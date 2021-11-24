@@ -79,7 +79,18 @@ public class PaymentRequest {
     private boolean removalConditionForOutgoingTransaction;
 
     private BigDecimal txValue;
+    /**
+     * For forwarding transaction this is the transaction
+     * from the user who is selling the coins to the temporary server-generated address.
+     * For non-forwarding transaction this is the (only) transaction
+     * from user who is selling the coins to the final destination address.
+     */
     private String incomingTransactionHash;
+    /**
+     * For forwarding transaction this is the transaction
+     * going from the temporary server-generated address to the final destination address.
+     * For non-forwarding transactions this is null.
+     */
     private String outgoingTransactionHash;
     private String timeoutRefundAddress;
     private List<IPaymentOutput> outputs;
