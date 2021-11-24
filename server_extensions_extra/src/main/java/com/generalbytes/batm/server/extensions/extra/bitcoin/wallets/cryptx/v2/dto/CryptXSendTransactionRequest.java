@@ -1,16 +1,19 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryptx.v2.dto;
 
+import java.math.BigInteger;
 import java.util.List;
 
 public class CryptXSendTransactionRequest {
 
 	private String address;
 
-	private String value;
+	private BigInteger value;
 
 	private List<AddressValuePair> addressValues;
 
 	private String uniqueId;
+
+    private String description;
 
 	private int blocksSize;
 
@@ -20,30 +23,32 @@ public class CryptXSendTransactionRequest {
 
 	private boolean subtractFeeFromOutputs;
 
-	private String passphrase;
+	private String password;
 
-	public CryptXSendTransactionRequest(String address, String value, String uniqueId, int blocksSize, String customFeePrice, String customGasLimit, String passphrase) {
+	public CryptXSendTransactionRequest(String address, BigInteger value, String uniqueId, int blocksSize, String customFeePrice, String customGasLimit, String password) {
 		this.address = address;
 		this.value = value;
 		this.uniqueId = uniqueId;
+        this.description = "Description of " + uniqueId;
 		this.blocksSize = blocksSize != 0 ? blocksSize : 2;
 		this.customFeePrice = customFeePrice;
 		this.customGasLimit = customGasLimit;
 		this.subtractFeeFromOutputs = false;
 		this.addressValues = null;
-		this.passphrase = passphrase;
+		this.password = password;
 	}
 
-	public CryptXSendTransactionRequest(List<AddressValuePair> addressValues, String uniqueId, int blocksSize, String customFeePrice, String customGasLimit, String passphrase) {
+	public CryptXSendTransactionRequest(List<AddressValuePair> addressValues, String uniqueId, int blocksSize, String customFeePrice, String customGasLimit, String password) {
 		this.address = null;
 		this.value = null;
 		this.uniqueId = uniqueId;
+        this.description = "Description of " + uniqueId;
 		this.blocksSize = blocksSize != 0 ? blocksSize : 2;
 		this.subtractFeeFromOutputs = false;
 		this.addressValues = addressValues;
 		this.customFeePrice = customFeePrice;
 		this.customGasLimit = customGasLimit;
-		this.passphrase = passphrase;
+		this.password = password;
 	}
 
 	public String getAddress() {
@@ -54,11 +59,11 @@ public class CryptXSendTransactionRequest {
 		this.address = address;
 	}
 
-	public String getValue() {
+	public BigInteger getValue() {
 		return value;
 	}
 
-	public void setValue(String value) {
+	public void setValue(BigInteger value) {
 		this.value = value;
 	}
 
@@ -78,7 +83,15 @@ public class CryptXSendTransactionRequest {
 		this.uniqueId = uniqueId;
 	}
 
-	public int getBlocksSize() {
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getBlocksSize() {
 		return blocksSize;
 	}
 
@@ -110,19 +123,19 @@ public class CryptXSendTransactionRequest {
 		this.subtractFeeFromOutputs = subtractFeeFromOutputs;
 	}
 
-	public String getPassphrase() {
-		return passphrase;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public void setPassphrase(String passphrase) {
-		this.passphrase = passphrase;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	public static class AddressValuePair {
+    public static class AddressValuePair {
 		public String address;
-		public String value;
+		public BigInteger value;
 
-		public AddressValuePair(String address, String value) {
+		public AddressValuePair(String address, BigInteger value) {
 			this.address = address;
 			this.value = value;
 		}
