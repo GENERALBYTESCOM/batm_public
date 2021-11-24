@@ -26,7 +26,7 @@ Advantages of the OSW:
 $ sudo add-apt-repository ppa:ondrej/php
 $ sudo apt-get update
 $ sudo apt-get install php8.0
-$ sudo apt install -y php8.0-mbstring php8.0-xml php8.0-zip php8.0-mysql php8.0-common php8.0-cli unzip curl nginx
+$ sudo apt install -y php8.0-mbstring php8.0-fpm php8.0-xml php8.0-zip php8.0-mysql php8.0-common php8.0-cli unzip curl nginx
 ```
 
 ** Install composer: **
@@ -76,20 +76,21 @@ $ php artisan serve
 
 
 ** Configure Nginx **
+* move batm_public project to /var/www/html/ and change ownership
 ```bash
-  $ sudo chmod -R 755 /var/www/html/example
-  $ sudo chown -R www-data:www-data /var/www/html/example
+  $ sudo mv /home/userFolder/batm_public /var/www/html/
+  $ sudo chown -R www-data:www-data /var/www/html/batm_public
 ```
-* Create an Nginx configuration file
+* Create a Nginx configuration file
 ```bash
-$ sudo nano /etc/nginx/sites-available/example
+$ sudo nano /etc/nginx/sites-available/osw.conf
 ```
 * configuration
 ```bash
      server {
         listen 80;
         server_name yourservername.com;
-        root /var/www/html/gbapp/public;
+        root /var/www/html/batm_public/operators_sample_website/website/public;
 
         add_header X-Frame-Options "SAMEORIGIN";
       add_header X-Content-Type-Options "nosniff";
@@ -114,15 +115,15 @@ $ sudo nano /etc/nginx/sites-available/example
        location ~ /\.(?!well-known).* {
        deny all;
        }
+      }
     }
 ```
 * Enable configuration
 ```bash
-$ sudo ln -s /etc/nginx/sites-available/example /etc/nginx/sites-enabled/
+$ sudo ln -s /etc/nginx/sites-available/osw.conf /etc/nginx/sites-enabled/
 ```
 
 * Restart Nginx
-  $ sudo ln -s /etc/nginx/sites-available/example /etc/nginx/sites-enabled/
 ```bash
   $ sudo systemctl restart nginx
 ```
