@@ -48,4 +48,9 @@ public interface ILocationDetail extends ILocation {
      * @return - Records about openening hours. Each record represents one day of the week.
      */
     List<IOpeningHours> getOpeningHours();
+
+    /**
+     * @return Records about scheduled cash withdrawals. Each record represents one day of the month.
+     */
+    List<ICashCollectionDay> getCashCollectionDays();
 }
