@@ -74,7 +74,7 @@
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency buyonly="true">BTBS</cryptocurrency>
                 <cryptocurrency buyonly="true">ETH</cryptocurrency>
-                <cryptocurrency>USDT</cryptocurrency>
+                <cryptocurrency buyonly="true">USDT</cryptocurrency>
                 <help>
                     *host: https://api.cryptx.com/ (required) -
                     port: (not required) - *token: generate Access tokens from CryptX Settings (required) -
@@ -100,7 +100,7 @@
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency buyonly="true">ETH</cryptocurrency>
-                <cryptocurrency>USDT</cryptocurrency>
+                <cryptocurrency buyonly="true">USDT</cryptocurrency>
                 <help>
                     *host: https://api.cryptx.com/ (required) -
                     port: (not required) - *token: generate Access tokens from CryptX Settings (required) -
@@ -319,7 +319,7 @@
                 <param name="apisecret" />
                 <param name="fiatcurrency" />
                 <cryptocurrency>BTC</cryptocurrency>
-                <cryptocurrency>ETH</cryptocurrency>
+                <cryptocurrency buyonly="true">ETH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
                 <!-- Sell on exchange & receive to exchange will work only for BTC, LTC, ETH, see org.knowm.xchange.bitfinex.v1.service.BitfinexAccountServiceRaw.requestDepositAddressRaw -->
                 <cryptocurrency>BCH</cryptocurrency>
@@ -331,14 +331,14 @@
                 <param name="apisecret" />
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>BCH</cryptocurrency>
-                <cryptocurrency>ETH</cryptocurrency>
+                <cryptocurrency buyonly="true">ETH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>BAY</cryptocurrency>
             </exchange>
             <exchange prefix="dvchain" name="DV Chain Exchange">
                 <param name="secretKey" />
                 <cryptocurrency>BTC</cryptocurrency>
-                <cryptocurrency>ETH</cryptocurrency>
+                <cryptocurrency buyonly="true">ETH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>BCH</cryptocurrency>
                 <cryptocurrency>XMR</cryptocurrency>
@@ -347,7 +347,7 @@
             <param name="apikey" />
             <param name="apisecret" />
             <cryptocurrency>BTC</cryptocurrency>
-            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency buyonly="true">ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>SMART</cryptocurrency>
             <cryptocurrency>BCH</cryptocurrency>
@@ -383,6 +383,7 @@
             <cryptocurrency>DASH</cryptocurrency>
             <cryptocurrency buyonly="true">ETC</cryptocurrency>
             <cryptocurrency buyonly="true">ETH</cryptocurrency>
+            <cryptocurrency buyonly="true">USDT</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
             <help>accountname parameter is optional</help>
@@ -398,6 +399,7 @@
             <cryptocurrency>BIZZ</cryptocurrency>
             <cryptocurrency>ETC</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>USDT</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
             <help>accountname parameter is optional. This variant of the wallet generates new addresses for each transaction and does not forward payments from temporary address</help>
@@ -410,8 +412,8 @@
             <param name="paymentmethod" />
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
-            <cryptocurrency>ETC</cryptocurrency>
-            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency buyonly="true">ETC</cryptocurrency>
+            <cryptocurrency buyonly="true">ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>BAT</cryptocurrency>
             <help>fiatcurrency,paymentmethod are optional</help>
@@ -423,7 +425,7 @@
             <param name="fiatcurrency" />
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
-            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency buyonly="true">ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
         </exchange>
         <exchange prefix="poloniex" name="Poloniex">
@@ -433,7 +435,7 @@
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>BURST</cryptocurrency>
-            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency buyonly="true">ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>DASH</cryptocurrency>
             <cryptocurrency>DAI</cryptocurrency>
@@ -497,7 +499,7 @@
             <param name="password"/>
             <param name="fiatcurrency"/>
             <cryptocurrency>BTC</cryptocurrency>
-            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency buyonly="true">ETH</cryptocurrency>
             <cryptocurrency>BCH</cryptocurrency>
         </exchange>
         <ratesource prefix="enigma" name="Enigma-Securities.com">
@@ -654,7 +656,7 @@
             <cryptocurrency>CLOAK</cryptocurrency>
             <cryptocurrency>DASH</cryptocurrency>
             <cryptocurrency>DOGE</cryptocurrency>
-            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency buyonly="true">ETH</cryptocurrency>
             <cryptocurrency>GRS</cryptocurrency>
             <cryptocurrency>KMD</cryptocurrency>
             <cryptocurrency>LSK</cryptocurrency>
@@ -666,7 +668,7 @@
             <cryptocurrency>SYS</cryptocurrency>
             <cryptocurrency>TRX</cryptocurrency>
             <cryptocurrency>USDS</cryptocurrency>
-            <cryptocurrency>USDT</cryptocurrency>
+            <cryptocurrency buyonly="true">USDT</cryptocurrency>
             <cryptocurrency>VIA</cryptocurrency>
             <cryptocurrency>XMR</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
@@ -709,11 +711,11 @@
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>DASH</cryptocurrency>
             <cryptocurrency>DOGE</cryptocurrency>
-            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency buyonly="true">ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>NANO</cryptocurrency>
             <cryptocurrency>PAXG</cryptocurrency>
-            <cryptocurrency>USDT</cryptocurrency>
+            <cryptocurrency buyonly="true">USDT</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
         </exchange>
         <ratesource prefix="binanceus" name="Binance US">
@@ -736,7 +738,7 @@
             <param name="fiatcurrency"/>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>DOGE</cryptocurrency>
-            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency buyonly="true">ETH</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
         </exchange>
         <ratesource prefix="bitpandapro" name="Bitpanda Pro">
@@ -750,7 +752,7 @@
             <param name="token"/>
             <param name="secret"/>
             <cryptocurrency>BTC</cryptocurrency>
-            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency buyonly="true">ETH</cryptocurrency>
         </exchange>
         <ratesource prefix="coinzix" name="Coinzix">
             <cryptocurrency>BTC</cryptocurrency>
@@ -763,7 +765,7 @@
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>DAI</cryptocurrency>
-            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency buyonly="true">ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
             <help>fiatcurrency is optional, default: CAD</help>
@@ -2066,7 +2068,7 @@
             <param name="gaslimit" />
             <param name="gasPriceMultiplier" />
             <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
-            <cryptocurrency>USDT</cryptocurrency>
+            <cryptocurrency buyonly="true">USDT</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="USDT" file="usdt.png"/>
         <cryptologo cryptocurrency="USDT" file="usdt.svg"/>
