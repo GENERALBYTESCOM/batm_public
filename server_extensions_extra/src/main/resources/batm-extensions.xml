@@ -164,6 +164,7 @@
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>BAY</cryptocurrency>
+                <cryptocurrency>BTBS</cryptocurrency>
             </ratesource>
             <ratesource prefix="coinmarketcap" name ="CoinMarketCap.com" >
                 <param name="fiatcurrency" />
@@ -334,6 +335,7 @@
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>BAY</cryptocurrency>
+                <cryptocurrency>BTBS</cryptocurrency>
             </exchange>
             <exchange prefix="dvchain" name="DV Chain Exchange">
                 <param name="secretKey" />
