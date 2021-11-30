@@ -334,7 +334,9 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
         try {
             MarketDataService marketDataService = getExchange().getMarketDataService();
             RateLimiter.waitForPossibleCall(getClass());
-
+            if (CryptoCurrency.BTBS.getCode().equals(cryptoCurrency)) {
+                fiatCurrency = CryptoCurrency.USDT.getCode();
+            }
             CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrency);
             List<LimitOrder> asks = marketDataService.getOrderBook(currencyPair).getAsks();
             Collections.sort(asks, asksComparator);
