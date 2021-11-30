@@ -342,7 +342,10 @@
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>BCH</cryptocurrency>
                 <cryptocurrency>XMR</cryptocurrency>
+                <cryptocurrency>SHIB</cryptocurrency>
             </exchange>
+        <cryptologo cryptocurrency="SHIB" file="shib.png"/>
+        <cryptologo cryptocurrency="SHIB" file="shib.svg"/>
         <exchange prefix="hitbtc" name="HitBTC Exchange">
             <param name="apikey" />
             <param name="apisecret" />
