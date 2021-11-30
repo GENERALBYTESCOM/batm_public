@@ -1,5 +1,6 @@
 package com.generalbytes.batm.server.extensions.extra.examples.location;
 
+import com.generalbytes.batm.server.extensions.ICashCollectionDay;
 import com.generalbytes.batm.server.extensions.ILocationDetail;
 import com.generalbytes.batm.server.extensions.INote;
 import com.generalbytes.batm.server.extensions.IOpeningHours;
@@ -29,6 +30,7 @@ public class LocationDetailExample implements ILocationDetail {
     private Integer terminalCapacity;
     private List<NoteExample> notes;
     private List<OpeningHoursExample> openingHours;
+    private List<CashCollectionDayExample> cashCollectionDays = new ArrayList<>();
 
     public LocationDetailExample() {
     }
@@ -123,4 +125,8 @@ public class LocationDetailExample implements ILocationDetail {
         return new ArrayList<>(openingHours);
     }
 
+    @Override
+    public List<ICashCollectionDay> getCashCollectionDays() {
+        return new ArrayList<>(cashCollectionDays);
+    }
 }
