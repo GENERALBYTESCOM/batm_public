@@ -30,15 +30,13 @@ public interface ITransactionScoringProvider {
     ScoringResult scoreCryptoAddress(String cryptoAddress, String cryptoCurrency, String identityPublicId);
 
     /**
-     * @param transactionId  on-chain transaction id (hash)
-     * @param cryptoCurrency
-     * @return
+     * @param transactionId    on-chain transaction id (hash)
+     * @param identityPublicId identity Public ID or null if identity is not known (anonymous transaction)
      */
-    ScoringResult scoreTransaction(String transactionId, String cryptoCurrency);
+    ScoringResult scoreTransaction(String transactionId, String destinationCryptoAddress, String cryptoCurrency, String identityPublicId);
 
     /**
-     *
-     * @return human readable provider name
+     * @return transaction scoring provider name
      */
     String getName();
 
