@@ -17,6 +17,8 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bittrex;
 
+import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.XChangeExchange;
 import com.generalbytes.batm.server.extensions.util.net.RateLimiter;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
@@ -29,6 +31,7 @@ import org.knowm.xchange.currency.Currency;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.Order;
 import org.knowm.xchange.dto.marketdata.OrderBook;
+import org.knowm.xchange.dto.marketdata.Ticker;
 import org.knowm.xchange.dto.trade.LimitOrder;
 import org.knowm.xchange.dto.trade.OpenOrders;
 import org.knowm.xchange.service.account.AccountService;
@@ -42,7 +45,7 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.TimeoutException;
 
-public class BittrexExchange implements IExchangeAdvanced {
+public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
 
     private static final Logger log = LoggerFactory.getLogger("batm.master.BittrexExchange");
 
@@ -54,6 +57,11 @@ public class BittrexExchange implements IExchangeAdvanced {
     private Exchange exchange = null;
     private String apiKey;
     private String apiSecret;
+    private String preferredFiatCurrency;
+
+    private static final HashMap<String,BigDecimal> rateAmounts = new HashMap<>();
+    private static HashMap<String,Long> rateTimes = new HashMap<>();
+    private static final long MAXIMUM_ALLOWED_TIME_OFFSET = 30 * 1000;
 
     static {
         FIAT_CURRENCIES.add(FiatCurrency.USD.getCode());
@@ -87,9 +95,18 @@ public class BittrexExchange implements IExchangeAdvanced {
         return FIAT_CURRENCIES;
     }
 
-    public BittrexExchange(String apiKey, String apiSecret) {
+    public BittrexExchange(String apiKey, String apiSecret, String preferredFiatCurrency) {
         this.apiKey = apiKey;
         this.apiSecret = apiSecret;
+        this.preferredFiatCurrency = preferredFiatCurrency;
+    }
+
+    /**
+     * ratesource
+     * @param preferredFiatCurrency
+     */
+    public BittrexExchange(String preferredFiatCurrency) {
+        this(null, null, preferredFiatCurrency);
     }
 
     @Override
@@ -109,7 +126,7 @@ public class BittrexExchange implements IExchangeAdvanced {
 
     @Override
     public String getPreferredFiatCurrency() {
-        return FiatCurrency.USD.getCode();
+        return preferredFiatCurrency;
     }
 
     @Override
@@ -288,6 +305,118 @@ public class BittrexExchange implements IExchangeAdvanced {
             AccountService accountService = getExchange().getAccountService();
             RateLimiter.waitForPossibleCall(getClass());
             return accountService.requestDepositAddress(Currency.getInstance(cryptoCurrency));
+        } catch (IOException | TimeoutException e) {
+            log.error("Error", e);
+        }
+        return null;
+    }
+
+    @Override
+    public BigDecimal getExchangeRateForBuy(String cryptoCurrency, String fiatCurrency) {
+        BigDecimal result = calculateBuyPrice(cryptoCurrency, fiatCurrency, getMeasureCryptoAmount(cryptoCurrency));
+        if (result != null) {
+            return result.divide(getMeasureCryptoAmount(cryptoCurrency), 2, BigDecimal.ROUND_UP);
+        }
+        return null;
+    }
+
+    @Override
+    public BigDecimal getExchangeRateForSell(String cryptoCurrency, String fiatCurrency) {
+        BigDecimal result = calculateSellPrice(cryptoCurrency, fiatCurrency, getMeasureCryptoAmount(cryptoCurrency));
+        if (result != null) {
+            return result.divide(getMeasureCryptoAmount(cryptoCurrency), 2, BigDecimal.ROUND_DOWN);
+        }
+        return null;
+    }
+
+    private BigDecimal getMeasureCryptoAmount(String cryptoCurrency) {
+        if (CryptoCurrency.BTC.getCode().equals(cryptoCurrency)) {
+            return XChangeExchange.BTC_RATE_SOURCE_CRYPTO_AMOUNT;
+        }
+        return new BigDecimal(5);
+    }
+
+    @Override
+    public BigDecimal calculateBuyPrice(String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount) {
+        try {
+            MarketDataService marketDataService = getExchange().getMarketDataService();
+            RateLimiter.waitForPossibleCall(getClass());
+            if (CryptoCurrency.BTBS.getCode().equals(cryptoCurrency)) {
+                fiatCurrency = CryptoCurrency.USDT.getCode();
+            }
+            CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrency);
+            List<LimitOrder> asks = marketDataService.getOrderBook(currencyPair).getAsks();
+            Collections.sort(asks, asksComparator);
+
+            BigDecimal tradableLimit = getTradablePrice(cryptoAmount, asks);
+
+            if (tradableLimit != null) {
+                log.debug("Called Bittrex exchange for BUY rate: {}{} = {}", cryptoCurrency, fiatCurrency, tradableLimit);
+                return tradableLimit.multiply(cryptoAmount);
+            }
+        } catch (Throwable e) {
+            log.error("Error", e);
+        }
+        return null;
+    }
+
+    @Override
+    public BigDecimal calculateSellPrice(String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount) {
+        try {
+            MarketDataService marketDataService = getExchange().getMarketDataService();
+            CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrency);
+            RateLimiter.waitForPossibleCall(getClass());
+            OrderBook orderBook = marketDataService.getOrderBook(currencyPair);
+
+            List<LimitOrder> bids = orderBook.getBids();
+            Collections.sort(bids, bidsComparator);
+
+            BigDecimal tradableLimit = getTradablePrice(cryptoAmount, bids);
+
+            if (tradableLimit != null) {
+                log.debug("Called Bittrex exchange for SELL rate: {}{} = {}", cryptoCurrency, fiatCurrency, tradableLimit);
+                return tradableLimit.multiply(cryptoAmount);
+            }
+        } catch (Throwable e) {
+            log.error("Error", e);
+        }
+        return null;
+    }
+
+    @Override
+    public BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency) {
+        String key = cryptoCurrency +"_" + fiatCurrency;
+        synchronized (rateAmounts) {
+            long now  = System.currentTimeMillis();
+            BigDecimal amount = rateAmounts.get(key);
+            if (amount == null) {
+                BigDecimal result = getExchangeRateLastSync(cryptoCurrency, fiatCurrency);
+                log.debug("Called bittrex exchange for rate: " + key + " = " + result);
+                rateAmounts.put(key,result);
+                rateTimes.put(key,now+MAXIMUM_ALLOWED_TIME_OFFSET);
+                return result;
+            }else {
+                Long expirationTime = rateTimes.get(key);
+                if (expirationTime > now) {
+                    return rateAmounts.get(key);
+                }else{
+                    //do the job;
+                    BigDecimal result = getExchangeRateLastSync(cryptoCurrency, fiatCurrency);
+                    log.debug("Called bittrex exchange for rate: " + key + " = " + result);
+                    rateAmounts.put(key,result);
+                    rateTimes.put(key,now+MAXIMUM_ALLOWED_TIME_OFFSET);
+                    return result;
+                }
+            }
+        }
+    }
+
+    private BigDecimal getExchangeRateLastSync(String cryptoCurrency, String cashCurrency) {
+        try {
+            MarketDataService marketDataService = getExchange().getMarketDataService();
+            RateLimiter.waitForPossibleCall(getClass());
+            Ticker ticker = marketDataService.getTicker(new CurrencyPair(cryptoCurrency,cashCurrency));
+            return ticker.getLast();
         } catch (IOException | TimeoutException e) {
             log.error("Error", e);
         }
