@@ -22,7 +22,6 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.sources.satangpro;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.bitkub.BitKubRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.satangpro.dto.SatangProRateInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,12 +30,11 @@ import si.mazi.rescu.RestProxyFactory;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 public class SatangProRateSource implements IRateSourceAdvanced {
 
-    private static final Logger log = LoggerFactory.getLogger(BitKubRateSource.class);
+    private static final Logger log = LoggerFactory.getLogger(SatangProRateSource.class);
 
     private final SatangPro api;
     private final String preferredFiatCurrency;
