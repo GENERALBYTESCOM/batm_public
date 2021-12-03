@@ -21,11 +21,10 @@ import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.XChangeExchange;
 import org.knowm.xchange.ExchangeSpecification;
-import org.knowm.xchange.exceptions.NotYetImplementedForExchangeException;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
-import java.math.BigDecimal;
 
 public class DVChainExchange extends XChangeExchange {
 
@@ -71,6 +70,7 @@ public class DVChainExchange extends XChangeExchange {
         cryptoCurrencies.add(CryptoCurrency.LTC.getCode());
         cryptoCurrencies.add(CryptoCurrency.ETH.getCode());
         cryptoCurrencies.add(CryptoCurrency.XMR.getCode());
+        cryptoCurrencies.add(CryptoCurrency.SHIB.getCode());
         return cryptoCurrencies;
     }
 
