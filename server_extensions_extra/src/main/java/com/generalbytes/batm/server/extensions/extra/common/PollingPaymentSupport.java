@@ -77,7 +77,8 @@ public abstract class PollingPaymentSupport implements IPaymentSupport {
 
         PaymentRequest request = new PaymentRequest(spec.getCryptoCurrency(), spec.getDescription(), validTillMillis,
             address, spec.getTotal(), BigDecimal.ZERO, spec.getRemoveAfterNumberOfConfirmationsOfIncomingTransaction(), spec.getRemoveAfterNumberOfConfirmationsOfOutgoingTransaction(), spec.getWallet(), spec.getTimeoutRefundAddress(),
-            spec.getOutputs(), spec.isDoNotForward(), null);
+            spec.getOutputs(), spec.isDoNotForward(), null,
+            spec.getMinimumMiningFeePerByte(), spec.getMaximumMiningFeePerByte());
 
         registerPaymentRequest(request);
         return request;

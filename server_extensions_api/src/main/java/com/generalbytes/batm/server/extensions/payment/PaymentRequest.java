@@ -95,12 +95,14 @@ public class PaymentRequest {
     private String timeoutRefundAddress;
     private List<IPaymentOutput> outputs;
     private Integer paymentIndex;
+    private final BigDecimal minimumMiningFeePerByte;
+    private final BigDecimal maximumMiningFeePerByte;
 
     private boolean alreadyRefunded;
 
     private IWallet wallet;
 
-    public PaymentRequest(String cryptoCurrency, String description, long validTill, String address, BigDecimal amount, BigDecimal tolerance, int removeAfterNumberOfConfirmationsOfIncomingTransaction, int removeAfterNumberOfConfirmationsOfOutgoingTransaction, IWallet wallet, String timeoutRefundAddress, List<IPaymentOutput> outputs, Boolean nonForwarding, Integer paymentIndex) {
+    public PaymentRequest(String cryptoCurrency, String description, long validTill, String address, BigDecimal amount, BigDecimal tolerance, int removeAfterNumberOfConfirmationsOfIncomingTransaction, int removeAfterNumberOfConfirmationsOfOutgoingTransaction, IWallet wallet, String timeoutRefundAddress, List<IPaymentOutput> outputs, Boolean nonForwarding, Integer paymentIndex, BigDecimal minimumMiningFeePerByte, BigDecimal maximumMiningFeePerByte) {
         this.cryptoCurrency = cryptoCurrency;
         this.description = description;
         this.validTill = validTill;
@@ -115,6 +117,8 @@ public class PaymentRequest {
         this.timeoutRefundAddress = timeoutRefundAddress;
         this.outputs = outputs;
         this.paymentIndex = paymentIndex;
+        this.minimumMiningFeePerByte = minimumMiningFeePerByte;
+        this.maximumMiningFeePerByte = maximumMiningFeePerByte;
     }
 
     /**
@@ -328,5 +332,13 @@ public class PaymentRequest {
 
     public boolean isNonForwarding() {
         return nonForwarding;
+    }
+
+    public BigDecimal getMinimumMiningFeePerByte() {
+        return minimumMiningFeePerByte;
+    }
+
+    public BigDecimal getMaximumMiningFeePerByte() {
+        return maximumMiningFeePerByte;
     }
 }
