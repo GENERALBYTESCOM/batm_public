@@ -92,6 +92,7 @@ public enum CryptoCurrency {
     PAXG("Paxos Gold"),
     POT("PotCoin"),
     REP("Augur"),
+    SHIB("Shiba Inu"),
     SMART("SmartCash"),
     SPICE("Spice"),
     START("Startcoin"),
