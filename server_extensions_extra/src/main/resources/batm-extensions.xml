@@ -541,7 +541,6 @@
             <cryptocurrency>ILC</cryptocurrency>
             <cryptocurrency>JOB</cryptocurrency>
             <cryptocurrency>LMY</cryptocurrency>
-            <cryptocurrency>KMD</cryptocurrency>
             <cryptocurrency>LEO</cryptocurrency>
             <cryptocurrency>LINDA</cryptocurrency>
             <cryptocurrency>LSK</cryptocurrency>
@@ -611,7 +610,6 @@
             <cryptocurrency>HBX</cryptocurrency>
             <cryptocurrency>JOB</cryptocurrency>
             <cryptocurrency>LMY</cryptocurrency>
-            <cryptocurrency>KMD</cryptocurrency>
             <cryptocurrency>LEO</cryptocurrency>
             <cryptocurrency>LINDA</cryptocurrency>
             <cryptocurrency>LSK</cryptocurrency>
@@ -631,7 +629,6 @@
             <cryptocurrency>SPICE</cryptocurrency>
             <cryptocurrency>START</cryptocurrency>
             <cryptocurrency>SYS</cryptocurrency>
-            <cryptocurrency>TBTC</cryptocurrency>
             <cryptocurrency>TKN</cryptocurrency>
             <cryptocurrency>TRTL</cryptocurrency>
             <cryptocurrency>TRX</cryptocurrency>
@@ -659,7 +656,6 @@
             <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>GRS</cryptocurrency>
-            <cryptocurrency>KMD</cryptocurrency>
             <cryptocurrency>LSK</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>NANO</cryptocurrency>
@@ -686,7 +682,6 @@
             <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>GRS</cryptocurrency>
-            <cryptocurrency>KMD</cryptocurrency>
             <cryptocurrency>LSK</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>NANO</cryptocurrency>
@@ -893,7 +888,7 @@
         <cryptologo cryptocurrency="DOGE" file="doge.png"/>
         <cryptologo cryptocurrency="DOGE" file="doge.svg"/>
     </extension>
-    <extension class="com.generalbytes.batm.server.extensions.extra.newyorkcoin.NewYorkCoinExtension" >
+    <extension class="com.generalbytes.batm.server.extensions.extra.newyorkcoin.NewyorkcoinExtension" >
         <wallet prefix="newyorkcoind" name="Newyorkcoind">
             <tunnel supported="true"/>
             <sendtomany supported="true"/>
@@ -924,7 +919,7 @@
         <cryptologo cryptocurrency="NYC" file="nyc.png"/>
         <cryptologo cryptocurrency="NYC" file="nyc.svg"/>
     </extension>
-    <extension class="com.generalbytes.batm.server.extensions.extra.nesteggcoin.NesteggCoinExtension" >
+    <extension class="com.generalbytes.batm.server.extensions.extra.nesteggcoin.NesteggcoinExtension" >
         <wallet prefix="nesteggd" name="Nesteggd">
             <tunnel supported="true"/>
             <sendtomany supported="true"/>
