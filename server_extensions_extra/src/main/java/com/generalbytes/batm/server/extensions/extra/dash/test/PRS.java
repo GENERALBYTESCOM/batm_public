@@ -203,4 +203,14 @@ public class PRS implements IPaymentRequestSpecification{
     public String getCryptoCurrency() {
         return cryptoCurrency;
     }
+
+    @Override
+    public BigDecimal getMinimumMiningFeePerByte() {
+        return minimumMiningFeePerByte;
+    }
+
+    @Override
+    public BigDecimal getMaximumMiningFeePerByte() {
+        return maximumMiningFeePerByte;
+    }
 }

@@ -518,7 +518,9 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
                 spec.getTimeoutRefundAddress(),
                 spec.getOutputs(),
                 spec.isDoNotForward(),
-                null);
+                null,
+                spec.getMinimumMiningFeePerByte(),
+                spec.getMaximumMiningFeePerByte());
 
             registerPaymentRequest(paymentRequest);
             return paymentRequest;

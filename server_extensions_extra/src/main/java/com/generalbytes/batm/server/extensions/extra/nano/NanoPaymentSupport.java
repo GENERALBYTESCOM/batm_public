@@ -81,7 +81,8 @@ public class NanoPaymentSupport extends PollingPaymentSupport {
             address, spec.getTotal(), spec.getTolerance(),
             spec.getRemoveAfterNumberOfConfirmationsOfIncomingTransaction(),
             spec.getRemoveAfterNumberOfConfirmationsOfOutgoingTransaction(), spec.getWallet(),
-            refundAddr, spec.getOutputs(), spec.isDoNotForward(), null);
+            refundAddr, spec.getOutputs(), spec.isDoNotForward(), null,
+            spec.getMinimumMiningFeePerByte(), spec.getMaximumMiningFeePerByte());
 
         registerPaymentRequest(request);
         return request;

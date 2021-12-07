@@ -49,4 +49,6 @@ public interface IPaymentRequestSpecification {
 
     BigDecimal getTolerance();
 
+    BigDecimal getMinimumMiningFeePerByte();
+    BigDecimal getMaximumMiningFeePerByte();
 }
