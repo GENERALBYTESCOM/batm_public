@@ -17,13 +17,13 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bittrex;
 
+import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.XChangeExchange;
 import com.generalbytes.batm.server.extensions.util.net.RateLimiter;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.IExchangeAdvanced;
-import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
 import com.generalbytes.batm.server.extensions.ITask;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.XChangeExchange;
 import org.knowm.xchange.Exchange;
 import org.knowm.xchange.ExchangeFactory;
 import org.knowm.xchange.ExchangeSpecification;
@@ -50,23 +50,28 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
     private static final Logger log = LoggerFactory.getLogger("batm.master.BittrexExchange");
 
     private static final Set<String> FIAT_CURRENCIES = new HashSet<>();
+    private static final Set<String> CRYPTO_CURRENCIES = new HashSet<>();
     public static final Comparator<LimitOrder> asksComparator = Comparator.comparing(LimitOrder::getLimitPrice);
     public static final Comparator<LimitOrder> bidsComparator = Comparator.comparing(LimitOrder::getLimitPrice).reversed();
 
     private Exchange exchange = null;
     private String apiKey;
     private String apiSecret;
+    private String preferredFiatCurrency;
 
-    private static final HashMap<String,BigDecimal> rateAmounts = new HashMap<String, BigDecimal>();
-    private static HashMap<String,Long> rateTimes = new HashMap<String, Long>();
+    private static final HashMap<String,BigDecimal> rateAmounts = new HashMap<>();
+    private static HashMap<String,Long> rateTimes = new HashMap<>();
     private static final long MAXIMUM_ALLOWED_TIME_OFFSET = 30 * 1000;
 
     static {
-        initConstants();
-    }
-
-    private static void initConstants() {
         FIAT_CURRENCIES.add(FiatCurrency.USD.getCode());
+
+        CRYPTO_CURRENCIES.add(CryptoCurrency.BTC.getCode());
+        CRYPTO_CURRENCIES.add(CryptoCurrency.BCH.getCode());
+        CRYPTO_CURRENCIES.add(CryptoCurrency.ETH.getCode());
+        CRYPTO_CURRENCIES.add(CryptoCurrency.LTC.getCode());
+        CRYPTO_CURRENCIES.add(CryptoCurrency.BAY.getCode());
+        CRYPTO_CURRENCIES.add(CryptoCurrency.BTBS.getCode());
     }
 
     private synchronized Exchange getExchange() throws TimeoutException {
@@ -82,13 +87,7 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
 
     @Override
     public Set<String> getCryptoCurrencies() {
-        Set<String> cryptoCurrencies = new HashSet<String>();
-        cryptoCurrencies.add(CryptoCurrency.BTC.getCode());
-        cryptoCurrencies.add(CryptoCurrency.BCH.getCode());
-        cryptoCurrencies.add(CryptoCurrency.ETH.getCode());
-        cryptoCurrencies.add(CryptoCurrency.LTC.getCode());
-        cryptoCurrencies.add(CryptoCurrency.BAY.getCode());
-        return cryptoCurrencies;
+        return CRYPTO_CURRENCIES;
     }
 
     @Override
@@ -96,9 +95,18 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
         return FIAT_CURRENCIES;
     }
 
-    public BittrexExchange(String apiKey, String apiSecret) {
+    public BittrexExchange(String apiKey, String apiSecret, String preferredFiatCurrency) {
         this.apiKey = apiKey;
         this.apiSecret = apiSecret;
+        this.preferredFiatCurrency = preferredFiatCurrency;
+    }
+
+    /**
+     * ratesource
+     * @param preferredFiatCurrency
+     */
+    public BittrexExchange(String preferredFiatCurrency) {
+        this(null, null, preferredFiatCurrency);
     }
 
     @Override
@@ -118,7 +126,7 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
 
     @Override
     public String getPreferredFiatCurrency() {
-        return FiatCurrency.USD.getCode();
+        return preferredFiatCurrency;
     }
 
     @Override
@@ -333,7 +341,9 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
         try {
             MarketDataService marketDataService = getExchange().getMarketDataService();
             RateLimiter.waitForPossibleCall(getClass());
-
+            if (CryptoCurrency.BTBS.getCode().equals(cryptoCurrency)) {
+                fiatCurrency = CryptoCurrency.USDT.getCode();
+            }
             CurrencyPair currencyPair = new CurrencyPair(cryptoCurrency, fiatCurrency);
             List<LimitOrder> asks = marketDataService.getOrderBook(currencyPair).getAsks();
             Collections.sort(asks, asksComparator);
@@ -372,8 +382,6 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
         }
         return null;
     }
-
-
 
     @Override
     public BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency) {
@@ -414,7 +422,6 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
         }
         return null;
     }
-
 
     @Override
     public ITask createPurchaseCoinsTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
@@ -701,9 +708,4 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
             log.info("", e);
         }
     }
-
-//    public static void main(String[] args) {
-//        log.info(new BittrexExchange("XXX", "XXX")
-//            .purchaseCoins(new BigDecimal(50), "BCH", "USD", "desc"));
-//    }
 }
