@@ -74,7 +74,7 @@
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency buyonly="true">BTBS</cryptocurrency>
                 <cryptocurrency buyonly="true">ETH</cryptocurrency>
-                <cryptocurrency>USDT</cryptocurrency>
+                <cryptocurrency buyonly="true">USDT</cryptocurrency>
                 <help>
                     *host: https://api.cryptx.com/ (required) -
                     port: (not required) - *token: generate Access tokens from CryptX Settings (required) -
@@ -100,7 +100,7 @@
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency buyonly="true">ETH</cryptocurrency>
-                <cryptocurrency>USDT</cryptocurrency>
+                <cryptocurrency buyonly="true">USDT</cryptocurrency>
                 <help>
                     *host: https://api.cryptx.com/ (required) -
                     port: (not required) - *token: generate Access tokens from CryptX Settings (required) -
@@ -160,10 +160,13 @@
                 <cryptocurrency>XMR</cryptocurrency>
             </ratesource>
             <ratesource prefix="bittrex" name ="Bittrex.com Exchange" >
+                <param name="fiatcurrency"/>
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>BAY</cryptocurrency>
+                <cryptocurrency>BTBS</cryptocurrency>
+                <help>The parameter is optional (the only supported fiat currency is USDT).</help>
             </ratesource>
             <ratesource prefix="coinmarketcap" name ="CoinMarketCap.com" >
                 <param name="fiatcurrency" />
@@ -251,6 +254,7 @@
                 <cryptocurrency>HATCH</cryptocurrency>
                 <cryptocurrency>HT</cryptocurrency>
                 <cryptocurrency>ILC</cryptocurrency>
+                <cryptocurrency>JMEL</cryptocurrency>
                 <cryptocurrency>JOB</cryptocurrency>
                 <cryptocurrency>LEO</cryptocurrency>
                 <cryptocurrency>LINDA</cryptocurrency>
@@ -319,7 +323,7 @@
                 <param name="apisecret" />
                 <param name="fiatcurrency" />
                 <cryptocurrency>BTC</cryptocurrency>
-                <cryptocurrency>ETH</cryptocurrency>
+                <cryptocurrency buyonly="true">ETH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
                 <!-- Sell on exchange & receive to exchange will work only for BTC, LTC, ETH, see org.knowm.xchange.bitfinex.v1.service.BitfinexAccountServiceRaw.requestDepositAddressRaw -->
                 <cryptocurrency>BCH</cryptocurrency>
@@ -331,14 +335,15 @@
                 <param name="apisecret" />
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>BCH</cryptocurrency>
-                <cryptocurrency>ETH</cryptocurrency>
+                <cryptocurrency buyonly="true">ETH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>BAY</cryptocurrency>
+                <cryptocurrency>BTBS</cryptocurrency>
             </exchange>
             <exchange prefix="dvchain" name="DV Chain Exchange">
                 <param name="secretKey" />
                 <cryptocurrency>BTC</cryptocurrency>
-                <cryptocurrency>ETH</cryptocurrency>
+                <cryptocurrency buyonly="true">ETH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>BCH</cryptocurrency>
                 <cryptocurrency>XMR</cryptocurrency>
@@ -350,7 +355,7 @@
             <param name="apikey" />
             <param name="apisecret" />
             <cryptocurrency>BTC</cryptocurrency>
-            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency buyonly="true">ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>SMART</cryptocurrency>
             <cryptocurrency>BCH</cryptocurrency>
@@ -386,6 +391,7 @@
             <cryptocurrency>DASH</cryptocurrency>
             <cryptocurrency buyonly="true">ETC</cryptocurrency>
             <cryptocurrency buyonly="true">ETH</cryptocurrency>
+            <cryptocurrency buyonly="true">USDT</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
             <help>accountname parameter is optional</help>
@@ -401,6 +407,7 @@
             <cryptocurrency>BIZZ</cryptocurrency>
             <cryptocurrency>ETC</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>USDT</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
             <help>accountname parameter is optional. This variant of the wallet generates new addresses for each transaction and does not forward payments from temporary address</help>
@@ -413,8 +420,8 @@
             <param name="paymentmethod" />
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
-            <cryptocurrency>ETC</cryptocurrency>
-            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency buyonly="true">ETC</cryptocurrency>
+            <cryptocurrency buyonly="true">ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>BAT</cryptocurrency>
             <help>fiatcurrency,paymentmethod are optional</help>
@@ -426,7 +433,7 @@
             <param name="fiatcurrency" />
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
-            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency buyonly="true">ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
         </exchange>
         <exchange prefix="poloniex" name="Poloniex">
@@ -436,7 +443,7 @@
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>BURST</cryptocurrency>
-            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency buyonly="true">ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>DASH</cryptocurrency>
             <cryptocurrency>DAI</cryptocurrency>
@@ -500,7 +507,7 @@
             <param name="password"/>
             <param name="fiatcurrency"/>
             <cryptocurrency>BTC</cryptocurrency>
-            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency buyonly="true">ETH</cryptocurrency>
             <cryptocurrency>BCH</cryptocurrency>
         </exchange>
         <ratesource prefix="enigma" name="Enigma-Securities.com">
@@ -541,7 +548,6 @@
             <cryptocurrency>ILC</cryptocurrency>
             <cryptocurrency>JOB</cryptocurrency>
             <cryptocurrency>LMY</cryptocurrency>
-            <cryptocurrency>KMD</cryptocurrency>
             <cryptocurrency>LEO</cryptocurrency>
             <cryptocurrency>LINDA</cryptocurrency>
             <cryptocurrency>LSK</cryptocurrency>
@@ -611,7 +617,6 @@
             <cryptocurrency>HBX</cryptocurrency>
             <cryptocurrency>JOB</cryptocurrency>
             <cryptocurrency>LMY</cryptocurrency>
-            <cryptocurrency>KMD</cryptocurrency>
             <cryptocurrency>LEO</cryptocurrency>
             <cryptocurrency>LINDA</cryptocurrency>
             <cryptocurrency>LSK</cryptocurrency>
@@ -631,7 +636,6 @@
             <cryptocurrency>SPICE</cryptocurrency>
             <cryptocurrency>START</cryptocurrency>
             <cryptocurrency>SYS</cryptocurrency>
-            <cryptocurrency>TBTC</cryptocurrency>
             <cryptocurrency>TKN</cryptocurrency>
             <cryptocurrency>TRTL</cryptocurrency>
             <cryptocurrency>TRX</cryptocurrency>
@@ -657,9 +661,8 @@
             <cryptocurrency>CLOAK</cryptocurrency>
             <cryptocurrency>DASH</cryptocurrency>
             <cryptocurrency>DOGE</cryptocurrency>
-            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency buyonly="true">ETH</cryptocurrency>
             <cryptocurrency>GRS</cryptocurrency>
-            <cryptocurrency>KMD</cryptocurrency>
             <cryptocurrency>LSK</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>NANO</cryptocurrency>
@@ -669,7 +672,7 @@
             <cryptocurrency>SYS</cryptocurrency>
             <cryptocurrency>TRX</cryptocurrency>
             <cryptocurrency>USDS</cryptocurrency>
-            <cryptocurrency>USDT</cryptocurrency>
+            <cryptocurrency buyonly="true">USDT</cryptocurrency>
             <cryptocurrency>VIA</cryptocurrency>
             <cryptocurrency>XMR</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
@@ -686,7 +689,6 @@
             <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>GRS</cryptocurrency>
-            <cryptocurrency>KMD</cryptocurrency>
             <cryptocurrency>LSK</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>NANO</cryptocurrency>
@@ -712,11 +714,11 @@
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>DASH</cryptocurrency>
             <cryptocurrency>DOGE</cryptocurrency>
-            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency buyonly="true">ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>NANO</cryptocurrency>
             <cryptocurrency>PAXG</cryptocurrency>
-            <cryptocurrency>USDT</cryptocurrency>
+            <cryptocurrency buyonly="true">USDT</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
         </exchange>
         <ratesource prefix="binanceus" name="Binance US">
@@ -739,7 +741,7 @@
             <param name="fiatcurrency"/>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>DOGE</cryptocurrency>
-            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency buyonly="true">ETH</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
         </exchange>
         <ratesource prefix="bitpandapro" name="Bitpanda Pro">
@@ -753,7 +755,7 @@
             <param name="token"/>
             <param name="secret"/>
             <cryptocurrency>BTC</cryptocurrency>
-            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency buyonly="true">ETH</cryptocurrency>
         </exchange>
         <ratesource prefix="coinzix" name="Coinzix">
             <cryptocurrency>BTC</cryptocurrency>
@@ -766,7 +768,7 @@
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>DAI</cryptocurrency>
-            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency buyonly="true">ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
             <help>fiatcurrency is optional, default: CAD</help>
@@ -893,7 +895,7 @@
         <cryptologo cryptocurrency="DOGE" file="doge.png"/>
         <cryptologo cryptocurrency="DOGE" file="doge.svg"/>
     </extension>
-    <extension class="com.generalbytes.batm.server.extensions.extra.newyorkcoin.NewYorkCoinExtension" >
+    <extension class="com.generalbytes.batm.server.extensions.extra.newyorkcoin.NewyorkcoinExtension" >
         <wallet prefix="newyorkcoind" name="Newyorkcoind">
             <tunnel supported="true"/>
             <sendtomany supported="true"/>
@@ -924,7 +926,7 @@
         <cryptologo cryptocurrency="NYC" file="nyc.png"/>
         <cryptologo cryptocurrency="NYC" file="nyc.svg"/>
     </extension>
-    <extension class="com.generalbytes.batm.server.extensions.extra.nesteggcoin.NesteggCoinExtension" >
+    <extension class="com.generalbytes.batm.server.extensions.extra.nesteggcoin.NesteggcoinExtension" >
         <wallet prefix="nesteggd" name="Nesteggd">
             <tunnel supported="true"/>
             <sendtomany supported="true"/>
@@ -2069,7 +2071,7 @@
             <param name="gaslimit" />
             <param name="gasPriceMultiplier" />
             <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
-            <cryptocurrency>USDT</cryptocurrency>
+            <cryptocurrency buyonly="true">USDT</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="USDT" file="usdt.png"/>
         <cryptologo cryptocurrency="USDT" file="usdt.svg"/>
@@ -2095,17 +2097,6 @@
         <cryptologo cryptocurrency="PAXG" file="paxg.svg"/>
         <!-- ADD your ERC20 tokens here. And don't forget to add cryptologos. -->
     </extension>
-
-    <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.TransactionExtension" />-->
-    <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.ProfitOverrideExtension" />-->
-    <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.identity.IdentityExampleExtension" />-->
-    <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.location.LocationExampleExtension" />-->
-    <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.identity.ExternalIdentityExampleExtension" />-->
-    <!--<extension class="com.generalbytes.batm.server.extensions.extra.watchlists.WatchlistExtension" />-->
-    <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.rest.RESTExampleExtension" />-->
-    <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.communication.ExternalCommunicationExampleExtension" />-->
-    <!--<extension class="com.generalbytes.batm.server.extensions.extra.examples.activeTerminals.ActiveTerminalsExtension" />-->
-
     <extension class="com.generalbytes.batm.server.extensions.extra.examples.chat.ChatBotExtensionExample" />
     <extension class="com.generalbytes.batm.server.extensions.extra.nuls.NulsExtension" >
         <wallet prefix="nulsBinance" name="NULS">
@@ -2179,6 +2170,7 @@
             <cryptocurrency>SPICE</cryptocurrency>
             <cryptocurrency>DDB</cryptocurrency>
             <cryptocurrency>SUNCASH</cryptocurrency>
+            <cryptocurrency>JMEL</cryptocurrency>
         </wallet>
         <!-- See https://github.com/kosinusbch/slp-token-icons for token logos -->
         <cryptologo cryptocurrency="SPICE" file="spice.png"/>
@@ -2187,6 +2179,8 @@
         <cryptologo cryptocurrency="DDB" file="ddb.svg"/>
         <cryptologo cryptocurrency="SUNCASH" file="suncash.png"/>
         <cryptologo cryptocurrency="SUNCASH" file="suncash.svg"/>
+        <cryptologo cryptocurrency="JMEL" file="jmel.png"/>
+        <cryptologo cryptocurrency="JMEL" file="jmel.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.ilcoin.IlcoinExtension" >
         <wallet prefix="ilcoind" name="ILCoin">
@@ -2243,5 +2237,15 @@
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.ethereumclassic.EthereumClassicExtension">
     </extension>
+
+    <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.TransactionExtension" />
+    <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.ProfitOverrideExtension" />
+    <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.identity.IdentityExampleExtension" />
+    <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.location.LocationExampleExtension" />
+    <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.identity.ExternalIdentityExampleExtension" />
+    <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.watchlists.WatchlistExtension" />
+    <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.rest.RESTExampleExtension" />
+    <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.communication.ExternalCommunicationExampleExtension" />
+    <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.activeTerminals.ActiveTerminalsExtension" />
 
 </extensions>

@@ -19,7 +19,6 @@ package com.generalbytes.batm.server.extensions.extra.ethereum;
 
 import com.generalbytes.batm.server.extensions.AbstractExtension;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
-import com.generalbytes.batm.server.extensions.CryptoCurrencyDefinition;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
 import com.generalbytes.batm.server.extensions.IRateSource;
@@ -29,6 +28,7 @@ import com.generalbytes.batm.server.extensions.extra.ethereum.erc20.bizz.BizzDef
 import com.generalbytes.batm.server.extensions.extra.ethereum.erc20.dai.DaiDefinition;
 import com.generalbytes.batm.server.extensions.extra.ethereum.sources.stasis.StasisTickerRateSource;
 import com.generalbytes.batm.server.extensions.extra.ethereum.stream365.Stream365;
+import com.google.common.collect.ImmutableSet;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -37,9 +37,11 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 public class EthereumExtension extends AbstractExtension{
-    private static final CryptoCurrencyDefinition DAI_CRYPTOCURRENCY_DEFINITION = new DaiDefinition();
-    private static final CryptoCurrencyDefinition ETH_CRYPTOCURRENCY_DEFINITION = new EthDefinition();
-    private static final CryptoCurrencyDefinition BIZZ_CRYPTOCURRENCY_DEFINITION = new BizzDefinition();
+    private static final Set<ICryptoCurrencyDefinition> cryptoCurrencyDefinitions = ImmutableSet.of(
+        new DaiDefinition(),
+        new EthDefinition(),
+        new BizzDefinition(),
+        new UsdtDefinition());
 
     @Override
     public String getName() {
@@ -65,6 +67,11 @@ public class EthereumExtension extends AbstractExtension{
         result.add(CryptoCurrency.USDT.getCode());
         result.add(CryptoCurrency.ZPAE.getCode());
         result.add(CryptoCurrency.PAXG.getCode());
+        result.add(CryptoCurrency.HT.getCode());
+        result.add(CryptoCurrency.LMY.getCode());
+        result.add(CryptoCurrency.USDS.getCode());
+        result.add(CryptoCurrency.JOB.getCode());
+        result.add(CryptoCurrency.WILC.getCode());
         result.add(CryptoCurrency.SHIB.getCode());
         return result;
     }
@@ -148,11 +155,7 @@ public class EthereumExtension extends AbstractExtension{
 
     @Override
     public Set<ICryptoCurrencyDefinition> getCryptoCurrencyDefinitions() {
-        Set<ICryptoCurrencyDefinition> result = new HashSet<>();
-        result.add(DAI_CRYPTOCURRENCY_DEFINITION);
-        result.add(ETH_CRYPTOCURRENCY_DEFINITION);
-        result.add(BIZZ_CRYPTOCURRENCY_DEFINITION);
-        return result;
+        return cryptoCurrencyDefinitions;
     }
 
 }

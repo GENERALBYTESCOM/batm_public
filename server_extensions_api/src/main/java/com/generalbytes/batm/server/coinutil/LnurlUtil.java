@@ -8,13 +8,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 public class LnurlUtil {
     public static final String WITHDRAW_PATH = "withdraw";
     public static final String WITHDRAW_CONFIRM_PATH = "withdraw-confirm";
     public static final String LNURL_HRP = "lnurl";
 
-    public final String baseUrl = getBaseUrlConfiguration();
+    private String baseUrl = null;
+    private Long baseUrlLoadedNanoTime = null;
 
     public static String getLock(String rid) {
         return ("LNURL" + rid).intern();
@@ -23,6 +25,7 @@ public class LnurlUtil {
     // some wallets will display the hostname, e.g. <hostname> is taking too long to pay [...] please contact <hostname>.
 
     public String getLnurlQrcode(String rid, String uuid, BigDecimal cryptoAmount) {
+        String baseUrl = getBaseUrl();
         Objects.requireNonNull(baseUrl, "LNURL Base URL must be configured");
         Objects.requireNonNull(rid, "RID cannot be null");
         Objects.requireNonNull(uuid, "UUID cannot be null");
@@ -35,6 +38,7 @@ public class LnurlUtil {
     }
 
     public String getConfirmCallbackUrl(String uuid, String rid) {
+        String baseUrl = getBaseUrl();
         Objects.requireNonNull(baseUrl, "LNURL Base URL must be configured");
         Objects.requireNonNull(rid, "RID cannot be null");
         Objects.requireNonNull(uuid, "UUID cannot be null");
@@ -59,9 +63,18 @@ public class LnurlUtil {
 
     /**
      * @return "base_url" property from /batm/config/lnurl file or null if the file does not exist.
+     * File content is memoized for 1 minute.
      * @throws RuntimeException if the file exist but cannot be read
      */
-    private String getBaseUrlConfiguration() throws RuntimeException {
+    private String getBaseUrl() throws RuntimeException {
+        if (baseUrlLoadedNanoTime == null || System.nanoTime() - baseUrlLoadedNanoTime > TimeUnit.MINUTES.toNanos(1)) {
+            baseUrl = loadBaseUrl();
+            baseUrlLoadedNanoTime = System.nanoTime();
+        }
+        return baseUrl;
+    }
+
+    private String loadBaseUrl() throws RuntimeException {
         Path path = Paths.get(System.getProperty("batm.home", "/batm"), "config", "lnurl");
         if (!Files.exists(path)) {
             return null;
@@ -78,7 +91,7 @@ public class LnurlUtil {
     private String validateBaseUrl(String baseUrl, Path path) {
         if (baseUrl == null || !baseUrl.startsWith("https://") || baseUrl.endsWith("/")) {
             throw new RuntimeException("LNURL: Invalid base url configuration. "
-                + "Use 'base_url' property in '" + path.toAbsolutePath().toString() + "' file. "
+                + "Use 'base_url' property in '" + path.toAbsolutePath() + "' file. "
                 + "It must start with https:// and must not end with '/'");
         }
         return baseUrl;

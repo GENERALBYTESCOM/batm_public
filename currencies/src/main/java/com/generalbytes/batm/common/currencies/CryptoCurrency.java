@@ -72,6 +72,7 @@ public enum CryptoCurrency {
     HT("Huobi Token"),
     ILC("ILCoin"),
     KMD("Komodo"),
+    JMEL("JMEL Enterprises"),
     JOB("Jobchain"),
     LMY("Lunch Money"),
     LBTC("Lightning Network Bitcoin"),

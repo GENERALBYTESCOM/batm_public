@@ -98,7 +98,7 @@ public class BitcoinExtension extends AbstractExtension {
             } else if ("bittrex".equalsIgnoreCase(prefix)) {
                 String apiKey = paramTokenizer.nextToken();
                 String apiSecret = paramTokenizer.nextToken();
-                return new BittrexExchange(apiKey, apiSecret);
+                return new BittrexExchange(apiKey, apiSecret, FiatCurrency.USD.getCode());
             } else if ("hitbtc".equalsIgnoreCase(prefix)) {
                 String preferredFiatCurrency = FiatCurrency.USD.getCode();
                 String apiKey = paramTokenizer.nextToken();
@@ -473,7 +473,8 @@ public class BitcoinExtension extends AbstractExtension {
                 }
                 return new BitfinexExchange(preferredFiatCurrency);
             } else if ("bittrex".equalsIgnoreCase(rsType)) {
-                return new BittrexExchange("**", "**");
+                String preferredFiatCurrency = st.hasMoreTokens() ? st.nextToken().toUpperCase() : FiatCurrency.USD.getCode();
+                return new BittrexExchange(preferredFiatCurrency);
             } else if ("bity".equalsIgnoreCase(rsType)) {
                 String preferredFiatCurrency = FiatCurrency.CHF.getCode();
                 if (st.hasMoreTokens()) {
