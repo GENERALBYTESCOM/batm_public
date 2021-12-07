@@ -27,6 +27,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBPaginatedResponse;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBSendRequest;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBSendResponse;
+import com.google.common.collect.ImmutableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import si.mazi.rescu.ClientConfig;
@@ -48,6 +49,19 @@ import java.util.function.Function;
 
 public class CoinbaseWalletV2 implements IWallet {
     private static final Logger log = LoggerFactory.getLogger("batm.master.CoinbaseWallet2");
+    private static final ImmutableMap<String, String> supportedCryptoCurrencyToNetworkMap = new ImmutableMap.Builder<String, String>()
+        .put(CryptoCurrency.BTC.getCode(), "bitcoin")
+        .put(CryptoCurrency.LTC.getCode(), "litecoin")
+        .put(CryptoCurrency.ETH.getCode(), "ethereum")
+        .put(CryptoCurrency.BAT.getCode(), "ethereum")
+        .put(CryptoCurrency.DAI.getCode(), "ethereum")
+        .put(CryptoCurrency.BIZZ.getCode(), "ethereum")
+        .put(CryptoCurrency.USDT.getCode(), "ethereum")
+        .put(CryptoCurrency.ETC.getCode(), "ethereum_classic")
+        .put(CryptoCurrency.BCH.getCode(), "bitcoincash")
+        .put(CryptoCurrency.DASH.getCode(), "dash")
+        .put(CryptoCurrency.XRP.getCode(), "ripple")
+        .build();
 
     protected static final String API_VERSION="2016-07-23";
     private String preferredCryptoCurrency;
@@ -68,18 +82,7 @@ public class CoinbaseWalletV2 implements IWallet {
 
     @Override
     public Set<String> getCryptoCurrencies() {
-        Set<String> result = new HashSet<String>();
-        result.add(CryptoCurrency.BAT.getCode());
-        result.add(CryptoCurrency.DAI.getCode());
-        result.add(CryptoCurrency.BIZZ.getCode());
-        result.add(CryptoCurrency.BCH.getCode());
-        result.add(CryptoCurrency.BTC.getCode());
-        result.add(CryptoCurrency.ETC.getCode());
-        result.add(CryptoCurrency.ETH.getCode());
-        result.add(CryptoCurrency.DASH.getCode());
-        result.add(CryptoCurrency.LTC.getCode());
-        result.add(CryptoCurrency.XRP.getCode());
-        return result;
+        return supportedCryptoCurrencyToNetworkMap.keySet();
     }
 
     @Override
@@ -179,23 +182,7 @@ public class CoinbaseWalletV2 implements IWallet {
     }
 
     protected String getNetworkName(String cryptoCurrency) {
-        if (CryptoCurrency.BTC.getCode().equalsIgnoreCase(cryptoCurrency)) {
-            return "bitcoin";
-        } else if (CryptoCurrency.LTC.getCode().equalsIgnoreCase(cryptoCurrency)) {
-            return "litecoin";
-        } else if (CryptoCurrency.ETH.getCode().equalsIgnoreCase(cryptoCurrency)
-            || CryptoCurrency.BAT.getCode().equalsIgnoreCase(cryptoCurrency)
-            || CryptoCurrency.DAI.getCode().equalsIgnoreCase(cryptoCurrency)
-            || CryptoCurrency.BIZZ.getCode().equalsIgnoreCase(cryptoCurrency)) {
-            return "ethereum";
-        } else if (CryptoCurrency.ETC.getCode().equalsIgnoreCase(cryptoCurrency)) {
-            return "ethereum_classic";
-        } else if (CryptoCurrency.BCH.getCode().equalsIgnoreCase(cryptoCurrency)) {
-            return "bitcoincash";
-        } else if (CryptoCurrency.DASH.getCode().equalsIgnoreCase(cryptoCurrency)) {
-            return "dash";
-        }
-        return null;
+        return supportedCryptoCurrencyToNetworkMap.get(cryptoCurrency);
     }
 
     @Override
