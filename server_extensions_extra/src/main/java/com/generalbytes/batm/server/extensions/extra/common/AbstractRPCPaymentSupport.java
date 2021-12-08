@@ -35,6 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -386,7 +387,7 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
                                 log_info("Amounts matched " + (exactMatch ? "exactly" : "") + (matchInTolerance ? "in tolerance" : "") + " " + request.getAddress() + ". Creating forwarding transaction. " + request.getLogInfoWatchingFor() + "\ntx = " + tx);
                                 TXForBroadcast newTx = createTransaction(tx.raw(), request, toleranceRemain, request.getOutputs());
                                 if (newTx != null) {
-                                    BigDecimal txValue = totalCoinsReceived.subtract(getMinimumNetworkFee(getClient(request.getWallet())));
+                                    BigDecimal txValue = totalCoinsReceived.subtract(request.getForwardingTransactionMiningFee());
                                     request.setTxValue(txValue);
                                     request.setIncomingTransactionHash(tx.txId());
                                     incomingTransactions.add(tx.txId());
@@ -504,7 +505,7 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
                 }
             }
 
-            cryptoTotalToSend = cryptoTotalToSend.setScale(6, BigDecimal.ROUND_HALF_UP); //round to 6 decimal places
+            cryptoTotalToSend = cryptoTotalToSend.setScale(8, RoundingMode.HALF_UP);
             final PaymentRequest paymentRequest = new PaymentRequest(
                 spec.getCryptoCurrency(),
                 spec.getDescription(),
