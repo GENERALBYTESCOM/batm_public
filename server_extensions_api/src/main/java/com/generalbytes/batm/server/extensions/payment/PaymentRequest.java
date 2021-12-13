@@ -215,6 +215,12 @@ public class PaymentRequest {
         return tolerance;
     }
 
+    /**
+     * @return amount to be sold on exchange (if appropriate strategy configured).
+     * For forwarding transactions this should be the amount sent by the user minus mining fee used for the forwarding transaction.
+     * For non-forwarding, it's the same as the amount received from the user.
+     * Also see {@link #getForwardingTransactionMiningFee()}
+     */
     public BigDecimal getTxValue() {
         return txValue;
     }
@@ -340,5 +346,16 @@ public class PaymentRequest {
 
     public BigDecimal getMaximumMiningFeePerByte() {
         return maximumMiningFeePerByte;
+    }
+
+    /**
+     * Gets mining fee used for the forwarding transaction from the server generated wallet to the destination address
+     *
+     * @return difference between "amount" (what was sent by the user) and sum of all outputs (what will be received to the destination address).
+     * Non-forwarding transactions should have one output of the same size as request amount so the result will be zero.
+     */
+    public BigDecimal getForwardingTransactionMiningFee() {
+        BigDecimal outputsSum = outputs.stream().map(IPaymentOutput::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+        return amount.subtract(outputsSum);
     }
 }
