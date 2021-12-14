@@ -8,6 +8,7 @@ import com.generalbytes.batm.server.extensions.extra.watchlists.ca.tags.Record;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ParsedSanctions implements IParsedSanctions {
 
@@ -18,7 +19,23 @@ public class ParsedSanctions implements IParsedSanctions {
     }
 
     public static ParsedSanctions parse(DataSet dataSet) {
-        return new ParsedSanctions(dataSet.getRecords());
+        List<Record> records = dataSet.getRecords().stream()
+            .filter(recordElement -> recordElement.getItem() != null)
+            .filter(recordElement -> recordElement.getCountry() != null)
+            .map(original -> {
+                Record modified = new Record();
+                modified.setCountry(fixCountryName(original.getCountry()));
+                modified.setGivenName(makeTrimmedNonNullString(original.getGivenName()));
+                modified.setLastName(makeTrimmedNonNullString(original.getLastName()));
+                modified.setItem(original.getItem());
+                modified.setSchedule(original.getSchedule());
+                modified.setAliases(original.getAliases());
+
+                return modified;
+            })
+            .collect(Collectors.toList());
+
+        return new ParsedSanctions(records);
     }
 
     @Override
@@ -32,7 +49,7 @@ public class ParsedSanctions implements IParsedSanctions {
             if (!lastName.isEmpty()) {
                 //search just against last names
                 for (Record item : records) {
-                    if (lastName.equalsIgnoreCase(getTrimmedNonNullString(item.getLastName()))) {
+                    if (lastName.equalsIgnoreCase(item.getLastName())) {
                         matchedParties.add(new Match(getPartyId(item), 100));
                         continue;
                     }
@@ -48,7 +65,7 @@ public class ParsedSanctions implements IParsedSanctions {
             //search against lastname and firstname
             Set<Record> candidateRecords = new HashSet<>();
             for (Record item : records) {
-                if (lastName.equalsIgnoreCase(getTrimmedNonNullString(item.getLastName()))) {
+                if (lastName.equalsIgnoreCase(item.getLastName())) {
                     if (firstName.equalsIgnoreCase(item.getGivenName()) || containsSubstring(firstName, item.getGivenName())) {
                         matchedParties.add(new Match(getPartyId(item), 100));
                     } else {
@@ -79,6 +96,10 @@ public class ParsedSanctions implements IParsedSanctions {
 
     @Override
     public String getTrimmedNonNullString(String input) {
+        return ParsedSanctions.makeTrimmedNonNullString(input);
+    }
+
+    private static String makeTrimmedNonNullString(String input) {
         if (input == null) {
             return "";
         }
@@ -86,8 +107,7 @@ public class ParsedSanctions implements IParsedSanctions {
     }
 
     private String getPartyId(Record item) {
-        String country = fixCountryName(item.getCountry());
-        String partyId = country + "/";
+        String partyId = item.getCountry() + "/";
         String schedule = item.getSchedule();
         if (schedule != null && !schedule.isEmpty()) {
             schedule = schedule.replaceAll("[^0-9]+", ".").replaceAll("\\.+$|^\\.+", "");
@@ -99,7 +119,7 @@ public class ParsedSanctions implements IParsedSanctions {
         return partyId;
     }
 
-    private String fixCountryName(String countryRaw) {
+    private static String fixCountryName(String countryRaw) {
         String country = countryRaw.split("/")[0].trim();
         int longestCountryNameLength = 57;
         if (country.length() > longestCountryNameLength) {
