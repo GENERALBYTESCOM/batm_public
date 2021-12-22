@@ -53,7 +53,7 @@ public class CoinbaseWalletV2WithUniqueAddresses extends CoinbaseWalletV2 implem
             CBAddress address = addressesResponse.getData();
             String network = getNetworkName(cryptoCurrency);
             if (!address.getNetwork().equalsIgnoreCase(network)) {
-                log.warn("network does not match");
+                log.warn("network does not match; {} network name: {}, received: {}", cryptoCurrency, network, address.getNetwork());
                 return null;
             }
             return address.getAddress();
