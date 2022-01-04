@@ -255,6 +255,11 @@ public class TestExtensionContext implements IExtensionContext {
     }
 
     @Override
+    public boolean watchListScan(String identityPublicId) {
+        return false;
+    }
+
+    @Override
     public PhoneNumberQueryResult queryPhoneNumber(String phoneNumber, String terminalSerialNumber) {
         return null;
     }
