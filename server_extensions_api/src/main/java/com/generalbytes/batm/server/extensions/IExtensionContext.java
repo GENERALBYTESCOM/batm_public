@@ -484,6 +484,14 @@ public interface IExtensionContext {
     WatchListResult searchWatchList(WatchListQuery query);
 
     /**
+     * Triggers a watch list scan for given identity public ID.
+     * Also updates identity's watchListBanned and watchListLastScanAt fields.
+     * @param identityPublicId public ID of an existing identity
+     * @return true if identity is banned on any of watch lists
+     */
+    boolean watchListScan(String identityPublicId);
+
+    /**
      * Queries the phone number for its type and if it is blocked based on the settings on terminal organization.
      * Same functionality as "Use GB API For Blocking Not Registered Identities By Certain Line Type". Charged Service.
      * @param phoneNumber phone number to be queried. If missing, the country prefix is determined by the terminal location.
