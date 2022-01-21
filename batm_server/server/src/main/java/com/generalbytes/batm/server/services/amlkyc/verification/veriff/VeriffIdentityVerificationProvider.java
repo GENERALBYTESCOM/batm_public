@@ -30,8 +30,8 @@ public class VeriffIdentityVerificationProvider implements IIdentityVerification
         Objects.requireNonNull(publicKey, "veriff public key cannot be null");
         Objects.requireNonNull(privateKey, "veriff private key cannot be null");
         VeriffDigest veriffDigest = new VeriffDigest(privateKey);
-        veriffWebhookProcessor = new VeriffWebhookProcessor(veriffDigest);
         api = IVeriffApi.create(publicKey, veriffDigest);
+        veriffWebhookProcessor = new VeriffWebhookProcessor(publicKey, veriffDigest, api);
     }
 
     /**

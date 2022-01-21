@@ -3,14 +3,19 @@ package com.generalbytes.batm.server.services.amlkyc.verification.onfido;
 import com.generalbytes.batm.server.ServerConfigForAll;
 import com.generalbytes.batm.server.common.data.Organization;
 import com.generalbytes.batm.server.common.data.amlkyc.ApplicantCheckResult;
+import com.generalbytes.batm.server.common.data.amlkyc.Identity;
 import com.generalbytes.batm.server.common.data.amlkyc.IdentityApplicant;
+import com.generalbytes.batm.server.core.tp.IdentityHelper;
 import com.generalbytes.batm.server.dao.JPADao;
 import com.generalbytes.batm.server.dao.JPAUtil;
 import com.generalbytes.batm.server.services.amlkyc.verification.VerificationResultProcessor;
 import com.generalbytes.batm.server.services.web.IdentityCheckWebhookException;
 import com.onfido.Onfido;
+import com.onfido.api.FileDownload;
 import com.onfido.exceptions.OnfidoException;
 import com.onfido.models.Check;
+import com.onfido.models.Document;
+import com.onfido.models.LivePhoto;
 import com.onfido.models.Webhook;
 import com.onfido.webhooks.WebhookEvent;
 import com.onfido.webhooks.WebhookEventVerifier;
@@ -18,8 +23,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.Response;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Onfido has a list of webhooks configured, and it sends the events to ALL of them.
@@ -46,7 +55,8 @@ import java.util.Map;
  */
 public class OnfidoWebhookProcessor {
     private static final Logger log = LoggerFactory.getLogger(OnfidoWebhookProcessor.class);
-    static final Map<String, Webhook> HOOKS = new HashMap<>();
+    private static final Map<String, Webhook> HOOKS = new HashMap<>();
+    private static final ExecutorService documentDownloadExecutorService = Executors.newSingleThreadExecutor();
 
     private final JPADao jpaDao;
     private final Onfido onfido;
@@ -58,7 +68,7 @@ public class OnfidoWebhookProcessor {
         this.onfido = onfido;
         this.checkResultMapper = new OnfidoVerificationResultMapper(onfido);
 
-        getOrCreateWebhook(webhookKey);
+        getOrCreateWebhook(Objects.requireNonNull(webhookKey, "Webhook key cannot be null"));
     }
 
     private Webhook getOrCreateWebhook(String webhookKey) {
@@ -95,9 +105,10 @@ public class OnfidoWebhookProcessor {
 
             if (event.getAction().equals("check.completed")) {
                 Check check = onfido.check.find(event.getObject().getId());
-                IdentityApplicant identityApplicant = jpaDao.getApplicantByApplicantId(check.getApplicantId());
+                String applicantId = check.getApplicantId();
+                IdentityApplicant identityApplicant = jpaDao.getApplicantByApplicantId(applicantId);
                 if (identityApplicant == null) {
-                    log.error("Identity applicant {} not found. Skipping check result processing.", check.getApplicantId());
+                    log.error("Identity applicant {} not found. Skipping check result processing.", applicantId);
                     return;
                 }
                 Organization applicantOrganization = identityApplicant.getOrganization();
@@ -107,6 +118,8 @@ public class OnfidoWebhookProcessor {
                         webhookKey, identityApplicant, applicantOrganization.getId());
                     return;
                 }
+
+                downloadDocuments(applicantId, identityApplicant);
                 ApplicantCheckResult result = checkResultMapper.mapResult(check, identityApplicant);
                 verificationResultProcessor.process(result);
                 jpaDao.update(result);
@@ -128,5 +141,51 @@ public class OnfidoWebhookProcessor {
             // Delete any unused/old webhooks on https://dashboard.onfido.com/api/webhook_management
             throw new IdentityCheckWebhookException(Response.Status.INTERNAL_SERVER_ERROR, "Failed to parse event", rawPayload, e);
         }
+    }
+
+    private void downloadDocuments(String applicantId, IdentityApplicant identityApplicant) {
+        // we have 10 seconds to reply to the webhook, better download the documents in a background thread
+        documentDownloadExecutorService.submit(() -> {
+            try {
+                downloadIdScans(applicantId, identityApplicant.getIdentity());
+                downloadSelfies(applicantId, identityApplicant.getIdentity());
+            } catch (Exception e) {
+                log.error("Error downloading documents for applicant ID: {}, {}", applicantId, identityApplicant.getIdentity(), e);
+            }
+        });
+    }
+
+    private void downloadSelfies(String applicantId, Identity identity) throws OnfidoException {
+        for (LivePhoto photo : onfido.livePhoto.list(applicantId)) {
+            log.info("Saving selfie for {}", identity);
+            FileDownload download = downloadSelfie(photo);
+            IdentityHelper.addSelfieToIdentityInCurrentTransaction(identity, download.contentType, download.content);
+        }
+    }
+
+    private void downloadIdScans(String applicantId, Identity identity) throws OnfidoException {
+        for (Document document : onfido.document.list(applicantId)) {
+            log.info("Saving ID scan (type:{}, side:{}) for {}", document.getType(), document.getSide(), identity);
+            FileDownload download = downloadIdScan(document);
+            IdentityHelper.addIdScanToIdentityInCurrentTransaction(identity, download.contentType, download.content);
+        }
+    }
+
+    private FileDownload downloadSelfie(LivePhoto photo) throws OnfidoException {
+        long downloadStartNanos = System.nanoTime();
+        FileDownload download = onfido.livePhoto.download(photo.getId());
+        int fileSizeKiloBytes = download.content.length / 1000;
+        long downloadMillis = Duration.ofNanos(System.nanoTime() - downloadStartNanos).toMillis();
+        log.info("Onfido selfie downloaded: {} kB in {} ms", fileSizeKiloBytes, downloadMillis);
+        return download;
+    }
+
+    private FileDownload downloadIdScan(Document document) throws OnfidoException {
+        long downloadStartNanos = System.nanoTime();
+        FileDownload download = onfido.document.download(document.getId());
+        int fileSizeKiloBytes = download.content.length / 1000;
+        long downloadMillis = Duration.ofNanos(System.nanoTime() - downloadStartNanos).toMillis();
+        log.info("Onfido ID scan downloaded: {} kB in {} ms", fileSizeKiloBytes, downloadMillis);
+        return download;
     }
 }
