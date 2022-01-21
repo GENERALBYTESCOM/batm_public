@@ -49,8 +49,9 @@ public class VerificationSiteClient {
     }
 
     public static VerificationSiteClient create(String url, Organization org) {
-        log.info("Creating new verification-site client for url {}", url);
-        String callbackUrl = org.getIdentityVerificationConfig().getProvider() == ONFIDO_GLOBAL_CAS ? ServerConfig.getPropertyGlobalServer("base_url") : ServerConfig.getMasterServerApiAddress();
+        String callbackUrl = ServerConfig.getMasterServerApiAddress();
+        // After the documents are submitted, the verification website will call this url (with added path and applicant ID)
+        log.info("Creating new verification-site client for url {} with callbackUrl {}(/serverapi/apiv1/identity-check/submit/<applicantId>)", url, callbackUrl);
         return new VerificationSiteClient(url, callbackUrl);
     }
 }

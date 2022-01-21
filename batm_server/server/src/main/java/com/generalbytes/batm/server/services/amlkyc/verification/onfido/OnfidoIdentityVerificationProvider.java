@@ -1,16 +1,14 @@
 package com.generalbytes.batm.server.services.amlkyc.verification.onfido;
 
-import com.generalbytes.batm.server.ServerConfigForAll;
 import com.generalbytes.batm.server.common.data.OnfidoRegion;
 import com.generalbytes.batm.server.common.data.Organization;
-import com.generalbytes.batm.server.common.data.amlkyc.ApplicantCheckResult;
 import com.generalbytes.batm.server.common.data.amlkyc.Identity;
 import com.generalbytes.batm.server.common.data.amlkyc.IdentityApplicant;
 import com.generalbytes.batm.server.dao.JPADao;
 import com.generalbytes.batm.server.dao.JPAUtil;
 import com.generalbytes.batm.server.services.amlkyc.verification.IIdentityVerificationProvider;
 import com.generalbytes.batm.server.services.amlkyc.verification.IdentityVerificationBillingHelper;
-import com.generalbytes.batm.server.services.amlkyc.verification.VerificationResultProcessor;
+import com.generalbytes.batm.server.services.web.IdentityCheckWebhookException;
 import com.generalbytes.batm.server.services.web.client.VerificationSiteClient;
 import com.generalbytes.batm.server.services.web.client.dto.CreateApplicantResponse;
 import com.onfido.Onfido;
@@ -18,46 +16,35 @@ import com.onfido.exceptions.OnfidoException;
 import com.onfido.models.Applicant;
 import com.onfido.models.Check;
 import com.onfido.models.SdkToken;
-import com.onfido.models.Webhook;
-import com.onfido.webhooks.WebhookEvent;
-import com.onfido.webhooks.WebhookEventVerifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
 
 public class OnfidoIdentityVerificationProvider implements IIdentityVerificationProvider {
 
     private static final Logger log = LoggerFactory.getLogger("batm.master.OnfidoIdentityVerificationProvider");
-    private static Webhook HOOK;
 
     public final Onfido onfido;
     private final JPADao jpaDao;
-    private final OnfidoVerificationResultMapper checkResultMapper;
     private final String referrer;
     private final String verificationSiteUrl;
-    private final VerificationResultProcessor verificationResultProcessor = new VerificationResultProcessor();
-    private IdentityVerificationBillingHelper identityVerificationBillingHelper = new IdentityVerificationBillingHelper();
+    private final OnfidoWebhookProcessor webhookProcessor;
+    private final IdentityVerificationBillingHelper identityVerificationBillingHelper = new IdentityVerificationBillingHelper();
 
-    public OnfidoIdentityVerificationProvider() {
-        this(ServerConfigForAll.getOnfidoApiKey(),
-            ServerConfigForAll.getOnfidoVerificationSiteUrl(),
-            OnfidoRegion.valueOf(ServerConfigForAll.getOnfidoRegion()));
-    }
-
-    public OnfidoIdentityVerificationProvider(String onfidoApiKey, String verificationSiteUrl, OnfidoRegion region) {
+    public OnfidoIdentityVerificationProvider(String onfidoApiKey, String verificationSiteUrl, OnfidoRegion region, String webhookKey) {
         this(
             buildOnfido(onfidoApiKey, region),
             JPADao.getInstance(),
-            verificationSiteUrl
-        );
+            verificationSiteUrl,
+            webhookKey);
     }
 
     private static Onfido buildOnfido(String apiKey, OnfidoRegion region) {
+        Objects.requireNonNull(apiKey, "onfido api key cannot be null");
         Onfido.Builder builder = Onfido.builder().apiToken(apiKey);
         Objects.requireNonNull(region, "region cannot be null");
         switch (region) {
@@ -71,16 +58,15 @@ public class OnfidoIdentityVerificationProvider implements IIdentityVerification
         }
     }
 
-    public OnfidoIdentityVerificationProvider(Onfido onfido, JPADao jpaDao, String verificationSiteUrl) {
+    public OnfidoIdentityVerificationProvider(Onfido onfido, JPADao jpaDao, String verificationSiteUrl, String webhookKey) {
         if (verificationSiteUrl == null) {
             throw new IllegalArgumentException("verificationSiteUrl must be configured!");
         }
         this.onfido = onfido;
         this.jpaDao = jpaDao;
-        this.checkResultMapper = new OnfidoVerificationResultMapper(onfido);
         this.referrer = getReferrer(verificationSiteUrl);
         this.verificationSiteUrl = verificationSiteUrl;
-        ensureWebhook();
+        this.webhookProcessor = new OnfidoWebhookProcessor(onfido, jpaDao, webhookKey);
     }
 
     @Override
@@ -139,46 +125,8 @@ public class OnfidoIdentityVerificationProvider implements IIdentityVerification
     }
 
     @Override
-    public void processWebhookEvent(String rawPayload, String signature) {
-        try {
-            WebhookEvent event = callInTry(() -> new WebhookEventVerifier(HOOK.getToken()).readPayload(rawPayload, signature));
-            if (event == null) {
-                log.error("Failed to parse event: {}", rawPayload);
-                return;
-            }
-            log.debug("Received onfido event {}: id {} status {}", event.getAction(), event.getObject().getId(), event.getObject().getStatus());
-
-            if (event.getAction().equals("check.completed")) {
-                Check check = callInTry(() -> onfido.check.find(event.getObject().getId()));
-                IdentityApplicant identityApplicant = jpaDao.getApplicantByApplicantId(check.getApplicantId());
-                if (identityApplicant == null) {
-                    log.error("Identity applicant {} not found. Skipping check result processing.", check.getApplicantId());
-                    return;
-                }
-                ApplicantCheckResult result = checkResultMapper.mapResult(check, identityApplicant);
-                verificationResultProcessor.process(result);
-                jpaDao.update(result);
-            }
-        } catch (Exception e) {
-            log.error("processWebhookEvent - ERROR", e);
-        } finally {
-            JPAUtil.releaseEntityManagerWithCommit();
-        }
-    }
-
-    private void ensureWebhook() {
-        callInTry(() -> {
-            if (HOOK == null) {
-                String webhookMasterUrl = ServerConfigForAll.getMasterServerProxyAddress() + "/serverapi/apiv1/identity-check/onfidowh";
-                List<Webhook> webhooks = onfido.webhook.list();
-                HOOK = webhooks.stream().filter(webhook -> webhook.getUrl().equals(webhookMasterUrl)).findFirst().orElse(null);
-                if (HOOK == null) {
-                    log.info("creating new webhook with url={}", webhookMasterUrl);
-                    HOOK = onfido.webhook.create(Webhook.request().url(webhookMasterUrl));
-                }
-            }
-            return null;
-        });
+    public void processWebhookEvent(String rawPayload, String signature, String webhookKey) throws IdentityCheckWebhookException {
+        webhookProcessor.process(rawPayload, signature, webhookKey);
     }
 
     private String getSdkToken(String applicantId) {
@@ -200,8 +148,8 @@ public class OnfidoIdentityVerificationProvider implements IIdentityVerification
         }
     }
 
-    public static  <OUT> OUT callInTry(OnfidoCallSupplier<OUT> fn) {
-       return fn.get();
+    public static <OUT> OUT callInTry(OnfidoCallSupplier<OUT> fn) {
+        return fn.get();
     }
 }
 

@@ -78,7 +78,7 @@ public class VeriffIdentityVerificationProvider implements IIdentityVerification
     }
 
     @Override
-    public void processWebhookEvent(String rawPayload, String signature) throws IdentityCheckWebhookException {
+    public void processWebhookEvent(String rawPayload, String signature, String webhookKey) throws IdentityCheckWebhookException {
         veriffWebhookProcessor.process(rawPayload, signature);
     }
 }
