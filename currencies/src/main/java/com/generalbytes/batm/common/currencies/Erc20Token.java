@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum Erc20Token {
-    USDT(CryptoCurrency.USDT, "0xdAC17F958D2ee523a2206206994597C13D831ec7"),
-    DAI(CryptoCurrency.DAI, "0x89d24A6b4CcB1B6fAA2625fE562bDD9a23260359"), // SAI stable coin
+    USDT(CryptoCurrency.USDT, 6, "0xdAC17F958D2ee523a2206206994597C13D831ec7"),
+    DAI(CryptoCurrency.DAI, 18, "0x89d24A6b4CcB1B6fAA2625fE562bDD9a23260359"), // SAI stable coin
     ;
 
     /**
@@ -23,10 +23,12 @@ public enum Erc20Token {
     }
 
     private final CryptoCurrency cryptoCurrency;
+    private final int decimals;
     private final String contractAddress;
 
-    Erc20Token(CryptoCurrency cryptoCurrency, String contractAddress) {
+    Erc20Token(CryptoCurrency cryptoCurrency, int decimals, String contractAddress) {
         this.cryptoCurrency = cryptoCurrency;
+        this.decimals = decimals;
         this.contractAddress = contractAddress;
     }
 
@@ -36,5 +38,9 @@ public enum Erc20Token {
 
     public CryptoCurrency getCryptoCurrency() {
         return cryptoCurrency;
+    }
+
+    public int getDecimals() {
+        return decimals;
     }
 }
