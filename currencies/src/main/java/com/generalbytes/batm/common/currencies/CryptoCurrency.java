@@ -105,8 +105,8 @@ public enum CryptoCurrency {
     TRTL("TurtleCoin"),
     TRX("Tron"),
     USDS("StableUSD"),
-    USDC("USD Coin"),
-    USDT("Tether"),
+    USDC("USD Coin"), // ERC-20 (ethereum) based
+    USDT("Tether"), // ERC-20 (ethereum) based
     USDTTRON("Tether USD TRON"), // TRC20 based USDT stablecoin issued by Tether on the TRON network
     VIA("Viacoin"),
     VOLTZ("VOLTZ"),
