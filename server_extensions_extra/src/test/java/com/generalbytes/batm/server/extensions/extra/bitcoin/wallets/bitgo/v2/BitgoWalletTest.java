@@ -5,6 +5,7 @@ import ch.qos.logback.classic.LoggerContext;
 import com.generalbytes.batm.server.extensions.Converters;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.ICanSendMany;
+import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -136,5 +137,18 @@ public class BitgoWalletTest {
 
         String result = walletParams.sendCoins(destinationAddress, amount, coin, description);
         log.info("send coins with numBlocks parameter status = {}", result);
+    }
+
+    @Test
+    public void convertBalance() {
+        Assertions.assertThat(wallet.divideBalance(CryptoCurrency.BTC.getCode(), BigDecimal.ONE)).isEqualByComparingTo(new BigDecimal("0.00000001"));
+        Assertions.assertThat(wallet.toSatoshis(new BigDecimal("0.00000001"), CryptoCurrency.BTC.getCode())).isEqualByComparingTo(1);
+
+        Assert.assertNull("return null for unknown cryptocurrency", wallet.divideBalance("unknown", BigDecimal.ONE));
+        for (String cryptoCurrency : wallet.getCryptoCurrencies()) {
+            wallet.toSatoshis(BigDecimal.ONE, cryptoCurrency);
+            BigDecimal divided = wallet.divideBalance(cryptoCurrency, BigDecimal.ONE);
+            Assert.assertNotNull("divide failed for " + cryptoCurrency, divided);
+        }
     }
 }
