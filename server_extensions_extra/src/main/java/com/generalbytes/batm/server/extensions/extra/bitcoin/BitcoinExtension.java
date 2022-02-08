@@ -27,6 +27,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitbuy.Bi
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitfinex.BitfinexExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitflyer.BitFlyerExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitpandapro.BitpandaProExchange;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitstamp.BitstampExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bittrex.BittrexExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.CoinbaseExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbasepro.CoinbaseProExchange;
@@ -95,6 +96,22 @@ public class BitcoinExtension extends AbstractExtension {
                     preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase();
                 }
                 return new BitfinexExchange(apiKey, apiSecret, preferredFiatCurrency);
+            } else if ("bitstamp".equalsIgnoreCase(prefix)) {
+                String preferredFiatCurrency = FiatCurrency.USD.getCode();
+                String something = paramTokenizer.nextToken();
+                String userId;
+                if (something.equalsIgnoreCase(FiatCurrency.USD.getCode())
+                    || something.equalsIgnoreCase(FiatCurrency.EUR.getCode())
+                    || something.equalsIgnoreCase(FiatCurrency.GBP.getCode())) {
+                    preferredFiatCurrency = something.toUpperCase();
+                    userId = paramTokenizer.nextToken();
+                } else {
+                    userId = something;
+                }
+
+                String apiKey = paramTokenizer.nextToken();
+                String secretKey = paramTokenizer.nextToken();
+                return new BitstampExchange(preferredFiatCurrency, userId, apiKey, secretKey);
             } else if ("bittrex".equalsIgnoreCase(prefix)) {
                 String apiKey = paramTokenizer.nextToken();
                 String apiSecret = paramTokenizer.nextToken();
@@ -472,6 +489,12 @@ public class BitcoinExtension extends AbstractExtension {
                     preferredFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new BitfinexExchange(preferredFiatCurrency);
+            } else if ("bitstamp".equalsIgnoreCase(rsType)) {
+                String preferredFiatCurrency = FiatCurrency.USD.getCode();
+                if (st.hasMoreTokens()) {
+                    preferredFiatCurrency = st.nextToken().toUpperCase();
+                }
+                return new BitstampExchange(preferredFiatCurrency);
             } else if ("bittrex".equalsIgnoreCase(rsType)) {
                 String preferredFiatCurrency = st.hasMoreTokens() ? st.nextToken().toUpperCase() : FiatCurrency.USD.getCode();
                 return new BittrexExchange(preferredFiatCurrency);

@@ -18,10 +18,10 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
-import com.generalbytes.batm.server.extensions.util.net.RateLimiter;
 import com.generalbytes.batm.server.extensions.IExchangeAdvanced;
 import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
 import com.generalbytes.batm.server.extensions.ITask;
+import com.generalbytes.batm.server.extensions.util.net.RateLimiter;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import org.knowm.xchange.Exchange;
@@ -39,7 +39,6 @@ import org.knowm.xchange.dto.trade.OpenOrders;
 import org.knowm.xchange.exceptions.ExchangeException;
 import org.knowm.xchange.exceptions.NotAvailableFromExchangeException;
 import org.knowm.xchange.exceptions.NotYetImplementedForExchangeException;
-
 import org.knowm.xchange.service.account.AccountService;
 import org.knowm.xchange.service.marketdata.MarketDataService;
 import org.knowm.xchange.service.trade.TradeService;
@@ -50,6 +49,7 @@ import si.mazi.rescu.HttpStatusIOException;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -211,6 +211,10 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
         if (!isCryptoCurrencySupported(cryptoCurrency)){
             return null;
+        }
+
+        if (CryptoCurrency.XRP.getCode().equals(cryptoCurrency)) {
+            amount = amount.setScale(6, RoundingMode.FLOOR);
         }
 
         log.info("{} exchange withdrawing {} {} to {}", name, amount, cryptoCurrency, destinationAddress);

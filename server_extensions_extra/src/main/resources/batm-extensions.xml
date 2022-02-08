@@ -159,6 +159,14 @@
                 <cryptocurrency>DASH</cryptocurrency>
                 <cryptocurrency>XMR</cryptocurrency>
             </ratesource>
+            <ratesource prefix="bitstamp" name="Bitstamp.net Exchange" >
+                <param name="fiatcurrency" />
+                <cryptocurrency>BCH</cryptocurrency>
+                <cryptocurrency>BTC</cryptocurrency>
+                <cryptocurrency>ETH</cryptocurrency>
+                <cryptocurrency>LTC</cryptocurrency>
+                <cryptocurrency>XRP</cryptocurrency>
+            </ratesource>
             <ratesource prefix="bittrex" name ="Bittrex.com Exchange" >
                 <param name="fiatcurrency"/>
                 <cryptocurrency>BTC</cryptocurrency>
@@ -329,6 +337,17 @@
                 <cryptocurrency>BCH</cryptocurrency>
                 <cryptocurrency>DASH</cryptocurrency>
                 <cryptocurrency>XMR</cryptocurrency>
+            </exchange>
+            <exchange prefix="bitstamp" name="Bitstamp.net Exchange">
+                <param name="fiatcurrency" />
+                <param name="userid" />
+                <param name="apikey" />
+                <param name="secretkey" />
+                <cryptocurrency>BCH</cryptocurrency>
+                <cryptocurrency>BTC</cryptocurrency>
+                <cryptocurrency buyonly="true">ETH</cryptocurrency>
+                <cryptocurrency>LTC</cryptocurrency>
+                <cryptocurrency>XRP</cryptocurrency>
             </exchange>
             <exchange prefix="bittrex" name="Bittrex.com Exchange">
                 <param name="apikey" />
