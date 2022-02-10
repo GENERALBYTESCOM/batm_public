@@ -24,6 +24,7 @@ import com.generalbytes.batm.server.extensions.IIdentityPiece;
 import com.generalbytes.batm.server.extensions.IIdentityBase;
 import com.generalbytes.batm.server.extensions.ILimit;
 import com.generalbytes.batm.server.extensions.IRemainingLimit;
+import com.generalbytes.batm.server.extensions.IVerificationInfo;
 import com.generalbytes.batm.server.extensions.PhoneNumberQueryResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -195,6 +196,15 @@ public class IdentityExampleRestService {
         log.debug("Found {} identities for phone number '{}' in {} milliseconds", identities.size(), phoneNumber, duration);
 
         return identities;
+    }
+
+    // curl -k -XPOST https://localhost:7743/extensions/identity-example/startverif?identityPublicId=IE3BVEBUIIXZ3SZV&message=Please%20verify%20identity%20%7Blink%7D
+    @POST
+    @Path("/startverif")
+    @Produces(MediaType.APPLICATION_JSON)
+    public IVerificationInfo startVerificationByIdentityId(@QueryParam("identityPublicId") String identityPublicId, @QueryParam("message") String message) {
+        IExtensionContext ctx = IdentityExampleExtension.getExtensionContext();
+        return ctx.startVerificationByIdentityId(identityPublicId, message);
     }
 
 }

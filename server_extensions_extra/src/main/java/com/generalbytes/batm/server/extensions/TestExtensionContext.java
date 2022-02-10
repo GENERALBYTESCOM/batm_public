@@ -318,4 +318,9 @@ public class TestExtensionContext implements IExtensionContext {
     public ILocation addLocation(ILocationDetail location) {
         return null;
     }
+
+    @Override
+    public IVerificationInfo startVerificationByIdentityId(String publicIdentityId, String messageToCustomer) {
+        return null;
+    }
 }

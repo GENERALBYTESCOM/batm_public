@@ -592,4 +592,15 @@ public interface IExtensionContext {
      * @return created location
      */
     ILocation addLocation(ILocationDetail location);
+
+    /**
+     * Starts identity verification.
+     * @param publicIdentityId public ID of an existing identity to be verified
+     * @param messageToCustomer - The message that will be displayed to the customer via SMS.
+     *                          Message may contain '{link}' placeholder to be replaced by link to verification provider.
+     *                          If this argument is not given, the default text will be used.
+     *
+     * @return info about result of action
+     */
+    IVerificationInfo startVerificationByIdentityId(String publicIdentityId, String messageToCustomer);
 }
