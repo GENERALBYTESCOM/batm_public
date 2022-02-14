@@ -36,5 +36,4 @@ substitute module: 'org.bouncycastle:bcprov-jdk15to18', versions: ['1.66','1.68'
 substitute module: 'com.fasterxml.jackson.datatype:jackson-datatype-guava', versions: ['2.11.2'], toVersion: '2.12.0'
 substitute module: 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8', versions: ['2.11.2'], toVersion: '2.12.0'
 substitute module: 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310', versions: ['2.11.2'], toVersion: '2.12.0'
-substitute module: 'org.bitcoinj:bitcoinj-core', versions: ['0.15.10'], toVersion: '0.16.1'
 

@@ -153,7 +153,7 @@ verifyModule 'org.web3j:utils:3.6.0:82f33449d2970e402b2634931d51837112b4d5f8f0fe
 verifyModule 'org.bitcoinj:bitcoinj-core:0.16.1:7dbe2cf0f8479d2b88b9cca8816145cc9212a5a7ff7bc9b7a287e72f588ee980'
 verifyModule 'org.bouncycastle:bcprov-jdk15to18:1.69:8e145c3581507ed74ec3cb1dc634e1d39dd2c21584cc3adb4d6689a0d56bcdaa'
 verifyModule 'org.checkerframework:checker-compat-qual:2.5.5:11d134b245e9cacc474514d2d66b5b8618f8039a1465cdc55bbc0b34e0008b7a'
-verifyModule 'com.github.dogecoin:libdohj:7e68d7e19b6c28f231418d56fc2ee542e9e40ed5:21c86fe0e107b1c4266c7501784e5869293cd455fa6c038c3fcb36124a100cec'
+verifyModule 'com.github.pvyhnal-generalbytes:libdohj:a324670d5d55fb4e2d4dd855cf96e632efd1d7f5:6ff09f0af62bf6010e552f15268239f980e5be5abe964a691983203c756507af'
 verifyModule 'com.google.protobuf:protobuf-java:3.13.0:97d5b2758408690c0dc276238707492a0b6a4d71206311b6c442cdc26c5973ff'
 verifyModule 'com.madgag.spongycastle:core:1.58.0.0:199617dd5698c5a9312b898c0a4cec7ce9dd8649d07f65d91629f58229d72728'
 verifyModule 'com.fasterxml.jackson.datatype:jackson-datatype-guava:2.12.0:484a53b30466d3eb2ac95de3e3fd1e6c060e1629f907140fa1aeadd153caee2b'
