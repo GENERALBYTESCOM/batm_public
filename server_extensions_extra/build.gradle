@@ -72,7 +72,7 @@ dependencies {
     // Note when updating bitcoinj: block.io depends on libdohj for doge and ltc
     // which depends on bitcoinj and extends some classes, it must be compatible version
     // and it will break at runtime if the version is substituted for an incompatible one
-    implementation group: 'com.github.pvyhnal-generalbytes', name: 'libdohj', version: 'a324670d5d55fb4e2d4dd855cf96e632efd1d7f5' // TODO change to generalbytes.com fork
+    implementation group: 'com.github.dogecoin', name: 'libdohj', version: 'a2a37e454e5cd02f664ca119ab8b59dfddc75590'
     compile (group: 'org.xrpl', name: 'xrpl4j-model', version:'2.1.0')
     compile (group: 'org.xrpl', name: 'xrpl4j-keypairs', version:'2.1.0')
 
