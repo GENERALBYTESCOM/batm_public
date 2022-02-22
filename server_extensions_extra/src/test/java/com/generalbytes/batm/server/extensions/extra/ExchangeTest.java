@@ -62,7 +62,7 @@ public class ExchangeTest {
     @Test
     public void testPurchaseAdvanced() {
         if (exchange instanceof IExchangeAdvanced) {
-            ITask tt = ((IExchangeAdvanced) exchange).createPurchaseCoinsTask(BigDecimal.TEN, cryptoCurrency, "USD", "test");
+            ITask tt = ((IExchangeAdvanced) exchange).createPurchaseCoinsTask(new BigDecimal("0.00000001"), cryptoCurrency, exchange.getPreferredFiatCurrency(), "test");
             tt.onCreate();
             for (int i = 0; i < 10 && !tt.isFinished(); i++) {
                 tt.onDoStep();
@@ -72,7 +72,19 @@ public class ExchangeTest {
             Assert.assertNotNull(purchaseId);
         }
     }
-
+    @Test
+    public void testSellAdvanced() {
+        if (exchange instanceof IExchangeAdvanced) {
+            ITask tt = ((IExchangeAdvanced) exchange).createSellCoinsTask(new BigDecimal("0.00000001"), cryptoCurrency, exchange.getPreferredFiatCurrency(), "test");
+            tt.onCreate();
+            for (int i = 0; i < 10 && !tt.isFinished(); i++) {
+                tt.onDoStep();
+            }
+            String purchaseId = tt.getResult() == null ? null : tt.getResult().toString();
+            System.out.println(purchaseId);
+            Assert.assertNotNull(purchaseId);
+        }
+    }
     @Test
     public void testGetCryptoBalance() {
         BigDecimal cryptoBalance = exchange.getCryptoBalance(cryptoCurrency);
