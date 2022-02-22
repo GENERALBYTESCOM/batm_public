@@ -5,44 +5,42 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 
-public class CoinUnitTest {
+import static org.assertj.core.api.Assertions.assertThat;
 
-    private void assertEquals(BigDecimal expected, BigDecimal actual) {
-        Assert.assertTrue("expected: " + expected + ", actual: " + actual, expected.compareTo(actual) == 0);
-    }
+public class CoinUnitTest {
 
     /// satToBitcoin
 
     @Test
     public void satToBitcoin() {
-        assertEquals(BigDecimal.TEN, CoinUnit.satToBitcoin(10_00000000L));
+        assertThat(CoinUnit.satToBitcoin(10_00000000L)).isEqualByComparingTo(BigDecimal.TEN);
     }
 
     @Test
     public void satToBitcoin123() {
-        assertEquals(new BigDecimal("0.00000123"), CoinUnit.satToBitcoin(123L));
+        assertThat(CoinUnit.satToBitcoin(123L)).isEqualByComparingTo("0.00000123");
     }
 
     @Test
     public void satToBitcoinZero() {
-        assertEquals(BigDecimal.ZERO, CoinUnit.satToBitcoin(0L));
+        assertThat(CoinUnit.satToBitcoin(0L)).isEqualByComparingTo(BigDecimal.ZERO);
     }
 
     /// mSatToBitcoin
 
     @Test
     public void mSatToBitcoin() {
-        assertEquals(BigDecimal.TEN, CoinUnit.mSatToBitcoin(10_00000000_000L));
+        assertThat(CoinUnit.mSatToBitcoin(10_00000000_000L)).isEqualByComparingTo(BigDecimal.TEN);
     }
 
     @Test
     public void mSatToBitcoin123() {
-        assertEquals(new BigDecimal("0.00000000123"), CoinUnit.mSatToBitcoin(123L));
+        assertThat(CoinUnit.mSatToBitcoin(123L)).isEqualByComparingTo("0.00000000123");
     }
 
     @Test
     public void mSatToBitcoinZero() {
-        assertEquals(BigDecimal.ZERO, CoinUnit.mSatToBitcoin(0L));
+        assertThat(CoinUnit.mSatToBitcoin(0L)).isEqualByComparingTo(BigDecimal.ZERO);
     }
 
     /// bitcoinToSat

@@ -1,5 +1,11 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitpandapro;
 
+import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import java.math.BigDecimal;
+
 import static com.generalbytes.batm.common.currencies.CryptoCurrency.BTC;
 import static com.generalbytes.batm.common.currencies.CryptoCurrency.DOGE;
 import static com.generalbytes.batm.common.currencies.CryptoCurrency.ETH;
@@ -7,17 +13,11 @@ import static com.generalbytes.batm.common.currencies.CryptoCurrency.XRP;
 import static com.generalbytes.batm.common.currencies.FiatCurrency.CHF;
 import static com.generalbytes.batm.common.currencies.FiatCurrency.EUR;
 import static com.generalbytes.batm.common.currencies.FiatCurrency.GBP;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-
-import java.math.BigDecimal;
-
-import org.junit.Ignore;
-import org.junit.Test;
-
-import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
 
 @Ignore // requires online resources - for manual run only
 public class BitpandaProRateSourceTest {
@@ -63,7 +63,7 @@ public class BitpandaProRateSourceTest {
 
         // second time is cached
         final BigDecimal cached = subject.getExchangeRateLast(BTC.getCode(), EUR.getCode());
-        assertEquals(fresh, cached);
+        assertThat(cached).isEqualByComparingTo(fresh);
     }
 
     @Test
