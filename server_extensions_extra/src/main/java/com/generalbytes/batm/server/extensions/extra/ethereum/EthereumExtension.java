@@ -41,7 +41,8 @@ public class EthereumExtension extends AbstractExtension{
         new DaiDefinition(),
         new EthDefinition(),
         new BizzDefinition(),
-        new UsdtDefinition());
+        new UsdtDefinition(),
+        new UsdcDefinition());
 
     @Override
     public String getName() {
