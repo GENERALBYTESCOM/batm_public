@@ -21,14 +21,17 @@ import java.math.BigDecimal;
 
 public class Converters {
 
-    public static final BigDecimal BCH = BigDecimal.valueOf(Math.pow(10, 8));
-    public static final BigDecimal BTC = BigDecimal.valueOf(Math.pow(10, 8));
-    public static final BigDecimal LTC = BigDecimal.valueOf(Math.pow(10, 8));
-    public static final BigDecimal ETH = BigDecimal.valueOf(Math.pow(10, 18));
-    public static final BigDecimal BTBS = BigDecimal.valueOf(Math.pow(10, 18));
-    public static final BigDecimal USDT = BigDecimal.valueOf(Math.pow(10, 6));
+    public static final BigDecimal BCH = BigDecimal.TEN.pow(8);
+    public static final BigDecimal BTC = BigDecimal.TEN.pow(8);
+    public static final BigDecimal LTC = BigDecimal.TEN.pow(8);
+    public static final BigDecimal ETH = BigDecimal.TEN.pow(18);
+    public static final BigDecimal BTBS = BigDecimal.TEN.pow(18);
+    public static final BigDecimal USDT = BigDecimal.TEN.pow(6);
+    public static final BigDecimal XRP = BigDecimal.TEN.pow(8);
 
-    public static final BigDecimal TBCH = BigDecimal.valueOf(Math.pow(10, 8));
-    public static final BigDecimal TBTC = BigDecimal.valueOf(Math.pow(10, 8));
-    public static final BigDecimal TLTC = BigDecimal.valueOf(Math.pow(10, 8));
+    public static final BigDecimal TBCH = BigDecimal.TEN.pow(8);
+    public static final BigDecimal TBTC = BigDecimal.TEN.pow(8);
+    public static final BigDecimal TLTC = BigDecimal.TEN.pow(8);
+    public static final BigDecimal TETH = BigDecimal.TEN.pow(18);
+    public static final BigDecimal TXRP = BigDecimal.TEN.pow(8);
 }

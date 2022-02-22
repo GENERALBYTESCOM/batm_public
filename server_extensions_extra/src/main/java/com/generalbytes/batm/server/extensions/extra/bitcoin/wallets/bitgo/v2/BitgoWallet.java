@@ -127,7 +127,7 @@ public class BitgoWallet implements IWallet, ICanSendMany {
         return null;
     }
 
-    private int toSatoshis(BigDecimal amount, String cryptoCurrency) {
+    protected int toSatoshis(BigDecimal amount, String cryptoCurrency) {
         switch (CryptoCurrency.valueOfCode(cryptoCurrency)) {
             case BTC:
                 return amount.multiply(Converters.BTC).intValue();
@@ -137,6 +137,10 @@ public class BitgoWallet implements IWallet, ICanSendMany {
                 return amount.multiply(Converters.BCH).intValue();
             case ETH:
                 return amount.multiply(Converters.ETH).intValue();
+            case XRP:
+                return amount.multiply(Converters.XRP).intValue();
+            case USDT:
+                return amount.multiply(Converters.USDT).intValue();
 
             case TBTC:
                 return amount.multiply(Converters.TBTC).intValue();
@@ -190,15 +194,12 @@ public class BitgoWallet implements IWallet, ICanSendMany {
         HashSet<String> s = new HashSet<>();
         s.add(CryptoCurrency.BCH.getCode());
         s.add(CryptoCurrency.BTC.getCode());
-        s.add(CryptoCurrency.LTC.getCode());
         s.add(CryptoCurrency.ETH.getCode());
+        s.add(CryptoCurrency.LTC.getCode());
+        s.add(CryptoCurrency.USDT.getCode());
+        s.add(CryptoCurrency.XRP.getCode());
 
-        s.add(CryptoCurrency.TBCH.getCode());
         s.add(CryptoCurrency.TBTC.getCode());
-        s.add(CryptoCurrency.TRMG.getCode());
-        s.add(CryptoCurrency.TLTC.getCode());
-        s.add(CryptoCurrency.TXRP.getCode());
-        s.add(CryptoCurrency.TETH.getCode());
         return s;
     }
 
@@ -232,23 +233,7 @@ public class BitgoWallet implements IWallet, ICanSendMany {
             }
 
             BigDecimal balance = new BigDecimal(balanceObject.toString());
-            if (CryptoCurrency.BTC.getCode().equals(cryptoCurrency.toUpperCase())) {
-                return balance.divide(Converters.BTC);
-            } else if (CryptoCurrency.LTC.getCode().equals(cryptoCurrency.toUpperCase())) {
-                return balance.divide(Converters.LTC);
-            } else if (CryptoCurrency.BCH.getCode().equals(cryptoCurrency.toUpperCase())) {
-                return balance.divide(Converters.BCH);
-            } else if (CryptoCurrency.ETH.getCode().equals(cryptoCurrency.toUpperCase())) {
-                return balance.divide(Converters.ETH);
-            } else if (CryptoCurrency.TBTC.getCode().equals(cryptoCurrency.toUpperCase())) {
-                return balance.divide(Converters.TBTC);
-            } else if (CryptoCurrency.TLTC.getCode().equals(cryptoCurrency.toUpperCase())) {
-                return balance.divide(Converters.TLTC);
-            } else if (CryptoCurrency.TBCH.getCode().equals(cryptoCurrency.toUpperCase())) {
-                return balance.divide(Converters.TBCH);
-            }
-            log.error("{} not supported", cryptoCurrency);
-            return null;
+            return divideBalance(cryptoCurrency, balance);
         } catch (HttpStatusIOException hse) {
             log.debug("getCryptoBalance error: {}", hse.getHttpBody());
         } catch (ErrorResponseException e) {
@@ -256,6 +241,34 @@ public class BitgoWallet implements IWallet, ICanSendMany {
         } catch (Exception e) {
             log.error("getCryptoBalance error", e);
         }
+        return null;
+    }
+
+    /**
+     * converts balance from the smallest unit to the base unit, e.g. satoshi to bitcoin
+     */
+    protected BigDecimal divideBalance(String cryptoCurrency, BigDecimal balance) {
+        if (CryptoCurrency.BTC.getCode().equals(cryptoCurrency.toUpperCase())) {
+            return balance.divide(Converters.BTC);
+        } else if (CryptoCurrency.LTC.getCode().equals(cryptoCurrency.toUpperCase())) {
+            return balance.divide(Converters.LTC);
+        } else if (CryptoCurrency.BCH.getCode().equals(cryptoCurrency.toUpperCase())) {
+            return balance.divide(Converters.BCH);
+        } else if (CryptoCurrency.ETH.getCode().equals(cryptoCurrency.toUpperCase())) {
+            return balance.divide(Converters.ETH);
+        } else if (CryptoCurrency.XRP.getCode().equals(cryptoCurrency.toUpperCase())) {
+            return balance.divide(Converters.XRP);
+        } else if (CryptoCurrency.USDT.getCode().equals(cryptoCurrency.toUpperCase())) {
+            return balance.divide(Converters.USDT);
+
+        } else if (CryptoCurrency.TBTC.getCode().equals(cryptoCurrency.toUpperCase())) {
+            return balance.divide(Converters.TBTC);
+        } else if (CryptoCurrency.TLTC.getCode().equals(cryptoCurrency.toUpperCase())) {
+            return balance.divide(Converters.TLTC);
+        } else if (CryptoCurrency.TBCH.getCode().equals(cryptoCurrency.toUpperCase())) {
+            return balance.divide(Converters.TBCH);
+        }
+        log.error("{} not supported", cryptoCurrency);
         return null;
     }
 
