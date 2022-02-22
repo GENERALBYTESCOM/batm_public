@@ -1168,6 +1168,7 @@
       <cryptocurrency>SYS</cryptocurrency>
     </ratesource>
     <cryptologo cryptocurrency="SYS" file="sys.png"/>
+    <cryptologo cryptocurrency="SYS" file="sys.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.digibyte.DigiByteExtension" >
         <wallet prefix="digibyted" name="Digibyted">
