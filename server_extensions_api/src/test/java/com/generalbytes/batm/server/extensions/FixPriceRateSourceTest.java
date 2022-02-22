@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 
 public class FixPriceRateSourceTest {
@@ -20,7 +21,7 @@ public class FixPriceRateSourceTest {
         FixPriceRateSource rateSource = new FixPriceRateSource(rate, "USD");
         BigDecimal exchangeRateLast = rateSource.getExchangeRateLast("BTC", "USD");
         if (expected) {
-            assertEquals(rate, exchangeRateLast);
+            assertThat(exchangeRateLast).isEqualByComparingTo(rate);
         } else {
             assertNull(exchangeRateLast);
         }

@@ -1,9 +1,10 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.binance;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class BinanceExchangeRoundingTest {
     BinanceUsExchange e = new BinanceUsExchange("USD");
@@ -19,10 +20,8 @@ public class BinanceExchangeRoundingTest {
     }
 
     private void assertEquals(String amount, String minStep, String expected) {
-        BigDecimal actual = e.getAmountRoundedToMinStep(new BigDecimal(amount), new BigDecimal(minStep));
-        if(new BigDecimal(expected).compareTo(actual) != 0){ // BigDecimals need to be compared by compareTo, not equals
-            Assert.assertEquals(new BigDecimal(expected), actual);
-        }
+        assertThat(e.getAmountRoundedToMinStep(new BigDecimal(amount), new BigDecimal(minStep)))
+            .isEqualByComparingTo(expected);
     }
 
 }

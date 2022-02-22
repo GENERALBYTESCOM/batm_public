@@ -1,21 +1,22 @@
 package com.generalbytes.batm.server.extensions.payment;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class PaymentRequestTest {
 
     @Test
     public void getForwardingTransactionMiningFee() {
-        assertEquals(BigDecimal.ONE, getPaymentRequest(false, getPaymentOutput(new BigDecimal(8)), getPaymentOutput(BigDecimal.ONE)).getForwardingTransactionMiningFee());
-        assertEquals(BigDecimal.ONE, getPaymentRequest(null, getPaymentOutput(new BigDecimal(8)), getPaymentOutput(BigDecimal.ONE)).getForwardingTransactionMiningFee());
-        assertEquals(BigDecimal.ONE, getPaymentRequest(false, getPaymentOutput(new BigDecimal(9))).getForwardingTransactionMiningFee());
-        assertEquals(BigDecimal.TEN, getPaymentRequest(false).getForwardingTransactionMiningFee());
+        assertThat(getPaymentRequest(false, getPaymentOutput(new BigDecimal(8)), getPaymentOutput(BigDecimal.ONE)).getForwardingTransactionMiningFee()).isEqualByComparingTo(BigDecimal.ONE);
+        assertThat(getPaymentRequest(null, getPaymentOutput(new BigDecimal(8)), getPaymentOutput(BigDecimal.ONE)).getForwardingTransactionMiningFee()).isEqualByComparingTo(BigDecimal.ONE);
+        assertThat(getPaymentRequest(false, getPaymentOutput(new BigDecimal(9))).getForwardingTransactionMiningFee()).isEqualByComparingTo(BigDecimal.ONE);
+        assertThat(getPaymentRequest(false).getForwardingTransactionMiningFee()).isEqualByComparingTo(BigDecimal.TEN);
 
-        assertEquals(BigDecimal.ZERO, getPaymentRequest(true, getPaymentOutput(new BigDecimal(10))).getForwardingTransactionMiningFee());
+        assertThat(getPaymentRequest(true, getPaymentOutput(new BigDecimal(10))).getForwardingTransactionMiningFee()).isEqualByComparingTo(BigDecimal.ZERO);
     }
 
     private PaymentRequest getPaymentRequest(Boolean nonForwarding, IPaymentOutput... outputs) {
@@ -44,9 +45,5 @@ public class PaymentRequestTest {
 
             }
         };
-    }
-
-    private void assertEquals(BigDecimal expected, BigDecimal actual) {
-        Assert.assertTrue("expected: " + expected + ", actual: " + actual, expected.compareTo(actual) == 0);
     }
 }
