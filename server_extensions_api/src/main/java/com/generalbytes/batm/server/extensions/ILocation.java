@@ -33,4 +33,5 @@ public interface ILocation {
     String getGpsLon();
     String getTimeZone();
     String getPublicId();
+    String getExternalLocationId();
 }

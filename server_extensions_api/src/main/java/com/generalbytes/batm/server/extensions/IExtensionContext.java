@@ -579,6 +579,11 @@ public interface IExtensionContext {
     ILocationDetail getLocationByPublicId(String locationPublicId);
 
     /**
+     * Gets a location identified by External Location ID
+     */
+    ILocationDetail getLocationByExternalId(String externalLocationId);
+
+    /**
      * Updates Location.
      * @param publicId - public id of updated Location
      * @param location - new state of location to be set
