@@ -579,7 +579,10 @@ public interface IExtensionContext {
     ILocationDetail getLocationByPublicId(String locationPublicId);
 
     /**
-     * Gets a location identified by External Location ID
+     * Finds a location by its external ID
+     *
+     * @param externalLocationId External Location ID
+     * @return the location identified by its External ID
      */
     ILocationDetail getLocationByExternalId(String externalLocationId);
 
