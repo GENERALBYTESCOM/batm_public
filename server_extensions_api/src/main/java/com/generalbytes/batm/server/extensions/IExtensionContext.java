@@ -584,7 +584,7 @@ public interface IExtensionContext {
      * @param externalLocationId External Location ID
      * @return the location identified by its External ID
      */
-    ILocationDetail getLocationByExternalId(String externalLocationId);
+    ILocationDetail getLocationByExternalId(String externalLocationId, IOrganization organization);
 
     /**
      * Updates Location.

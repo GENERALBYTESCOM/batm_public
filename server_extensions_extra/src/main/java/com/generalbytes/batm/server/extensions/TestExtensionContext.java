@@ -310,7 +310,7 @@ public class TestExtensionContext implements IExtensionContext {
     }
 
     @Override
-    public ILocationDetail getLocationByExternalId(String locationExternalId) {
+    public ILocationDetail getLocationByExternalId(String locationExternalId, IOrganization organization) {
         return null;
     }
 
