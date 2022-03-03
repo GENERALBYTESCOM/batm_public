@@ -80,6 +80,7 @@ public enum FiatCurrency {
     PEN("Peruvian sol"),
     PHP("Philippine piso"),
     PLN("Polish złoty"),
+    PYG("Paraguayan guaraní"),
     RON("Romanian leu"),
     RSD("Serbian dinar"),
     RUB("Russian ruble"),
