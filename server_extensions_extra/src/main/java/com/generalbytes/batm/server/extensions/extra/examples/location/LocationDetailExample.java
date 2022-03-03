@@ -23,6 +23,7 @@ public class LocationDetailExample implements ILocationDetail {
     private String gpsLon;
     private String timeZone;
     private String publicId;
+    private String externalLocationId;
 
     private PersonExample contactPerson;
     private OrganizationExample organization;
@@ -93,6 +94,11 @@ public class LocationDetailExample implements ILocationDetail {
     @Override
     public String getPublicId() {
         return publicId;
+    }
+
+    @Override
+    public String getExternalLocationId() {
+        return externalLocationId;
     }
 
     @Override

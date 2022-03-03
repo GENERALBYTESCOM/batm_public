@@ -310,6 +310,11 @@ public class TestExtensionContext implements IExtensionContext {
     }
 
     @Override
+    public ILocationDetail getLocationByExternalId(String locationExternalId, IOrganization organization) {
+        return null;
+    }
+
+    @Override
     public ILocation updateLocationById(String publicId, ILocationDetail location) {
         return null;
     }
