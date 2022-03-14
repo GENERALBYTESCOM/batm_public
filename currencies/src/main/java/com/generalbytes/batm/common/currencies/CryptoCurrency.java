@@ -63,6 +63,7 @@ public enum CryptoCurrency {
     EGG("NestEgg Coin"),
     ETC("Ethereum Classic"),
     ETH("Ethereum"),
+    EGLD("Elrond"),
     EURS("STASIS EURO"),
     FLASH("FLASH"),
     FTO("FuturoCoin"),
