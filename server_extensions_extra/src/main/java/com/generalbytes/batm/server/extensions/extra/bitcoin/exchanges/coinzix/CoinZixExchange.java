@@ -57,6 +57,8 @@ public class CoinZixExchange implements IRateSourceAdvanced, IExchangeAdvanced {
 
         CRYPTO_CURRENCIES.add(CryptoCurrency.BTC.getCode());
         CRYPTO_CURRENCIES.add(CryptoCurrency.ETH.getCode());
+        CRYPTO_CURRENCIES.add(CryptoCurrency.EGLD.getCode());
+        CRYPTO_CURRENCIES.add(CryptoCurrency.USDTTRON.getCode());
     }
 
     public CoinZixExchange() {
@@ -99,6 +101,11 @@ public class CoinZixExchange implements IRateSourceAdvanced, IExchangeAdvanced {
             log.debug("getCryptoBalance");
             cryptoCurrency = checkCryptoCurrency(cryptoCurrency);
             if (cryptoCurrency != null) {
+                if (cryptoCurrency.equals("USDTTRON")) {
+                    String crypto = "USDT";
+                    cryptoCurrency = crypto;
+                    return getBalance(cryptoCurrency);
+                }
                 return getBalance(cryptoCurrency);
             }
         } catch (Throwable e) {
@@ -144,17 +151,20 @@ public class CoinZixExchange implements IRateSourceAdvanced, IExchangeAdvanced {
                 request.iso = cryptoCurrency;
                 request.amount = amount.toPlainString();
                 request.to_address = destinationAddress;
-
+                if (cryptoCurrency.equals("USDTTRON")) {
+                    request.iso = "USDT";
+                    request.network_type = "2"; // trc20
+                }
                 String sign = createSign(request);
 
                 RateLimiter.waitForPossibleCall(getClass());
                 WithdrawResponse response = api.withdraw(token, sign, request);
 
-                if (response.data != null){
+                if (response.data != null) {
                     return response.data.id;
                 }
             }
-        }catch (Throwable e) {
+        } catch (Throwable e) {
             log.error("sendCoins", e);
         }
         return null;
@@ -166,15 +176,23 @@ public class CoinZixExchange implements IRateSourceAdvanced, IExchangeAdvanced {
             cryptoCurrency = checkCryptoCurrency(cryptoCurrency);
             if (cryptoCurrency != null) {
                 GetDepositAddressRequest request = new GetDepositAddressRequest();
-                request.iso = cryptoCurrency;
+                if (cryptoCurrency.equals("USDTTRON")) {
+                    cryptoCurrency = "USDT";
+                    request.iso = cryptoCurrency;
+                    request.network = "TRX";
+                } else {
+                    request.iso = cryptoCurrency;
+                    request.network = "";
+                }
                 String sign = createSign(request);
                 RateLimiter.waitForPossibleCall(getClass());
+
                 GetDepositAddressResponse response = api.getDepositAddress(token, sign, request);
                 if (response.data != null) {
                     return response.data.address;
                 }
             }
-        }catch (Throwable e) {
+        } catch (Throwable e) {
             log.error("getDepositAddress", e);
         }
         return null;
@@ -268,11 +286,11 @@ public class CoinZixExchange implements IRateSourceAdvanced, IExchangeAdvanced {
             if (pair != null) {
                 RateLimiter.waitForPossibleCall(getClass());
                 TickerResponse response = api.getTicker(pair);
-                if (response.data != null){
+                if (response.data != null) {
                     return new BigDecimal(response.data.last);
                 }
             }
-        }catch (Throwable e) {
+        } catch (Throwable e) {
             log.error("getExchangeRateLast", e);
         }
         return null;
@@ -322,9 +340,9 @@ public class CoinZixExchange implements IRateSourceAdvanced, IExchangeAdvanced {
         String sign = createSign(request);
         RateLimiter.waitForPossibleCall(getClass());
         BalancesResponse balancesResponse = api.getBalances(this.token, sign, request);
-        if (balancesResponse.data != null && balancesResponse.data.list != null){
-            for (Balance b: balancesResponse.data.list){
-                if (b.currency.iso3.equals(currency)){
+        if (balancesResponse.data != null && balancesResponse.data.list != null) {
+            for (Balance b : balancesResponse.data.list) {
+                if (b.currency.iso3.equals(currency)) {
                     return BigDecimal.valueOf(b.balance_available).divide(DECIMAL_CONST, PRECISION, RoundingMode.DOWN);
                 }
             }
@@ -336,12 +354,17 @@ public class CoinZixExchange implements IRateSourceAdvanced, IExchangeAdvanced {
         cryptoCurrency = checkCryptoCurrency(cryptoCurrency);
         fiatCurrency = checkFiatCurrency(fiatCurrency);
         if (cryptoCurrency != null && fiatCurrency != null) {
+            log.info("getCurrencyPair : {}  <--> {}", cryptoCurrency, fiatCurrency);
+            if (cryptoCurrency.equals("USDTTRON")) {
+                cryptoCurrency = "USDT";
+                return fiatCurrency.toUpperCase() + cryptoCurrency.toUpperCase();
+            }
             return cryptoCurrency.toUpperCase() + fiatCurrency.toUpperCase();
         }
         return null;
     }
 
-    public static String getSortedFieldsString(JsonNode node){
+    public static String getSortedFieldsString(JsonNode node) {
         String string = "";
 
         List<String> list = new LinkedList<String>();
@@ -351,7 +374,7 @@ public class CoinZixExchange implements IRateSourceAdvanced, IExchangeAdvanced {
         }
         Collections.sort(list);
 
-        for (String f: list){
+        for (String f : list) {
             JsonNode subNode = node.get(f);
             string += subNode.isObject() ? getSortedFieldsString(subNode) : subNode.asText();
         }
@@ -363,7 +386,7 @@ public class CoinZixExchange implements IRateSourceAdvanced, IExchangeAdvanced {
         StringBuilder hexString = new StringBuilder(2 * hash.length);
         for (int i = 0; i < hash.length; i++) {
             String hex = Integer.toHexString(0xff & hash[i]);
-            if(hex.length() == 1) {
+            if (hex.length() == 1) {
                 hexString.append('0');
             }
             hexString.append(hex);
@@ -371,13 +394,13 @@ public class CoinZixExchange implements IRateSourceAdvanced, IExchangeAdvanced {
         return hexString.toString();
     }
 
-    private String createSign(BasicRequest request){
+    private String createSign(BasicRequest request) {
         JsonNode node = mapper.convertValue(request, JsonNode.class);
         String str = getSortedFieldsString(node);
         String signed;
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] encodedhash = digest.digest((str+secretKey).getBytes(StandardCharsets.UTF_8));
+            byte[] encodedhash = digest.digest((str + secretKey).getBytes(StandardCharsets.UTF_8));
             signed = bytesToHex(encodedhash);
         } catch (NoSuchAlgorithmException e) {
             return "";
@@ -421,18 +444,18 @@ public class CoinZixExchange implements IRateSourceAdvanced, IExchangeAdvanced {
                 if (orderResponse.data != null) {
                     orderId = Long.toString(orderResponse.data.id);
                     createTime = System.currentTimeMillis();
-                    log.debug(logString+".onCreate - " + ("orderAId = " + orderId));
+                    log.debug(logString + ".onCreate - " + ("orderAId = " + orderId));
                 }
             } catch (Exception e) {
-                log.error(logString+".onCreate", e);
+                log.error(logString + ".onCreate", e);
             }
             return (orderId != null);
         }
 
         @Override
-        public boolean onDoStep(){
+        public boolean onDoStep() {
             if (orderId == null) {
-                log.debug(logString+".onDoStep - Giving up on waiting for trade to complete. Because it did not happen.");
+                log.debug(logString + ".onDoStep - Giving up on waiting for trade to complete. Because it did not happen.");
                 finished = true;
                 result = "Skipped";
                 return false;
@@ -440,7 +463,7 @@ public class CoinZixExchange implements IRateSourceAdvanced, IExchangeAdvanced {
 
             long checkTillTime = createTime + MAXIMUM_TIME_TO_WAIT_FOR_ORDER_TO_FINISH;
             if (System.currentTimeMillis() > checkTillTime) {
-                log.debug(logString+".onDoStep - " + ("Giving up on waiting for trade " + orderId + " to complete."));
+                log.debug(logString + ".onDoStep - " + ("Giving up on waiting for trade " + orderId + " to complete."));
                 finished = true;
                 return false;
             }
@@ -457,7 +480,7 @@ public class CoinZixExchange implements IRateSourceAdvanced, IExchangeAdvanced {
                     result = orderId;
                     finished = true;
                 } else if (response.data != null && response.data.status == Constants.STATUS.CLOSED) {
-                    log.debug(logString+".onDoStep - trade is not fully filled.");
+                    log.debug(logString + ".onDoStep - trade is not fully filled.");
                     finished = true;
                     result = "Skipped";
                     return false;
@@ -471,7 +494,7 @@ public class CoinZixExchange implements IRateSourceAdvanced, IExchangeAdvanced {
 
         @Override
         public void onFinish() {
-            log.debug(logString+".onFinish - Trade task finished.");
+            log.debug(logString + ".onFinish - Trade task finished.");
         }
 
         @Override

@@ -610,6 +610,8 @@ public class BitcoinExtension extends AbstractExtension {
         result.add(CryptoCurrency.ETH.getCode());
         result.add(CryptoCurrency.LTC.getCode());
         result.add(CryptoCurrency.BCH.getCode());
+        result.add(CryptoCurrency.EGLD.getCode());
+        result.add(CryptoCurrency.USDTTRON.getCode());
         return result;
     }
 

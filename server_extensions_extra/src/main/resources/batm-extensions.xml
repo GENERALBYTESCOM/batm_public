@@ -780,11 +780,15 @@
             <param name="token"/>
             <param name="secret"/>
             <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>EGLD</cryptocurrency>
+            <cryptocurrency>USDTTRON</cryptocurrency>
             <cryptocurrency buyonly="true">ETH</cryptocurrency>
         </exchange>
         <ratesource prefix="coinzix" name="Coinzix">
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>EGLD</cryptocurrency>
+            <cryptocurrency>USDTTRON</cryptocurrency>
         </ratesource>
         <exchange prefix="bitbuy" name="Bitbuy.ca Exchange">
             <param name="apikey" />
@@ -814,6 +818,8 @@
         <cryptologo cryptocurrency="KMD" file="kmd.svg"/>
         <cryptologo cryptocurrency="TRX" file="trx.png"/>
         <cryptologo cryptocurrency="TRX" file="trx.svg"/>
+        <cryptologo cryptocurrency="EGLD" file="elrond.png"/>
+        <cryptologo cryptocurrency="EGLD" file="elrond.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.bitcoincash.BitcoinCashExtension">
         <wallet prefix="bitcoincashd" name="BitcoinABC/BCHN Cash Core - bitcoind" >
