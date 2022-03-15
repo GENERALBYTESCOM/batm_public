@@ -180,9 +180,9 @@ public class CoinPaprikaRateSource implements IRateSource {
         return null;
     }
 
-    public static void main(String[] args) {
-        BigDecimal exchangeRateLast = new CoinPaprikaRateSource("USD").getExchangeRateLast("BTC", "CZK");
-        System.out.println("exchangeRateLast = " + exchangeRateLast);
-        System.out.println(exchangeRateLast);
-    }
+//    public static void main(String[] args) {
+//        BigDecimal exchangeRateLast = new CoinPaprikaRateSource("USD").getExchangeRateLast("BTC", "CZK");
+//        System.out.println("exchangeRateLast = " + exchangeRateLast);
+//        System.out.println(exchangeRateLast);
+//    }
 }
