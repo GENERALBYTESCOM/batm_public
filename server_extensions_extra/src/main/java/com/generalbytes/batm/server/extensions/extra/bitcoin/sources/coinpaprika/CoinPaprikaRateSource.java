@@ -108,7 +108,7 @@ public class CoinPaprikaRateSource implements IRateSource {
 
     public CoinPaprikaRateSource(String preferredFiatCurrency) {
         this.preferredFiatCurrency = preferredFiatCurrency;
-        final ClientConfig config = new ClientConfig().addDefaultParam(HeaderParam.class, "User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36");
+        final ClientConfig config = new ClientConfig().addDefaultParam(HeaderParam.class, "User-Agent", " Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36");
         api = RestProxyFactory.createProxy(CoinPaprikaV1API.class, "https://api.coinpaprika.com", config);
     }
 
@@ -181,6 +181,8 @@ public class CoinPaprikaRateSource implements IRateSource {
     }
 
 //    public static void main(String[] args) {
-//        System.out.println(new CoinPaprikaRateSource("USD").getExchangeRateLast("BTC", "CZK"));
+//        BigDecimal exchangeRateLast = new CoinPaprikaRateSource("USD").getExchangeRateLast("BTC", "CZK");
+//        System.out.println("exchangeRateLast = " + exchangeRateLast);
+//        System.out.println(exchangeRateLast);
 //    }
 }
