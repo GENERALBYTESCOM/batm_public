@@ -1121,6 +1121,20 @@
         </ratesource>
         <cryptologo cryptocurrency="VIA" file="via.png"/>
     </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.elrond.ElrondExtension" >
+        <wallet prefix="Elrond wallet" name="Elrond Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
+            <cryptocurrency>VIA</cryptocurrency>
+        </wallet>
+        <ratesource prefix="egld" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>EGLD</cryptocurrency>
+            <help>EUR is default fiat currency.</help>
+        </ratesource>
+        <cryptologo cryptocurrency="EGLD" file="elrond.png"/>
+        <cryptologo cryptocurrency="EGLD" file="elrond.svg"/>
+    </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.worldcoin.WorldcoinExtension" >
         <wallet prefix="worldcoind" name="Worldcoind">
             <param name="protocol" />

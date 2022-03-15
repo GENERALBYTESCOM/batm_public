@@ -32,39 +32,4 @@ public class ElrondExtension extends AbstractExtension {
         return null;
     }
 
-
-    @Override
-    public IRateSource createRateSource(String sourceLogin) {
-        try {
-            if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
-                StringTokenizer st = new StringTokenizer(sourceLogin, ":");
-                String rsType = st.nextToken();
-                if ("coinzix".equals(rsType)) {
-                    return new CoinZixExchange();
-                }
-            }
-        } catch (Exception e) {
-            log.warn("createRateSource failed", e);
-        }
-        return null;
-    }
-
-    @Override
-    public IExchange createExchange(String paramString) {
-        try {
-            if ((paramString != null) && (!paramString.trim().isEmpty())) {
-                StringTokenizer paramTokenizer = new StringTokenizer(paramString, ":");
-                String prefix = paramTokenizer.nextToken();
-                if ("coinzix".equalsIgnoreCase(prefix)) {
-                    String token = paramTokenizer.nextToken();
-                    String secret = paramTokenizer.nextToken();
-                    return new CoinZixExchange(token, secret);
-                }
-            }
-        } catch (Exception e) {
-            log.warn("createExchange failed", e);
-        }
-        return null;
-    }
-
 }
