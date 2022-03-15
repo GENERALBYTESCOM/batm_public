@@ -7,12 +7,11 @@ import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.IExchangeAdvanced;
 import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
 import com.generalbytes.batm.server.extensions.ITask;
-
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.XChangeExchange;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinzix.dto.entities.*;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinzix.dto.entities.Balance;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinzix.dto.entities.OrderBookPrice;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinzix.dto.requests.*;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinzix.dto.responses.*;
-
 import com.generalbytes.batm.server.extensions.util.net.RateLimiter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
