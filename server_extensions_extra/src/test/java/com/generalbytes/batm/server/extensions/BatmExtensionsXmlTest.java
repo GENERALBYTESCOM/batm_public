@@ -59,7 +59,7 @@ public class BatmExtensionsXmlTest {
     @Test
     public void testCryptoCurrencyValidators() throws Exception {
         // currencies mentioned in batm_extensions.xml but having CryptoCurrencyValidators implemented in the non-opensourced part of the codebase
-        Set<String> supportedInBuiltin = ImmutableSet.of("TRTL", "BTC", "LBTC", "XMR", "ETC","EGLD","USDTTRON");
+        Set<String> supportedInBuiltin = ImmutableSet.of("TRTL", "BTC", "LBTC", "XMR", "ETC");
 
         List<IExtension> extensions = getExtensionInstances();
         getCryptoCurrencies().stream()
