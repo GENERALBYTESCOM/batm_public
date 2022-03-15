@@ -1125,7 +1125,7 @@
         <wallet prefix="Elrond wallet" name="Elrond Demo Wallet">
             <param name="fiatCurrency" />
             <param name="walletAddress" />
-            <cryptocurrency>VIA</cryptocurrency>
+            <cryptocurrency>EGLD</cryptocurrency>
         </wallet>
         <ratesource prefix="egld" name ="Fix Price" >
             <param name="price" />

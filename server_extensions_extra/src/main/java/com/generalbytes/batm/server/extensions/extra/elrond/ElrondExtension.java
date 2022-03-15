@@ -1,12 +1,11 @@
 package com.generalbytes.batm.server.extensions.extra.elrond;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
-import com.generalbytes.batm.server.extensions.*;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinzix.CoinZixExchange;
+import com.generalbytes.batm.server.extensions.AbstractExtension;
+import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
+import com.generalbytes.batm.server.extensions.IExtensionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.StringTokenizer;
 
 public class ElrondExtension extends AbstractExtension {
     private IExtensionContext ctx;
