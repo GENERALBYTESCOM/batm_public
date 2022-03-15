@@ -819,7 +819,7 @@
         <cryptologo cryptocurrency="TRX" file="trx.png"/>
         <cryptologo cryptocurrency="TRX" file="trx.svg"/>
         <cryptologo cryptocurrency="EGLD" file="elrond.png"/>
-        <cryptologo cryptocurrency="EGLD" file="elrond.svg"/>
+        <cryptologo cryptocurrency="EGLD" file="template.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.bitcoincash.BitcoinCashExtension">
         <wallet prefix="bitcoincashd" name="BitcoinABC/BCHN Cash Core - bitcoind" >
@@ -1133,7 +1133,7 @@
             <help>EUR is default fiat currency.</help>
         </ratesource>
         <cryptologo cryptocurrency="EGLD" file="elrond.png"/>
-        <cryptologo cryptocurrency="EGLD" file="elrond.svg"/>
+        <cryptologo cryptocurrency="EGLD" file="template.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.worldcoin.WorldcoinExtension" >
         <wallet prefix="worldcoind" name="Worldcoind">
