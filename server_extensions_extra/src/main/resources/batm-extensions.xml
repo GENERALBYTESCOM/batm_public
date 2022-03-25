@@ -808,6 +808,28 @@
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
         </ratesource>
+        <exchange prefix="aqua" name="aquanow.io Exchange">
+            <param name="apikey" />
+            <param name="apisecret" />
+            <param name="fiatcurrency" />
+            <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency buyonly="true">ETH</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>XRP</cryptocurrency>
+            <help>fiatcurrency is optional, default: CAD</help>
+        </exchange>
+        <ratesource prefix="aqua" name="aquanow.io Exchange">
+            <param name="apikey" />
+            <param name="apisecret" />
+            <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>XRP</cryptocurrency>
+        </ratesource>
         <cryptologo cryptocurrency="BNB" file="bnb.png"/>
         <cryptologo cryptocurrency="BNB" file="bnb.svg"/>
         <cryptologo cryptocurrency="KMD" file="kmd.png"/>
@@ -2272,6 +2294,25 @@
         <cryptologo cryptocurrency="USDTTRON" file="usdttron.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.ethereumclassic.EthereumClassicExtension">
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.aquanow.AquanowExtension" >
+        <!-- <wallet prefix="tokencoind" name="Tokencoind">
+            <param name="host" />
+            <param name="port" />
+            <param name="accountid" />
+            <cryptocurrency>TKN</cryptocurrency>
+        </wallet>
+        <wallet prefix="tkndemo" name="Tokencoin Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
+            <cryptocurrency>TKN</cryptocurrency>
+        </wallet> -->
+        <ratesource prefix="aquanowapi" name ="Aquanow API" >
+            <param name="price" />
+            <cryptocurrency>BTC</cryptocurrency>
+            <help>USD is default fiat currency.</help>
+        </ratesource>
+        <!-- <cryptologo cryptocurrency="aquanow" file="aquanow.png"/> -->
     </extension>
 
     <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.TransactionExtension" />
