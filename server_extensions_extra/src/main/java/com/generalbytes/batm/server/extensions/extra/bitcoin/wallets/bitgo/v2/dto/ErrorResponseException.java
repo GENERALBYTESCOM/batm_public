@@ -17,7 +17,11 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto;
 
-public class ErrorResponseException extends RuntimeException {
+import com.fasterxml.jackson.annotation.JsonProperty;
+import si.mazi.rescu.HttpStatusExceptionSupport;
+
+public class ErrorResponseException extends HttpStatusExceptionSupport {
+    @JsonProperty("error")
     public String error;
 
     @Override
