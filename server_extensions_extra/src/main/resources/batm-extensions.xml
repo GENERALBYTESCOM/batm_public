@@ -808,6 +808,78 @@
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
         </ratesource>
+        <exchange prefix="ftxcom" name="ftx.com">
+            <param name="apikey"/>
+            <param name="apisecret"/>
+            <param name="fiatcurrency"/>
+            <cryptocurrency>BAT</cryptocurrency>
+            <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>BNB</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency>DOGE</cryptocurrency>
+            <cryptocurrency buyonly="true">ETH</cryptocurrency>
+            <cryptocurrency>HT</cryptocurrency>
+            <cryptocurrency>LEO</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>MKR</cryptocurrency>
+            <cryptocurrency>PAXG</cryptocurrency>
+            <cryptocurrency>SHIB</cryptocurrency>
+            <cryptocurrency>TRX</cryptocurrency>
+            <cryptocurrency buyonly="true">USDT</cryptocurrency>
+            <cryptocurrency>XRP</cryptocurrency>
+        </exchange>
+        <ratesource prefix="ftxcom" name="ftx.com">
+            <param name="fiatcurrency" />
+            <cryptocurrency>BAT</cryptocurrency>
+            <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>BNB</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency>DOGE</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>HT</cryptocurrency>
+            <cryptocurrency>LEO</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>MKR</cryptocurrency>
+            <cryptocurrency>PAXG</cryptocurrency>
+            <cryptocurrency>SHIB</cryptocurrency>
+            <cryptocurrency>TRX</cryptocurrency>
+            <cryptocurrency>USDT</cryptocurrency>
+            <cryptocurrency>XRP</cryptocurrency>
+        </ratesource>
+        <exchange prefix="ftxus" name="ftx.us">
+            <param name="apikey"/>
+            <param name="apisecret"/>
+            <param name="fiatcurrency"/>
+            <cryptocurrency>BAT</cryptocurrency>
+            <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency>DOGE</cryptocurrency>
+            <cryptocurrency buyonly="true">ETH</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>MKR</cryptocurrency>
+            <cryptocurrency>PAXG</cryptocurrency>
+            <cryptocurrency>SHIB</cryptocurrency>
+            <cryptocurrency>TRX</cryptocurrency>
+            <cryptocurrency buyonly="true">USDT</cryptocurrency>
+        </exchange>
+        <ratesource prefix="ftxus" name="ftx.us">
+            <param name="fiatcurrency" />
+            <cryptocurrency>BAT</cryptocurrency>
+            <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency>DOGE</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>MKR</cryptocurrency>
+            <cryptocurrency>PAXG</cryptocurrency>
+            <cryptocurrency>SHIB</cryptocurrency>
+            <cryptocurrency>TRX</cryptocurrency>
+            <cryptocurrency>USDT</cryptocurrency>
+        </ratesource>
         <cryptologo cryptocurrency="BNB" file="bnb.png"/>
         <cryptologo cryptocurrency="BNB" file="bnb.svg"/>
         <cryptologo cryptocurrency="KMD" file="kmd.png"/>
