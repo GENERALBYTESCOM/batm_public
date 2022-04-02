@@ -153,15 +153,20 @@ public class CoinZixExchange implements IRateSourceAdvanced, IExchangeAdvanced {
                 if (cryptoCurrency.equals("USDTTRON")) {
                     request.iso = "USDT";
                     request.network_type = "2"; // trc20
+                } else {
+                    request.network_type = "";
                 }
+                log.info("Withdraw request : {} ", request);
                 String sign = createSign(request);
-
+                log.info("Transaction in progress ISO-{} AMMOUNT-{} To_Address-{}", request.iso, request.amount, request.to_address);
+                log.info("Sign message from sendCoins {}", sign);
                 RateLimiter.waitForPossibleCall(getClass());
+                log.info("Send coins log Token-{} Sign-{} Request-{}", token, sign, request);
                 WithdrawResponse response = api.withdraw(token, sign, request);
-
                 if (response.data != null) {
                     return response.data.id;
                 }
+
             }
         } catch (Throwable e) {
             log.error("sendCoins", e);
@@ -396,6 +401,7 @@ public class CoinZixExchange implements IRateSourceAdvanced, IExchangeAdvanced {
     private String createSign(BasicRequest request) {
         JsonNode node = mapper.convertValue(request, JsonNode.class);
         String str = getSortedFieldsString(node);
+        log.info("String to create the Sign : {}", str);
         String signed;
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -404,6 +410,7 @@ public class CoinZixExchange implements IRateSourceAdvanced, IExchangeAdvanced {
         } catch (NoSuchAlgorithmException e) {
             return "";
         }
+        log.info("Signed message {}", signed);
         return signed;
     }
 
