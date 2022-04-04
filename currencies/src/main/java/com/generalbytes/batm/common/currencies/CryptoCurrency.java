@@ -67,6 +67,7 @@ public enum CryptoCurrency {
     FLASH("FLASH"),
     FTO("FuturoCoin"),
     GRS("Groestlcoin"),
+    GQ("Outer Ring MMO"),
     HATCH("Hatch"),
     HBX("HBX"),
     HT("Huobi Token"),
