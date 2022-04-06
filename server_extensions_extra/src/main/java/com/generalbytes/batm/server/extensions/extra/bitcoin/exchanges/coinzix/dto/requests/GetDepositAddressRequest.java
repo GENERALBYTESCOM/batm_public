@@ -8,4 +8,5 @@ public class GetDepositAddressRequest extends BasicRequest{
 
     @JsonProperty("new")
     public int isNew = 0;
+    public String network;
 }

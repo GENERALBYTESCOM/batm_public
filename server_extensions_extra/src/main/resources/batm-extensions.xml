@@ -780,11 +780,15 @@
             <param name="token"/>
             <param name="secret"/>
             <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>EGLD</cryptocurrency>
+            <cryptocurrency>USDTTRON</cryptocurrency>
             <cryptocurrency buyonly="true">ETH</cryptocurrency>
         </exchange>
         <ratesource prefix="coinzix" name="Coinzix">
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>EGLD</cryptocurrency>
+            <cryptocurrency>USDTTRON</cryptocurrency>
         </ratesource>
         <exchange prefix="bitbuy" name="Bitbuy.ca Exchange">
             <param name="apikey" />
@@ -886,6 +890,8 @@
         <cryptologo cryptocurrency="KMD" file="kmd.svg"/>
         <cryptologo cryptocurrency="TRX" file="trx.png"/>
         <cryptologo cryptocurrency="TRX" file="trx.svg"/>
+        <cryptologo cryptocurrency="EGLD" file="elrond.png"/>
+        <cryptologo cryptocurrency="EGLD" file="elrond.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.bitcoincash.BitcoinCashExtension">
         <wallet prefix="bitcoincashd" name="BitcoinABC/BCHN Cash Core - bitcoind" >
@@ -1186,6 +1192,20 @@
             <cryptocurrency>VIA</cryptocurrency>
         </ratesource>
         <cryptologo cryptocurrency="VIA" file="via.png"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.elrond.ElrondExtension" >
+        <wallet prefix="Elrond wallet" name="Elrond Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
+            <cryptocurrency>EGLD</cryptocurrency>
+        </wallet>
+        <ratesource prefix="egld" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>EGLD</cryptocurrency>
+            <help>EUR is default fiat currency.</help>
+        </ratesource>
+        <cryptologo cryptocurrency="EGLD" file="elrond.png"/>
+        <cryptologo cryptocurrency="EGLD" file="elrond.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.worldcoin.WorldcoinExtension" >
         <wallet prefix="worldcoind" name="Worldcoind">
