@@ -34,6 +34,7 @@ import si.mazi.rescu.ClientConfig;
 import si.mazi.rescu.RestProxyFactory;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -219,6 +220,10 @@ public class CoinbaseWalletV2 implements IWallet {
                 destinationTag = addressParts[1];
             }
         }
+        if (CryptoCurrency.USDT.getCode().equals(cryptoCurrency)) {
+            amount = amount.setScale(6, RoundingMode.FLOOR);
+        }
+        log.info("sending {} {} to {}", amount, cryptoCurrency, destinationAddress);
         CBSendRequest sendRequest = new CBSendRequest("send",destinationAddress,amount.stripTrailingZeros().toPlainString(),cryptoCurrency,description, description, destinationTag); //note that description is here used as unique token as reply protection
         CBSendResponse response = api.send(apiKey,API_VERSION, CBDigest.createInstance(apiSecret, timeStamp), timeStamp,accountIds.get(cryptoCurrency), sendRequest);
         if (response != null && response.getData() != null) {
