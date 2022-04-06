@@ -18,14 +18,18 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2;
 
 import com.generalbytes.batm.server.extensions.IGeneratesNewDepositCryptoAddress;
+import com.generalbytes.batm.server.extensions.IQueryableWallet;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.BitGoCreateAddressRequest;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.BitGoCreateAddressResponse;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.BitGoAddressResponse;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.ErrorResponseException;
+import com.generalbytes.batm.server.extensions.payment.ReceivedAmount;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import si.mazi.rescu.HttpStatusIOException;
 
-public class BitgoWalletWithUniqueAddresses extends BitgoWallet implements IGeneratesNewDepositCryptoAddress {
+import java.math.BigDecimal;
+
+public class BitgoWalletWithUniqueAddresses extends BitgoWallet implements IGeneratesNewDepositCryptoAddress, IQueryableWallet {
     private static final Logger log = LoggerFactory.getLogger(BitgoWalletWithUniqueAddresses.class);
 
     public BitgoWalletWithUniqueAddresses(String scheme, String host, int port, String token, String walletId, String walletPassphrase, Integer numBlocks) {
@@ -46,22 +50,47 @@ public class BitgoWalletWithUniqueAddresses extends BitgoWallet implements IGene
             final BitGoCreateAddressRequest request = new BitGoCreateAddressRequest();
             request.setChain(0); // https://github.com/BitGo/unspents/blob/master/src/codes.ts ??? [0, UnspentType.p2sh, Purpose.external],
             request.setLabel(label);
-            final BitGoCreateAddressResponse response = api.createAddress(cryptoCurrency, walletId, request);
+            final BitGoAddressResponse response = api.createAddress(cryptoCurrency, walletId, request);
             if (response == null) {
                 return null;
             }
             String address = response.getAddress();
             if (address == null || address.isEmpty()) {
+                log.error("address missing in response: '{}'", address);
                 return null;
             }
             return address;
         } catch (HttpStatusIOException hse) {
             log.debug("create address error: {}", hse.getHttpBody());
         } catch (ErrorResponseException e) {
-            log.debug("create address error: {}", e.getMessage());
+            log.debug("create address error, HTTP status: {}, error: {}", e.getHttpStatusCode(), e.getMessage());
         } catch (Exception e) {
             log.error("create address error", e);
         }
         return null;
+    }
+
+    @Override
+    public ReceivedAmount getReceivedAmount(String address, String cryptoCurrency) {
+        if (!getCryptoCurrencies().contains(cryptoCurrency)) {
+            log.error("Wallet supports only {}, not {}", getCryptoCurrencies(), cryptoCurrency);
+            return ReceivedAmount.ZERO;
+        }
+        cryptoCurrency = cryptoCurrency.toLowerCase();
+
+        try {
+            BitGoAddressResponse resp = api.getAddress(cryptoCurrency, walletId, address);
+            if (resp.getBalance().getConfirmedBalance().compareTo(BigDecimal.ZERO) > 0) {
+                return new ReceivedAmount(divideBalance(cryptoCurrency, resp.getBalance().getConfirmedBalance()), 999);
+            }
+            return new ReceivedAmount(divideBalance(cryptoCurrency, resp.getBalance().getBalance()), 0);
+        } catch (HttpStatusIOException e) {
+            log.debug("get address error: {}", e.getHttpBody());
+        } catch (ErrorResponseException e) {
+            log.debug("get address error, HTTP status: {}, error: {}", e.getHttpStatusCode(), e.getMessage());
+        } catch (Exception e) {
+            log.error("get address error", e);
+        }
+        return ReceivedAmount.ZERO;
     }
 }

@@ -2,6 +2,7 @@ package com.generalbytes.batm.server.extensions.extra;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.IGeneratesNewDepositCryptoAddress;
+import com.generalbytes.batm.server.extensions.IQueryableWallet;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitcoind.BATMBitcoindRPCWallet;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitcoind.BATMBitcoindRPCWalletWithUniqueAddresses;
@@ -9,6 +10,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoincash.BitcoinCashRPCW
 import com.generalbytes.batm.server.extensions.extra.bitcoincash.BitcoinCashUniqueAddressRPCWallet;
 import com.generalbytes.batm.server.extensions.extra.litecoin.wallets.litecoind.LitecoindRPCWallet;
 import com.generalbytes.batm.server.extensions.extra.litecoin.wallets.litecoind.LitecoindUniqueAddressRPCWallet;
+import com.generalbytes.batm.server.extensions.payment.ReceivedAmount;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -86,6 +88,15 @@ public class WalletTest {
         BigDecimal cryptoBalance = wallet.getCryptoBalance(cryptoCurrency);
         System.out.println(cryptoBalance);
         Assert.assertNotNull(cryptoBalance);
+    }
+
+    @Test
+    public void testReceivedAmount() {
+        if (wallet instanceof IQueryableWallet) {
+            ReceivedAmount amount = ((IQueryableWallet) wallet).getReceivedAmount("MAtZDadQRhRaD2uAZ8gUMHq8Say4TSVshw", cryptoCurrency);
+            System.out.println(amount.getConfirmations());
+            System.out.println(amount.getTotalAmountReceived());
+        }
     }
 
 }
