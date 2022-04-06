@@ -26,6 +26,7 @@ public class Converters {
     public static final BigDecimal LTC = BigDecimal.TEN.pow(8);
     public static final BigDecimal ETH = BigDecimal.TEN.pow(18);
     public static final BigDecimal BTBS = BigDecimal.TEN.pow(18);
+    public static final BigDecimal GQ = BigDecimal.TEN.pow(18);
     public static final BigDecimal USDT = BigDecimal.TEN.pow(6);
     public static final BigDecimal XRP = BigDecimal.TEN.pow(8);
 
