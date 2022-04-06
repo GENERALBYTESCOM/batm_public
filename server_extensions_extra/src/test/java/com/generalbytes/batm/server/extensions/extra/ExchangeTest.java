@@ -91,6 +91,12 @@ public class ExchangeTest {
         System.out.println(cryptoBalance);
         Assert.assertNotNull(cryptoBalance);
     }
+    @Test
+    public void testGetFiatBalance() {
+        BigDecimal fiatBalance = exchange.getFiatBalance(exchange.getPreferredFiatCurrency());
+        System.out.println(fiatBalance);
+        Assert.assertNotNull(fiatBalance);
+    }
 
     @Test
     public void testGetDepositAddress() {

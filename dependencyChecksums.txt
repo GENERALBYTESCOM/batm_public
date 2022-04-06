@@ -133,6 +133,7 @@ verifyModule 'org.knowm.xchange:xchange-coingi:5.0.10:7cc8f38653c56c50f08376c6e5
 verifyModule 'org.knowm.xchange:xchange-core:5.0.10:f4e95cc652efb58ea2840cfc87f00a835e9658c81aa45bcbf4b5175c891105ba'
 verifyModule 'org.knowm.xchange:xchange-dvchain:5.0.10:d64ccf69f3756f0ba150dc61ff163601acd93a0f0a95893920cca60bc62ca99d'
 verifyModule 'org.knowm.xchange:xchange-enigma:5.0.10:e8db7dc3f3ba1e1084af52450c43813fbe2d0ba14add1457fb3912d3ee85e8b7'
+verifyModule 'org.knowm.xchange:xchange-ftx:5.0.13:20d1246a3bf37b954d4c7eeab4aadabc7844ae8f0896a96e91552ddad348c287'
 verifyModule 'org.knowm.xchange:xchange-hitbtc:5.0.10:e4c823f44d35b68c17610440f8d27a565315be26581d4574d3bae63b56c6f5a1'
 verifyModule 'org.knowm.xchange:xchange-poloniex:5.0.10:1a6af252ed10aa9f404ed2a4e6cae66bc19d392070d13f0579e92195d22479cb'
 verifyModule 'org.litecoinj:core:0.15.1.20190418:1eee20226aa76269601f1aa1f22d3980d1833c01b93112504e3c7ed4b972bbbe'
