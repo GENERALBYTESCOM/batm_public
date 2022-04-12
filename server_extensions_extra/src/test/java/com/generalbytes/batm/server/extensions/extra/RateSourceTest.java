@@ -20,6 +20,7 @@ package com.generalbytes.batm.server.extensions.extra;
 import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.ftx.FtxComExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.ftx.FtxUsExchange;
+import com.generalbytes.batm.server.extensions.extra.btoken.sources.fixed.BTokenFixedRateSource;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,6 +48,7 @@ public class RateSourceTest {
             {"BTC", new FtxComExchange("USD")},
             {"BTC", new FtxUsExchange("EUR")},
             {"BTC", new FtxUsExchange("USD")},
+	     { "BTOKEN", new BTokenFixedRateSource(new BigDecimal(1), "USD") },
         });
     }
 

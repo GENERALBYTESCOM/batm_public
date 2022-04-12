@@ -192,6 +192,7 @@
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>DAI</cryptocurrency>
+                <cryptocurrency>BTOKEN</cryptocurrency>
                 <cryptocurrency>BIZZ</cryptocurrency>
                 <cryptocurrency>EURS</cryptocurrency>
                 <cryptocurrency>USDS</cryptocurrency>
@@ -560,6 +561,7 @@
             <cryptocurrency>BURST</cryptocurrency>
             <cryptocurrency>CLOAK</cryptocurrency>
             <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency>BTOKEN</cryptocurrency>
             <cryptocurrency>BIZZ</cryptocurrency>
             <cryptocurrency>DASH</cryptocurrency>
             <cryptocurrency>DEX</cryptocurrency>
@@ -629,6 +631,7 @@
             <cryptocurrency>BURST</cryptocurrency>
             <cryptocurrency>CLOAK</cryptocurrency>
             <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency>BTOKEN</cryptocurrency>
             <cryptocurrency>BIZZ</cryptocurrency>
             <cryptocurrency>DASH</cryptocurrency>
             <cryptocurrency>DEX</cryptocurrency>
@@ -1474,6 +1477,25 @@
             <cryptocurrency>SMART</cryptocurrency>
         </ratesource>
         <cryptologo cryptocurrency="SMART" file="smart.png"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.btoken.BTokenExtension" >
+        <wallet prefix="btoken-wallet" name="btoken-wallet">
+            <param name="tokenSymbol" />
+            <param name="tokenDecimalPlaces" />
+            <param name="contractAddress" />
+            <param name="rpcURL" />
+            <param name="mnemonic" />
+            <param name="gaslimit" />
+            <param name="gasPriceMultiplier" />
+            <cryptocurrency>BTOKEN</cryptocurrency>
+        </wallet>
+        <ratesource prefix="btokenfix" name ="Fix Price - BTOKEN" >
+            <param name="price" />
+            <cryptocurrency>BTOKEN</cryptocurrency>
+            <help>USD is default fiat currency.</help>
+        </ratesource>
+        <cryptologo cryptocurrency="BTOKEN" file="btoken.png"/>
+        <cryptologo cryptocurrency="BTOKEN" file="btoken.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.startcoin.StartcoinExtension" >
         <wallet prefix="startcoind" name="Startcoind">
@@ -2386,7 +2408,7 @@
     <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.location.LocationExampleExtension" />
     <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.identity.ExternalIdentityExampleExtension" />
     <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.watchlists.WatchlistExtension" />
-    <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.rest.RESTExampleExtension" />
+    <extension autoload="true" class="com.generalbytes.batm.server.extensions.extra.examples.rest.RESTExampleExtension" />
     <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.communication.ExternalCommunicationExampleExtension" />
     <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.activeTerminals.ActiveTerminalsExtension" />
 

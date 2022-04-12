@@ -18,17 +18,6 @@
 
 package com.generalbytes.batm.server.extensions.test;
 
-import com.generalbytes.batm.server.extensions.*;
-import joptsimple.OptionParser;
-import joptsimple.OptionSet;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,16 +29,69 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import com.generalbytes.batm.server.extensions.IExchange;
+import com.generalbytes.batm.server.extensions.IExtension;
+import com.generalbytes.batm.server.extensions.IPaperWallet;
+import com.generalbytes.batm.server.extensions.IPaperWalletGenerator;
+import com.generalbytes.batm.server.extensions.IRateSource;
+import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
+import com.generalbytes.batm.server.extensions.IWallet;
+import com.generalbytes.batm.server.extensions.TestExtensionContext;
+import com.generalbytes.batm.server.extensions.extra.btoken.BTokenWalletGenerator;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import joptsimple.OptionParser;
+import joptsimple.OptionSet;
+
 public class Tester {
     private List<IExtension> extensions;
     private Document descriptors;
 
     public static void main(String[] args) {
         Tester t = new Tester();
+/*
+        File file = new File("server_extensions_extra/build/libs/batm_server_extensions_extra.jar");
+        t.loadExtensions(file);
+
+        t.getWalletBalance("btoken-wallet",
+                "BTOKEN:18:0x8a79dD9A76f6C8ffF22791c758A137213D54fD12:ropsten.infura.io/v3/fe61370c71034c7fadb5161f6a4381b9:liquid brand gaze spare someone toe cause nuclear rug west wash mask");
+
+        t.sendFromWallet("btoken-wallet",
+                "BTOKEN:18:0x8a79dD9A76f6C8ffF22791c758A137213D54fD12:ropsten.infura.io/v3/fe61370c71034c7fadb5161f6a4381b9:liquid brand gaze spare someone toe cause nuclear rug west wash mask");
+
+        IPaperWalletGenerator paperWalletGenerator = new BTokenWalletGenerator(new TestExtensionContext());
+        IPaperWallet paperWallet = paperWalletGenerator.generateWallet("BTOKEN", "", "en",
+                false);
+
+        System.out.println();
+        System.out.println();
+        System.out.println();
+
+        System.out.println("Paper Wallet getAddress => " + paperWallet.getAddress());
+        System.out.println("Paper Wallet getMessage => " + paperWallet.getMessage());
+        System.out.println("Paper Wallet getCryptoCurrency => " + paperWallet.getCryptoCurrency());
+        System.out.println("Paper Wallet getFileExtension => " + paperWallet.getFileExtension());
+        System.out.println("Paper Wallet getPrivateKey => " + paperWallet.getPrivateKey());
+
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+
+        */
         t.go(args);
+
     }
 
-    private static void usage(){
+    private static void usage() {
         System.out.println("Welcome to BATM Extensions Tester");
         System.out.println("Usage:");
         System.out.println();
@@ -92,11 +134,11 @@ public class Tester {
     }
 
     public void go(String[] args) {
-        OptionParser parser = new OptionParser( "a:j:n:p:" );
+        OptionParser parser = new OptionParser("a:j:n:p:");
 
-        OptionSet options = parser.parse( args );
+        OptionSet options = parser.parse(args);
 
-        if (args.length ==0) {
+        if (args.length == 0) {
             usage();
             System.exit(1);
         }
@@ -129,7 +171,7 @@ public class Tester {
                 try {
                     extension.init(new TestExtensionContext());
                 } catch (AbstractMethodError e) {
-                    //eat it for backward compatibility reasons
+                    // eat it for backward compatibility reasons
                 }
                 System.out.println("Loaded extension: " + extension.getName());
             }
@@ -138,13 +180,13 @@ public class Tester {
         String action = (String) options.valueOf("a");
         if ("list-ratesources".equalsIgnoreCase(action)) {
             listRateSources();
-        }else if ("list-wallets".equalsIgnoreCase(action)) {
+        } else if ("list-wallets".equalsIgnoreCase(action)) {
             listWallets();
-        }else if ("list-exchanges".equalsIgnoreCase(action)) {
+        } else if ("list-exchanges".equalsIgnoreCase(action)) {
             listExchanges();
-        }else if ("list-paymentprocessors".equalsIgnoreCase(action)) {
+        } else if ("list-paymentprocessors".equalsIgnoreCase(action)) {
             listPaymentProcessors();
-        }else if ("get-rates".equalsIgnoreCase(action)) {
+        } else if ("get-rates".equalsIgnoreCase(action)) {
             if (!options.hasArgument("n")) {
                 System.err.println("Error: Missing -n parameter.");
                 usage();
@@ -152,8 +194,8 @@ public class Tester {
             }
             final String name = (String) options.valueOf("n");
             final String params = (String) options.valueOf("p");
-            getRates(name,params);
-        }else if ("get-wbalance".equalsIgnoreCase(action)) {
+            getRates(name, params);
+        } else if ("get-wbalance".equalsIgnoreCase(action)) {
             if (!options.hasArgument("n")) {
                 System.err.println("Error: Missing -n parameter.");
                 usage();
@@ -167,7 +209,7 @@ public class Tester {
             final String name = (String) options.valueOf("n");
             final String params = (String) options.valueOf("p");
             getWalletBalance(name, params);
-        }else if ("get-ebalance".equalsIgnoreCase(action)) {
+        } else if ("get-ebalance".equalsIgnoreCase(action)) {
             if (!options.hasArgument("n")) {
                 System.err.println("Error: Missing -n parameter.");
                 usage();
@@ -181,7 +223,7 @@ public class Tester {
             final String name = (String) options.valueOf("n");
             final String params = (String) options.valueOf("p");
             getExchangeBalance(name, params);
-        }else{
+        } else {
             System.err.println("Error: Unknown Action.");
             usage();
             System.exit(1);
@@ -192,11 +234,11 @@ public class Tester {
     private void loadExtensions(File extensionsFile) {
         try {
             URL url = extensionsFile.toURL();
-            URL[] urls = new URL[]{url};
+            URL[] urls = new URL[] { url };
             ClassLoader cl = new URLClassLoader(urls);
             InputStream resourceAsStream = cl.getResourceAsStream("batm-extensions.xml");
             if (resourceAsStream != null) {
-               loadExtensionsFromFile(resourceAsStream, cl);
+                loadExtensionsFromFile(resourceAsStream, cl);
             }
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -217,7 +259,7 @@ public class Tester {
         }
 
         if (descriptors != null) {
-            //load extensions
+            // load extensions
             final NodeList childNodes = descriptors.getDocumentElement().getChildNodes();
             for (int i = 0; i < childNodes.getLength(); i++) {
                 Node node = childNodes.item(i);
@@ -260,17 +302,17 @@ public class Tester {
                         for (int k = 0; k < specs.getLength(); k++) {
                             Node spec = specs.item(k);
                             if ("cryptocurrency".equals(spec.getNodeName())) {
-                                cryptoCurrencies += spec.getTextContent() +",";
-                            }else if ("param".equals(spec.getNodeName())) {
+                                cryptoCurrencies += spec.getTextContent() + ",";
+                            } else if ("param".equals(spec.getNodeName())) {
                                 String pname = spec.getAttributes().getNamedItem("name").getTextContent();
-                                params+=pname+":";
+                                params += pname + ":";
                             }
                         }
                         if (!params.isEmpty()) {
-                            params = " -p=" + params.substring(0,params.length() -1);
+                            params = " -p=" + params.substring(0, params.length() - 1);
                         }
                         if (!cryptoCurrencies.isEmpty()) {
-                            cryptoCurrencies = cryptoCurrencies.substring(0,cryptoCurrencies.length() -1);
+                            cryptoCurrencies = cryptoCurrencies.substring(0, cryptoCurrencies.length() - 1);
                         }
                         System.out.println(" -n=" + prefix + " - " + name + "(" + cryptoCurrencies + ") " + params);
                     }
@@ -297,17 +339,17 @@ public class Tester {
                         for (int k = 0; k < specs.getLength(); k++) {
                             Node spec = specs.item(k);
                             if ("cryptocurrency".equals(spec.getNodeName())) {
-                                cryptoCurrencies += spec.getTextContent() +",";
-                            }else if ("param".equals(spec.getNodeName())) {
+                                cryptoCurrencies += spec.getTextContent() + ",";
+                            } else if ("param".equals(spec.getNodeName())) {
                                 String pname = spec.getAttributes().getNamedItem("name").getTextContent();
-                                params+=pname+":";
+                                params += pname + ":";
                             }
                         }
                         if (!params.isEmpty()) {
-                            params = " -p=" + params.substring(0,params.length() -1);
+                            params = " -p=" + params.substring(0, params.length() - 1);
                         }
                         if (!cryptoCurrencies.isEmpty()) {
-                            cryptoCurrencies = cryptoCurrencies.substring(0,cryptoCurrencies.length() -1);
+                            cryptoCurrencies = cryptoCurrencies.substring(0, cryptoCurrencies.length() - 1);
                         }
                         System.out.println(" -n=" + prefix + " - " + name + "(" + cryptoCurrencies + ") " + params);
                     }
@@ -334,17 +376,17 @@ public class Tester {
                         for (int k = 0; k < specs.getLength(); k++) {
                             Node spec = specs.item(k);
                             if ("cryptocurrency".equals(spec.getNodeName())) {
-                                cryptoCurrencies += spec.getTextContent() +",";
-                            }else if ("param".equals(spec.getNodeName())) {
+                                cryptoCurrencies += spec.getTextContent() + ",";
+                            } else if ("param".equals(spec.getNodeName())) {
                                 String pname = spec.getAttributes().getNamedItem("name").getTextContent();
-                                params+=pname+":";
+                                params += pname + ":";
                             }
                         }
                         if (!params.isEmpty()) {
-                            params = " -p=" + params.substring(0,params.length() -1);
+                            params = " -p=" + params.substring(0, params.length() - 1);
                         }
                         if (!cryptoCurrencies.isEmpty()) {
-                            cryptoCurrencies = cryptoCurrencies.substring(0,cryptoCurrencies.length() -1);
+                            cryptoCurrencies = cryptoCurrencies.substring(0, cryptoCurrencies.length() - 1);
                         }
                         System.out.println(" -n=" + prefix + " - " + name + "(" + cryptoCurrencies + ") " + params);
                     }
@@ -371,17 +413,17 @@ public class Tester {
                         for (int k = 0; k < specs.getLength(); k++) {
                             Node spec = specs.item(k);
                             if ("cryptocurrency".equals(spec.getNodeName())) {
-                                cryptoCurrencies += spec.getTextContent() +",";
-                            }else if ("param".equals(spec.getNodeName())) {
+                                cryptoCurrencies += spec.getTextContent() + ",";
+                            } else if ("param".equals(spec.getNodeName())) {
                                 String pname = spec.getAttributes().getNamedItem("name").getTextContent();
-                                params+=pname+":";
+                                params += pname + ":";
                             }
                         }
                         if (!params.isEmpty()) {
-                            params = " -p=" + params.substring(0,params.length() -1);
+                            params = " -p=" + params.substring(0, params.length() - 1);
                         }
                         if (!cryptoCurrencies.isEmpty()) {
-                            cryptoCurrencies = cryptoCurrencies.substring(0,cryptoCurrencies.length() -1);
+                            cryptoCurrencies = cryptoCurrencies.substring(0, cryptoCurrencies.length() - 1);
                         }
                         System.out.println(" -n=" + prefix + " - " + name + "(" + cryptoCurrencies + ") " + params);
                     }
@@ -389,10 +431,6 @@ public class Tester {
             }
         }
     }
-
-
-
-
 
     private void getRates(String name, String params) {
         for (int i = 0; i < extensions.size(); i++) {
@@ -402,46 +440,51 @@ public class Tester {
                 final String preferredFiatCurrency = rs.getPreferredFiatCurrency();
                 final Set<String> fiatCurrencies = rs.getFiatCurrencies();
                 final Set<String> cryptoCurrencies = rs.getCryptoCurrencies();
-				System.out.println("Preferred Fiat Currency = " + preferredFiatCurrency);
-				System.out.println("Fiat Currencies:");
-				for (String fiatCurrency : fiatCurrencies) {
-					System.out.println("  " + fiatCurrency);
-				}
-				for (String selectedCryptoCurrency : cryptoCurrencies) {
-					System.out.println("Crypto Currency:");
-					System.out.println("  " + selectedCryptoCurrency);
+                System.out.println("Preferred Fiat Currency = " + preferredFiatCurrency);
+                System.out.println("Fiat Currencies:");
+                for (String fiatCurrency : fiatCurrencies) {
+                    System.out.println("  " + fiatCurrency);
+                }
+                for (String selectedCryptoCurrency : cryptoCurrencies) {
+                    System.out.println("Crypto Currency:");
+                    System.out.println("  " + selectedCryptoCurrency);
 
-					final BigDecimal exchangeRateLast = rs.getExchangeRateLast(selectedCryptoCurrency, preferredFiatCurrency);
-					if (exchangeRateLast != null) {
-						System.out.println("Exchange Rate Last: 1 " + selectedCryptoCurrency + " = " + exchangeRateLast.stripTrailingZeros().toPlainString() + " " + preferredFiatCurrency);
-					}else{
-						System.err.println("Rate source returned NULL.");
-					}
+                    final BigDecimal exchangeRateLast = rs.getExchangeRateLast(selectedCryptoCurrency,
+                            preferredFiatCurrency);
+                    if (exchangeRateLast != null) {
+                        System.out.println("Exchange Rate Last: 1 " + selectedCryptoCurrency + " = "
+                                + exchangeRateLast.stripTrailingZeros().toPlainString() + " " + preferredFiatCurrency);
+                    } else {
+                        System.err.println("Rate source returned NULL.");
+                    }
 
-					if (rs instanceof IRateSourceAdvanced) {
-						IRateSourceAdvanced rsa = (IRateSourceAdvanced)rs;
+                    if (rs instanceof IRateSourceAdvanced) {
+                        IRateSourceAdvanced rsa = (IRateSourceAdvanced) rs;
 
-						for (String fiatCurrency : fiatCurrencies) {
-							System.out.println("Checking price for " + fiatCurrency);
+                        for (String fiatCurrency : fiatCurrencies) {
+                            System.out.println("Checking price for " + fiatCurrency);
 
-							final BigDecimal buyPrice = rsa.getExchangeRateForBuy(selectedCryptoCurrency, fiatCurrency);
-							if (buyPrice != null) {
-								System.out.println("Buy Price: 1 " + selectedCryptoCurrency + " = " + buyPrice.stripTrailingZeros().toPlainString() + " " + fiatCurrency);
-							}else{
-								System.err.println("Rate source returned NULL on Buy Price.");
-							}
+                            final BigDecimal buyPrice = rsa.getExchangeRateForBuy(selectedCryptoCurrency, fiatCurrency);
+                            if (buyPrice != null) {
+                                System.out.println("Buy Price: 1 " + selectedCryptoCurrency + " = "
+                                        + buyPrice.stripTrailingZeros().toPlainString() + " " + fiatCurrency);
+                            } else {
+                                System.err.println("Rate source returned NULL on Buy Price.");
+                            }
 
-							final BigDecimal sellPrice = rsa.getExchangeRateForSell(selectedCryptoCurrency, fiatCurrency);
-							if (sellPrice != null) {
-								System.out.println("Sell Price: 1 " + selectedCryptoCurrency + " = " + sellPrice.stripTrailingZeros().toPlainString() + " " + fiatCurrency);
-							}else{
-								System.err.println("Rate source returned NULL on Sell Price.");
-							}
+                            final BigDecimal sellPrice = rsa.getExchangeRateForSell(selectedCryptoCurrency,
+                                    fiatCurrency);
+                            if (sellPrice != null) {
+                                System.out.println("Sell Price: 1 " + selectedCryptoCurrency + " = "
+                                        + sellPrice.stripTrailingZeros().toPlainString() + " " + fiatCurrency);
+                            } else {
+                                System.err.println("Rate source returned NULL on Sell Price.");
+                            }
 
-						}
+                        }
 
-					}
-				}
+                    }
+                }
                 return;
             }
         }
@@ -466,8 +509,41 @@ public class Tester {
                 System.out.println("CryptoAddress = " + cryptoAddress);
                 final BigDecimal balance = w.getCryptoBalance(preferredCryptoCurrency);
                 if (balance != null) {
-                    System.out.println("Balance: " + balance.stripTrailingZeros().toPlainString() + " " + preferredCryptoCurrency);
-                }else{
+                    System.out.println(
+                            "Balance: " + balance.stripTrailingZeros().toPlainString() + " " + preferredCryptoCurrency);
+                } else {
+                    System.err.println("Wallet returned NULL.");
+                }
+
+                return;
+            }
+        }
+        System.err.println("Error: Wallet not found.");
+    }
+
+    private void sendFromWallet(String name, String params) {
+        for (int i = 0; i < extensions.size(); i++) {
+            IExtension extension = extensions.get(i);
+            final IWallet w = extension.createWallet(name + ":" + params, null);
+            if (w != null) {
+                final String preferredCryptoCurrency = w.getPreferredCryptoCurrency();
+                final Set<String> cryptoCurrencies = w.getCryptoCurrencies();
+
+                System.out.println("Preferred Crypto Currency = " + preferredCryptoCurrency);
+                System.out.println("Crypto Currencies:");
+                for (String cryptoCurrency : cryptoCurrencies) {
+                    System.out.println("  " + cryptoCurrency);
+                }
+
+                final String cryptoAddress = w.getCryptoAddress(preferredCryptoCurrency);
+                System.out.println("CryptoAddress = " + cryptoAddress);
+                String sendResult = w.sendCoins("0x03dD169Bf7e718779Bd2A72279f1D33615FAd306", new BigDecimal(1),
+                        "BTOKEN", "Test");
+
+                if (sendResult != null) {
+                    System.out.println(
+                            "sendResult: " + sendResult + " preferredCryptoCurrency => " + preferredCryptoCurrency);
+                } else {
                     System.err.println("Wallet returned NULL.");
                 }
 
@@ -478,40 +554,40 @@ public class Tester {
     }
 
     private void getExchangeBalance(String name, String params) {
-		for (int i = 0; i < extensions.size(); i++) {
-			IExtension extension = extensions.get(i);
-			final IExchange e = extension.createExchange(name + ":" + params);
-			if (e != null) {
-				final String preferredFiatCurrency = e.getPreferredFiatCurrency();
-				final Set<String> cryptoCurrencies = e.getCryptoCurrencies();
-				final Set<String> fiatCurrencies = e.getFiatCurrencies();
+        for (int i = 0; i < extensions.size(); i++) {
+            IExtension extension = extensions.get(i);
+            final IExchange e = extension.createExchange(name + ":" + params);
+            if (e != null) {
+                final String preferredFiatCurrency = e.getPreferredFiatCurrency();
+                final Set<String> cryptoCurrencies = e.getCryptoCurrencies();
+                final Set<String> fiatCurrencies = e.getFiatCurrencies();
 
-				System.out.println("Preferred Fiat Currency = " + preferredFiatCurrency);
-				System.out.println("Crypto Currencies:");
-				String selectedCryptoCurrency = null;
-				for (String cryptoCurrency : cryptoCurrencies) {
-					if (selectedCryptoCurrency == null) {
-						selectedCryptoCurrency = cryptoCurrency;
-					}
-					System.out.println("  " + cryptoCurrency);
-				}
-				System.out.println("Fiat Currencies:");
-				for (String fiatCurrency : fiatCurrencies) {
-					System.out.println("  " + fiatCurrency);
-				}
-				final BigDecimal balance = e.getCryptoBalance(selectedCryptoCurrency);
-				if (balance != null) {
-					System.out.println("Crypto Balance: " + balance.stripTrailingZeros().toPlainString() + " " + selectedCryptoCurrency);
-				}else{
-					System.err.println("Exchange returned NULL.");
-				}
-				final String depositAddress = e.getDepositAddress(selectedCryptoCurrency);
-				System.out.println("Deposit Address: " + depositAddress);
-				return;
-			}
-		}
+                System.out.println("Preferred Fiat Currency = " + preferredFiatCurrency);
+                System.out.println("Crypto Currencies:");
+                String selectedCryptoCurrency = null;
+                for (String cryptoCurrency : cryptoCurrencies) {
+                    if (selectedCryptoCurrency == null) {
+                        selectedCryptoCurrency = cryptoCurrency;
+                    }
+                    System.out.println("  " + cryptoCurrency);
+                }
+                System.out.println("Fiat Currencies:");
+                for (String fiatCurrency : fiatCurrencies) {
+                    System.out.println("  " + fiatCurrency);
+                }
+                final BigDecimal balance = e.getCryptoBalance(selectedCryptoCurrency);
+                if (balance != null) {
+                    System.out.println("Crypto Balance: " + balance.stripTrailingZeros().toPlainString() + " "
+                            + selectedCryptoCurrency);
+                } else {
+                    System.err.println("Exchange returned NULL.");
+                }
+                final String depositAddress = e.getDepositAddress(selectedCryptoCurrency);
+                System.out.println("Deposit Address: " + depositAddress);
+                return;
+            }
+        }
         System.err.println("Error: Exchange not found.");
     }
-
 
 }
