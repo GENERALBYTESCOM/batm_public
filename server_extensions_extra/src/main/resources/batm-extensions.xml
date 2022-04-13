@@ -133,6 +133,7 @@
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>DASH</cryptocurrency>
                 <cryptocurrency>DAI</cryptocurrency>
+                <cryptocurrency>BTOKEN</cryptocurrency>
                 <cryptocurrency>BIZZ</cryptocurrency>
             </ratesource>
             <ratesource prefix="bitkub" name ="BitKub.com" >
@@ -254,6 +255,7 @@
                 <cryptocurrency>BURST</cryptocurrency>
                 <cryptocurrency>CLOAK</cryptocurrency>
                 <cryptocurrency>DAI</cryptocurrency>
+                <cryptocurrency>BTOKEN</cryptocurrency>
                 <cryptocurrency>BIZZ</cryptocurrency>
                 <cryptocurrency>DASH</cryptocurrency>
                 <cryptocurrency>DDB</cryptocurrency>
@@ -405,6 +407,7 @@
             <cryptocurrency>ETC</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency>BTOKEN</cryptocurrency>
             <cryptocurrency>BIZZ</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
             <help>fiatcurrency parameter is optional</help>
@@ -433,6 +436,7 @@
             <cryptocurrency buyonly="true">BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency>BTOKEN</cryptocurrency>
             <cryptocurrency>BIZZ</cryptocurrency>
             <cryptocurrency>ETC</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
@@ -477,6 +481,7 @@
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>DASH</cryptocurrency>
             <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency>BTOKEN</cryptocurrency>
             <cryptocurrency>DGB</cryptocurrency>
             <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency>LSK</cryptocurrency>
@@ -804,6 +809,7 @@
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency>BTOKEN</cryptocurrency>
             <cryptocurrency buyonly="true">ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
@@ -815,6 +821,7 @@
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency>BTOKEN</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
@@ -828,6 +835,7 @@
             <cryptocurrency>BNB</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency>BTOKEN</cryptocurrency>
             <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency buyonly="true">ETH</cryptocurrency>
             <cryptocurrency>HT</cryptocurrency>
@@ -847,6 +855,7 @@
             <cryptocurrency>BNB</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency>BTOKEN</cryptocurrency>
             <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>HT</cryptocurrency>
@@ -867,6 +876,7 @@
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency>BTOKEN</cryptocurrency>
             <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency buyonly="true">ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
@@ -882,6 +892,7 @@
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency>BTOKEN</cryptocurrency>
             <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
@@ -931,6 +942,7 @@
             <cryptocurrency buyonly="true">BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency>BTOKEN</cryptocurrency>
             <cryptocurrency>BIZZ</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
@@ -943,6 +955,7 @@
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency buyonly="true">DAI</cryptocurrency>
+            <cryptocurrency>BTOKEN</cryptocurrency>
             <cryptocurrency>BIZZ</cryptocurrency>
             <cryptocurrency buyonly="true">ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>

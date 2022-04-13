@@ -40,6 +40,7 @@ public class FtxComExchange extends FtxExchange {
         SUPPORTED_CRYPTOS.add(CryptoCurrency.BNB.getCode());
         SUPPORTED_CRYPTOS.add(CryptoCurrency.BTC.getCode());
         SUPPORTED_CRYPTOS.add(CryptoCurrency.DAI.getCode());
+        SUPPORTED_CRYPTOS.add(CryptoCurrency.BTOKEN.getCode());
         SUPPORTED_CRYPTOS.add(CryptoCurrency.DOGE.getCode());
         SUPPORTED_CRYPTOS.add(CryptoCurrency.ETH.getCode());
         SUPPORTED_CRYPTOS.add(CryptoCurrency.HT.getCode());

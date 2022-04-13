@@ -17,12 +17,15 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.btoken;
 
-import com.generalbytes.batm.common.currencies.CryptoCurrency;
-import com.generalbytes.batm.server.extensions.extra.common.QueryableWalletPaymentSupport;
-
 import java.util.concurrent.TimeUnit;
 
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
+import com.generalbytes.batm.server.extensions.extra.common.QueryableWalletPaymentSupport;
+
 public class BTokenPaymentSupport extends QueryableWalletPaymentSupport {
+
+    private BTokenAddressValidator addressValidator = new BTokenAddressValidator();
 
     @Override
     protected String getCryptoCurrency() {
@@ -35,6 +38,14 @@ public class BTokenPaymentSupport extends QueryableWalletPaymentSupport {
 
     protected long getPollingInitialDelayMillis() {
         return TimeUnit.SECONDS.toMillis(60);
+    }
+
+    public String getCurrency() {
+        return CryptoCurrency.BTOKEN.getCode();
+    }
+
+    public ICryptoAddressValidator getAddressValidator() {
+        return addressValidator;
     }
 
 }

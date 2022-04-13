@@ -27,19 +27,20 @@ public class BTokenFixedRateSource implements IRateSourceAdvanced {
     private static final BigDecimal MAX_ALLOWED_PRICE_VALUE = new BigDecimal("9999999999.9999999999");
 
     private String preferedFiatCurrency = FiatCurrency.USD.getCode();
-    private BigDecimal rate = BigDecimal.ZERO;
+    private BigDecimal rate = new BigDecimal(1);
 
     public BTokenFixedRateSource(BigDecimal rate, String preferedFiatCurrency) {
+        if (rate != null && preferedFiatCurrency != null) {
+            if (rate.compareTo(MAX_ALLOWED_PRICE_VALUE) > 0) {
+                this.rate = null;
+            }
+            this.rate = rate;
 
-        if (rate.compareTo(MAX_ALLOWED_PRICE_VALUE) > 0) {
-            this.rate = null;
+            if (!getFiatCurrencies().contains(preferedFiatCurrency)) {
+                preferedFiatCurrency = FiatCurrency.USD.getCode();
+            }
+            this.preferedFiatCurrency = preferedFiatCurrency;
         }
-        this.rate = rate;
-
-        if (!getFiatCurrencies().contains(preferedFiatCurrency)) {
-            preferedFiatCurrency = FiatCurrency.USD.getCode();
-        }
-        this.preferedFiatCurrency = preferedFiatCurrency;
     }
 
     @Override
@@ -86,6 +87,6 @@ public class BTokenFixedRateSource implements IRateSourceAdvanced {
 
     @Override
     public BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency) {
-        return this.rate;
+        return getExchangeRateForSell(cryptoCurrency, fiatCurrency);
     }
 }

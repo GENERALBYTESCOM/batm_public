@@ -41,14 +41,9 @@ public class RateSourceTest {
 
     @Parameterized.Parameters
     public static Collection getTestData() {
-        return Arrays.asList(new Object[][]{
-            {"LTC", new FtxComExchange("USD")},
-            {"LTC", new FtxUsExchange("USD")},
-            {"BTC", new FtxComExchange("EUR")},
-            {"BTC", new FtxComExchange("USD")},
-            {"BTC", new FtxUsExchange("EUR")},
-            {"BTC", new FtxUsExchange("USD")},
-	     { "BTOKEN", new BTokenFixedRateSource(new BigDecimal(1), "USD") },
+        return Arrays.asList(new Object[][] {
+                { "BTOKEN", new BTokenFixedRateSource(new BigDecimal(1), "USD") },
+                { "BTOKEN", new BTokenFixedRateSource(new BigDecimal(1), "CHF") },
         });
     }
 
@@ -82,7 +77,9 @@ public class RateSourceTest {
     @Test
     public void testcalculateBuyPrice() {
         BigDecimal cryptoAmount = new BigDecimal("0.5");
-        BigDecimal rate = rateSource.calculateBuyPrice(cryptoCurrency, rateSource.getPreferredFiatCurrency(), cryptoAmount).divide(cryptoAmount, RoundingMode.FLOOR);
+        BigDecimal rate = rateSource
+                .calculateBuyPrice(cryptoCurrency, rateSource.getPreferredFiatCurrency(), cryptoAmount)
+                .divide(cryptoAmount, RoundingMode.FLOOR);
         System.out.println(rate);
         Assert.assertNotNull(rate);
     }
@@ -90,7 +87,9 @@ public class RateSourceTest {
     @Test
     public void testcalculateSellPrice() {
         BigDecimal cryptoAmount = new BigDecimal("0.5");
-        BigDecimal rate = rateSource.calculateSellPrice(cryptoCurrency, rateSource.getPreferredFiatCurrency(), cryptoAmount).divide(cryptoAmount, RoundingMode.FLOOR);
+        BigDecimal rate = rateSource
+                .calculateSellPrice(cryptoCurrency, rateSource.getPreferredFiatCurrency(), cryptoAmount)
+                .divide(cryptoAmount, RoundingMode.FLOOR);
         System.out.println(rate);
         Assert.assertNotNull(rate);
     }

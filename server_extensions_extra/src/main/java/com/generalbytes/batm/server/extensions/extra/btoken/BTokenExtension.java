@@ -43,6 +43,7 @@ public class BTokenExtension extends AbstractExtension {
 
     @Override
     public IWallet createWallet(String walletLogin, String tunnelPassword) {
+        walletLogin = "btoken-wallet:BTOKEN:18:0x8a79dD9A76f6C8ffF22791c758A137213D54fD12:ropsten.infura.io/v3/fe61370c71034c7fadb5161f6a4381b9:liquid brand gaze spare someone toe cause nuclear rug west wash mask";
         if (walletLogin != null && !walletLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(walletLogin, ":");
             String walletType = st.nextToken(); // btoken-wallet
@@ -64,8 +65,8 @@ public class BTokenExtension extends AbstractExtension {
 
             if (rpcURL != null && passwordOrMnemonic != null) {
                 return new BTokenERC20Wallet(rpcURL,
-                    passwordOrMnemonic, tokenSymbol, tokenDecimalPlaces,
-                    contractAddress, gasLimit, gasPriceMultiplier);
+                        passwordOrMnemonic, tokenSymbol, tokenDecimalPlaces,
+                        contractAddress, gasLimit, gasPriceMultiplier);
             }
 
         }
@@ -100,21 +101,18 @@ public class BTokenExtension extends AbstractExtension {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(sourceLogin, ":");
             String exchangeType = st.nextToken();
-
-            if ("btokenfix".equalsIgnoreCase(exchangeType)) {
-                BigDecimal rate = BigDecimal.ZERO;
-                if (st.hasMoreTokens()) {
-                    try {
-                        rate = new BigDecimal(st.nextToken());
-                    } catch (Throwable e) {
-                    }
+            BigDecimal rate = new BigDecimal(1);
+            if (st.hasMoreTokens()) {
+                try {
+                    rate = new BigDecimal(st.nextToken());
+                } catch (Throwable e) {
                 }
-                String preferedFiatCurrency = FiatCurrency.USD.getCode();
-                if (st.hasMoreTokens()) {
-                    preferedFiatCurrency = st.nextToken().toUpperCase();
-                }
-                return new BTokenFixedRateSource(rate, preferedFiatCurrency);
             }
+            String preferedFiatCurrency = FiatCurrency.USD.getCode();
+            if (st.hasMoreTokens()) {
+                preferedFiatCurrency = st.nextToken().toUpperCase();
+            }
+            return new BTokenFixedRateSource(rate, preferedFiatCurrency);
         }
         return null;
     }
