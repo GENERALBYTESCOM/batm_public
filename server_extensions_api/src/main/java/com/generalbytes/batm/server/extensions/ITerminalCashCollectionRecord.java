@@ -85,4 +85,10 @@ public interface ITerminalCashCollectionRecord {
      * @return Cash collection public ID
      */
     String getPublicId();
+
+    /**
+     * @return Public ID of related location
+     */
+    String getLocationPublicId();
+
 }
