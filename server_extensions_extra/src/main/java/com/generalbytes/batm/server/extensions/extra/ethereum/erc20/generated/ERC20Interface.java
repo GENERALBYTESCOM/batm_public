@@ -1,5 +1,6 @@
 package com.generalbytes.batm.server.extensions.extra.ethereum.erc20.generated;
 
+import io.reactivex.Flowable;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,15 +16,14 @@ import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameter;
-import org.web3j.protocol.core.RemoteCall;
+import org.web3j.protocol.core.RemoteFunctionCall;
 import org.web3j.protocol.core.methods.request.EthFilter;
+import org.web3j.protocol.core.methods.response.BaseEventResponse;
 import org.web3j.protocol.core.methods.response.Log;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.tx.Contract;
 import org.web3j.tx.TransactionManager;
 import org.web3j.tx.gas.ContractGasProvider;
-import rx.Observable;
-import rx.functions.Func1;
 
 /**
  * <p>Auto generated code.
@@ -32,10 +32,11 @@ import rx.functions.Func1;
  * or the org.web3j.codegen.SolidityFunctionWrapperGenerator in the 
  * <a href="https://github.com/web3j/web3j/tree/master/codegen">codegen module</a> to update.
  *
- * <p>Generated with web3j version 3.6.0.
+ * <p>Generated with web3j version 1.4.1.
  */
+@SuppressWarnings("rawtypes")
 public class ERC20Interface extends Contract {
-    private static final String BINARY = "";
+    public static final String BINARY = "Bin file was not provided";
 
     public static final String FUNC_APPROVE = "approve";
 
@@ -75,52 +76,52 @@ public class ERC20Interface extends Contract {
         super(BINARY, contractAddress, web3j, transactionManager, contractGasProvider);
     }
 
-    public RemoteCall<TransactionReceipt> approve(String spender, BigInteger tokens) {
+    public RemoteFunctionCall<TransactionReceipt> approve(String spender, BigInteger tokens) {
         final Function function = new Function(
                 FUNC_APPROVE, 
-                Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(spender), 
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(160, spender), 
                 new org.web3j.abi.datatypes.generated.Uint256(tokens)), 
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
     }
 
-    public RemoteCall<BigInteger> totalSupply() {
+    public RemoteFunctionCall<BigInteger> totalSupply() {
         final Function function = new Function(FUNC_TOTALSUPPLY, 
                 Arrays.<Type>asList(), 
                 Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}));
         return executeRemoteCallSingleValueReturn(function, BigInteger.class);
     }
 
-    public RemoteCall<TransactionReceipt> transferFrom(String from, String to, BigInteger tokens) {
+    public RemoteFunctionCall<TransactionReceipt> transferFrom(String from, String to, BigInteger tokens) {
         final Function function = new Function(
                 FUNC_TRANSFERFROM, 
-                Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(from), 
-                new org.web3j.abi.datatypes.Address(to), 
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(160, from), 
+                new org.web3j.abi.datatypes.Address(160, to), 
                 new org.web3j.abi.datatypes.generated.Uint256(tokens)), 
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
     }
 
-    public RemoteCall<BigInteger> balanceOf(String tokenOwner) {
+    public RemoteFunctionCall<BigInteger> balanceOf(String tokenOwner) {
         final Function function = new Function(FUNC_BALANCEOF, 
-                Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(tokenOwner)), 
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(160, tokenOwner)), 
                 Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}));
         return executeRemoteCallSingleValueReturn(function, BigInteger.class);
     }
 
-    public RemoteCall<TransactionReceipt> transfer(String to, BigInteger tokens) {
+    public RemoteFunctionCall<TransactionReceipt> transfer(String to, BigInteger tokens) {
         final Function function = new Function(
                 FUNC_TRANSFER, 
-                Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(to), 
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(160, to), 
                 new org.web3j.abi.datatypes.generated.Uint256(tokens)), 
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
     }
 
-    public RemoteCall<BigInteger> allowance(String tokenOwner, String spender) {
+    public RemoteFunctionCall<BigInteger> allowance(String tokenOwner, String spender) {
         final Function function = new Function(FUNC_ALLOWANCE, 
-                Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(tokenOwner), 
-                new org.web3j.abi.datatypes.Address(spender)), 
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(160, tokenOwner), 
+                new org.web3j.abi.datatypes.Address(160, spender)), 
                 Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}));
         return executeRemoteCallSingleValueReturn(function, BigInteger.class);
     }
@@ -139,10 +140,10 @@ public class ERC20Interface extends Contract {
         return responses;
     }
 
-    public Observable<TransferEventResponse> transferEventObservable(EthFilter filter) {
-        return web3j.ethLogObservable(filter).map(new Func1<Log, TransferEventResponse>() {
+    public Flowable<TransferEventResponse> transferEventFlowable(EthFilter filter) {
+        return web3j.ethLogFlowable(filter).map(new io.reactivex.functions.Function<Log, TransferEventResponse>() {
             @Override
-            public TransferEventResponse call(Log log) {
+            public TransferEventResponse apply(Log log) {
                 Contract.EventValuesWithLog eventValues = extractEventParametersWithLog(TRANSFER_EVENT, log);
                 TransferEventResponse typedResponse = new TransferEventResponse();
                 typedResponse.log = log;
@@ -154,10 +155,10 @@ public class ERC20Interface extends Contract {
         });
     }
 
-    public Observable<TransferEventResponse> transferEventObservable(DefaultBlockParameter startBlock, DefaultBlockParameter endBlock) {
+    public Flowable<TransferEventResponse> transferEventFlowable(DefaultBlockParameter startBlock, DefaultBlockParameter endBlock) {
         EthFilter filter = new EthFilter(startBlock, endBlock, getContractAddress());
         filter.addSingleTopic(EventEncoder.encode(TRANSFER_EVENT));
-        return transferEventObservable(filter);
+        return transferEventFlowable(filter);
     }
 
     public List<ApprovalEventResponse> getApprovalEvents(TransactionReceipt transactionReceipt) {
@@ -174,10 +175,10 @@ public class ERC20Interface extends Contract {
         return responses;
     }
 
-    public Observable<ApprovalEventResponse> approvalEventObservable(EthFilter filter) {
-        return web3j.ethLogObservable(filter).map(new Func1<Log, ApprovalEventResponse>() {
+    public Flowable<ApprovalEventResponse> approvalEventFlowable(EthFilter filter) {
+        return web3j.ethLogFlowable(filter).map(new io.reactivex.functions.Function<Log, ApprovalEventResponse>() {
             @Override
-            public ApprovalEventResponse call(Log log) {
+            public ApprovalEventResponse apply(Log log) {
                 Contract.EventValuesWithLog eventValues = extractEventParametersWithLog(APPROVAL_EVENT, log);
                 ApprovalEventResponse typedResponse = new ApprovalEventResponse();
                 typedResponse.log = log;
@@ -189,28 +190,10 @@ public class ERC20Interface extends Contract {
         });
     }
 
-    public Observable<ApprovalEventResponse> approvalEventObservable(DefaultBlockParameter startBlock, DefaultBlockParameter endBlock) {
+    public Flowable<ApprovalEventResponse> approvalEventFlowable(DefaultBlockParameter startBlock, DefaultBlockParameter endBlock) {
         EthFilter filter = new EthFilter(startBlock, endBlock, getContractAddress());
         filter.addSingleTopic(EventEncoder.encode(APPROVAL_EVENT));
-        return approvalEventObservable(filter);
-    }
-
-    public static RemoteCall<ERC20Interface> deploy(Web3j web3j, Credentials credentials, ContractGasProvider contractGasProvider) {
-        return deployRemoteCall(ERC20Interface.class, web3j, credentials, contractGasProvider, BINARY, "");
-    }
-
-    @Deprecated
-    public static RemoteCall<ERC20Interface> deploy(Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
-        return deployRemoteCall(ERC20Interface.class, web3j, credentials, gasPrice, gasLimit, BINARY, "");
-    }
-
-    public static RemoteCall<ERC20Interface> deploy(Web3j web3j, TransactionManager transactionManager, ContractGasProvider contractGasProvider) {
-        return deployRemoteCall(ERC20Interface.class, web3j, transactionManager, contractGasProvider, BINARY, "");
-    }
-
-    @Deprecated
-    public static RemoteCall<ERC20Interface> deploy(Web3j web3j, TransactionManager transactionManager, BigInteger gasPrice, BigInteger gasLimit) {
-        return deployRemoteCall(ERC20Interface.class, web3j, transactionManager, gasPrice, gasLimit, BINARY, "");
+        return approvalEventFlowable(filter);
     }
 
     @Deprecated
@@ -231,9 +214,7 @@ public class ERC20Interface extends Contract {
         return new ERC20Interface(contractAddress, web3j, transactionManager, contractGasProvider);
     }
 
-    public static class TransferEventResponse {
-        public Log log;
-
+    public static class TransferEventResponse extends BaseEventResponse {
         public String from;
 
         public String to;
@@ -241,9 +222,7 @@ public class ERC20Interface extends Contract {
         public BigInteger tokens;
     }
 
-    public static class ApprovalEventResponse {
-        public Log log;
-
+    public static class ApprovalEventResponse extends BaseEventResponse {
         public String tokenOwner;
 
         public String spender;
