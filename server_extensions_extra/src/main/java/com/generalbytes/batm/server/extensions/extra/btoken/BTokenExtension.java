@@ -43,10 +43,11 @@ public class BTokenExtension extends AbstractExtension {
 
     @Override
     public IWallet createWallet(String walletLogin, String tunnelPassword) {
-        walletLogin = "btoken-wallet:BTOKEN:18:0x8a79dD9A76f6C8ffF22791c758A137213D54fD12:ropsten.infura.io/v3/fe61370c71034c7fadb5161f6a4381b9:liquid brand gaze spare someone toe cause nuclear rug west wash mask";
         if (walletLogin != null && !walletLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(walletLogin, ":");
-            String walletType = st.nextToken(); // btoken-wallet
+            String walletType = st.nextToken();
+
+            Long chainID = Long.parseLong(st.nextToken());
 
             String tokenSymbol = st.nextToken();
             int tokenDecimalPlaces = Integer.parseInt(st.nextToken());
@@ -64,7 +65,7 @@ public class BTokenExtension extends AbstractExtension {
             }
 
             if (rpcURL != null && passwordOrMnemonic != null) {
-                return new BTokenERC20Wallet(rpcURL,
+                return new BTokenERC20Wallet(chainID, rpcURL,
                         passwordOrMnemonic, tokenSymbol, tokenDecimalPlaces,
                         contractAddress, gasLimit, gasPriceMultiplier);
             }
@@ -72,14 +73,7 @@ public class BTokenExtension extends AbstractExtension {
         }
         return null;
     }
-/*
-    @Override
-    public Set<ICryptoCurrencyDefinition> getCryptoCurrencyDefinitions() {
-        Set<ICryptoCurrencyDefinition> result = new HashSet<>();
-        result.add(DEFINITION);
-        return result;
-    }
-*/
+
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
         if (CryptoCurrency.BTOKEN.getCode().equalsIgnoreCase(cryptoCurrency)) {

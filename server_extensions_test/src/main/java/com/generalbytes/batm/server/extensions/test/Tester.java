@@ -57,15 +57,15 @@ public class Tester {
 
     public static void main(String[] args) {
         Tester t = new Tester();
-/*
+
         File file = new File("server_extensions_extra/build/libs/batm_server_extensions_extra.jar");
         t.loadExtensions(file);
 
         t.getWalletBalance("btoken-wallet",
-                "BTOKEN:18:0x8a79dD9A76f6C8ffF22791c758A137213D54fD12:ropsten.infura.io/v3/fe61370c71034c7fadb5161f6a4381b9:liquid brand gaze spare someone toe cause nuclear rug west wash mask");
+                "80001:BTOKEN:18:0x33fE40e90b3786005e51c49e05c0032FF086e255:polygon-mumbai.infura.io/v3/fe61370c71034c7fadb5161f6a4381b9:liquid brand gaze spare someone toe cause nuclear rug west wash mask");
 
         t.sendFromWallet("btoken-wallet",
-                "BTOKEN:18:0x8a79dD9A76f6C8ffF22791c758A137213D54fD12:ropsten.infura.io/v3/fe61370c71034c7fadb5161f6a4381b9:liquid brand gaze spare someone toe cause nuclear rug west wash mask");
+                "80001:BTOKEN:18:0x33fE40e90b3786005e51c49e05c0032FF086e255:polygon-mumbai.infura.io/v3/fe61370c71034c7fadb5161f6a4381b9:liquid brand gaze spare someone toe cause nuclear rug west wash mask");
 
         IPaperWalletGenerator paperWalletGenerator = new BTokenWalletGenerator(new TestExtensionContext());
         IPaperWallet paperWallet = paperWalletGenerator.generateWallet("BTOKEN", "", "en",
@@ -86,7 +86,6 @@ public class Tester {
         System.out.println();
         System.out.println();
 
-        */
         t.go(args);
 
     }

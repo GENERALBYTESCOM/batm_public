@@ -1493,6 +1493,7 @@
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.btoken.BTokenExtension" >
         <wallet prefix="btoken-wallet" name="btoken-wallet">
+            <param name="chainID" />
             <param name="tokenSymbol" />
             <param name="tokenDecimalPlaces" />
             <param name="contractAddress" />

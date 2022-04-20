@@ -44,26 +44,17 @@ public class BTokenWalletGenerator implements IPaperWalletGenerator {
     }
 
     @Override
-    public IPaperWallet generateWallet(String cryptoCurrency, String oneTimePassword, String userLanguage,
-            boolean shouldBeVanity) {
+    public IPaperWallet generateWallet(String cryptoCurrency, String oneTimePassword, String userLanguage, boolean shouldBeVanity) {
         WalletToolsETH wt = new WalletToolsETH();
         String mnemonic = EtherUtils.generateMnemonic();
 
-        System.out.println();
-        System.out.println();
-        System.out.println(mnemonic);
-        System.out.println();
-        System.out.println();
-
-        MasterPrivateKeyETH m = wt.getMasterPrivateKey(mnemonic, "", CryptoCurrency.BTOKEN.getCode(),
-                IWalletTools.STANDARD_BIP44);
+        MasterPrivateKeyETH m = wt.getMasterPrivateKey(mnemonic, "", CryptoCurrency.BTOKEN.getCode(), IWalletTools.STANDARD_BIP44);
 
         String privateKey = wt.getWalletPrivateKey(m, CryptoCurrency.BTOKEN.getCode(), 0, 0, 0);
         String address = wt.getWalletAddress(m, CryptoCurrency.BTOKEN.getCode(), 0, 0, 0);
 
         byte[] content = ctx.createPaperWallet7ZIP(mnemonic, address, oneTimePassword, cryptoCurrency);
 
-        // send wallet to customer
         String messageText = "New wallet " + address + " use your onetime password to open the attachment.";
         String messageTextLang = readTemplate("/batm/config/template_wallet_" + userLanguage + ".txt");
         if (messageTextLang != null) {
@@ -74,13 +65,10 @@ public class BTokenWalletGenerator implements IPaperWalletGenerator {
                 messageText = messageTextEN;
             }
         }
-        // (byte[] content, String address, String privateKey, String message, String
-        // contentType, String fileExtension, String cryptoCurrency)
-        return new BTokenPaperWallet(content, address, mnemonic, messageText, "application/zip", "zip",
-                cryptoCurrency);
+
+        return new BTokenPaperWallet(content, address, mnemonic, messageText, "application/zip", "zip", cryptoCurrency);
     }
 
-    @SuppressWarnings("all")
     private String readTemplate(String templateFile) {
         File f = new File(templateFile);
         if (f.exists() && f.canRead()) {

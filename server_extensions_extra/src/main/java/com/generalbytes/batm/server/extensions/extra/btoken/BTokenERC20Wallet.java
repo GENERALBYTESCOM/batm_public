@@ -47,14 +47,16 @@ public class BTokenERC20Wallet implements IWallet {
     private final BigInteger fixedGasLimit;
     private final BigDecimal gasPriceMultiplier;
     private final ERC20Interface noGasContract;
+    private long chainID;
     private static final Logger log = LoggerFactory.getLogger(BTokenERC20Wallet.class);
 
-    public BTokenERC20Wallet(String rpcURL, String mnemonicOrPassword, String tokenSymbol, int tokenDecimalPlaces,
+    public BTokenERC20Wallet(long chainID, String rpcURL, String mnemonicOrPassword, String tokenSymbol, int tokenDecimalPlaces,
             String contractAddress, BigInteger fixedGasLimit, BigDecimal gasPriceMultiplier) {
 
         StringBuilder sb = new StringBuilder();
 
         sb.append("BTokenERC20Wallet:: ").append("\n");
+        sb.append("ChainID:: " + chainID).append("\n");
         sb.append("rpcURL:: " + rpcURL).append("\n");
         sb.append("tokenSymbol:: " + tokenSymbol).append("\n");
         sb.append("tokenDecimalPlaces:: " + tokenDecimalPlaces).append("\n");
@@ -68,15 +70,13 @@ public class BTokenERC20Wallet implements IWallet {
         this.contractAddress = contractAddress.toLowerCase();
         this.fixedGasLimit = fixedGasLimit;
         this.gasPriceMultiplier = gasPriceMultiplier;
-
-        log.info(sb.toString());
+        this.chainID = chainID;
 
         this.w = Web3j.build(new HttpService("https://" + rpcURL));
 
         this.credentials = initCredentials(mnemonicOrPassword);
 
-        this.noGasContract = ERC20Interface.load(this.contractAddress, w, new FastRawTransactionManager(this.w, this.credentials, (byte) 3),
-            DummyContractGasProvider.INSTANCE);
+        this.noGasContract = ERC20Interface.load(this.contractAddress, w, new FastRawTransactionManager(this.w, this.credentials, chainID), DummyContractGasProvider.INSTANCE);
 
     }
 
@@ -84,7 +84,7 @@ public class BTokenERC20Wallet implements IWallet {
         ERC20ContractGasProvider contractGasProvider = new ERC20ContractGasProvider(contractAddress,
                 credentials.getAddress(), destinationAddress, tokensAmount, fixedGasLimit, gasPriceMultiplier, w);
 
-        return ERC20Interface.load(this.contractAddress, w, new FastRawTransactionManager(this.w, this.credentials, (byte) 3), contractGasProvider);
+        return ERC20Interface.load(this.contractAddress, w, new FastRawTransactionManager(this.w, this.credentials,  chainID), contractGasProvider);
     }
 
     private BigDecimal convertToBigDecimal(BigInteger value) {
@@ -103,7 +103,6 @@ public class BTokenERC20Wallet implements IWallet {
     }
 
     private Credentials initCredentials(String mnemonicOrPassword) {
-
         try {
             String mnemonic;
             if (!mnemonicOrPassword.contains(" ")) {
@@ -112,8 +111,6 @@ public class BTokenERC20Wallet implements IWallet {
             } else {
                 mnemonic = mnemonicOrPassword;
             }
-
-            log.info(mnemonic, EtherUtils.ETHEREUM_WALLET_PASSWORD);
 
             return EtherUtils.loadBip44Credentials(mnemonic, EtherUtils.ETHEREUM_WALLET_PASSWORD);
         } catch (Exception ex) {
@@ -168,9 +165,6 @@ public class BTokenERC20Wallet implements IWallet {
             return null;
         }
 
-        NetVersion netVersion = new NetVersion();
-        netVersion.setResult("80001");
-
         if (destinationAddress != null) {
             destinationAddress = destinationAddress.toLowerCase();
         }
@@ -183,14 +177,11 @@ public class BTokenERC20Wallet implements IWallet {
         }
 
         try {
-            log.info("ERC20 sending coins from " + credentials.getAddress() + " using smart contract " + contractAddress
-                    + " to: " + destinationAddress + " " + amount + " " + cryptoCurrency);
             BigInteger tokens = convertFromBigDecimal(amount);
             TransactionReceipt receipt = getContract(destinationAddress, tokens)
                     .transfer(destinationAddress, tokens)
                     .sendAsync()
-                    .get(120, TimeUnit.SECONDS);
-            log.debug("ERC20 receipt: {}", receipt);
+                    .get(240, TimeUnit.SECONDS);
             return receipt.getTransactionHash();
         } catch (TimeoutException e) {
             log.error(e.getMessage(), e);
