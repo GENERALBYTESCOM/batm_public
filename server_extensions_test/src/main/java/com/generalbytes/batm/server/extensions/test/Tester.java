@@ -61,33 +61,14 @@ public class Tester {
         File file = new File("server_extensions_extra/build/libs/batm_server_extensions_extra.jar");
         t.loadExtensions(file);
 
-        t.getWalletBalance("btoken-wallet",
-                "80001:BTOKEN:18:0x33fE40e90b3786005e51c49e05c0032FF086e255:polygon-mumbai.infura.io/v3/fe61370c71034c7fadb5161f6a4381b9:liquid brand gaze spare someone toe cause nuclear rug west wash mask");
+        t.getWalletBalance("", "");
 
-        t.sendFromWallet("btoken-wallet",
-                "80001:BTOKEN:18:0x33fE40e90b3786005e51c49e05c0032FF086e255:polygon-mumbai.infura.io/v3/fe61370c71034c7fadb5161f6a4381b9:liquid brand gaze spare someone toe cause nuclear rug west wash mask");
+        t.sendFromWallet("", "");
 
         IPaperWalletGenerator paperWalletGenerator = new BTokenWalletGenerator(new TestExtensionContext());
-        IPaperWallet paperWallet = paperWalletGenerator.generateWallet("BTOKEN", "", "en",
-                false);
-
-        System.out.println();
-        System.out.println();
-        System.out.println();
-
-        System.out.println("Paper Wallet getAddress => " + paperWallet.getAddress());
-        System.out.println("Paper Wallet getMessage => " + paperWallet.getMessage());
-        System.out.println("Paper Wallet getCryptoCurrency => " + paperWallet.getCryptoCurrency());
-        System.out.println("Paper Wallet getFileExtension => " + paperWallet.getFileExtension());
-        System.out.println("Paper Wallet getPrivateKey => " + paperWallet.getPrivateKey());
-
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
+        IPaperWallet paperWallet = paperWalletGenerator.generateWallet("BTOKEN", "", "en", false);
 
         t.go(args);
-
     }
 
     private static void usage() {
