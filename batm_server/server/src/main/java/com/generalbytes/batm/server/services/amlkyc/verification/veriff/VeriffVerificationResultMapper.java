@@ -10,15 +10,17 @@ import com.generalbytes.batm.server.services.amlkyc.verification.veriff.api.webh
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 
 public class VeriffVerificationResultMapper {
     private static final Logger log = LoggerFactory.getLogger(VeriffVerificationResultMapper.class);
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd", Locale.ROOT);
+    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ROOT).withZone(ZoneId.systemDefault());
 
     public ApplicantCheckResult mapResult(VerificationDecisionWebhookRequest decisionRequest, IdentityApplicant identityApplicant) {
         Objects.requireNonNull(decisionRequest, "decisionRequest cannot be null");
@@ -92,8 +94,8 @@ public class VeriffVerificationResultMapper {
             return null;
         }
         try {
-            return DATE_FORMAT.parse(date);
-        } catch (ParseException e) {
+            return Date.from(DATE_FORMAT.parse(date, Instant::from));
+        } catch (DateTimeParseException e) {
             log.error("Error parsing date: " + date, e);
             return null;
         }

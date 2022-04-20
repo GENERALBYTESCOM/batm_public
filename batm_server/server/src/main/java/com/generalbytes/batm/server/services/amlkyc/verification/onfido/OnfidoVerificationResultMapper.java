@@ -9,8 +9,10 @@ import com.onfido.models.Report;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -62,7 +64,7 @@ public class OnfidoVerificationResultMapper {
     private Onfido onfido;
 
     private static final Logger log = LoggerFactory.getLogger(OnfidoVerificationResultMapper.class);
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneId.systemDefault());
 
     public OnfidoVerificationResultMapper(Onfido onfido) {
         this.onfido = onfido;
@@ -269,8 +271,8 @@ public class OnfidoVerificationResultMapper {
         String s = (String) props.get(fieldName);
         if (s != null) {
             try {
-                return DATE_FORMAT.parse(s);
-            } catch (ParseException e) {
+                return Date.from(DATE_FORMAT.parse(s, Instant::from));
+            } catch (DateTimeParseException e) {
                 log.error("Error parsing date.", e);
                 return null;
             }
