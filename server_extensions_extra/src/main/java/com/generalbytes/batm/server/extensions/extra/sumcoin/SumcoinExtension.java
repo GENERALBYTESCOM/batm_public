@@ -26,6 +26,7 @@ import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
+import com.generalbytes.batm.server.extensions.exceptions.helper.ExceptionHelper;
 import com.generalbytes.batm.server.extensions.extra.sumcoin.sumcored.SumcoinRPCWallet;
 import com.generalbytes.batm.server.extensions.extra.sumcoin.sources.sumcoinindex.SumcoinindexRateSource;
 import com.generalbytes.batm.server.extensions.extra.sumcoin.sumcored.SumcoinUniqueAddressRPCWallet;
@@ -50,10 +51,11 @@ public class SumcoinExtension extends AbstractExtension {
 
     @Override
     public IWallet createWallet(String walletLogin, String tunnelPassword) {
+        String walletType = null;
         try {
         if (walletLogin !=null && !walletLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(walletLogin,":");
-            String walletType = st.nextToken();
+            walletType = st.nextToken();
 
             if ("sumcoind".equalsIgnoreCase(walletType)
                 || "sumcoindnoforward".equalsIgnoreCase(walletType)) {
@@ -95,7 +97,8 @@ public class SumcoinExtension extends AbstractExtension {
             }
         }
         } catch (Exception e) {
-            log.error("", e);
+            String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
+            log.warn("createWallet failed for prefix: {}, on terminal with serial number: {}", walletType, serialNumber);
         }
         return null;
     }
@@ -111,28 +114,33 @@ public class SumcoinExtension extends AbstractExtension {
     @Override
     public IRateSource createRateSource(String sourceLogin) {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
-            StringTokenizer st = new StringTokenizer(sourceLogin,":");
-            String exchangeType = st.nextToken();
+            String exchangeType = null;
+            try {
+                StringTokenizer st = new StringTokenizer(sourceLogin, ":");
+                exchangeType = st.nextToken();
 
-            if ("sumcoinindex".equalsIgnoreCase(exchangeType)) {
-                if (st.hasMoreTokens()) {
-                    return new SumcoinindexRateSource(st.nextToken().toUpperCase());
-                }
-                return new SumcoinindexRateSource(FiatCurrency.USD.getCode());
-            }
-            else if ("sumfix".equalsIgnoreCase(exchangeType)) {
-                BigDecimal rate = BigDecimal.ZERO;
-                if (st.hasMoreTokens()) {
-                    try {
-                        rate = new BigDecimal(st.nextToken());
-                    } catch (Throwable e) {
+                if ("sumcoinindex".equalsIgnoreCase(exchangeType)) {
+                    if (st.hasMoreTokens()) {
+                        return new SumcoinindexRateSource(st.nextToken().toUpperCase());
                     }
+                    return new SumcoinindexRateSource(FiatCurrency.USD.getCode());
+                } else if ("sumfix".equalsIgnoreCase(exchangeType)) {
+                    BigDecimal rate = BigDecimal.ZERO;
+                    if (st.hasMoreTokens()) {
+                        try {
+                            rate = new BigDecimal(st.nextToken());
+                        } catch (Throwable e) {
+                        }
+                    }
+                    String preferedFiatCurrency = FiatCurrency.USD.getCode();
+                    if (st.hasMoreTokens()) {
+                        preferedFiatCurrency = st.nextToken().toUpperCase();
+                    }
+                    return new FixPriceRateSource(rate, preferedFiatCurrency);
                 }
-                String preferedFiatCurrency = FiatCurrency.USD.getCode();
-                if (st.hasMoreTokens()) {
-                    preferedFiatCurrency = st.nextToken().toUpperCase();
-                }
-                return new FixPriceRateSource(rate,preferedFiatCurrency);
+            } catch (Exception e) {
+                String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
+                log.warn("createRateSource failed for prefix: {}, on terminal with serial number: {}", exchangeType, serialNumber);
             }
 
         }

@@ -23,6 +23,7 @@ import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
 import com.generalbytes.batm.server.extensions.IExtensionContext;
 import com.generalbytes.batm.server.extensions.IRestService;
 import com.generalbytes.batm.server.extensions.IWallet;
+import com.generalbytes.batm.server.extensions.exceptions.helper.ExceptionHelper;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.lnurl.LnurlRestService;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.DemoLightningWallet;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.EclairWallet;
@@ -58,10 +59,11 @@ public class LightningBitcoinExtension extends AbstractExtension {
 
     @Override
     public IWallet createWallet(String walletLogin, String tunnelPassword) {
+        String walletType = null;
         try {
             if (walletLogin != null && !walletLogin.trim().isEmpty()) {
                 StringTokenizer st = new StringTokenizer(walletLogin, ":");
-                String walletType = st.nextToken();
+                walletType = st.nextToken();
 
                 if ("eclair".equalsIgnoreCase(walletType)) {
                     String scheme = st.nextToken();
@@ -113,7 +115,8 @@ public class LightningBitcoinExtension extends AbstractExtension {
                 }
             }
         } catch (Exception e) {
-            log.warn("createWallet failed", e);
+            String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
+            log.warn("createWallet failed for prefix: {}, on terminal with serial number: {}", walletType, serialNumber);
         }
         return null;
     }

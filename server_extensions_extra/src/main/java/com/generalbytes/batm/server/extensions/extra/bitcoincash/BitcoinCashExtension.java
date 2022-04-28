@@ -24,6 +24,7 @@ import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
 import com.generalbytes.batm.server.extensions.IPaperWalletGenerator;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.IWallet;
+import com.generalbytes.batm.server.extensions.exceptions.helper.ExceptionHelper;
 import com.generalbytes.batm.server.extensions.extra.bitcoincash.sources.telr.TelrRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoincash.wallets.telr.TelrCashWallet;
 import org.slf4j.Logger;
@@ -46,10 +47,11 @@ public class BitcoinCashExtension extends AbstractExtension {
 
     @Override
     public IWallet createWallet(String walletLogin, String tunnelPassword) {
+        String walletType = null;
         try {
         if (walletLogin != null && !walletLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(walletLogin, ":");
-            String walletType = st.nextToken();
+            walletType = st.nextToken();
             if ("bitcoincashd".equalsIgnoreCase(walletType)
                 || "bitcoincashdnoforward".equalsIgnoreCase(walletType)) {
                 //"bitcoind:protocol:user:password:ip:port:accountname"
@@ -84,7 +86,8 @@ public class BitcoinCashExtension extends AbstractExtension {
             }
         }
         } catch (Exception e) {
-            log.warn("createWallet failed", e);
+            String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
+            log.warn("createWallet failed for prefix: {}, on terminal with serial number: {}", walletType, serialNumber);
         }
         return null;
     }
@@ -121,30 +124,36 @@ public class BitcoinCashExtension extends AbstractExtension {
 
     @Override
     public IRateSource createRateSource(String sourceLogin) {
-        if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
-            StringTokenizer st = new StringTokenizer(sourceLogin, ":");
-            String rsType = st.nextToken();
+        String rsType = null;
+        try {
+            if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
+                StringTokenizer st = new StringTokenizer(sourceLogin, ":");
+                rsType = st.nextToken();
 
-            if ("telr".equalsIgnoreCase(rsType)) {
-                /* Set authorization parameters. */
-                String address = st.nextToken();
-                String secret = st.nextToken();
-                String signature = st.nextToken();
+                if ("telr".equalsIgnoreCase(rsType)) {
+                    /* Set authorization parameters. */
+                    String address = st.nextToken();
+                    String secret = st.nextToken();
+                    String signature = st.nextToken();
 
-                /* Set preferred fiat currency. */
-                String preferredFiatCurrency = "USD";
-                if (st.hasMoreTokens()) {
-                    preferredFiatCurrency = st.nextToken().toUpperCase();
+                    /* Set preferred fiat currency. */
+                    String preferredFiatCurrency = "USD";
+                    if (st.hasMoreTokens()) {
+                        preferredFiatCurrency = st.nextToken().toUpperCase();
+                    }
+
+                    /* Initialize Telr Rate Source. */
+                    return new TelrRateSource(
+                        address,
+                        secret,
+                        signature,
+                        preferredFiatCurrency
+                    );
                 }
-
-                /* Initialize Telr Rate Source. */
-                return new TelrRateSource(
-                    address,
-                    secret,
-                    signature,
-                    preferredFiatCurrency
-                );
             }
+        } catch (Exception e) {
+            String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
+            log.warn("createRateSource failed for prefix: {}, on terminal with serial number: {}", rsType, serialNumber);
         }
         return null;
     }

@@ -21,6 +21,7 @@ import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
+import com.generalbytes.batm.server.extensions.exceptions.helper.ExceptionHelper;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.binance.BinanceComExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.binance.BinanceUsExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitbuy.BitbuyExchange;
@@ -62,6 +63,8 @@ import org.slf4j.LoggerFactory;
 import java.math.BigDecimal;
 import java.net.InetSocketAddress;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.generalbytes.batm.common.currencies.CryptoCurrency.USDT;
 import static com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitflyer.BitFlyerExchange.BITFLYER_COM_BASE_URL;
@@ -84,10 +87,11 @@ public class BitcoinExtension extends AbstractExtension {
 
     @Override
     public IExchange createExchange(String paramString) {
+        String prefix = null;
         try {
         if ((paramString != null) && (!paramString.trim().isEmpty())) {
             StringTokenizer paramTokenizer = new StringTokenizer(paramString, ":");
-            String prefix = paramTokenizer.nextToken();
+            prefix = paramTokenizer.nextToken();
             if ("bitfinex".equalsIgnoreCase(prefix)) {
                 String apiKey = paramTokenizer.nextToken();
                 String apiSecret = paramTokenizer.nextToken();
@@ -230,7 +234,8 @@ public class BitcoinExtension extends AbstractExtension {
             }
         }
         } catch (Exception e) {
-            log.warn("createExchange failed", e);
+            String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
+            log.warn("createRateSource failed for prefix: {}, on terminal with serial number: {}", prefix, serialNumber);
         }
         return null;
     }
@@ -256,10 +261,11 @@ public class BitcoinExtension extends AbstractExtension {
 
     @Override
     public IWallet createWallet(String walletLogin, String tunnelPassword) {
+        String walletType = null;
         try{
         if (walletLogin !=null && !walletLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(walletLogin,":");
-            String walletType = st.nextToken();
+            walletType = st.nextToken();
             if ("bitcoind".equalsIgnoreCase(walletType) || "bitcoindnoforward".equalsIgnoreCase(walletType)) {
                 // "bitcoind:protocol:user:password:ip:port:label"
 
@@ -430,7 +436,8 @@ public class BitcoinExtension extends AbstractExtension {
             }
         }
         } catch (Exception e) {
-            log.warn("createWallet failed", e);
+            String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
+            log.warn("createRateSource failed for prefix: {}, on terminal with serial number: {}", walletType, serialNumber);
         }
         return null;
     }
@@ -452,10 +459,11 @@ public class BitcoinExtension extends AbstractExtension {
 
     @Override
     public IRateSource createRateSource(String sourceLogin) {
+        String rsType = null;
         try {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(sourceLogin, ":");
-            String rsType = st.nextToken();
+            rsType = st.nextToken();
 
             if ("btcfix".equalsIgnoreCase(rsType)) {
                 BigDecimal rate = BigDecimal.ZERO;
@@ -598,7 +606,8 @@ public class BitcoinExtension extends AbstractExtension {
             }
         }
         } catch (Exception e) {
-            log.warn("createRateSource failed", e);
+            String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
+            log.warn("createRateSource failed for prefix: {}, on terminal with serial number: {}", rsType, serialNumber);
         }
         return null;
     }

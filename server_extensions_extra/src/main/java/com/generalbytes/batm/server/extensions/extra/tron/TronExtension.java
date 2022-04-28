@@ -22,6 +22,9 @@ import com.generalbytes.batm.server.extensions.AbstractExtension;
 import com.generalbytes.batm.server.extensions.DummyExchangeAndWalletAndSource;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.IWallet;
+import com.generalbytes.batm.server.extensions.exceptions.helper.ExceptionHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -29,6 +32,9 @@ import java.util.HashSet;
 import java.util.StringTokenizer;
 
 public class TronExtension extends AbstractExtension {
+
+    private static final Logger log = LoggerFactory.getLogger(TronExtension.class);
+
     private static final Collection<String> supportedCryptoCurrencies = Collections.unmodifiableSet(new HashSet<String>() {{
         add(CryptoCurrency.TRX.getCode());
         add(CryptoCurrency.USDTTRON.getCode());
@@ -43,28 +49,34 @@ public class TronExtension extends AbstractExtension {
     @Override
     public IWallet createWallet(String walletLogin, String tunnelPassword) {
         if (walletLogin != null && !walletLogin.trim().isEmpty()) {
-            StringTokenizer st = new StringTokenizer(walletLogin, ":");
-            String walletType = st.nextToken();
+            String walletType = null;
+            try {
+                StringTokenizer st = new StringTokenizer(walletLogin, ":");
+                walletType = st.nextToken();
 
-            if (walletType.startsWith("tridentTRC20_")) {
-                StringTokenizer wt = new StringTokenizer(walletType, "_");
-                wt.nextToken();
-                String tokenSymbol = wt.nextToken();
-                int tokenDecimalPlaces = Integer.parseInt(wt.nextToken());
-                String contractAddress = wt.nextToken();
+                if (walletType.startsWith("tridentTRC20_")) {
+                    StringTokenizer wt = new StringTokenizer(walletType, "_");
+                    wt.nextToken();
+                    String tokenSymbol = wt.nextToken();
+                    int tokenDecimalPlaces = Integer.parseInt(wt.nextToken());
+                    String contractAddress = wt.nextToken();
 
-                String tronProApiKey = st.nextToken();
-                String hexPrivateKey = st.nextToken();
-                return new TRC20Wallet(tronProApiKey, hexPrivateKey, tokenSymbol, tokenDecimalPlaces, contractAddress);
-            } else if ("usdttrondemo".equalsIgnoreCase(walletType)) {
-                String fiatCurrency = st.nextToken();
-                String walletAddress = "";
-                if (st.hasMoreTokens()) {
-                    walletAddress = st.nextToken();
+                    String tronProApiKey = st.nextToken();
+                    String hexPrivateKey = st.nextToken();
+                    return new TRC20Wallet(tronProApiKey, hexPrivateKey, tokenSymbol, tokenDecimalPlaces, contractAddress);
+                } else if ("usdttrondemo".equalsIgnoreCase(walletType)) {
+                    String fiatCurrency = st.nextToken();
+                    String walletAddress = "";
+                    if (st.hasMoreTokens()) {
+                        walletAddress = st.nextToken();
+                    }
+                    if (fiatCurrency != null && walletAddress != null) {
+                        return new DummyExchangeAndWalletAndSource(fiatCurrency, CryptoCurrency.USDTTRON.getCode(), walletAddress);
+                    }
                 }
-                if (fiatCurrency != null && walletAddress != null) {
-                    return new DummyExchangeAndWalletAndSource(fiatCurrency, CryptoCurrency.USDTTRON.getCode(), walletAddress);
-                }
+            } catch (Exception e) {
+                String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
+                log.warn("createWallet failed for prefix: {}, on terminal with serial number: {}", walletType, serialNumber);
             }
         }
         return null;

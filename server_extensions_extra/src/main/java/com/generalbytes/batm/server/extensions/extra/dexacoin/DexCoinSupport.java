@@ -21,6 +21,9 @@ import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
+import com.generalbytes.batm.server.extensions.exceptions.helper.ExceptionHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -28,6 +31,8 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 public class DexCoinSupport extends AbstractExtension implements IExchange, IWallet, ICryptoAddressValidator {
+
+    private static final Logger log = LoggerFactory.getLogger(DexCoinSupport.class);
     private static final String CRYPTO_CURRENCY = CryptoCurrency.DEX.getCode();
     private static final BigDecimal WALLET_BALANCE = new BigDecimal("1000000");
     private static final BigDecimal EXCHANGE_BALANCE = new BigDecimal("2000000");
@@ -136,22 +141,28 @@ public class DexCoinSupport extends AbstractExtension implements IExchange, IWal
     @Override
     public IExchange createExchange(String exchangeLogin) {
         if (exchangeLogin !=null && !exchangeLogin.trim().isEmpty()) {
-            StringTokenizer st = new StringTokenizer(exchangeLogin,":");
-            String exchangeType = st.nextToken();
+            String exchangeType = null;
+            try {
+                StringTokenizer st = new StringTokenizer(exchangeLogin, ":");
+                exchangeType = st.nextToken();
 
-            if ((CRYPTO_CURRENCY.toLowerCase()+ "_exchange").equalsIgnoreCase(exchangeType)) {
-                BigDecimal rate = BigDecimal.ZERO;
-                if (st.hasMoreTokens()) {
-                    try {
-                        rate = new BigDecimal(st.nextToken());
-                    } catch (Throwable e) {
+                if ((CRYPTO_CURRENCY.toLowerCase() + "_exchange").equalsIgnoreCase(exchangeType)) {
+                    BigDecimal rate = BigDecimal.ZERO;
+                    if (st.hasMoreTokens()) {
+                        try {
+                            rate = new BigDecimal(st.nextToken());
+                        } catch (Throwable e) {
+                        }
                     }
+                    String preferredFiatCurrency = FiatCurrency.USD.getCode();
+                    if (st.hasMoreTokens()) {
+                        preferredFiatCurrency = st.nextToken().toUpperCase();
+                    }
+                    return new DexCoinSupport(preferredFiatCurrency, rate);
                 }
-                String preferredFiatCurrency = FiatCurrency.USD.getCode();
-                if (st.hasMoreTokens()) {
-                    preferredFiatCurrency = st.nextToken().toUpperCase();
-                }
-                return new DexCoinSupport(preferredFiatCurrency,rate);
+            } catch (Exception e) {
+                String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
+                log.warn("createRateSource failed for prefix: {}, on terminal with serial number: {}", exchangeType, serialNumber);
             }
         }
         return null;
@@ -173,22 +184,28 @@ public class DexCoinSupport extends AbstractExtension implements IExchange, IWal
     @Override
     public IRateSource createRateSource(String sourceLogin) {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
-            StringTokenizer st = new StringTokenizer(sourceLogin,":");
-            String exchangeType = st.nextToken();
+            String exchangeType = null;
+            try {
+                StringTokenizer st = new StringTokenizer(sourceLogin, ":");
+                exchangeType = st.nextToken();
 
-            if ((CRYPTO_CURRENCY.toLowerCase() + "_fix").equalsIgnoreCase(exchangeType)) {
-                BigDecimal rate = BigDecimal.ZERO;
-                if (st.hasMoreTokens()) {
-                    try {
-                        rate = new BigDecimal(st.nextToken());
-                    } catch (Throwable e) {
+                if ((CRYPTO_CURRENCY.toLowerCase() + "_fix").equalsIgnoreCase(exchangeType)) {
+                    BigDecimal rate = BigDecimal.ZERO;
+                    if (st.hasMoreTokens()) {
+                        try {
+                            rate = new BigDecimal(st.nextToken());
+                        } catch (Throwable e) {
+                        }
                     }
+                    String preferedFiatCurrency = FiatCurrency.USD.getCode();
+                    if (st.hasMoreTokens()) {
+                        preferedFiatCurrency = st.nextToken().toUpperCase();
+                    }
+                    return new FixPriceRateSource(rate, preferedFiatCurrency);
                 }
-                String preferedFiatCurrency = FiatCurrency.USD.getCode();
-                if (st.hasMoreTokens()) {
-                    preferedFiatCurrency = st.nextToken().toUpperCase();
-                }
-                return new FixPriceRateSource(rate,preferedFiatCurrency);
+            } catch (Exception e) {
+                String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
+                log.warn("createRateSource failed for prefix: {}, on terminal with serial number: {}", exchangeType, serialNumber);
             }
         }
         return null;

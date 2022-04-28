@@ -18,13 +18,8 @@
 package com.generalbytes.batm.server.extensions.extra.nano;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
-import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.binance.BinanceComExchange;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.binance.BinanceUsExchange;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.coingecko.CoinGeckoRateSource;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.coinpaprika.CoinPaprikaRateSource;
-import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.CoinmarketcapRateSource;
+import com.generalbytes.batm.server.extensions.exceptions.helper.ExceptionHelper;
 import com.generalbytes.batm.server.extensions.extra.nano.util.NanoUtil;
 import com.generalbytes.batm.server.extensions.extra.nano.wallet.demo.DemoWallet;
 import com.generalbytes.batm.server.extensions.extra.nano.wallet.node.NanoNodeWallet;
@@ -65,10 +60,11 @@ public class NanoExtension extends AbstractExtension {
 
     @Override
     public IWallet createWallet(String walletLogin, String tunnelPassword) {
+        String walletName = null;
         try {
             if (walletLogin != null && !walletLogin.trim().isEmpty()) {
                 StringTokenizer st = new StringTokenizer(walletLogin, ":");
-                String walletName = st.nextToken();
+                walletName = st.nextToken();
 
                 if ("nano_node".equalsIgnoreCase(walletName)) {
                     return NanoNodeWallet.create(context, st);
@@ -79,7 +75,8 @@ public class NanoExtension extends AbstractExtension {
                 }
             }
         } catch (Exception e) {
-            log.error("Couldn't create wallet.", e);
+            String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
+            log.warn("createWallet failed for prefix: {}, on terminal with serial number: {}", walletName, serialNumber);
         }
         return null;
     }

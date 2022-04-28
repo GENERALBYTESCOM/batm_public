@@ -21,6 +21,7 @@ import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
+import com.generalbytes.batm.server.extensions.exceptions.helper.ExceptionHelper;
 import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.CoinmarketcapRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.coinpaprika.CoinPaprikaRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.coingecko.CoinGeckoRateSource;
@@ -46,10 +47,11 @@ public class GroestlcoinExtension extends AbstractExtension{
 
     @Override
     public IWallet createWallet(String walletLogin, String tunnelPassword) {
+        String walletType = null;
         try {
         if (walletLogin !=null && !walletLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(walletLogin,":");
-            String walletType = st.nextToken();
+            walletType = st.nextToken();
 
             if ("groestlcoind".equalsIgnoreCase(walletType)) {
                 //"groestlcoind:protocol:user:password:ip:port:accountname"
@@ -90,7 +92,8 @@ public class GroestlcoinExtension extends AbstractExtension{
             }
         }
         } catch (Exception e) {
-            log.warn("createWallet failed",e );
+            String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
+            log.warn("createWallet failed for prefix: {}, on terminal with serial number: {}", walletType, serialNumber);
         }
         return null;
     }
@@ -113,38 +116,44 @@ public class GroestlcoinExtension extends AbstractExtension{
     @Override
     public IRateSource createRateSource(String sourceLogin) {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
-            StringTokenizer st = new StringTokenizer(sourceLogin,":");
-            String rsType = st.nextToken();
+            String rsType = null;
+            try {
+                StringTokenizer st = new StringTokenizer(sourceLogin, ":");
+                rsType = st.nextToken();
 
-            if ("grsfix".equalsIgnoreCase(rsType)) {
-                BigDecimal rate = BigDecimal.ZERO;
-                if (st.hasMoreTokens()) {
-                    try {
-                        rate = new BigDecimal(st.nextToken());
-                    } catch (Throwable e) {
+                if ("grsfix".equalsIgnoreCase(rsType)) {
+                    BigDecimal rate = BigDecimal.ZERO;
+                    if (st.hasMoreTokens()) {
+                        try {
+                            rate = new BigDecimal(st.nextToken());
+                        } catch (Throwable e) {
+                        }
                     }
+                    String preferedFiatCurrency = FiatCurrency.USD.getCode();
+                    if (st.hasMoreTokens()) {
+                        preferedFiatCurrency = st.nextToken().toUpperCase();
+                    }
+                    return new FixPriceRateSource(rate, preferedFiatCurrency);
+                } else if ("coinmarketcap".equalsIgnoreCase(rsType)) {
+                    String preferredFiatCurrency = FiatCurrency.USD.getCode();
+                    String apiKey = null;
+                    if (st.hasMoreTokens()) {
+                        preferredFiatCurrency = st.nextToken().toUpperCase();
+                    }
+                    if (st.hasMoreTokens()) {
+                        apiKey = st.nextToken();
+                    }
+                    return new CoinmarketcapRateSource(apiKey, preferredFiatCurrency);
+                } else if ("coingecko".equalsIgnoreCase(rsType)) {
+                    String preferredFiatCurrency = st.hasMoreTokens() ? st.nextToken().toUpperCase() : FiatCurrency.USD.getCode();
+                    return new CoinGeckoRateSource(preferredFiatCurrency);
+                } else if ("coinpaprika".equalsIgnoreCase(rsType)) {
+                    String preferredFiatCurrency = st.hasMoreTokens() ? st.nextToken().toUpperCase() : FiatCurrency.USD.getCode();
+                    return new CoinPaprikaRateSource(preferredFiatCurrency);
                 }
-                String preferedFiatCurrency = FiatCurrency.USD.getCode();
-                if (st.hasMoreTokens()) {
-                    preferedFiatCurrency = st.nextToken().toUpperCase();
-                }
-                return new FixPriceRateSource(rate, preferedFiatCurrency);
-            } else if ("coinmarketcap".equalsIgnoreCase(rsType)) {
-                String preferredFiatCurrency = FiatCurrency.USD.getCode();
-                String apiKey = null;
-                if (st.hasMoreTokens()) {
-                    preferredFiatCurrency = st.nextToken().toUpperCase();
-                }
-                if (st.hasMoreTokens()) {
-                    apiKey = st.nextToken();
-                }
-                return new CoinmarketcapRateSource(apiKey, preferredFiatCurrency);
-            } else if ("coingecko".equalsIgnoreCase(rsType)) {
-                String preferredFiatCurrency = st.hasMoreTokens() ? st.nextToken().toUpperCase() : FiatCurrency.USD.getCode();
-                return new CoinGeckoRateSource(preferredFiatCurrency);
-            } else if ("coinpaprika".equalsIgnoreCase(rsType)) {
-                String preferredFiatCurrency = st.hasMoreTokens() ? st.nextToken().toUpperCase() : FiatCurrency.USD.getCode();
-                return new CoinPaprikaRateSource(preferredFiatCurrency);
+            } catch (Exception e) {
+                String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
+                log.warn("createRateSource failed for prefix: {}, on terminal with serial number: {}", rsType, serialNumber);
             }
         }
         return null;

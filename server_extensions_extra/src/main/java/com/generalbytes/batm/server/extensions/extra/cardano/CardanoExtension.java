@@ -4,6 +4,7 @@ import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.AbstractExtension;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.IWallet;
+import com.generalbytes.batm.server.extensions.exceptions.helper.ExceptionHelper;
 import com.generalbytes.batm.server.extensions.extra.cardano.wallets.CardanoWallet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +47,8 @@ public class CardanoExtension extends AbstractExtension {
                         return new CardanoWallet(protocol, host, port, walletId, passphrase);
                     }
                 } catch (IOException e) {
-                    log.error("createWallet for cardano failed", e);
+                    String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
+                    log.warn("createWallet failed for prefix: cardano, on terminal with serial number: {}", serialNumber);
                 }
             }
         }

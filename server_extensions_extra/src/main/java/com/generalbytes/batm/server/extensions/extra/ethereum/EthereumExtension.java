@@ -23,12 +23,15 @@ import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.IWallet;
+import com.generalbytes.batm.server.extensions.exceptions.helper.ExceptionHelper;
 import com.generalbytes.batm.server.extensions.extra.ethereum.erc20.ERC20Wallet;
 import com.generalbytes.batm.server.extensions.extra.ethereum.erc20.bizz.BizzDefinition;
 import com.generalbytes.batm.server.extensions.extra.ethereum.erc20.dai.DaiDefinition;
 import com.generalbytes.batm.server.extensions.extra.ethereum.sources.stasis.StasisTickerRateSource;
 import com.generalbytes.batm.server.extensions.extra.ethereum.stream365.Stream365;
 import com.google.common.collect.ImmutableSet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -37,6 +40,8 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 public class EthereumExtension extends AbstractExtension{
+
+    private static final Logger log = LoggerFactory.getLogger(EthereumExtension.class);
     private static final Set<ICryptoCurrencyDefinition> cryptoCurrencyDefinitions = ImmutableSet.of(
         new DaiDefinition(),
         new EthDefinition(),
@@ -82,36 +87,42 @@ public class EthereumExtension extends AbstractExtension{
     @Override
     public IWallet createWallet(String walletLogin, String tunnelPassword) {
         if (walletLogin !=null && !walletLogin.trim().isEmpty()) {
-            StringTokenizer st = new StringTokenizer(walletLogin,":");
-            String walletType = st.nextToken();
+            String walletType = null;
+            try {
+                StringTokenizer st = new StringTokenizer(walletLogin,":");
+                walletType = st.nextToken();
 
-            if ("infura".equalsIgnoreCase(walletType)) {
-                String projectId = st.nextToken();
-                String passwordOrMnemonic = st.nextToken();
-                if (projectId != null && passwordOrMnemonic != null) {
-                    return new InfuraWallet(projectId, passwordOrMnemonic);
-                }
-            }else if (walletType.startsWith("infuraERC20_")) {
-                StringTokenizer wt = new StringTokenizer(walletType,"_");
-                wt.nextToken();//no use for this one
-                String tokenSymbol = wt.nextToken();
-                int tokenDecimalPlaces = Integer.parseInt(wt.nextToken());
-                String contractAddress = wt.nextToken();
+                if ("infura".equalsIgnoreCase(walletType)) {
+                    String projectId = st.nextToken();
+                    String passwordOrMnemonic = st.nextToken();
+                    if (projectId != null && passwordOrMnemonic != null) {
+                        return new InfuraWallet(projectId, passwordOrMnemonic);
+                    }
+                }else if (walletType.startsWith("infuraERC20_")) {
+                    StringTokenizer wt = new StringTokenizer(walletType,"_");
+                    wt.nextToken();//no use for this one
+                    String tokenSymbol = wt.nextToken();
+                    int tokenDecimalPlaces = Integer.parseInt(wt.nextToken());
+                    String contractAddress = wt.nextToken();
 
-                String projectId = st.nextToken();
-                String passwordOrMnemonic = st.nextToken();
-                BigInteger gasLimit = null;
-                if (st.hasMoreTokens()) {
-                    gasLimit = new BigInteger(st.nextToken());
-                }
-                BigDecimal gasPriceMultiplier = BigDecimal.ONE;
-                if (st.hasMoreTokens()) {
-                    gasPriceMultiplier = new BigDecimal(st.nextToken());
-                }
+                    String projectId = st.nextToken();
+                    String passwordOrMnemonic = st.nextToken();
+                    BigInteger gasLimit = null;
+                    if (st.hasMoreTokens()) {
+                        gasLimit = new BigInteger(st.nextToken());
+                    }
+                    BigDecimal gasPriceMultiplier = BigDecimal.ONE;
+                    if (st.hasMoreTokens()) {
+                        gasPriceMultiplier = new BigDecimal(st.nextToken());
+                    }
 
-                if (projectId != null && passwordOrMnemonic != null) {
-                    return new ERC20Wallet(projectId, passwordOrMnemonic, tokenSymbol, tokenDecimalPlaces, contractAddress, gasLimit, gasPriceMultiplier);
+                    if (projectId != null && passwordOrMnemonic != null) {
+                        return new ERC20Wallet(projectId, passwordOrMnemonic, tokenSymbol, tokenDecimalPlaces, contractAddress, gasLimit, gasPriceMultiplier);
+                    }
                 }
+            } catch (Exception e) {
+                String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
+                log.warn("createWallet failed for prefix: {}, on terminal with serial number: {}", walletType, serialNumber);
             }
         }
         return null;

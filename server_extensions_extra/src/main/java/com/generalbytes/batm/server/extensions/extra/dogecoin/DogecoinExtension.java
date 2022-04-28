@@ -25,6 +25,7 @@ import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.IWallet;
+import com.generalbytes.batm.server.extensions.exceptions.helper.ExceptionHelper;
 import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.BlockIOWallet;
 import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.BlockIOWalletWithUniqueAddresses;
 import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.dogecoind.DogecoindRPCWallet;
@@ -48,10 +49,11 @@ public class DogecoinExtension extends AbstractExtension {
 
     @Override
     public IWallet createWallet(String walletLogin, String tunnelPassword) {
+        String walletType = null;
         try {
             if (walletLogin !=null && !walletLogin.trim().isEmpty()) {
                 StringTokenizer st = new StringTokenizer(walletLogin,":");
-                String walletType = st.nextToken();
+                walletType = st.nextToken();
 
                 if ("blockio".equalsIgnoreCase(walletType)) {
                     String apikey = st.nextToken();
@@ -115,7 +117,8 @@ public class DogecoinExtension extends AbstractExtension {
                 }
             }
         } catch (Exception e) {
-            log.error("", e);
+            String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
+            log.warn("createWallet failed for prefix: {}, on terminal with serial number: {}", walletType, serialNumber);
         }
         return null;
     }
@@ -131,22 +134,28 @@ public class DogecoinExtension extends AbstractExtension {
     @Override
     public IRateSource createRateSource(String sourceLogin) {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
-            StringTokenizer st = new StringTokenizer(sourceLogin,":");
-            String exchangeType = st.nextToken();
+            String exchangeType = null;
+            try {
+                StringTokenizer st = new StringTokenizer(sourceLogin, ":");
+                exchangeType = st.nextToken();
 
-            if ("dogefix".equalsIgnoreCase(exchangeType)) {
-                BigDecimal rate = BigDecimal.ZERO;
-                if (st.hasMoreTokens()) {
-                    try {
-                        rate = new BigDecimal(st.nextToken());
-                    } catch (Throwable e) {
+                if ("dogefix".equalsIgnoreCase(exchangeType)) {
+                    BigDecimal rate = BigDecimal.ZERO;
+                    if (st.hasMoreTokens()) {
+                        try {
+                            rate = new BigDecimal(st.nextToken());
+                        } catch (Throwable e) {
+                        }
                     }
+                    String preferedFiatCurrency = FiatCurrency.USD.getCode();
+                    if (st.hasMoreTokens()) {
+                        preferedFiatCurrency = st.nextToken().toUpperCase();
+                    }
+                    return new FixPriceRateSource(rate, preferedFiatCurrency);
                 }
-                String preferedFiatCurrency = FiatCurrency.USD.getCode();
-                if (st.hasMoreTokens()) {
-                    preferedFiatCurrency = st.nextToken().toUpperCase();
-                }
-                return new FixPriceRateSource(rate,preferedFiatCurrency);
+            } catch (Exception e) {
+                String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
+                log.warn("createRateSource failed for prefix: {}, on terminal with serial number: {}", exchangeType, serialNumber);
             }
         }
         return null;

@@ -21,6 +21,7 @@ import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
+import com.generalbytes.batm.server.extensions.exceptions.helper.ExceptionHelper;
 import com.generalbytes.batm.server.extensions.extra.litecoin.wallets.litecoind.LitecoindRPCWallet;
 import com.generalbytes.batm.server.extensions.extra.litecoin.wallets.litecoind.LitecoindUniqueAddressRPCWallet;
 import org.slf4j.Logger;
@@ -40,10 +41,11 @@ public class LitecoinExtension extends AbstractExtension{
 
     @Override
     public IWallet createWallet(String walletLogin, String tunnelPassword) {
+        String walletType = null;
         try {
         if (walletLogin !=null && !walletLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(walletLogin,":");
-            String walletType = st.nextToken();
+            walletType = st.nextToken();
 
             if ("litecoind".equalsIgnoreCase(walletType)
                 || "litecoindnoforward".equalsIgnoreCase(walletType)) {
@@ -73,7 +75,8 @@ public class LitecoinExtension extends AbstractExtension{
             }
         }
         } catch (Exception e) {
-            log.error("", e);
+            String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
+            log.warn("createWallet failed for prefix: {}, on terminal with serial number: {}", walletType, serialNumber);
         }
         return null;
     }
@@ -89,22 +92,28 @@ public class LitecoinExtension extends AbstractExtension{
     @Override
     public IRateSource createRateSource(String sourceLogin) {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
-            StringTokenizer st = new StringTokenizer(sourceLogin,":");
-            String exchangeType = st.nextToken();
+            String exchangeType = null;
+            try {
+                StringTokenizer st = new StringTokenizer(sourceLogin, ":");
+                exchangeType = st.nextToken();
 
-            if ("ltcfix".equalsIgnoreCase(exchangeType)) {
-                BigDecimal rate = BigDecimal.ZERO;
-                if (st.hasMoreTokens()) {
-                    try {
-                        rate = new BigDecimal(st.nextToken());
-                    } catch (Throwable e) {
+                if ("ltcfix".equalsIgnoreCase(exchangeType)) {
+                    BigDecimal rate = BigDecimal.ZERO;
+                    if (st.hasMoreTokens()) {
+                        try {
+                            rate = new BigDecimal(st.nextToken());
+                        } catch (Throwable e) {
+                        }
                     }
+                    String preferedFiatCurrency = FiatCurrency.USD.getCode();
+                    if (st.hasMoreTokens()) {
+                        preferedFiatCurrency = st.nextToken().toUpperCase();
+                    }
+                    return new FixPriceRateSource(rate, preferedFiatCurrency);
                 }
-                String preferedFiatCurrency = FiatCurrency.USD.getCode();
-                if (st.hasMoreTokens()) {
-                    preferedFiatCurrency = st.nextToken().toUpperCase();
-                }
-                return new FixPriceRateSource(rate,preferedFiatCurrency);
+            } catch (Exception e) {
+                String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
+                log.warn("createRateSource failed for prefix: {}, on terminal with serial number: {}", exchangeType, serialNumber);
             }
 
         }

@@ -20,6 +20,9 @@ package com.generalbytes.batm.server.extensions.extra.ripple;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
+import com.generalbytes.batm.server.extensions.exceptions.helper.ExceptionHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -27,6 +30,9 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 public class RippleExtension extends AbstractExtension{
+
+    private static final Logger log = LoggerFactory.getLogger(RippleExtension.class);
+
     @Override
     public String getName() {
         return "BATM Ripple extension";
@@ -35,20 +41,26 @@ public class RippleExtension extends AbstractExtension{
     @Override
     public IWallet createWallet(String walletLogin, String tunnelPassword) {
         if (walletLogin !=null && !walletLogin.trim().isEmpty()) {
-            StringTokenizer st = new StringTokenizer(walletLogin,":");
-            String walletType = st.nextToken();
+            String walletType = null;
+            try {
+                StringTokenizer st = new StringTokenizer(walletLogin, ":");
+                walletType = st.nextToken();
 
-            if ("xrpdemo".equalsIgnoreCase(walletType)) {
+                if ("xrpdemo".equalsIgnoreCase(walletType)) {
 
-                String fiatCurrency = st.nextToken();
-                String walletAddress = "";
-                if (st.hasMoreTokens()) {
-                    walletAddress = st.nextToken();
+                    String fiatCurrency = st.nextToken();
+                    String walletAddress = "";
+                    if (st.hasMoreTokens()) {
+                        walletAddress = st.nextToken();
+                    }
+
+                    if (fiatCurrency != null && walletAddress != null) {
+                        return new DummyExchangeAndWalletAndSource(fiatCurrency, CryptoCurrency.XRP.getCode(), walletAddress);
+                    }
                 }
-
-                if (fiatCurrency != null && walletAddress != null) {
-                    return new DummyExchangeAndWalletAndSource(fiatCurrency, CryptoCurrency.XRP.getCode(), walletAddress);
-                }
+            } catch (Exception e) {
+                String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
+                log.warn("createWallet failed for prefix: {}, on terminal with serial number: {}", walletType, serialNumber);
             }
         }
         return null;
@@ -73,22 +85,28 @@ public class RippleExtension extends AbstractExtension{
     @Override
     public IRateSource createRateSource(String sourceLogin) {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
-            StringTokenizer st = new StringTokenizer(sourceLogin,":");
-            String rsType = st.nextToken();
+            String rsType = null;
+            try {
+                StringTokenizer st = new StringTokenizer(sourceLogin, ":");
+                rsType = st.nextToken();
 
-            if ("xrpfix".equalsIgnoreCase(rsType)) {
-                BigDecimal rate = BigDecimal.ZERO;
-                if (st.hasMoreTokens()) {
-                    try {
-                        rate = new BigDecimal(st.nextToken());
-                    } catch (Throwable e) {
+                if ("xrpfix".equalsIgnoreCase(rsType)) {
+                    BigDecimal rate = BigDecimal.ZERO;
+                    if (st.hasMoreTokens()) {
+                        try {
+                            rate = new BigDecimal(st.nextToken());
+                        } catch (Throwable e) {
+                        }
                     }
+                    String preferedFiatCurrency = FiatCurrency.USD.getCode();
+                    if (st.hasMoreTokens()) {
+                        preferedFiatCurrency = st.nextToken().toUpperCase();
+                    }
+                    return new FixPriceRateSource(rate, preferedFiatCurrency);
                 }
-                String preferedFiatCurrency = FiatCurrency.USD.getCode();
-                if (st.hasMoreTokens()) {
-                    preferedFiatCurrency = st.nextToken().toUpperCase();
-                }
-                return new FixPriceRateSource(rate,preferedFiatCurrency);
+            } catch (Exception e) {
+                String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
+                log.warn("createRateSource failed for prefix: {}, on terminal with serial number: {}", rsType, serialNumber);
             }
 
         }
