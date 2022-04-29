@@ -21,7 +21,7 @@ import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
-import com.generalbytes.batm.server.extensions.exceptions.helper.ExceptionHelper;
+import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.CoinmarketcapRateSource;
 import com.generalbytes.batm.server.extensions.extra.electra.wallets.electrad.ElectraRPCWallet;
 import org.slf4j.Logger;
@@ -43,10 +43,9 @@ public class ElectraExtension extends AbstractExtension{
     @Override
     public IWallet createWallet(String walletLogin, String tunnelPassword) {
         if (walletLogin !=null && !walletLogin.trim().isEmpty()) {
-            String walletType = null;
             try {
                 StringTokenizer st = new StringTokenizer(walletLogin, ":");
-                walletType = st.nextToken();
+                String walletType = st.nextToken();
 
                 if ("electrad".equalsIgnoreCase(walletType)) {
                     //"electrad:protocol:user:password:ip:port:accountname"
@@ -80,8 +79,7 @@ public class ElectraExtension extends AbstractExtension{
                     }
                 }
             } catch (Exception e) {
-                String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
-                log.warn("createWallet failed for prefix: {}, on terminal with serial number: {}", walletType, serialNumber);
+                log.warn("createWallet failed for prefix: {}", ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin));
             }
         }
         return null;
@@ -98,10 +96,9 @@ public class ElectraExtension extends AbstractExtension{
     @Override
     public IRateSource createRateSource(String sourceLogin) {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
-            String exchangeType = null;
             try {
                 StringTokenizer st = new StringTokenizer(sourceLogin, ":");
-                exchangeType = st.nextToken();
+                String exchangeType = st.nextToken();
                 if ("electrafix".equalsIgnoreCase(exchangeType)) {
                     BigDecimal rate = BigDecimal.ZERO;
                     if (st.hasMoreTokens()) {
@@ -127,8 +124,7 @@ public class ElectraExtension extends AbstractExtension{
                     return new CoinmarketcapRateSource(apiKey, preferredFiatCurrency);
                 }
             } catch (Exception e) {
-                String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
-                log.warn("createRateSource failed for prefix: {}, on terminal with serial number: {}", exchangeType, serialNumber);
+                log.warn("createRateSource failed for prefix: {} ", ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin));
             }
         }
         return null;

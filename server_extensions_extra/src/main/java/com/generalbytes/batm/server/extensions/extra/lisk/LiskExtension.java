@@ -21,7 +21,7 @@ import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
-import com.generalbytes.batm.server.extensions.exceptions.helper.ExceptionHelper;
+import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.extra.lisk.sources.binance.BinanceRateSource;
 import com.generalbytes.batm.server.extensions.extra.lisk.wallets.liskbinancewallet.LskWallet;
 import org.slf4j.Logger;
@@ -41,10 +41,9 @@ public class LiskExtension extends AbstractExtension{
     @Override
     public IWallet createWallet(String walletLogin, String tunnelPassword) {
         if (walletLogin !=null && !walletLogin.trim().isEmpty()) {
-            String walletType = null;
             try {
                 StringTokenizer st = new StringTokenizer(walletLogin, ":");
-                walletType = st.nextToken();
+                String walletType = st.nextToken();
 
                 if ("liskBinance".equalsIgnoreCase(walletType)) {
                     //"liskBinance:address:binanceApiKey:binanceApiSecret"
@@ -70,8 +69,7 @@ public class LiskExtension extends AbstractExtension{
                     }
                 }
             } catch (Exception e) {
-                String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
-                log.warn("createWallet failed for prefix: {}, on terminal with serial number: {}", walletType, serialNumber);
+                log.warn("createWallet failed for prefix: {}", ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin));
             }
         }
         return null;
@@ -88,10 +86,9 @@ public class LiskExtension extends AbstractExtension{
     @Override
     public IRateSource createRateSource(String sourceLogin) {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
-            String exchangeType = null;
             try {
                 StringTokenizer st = new StringTokenizer(sourceLogin, ":");
-                exchangeType = st.nextToken();
+                String exchangeType = st.nextToken();
                 if ("lskFix".equalsIgnoreCase(exchangeType)) {
                     BigDecimal rate = BigDecimal.ZERO;
                     if (st.hasMoreTokens()) {
@@ -117,8 +114,7 @@ public class LiskExtension extends AbstractExtension{
                     return new BinanceRateSource(preferedFiatCurrency, coinmarketcapApiKey);
                 }
             } catch (Exception e) {
-                String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
-                log.warn("createRateSource failed for prefix: {}, on terminal with serial number: {}", exchangeType, serialNumber);
+                log.warn("createRateSource failed for prefix: {} ", ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin));
             }
         }
         return null;

@@ -22,7 +22,7 @@ import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
-import com.generalbytes.batm.server.extensions.exceptions.helper.ExceptionHelper;
+import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.extra.tokencoin.wallets.paperwallet.TokencoinPaperWalletGenerator;
 import com.generalbytes.batm.server.extensions.extra.tokencoin.wallets.tokencoind.TokenWallet;
 import org.slf4j.Logger;
@@ -43,10 +43,9 @@ public class TKNExtension extends AbstractExtension{
     @Override
     public IWallet createWallet(String walletLogin, String tunnelPassword) {
         if (walletLogin != null && !walletLogin.trim().isEmpty()) {
-            String walletType = null;
             try {
                 StringTokenizer st = new StringTokenizer(walletLogin, ":");
-                walletType = st.nextToken();
+                String walletType = st.nextToken();
 
                 if ("tokencoind".equalsIgnoreCase(walletType)) {
                     //"nud:protocol:user:password:ip:port:accountname"
@@ -74,8 +73,7 @@ public class TKNExtension extends AbstractExtension{
                     }
                 }
             } catch (Exception e) {
-                String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
-                log.warn("createWallet failed for prefix: {}, on terminal with serial number: {}", walletType, serialNumber);
+                log.warn("createWallet failed for prefix: {}", ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin));
             }
         }
         return null;
@@ -100,10 +98,9 @@ public class TKNExtension extends AbstractExtension{
     @Override
     public IRateSource createRateSource(String sourceLogin) {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
-            String rsType = null;
             try {
                 StringTokenizer st = new StringTokenizer(sourceLogin, ":");
-                rsType = st.nextToken();
+                String rsType = st.nextToken();
 
                 if ("tknfix".equalsIgnoreCase(rsType)) { // fixed price
                     BigDecimal rate = BigDecimal.ZERO;
@@ -120,8 +117,7 @@ public class TKNExtension extends AbstractExtension{
                     return new FixPriceRateSource(rate, preferedFiatCurrency);
                 }
             } catch (Exception e) {
-                String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
-                log.warn("createRateSource failed for prefix: {}, on terminal with serial number: {}", rsType, serialNumber);
+                log.warn("createRateSource failed for prefix: {} ", ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin));
             }
 
         }

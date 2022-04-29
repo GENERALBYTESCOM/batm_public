@@ -21,7 +21,7 @@ package com.generalbytes.batm.server.extensions.extra.monetaryunit;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
-import com.generalbytes.batm.server.extensions.exceptions.helper.ExceptionHelper;
+import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.CoinmarketcapRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.coinpaprika.CoinPaprikaRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.coingecko.CoinGeckoRateSource;
@@ -44,10 +44,9 @@ public class MonetaryUnitExtension extends AbstractExtension{
     @Override
     public IWallet createWallet(String walletLogin, String tunnelPassword) {
         if (walletLogin !=null && !walletLogin.trim().isEmpty()) {
-            String walletType = null;
             try {
                 StringTokenizer st = new StringTokenizer(walletLogin, ":");
-                walletType = st.nextToken();
+                String walletType = st.nextToken();
 
                 if ("monetaryunitd".equalsIgnoreCase(walletType)) {
                     //"monetaryunitd:protocol:user:password:ip:port:accountname"
@@ -81,8 +80,7 @@ public class MonetaryUnitExtension extends AbstractExtension{
                     }
                 }
             } catch (Exception e) {
-                String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
-                log.warn("createWallet failed for prefix: {}, on terminal with serial number: {}", walletType, serialNumber);
+                log.warn("createWallet failed for prefix: {}", ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin));
             }
         }
         return null;
@@ -91,10 +89,9 @@ public class MonetaryUnitExtension extends AbstractExtension{
     @Override
     public IRateSource createRateSource(String sourceLogin) {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
-            String rsType = null;
             try {
                 StringTokenizer st = new StringTokenizer(sourceLogin, ":");
-                rsType = st.nextToken();
+                String rsType = st.nextToken();
 
                 if ("coinmarketcap".equalsIgnoreCase(rsType)) {
                     String preferredFiatCurrency = FiatCurrency.USD.getCode();
@@ -114,8 +111,7 @@ public class MonetaryUnitExtension extends AbstractExtension{
                     return new CoinPaprikaRateSource(preferredFiatCurrency);
                 }
             } catch (Exception e) {
-                String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
-                log.warn("createRateSource failed for prefix: {}, on terminal with serial number: {}", rsType, serialNumber);
+                log.warn("createRateSource failed for prefix: {} ", ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin));
             }
         }
         return null;

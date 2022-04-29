@@ -21,7 +21,7 @@ import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
-import com.generalbytes.batm.server.extensions.exceptions.helper.ExceptionHelper;
+import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.extra.dash.sources.cddash.CryptodiggersRateSource;
 import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.CoinmarketcapRateSource;
 import com.generalbytes.batm.server.extensions.extra.dash.wallets.dashd.DashRPCWallet;
@@ -55,11 +55,10 @@ public class DashExtension extends AbstractExtension{
 
     @Override
     public IWallet createWallet(String walletLogin, String tunnelPassword) {
-        String walletType = null;
         try {
         if (walletLogin != null && !walletLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(walletLogin, ":");
-            walletType = st.nextToken();
+            String walletType = st.nextToken();
             if ("dashd".equalsIgnoreCase(walletType)
                 || "dashdnoforward".equalsIgnoreCase(walletType)) {
                 //"dashd:protocol:user:password:ip:port:accountname"
@@ -92,8 +91,7 @@ public class DashExtension extends AbstractExtension{
             }
         }
         } catch (Exception e) {
-            String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
-            log.warn("createWallet failed for prefix: {}, on terminal with serial number: {}", walletType, serialNumber);
+            log.warn("createWallet failed for prefix: {}", ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin));
         }
         return null;
     }
@@ -109,10 +107,9 @@ public class DashExtension extends AbstractExtension{
     @Override
     public IRateSource createRateSource(String sourceLogin) {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
-            String exchangeType = null;
             try {
                 StringTokenizer st = new StringTokenizer(sourceLogin, ":");
-                exchangeType = st.nextToken();
+                String exchangeType = st.nextToken();
                 if ("cddash".equalsIgnoreCase(exchangeType)) {
                     if (st.hasMoreTokens()) {
                         return new CryptodiggersRateSource(st.nextToken().toUpperCase());
@@ -143,8 +140,7 @@ public class DashExtension extends AbstractExtension{
                     return new CoinmarketcapRateSource(apiKey, preferredFiatCurrency);
                 }
             } catch (Exception e) {
-                String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
-                log.warn("createRateSource failed for prefix: {}, on terminal with serial number: {}", exchangeType, serialNumber);
+                log.warn("createRateSource failed for prefix: {} ", ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin));
             }
         }
         return null;

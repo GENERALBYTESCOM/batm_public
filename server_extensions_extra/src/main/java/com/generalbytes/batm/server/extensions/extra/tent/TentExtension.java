@@ -20,7 +20,7 @@ package com.generalbytes.batm.server.extensions.extra.tent;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
-import com.generalbytes.batm.server.extensions.exceptions.helper.ExceptionHelper;
+import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.extra.tent.wallets.snowgemd.SnowgemRPCWallet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,11 +42,10 @@ public class TentExtension extends AbstractExtension {
     @Override
     public IWallet createWallet(String walletLogin, String tunnelPassword) {
         if (walletLogin != null && !walletLogin.trim().isEmpty()) {
-            String walletName = null;
             try {
                 //"walletname:protocol:user:password:ip:port"
                 StringTokenizer st = new StringTokenizer(walletLogin, ":");
-                walletName = st.nextToken();
+                String walletName = st.nextToken();
                 if ("snowgemd".equals(walletName)) {
                     String protocol = st.nextToken();
                     String username = st.nextToken();
@@ -72,8 +71,7 @@ public class TentExtension extends AbstractExtension {
                     }
                 }
             } catch (Exception e) {
-                String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
-                log.warn("createWallet failed for prefix: {}, on terminal with serial number: {}", walletName, serialNumber);
+                log.warn("createWallet failed for prefix: {}", ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin));
             }
         }
 
@@ -91,10 +89,9 @@ public class TentExtension extends AbstractExtension {
     @Override
     public IRateSource createRateSource(String sourceLogin) {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()){
-            String exchangeType = null;
             try {
                 StringTokenizer st = new StringTokenizer(sourceLogin, ":");
-                exchangeType = st.nextToken();
+                String exchangeType = st.nextToken();
                 String preferredFiatCurrency = FiatCurrency.USD.getCode();
                 if ("tentfix".equalsIgnoreCase(exchangeType)) {
                     BigDecimal rate = BigDecimal.ZERO;
@@ -110,8 +107,7 @@ public class TentExtension extends AbstractExtension {
                     return new FixPriceRateSource(rate, preferredFiatCurrency);
                 }
             } catch (Exception e) {
-                String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
-                log.warn("createRateSource failed for prefix: {}, on terminal with serial number: {}", exchangeType, serialNumber);
+                log.warn("createRateSource failed for prefix: {} ", ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin));
             }
         }
         return null;

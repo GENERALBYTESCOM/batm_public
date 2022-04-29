@@ -21,7 +21,7 @@ import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
-import com.generalbytes.batm.server.extensions.exceptions.helper.ExceptionHelper;
+import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.extra.anon.wallets.anond.ANONRPCWallet;
 import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.CoinmarketcapRateSource;
 import org.slf4j.Logger;
@@ -46,10 +46,9 @@ public class ANONExtension extends AbstractExtension {
     @Override
     public IWallet createWallet(String walletLogin, String tunnelPassword) {
         if (walletLogin != null && !walletLogin.trim().isEmpty()) {
-            String walletType = null;
             try {
                 StringTokenizer st = new StringTokenizer(walletLogin, ":");
-                walletType = st.nextToken();
+                String walletType = st.nextToken();
 
                 if ("anond".equalsIgnoreCase(walletType)) {
                     String protocol = st.nextToken();
@@ -81,8 +80,7 @@ public class ANONExtension extends AbstractExtension {
                     }
                 }
             } catch (Exception e) {
-                String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
-                log.warn("createWallet failed for prefix: {}, on terminal with serial number: {}", walletType, serialNumber);
+                log.warn("createWallet failed for prefix: {} ", ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin));
             }
         }
         return null;
@@ -99,10 +97,9 @@ public class ANONExtension extends AbstractExtension {
     @Override
     public IRateSource createRateSource(String sourceLogin) {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
-            String exchangeType = null;
             try {
                 StringTokenizer st = new StringTokenizer(sourceLogin, ":");
-                exchangeType = st.nextToken();
+                String exchangeType = st.nextToken();
                 if ("coinmarketcap".equalsIgnoreCase(exchangeType)) {
                     String preferredFiatCurrency = FiatCurrency.USD.getCode();
                     String apiKey = null;
@@ -128,8 +125,7 @@ public class ANONExtension extends AbstractExtension {
                     return new FixPriceRateSource(rate, preferedFiatCurrency);
                 }
             } catch (Exception e) {
-                String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
-                log.warn("createRateSource failed for prefix: {}, on terminal with serial number: {}", exchangeType, serialNumber);
+                log.warn("createRateSource failed for prefix: {}", ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin));
             }
         }
         return null;

@@ -21,7 +21,7 @@ import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
-import com.generalbytes.batm.server.extensions.exceptions.helper.ExceptionHelper;
+import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -141,10 +141,9 @@ public class DexCoinSupport extends AbstractExtension implements IExchange, IWal
     @Override
     public IExchange createExchange(String exchangeLogin) {
         if (exchangeLogin !=null && !exchangeLogin.trim().isEmpty()) {
-            String exchangeType = null;
             try {
                 StringTokenizer st = new StringTokenizer(exchangeLogin, ":");
-                exchangeType = st.nextToken();
+                String exchangeType = st.nextToken();
 
                 if ((CRYPTO_CURRENCY.toLowerCase() + "_exchange").equalsIgnoreCase(exchangeType)) {
                     BigDecimal rate = BigDecimal.ZERO;
@@ -161,8 +160,7 @@ public class DexCoinSupport extends AbstractExtension implements IExchange, IWal
                     return new DexCoinSupport(preferredFiatCurrency, rate);
                 }
             } catch (Exception e) {
-                String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
-                log.warn("createRateSource failed for prefix: {}, on terminal with serial number: {}", exchangeType, serialNumber);
+                log.warn("createRateSource failed for prefix: {} ", ExtensionsUtil.getPrefixWithCountOfParameters(exchangeLogin));
             }
         }
         return null;
@@ -184,10 +182,9 @@ public class DexCoinSupport extends AbstractExtension implements IExchange, IWal
     @Override
     public IRateSource createRateSource(String sourceLogin) {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
-            String exchangeType = null;
             try {
                 StringTokenizer st = new StringTokenizer(sourceLogin, ":");
-                exchangeType = st.nextToken();
+                String exchangeType = st.nextToken();
 
                 if ((CRYPTO_CURRENCY.toLowerCase() + "_fix").equalsIgnoreCase(exchangeType)) {
                     BigDecimal rate = BigDecimal.ZERO;
@@ -204,8 +201,7 @@ public class DexCoinSupport extends AbstractExtension implements IExchange, IWal
                     return new FixPriceRateSource(rate, preferedFiatCurrency);
                 }
             } catch (Exception e) {
-                String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
-                log.warn("createRateSource failed for prefix: {}, on terminal with serial number: {}", exchangeType, serialNumber);
+                log.warn("createRateSource failed for prefix: {} ", ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin));
             }
         }
         return null;
@@ -231,7 +227,7 @@ public class DexCoinSupport extends AbstractExtension implements IExchange, IWal
     public boolean isAddressValid(String address) {
         boolean result = isCryptoAddressValid(address);
         if (!result) {
-            result = isPaperWalletSupported() && ExtensionsUtil.isValidEmailAddress(address);
+            result = isPaperWalletSupported() && com.generalbytes.batm.server.extensions.ExtensionsUtil.isValidEmailAddress(address);
         }
         return result;
     }

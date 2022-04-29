@@ -18,8 +18,9 @@
 package com.generalbytes.batm.server.extensions.extra.simplecoin;
 
 import com.generalbytes.batm.server.extensions.AbstractExtension;
+import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.IRateSource;
-import com.generalbytes.batm.server.extensions.exceptions.helper.ExceptionHelper;
+import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.extra.simplecoin.sources.SimpleCoinRateSource;
 import com.generalbytes.batm.server.extensions.extra.simplecoin.sources.SupportedCurrencies;
 import org.slf4j.Logger;
@@ -44,10 +45,9 @@ public class SimpleCoinExtension extends AbstractExtension {
     @Override
     public IRateSource createRateSource(String sourceLogin) {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
-            String rsType = null;
             try {
                 StringTokenizer st = new StringTokenizer(sourceLogin, ":");
-                rsType = st.nextToken();
+                String rsType = st.nextToken();
                 if ("simplecoin".equalsIgnoreCase(rsType)) {
                     if (st.hasMoreTokens()) {
                         supportedCurrencies.setPreferredFiatCurrency(st.nextToken());
@@ -55,8 +55,7 @@ public class SimpleCoinExtension extends AbstractExtension {
                     return new SimpleCoinRateSource(supportedCurrencies);
                 }
             } catch (Exception e) {
-                String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
-                log.warn("createRateSource failed for prefix: {}, on terminal with serial number: {}", rsType, serialNumber);
+                log.warn("createRateSource failed for prefix: {} ", ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin));
             }
         }
         return null;

@@ -21,11 +21,12 @@ import com.generalbytes.batm.server.extensions.AbstractExtension;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.DummyExchangeAndWalletAndSource;
+import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
-import com.generalbytes.batm.server.extensions.exceptions.helper.ExceptionHelper;
+import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.extra.digibyte.sources.livecoin.LiveCoinRateSource;
 import com.generalbytes.batm.server.extensions.extra.digibyte.wallets.digibyted.DigiByteRPCWallet;
 import org.slf4j.Logger;
@@ -47,10 +48,9 @@ public class DigiByteExtension extends AbstractExtension {
   @Override
   public IWallet createWallet(String walletLogin, String tunnelPassword) {
     if (walletLogin != null && !walletLogin.trim().isEmpty()) {
-      String walletType = null;
       try {
           StringTokenizer st = new StringTokenizer(walletLogin, ":");
-          walletType = st.nextToken();
+          String walletType = st.nextToken();
           if ("digibyted".equalsIgnoreCase(walletType)) {
               //"digibyted:protocol:user:password:ip:port:accountname"
 
@@ -84,8 +84,7 @@ public class DigiByteExtension extends AbstractExtension {
               }
           }
       } catch (Exception e) {
-          String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
-          log.warn("createWallet failed for prefix: {}, on terminal with serial number: {}", walletType, serialNumber);
+          log.warn("createWallet failed for prefix: {}", ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin));
       }
     }
     return null;
@@ -102,10 +101,9 @@ public class DigiByteExtension extends AbstractExtension {
   @Override
   public IRateSource createRateSource(String sourceLogin) {
     if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
-        String exchangeType = null;
         try {
             StringTokenizer st = new StringTokenizer(sourceLogin, ":");
-            exchangeType = st.nextToken();
+            String exchangeType = st.nextToken();
             if ("digibytefix".equalsIgnoreCase(exchangeType)) {
                 BigDecimal rate = BigDecimal.ZERO;
                 if (st.hasMoreTokens()) {
@@ -127,8 +125,7 @@ public class DigiByteExtension extends AbstractExtension {
                 return new LiveCoinRateSource(preferedFiatCurrency);
             }
         } catch (Exception e) {
-            String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
-            log.warn("createRateSource failed for prefix: {}, on terminal with serial number: {}", exchangeType, serialNumber);
+            log.warn("createRateSource failed for prefix: {} ", ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin));
         }
     }
     return null;

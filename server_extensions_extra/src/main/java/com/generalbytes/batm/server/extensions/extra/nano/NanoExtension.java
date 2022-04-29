@@ -19,7 +19,7 @@ package com.generalbytes.batm.server.extensions.extra.nano;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.*;
-import com.generalbytes.batm.server.extensions.exceptions.helper.ExceptionHelper;
+import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.extra.nano.util.NanoUtil;
 import com.generalbytes.batm.server.extensions.extra.nano.wallet.demo.DemoWallet;
 import com.generalbytes.batm.server.extensions.extra.nano.wallet.node.NanoNodeWallet;
@@ -60,11 +60,10 @@ public class NanoExtension extends AbstractExtension {
 
     @Override
     public IWallet createWallet(String walletLogin, String tunnelPassword) {
-        String walletName = null;
         try {
             if (walletLogin != null && !walletLogin.trim().isEmpty()) {
                 StringTokenizer st = new StringTokenizer(walletLogin, ":");
-                walletName = st.nextToken();
+                String walletName = st.nextToken();
 
                 if ("nano_node".equalsIgnoreCase(walletName)) {
                     return NanoNodeWallet.create(context, st);
@@ -75,8 +74,7 @@ public class NanoExtension extends AbstractExtension {
                 }
             }
         } catch (Exception e) {
-            String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
-            log.warn("createWallet failed for prefix: {}, on terminal with serial number: {}", walletName, serialNumber);
+            log.warn("createWallet failed for prefix: {}", ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin));
         }
         return null;
     }

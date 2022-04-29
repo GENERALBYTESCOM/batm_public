@@ -19,12 +19,12 @@ package com.generalbytes.batm.server.extensions.extra.bitcoincash;
 
 import com.generalbytes.batm.server.extensions.AbstractExtension;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
 import com.generalbytes.batm.server.extensions.IPaperWalletGenerator;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.IWallet;
-import com.generalbytes.batm.server.extensions.exceptions.helper.ExceptionHelper;
 import com.generalbytes.batm.server.extensions.extra.bitcoincash.sources.telr.TelrRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoincash.wallets.telr.TelrCashWallet;
 import org.slf4j.Logger;
@@ -47,11 +47,10 @@ public class BitcoinCashExtension extends AbstractExtension {
 
     @Override
     public IWallet createWallet(String walletLogin, String tunnelPassword) {
-        String walletType = null;
         try {
         if (walletLogin != null && !walletLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(walletLogin, ":");
-            walletType = st.nextToken();
+            String walletType = st.nextToken();
             if ("bitcoincashd".equalsIgnoreCase(walletType)
                 || "bitcoincashdnoforward".equalsIgnoreCase(walletType)) {
                 //"bitcoind:protocol:user:password:ip:port:accountname"
@@ -86,8 +85,7 @@ public class BitcoinCashExtension extends AbstractExtension {
             }
         }
         } catch (Exception e) {
-            String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
-            log.warn("createWallet failed for prefix: {}, on terminal with serial number: {}", walletType, serialNumber);
+            log.warn("createWallet failed for prefix: {}", ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin));
         }
         return null;
     }
@@ -124,11 +122,10 @@ public class BitcoinCashExtension extends AbstractExtension {
 
     @Override
     public IRateSource createRateSource(String sourceLogin) {
-        String rsType = null;
         try {
             if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
                 StringTokenizer st = new StringTokenizer(sourceLogin, ":");
-                rsType = st.nextToken();
+                String rsType = st.nextToken();
 
                 if ("telr".equalsIgnoreCase(rsType)) {
                     /* Set authorization parameters. */
@@ -152,8 +149,7 @@ public class BitcoinCashExtension extends AbstractExtension {
                 }
             }
         } catch (Exception e) {
-            String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
-            log.warn("createRateSource failed for prefix: {}, on terminal with serial number: {}", rsType, serialNumber);
+            log.warn("createRateSource failed for prefix: {} ", ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin));
         }
         return null;
     }

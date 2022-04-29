@@ -21,7 +21,7 @@ import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
-import com.generalbytes.batm.server.extensions.exceptions.helper.ExceptionHelper;
+import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.extra.gulden.sources.GuldenTickerRateSource;
 import com.generalbytes.batm.server.extensions.extra.gulden.wallets.guldend.GuldendRPCWallet;
 import org.slf4j.Logger;
@@ -43,10 +43,9 @@ public class GuldenExtension extends AbstractExtension{
     @Override
     public IWallet createWallet(String walletLogin, String tunnelPassword) {
         if (walletLogin !=null && !walletLogin.trim().isEmpty()) {
-            String walletType = null;
             try {
                 StringTokenizer st = new StringTokenizer(walletLogin, ":");
-                walletType = st.nextToken();
+                String walletType = st.nextToken();
 
                 if ("guldend".equalsIgnoreCase(walletType)) {
                     //"guldend:protocol:user:password:ip:port:accountname"
@@ -80,8 +79,7 @@ public class GuldenExtension extends AbstractExtension{
                     }
                 }
             } catch (Exception e) {
-                String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
-                log.warn("createWallet failed for prefix: {}, on terminal with serial number: {}", walletType, serialNumber);
+                log.warn("createWallet failed for prefix: {}", ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin));
             }
         }
         return null;
@@ -98,10 +96,9 @@ public class GuldenExtension extends AbstractExtension{
     @Override
     public IRateSource createRateSource(String sourceLogin) {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
-            String prefix = null;
             try {
                 StringTokenizer st = new StringTokenizer(sourceLogin, ":");
-                prefix = st.nextToken();
+                String prefix = st.nextToken();
 
                 if ("nlgfix".equalsIgnoreCase(prefix)) {
                     BigDecimal rate = BigDecimal.ZERO;
@@ -120,8 +117,7 @@ public class GuldenExtension extends AbstractExtension{
                     return new GuldenTickerRateSource();
                 }
             } catch (Exception e) {
-                String serialNumber = ExceptionHelper.findSerialNumberInStackTrace();
-                log.warn("createRateSource failed for prefix: {}, on terminal with serial number: {}", prefix, serialNumber);
+                log.warn("createRateSource failed for prefix: {} ", ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin));
             }
         }
         return null;
