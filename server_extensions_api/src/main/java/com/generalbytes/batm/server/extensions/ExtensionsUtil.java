@@ -47,4 +47,12 @@ public class ExtensionsUtil {
         int index2 = body.indexOf(",") - 1;
         return body.substring(index1, index2);
     }
+
+    public static String getPrefixWithCountOfParameters(String paramValues) {
+        if (paramValues == null) {
+            return "null";
+        }
+        String[] i = paramValues.split(":");
+        return i[0] + " + " + (i.length - 1) + " params";
+    }
 }

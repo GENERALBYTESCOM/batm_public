@@ -21,7 +21,10 @@ import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
+import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.extra.flashcoin.wallets.flashcoind.FlashcoinRPCWallet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -29,6 +32,8 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 public class FlashcoinExtension extends AbstractExtension{
+
+    private static final Logger log = LoggerFactory.getLogger(FlashcoinExtension.class);
     @Override
     public String getName() {
         return "BATM Flashcoin extension";
@@ -37,39 +42,45 @@ public class FlashcoinExtension extends AbstractExtension{
     @Override
     public IWallet createWallet(String walletLogin, String tunnelPassword) {
         if (walletLogin !=null && !walletLogin.trim().isEmpty()) {
-            StringTokenizer st = new StringTokenizer(walletLogin,":");
-            String walletType = st.nextToken();
+            try {
+                StringTokenizer st = new StringTokenizer(walletLogin, ":");
+                String walletType = st.nextToken();
 
-            if ("flashcoind".equalsIgnoreCase(walletType)) {
-                //"flashcoind:protocol:user:password:ip:port:accountname"
+                if ("flashcoind".equalsIgnoreCase(walletType)) {
+                    //"flashcoind:protocol:user:password:ip:port:accountname"
 
-                String protocol = st.nextToken();
-                String username = st.nextToken();
-                String password = st.nextToken();
-                String hostname = st.nextToken();
-                String port = st.nextToken();
-                String accountName ="";
-                if (st.hasMoreTokens()) {
-                    accountName = st.nextToken();
+                    String protocol = st.nextToken();
+                    String username = st.nextToken();
+                    String password = st.nextToken();
+                    String hostname = st.nextToken();
+                    String port = st.nextToken();
+                    String accountName = "";
+                    if (st.hasMoreTokens()) {
+                        accountName = st.nextToken();
+                    }
+
+
+                    if (protocol != null && username != null && password != null && hostname != null && port != null && accountName != null) {
+                        String rpcURL = protocol + "://" + username + ":" + password + "@" + hostname + ":" + port;
+                        return new FlashcoinRPCWallet(rpcURL, accountName);
+                    }
                 }
+                if ("flashdemo".equalsIgnoreCase(walletType)) {
 
+                    String fiatCurrency = st.nextToken();
+                    String walletAddress = "";
+                    if (st.hasMoreTokens()) {
+                        walletAddress = st.nextToken();
+                    }
 
-                if (protocol != null && username != null && password != null && hostname !=null && port != null && accountName != null) {
-                    String rpcURL = protocol +"://" + username +":" + password + "@" + hostname +":" + port;
-                    return new FlashcoinRPCWallet(rpcURL,accountName);
+                    if (fiatCurrency != null && walletAddress != null) {
+                        return new DummyExchangeAndWalletAndSource(fiatCurrency, CryptoCurrency.FLASH.getCode(), walletAddress);
+                    }
                 }
-            }
-            if ("flashdemo".equalsIgnoreCase(walletType)) {
-
-                String fiatCurrency = st.nextToken();
-                String walletAddress = "";
-                if (st.hasMoreTokens()) {
-                    walletAddress = st.nextToken();
-                }
-
-                if (fiatCurrency != null && walletAddress != null) {
-                    return new DummyExchangeAndWalletAndSource(fiatCurrency, CryptoCurrency.FLASH.getCode(), walletAddress);
-                }
+            } catch (Exception e) {
+                log.warn("createWallet failed for prefix: {}, {}: {} ",
+                    ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
+                );
             }
         }
         return null;
@@ -86,22 +97,28 @@ public class FlashcoinExtension extends AbstractExtension{
     @Override
     public IRateSource createRateSource(String sourceLogin) {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
-            StringTokenizer st = new StringTokenizer(sourceLogin,":");
-            String exchangeType = st.nextToken();
+            try {
+                StringTokenizer st = new StringTokenizer(sourceLogin, ":");
+                String exchangeType = st.nextToken();
 
-            if ("flashfix".equalsIgnoreCase(exchangeType)) {
-                BigDecimal rate = BigDecimal.ZERO;
-                if (st.hasMoreTokens()) {
-                    try {
-                        rate = new BigDecimal(st.nextToken());
-                    } catch (Throwable e) {
+                if ("flashfix".equalsIgnoreCase(exchangeType)) {
+                    BigDecimal rate = BigDecimal.ZERO;
+                    if (st.hasMoreTokens()) {
+                        try {
+                            rate = new BigDecimal(st.nextToken());
+                        } catch (Throwable e) {
+                        }
                     }
+                    String preferedFiatCurrency = FiatCurrency.USD.getCode();
+                    if (st.hasMoreTokens()) {
+                        preferedFiatCurrency = st.nextToken().toUpperCase();
+                    }
+                    return new FixPriceRateSource(rate, preferedFiatCurrency);
                 }
-                String preferedFiatCurrency = FiatCurrency.USD.getCode();
-                if (st.hasMoreTokens()) {
-                    preferedFiatCurrency = st.nextToken().toUpperCase();
-                }
-                return new FixPriceRateSource(rate,preferedFiatCurrency);
+            } catch (Exception e) {
+                log.warn("createRateSource failed for prefix: {}, {}: {} ",
+                    ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin), e.getClass().getSimpleName(), e.getMessage()
+                );
             }
 
         }
