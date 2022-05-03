@@ -69,7 +69,9 @@ public class LiskExtension extends AbstractExtension{
                     }
                 }
             } catch (Exception e) {
-                log.warn("createWallet failed for prefix: {}", ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin));
+                log.warn("createWallet failed for prefix: {}, {}: {} ",
+                    ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
+                );
             }
         }
         return null;
@@ -114,7 +116,9 @@ public class LiskExtension extends AbstractExtension{
                     return new BinanceRateSource(preferedFiatCurrency, coinmarketcapApiKey);
                 }
             } catch (Exception e) {
-                log.warn("createRateSource failed for prefix: {} ", ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin));
+                log.warn("createRateSource failed for prefix: {}, {}: {} ",
+                    ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin), e.getClass().getSimpleName(), e.getMessage()
+                );
             }
         }
         return null;

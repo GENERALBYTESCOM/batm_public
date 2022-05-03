@@ -160,7 +160,9 @@ public class DexCoinSupport extends AbstractExtension implements IExchange, IWal
                     return new DexCoinSupport(preferredFiatCurrency, rate);
                 }
             } catch (Exception e) {
-                log.warn("createRateSource failed for prefix: {} ", ExtensionsUtil.getPrefixWithCountOfParameters(exchangeLogin));
+                log.warn("createExchange failed for prefix: {}, {}: {} ",
+                    ExtensionsUtil.getPrefixWithCountOfParameters(exchangeLogin), e.getClass().getSimpleName(), e.getMessage()
+                );
             }
         }
         return null;
@@ -201,7 +203,9 @@ public class DexCoinSupport extends AbstractExtension implements IExchange, IWal
                     return new FixPriceRateSource(rate, preferedFiatCurrency);
                 }
             } catch (Exception e) {
-                log.warn("createRateSource failed for prefix: {} ", ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin));
+                log.warn("createRateSource failed for prefix: {}, {}: {} ",
+                    ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin), e.getClass().getSimpleName(), e.getMessage()
+                );
             }
         }
         return null;

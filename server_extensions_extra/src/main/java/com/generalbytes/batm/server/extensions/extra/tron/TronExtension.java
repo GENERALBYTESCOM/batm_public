@@ -75,7 +75,9 @@ public class TronExtension extends AbstractExtension {
                     }
                 }
             } catch (Exception e) {
-                log.warn("createWallet failed for prefix: {}", ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin));
+                log.warn("createWallet failed for prefix: {}, {}: {} ",
+                    ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
+                );
             }
         }
         return null;

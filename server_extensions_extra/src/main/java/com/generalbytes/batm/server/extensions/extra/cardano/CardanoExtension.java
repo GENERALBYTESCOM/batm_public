@@ -47,7 +47,9 @@ public class CardanoExtension extends AbstractExtension {
                         return new CardanoWallet(protocol, host, port, walletId, passphrase);
                     }
                 } catch (IOException e) {
-                    log.warn("createWallet failed for prefix: {}", ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin));
+                    log.warn("createWallet failed for prefix: {}, {}: {} ",
+                        ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
+                    );
                 }
             }
         }

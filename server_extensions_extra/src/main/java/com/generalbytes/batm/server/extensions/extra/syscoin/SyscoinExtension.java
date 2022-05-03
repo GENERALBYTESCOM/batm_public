@@ -77,7 +77,9 @@ public class SyscoinExtension extends AbstractExtension{
                     }
                 }
             } catch (Exception e) {
-                log.warn("createWallet failed for prefix: {}", ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin));
+                log.warn("createWallet failed for prefix: {}, {}: {} ",
+                    ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
+                );
             }
         }
         return null;
@@ -122,7 +124,9 @@ public class SyscoinExtension extends AbstractExtension{
                     return new CoinmarketcapRateSource(apiKey, preferredFiatCurrency);
                 }
             } catch (Exception e) {
-                log.warn("createRateSource failed for prefix: {} ", ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin));
+                log.warn("createRateSource failed for prefix: {}, {}: {} ",
+                    ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin), e.getClass().getSimpleName(), e.getMessage()
+                );
             }
         }
         return null;

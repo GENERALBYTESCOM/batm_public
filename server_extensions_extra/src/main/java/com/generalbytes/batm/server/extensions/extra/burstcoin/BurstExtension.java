@@ -104,7 +104,9 @@ public class BurstExtension extends AbstractExtension{
                     }
                 }
             } catch (Exception e) {
-                log.warn("createWallet failed for prefix: {}", ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin));
+                log.warn("createWallet failed for prefix: {}, {}: {} ",
+                    ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
+                );
             }
         }
         return null;
@@ -142,7 +144,9 @@ public class BurstExtension extends AbstractExtension{
                     return new PoloniexRateSource();
                 }
             } catch (Exception e) {
-                log.warn("createRateSource failed for prefix: {} ", ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin));
+                log.warn("createRateSource failed for prefix: {}, {}: {} ",
+                    ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin), e.getClass().getSimpleName(), e.getMessage()
+                );
             }
         }
         return null;
