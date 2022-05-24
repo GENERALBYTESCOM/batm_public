@@ -36,6 +36,14 @@ public class TestExtensionContext implements IExtensionContext {
     }
 
     @Override
+    public void addNotificationListener(INotificationListener listener) {
+    }
+
+    @Override
+    public void removeNotificationListener(INotificationListener listener) {
+    }
+
+    @Override
     public ITransactionDetails findTransactionByTransactionId(String remoteOrLocalTransactionId) {
         return null;
     }
