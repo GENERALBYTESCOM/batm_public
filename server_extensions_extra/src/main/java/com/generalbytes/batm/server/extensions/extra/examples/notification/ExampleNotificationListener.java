@@ -1,12 +1,12 @@
 package com.generalbytes.batm.server.extensions.extra.examples.notification;
 
-import com.generalbytes.batm.server.extensions.AbstractNotificationListener;
 import com.generalbytes.batm.server.extensions.IExtensionContext;
 import com.generalbytes.batm.server.extensions.INotificationDetails;
+import com.generalbytes.batm.server.extensions.INotificationListener;
 
 import java.util.Map;
 
-public class ExampleNotificationListener extends AbstractNotificationListener {
+public class ExampleNotificationListener implements INotificationListener {
 
     private final IExtensionContext ctx;
 
