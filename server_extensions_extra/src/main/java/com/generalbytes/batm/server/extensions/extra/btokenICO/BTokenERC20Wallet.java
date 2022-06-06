@@ -179,7 +179,7 @@ public class BTokenERC20Wallet implements IWallet {
         try {
             BigInteger tokens = convertFromBigDecimal(amount);
             TransactionReceipt receipt = getContract(destinationAddress, tokens)
-                    .buy(tokens)
+                    .buy(destinationAddress, tokens)
                     .sendAsync()
                     .get(240, TimeUnit.SECONDS);
 
