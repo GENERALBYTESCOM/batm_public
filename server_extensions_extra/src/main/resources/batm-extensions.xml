@@ -1511,6 +1511,29 @@
         <cryptologo cryptocurrency="BTOKEN" file="btoken.png"/>
         <cryptologo cryptocurrency="BTOKEN" file="btoken.svg"/>
     </extension>
+
+    <extension class="com.generalbytes.batm.server.extensions.extra.btokenICO.BTokenExtension" >
+        <wallet prefix="btokenICO-wallet" name="btokenICO-wallet">
+            <param name="chainID" />
+            <param name="tokenSymbol" />
+            <param name="tokenDecimalPlaces" />
+            <param name="contractAddress" />
+            <param name="rpcURL" />
+            <param name="mnemonic" />
+            <param name="gaslimit" />
+            <param name="gasPriceMultiplier" />
+            <cryptocurrency>BTOKENICO</cryptocurrency>
+        </wallet>
+        <ratesource prefix="btokenICOfix" name ="Fix Price - BTOKENICO" >
+            <param name="price" />
+            <cryptocurrency>BTOKENICO</cryptocurrency>
+            <help>USD is default fiat currency.</help>
+        </ratesource>
+        <cryptologo cryptocurrency="BTOKENICO" file="btoken.png"/>
+        <cryptologo cryptocurrency="BTOKENICO" file="btoken.svg"/>
+    </extension>
+
+
     <extension class="com.generalbytes.batm.server.extensions.extra.startcoin.StartcoinExtension" >
         <wallet prefix="startcoind" name="Startcoind">
             <param name="protocol" />
