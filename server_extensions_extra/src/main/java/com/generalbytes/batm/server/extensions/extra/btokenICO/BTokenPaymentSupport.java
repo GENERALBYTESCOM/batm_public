@@ -29,7 +29,7 @@ public class BTokenPaymentSupport extends QueryableWalletPaymentSupport {
 
     @Override
     protected String getCryptoCurrency() {
-        return CryptoCurrency.BTOKEN.getCode();
+        return CryptoCurrency.BTOKENICO.getCode();
     }
 
     protected long getPollingPeriodMillis() {
@@ -41,7 +41,7 @@ public class BTokenPaymentSupport extends QueryableWalletPaymentSupport {
     }
 
     public String getCurrency() {
-        return CryptoCurrency.BTOKEN.getCode();
+        return CryptoCurrency.BTOKENICO.getCode();
     }
 
     public ICryptoAddressValidator getAddressValidator() {

@@ -38,7 +38,7 @@ public class BTokenExtension extends AbstractExtension {
 
     @Override
     public String getName() {
-        return "BATM BTOKEN extension";
+        return "BATM BTOKEN ICO extension";
     }
 
     @Override
@@ -76,7 +76,7 @@ public class BTokenExtension extends AbstractExtension {
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (CryptoCurrency.BTOKEN.getCode().equalsIgnoreCase(cryptoCurrency)) {
+        if (CryptoCurrency.BTOKENICO.getCode().equalsIgnoreCase(cryptoCurrency)) {
             return new BTokenAddressValidator();
         }
         return null;
@@ -84,7 +84,7 @@ public class BTokenExtension extends AbstractExtension {
 
     @Override
     public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency) {
-        if (CryptoCurrency.BTOKEN.getCode().equalsIgnoreCase(cryptoCurrency)) {
+        if (CryptoCurrency.BTOKENICO.getCode().equalsIgnoreCase(cryptoCurrency)) {
             return new BTokenWalletGenerator(ctx);
         }
         return null;
@@ -114,7 +114,7 @@ public class BTokenExtension extends AbstractExtension {
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(CryptoCurrency.BTOKEN.getCode());
+        result.add(CryptoCurrency.BTOKENICO.getCode());
         return result;
     }
 }

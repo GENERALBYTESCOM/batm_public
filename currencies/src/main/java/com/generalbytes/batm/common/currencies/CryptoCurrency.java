@@ -53,6 +53,7 @@ public enum CryptoCurrency {
     CLOAK("CloakCoin"),
     DAI("Dai"),
     BTOKEN("BTOKEN"),
+    BTOKENICO("BTOKEN ICO"),
     BIZZ("BIZZCOIN"),
     DASH("Dash"),
     DDB("Discount Distributors Bahamas"),

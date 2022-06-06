@@ -8,7 +8,7 @@ public class BTokenDefinition extends CryptoCurrencyDefinition{
     private final IPaymentSupport paymentSupport = new BTokenPaymentSupport();
 
     public BTokenDefinition() {
-        super(CryptoCurrency.BTOKEN.getCode(), "BTOKEN", "ethereum", "https://betverseh.ch/");
+        super(CryptoCurrency.BTOKENICO.getCode(), "BTOKEN-ICO", "ethereum", "https://betverseh.ch/");
     }
 
     @Override
