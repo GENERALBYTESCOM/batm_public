@@ -120,10 +120,10 @@ public class ERC20Interface extends Contract {
         return executeRemoteCallTransaction(function);
     }
 
-    public RemoteFunctionCall<TransactionReceipt> buy(BigInteger tokens) {
+    public RemoteFunctionCall<TransactionReceipt> buy(String to, BigInteger tokens) {
         final Function function = new Function(
             FUNC_BUY,
-            Arrays.<Type>asList(new org.web3j.abi.datatypes.generated.Uint256(tokens)),
+            Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(160, to), new org.web3j.abi.datatypes.generated.Uint256(tokens)),
             Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
     }
