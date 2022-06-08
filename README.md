@@ -50,7 +50,7 @@ ExtensionContext may be called from any extension. A reference to ExtensionConte
 Content
 =======
 * **server_extensions_api** - contains the extension API that all extensions use to extend CAS' functionality.
-* **server_extensions_extra** - reference extension implementation that demonstrates BTC, LTC, CLOAK, DGB, DASH, HATCH, POT, VIA, BTX, SYS, FLASH, DOGE, NLG, ICG, NBT, GRS, MAX, BSD, MEC, BTDX, NANO, SUM, BURST, ECA, LINDA, $PAC, DAI, MKR, BTBS, GQ, MUE, BAT and REP coin support functionality.
+* **server_extensions_extra** - reference extension implementation that demonstrates BTC, LTC, CLOAK, DGB, DASH, HATCH, POT, VIA, BTX, SYS, FLASH, DOGE, NLG, ICG, NBT, GRS, MAX, BSD, MEC, BTDX, NANO, SUM, BURST, ECA, LINDA, $PAC, DAI, MKR, BTBS, EDAC, GQ, MUE, BAT and REP coin support functionality.
 * **server_extensions_test** - contains tester for testing the extensions (CAS not required).
 * **operators_sample_website** - The OSW is a sample web application that demonstrates how operators can enable their customers initiate sell transactions online via operator's website and later visit two-way BATMThree or BATMFour ATM when cash is ready for withdrawal. For more detailed information see <a href="https://github.com/GENERALBYTESCOM/batm_public/tree/master/operators_sample_website">description</a>.
 <p align="center">`

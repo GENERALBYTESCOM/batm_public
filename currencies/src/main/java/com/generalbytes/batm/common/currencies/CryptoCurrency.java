@@ -59,6 +59,7 @@ public enum CryptoCurrency {
     DGB("DigiByte"),
     DOGE("DOGE"),
     ECA("Electra"),
+    EDAC("EDAC"),
     EFL("e-Gulden"),
     EGG("NestEgg Coin"),
     ETC("Ethereum Classic"),

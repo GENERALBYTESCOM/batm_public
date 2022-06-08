@@ -79,6 +79,7 @@
                 <cryptocurrency buyonly="true">BTBS</cryptocurrency>
                 <cryptocurrency buyonly="true">GQ</cryptocurrency>
                 <cryptocurrency buyonly="true">ETH</cryptocurrency>
+                <cryptocurrency buyonly="true">EDAC</cryptocurrency>
                 <cryptocurrency buyonly="true">USDT</cryptocurrency>
                 <help>
                     *host: https://api.cryptx.com/ (required) -
@@ -179,6 +180,7 @@
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>BAY</cryptocurrency>
                 <cryptocurrency>BTBS</cryptocurrency>
+                <cryptocurrency>EDAC</cryptocurrency>
                 <cryptocurrency>GQ</cryptocurrency>
                 <help>The parameter is optional (the only supported fiat currency is USDT).</help>
             </ratesource>
@@ -259,6 +261,7 @@
                 <cryptocurrency>DEX</cryptocurrency>
                 <cryptocurrency>DGB</cryptocurrency>
                 <cryptocurrency>DOGE</cryptocurrency>
+                <cryptocurrency>EDAC</cryptocurrency>
                 <cryptocurrency>ECA</cryptocurrency>
                 <cryptocurrency>EFL</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
@@ -364,6 +367,7 @@
                 <cryptocurrency buyonly="true">ETH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>BAY</cryptocurrency>
+                <cryptocurrency>EDAC</cryptocurrency>
                 <cryptocurrency>BTBS</cryptocurrency>
                 <cryptocurrency>GQ</cryptocurrency>
             </exchange>
@@ -2059,6 +2063,16 @@
         </wallet>
         <cryptologo cryptocurrency="GQ" file="gq.png"/>
         <cryptologo cryptocurrency="GQ" file="gq.svg"/>
+        <wallet prefix="infuraERC20_EDAC_18_0x32e6c34cd57087abbd59b5a4aecc4cb495924356" name="Infura.io wallet - EDAC">
+            <param name="projectId" />
+            <param name="mnemonic" />
+            <param name="gaslimit" />
+            <param name="gasPriceMultiplier" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
+            <cryptocurrency>EDAC</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="EDAC" file="edac.png"/>
+        <cryptologo cryptocurrency="EDAC" file="edac.svg"/>
         <wallet prefix="infuraERC20_MKR_18_0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2" name="Infura.io wallet - MKR">
             <param name="projectId" />
             <param name="mnemonic" />

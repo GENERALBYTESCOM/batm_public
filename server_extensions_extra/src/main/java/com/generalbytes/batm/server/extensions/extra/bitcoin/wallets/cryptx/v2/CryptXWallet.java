@@ -181,6 +181,8 @@ public class CryptXWallet implements IWallet, ICanSendMany {
                     return amount.multiply(Converters.BTBS).toBigInteger();
                 case GQ:
                     return amount.multiply(Converters.GQ).toBigInteger();
+                case EDAC:
+                    return amount.multiply(Converters.EDAC).toBigInteger();
                 case USDT:
                     return amount.multiply(Converters.USDT).toBigInteger();
                 default:
