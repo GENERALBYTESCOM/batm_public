@@ -57,6 +57,16 @@ public interface IExtensionContext {
     boolean removeTransactionListener(ITransactionListener listener);
 
     /**
+     * Registers a listener for receiving notification
+     */
+    void addNotificationListener(INotificationListener listener);
+
+    /**
+     * Stops a listener from receiving notification
+     */
+    void removeNotificationListener(INotificationListener listener);
+
+    /**
      * Register listener for terminal events
      */
     void addTerminalListener(ITerminalListener listener);
