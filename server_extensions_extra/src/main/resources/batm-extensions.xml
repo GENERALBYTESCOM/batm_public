@@ -1491,6 +1491,8 @@
         </ratesource>
         <cryptologo cryptocurrency="SMART" file="smart.png"/>
     </extension>
+
+
     <extension class="com.generalbytes.batm.server.extensions.extra.btoken.BTokenExtension" >
         <wallet prefix="btoken-wallet" name="btoken-wallet">
             <param name="chainID" />
@@ -1512,7 +1514,7 @@
         <cryptologo cryptocurrency="BTOKEN" file="btoken.svg"/>
     </extension>
 
-    <extension class="com.generalbytes.batm.server.extensions.extra.btokenICO.BTokenExtension" >
+    <extension class="com.generalbytes.batm.server.extensions.extra.btokenICO.BTokenICOExtension" >
         <wallet prefix="btokenICO-wallet" name="btokenICO-wallet">
             <param name="chainID" />
             <param name="tokenSymbol" />

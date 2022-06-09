@@ -23,13 +23,13 @@ import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
-public class BTokenFixedRateSource implements IRateSourceAdvanced {
+public class BTokenICOFixedRateSource implements IRateSourceAdvanced {
     private static final BigDecimal MAX_ALLOWED_PRICE_VALUE = new BigDecimal("9999999999.9999999999");
 
     private String preferedFiatCurrency = FiatCurrency.USD.getCode();
     private BigDecimal rate = new BigDecimal(1);
 
-    public BTokenFixedRateSource(BigDecimal rate, String preferedFiatCurrency) {
+    public BTokenICOFixedRateSource(BigDecimal rate, String preferedFiatCurrency) {
         if (rate != null && preferedFiatCurrency != null) {
             if (rate.compareTo(MAX_ALLOWED_PRICE_VALUE) > 0) {
                 this.rate = null;

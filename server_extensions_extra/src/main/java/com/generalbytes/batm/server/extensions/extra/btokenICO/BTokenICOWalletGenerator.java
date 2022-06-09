@@ -33,12 +33,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class BTokenWalletGenerator implements IPaperWalletGenerator {
+public class BTokenICOWalletGenerator implements IPaperWalletGenerator {
 
     private static final Logger log = LoggerFactory.getLogger("batm.master.BTokenWalletGenerator");
     private IExtensionContext ctx;
 
-    public BTokenWalletGenerator(IExtensionContext ctx) {
+    public BTokenICOWalletGenerator(IExtensionContext ctx) {
         this.ctx = ctx;
     }
 
@@ -65,7 +65,7 @@ public class BTokenWalletGenerator implements IPaperWalletGenerator {
             }
         }
 
-        return new BTokenPaperWallet(content, address, mnemonic, messageText, "application/zip", "zip", cryptoCurrency);
+        return new BTokenICOPaperWallet(content, address, mnemonic, messageText, "application/zip", "zip", cryptoCurrency);
     }
 
     private String readTemplate(String templateFile) {

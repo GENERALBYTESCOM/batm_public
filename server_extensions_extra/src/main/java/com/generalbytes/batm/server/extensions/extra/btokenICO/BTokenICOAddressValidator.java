@@ -20,7 +20,7 @@ package com.generalbytes.batm.server.extensions.extra.btokenICO;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.extra.ethereum.EtherUtils;
 
-public class BTokenAddressValidator implements ICryptoAddressValidator {
+public class BTokenICOAddressValidator implements ICryptoAddressValidator {
 
     @Override
     public boolean isAddressValid(String address) {

@@ -41,7 +41,7 @@ import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.TestExtensionContext;
-import com.generalbytes.batm.server.extensions.extra.btoken.BTokenWalletGenerator;
+import com.generalbytes.batm.server.extensions.extra.btokenICO.BTokenICOWalletGenerator;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -61,11 +61,11 @@ public class Tester {
         File file = new File("server_extensions_extra/build/libs/batm_server_extensions_extra.jar");
         t.loadExtensions(file);
 
-        t.getWalletBalance("", "");
+        //t.getWalletBalance("", "");
 
-        t.sendFromWallet("", "");
+        t.sendFromWallet("btokenICO-wallet", "80001:BTOKENICO:18:0x964e6b7CD5cB38c4F95321d3eE20Ea664479bEc2:polygon-mumbai.infura.io/v3/fe61370c71034c7fadb5161f6a4381b9:liquid brand gaze spare someone toe cause nuclear rug west wash mask");
 
-        IPaperWalletGenerator paperWalletGenerator = new BTokenWalletGenerator(new TestExtensionContext());
+        IPaperWalletGenerator paperWalletGenerator = new BTokenICOWalletGenerator(new TestExtensionContext());
         IPaperWallet paperWallet = paperWalletGenerator.generateWallet("BTOKEN", "", "en", false);
 
         t.go(args);
@@ -517,8 +517,8 @@ public class Tester {
 
                 final String cryptoAddress = w.getCryptoAddress(preferredCryptoCurrency);
                 System.out.println("CryptoAddress = " + cryptoAddress);
-                String sendResult = w.sendCoins("0x03dD169Bf7e718779Bd2A72279f1D33615FAd306", new BigDecimal(1),
-                        "BTOKEN", "Test");
+                String sendResult = w.sendCoins("0x0707BF36710f3f49c18eA9e02EaF0E63e17dE3db", new BigDecimal(3),
+                        "BTOKENICO", "Test");
 
                 if (sendResult != null) {
                     System.out.println(

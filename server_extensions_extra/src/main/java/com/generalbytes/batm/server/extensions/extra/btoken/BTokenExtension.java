@@ -47,6 +47,8 @@ public class BTokenExtension extends AbstractExtension {
             StringTokenizer st = new StringTokenizer(walletLogin, ":");
             String walletType = st.nextToken();
 
+            if(!walletType.equals("btoken-wallet")) return null;
+
             Long chainID = Long.parseLong(st.nextToken());
 
             String tokenSymbol = st.nextToken();

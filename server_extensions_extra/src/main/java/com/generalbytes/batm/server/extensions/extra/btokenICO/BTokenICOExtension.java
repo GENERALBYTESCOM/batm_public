@@ -20,9 +20,10 @@ package com.generalbytes.batm.server.extensions.extra.btokenICO;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
-import com.generalbytes.batm.server.extensions.extra.btokenICO.sources.fixed.BTokenFixedRateSource;
+import com.generalbytes.batm.server.extensions.extra.btokenICO.sources.fixed.BTokenICOFixedRateSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.web3j.tx.gas.DefaultGasProvider;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -30,11 +31,11 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-public class BTokenExtension extends AbstractExtension {
+public class BTokenICOExtension extends AbstractExtension {
 
-    private static final Logger log = LoggerFactory.getLogger(BTokenExtension.class);
+    private static final Logger log = LoggerFactory.getLogger(BTokenICOExtension.class);
 
-    private static final ICryptoCurrencyDefinition DEFINITION = new BTokenDefinition();
+    private static final ICryptoCurrencyDefinition DEFINITION = new BTokenICODefinition();
 
     @Override
     public String getName() {
@@ -59,13 +60,18 @@ public class BTokenExtension extends AbstractExtension {
             if (st.hasMoreTokens()) {
                 gasLimit = new BigInteger(st.nextToken());
             }
+
+
+
             BigDecimal gasPriceMultiplier = BigDecimal.ONE;
             if (st.hasMoreTokens()) {
                 gasPriceMultiplier = new BigDecimal(st.nextToken());
             }
 
+            //gasPriceMultiplier = DefaultGasProvider.GAS_PRICE;
+
             if (rpcURL != null && passwordOrMnemonic != null) {
-                return new BTokenERC20Wallet(chainID, rpcURL,
+                return new BTokenICOERC20Wallet(chainID, rpcURL,
                         passwordOrMnemonic, tokenSymbol, tokenDecimalPlaces,
                         contractAddress, gasLimit, gasPriceMultiplier);
             }
@@ -77,7 +83,7 @@ public class BTokenExtension extends AbstractExtension {
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
         if (CryptoCurrency.BTOKENICO.getCode().equalsIgnoreCase(cryptoCurrency)) {
-            return new BTokenAddressValidator();
+            return new BTokenICOAddressValidator();
         }
         return null;
     }
@@ -85,7 +91,7 @@ public class BTokenExtension extends AbstractExtension {
     @Override
     public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency) {
         if (CryptoCurrency.BTOKENICO.getCode().equalsIgnoreCase(cryptoCurrency)) {
-            return new BTokenWalletGenerator(ctx);
+            return new BTokenICOWalletGenerator(ctx);
         }
         return null;
     }
@@ -106,7 +112,7 @@ public class BTokenExtension extends AbstractExtension {
             if (st.hasMoreTokens()) {
                 preferedFiatCurrency = st.nextToken().toUpperCase();
             }
-            return new BTokenFixedRateSource(rate, preferedFiatCurrency);
+            return new BTokenICOFixedRateSource(rate, preferedFiatCurrency);
         }
         return null;
     }

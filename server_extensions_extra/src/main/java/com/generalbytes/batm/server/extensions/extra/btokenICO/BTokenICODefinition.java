@@ -4,10 +4,10 @@ import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.CryptoCurrencyDefinition;
 import com.generalbytes.batm.server.extensions.payment.IPaymentSupport;
 
-public class BTokenDefinition extends CryptoCurrencyDefinition{
-    private final IPaymentSupport paymentSupport = new BTokenPaymentSupport();
+public class BTokenICODefinition extends CryptoCurrencyDefinition{
+    private final IPaymentSupport paymentSupport = new BTokenICOPaymentSupport();
 
-    public BTokenDefinition() {
+    public BTokenICODefinition() {
         super(CryptoCurrency.BTOKENICO.getCode(), "BTOKEN-ICO", "ethereum", "https://betverseh.ch/");
     }
 

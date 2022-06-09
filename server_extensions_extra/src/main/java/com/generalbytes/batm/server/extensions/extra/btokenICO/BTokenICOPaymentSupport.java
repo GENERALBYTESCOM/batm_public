@@ -23,9 +23,9 @@ import com.generalbytes.batm.server.extensions.extra.common.QueryableWalletPayme
 
 import java.util.concurrent.TimeUnit;
 
-public class BTokenPaymentSupport extends QueryableWalletPaymentSupport {
+public class BTokenICOPaymentSupport extends QueryableWalletPaymentSupport {
 
-    private BTokenAddressValidator addressValidator = new BTokenAddressValidator();
+    private BTokenICOAddressValidator addressValidator = new BTokenICOAddressValidator();
 
     @Override
     protected String getCryptoCurrency() {
