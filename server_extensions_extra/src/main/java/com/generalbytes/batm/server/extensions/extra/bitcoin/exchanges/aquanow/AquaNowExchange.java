@@ -67,6 +67,7 @@ public class AquaNowExchange implements IExchangeAdvanced, IRateSourceAdvanced {
             CompatSSLSocketFactory socketFactory = new CompatSSLSocketFactory(sslcontext.getSocketFactory());
             config.setSslSocketFactory(socketFactory);
             config.setIgnoreHttpErrorCodes(true);
+            // change: https://api.aquanow.io https://market.aquanow.io
             apiMarket =  RestProxyFactory.createProxy(IAquaNowAPI.class, "https://market-staging.aquanow.io", config);
             apiTrade = RestProxyFactory.createProxy(IAquaNowAPI.class, "https://api-dev.aquanow.io", config);
         } catch (NoSuchAlgorithmException | KeyManagementException e) {
@@ -123,10 +124,10 @@ public class AquaNowExchange implements IExchangeAdvanced, IRateSourceAdvanced {
     }
 
     private BigDecimal getBalance(String currency) {
-        CurrentTimeIncrementalNonceFactory xNouce = new CurrentTimeIncrementalNonceFactory(TimeUnit.MILLISECONDS);
-        String time = String.valueOf(xNouce.createValue());
         try {
             log.debug("getBalance");
+            CurrentTimeIncrementalNonceFactory xNouce = new CurrentTimeIncrementalNonceFactory(TimeUnit.MILLISECONDS);
+            String time = String.valueOf(xNouce.createValue());
             if (currency != null) {
                 UserBalanceResponse userBalanceResponse = apiTrade.getUserBalance(apiKey, time, new AquaNowDigest(apiSecret),currency);
                 if (userBalanceResponse.message == null) {
@@ -186,8 +187,6 @@ public class AquaNowExchange implements IExchangeAdvanced, IRateSourceAdvanced {
         try {
             log.debug("getExchangeRate - " + priceType);
             String currencyPair = getMarketSymbol(cryptoCurrency, fiatCurrency);
-            CurrentTimeIncrementalNonceFactory xNouce = new CurrentTimeIncrementalNonceFactory(TimeUnit.MILLISECONDS);
-            String time = String.valueOf(xNouce.createValue());
             RateLimiter.waitForPossibleCall(getClass());
             BestPriceResponse response = apiMarket.getbestprice(currencyPair);
             if(priceType.equals("buy")){
