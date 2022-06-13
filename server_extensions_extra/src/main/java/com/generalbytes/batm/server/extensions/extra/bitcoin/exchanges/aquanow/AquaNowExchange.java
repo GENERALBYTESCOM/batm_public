@@ -23,39 +23,66 @@ import com.generalbytes.batm.server.extensions.IExchangeAdvanced;
 import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
 import com.generalbytes.batm.server.extensions.ITask;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.aquanow.dto.*;
+import com.generalbytes.batm.server.extensions.util.net.CompatSSLSocketFactory;
 import com.generalbytes.batm.server.extensions.util.net.RateLimiter;
 import com.google.common.collect.ImmutableSet;
+import org.knowm.xchange.utils.nonce.CurrentTimeIncrementalNonceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import si.mazi.rescu.ClientConfig;
 import si.mazi.rescu.HttpStatusIOException;
+import si.mazi.rescu.RestProxyFactory;
 
+import javax.net.ssl.SSLContext;
 import java.math.BigDecimal;
-import java.security.GeneralSecurityException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Set;
 import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
 public class AquaNowExchange implements IExchangeAdvanced, IRateSourceAdvanced {
-    private static final Logger log = LoggerFactory.getLogger("batm.master.exchange.aquaExchange");
+    private static final Logger log = LoggerFactory.getLogger("batm.master.exchange.AquaNowExchange");
 
     private static final Set<String> fiatCurrencies = ImmutableSet.of(
         FiatCurrency.CAD.getCode());
 
     private static final Set<String> cryptoCurrencies = ImmutableSet.of(
-        CryptoCurrency.BCH.getCode(),
         CryptoCurrency.BTC.getCode(),
-        CryptoCurrency.DAI.getCode(),
-        CryptoCurrency.ETH.getCode(),
-        CryptoCurrency.LTC.getCode(),
-        CryptoCurrency.XRP.getCode());
+        CryptoCurrency.ETH.getCode());
 
-    // Supported markets (2021-10-06; see IaquaAPI.getMarkets):
-    // [DAI-CAD, ETH-DAI, BTC-AAVE, ETH-AAVE, ETH-CAD, BTC-LINK, ETH-LINK, BCH-CAD, AAVE-CAD, BCH-BTC, BTC-DAI, LINK-CAD, BTC-CAD, XLM-CAD, LTC-CAD, XRP-CAD, EOS-BTC, XLM-BTC, XRP-BTC, ETH-BTC, LTC-BTC, EOS-CAD]
+    private String apiKey;
+    private String apiSecret;
 
-    private final String preferredFiatCurrency;
-    private final IAquaNowAPI api;
+    private String preferredFiatCurrency;
+    private IAquaNowAPI apiMarket;
+    private IAquaNowAPI apiTrade;
 
-    public AquaNowExchange(String preferredFiatCurrency) throws GeneralSecurityException {
-        this.api = IAquaNowAPI.create();
+    @SuppressWarnings("WeakerAccess")
+    public AquaNowExchange(){
+        try {
+            ClientConfig config = new ClientConfig();
+            SSLContext sslcontext = SSLContext.getInstance("TLS");
+            sslcontext.init(null, null, null);
+            CompatSSLSocketFactory socketFactory = new CompatSSLSocketFactory(sslcontext.getSocketFactory());
+            config.setSslSocketFactory(socketFactory);
+            config.setIgnoreHttpErrorCodes(true);
+            apiMarket =  RestProxyFactory.createProxy(IAquaNowAPI.class, "https://market-staging.aquanow.io", config);
+            apiTrade = RestProxyFactory.createProxy(IAquaNowAPI.class, "https://api-dev.aquanow.io", config);
+        } catch (NoSuchAlgorithmException | KeyManagementException e) {
+            log.error("constructor - Cannot create instance.", e);
+        }
+    }
+
+    public AquaNowExchange(String preferredFiatCurrency) {
+        this();
+        this.preferredFiatCurrency = preferredFiatCurrency;
+    }
+
+    public AquaNowExchange(String apiKey, String apiSecret,String preferredFiatCurrency) {
+        this();
+        this.apiKey = apiKey;
+        this.apiSecret = apiSecret;
         this.preferredFiatCurrency = preferredFiatCurrency;
     }
 
@@ -96,40 +123,77 @@ public class AquaNowExchange implements IExchangeAdvanced, IRateSourceAdvanced {
     }
 
     private BigDecimal getBalance(String currency) {
-        //change
-        return new BigDecimal(0);
+        CurrentTimeIncrementalNonceFactory xNouce = new CurrentTimeIncrementalNonceFactory(TimeUnit.MILLISECONDS);
+        String time = String.valueOf(xNouce.createValue());
+        try {
+            log.debug("getBalance");
+            if (currency != null) {
+                UserBalanceResponse userBalanceResponse = apiTrade.getUserBalance(apiKey, time, new AquaNowDigest(apiSecret),currency);
+                if (userBalanceResponse.message == null) {
+                    return userBalanceResponse.totalBalance;
+                } else {
+                    log.error("getBalance (1) - " + ("No account. getBalance = " + currency));
+                }
+            }
+        } catch (Throwable e) {
+            log.error("getBalance (2)", e);
+        }
+        return null;
     }
 
     @Override
     public String getDepositAddress(String cryptoCurrency) {
-        if (!isCryptoCurrencySupported(cryptoCurrency)) {
-            return null;
+        try {
+            CurrentTimeIncrementalNonceFactory xNouce = new CurrentTimeIncrementalNonceFactory(TimeUnit.MILLISECONDS);
+            String time = String.valueOf(xNouce.createValue());
+            RateLimiter.waitForPossibleCall(getClass());
+            GetAddressRequest getAddressRequest = new GetAddressRequest(cryptoCurrency);
+            GetAddressResponse getAddressResponse = apiTrade.getUserAddress(apiKey, time, new AquaNowDigest(apiSecret),getAddressRequest);
+            if (getAddressResponse.message == null) {
+                return getAddressResponse.address;
+            }else{
+                log.error("getDepositAddress (1) - " + cryptoCurrency);
+            }
+        } catch (Throwable e) {
+            log.error("getDepositAddress(2)", e);
         }
-        //change
-        return "a";
+        return null;
     }
 
     @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
-        if (!isCryptoCurrencySupported(cryptoCurrency)) {
-            return null;
+        try {
+            if (!isCryptoCurrencySupported(cryptoCurrency)) {
+                return null;
+            }
+            CurrentTimeIncrementalNonceFactory xNouce = new CurrentTimeIncrementalNonceFactory(TimeUnit.MILLISECONDS);
+            String time = String.valueOf(xNouce.createValue());
+            SendCoinRequest sendCoinsRequest = new SendCoinRequest(amount,cryptoCurrency, destinationAddress);
+            RateLimiter.waitForPossibleCall(getClass());
+            SendCoinResponse sendCoinResponse = apiTrade.sendCoins(apiKey, time, new AquaNowDigest(apiSecret),sendCoinsRequest);
+            if (sendCoinResponse.message == null) {
+                return sendCoinResponse.txId;
+            } else {
+                log.error("sendCoins - " + sendCoinResponse.message);
+            }
+        } catch (Throwable e) {
+            log.error("sendCoins", e);
         }
-
-        log.info("withdrawing {} {} to {}", amount, cryptoCurrency, destinationAddress);
-        //change
-        return "a";
+        return null;
     }
 
     private BigDecimal getExchangeRate(String cryptoCurrency, String fiatCurrency, String priceType) {
         try {
             log.debug("getExchangeRate - " + priceType);
             String currencyPair = getMarketSymbol(cryptoCurrency, fiatCurrency);
+            CurrentTimeIncrementalNonceFactory xNouce = new CurrentTimeIncrementalNonceFactory(TimeUnit.MILLISECONDS);
+            String time = String.valueOf(xNouce.createValue());
             RateLimiter.waitForPossibleCall(getClass());
-            BestPriceResponse response = api.getbestprice(currencyPair);
+            BestPriceResponse response = apiMarket.getbestprice(currencyPair);
             if(priceType.equals("buy")){
-                if (response.bestBid != null)  return new BigDecimal(String.valueOf(response.bestBid));
+                if (response.bestAsk != null)  return new BigDecimal(String.valueOf(response.bestAsk));
             } else if(priceType.equals("sell")){
-                if (response.bestAsk != null)   return new BigDecimal(String.valueOf(response.bestAsk));
+                if (response.bestBid != null)   return new BigDecimal(String.valueOf(response.bestBid));
             }
         } catch (Throwable e) {
             log.error("getExchangeRate", e);
@@ -169,75 +233,122 @@ public class AquaNowExchange implements IExchangeAdvanced, IRateSourceAdvanced {
 
     @Override
     public ITask createPurchaseCoinsTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
-        return createOrderTask(amount, cryptoCurrency, fiatCurrencyToUse, OrderSide.BUY);
+        return createOrderTask(amount, cryptoCurrency, fiatCurrencyToUse, "buy");
     }
 
     @Override
     public ITask createSellCoinsTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
-        return createOrderTask(amount, cryptoCurrency, fiatCurrencyToUse, OrderSide.SELL);
+        return createOrderTask(amount, cryptoCurrency, fiatCurrencyToUse, "sell");
     }
 
-    private ITask createOrderTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, OrderSide orderSide) {
+    private ITask createOrderTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String orderSide) {
         if (!isCryptoCurrencySupported(cryptoCurrency) || !isFiatCurrencySupported(fiatCurrencyToUse)) {
             return null;
         }
-        return new OrderTask(amount, cryptoCurrency, fiatCurrencyToUse, orderSide);
+        String symbol = getMarketSymbol(cryptoCurrency, fiatCurrencyToUse);
+        return new OrderTask(amount, symbol, orderSide);
     }
-
-    private BigDecimal getRateSourceCryptoVolume(String cryptoCurrency) {
-        if (CryptoCurrency.BTC.getCode().equals(cryptoCurrency)) {
-            return BigDecimal.ONE;
-        }
-        return BigDecimal.TEN;
-    }
-
 
     @Override
     public BigDecimal calculateBuyPrice(String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount) {
-        return calculatePrice(cryptoCurrency, fiatCurrency, cryptoAmount, OrderSide.BUY);
+        if (!isCryptoCurrencySupported(cryptoCurrency) || !isFiatCurrencySupported(fiatCurrency)) {
+            return null;
+        }
+        BigDecimal rate = getExchangeRate(cryptoCurrency, fiatCurrency, "buy");
+        return (rate != null) ? rate.multiply(cryptoAmount).stripTrailingZeros() : null;
     }
 
     @Override
     public BigDecimal calculateSellPrice(String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount) {
-        return calculatePrice(cryptoCurrency, fiatCurrency, cryptoAmount, OrderSide.SELL);
+        if (!isCryptoCurrencySupported(cryptoCurrency) || !isFiatCurrencySupported(fiatCurrency)) {
+            return null;
+        }
+        BigDecimal rate = getExchangeRate(cryptoCurrency, fiatCurrency, "sell");
+        return (rate != null) ? rate.multiply(cryptoAmount).stripTrailingZeros() : null;
     }
 
-    private BigDecimal calculatePrice(String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount, OrderSide orderSide) {
-       //change
-        return new BigDecimal(0);
-    }
 
     class OrderTask implements ITask {
         private static final long MAXIMUM_TIME_TO_WAIT_FOR_ORDER_TO_FINISH = 5 * 60 * 60 * 1000; //5 hours
 
         private final long checkTillTime;
         private final BigDecimal cryptoAmount;
-        private final String cryptoCurrency;
-        private final String fiatCurrencyToUse;
-        private final OrderSide orderSide;
+        private final String symbol;
+        private final String orderSide;
 
         private String orderId;
         private String result;
         private boolean finished;
 
-        OrderTask(BigDecimal cryptoAmount, String cryptoCurrency, String fiatCurrencyToUse, OrderSide orderSide) {
+        OrderTask(BigDecimal cryptoAmount, String symbol, String orderSide) {
             this.cryptoAmount = cryptoAmount;
-            this.cryptoCurrency = cryptoCurrency;
-            this.fiatCurrencyToUse = fiatCurrencyToUse;
+            this.symbol = symbol;
             this.orderSide = orderSide;
             this.checkTillTime = System.currentTimeMillis() + MAXIMUM_TIME_TO_WAIT_FOR_ORDER_TO_FINISH;
         }
 
         @Override
         public boolean onCreate() {
-            //change
-            return false;
+            try{
+                log.info("Calling exchange ({} {})", orderSide, symbol);
+                orderId = call("task submitLimitOrder", () -> {
+                    TradeCoinResponse tradeResponse = null;
+                    CurrentTimeIncrementalNonceFactory xNouce = new CurrentTimeIncrementalNonceFactory(TimeUnit.MILLISECONDS);
+                    String time = String.valueOf(xNouce.createValue());
+                    if(orderSide.equals("buy")){
+                        BuyCoinRequest buyCoinRequest = new BuyCoinRequest(cryptoAmount, symbol, orderSide);
+                        RateLimiter.waitForPossibleCall(getClass());
+                        tradeResponse = apiTrade.buyCoins(apiKey, time, new AquaNowDigest(apiSecret),buyCoinRequest);
+                        log.info("Submitting order: {}", buyCoinRequest);
+                    }
+                    else if(orderSide.equals("sell")){
+                        SellCoinRequest sellCoinRequest = new SellCoinRequest(cryptoAmount, symbol, orderSide);
+                        RateLimiter.waitForPossibleCall(getClass());
+                        tradeResponse = apiTrade.sellCoins(apiKey, time, new AquaNowDigest(apiSecret),sellCoinRequest);
+                        log.info("Submitting order: {}", sellCoinRequest);
+                    }
+                    return tradeResponse.payload.orderId;
+                });
+            } catch (Exception e) {
+                log.error("PurchaseOrSellCoinsTask.onCreate", e);
+            }
+            return (orderId != null);
         }
 
         @Override
         public boolean onDoStep() {
-           //change
-            return false;
+            try {
+                if (orderId == null || orderId.equals("0")) {
+                    log.debug("Giving up on waiting for trade to complete. Because it did not happen");
+                    finished = true;
+                    result = "Skipped";
+                    return false;
+                }
+                if (System.currentTimeMillis() > checkTillTime) {
+                    log.debug("Giving up on waiting for trade {} to complete", orderId);
+                    finished = true;
+                    return false;
+                }
+
+                CurrentTimeIncrementalNonceFactory xNouce = new CurrentTimeIncrementalNonceFactory(TimeUnit.MILLISECONDS);
+                String time = String.valueOf(xNouce.createValue());
+                OrderStatusResponse orderStatusResponse = call("task getOrder", () -> apiTrade.getOrderStatus(apiKey, time, new AquaNowDigest(apiSecret), orderId));
+
+                if (orderStatusResponse != null && orderStatusResponse.data.tradeStatus.equals("ERROR")) {
+                    log.debug("trade finish but trade result = error");
+                    finished = true;
+                    return false;
+                }
+                if (orderStatusResponse != null && orderStatusResponse.data.tradeStatus.equals("COMPLETE")) {
+                    result = orderId;
+                    finished = true;
+                }
+            }catch (Exception e) {
+                log.error("PurchaseOrSellCoinsTask.onDoStep", e);
+            }
+
+
+            return result != null;
         }
 
         @Override

@@ -3,28 +3,32 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.aquanow;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import si.mazi.rescu.RestInvocation;
+import com.google.gson.Gson;
+
+
+import javax.ws.rs.HeaderParam;
 
 // THE ORDER OF THE FIELDS IS IMPORTANT!
 // The bitbuy documentation uses JSONObject which uses HashMap where elements are unordered
 // but the MAC is computed over the resulting JSON string
-@JsonPropertyOrder({"path", "content-length", "query"})
+@JsonPropertyOrder({"httpMethod", "path","nonce"})
 class AquaNowMacData {
+
+    @JsonProperty("httpMethod")
+    public String httpMethod;
     @JsonProperty("path")
     public String path;
-    @JsonProperty("content-length")
-    public int contentLength;
-    @JsonProperty("query")
-    public String query;
+    @JsonProperty("nonce")
+    public String nonce;
 
-    public static AquaNowMacData from(RestInvocation restInvocation) {
+    public static String from(RestInvocation restInvocation) {
         AquaNowMacData macData = new AquaNowMacData();
+        macData.httpMethod = restInvocation.getHttpMethod().toUpperCase();
         macData.path = restInvocation.getPath();
-        macData.contentLength = getBodyLength(restInvocation.getRequestBody());
-        macData.query = restInvocation.getQueryString();
-        return macData;
+        macData.nonce = (String) restInvocation.getParamValue(HeaderParam.class, "x-nonce");
+        Gson gson = new Gson();
+        String macDataString = gson.toJson(macData);
+        return macDataString;
     }
 
-    private static int getBodyLength(String requestBody) {
-        return (requestBody == null || requestBody.isEmpty()) ? -1 : requestBody.length();
-    }
 }

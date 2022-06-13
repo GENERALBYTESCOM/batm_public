@@ -18,33 +18,67 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.aquanow;
 
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.aquanow.dto.*;
-import com.generalbytes.batm.server.extensions.util.net.RateLimitingInterceptor;
-import org.knowm.xchange.utils.nonce.CurrentTimeIncrementalNonceFactory;
-import si.mazi.rescu.ClientConfig;
-import si.mazi.rescu.Interceptor;
-import si.mazi.rescu.RestProxyFactory;
-
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
-import java.security.GeneralSecurityException;
-import java.util.concurrent.TimeUnit;
 
+
+@Path("")
 @Produces(MediaType.APPLICATION_JSON)
 public interface IAquaNowAPI {
 
-    static IAquaNowAPI create() throws GeneralSecurityException {
-        final ClientConfig config = new ClientConfig();
-        //config.addDefaultParam(HeaderParam.class, "x-api-key", apiKey);
-        config.addDefaultParam(HeaderParam.class, "x-nonce", new CurrentTimeIncrementalNonceFactory(TimeUnit.MILLISECONDS));
-       //config.addDefaultParam(HeaderParam.class, "x-signature", new AquaNowDigest(apiSecret));
-        Interceptor interceptor = new RateLimitingInterceptor(IAquaNowAPI.class, 25, 30_000);
-        return RestProxyFactory.createProxy(IAquaNowAPI.class, "https://market-staging.aquanow.io", config, interceptor);
-    }
-
     @GET
     @Path("/bestprice")
-    @Produces(MediaType.APPLICATION_JSON)
     BestPriceResponse getbestprice(@QueryParam("symbol") String symbol) throws IOException;
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/trades/v1/market")
+    TradeCoinResponse buyCoins(@HeaderParam("x-api-key") String apikey,
+                               @HeaderParam("x-nonce") String nonce,
+                               @HeaderParam("x-signature") AquaNowDigest digest,
+                               BuyCoinRequest buycoin) throws IOException;
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/trades/v1/market")
+    TradeCoinResponse sellCoins(@HeaderParam("x-api-key") String apikey,
+                                @HeaderParam("x-nonce") String nonce,
+                                @HeaderParam("x-signature") AquaNowDigest digest,
+                                SellCoinRequest sellcoin) throws IOException;
+
+    @GET
+    @Path("/trades/v2/order")
+    OrderStatusResponse getOrderStatus(@HeaderParam("x-api-key") String apikey,
+                                       @HeaderParam("x-nonce") String nonce,
+                                       @HeaderParam("x-signature") AquaNowDigest digest,
+                                       @QueryParam("orderId") String orderId) throws IOException;
+
+    @GET
+    @Path("/users/v1/userbalance")
+    UserBalanceResponse getUserBalance(@HeaderParam("x-api-key") String apikey,
+                                       @HeaderParam("x-nonce") String nonce,
+                                       @HeaderParam("x-signature") AquaNowDigest digest,
+                                       @QueryParam("symbol") String symbol) throws IOException;
+
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/accounts/v1/createAddress")
+    GetAddressResponse getUserAddress(@HeaderParam("x-api-key") String apikey,
+                                       @HeaderParam("x-nonce") String nonce,
+                                       @HeaderParam("x-signature") AquaNowDigest digest,
+                                       GetAddressRequest getAddressRequest) throws IOException;
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/accounts/v1/transaction")
+    SendCoinResponse sendCoins(@HeaderParam("x-api-key") String apikey,
+                          @HeaderParam("x-nonce") String nonce,
+                          @HeaderParam("x-signature") AquaNowDigest digest,
+                          SendCoinRequest sendCoinRequest) throws IOException;
+
+
+
 
 }

@@ -1,41 +1,40 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.aquanow;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import si.mazi.rescu.ParamsDigest;
 import si.mazi.rescu.RestInvocation;
-
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
-import java.util.Base64;
+
 
 public class AquaNowDigest implements ParamsDigest {
 
-    private static final String ALGORITHM = "HmacSHA256";
-    private static final Charset CHARSET = StandardCharsets.UTF_8;
+
+    private static final String ALGORITHM = "HmacSHA384";
 
     private final Mac mac;
 
     public AquaNowDigest(String apiSecret) throws GeneralSecurityException {
         this.mac = Mac.getInstance(ALGORITHM);
-        this.mac.init(new SecretKeySpec(apiSecret.getBytes(CHARSET), ALGORITHM));
+        this.mac.init(new SecretKeySpec(apiSecret.getBytes(), ALGORITHM));
     }
 
     public String digestParams(RestInvocation restInvocation) {
-        byte[] data = getMacData(restInvocation);
-        byte[] signature = mac.doFinal(data);
-        return Base64.getEncoder().encodeToString(signature);
+        String data = AquaNowMacData.from(restInvocation);
+        byte[] signature = mac.doFinal(data.getBytes());
+        return bytesToHexString(signature);
     }
 
-    protected byte[] getMacData(RestInvocation restInvocation) {
-        try {
-            return new ObjectMapper().writer().writeValueAsBytes(AquaNowMacData.from(restInvocation));
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+    public static String bytesToHexString(byte[] bytes) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < bytes.length; i++) {
+            String hex = Integer.toHexString(0xFF & bytes[i]);
+            if (hex.length() == 1) {
+                sb.append('0');
+            }
+            sb.append(hex);
         }
+        return sb.toString();
     }
 }
 
