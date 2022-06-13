@@ -50,6 +50,7 @@ public class VeriffVerificationResultMapper {
             case approved:
                 return CheckResult.CLEAR;
             case resubmission_requested:
+                return CheckResult.RESUBMISSION_REQUESTED;
             case declined:
             case abandoned:
             case expired:
