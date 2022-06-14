@@ -19,17 +19,13 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.d
 
 public class BitGoCoinRequest {
     private String address;
-    private Integer amount;
+    private String amount;
     private String walletPassphrase;
     private Integer numBlocks;
     private String comment;
 
 
-    public BitGoCoinRequest(String address, Integer amount, String walletPassphrase, String comment) {
-      this(address, amount, walletPassphrase, comment, 2);
-    }
-
-    public BitGoCoinRequest(String address, Integer amount, String walletPassphrase, String comment, Integer numBlocks) {
+    public BitGoCoinRequest(String address, String amount, String walletPassphrase, String comment, Integer numBlocks) {
         this.address = address;
         this.amount = amount;
         this.walletPassphrase = walletPassphrase;
@@ -45,11 +41,11 @@ public class BitGoCoinRequest {
         this.address = address;
     }
 
-    public Integer getAmount() {
+    public String getAmount() {
         return amount;
     }
 
-    public void setAmount(Integer amount) {
+    public void setAmount(String amount) {
         this.amount = amount;
     }
 
