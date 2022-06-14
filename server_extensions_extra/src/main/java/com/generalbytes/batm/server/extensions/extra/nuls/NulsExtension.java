@@ -21,6 +21,7 @@ package com.generalbytes.batm.server.extensions.extra.nuls;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
+import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.extra.lisk.sources.binance.BinanceRateSource;
 import com.generalbytes.batm.server.extensions.extra.lisk.wallets.liskbinancewallet.BinanceWallet;
 import org.slf4j.Logger;
@@ -45,26 +46,32 @@ public class NulsExtension extends AbstractExtension {
     @Override
     public IWallet createWallet(String walletLogin, String tunnelPassword) {
         if (walletLogin !=null && !walletLogin.trim().isEmpty()) {
-            StringTokenizer st = new StringTokenizer(walletLogin,":");
-            String walletType = st.nextToken();
+            try {
+                StringTokenizer st = new StringTokenizer(walletLogin, ":");
+                String walletType = st.nextToken();
 
-            if ("nulsBinance".equalsIgnoreCase(walletType)) {
-                String address = st.nextToken();
-                String binanceApiKey = st.nextToken();
-                String binanceApiSecret = st.nextToken();
-                if (address != null && binanceApiKey !=null && binanceApiSecret != null ) {
-                    return new BinanceWallet(address,binanceApiKey,binanceApiSecret,CryptoCurrency.NULS.getCode());
+                if ("nulsBinance".equalsIgnoreCase(walletType)) {
+                    String address = st.nextToken();
+                    String binanceApiKey = st.nextToken();
+                    String binanceApiSecret = st.nextToken();
+                    if (address != null && binanceApiKey != null && binanceApiSecret != null) {
+                        return new BinanceWallet(address, binanceApiKey, binanceApiSecret, CryptoCurrency.NULS.getCode());
+                    }
                 }
-            }
-            if ("nulsDemo".equalsIgnoreCase(walletType)) {
-                String fiatCurrency = st.nextToken();
-                String walletAddress = "";
-                if (st.hasMoreTokens()) {
-                    walletAddress = st.nextToken();
+                if ("nulsDemo".equalsIgnoreCase(walletType)) {
+                    String fiatCurrency = st.nextToken();
+                    String walletAddress = "";
+                    if (st.hasMoreTokens()) {
+                        walletAddress = st.nextToken();
+                    }
+                    if (fiatCurrency != null && walletAddress != null) {
+                        return new DummyExchangeAndWalletAndSource(fiatCurrency, CryptoCurrency.NULS.getCode(), walletAddress);
+                    }
                 }
-                if (fiatCurrency != null && walletAddress != null) {
-                    return new DummyExchangeAndWalletAndSource(fiatCurrency, CryptoCurrency.NULS.getCode(), walletAddress);
-                }
+            } catch (Exception e) {
+                log.warn("createWallet failed for prefix: {}, {}: {} ",
+                    ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
+                );
             }
         }
         return null;
@@ -81,33 +88,38 @@ public class NulsExtension extends AbstractExtension {
     @Override
     public IRateSource createRateSource(String sourceLogin) {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
-            StringTokenizer st = new StringTokenizer(sourceLogin, ":");
-            String exchangeType = st.nextToken();
-            if ("nulsFix".equalsIgnoreCase(exchangeType)) {
-                BigDecimal rate = BigDecimal.ZERO;
-                if (st.hasMoreTokens()) {
-                    try {
-                        rate = new BigDecimal(st.nextToken());
-                    } catch (Throwable e) {
-                        log.error("", e);
+            try {
+                StringTokenizer st = new StringTokenizer(sourceLogin, ":");
+                String exchangeType = st.nextToken();
+                if ("nulsFix".equalsIgnoreCase(exchangeType)) {
+                    BigDecimal rate = BigDecimal.ZERO;
+                    if (st.hasMoreTokens()) {
+                        try {
+                            rate = new BigDecimal(st.nextToken());
+                        } catch (Throwable e) {
+                            log.error("", e);
+                        }
                     }
+                    String preferredFiatCurrency = FiatCurrency.USD.getCode();
+                    if (st.hasMoreTokens()) {
+                        preferredFiatCurrency = st.nextToken().toUpperCase();
+                    }
+                    return new FixPriceRateSource(rate, preferredFiatCurrency);
+                } else if ("nulsBinanceRateSource".equalsIgnoreCase(exchangeType)) {
+                    String preferredFiatCurrency = FiatCurrency.USD.getCode();
+                    String coinMarketCapApiKey = null;
+                    if (st.hasMoreTokens()) {
+                        preferredFiatCurrency = st.nextToken().toUpperCase();
+                    }
+                    if (st.hasMoreTokens()) {
+                        coinMarketCapApiKey = st.nextToken();
+                    }
+                    return new BinanceRateSource(preferredFiatCurrency, coinMarketCapApiKey);
                 }
-                String preferredFiatCurrency = FiatCurrency.USD.getCode();
-                if (st.hasMoreTokens()) {
-                    preferredFiatCurrency = st.nextToken().toUpperCase();
-                }
-                return new FixPriceRateSource(rate, preferredFiatCurrency);
-            }
-            else if ("nulsBinanceRateSource".equalsIgnoreCase(exchangeType)) {
-                String preferredFiatCurrency = FiatCurrency.USD.getCode();
-                String coinMarketCapApiKey = null;
-                if (st.hasMoreTokens()) {
-                    preferredFiatCurrency = st.nextToken().toUpperCase();
-                }
-                if (st.hasMoreTokens()) {
-                    coinMarketCapApiKey = st.nextToken();
-                }
-                return new BinanceRateSource(preferredFiatCurrency, coinMarketCapApiKey);
+            } catch (Exception e) {
+                log.warn("createRateSource failed for prefix: {}, {}: {} ",
+                    ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin), e.getClass().getSimpleName(), e.getMessage()
+                );
             }
         }
         return null;

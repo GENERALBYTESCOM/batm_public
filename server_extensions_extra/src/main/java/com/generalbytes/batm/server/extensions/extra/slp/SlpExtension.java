@@ -19,6 +19,7 @@ package com.generalbytes.batm.server.extensions.extra.slp;
 
 import com.generalbytes.batm.common.currencies.SlpToken;
 import com.generalbytes.batm.server.extensions.AbstractExtension;
+import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
 import com.generalbytes.batm.server.extensions.IWallet;
@@ -56,7 +57,9 @@ public class SlpExtension extends AbstractExtension {
                 }
             }
         } catch (Exception e) {
-            log.warn("", e);
+            log.warn("createWallet failed for prefix: {}, {}: {} ",
+                ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
+            );
         }
         return null;
     }
