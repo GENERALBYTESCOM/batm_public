@@ -68,8 +68,8 @@ public class AquaNowExchange implements IExchangeAdvanced, IRateSourceAdvanced {
             config.setSslSocketFactory(socketFactory);
             config.setIgnoreHttpErrorCodes(true);
             // change: https://api.aquanow.io https://market.aquanow.io
-            apiMarket =  RestProxyFactory.createProxy(IAquaNowAPI.class, "https://market-staging.aquanow.io", config);
-            apiTrade = RestProxyFactory.createProxy(IAquaNowAPI.class, "https://api-dev.aquanow.io", config);
+            apiMarket =  RestProxyFactory.createProxy(IAquaNowAPI.class, "https://market.aquanow.io", config);
+            apiTrade = RestProxyFactory.createProxy(IAquaNowAPI.class, "https://api.aquanow.io", config);
         } catch (NoSuchAlgorithmException | KeyManagementException e) {
             log.error("constructor - Cannot create instance.", e);
         }
