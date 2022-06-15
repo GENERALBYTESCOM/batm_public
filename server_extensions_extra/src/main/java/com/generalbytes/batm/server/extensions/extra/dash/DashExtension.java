@@ -21,6 +21,7 @@ import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
+import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.extra.dash.sources.cddash.CryptodiggersRateSource;
 import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.CoinmarketcapRateSource;
 import com.generalbytes.batm.server.extensions.extra.dash.wallets.dashd.DashRPCWallet;
@@ -90,7 +91,9 @@ public class DashExtension extends AbstractExtension{
             }
         }
         } catch (Exception e) {
-            log.error("", e);
+            log.warn("createWallet failed for prefix: {}, {}: {} ",
+                ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
+            );
         }
         return null;
     }
@@ -106,36 +109,42 @@ public class DashExtension extends AbstractExtension{
     @Override
     public IRateSource createRateSource(String sourceLogin) {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
-            StringTokenizer st = new StringTokenizer(sourceLogin, ":");
-            String exchangeType = st.nextToken();
-            if ("cddash".equalsIgnoreCase(exchangeType)) {
-                if (st.hasMoreTokens()) {
-                    return new CryptodiggersRateSource(st.nextToken().toUpperCase());
-                }
-                return new CryptodiggersRateSource(FiatCurrency.USD.getCode());
-            } else if ("dashfix".equalsIgnoreCase(exchangeType)) {
-                BigDecimal rate = BigDecimal.ZERO;
-                if (st.hasMoreTokens()) {
-                    try {
-                        rate = new BigDecimal(st.nextToken());
-                    } catch (Throwable e) {
+            try {
+                StringTokenizer st = new StringTokenizer(sourceLogin, ":");
+                String exchangeType = st.nextToken();
+                if ("cddash".equalsIgnoreCase(exchangeType)) {
+                    if (st.hasMoreTokens()) {
+                        return new CryptodiggersRateSource(st.nextToken().toUpperCase());
                     }
+                    return new CryptodiggersRateSource(FiatCurrency.USD.getCode());
+                } else if ("dashfix".equalsIgnoreCase(exchangeType)) {
+                    BigDecimal rate = BigDecimal.ZERO;
+                    if (st.hasMoreTokens()) {
+                        try {
+                            rate = new BigDecimal(st.nextToken());
+                        } catch (Throwable e) {
+                        }
+                    }
+                    String preferedFiatCurrency = FiatCurrency.USD.getCode();
+                    if (st.hasMoreTokens()) {
+                        preferedFiatCurrency = st.nextToken().toUpperCase();
+                    }
+                    return new FixPriceRateSource(rate, preferedFiatCurrency);
+                } else if ("coinmarketcap".equalsIgnoreCase(exchangeType)) {
+                    String preferredFiatCurrency = FiatCurrency.USD.getCode();
+                    String apiKey = null;
+                    if (st.hasMoreTokens()) {
+                        preferredFiatCurrency = st.nextToken().toUpperCase();
+                    }
+                    if (st.hasMoreTokens()) {
+                        apiKey = st.nextToken();
+                    }
+                    return new CoinmarketcapRateSource(apiKey, preferredFiatCurrency);
                 }
-                String preferedFiatCurrency = FiatCurrency.USD.getCode();
-                if (st.hasMoreTokens()) {
-                    preferedFiatCurrency = st.nextToken().toUpperCase();
-                }
-                return new FixPriceRateSource(rate, preferedFiatCurrency);
-            } else if ("coinmarketcap".equalsIgnoreCase(exchangeType)) {
-                String preferredFiatCurrency = FiatCurrency.USD.getCode();
-                String apiKey = null;
-                if (st.hasMoreTokens()) {
-                    preferredFiatCurrency = st.nextToken().toUpperCase();
-                }
-                if (st.hasMoreTokens()) {
-                    apiKey = st.nextToken();
-                }
-                return new CoinmarketcapRateSource(apiKey, preferredFiatCurrency);
+            } catch (Exception e) {
+                log.warn("createRateSource failed for prefix: {}, {}: {} ",
+                    ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin), e.getClass().getSimpleName(), e.getMessage()
+                );
             }
         }
         return null;

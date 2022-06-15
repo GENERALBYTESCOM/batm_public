@@ -227,7 +227,9 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
         AccountService accountService = getExchange().getAccountService();
         Currency exchangeCryptoCurrency = Currency.getInstance(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency));
 
-        if (CryptoCurrency.XRP.getCode().equals(cryptoCurrency)) {
+        if (CryptoCurrency.XRP.getCode().equals(cryptoCurrency)
+            || CryptoCurrency.BNB.getCode().equals(cryptoCurrency)) {
+
             String[] addressParts = destinationAddress.split(":");
             if (addressParts.length == 2) {
                 return accountService.withdrawFunds(new DefaultWithdrawFundsParams(new AddressWithTag(addressParts[0], addressParts[1]), exchangeCryptoCurrency, amount));
@@ -354,7 +356,9 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
 
         AccountService accountService = getExchange().getAccountService();
         try {
-            if (CryptoCurrency.XRP.getCode().equals(cryptoCurrency)) {
+            if (CryptoCurrency.XRP.getCode().equals(cryptoCurrency)
+                || CryptoCurrency.BNB.getCode().equals(cryptoCurrency)) {
+
                 AddressWithTag addressWithTag = accountService.requestDepositAddressData(Currency.getInstance(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency)));
                 if (addressWithTag == null) {
                     return null;

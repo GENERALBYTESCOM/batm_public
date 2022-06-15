@@ -18,14 +18,19 @@
 package com.generalbytes.batm.server.extensions.extra.simplecoin;
 
 import com.generalbytes.batm.server.extensions.AbstractExtension;
+import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.IRateSource;
+import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.extra.simplecoin.sources.SimpleCoinRateSource;
 import com.generalbytes.batm.server.extensions.extra.simplecoin.sources.SupportedCurrencies;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Set;
 import java.util.StringTokenizer;
 
 public class SimpleCoinExtension extends AbstractExtension {
+    private static final Logger log = LoggerFactory.getLogger(SimpleCoinExtension.class);
     private SupportedCurrencies supportedCurrencies;
 
     public SimpleCoinExtension() {
@@ -40,13 +45,19 @@ public class SimpleCoinExtension extends AbstractExtension {
     @Override
     public IRateSource createRateSource(String sourceLogin) {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
-            StringTokenizer st = new StringTokenizer(sourceLogin, ":");
-            String rsType = st.nextToken();
-            if ("simplecoin".equalsIgnoreCase(rsType)) {
-                if (st.hasMoreTokens()) {
-                    supportedCurrencies.setPreferredFiatCurrency(st.nextToken());
+            try {
+                StringTokenizer st = new StringTokenizer(sourceLogin, ":");
+                String rsType = st.nextToken();
+                if ("simplecoin".equalsIgnoreCase(rsType)) {
+                    if (st.hasMoreTokens()) {
+                        supportedCurrencies.setPreferredFiatCurrency(st.nextToken());
+                    }
+                    return new SimpleCoinRateSource(supportedCurrencies);
                 }
-                return new SimpleCoinRateSource(supportedCurrencies);
+            } catch (Exception e) {
+                log.warn("createRateSource failed for prefix: {}, {}: {} ",
+                    ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin), e.getClass().getSimpleName(), e.getMessage()
+                );
             }
         }
         return null;
