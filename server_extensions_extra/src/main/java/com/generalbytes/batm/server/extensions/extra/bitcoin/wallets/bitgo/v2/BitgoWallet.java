@@ -77,8 +77,7 @@ public class BitgoWallet implements IWallet, ICanSendMany {
             sslcontext.init(null, null, null);
             final CompatSSLSocketFactory socketFactory = new CompatSSLSocketFactory(sslcontext.getSocketFactory());
             config.setSslSocketFactory(socketFactory);
-            config.setIgnoreHttpErrorCodes(true);
-        }catch(KeyManagementException | NoSuchAlgorithmException e) {
+        } catch (KeyManagementException | NoSuchAlgorithmException e) {
             log.error("", e);
         }
 
@@ -103,9 +102,9 @@ public class BitgoWallet implements IWallet, ICanSendMany {
             final BitGoSendManyRequest request = new BitGoSendManyRequest(recipients, walletPassphrase, description, this.numBlocks);
             return getResultTxId(api.sendMany(cryptoCurrency.toLowerCase(), this.walletId, request));
         } catch (HttpStatusIOException hse) {
-            log.debug("send coins error - HttpStatusIOException, error message: {}, HTTP code: {}, HTTP content: {}", hse.getMessage(), hse.getHttpStatusCode(), hse.getHttpBody());
+            log.debug("send many error, HTTP status: {}, body: {}", hse.getHttpStatusCode(), hse.getHttpBody());
         } catch (ErrorResponseException e) {
-            log.debug("send coins error message: {}", e.getMessage());
+            log.debug("send many error, HTTP status: {}, error: {}", e.getHttpStatusCode(), e.getMessage());
         } catch (Exception e) {
             log.error("Error", e);
         }
@@ -118,9 +117,9 @@ public class BitgoWallet implements IWallet, ICanSendMany {
             final BitGoCoinRequest request = new BitGoCoinRequest(destinationAddress, toSatoshis(amount, cryptoCurrency), walletPassphrase, description, this.numBlocks);
             return getResultTxId(api.sendCoins(cryptoCurrency.toLowerCase(), this.walletId, request));
         } catch (HttpStatusIOException hse) {
-            log.debug("send coins error - HttpStatusIOException, error message: {}, HTTP code: {}, HTTP content: {}", hse.getMessage(), hse.getHttpStatusCode(), hse.getHttpBody());
+            log.debug("send coins error, HTTP status: {}, body: {}", hse.getHttpStatusCode(), hse.getHttpBody());
         } catch (ErrorResponseException e) {
-            log.debug("send coins error message: {}", e.getMessage());
+            log.debug("send coins error, HTTP status: {}, error: {}", e.getHttpStatusCode(), e.getMessage());
         } catch (Exception e) {
             log.error("Error", e);
         }
@@ -180,9 +179,9 @@ public class BitgoWallet implements IWallet, ICanSendMany {
             }
             return (String)addressObj;
         } catch (HttpStatusIOException hse) {
-            log.debug("getCryptoAddress error: {}", hse.getHttpBody());
+            log.debug("getCryptoAddress error, HTTP status: {}, body: {}", hse.getHttpStatusCode(), hse.getHttpBody());
         } catch (ErrorResponseException e) {
-            log.debug("getCryptoAddress error: {}", e.getMessage());
+            log.debug("getCryptoAddress error, HTTP status: {}, error: {}", e.getHttpStatusCode(), e.getMessage());
         } catch (Exception e) {
             log.error("", e);
         }
@@ -235,9 +234,9 @@ public class BitgoWallet implements IWallet, ICanSendMany {
             BigDecimal balance = new BigDecimal(balanceObject.toString());
             return divideBalance(cryptoCurrency, balance);
         } catch (HttpStatusIOException hse) {
-            log.debug("getCryptoBalance error: {}", hse.getHttpBody());
+            log.debug("getCryptoBalance error, HTTP status: {}, body: {}", hse.getHttpStatusCode(), hse.getHttpBody());
         } catch (ErrorResponseException e) {
-            log.debug("getCryptoBalance error: {}", e.getMessage());
+            log.debug("getCryptoBalance error, HTTP status: {}, error: {}", e.getHttpStatusCode(), e.getMessage());
         } catch (Exception e) {
             log.error("getCryptoBalance error", e);
         }

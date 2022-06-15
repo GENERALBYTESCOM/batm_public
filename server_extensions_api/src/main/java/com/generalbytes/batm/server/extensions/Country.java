@@ -148,6 +148,7 @@ public enum Country {
     KI("KI", "KIR", "Kiribati"),
     KP("KP", "PRK", "Korea (Democratic People's Republic of)"),
     KR("KR", "KOR", "Korea (Republic of)"),
+    XK("XK", "XKX", "Kosovo"), // "user assigned" ISO 3166 code not designated by the standard
     KW("KW", "KWT", "Kuwait"),
     KG("KG", "KGZ", "Kyrgyzstan"),
     LA("LA", "LAO", "Lao People's Democratic Republic"),

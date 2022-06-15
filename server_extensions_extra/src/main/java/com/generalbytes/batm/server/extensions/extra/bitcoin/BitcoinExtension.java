@@ -240,7 +240,9 @@ public class BitcoinExtension extends AbstractExtension {
             }
         }
         } catch (Exception e) {
-            log.warn("createExchange failed", e);
+            log.warn("createExchange failed for prefix: {}, {}: {} ",
+                ExtensionsUtil.getPrefixWithCountOfParameters(paramString), e.getClass().getSimpleName(), e.getMessage()
+            );
         }
         return null;
     }
@@ -440,7 +442,9 @@ public class BitcoinExtension extends AbstractExtension {
             }
         }
         } catch (Exception e) {
-            log.warn("createWallet failed", e);
+            log.warn("createWallet failed for prefix: {}, {}: {} ",
+                ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
+            );
         }
         return null;
     }
@@ -614,7 +618,9 @@ public class BitcoinExtension extends AbstractExtension {
             }
         }
         } catch (Exception e) {
-            log.warn("createRateSource failed", e);
+            log.warn("createRateSource failed for prefix: {}, {}: {} ",
+                ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin), e.getClass().getSimpleName(), e.getMessage()
+            );
         }
         return null;
     }
@@ -626,6 +632,9 @@ public class BitcoinExtension extends AbstractExtension {
         result.add(CryptoCurrency.ETH.getCode());
         result.add(CryptoCurrency.LTC.getCode());
         result.add(CryptoCurrency.BCH.getCode());
+        result.add(CryptoCurrency.EGLD.getCode());
+        result.add(CryptoCurrency.USDTTRON.getCode());
+        result.add(CryptoCurrency.BNB.getCode());
         return result;
     }
 

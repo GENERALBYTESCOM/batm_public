@@ -24,6 +24,7 @@ import com.generalbytes.batm.server.extensions.ITask;
 import com.generalbytes.batm.server.extensions.util.net.RateLimiter;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.util.concurrent.UncheckedExecutionException;
 import org.knowm.xchange.Exchange;
 import org.knowm.xchange.ExchangeFactory;
 import org.knowm.xchange.ExchangeSpecification;
@@ -37,8 +38,6 @@ import org.knowm.xchange.dto.marketdata.OrderBook;
 import org.knowm.xchange.dto.trade.LimitOrder;
 import org.knowm.xchange.dto.trade.OpenOrders;
 import org.knowm.xchange.exceptions.ExchangeException;
-import org.knowm.xchange.exceptions.NotAvailableFromExchangeException;
-import org.knowm.xchange.exceptions.NotYetImplementedForExchangeException;
 import org.knowm.xchange.service.account.AccountService;
 import org.knowm.xchange.service.marketdata.MarketDataService;
 import org.knowm.xchange.service.trade.TradeService;
@@ -125,25 +124,14 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
         }
 
         @Override
-        public BigDecimal call() throws Exception {
+        public BigDecimal call() throws IOException {
             String[] keyParts = getCacheKeyParts(key);
             String cryptoCurrency = keyParts[0];
             String fiatCurrency = keyParts[1];
 
-            try {
-                return getExchange().getMarketDataService()
-                        .getTicker(new CurrencyPair(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency), fiatCurrency))
-                        .getLast();
-            } catch (ExchangeException e) {
-                log.error("Error", e);
-            } catch (NotAvailableFromExchangeException e) {
-                log.error("Error", e);
-            } catch (NotYetImplementedForExchangeException e) {
-                log.error("Error", e);
-            } catch (IOException e) {
-                log.error("Error", e);
-            }
-            return null;
+            return getExchange().getMarketDataService()
+                .getTicker(new CurrencyPair(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency), fiatCurrency))
+                .getLast();
         }
     }
 
@@ -154,7 +142,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
             BigDecimal result = rateCache.get(key, new RateCaller(key));
             log.debug("{} exchange rate request: {} = {}", name, key, result);
             return result;
-        } catch (ExecutionException e) {
+        } catch (ExecutionException | UncheckedExecutionException e) {
             log.error("{} exchange rate request: {}", name, key, e);
             return null;
         }
@@ -239,7 +227,9 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
         AccountService accountService = getExchange().getAccountService();
         Currency exchangeCryptoCurrency = Currency.getInstance(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency));
 
-        if (CryptoCurrency.XRP.getCode().equals(cryptoCurrency)) {
+        if (CryptoCurrency.XRP.getCode().equals(cryptoCurrency)
+            || CryptoCurrency.BNB.getCode().equals(cryptoCurrency)) {
+
             String[] addressParts = destinationAddress.split(":");
             if (addressParts.length == 2) {
                 return accountService.withdrawFunds(new DefaultWithdrawFundsParams(new AddressWithTag(addressParts[0], addressParts[1]), exchangeCryptoCurrency, amount));
@@ -366,7 +356,9 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
 
         AccountService accountService = getExchange().getAccountService();
         try {
-            if (CryptoCurrency.XRP.getCode().equals(cryptoCurrency)) {
+            if (CryptoCurrency.XRP.getCode().equals(cryptoCurrency)
+                || CryptoCurrency.BNB.getCode().equals(cryptoCurrency)) {
+
                 AddressWithTag addressWithTag = accountService.requestDepositAddressData(Currency.getInstance(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency)));
                 if (addressWithTag == null) {
                     return null;
@@ -535,14 +527,16 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
                 }
             }
 
-            if (tradableLimit != null) {
-                log.debug("Called {} exchange for BUY rate: {}:{} = {}", name, cryptoCurrency, fiatCurrency, tradableLimit);
-                return tradableLimit.multiply(cryptoAmount);
+            if (tradableLimit == null) {
+                log.error("Not enough asks received from the exchange, asks count: {}, asks total: {}, crypto amount: {}", asks.size(), asksTotal, cryptoAmount);
+                return null;
             }
+            log.debug("Called {} exchange for BUY rate: {}:{} = {}", name, cryptoCurrency, fiatCurrency, tradableLimit);
+            return tradableLimit.multiply(cryptoAmount);
         } catch (Throwable e) {
             log.error("{} exchange failed to calculate buy price", name, e);
+            return null;
         }
-        return null;
     }
 
     @Override
@@ -579,15 +573,16 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
                 }
             }
 
-            if (tradableLimit != null) {
-                log.debug("Called {} exchange for SELL rate: {}:{} = {}", name, cryptoCurrency, fiatCurrency, tradableLimit);
-                return tradableLimit.multiply(cryptoAmount);
+            if (tradableLimit == null) {
+                log.error("Not enough bids received from the exchange, bids count: {}, bids total: {}, crypto amount: {}", bids.size(), bidsTotal, cryptoAmount);
+                return null;
             }
+            log.debug("Called {} exchange for SELL rate: {}:{} = {}", name, cryptoCurrency, fiatCurrency, tradableLimit);
+            return tradableLimit.multiply(cryptoAmount);
         } catch (Throwable e) {
             log.error("{} exchange failed to calculate sell price", name, e);
+            return null;
         }
-        return null;
-
     }
 
     class PurchaseCoinsTask implements ITask {

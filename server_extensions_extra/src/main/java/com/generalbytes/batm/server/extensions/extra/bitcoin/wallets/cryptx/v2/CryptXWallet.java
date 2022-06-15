@@ -111,6 +111,7 @@ public class CryptXWallet implements IWallet, ICanSendMany {
         coins.add(CryptoCurrency.ETH.getCode());
         coins.add(CryptoCurrency.USDT.getCode());
         coins.add(CryptoCurrency.BTBS.getCode());
+        coins.add(CryptoCurrency.GQ.getCode());
         coins.add(CryptoCurrency.TBTC.getCode());
         coins.add(CryptoCurrency.TLTC.getCode());
         coins.add(CryptoCurrency.TBCH.getCode());
@@ -178,6 +179,8 @@ public class CryptXWallet implements IWallet, ICanSendMany {
                     return amount.multiply(Converters.ETH).toBigInteger();
                 case BTBS:
                     return amount.multiply(Converters.BTBS).toBigInteger();
+                case GQ:
+                    return amount.multiply(Converters.GQ).toBigInteger();
                 case USDT:
                     return amount.multiply(Converters.USDT).toBigInteger();
                 default:
@@ -215,6 +218,7 @@ public class CryptXWallet implements IWallet, ICanSendMany {
             case TETH:
             case ETH:
             case BTBS:
+            case GQ:
                 return new BigDecimal(bigIntegerAmount).movePointLeft(18);
             case USDT:
                 return new BigDecimal(bigIntegerAmount).movePointLeft(6);

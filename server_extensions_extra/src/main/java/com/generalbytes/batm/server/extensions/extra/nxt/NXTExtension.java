@@ -22,8 +22,11 @@ import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
+import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.extra.nxt.sources.poloniex.PoloniexRateSource;
 import com.generalbytes.batm.server.extensions.extra.nxt.wallets.mynxt.MynxtWallet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -31,42 +34,50 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 public class NXTExtension extends AbstractExtension{
+
+    private static final Logger log = LoggerFactory.getLogger(NXTExtension.class);
     @Override
     public String getName() { return "BATM NXT extension"; }
 
     @Override
     public IWallet createWallet(String walletLogin, String tunnelPassword) {
         if (walletLogin != null && !walletLogin.trim().isEmpty()) {
-            StringTokenizer st = new StringTokenizer(walletLogin,":");
-            String walletType = st.nextToken();
+            try {
+                StringTokenizer st = new StringTokenizer(walletLogin, ":");
+                String walletType = st.nextToken();
 
-            if ("mynxt".equalsIgnoreCase(walletType)) {
-                //"nud:protocol:user:password:ip:port:accountname"
+                if ("mynxt".equalsIgnoreCase(walletType)) {
+                    //"nud:protocol:user:password:ip:port:accountname"
 
-                String email = st.nextToken();
-                String password = st.nextToken();
-                String masterPassword = st.nextToken();
-                String accountId =null;
-                if (st.hasMoreTokens()) {
-                    accountId = st.nextToken();
+                    String email = st.nextToken();
+                    String password = st.nextToken();
+                    String masterPassword = st.nextToken();
+                    String accountId = null;
+                    if (st.hasMoreTokens()) {
+                        accountId = st.nextToken();
+                    }
+
+
+                    if (email != null && password != null && masterPassword != null) {
+                        return new MynxtWallet(email, password, masterPassword, accountId);
+                    }
                 }
+                if ("nxtdemo".equalsIgnoreCase(walletType)) {
 
+                    String fiatCurrency = st.nextToken();
+                    String walletAddress = "";
+                    if (st.hasMoreTokens()) {
+                        walletAddress = st.nextToken();
+                    }
 
-                if (email != null && password != null && masterPassword !=null) {
-                    return new MynxtWallet(email,password,masterPassword,accountId);
+                    if (fiatCurrency != null && walletAddress != null) {
+                        return new DummyExchangeAndWalletAndSource(fiatCurrency, CryptoCurrency.NXT.getCode(), walletAddress);
+                    }
                 }
-            }
-            if ("nxtdemo".equalsIgnoreCase(walletType)) {
-
-                String fiatCurrency = st.nextToken();
-                String walletAddress = "";
-                if (st.hasMoreTokens()) {
-                    walletAddress = st.nextToken();
-                }
-
-                if (fiatCurrency != null && walletAddress != null) {
-                    return new DummyExchangeAndWalletAndSource(fiatCurrency, CryptoCurrency.NXT.getCode(), walletAddress);
-                }
+            } catch (Exception e) {
+                log.warn("createWallet failed for prefix: {}, {}: {} ",
+                    ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
+                );
             }
         }
         return null;
@@ -83,30 +94,35 @@ public class NXTExtension extends AbstractExtension{
     @Override
     public IRateSource createRateSource(String sourceLogin) {
         if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
-            StringTokenizer st = new StringTokenizer(sourceLogin,":");
-            String rsType = st.nextToken();
+            try {
+                StringTokenizer st = new StringTokenizer(sourceLogin, ":");
+                String rsType = st.nextToken();
 
-            if ("nxtfix".equalsIgnoreCase(rsType)) {
-                BigDecimal rate = BigDecimal.ZERO;
-                if (st.hasMoreTokens()) {
-                    try {
-                        rate = new BigDecimal(st.nextToken());
-                    } catch (Throwable e) {
+                if ("nxtfix".equalsIgnoreCase(rsType)) {
+                    BigDecimal rate = BigDecimal.ZERO;
+                    if (st.hasMoreTokens()) {
+                        try {
+                            rate = new BigDecimal(st.nextToken());
+                        } catch (Throwable e) {
+                        }
                     }
+                    String preferedFiatCurrency = FiatCurrency.USD.getCode();
+                    if (st.hasMoreTokens()) {
+                        preferedFiatCurrency = st.nextToken().toUpperCase();
+                    }
+                    return new FixPriceRateSource(rate, preferedFiatCurrency);
+                } else if ("poloniexrs".equalsIgnoreCase(rsType)) {
+                    String preferredFiatCurrency = FiatCurrency.USD.getCode();
+                    if (st.hasMoreTokens()) {
+                        preferredFiatCurrency = st.nextToken();
+                    }
+                    return new PoloniexRateSource(preferredFiatCurrency);
                 }
-                String preferedFiatCurrency = FiatCurrency.USD.getCode();
-                if (st.hasMoreTokens()) {
-                    preferedFiatCurrency = st.nextToken().toUpperCase();
-                }
-                return new FixPriceRateSource(rate,preferedFiatCurrency);
-            }else if ("poloniexrs".equalsIgnoreCase(rsType)) {
-                String preferredFiatCurrency = FiatCurrency.USD.getCode();
-                if (st.hasMoreTokens()) {
-                    preferredFiatCurrency = st.nextToken();
-                }
-                return new PoloniexRateSource(preferredFiatCurrency);
+            } catch (Exception e) {
+                log.warn("createRateSource failed for prefix: {}, {}: {} ",
+                    ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin), e.getClass().getSimpleName(), e.getMessage()
+                );
             }
-
         }
         return null;
     }

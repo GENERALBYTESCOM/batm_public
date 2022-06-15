@@ -18,6 +18,7 @@
 package com.generalbytes.batm.server.extensions.extra.cardano;
 
 import com.generalbytes.batm.server.coinutil.AddressFormatException;
+import com.generalbytes.batm.server.coinutil.Base58;
 import com.generalbytes.batm.server.coinutil.Bech32;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import org.slf4j.Logger;
@@ -29,14 +30,20 @@ public class CardanoAddressValidator implements ICryptoAddressValidator {
     @Override
     public boolean isAddressValid(String address) {
         try {
-            Bech32.Bech32Data bech32Data = Bech32.decodeUnlimitedLength(address);
-            if (!bech32Data.hrp.equals("addr")) {
-                log.info("Address HRP is not 'addr'");
-                return false;
+            if (address.startsWith("addr1")) {
+                Bech32.Bech32Data bech32Data = Bech32.decodeUnlimitedLength(address);
+                if (!bech32Data.hrp.equals("addr")) {
+                    log.info("Address HRP is not 'addr'");
+                    return false;
+                }
+                return true;
+            } else if (address.startsWith("Ae2") || address.startsWith("DdzFF")) {
+                Base58.decode(address);
+                return true;
             }
-            return true;
+            return false;
         } catch (AddressFormatException e) {
-            log.error("Cannot decode Bech32 address", e);
+            log.error("Cannot decode address", e);
             return false;
         }
     }

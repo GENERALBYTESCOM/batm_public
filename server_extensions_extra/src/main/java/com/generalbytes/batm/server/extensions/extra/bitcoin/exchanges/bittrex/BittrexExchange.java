@@ -72,6 +72,7 @@ public class BittrexExchange implements IRateSourceAdvanced, IExchangeAdvanced {
         CRYPTO_CURRENCIES.add(CryptoCurrency.LTC.getCode());
         CRYPTO_CURRENCIES.add(CryptoCurrency.BAY.getCode());
         CRYPTO_CURRENCIES.add(CryptoCurrency.BTBS.getCode());
+        CRYPTO_CURRENCIES.add(CryptoCurrency.GQ.getCode());
     }
 
     private synchronized Exchange getExchange() throws TimeoutException {

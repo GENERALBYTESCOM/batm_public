@@ -4,4 +4,5 @@ public class WithdrawRequest extends BasicRequest{
     public String iso;
     public String amount;
     public String to_address;
+    public String network_type;
 }
