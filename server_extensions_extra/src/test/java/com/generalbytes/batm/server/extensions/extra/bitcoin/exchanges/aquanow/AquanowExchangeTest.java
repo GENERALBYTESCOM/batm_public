@@ -1,24 +1,16 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.aquanow;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.generalbytes.batm.server.extensions.IExchangeAdvanced;
 import com.generalbytes.batm.server.extensions.ITask;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.BitcoinExtension;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.aquanow.AquaNowExchange;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.knowm.xchange.utils.nonce.CurrentTimeIncrementalNonceFactory;
-import si.mazi.rescu.RestInvocation;
 
 import java.math.BigDecimal;
 import java.util.stream.Stream;
 
 import static com.generalbytes.batm.common.currencies.CryptoCurrency.*;
 import static com.generalbytes.batm.common.currencies.FiatCurrency.*;
-import static com.generalbytes.batm.common.currencies.FiatCurrency.EUR;
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertNotNull;
 

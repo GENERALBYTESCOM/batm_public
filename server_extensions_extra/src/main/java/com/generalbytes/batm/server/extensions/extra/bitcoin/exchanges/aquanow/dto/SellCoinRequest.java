@@ -18,7 +18,7 @@ public class SellCoinRequest {
 
     @Override
     public String toString() {
-        return "BuyCoinRequest{" +
+        return "SellCoinRequest{" +
             "deliverQuantity=" + deliverQuantity +
             ", ticker='" + ticker + '\'' +
             ", tradeSide='" + tradeSide + '\'' +

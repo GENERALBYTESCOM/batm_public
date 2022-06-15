@@ -1,9 +1,7 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.aquanow;
 
-import com.generalbytes.batm.server.extensions.IExchangeAdvanced;
 import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.BitcoinExtension;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitpandapro.BitpandaProExchange;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -11,7 +9,6 @@ import java.math.BigDecimal;
 
 import static com.generalbytes.batm.common.currencies.CryptoCurrency.*;
 import static com.generalbytes.batm.common.currencies.FiatCurrency.*;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 
 @Ignore // requires online resources - for manual run only

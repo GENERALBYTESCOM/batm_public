@@ -126,8 +126,8 @@ public class AquaNowExchange implements IExchangeAdvanced, IRateSourceAdvanced {
     private BigDecimal getBalance(String currency) {
         try {
             log.debug("getBalance");
-            CurrentTimeIncrementalNonceFactory xNouce = new CurrentTimeIncrementalNonceFactory(TimeUnit.MILLISECONDS);
-            String time = String.valueOf(xNouce.createValue());
+            CurrentTimeIncrementalNonceFactory xNonce = new CurrentTimeIncrementalNonceFactory(TimeUnit.MILLISECONDS);
+            String time = String.valueOf(xNonce.createValue());
             if (currency != null) {
                 UserBalanceResponse userBalanceResponse = apiTrade.getUserBalance(apiKey, time, new AquaNowDigest(apiSecret),currency);
                 if (userBalanceResponse.message == null) {
@@ -145,8 +145,8 @@ public class AquaNowExchange implements IExchangeAdvanced, IRateSourceAdvanced {
     @Override
     public String getDepositAddress(String cryptoCurrency) {
         try {
-            CurrentTimeIncrementalNonceFactory xNouce = new CurrentTimeIncrementalNonceFactory(TimeUnit.MILLISECONDS);
-            String time = String.valueOf(xNouce.createValue());
+            CurrentTimeIncrementalNonceFactory xNonce = new CurrentTimeIncrementalNonceFactory(TimeUnit.MILLISECONDS);
+            String time = String.valueOf(xNonce.createValue());
             RateLimiter.waitForPossibleCall(getClass());
             GetAddressRequest getAddressRequest = new GetAddressRequest(cryptoCurrency);
             GetAddressResponse getAddressResponse = apiTrade.getUserAddress(apiKey, time, new AquaNowDigest(apiSecret),getAddressRequest);
@@ -167,8 +167,8 @@ public class AquaNowExchange implements IExchangeAdvanced, IRateSourceAdvanced {
             if (!isCryptoCurrencySupported(cryptoCurrency)) {
                 return null;
             }
-            CurrentTimeIncrementalNonceFactory xNouce = new CurrentTimeIncrementalNonceFactory(TimeUnit.MILLISECONDS);
-            String time = String.valueOf(xNouce.createValue());
+            CurrentTimeIncrementalNonceFactory xNonce = new CurrentTimeIncrementalNonceFactory(TimeUnit.MILLISECONDS);
+            String time = String.valueOf(xNonce.createValue());
             SendCoinRequest sendCoinsRequest = new SendCoinRequest(amount,cryptoCurrency, destinationAddress);
             RateLimiter.waitForPossibleCall(getClass());
             SendCoinResponse sendCoinResponse = apiTrade.sendCoins(apiKey, time, new AquaNowDigest(apiSecret),sendCoinsRequest);
@@ -292,8 +292,8 @@ public class AquaNowExchange implements IExchangeAdvanced, IRateSourceAdvanced {
                 log.info("Calling exchange ({} {})", orderSide, symbol);
                 orderId = call("task submitLimitOrder", () -> {
                     TradeCoinResponse tradeResponse = null;
-                    CurrentTimeIncrementalNonceFactory xNouce = new CurrentTimeIncrementalNonceFactory(TimeUnit.MILLISECONDS);
-                    String time = String.valueOf(xNouce.createValue());
+                    CurrentTimeIncrementalNonceFactory xNonce = new CurrentTimeIncrementalNonceFactory(TimeUnit.MILLISECONDS);
+                    String time = String.valueOf(xNonce.createValue());
                     if(orderSide.equals("buy")){
                         BuyCoinRequest buyCoinRequest = new BuyCoinRequest(cryptoAmount, symbol, orderSide);
                         RateLimiter.waitForPossibleCall(getClass());
@@ -329,8 +329,8 @@ public class AquaNowExchange implements IExchangeAdvanced, IRateSourceAdvanced {
                     return false;
                 }
 
-                CurrentTimeIncrementalNonceFactory xNouce = new CurrentTimeIncrementalNonceFactory(TimeUnit.MILLISECONDS);
-                String time = String.valueOf(xNouce.createValue());
+                CurrentTimeIncrementalNonceFactory xNonce = new CurrentTimeIncrementalNonceFactory(TimeUnit.MILLISECONDS);
+                String time = String.valueOf(xNonce.createValue());
                 OrderStatusResponse orderStatusResponse = call("task getOrder", () -> apiTrade.getOrderStatus(apiKey, time, new AquaNowDigest(apiSecret), orderId));
 
                 if (orderStatusResponse != null && orderStatusResponse.data.tradeStatus.equals("ERROR")) {
