@@ -21,6 +21,7 @@ import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.aquanow.AquaNowDigest;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.binance.BinanceComExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.binance.BinanceUsExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitbuy.BitbuyExchange;
@@ -33,6 +34,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbasepro.CoinbaseProExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coingi.CoingiExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinzix.CoinZixExchange;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.aquanow.AquaNowExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.dvchain.DVChainExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.hitbtc.HitbtcExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.enigma.EnigmaExchange;
@@ -227,6 +229,14 @@ public class BitcoinExtension extends AbstractExtension {
                     preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase();
                 }
                 return new BitbuyExchange(apiKey, apiSecret, preferredFiatCurrency);
+            } else if ("aquanow".equalsIgnoreCase(prefix)) {
+                String apiKey = paramTokenizer.nextToken();
+                String apiSecret = paramTokenizer.nextToken();
+                String preferredFiatCurrency = FiatCurrency.CAD.getCode();
+                if (paramTokenizer.hasMoreTokens()) {
+                    preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase();
+                }
+                return new AquaNowExchange(apiKey, apiSecret,preferredFiatCurrency);
             }
         }
         } catch (Exception e) {
@@ -599,6 +609,12 @@ public class BitcoinExtension extends AbstractExtension {
                     preferredFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new BitbuyExchange(apiKey, apiSecret, preferredFiatCurrency);
+            } else if ("aquanow".equalsIgnoreCase(rsType)) {
+                String preferredFiatCurrency = FiatCurrency.CAD.getCode();
+                if (st.hasMoreTokens()) {
+                    preferredFiatCurrency = st.nextToken().toUpperCase();
+                }
+                return new AquaNowExchange(preferredFiatCurrency);
             }
         }
         } catch (Exception e) {

@@ -888,6 +888,20 @@
             <cryptocurrency>TRX</cryptocurrency>
             <cryptocurrency>USDT</cryptocurrency>
         </ratesource>
+        <exchange prefix="aquanow" name="AquaNow">
+            <param name="apikey" />
+            <param name="apisecret" />
+            <param name="fiatcurrency" />
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <help>fiatcurrency is optional, default: CAD</help>
+        </exchange>
+        <ratesource prefix="aquanow" name="AquaNow">
+            <param name="apikey" />
+            <param name="apisecret" />
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+        </ratesource>
         <cryptologo cryptocurrency="BNB" file="bnb.png"/>
         <cryptologo cryptocurrency="BNB" file="bnb.svg"/>
         <cryptologo cryptocurrency="KMD" file="kmd.png"/>
