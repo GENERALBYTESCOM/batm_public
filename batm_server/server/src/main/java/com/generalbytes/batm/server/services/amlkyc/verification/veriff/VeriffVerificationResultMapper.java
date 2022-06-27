@@ -52,9 +52,10 @@ public class VeriffVerificationResultMapper {
             case resubmission_requested:
                 return CheckResult.RESUBMISSION_REQUESTED;
             case declined:
+                return CheckResult.REJECTED;
             case abandoned:
             case expired:
-                return CheckResult.REJECTED;
+                return CheckResult.EXPIRED;
             default:
                 throw new RuntimeException("Unexpected verification status: " + status);
         }
