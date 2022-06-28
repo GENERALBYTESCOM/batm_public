@@ -67,8 +67,8 @@ public class TelrRateSource implements IRateSourceAdvanced {
         result.add(CryptoCurrency.BCH.getCode());
         result.add(CryptoCurrency.BTC.getCode());
         result.add(CryptoCurrency.DAI.getCode());
-        result.add(CryptoCurrency.BTOKEN.getCode());
-        result.add(CryptoCurrency.BTOKENICO.getCode());
+        result.add(CryptoCurrency.BVT.getCode());
+        result.add(CryptoCurrency.BVTOKENATMICO.getCode());
         result.add(CryptoCurrency.BIZZ.getCode());
         result.add(CryptoCurrency.ETH.getCode());
         result.add(CryptoCurrency.LTC.getCode());

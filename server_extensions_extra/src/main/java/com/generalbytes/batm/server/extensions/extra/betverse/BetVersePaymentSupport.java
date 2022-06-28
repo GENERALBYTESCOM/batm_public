@@ -15,21 +15,21 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.btokenICO;
+package com.generalbytes.batm.server.extensions.extra.betverse;
+
+import java.util.concurrent.TimeUnit;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.extra.common.QueryableWalletPaymentSupport;
 
-import java.util.concurrent.TimeUnit;
+public class BetVersePaymentSupport extends QueryableWalletPaymentSupport {
 
-public class BTokenICOPaymentSupport extends QueryableWalletPaymentSupport {
-
-    private BTokenICOAddressValidator addressValidator = new BTokenICOAddressValidator();
+    private BetVerseAddressValidator addressValidator = new BetVerseAddressValidator();
 
     @Override
     protected String getCryptoCurrency() {
-        return CryptoCurrency.BTOKENICO.getCode();
+        return CryptoCurrency.BVT.getCode();
     }
 
     protected long getPollingPeriodMillis() {
@@ -41,7 +41,7 @@ public class BTokenICOPaymentSupport extends QueryableWalletPaymentSupport {
     }
 
     public String getCurrency() {
-        return CryptoCurrency.BTOKENICO.getCode();
+        return CryptoCurrency.BVT.getCode();
     }
 
     public ICryptoAddressValidator getAddressValidator() {

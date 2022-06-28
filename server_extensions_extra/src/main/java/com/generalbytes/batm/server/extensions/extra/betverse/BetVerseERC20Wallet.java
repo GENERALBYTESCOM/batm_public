@@ -15,7 +15,7 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.btokenICO;
+package com.generalbytes.batm.server.extensions.extra.betverse;
 
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.ethereum.EtherUtils;
@@ -29,8 +29,6 @@ import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.FastRawTransactionManager;
-import org.web3j.tx.gas.DefaultGasProvider;
-import org.web3j.utils.Convert;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -39,7 +37,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-public class BTokenICOERC20Wallet implements IWallet {
+public class BetVerseERC20Wallet implements IWallet {
     private final String contractAddress;
     private final String tokenSymbol;
     private final int tokenDecimalPlaces;
@@ -49,14 +47,14 @@ public class BTokenICOERC20Wallet implements IWallet {
     private final BigDecimal gasPriceMultiplier;
     private final ERC20Interface noGasContract;
     private long chainID;
-    private static final Logger log = LoggerFactory.getLogger(BTokenICOERC20Wallet.class);
+    private static final Logger log = LoggerFactory.getLogger(BetVerseERC20Wallet.class);
 
-    public BTokenICOERC20Wallet(long chainID, String rpcURL, String mnemonicOrPassword, String tokenSymbol, int tokenDecimalPlaces,
-            String contractAddress, BigInteger fixedGasLimit, BigDecimal gasPriceMultiplier) {
+    public BetVerseERC20Wallet(long chainID, String rpcURL, String mnemonicOrPassword, String tokenSymbol, int tokenDecimalPlaces,
+                               String contractAddress, BigInteger fixedGasLimit, BigDecimal gasPriceMultiplier) {
 
         StringBuilder sb = new StringBuilder();
 
-        sb.append("BTokenICOERC20Wallet:: ").append("\n");
+        sb.append("BetVerseERC20Wallet:: ").append("\n");
         sb.append("ChainID:: " + chainID).append("\n");
         sb.append("rpcURL:: " + rpcURL).append("\n");
         sb.append("tokenSymbol:: " + tokenSymbol).append("\n");
@@ -77,13 +75,15 @@ public class BTokenICOERC20Wallet implements IWallet {
 
         this.credentials = initCredentials(mnemonicOrPassword);
 
-        this.noGasContract = ERC20Interface.load(this.contractAddress, w, new FastRawTransactionManager(this.w, this.credentials, chainID), DefaultGasProvider.GAS_PRICE, DefaultGasProvider.GAS_LIMIT);
-        //this.noGasContract = ERC20Interface.load(this.contractAddress, w, new FastRawTransactionManager(this.w, this.credentials, chainID), DummyContractGasProvider.INSTANCE);
+        this.noGasContract = ERC20Interface.load(this.contractAddress, w, new FastRawTransactionManager(this.w, this.credentials, chainID), DummyContractGasProvider.INSTANCE);
 
     }
 
     private ERC20Interface getContract(String destinationAddress, BigInteger tokensAmount) {
-        return ERC20Interface.load(this.contractAddress, w, new FastRawTransactionManager(this.w, this.credentials, chainID), DefaultGasProvider.GAS_PRICE, DefaultGasProvider.GAS_LIMIT);
+        ERC20ContractGasProvider contractGasProvider = new ERC20ContractGasProvider(contractAddress,
+                credentials.getAddress(), destinationAddress, tokensAmount, fixedGasLimit, gasPriceMultiplier, w);
+
+        return ERC20Interface.load(this.contractAddress, w, new FastRawTransactionManager(this.w, this.credentials,  chainID), contractGasProvider);
     }
 
     private BigDecimal convertToBigDecimal(BigInteger value) {
@@ -159,7 +159,6 @@ public class BTokenICOERC20Wallet implements IWallet {
 
     @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
-
         if (!getCryptoCurrencies().contains(cryptoCurrency)) {
             log.error("ERC20 wallet error: unknown cryptocurrency.");
             return null;
@@ -169,15 +168,19 @@ public class BTokenICOERC20Wallet implements IWallet {
             destinationAddress = destinationAddress.toLowerCase();
         }
 
+        BigDecimal cryptoBalance = getCryptoBalance(cryptoCurrency);
+        if (cryptoBalance == null || cryptoBalance.compareTo(amount) < 0) {
+            log.error("ERC20 wallet error: Not enough tokens. Balance is: " + cryptoBalance + " " + cryptoCurrency
+                    + ". Trying to send: " + amount + " " + cryptoCurrency);
+            return null;
+        }
+
         try {
             BigInteger tokens = convertFromBigDecimal(amount);
-            final BigInteger transferAmountWei = Convert.toWei(amount, Convert.Unit.ETHER).toBigIntegerExact();
-
-            TransactionReceipt receipt = getContract(destinationAddress, transferAmountWei)
-                    .buy(destinationAddress, transferAmountWei)
+            TransactionReceipt receipt = getContract(destinationAddress, tokens)
+                    .transfer(destinationAddress, tokens)
                     .sendAsync()
                     .get(240, TimeUnit.SECONDS);
-
             return receipt.getTransactionHash();
         } catch (TimeoutException e) {
             log.error(e.getMessage(), e);

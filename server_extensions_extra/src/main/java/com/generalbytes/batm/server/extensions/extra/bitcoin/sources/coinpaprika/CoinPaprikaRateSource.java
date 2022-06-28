@@ -53,8 +53,8 @@ public class CoinPaprikaRateSource implements IRateSource {
         CRYPTOCURRENCIES.put(CryptoCurrency.BURST.getCode(), "burst-burst");
         CRYPTOCURRENCIES.put(CryptoCurrency.CLOAK.getCode(), "cloak-cloakcoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.DAI.getCode(), "dai-dai");
-        CRYPTOCURRENCIES.put(CryptoCurrency.BTOKEN.getCode(), "btoken-btoken");
-        CRYPTOCURRENCIES.put(CryptoCurrency.BTOKENICO.getCode(), "btoken-btokenICO");
+        CRYPTOCURRENCIES.put(CryptoCurrency.BVT.getCode(), "betverse-betverse");
+        CRYPTOCURRENCIES.put(CryptoCurrency.BVTOKENATMICO.getCode(), "betverse-betverseICO");
         CRYPTOCURRENCIES.put(CryptoCurrency.BIZZ.getCode(), "bizz-bizzcoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.DASH.getCode(), "dash-dash");
         CRYPTOCURRENCIES.put(CryptoCurrency.DEX.getCode(), "dex-dex");

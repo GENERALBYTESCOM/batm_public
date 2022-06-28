@@ -13,23 +13,23 @@
 #
 ## */
 
-package com.generalbytes.batm.server.extensions.extra.btoken.sources.fixed;
-
-import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
+package com.generalbytes.batm.server.extensions.extra.betverseico.sources.fixed;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
 
-public class BTokenFixedRateSource implements IRateSourceAdvanced {
+import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
+
+public class BetVerseICOFixedRateSource implements IRateSourceAdvanced {
     private static final BigDecimal MAX_ALLOWED_PRICE_VALUE = new BigDecimal("9999999999.9999999999");
 
     private String preferedFiatCurrency = FiatCurrency.USD.getCode();
     private BigDecimal rate = new BigDecimal(1);
 
-    public BTokenFixedRateSource(BigDecimal rate, String preferedFiatCurrency) {
+    public BetVerseICOFixedRateSource(BigDecimal rate, String preferedFiatCurrency) {
         if (rate != null && preferedFiatCurrency != null) {
             if (rate.compareTo(MAX_ALLOWED_PRICE_VALUE) > 0) {
                 this.rate = null;
@@ -60,7 +60,7 @@ public class BTokenFixedRateSource implements IRateSourceAdvanced {
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(CryptoCurrency.BTOKEN.getCode());
+        result.add(CryptoCurrency.BVT.getCode());
         return result;
     }
 

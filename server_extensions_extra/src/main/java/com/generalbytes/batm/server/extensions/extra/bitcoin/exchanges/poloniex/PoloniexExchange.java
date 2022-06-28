@@ -44,8 +44,8 @@ public class PoloniexExchange extends XChangeExchange {
         SUPPORTED_CRYPTOS.add(CryptoCurrency.LTC.getCode());
         SUPPORTED_CRYPTOS.add(CryptoCurrency.DASH.getCode());
         SUPPORTED_CRYPTOS.add(CryptoCurrency.DAI.getCode());
-        SUPPORTED_CRYPTOS.add(CryptoCurrency.BTOKEN.getCode());
-        SUPPORTED_CRYPTOS.add(CryptoCurrency.BTOKENICO.getCode());
+        SUPPORTED_CRYPTOS.add(CryptoCurrency.BVT.getCode());
+        SUPPORTED_CRYPTOS.add(CryptoCurrency.BVTOKENATMICO.getCode());
         SUPPORTED_CRYPTOS.add(CryptoCurrency.DGB.getCode());
         SUPPORTED_CRYPTOS.add(CryptoCurrency.DOGE.getCode());
         SUPPORTED_CRYPTOS.add(CryptoCurrency.LSK.getCode());

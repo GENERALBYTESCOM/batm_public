@@ -133,7 +133,7 @@
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>DASH</cryptocurrency>
                 <cryptocurrency>DAI</cryptocurrency>
-                <cryptocurrency>BTOKEN</cryptocurrency>
+                <cryptocurrency>BVT</cryptocurrency>
                 <cryptocurrency>BIZZ</cryptocurrency>
             </ratesource>
             <ratesource prefix="bitkub" name ="BitKub.com" >
@@ -193,7 +193,7 @@
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>DAI</cryptocurrency>
-                <cryptocurrency>BTOKEN</cryptocurrency>
+                <cryptocurrency>BVT</cryptocurrency>
                 <cryptocurrency>BIZZ</cryptocurrency>
                 <cryptocurrency>EURS</cryptocurrency>
                 <cryptocurrency>USDS</cryptocurrency>
@@ -255,7 +255,7 @@
                 <cryptocurrency>BURST</cryptocurrency>
                 <cryptocurrency>CLOAK</cryptocurrency>
                 <cryptocurrency>DAI</cryptocurrency>
-                <cryptocurrency>BTOKEN</cryptocurrency>
+                <cryptocurrency>BVT</cryptocurrency>
                 <cryptocurrency>BIZZ</cryptocurrency>
                 <cryptocurrency>DASH</cryptocurrency>
                 <cryptocurrency>DDB</cryptocurrency>
@@ -407,7 +407,7 @@
             <cryptocurrency>ETC</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>DAI</cryptocurrency>
-            <cryptocurrency>BTOKEN</cryptocurrency>
+            <cryptocurrency>BVT</cryptocurrency>
             <cryptocurrency>BIZZ</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
             <help>fiatcurrency parameter is optional</help>
@@ -436,7 +436,7 @@
             <cryptocurrency buyonly="true">BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>DAI</cryptocurrency>
-            <cryptocurrency>BTOKEN</cryptocurrency>
+            <cryptocurrency>BVT</cryptocurrency>
             <cryptocurrency>BIZZ</cryptocurrency>
             <cryptocurrency>ETC</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
@@ -481,7 +481,7 @@
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>DASH</cryptocurrency>
             <cryptocurrency>DAI</cryptocurrency>
-            <cryptocurrency>BTOKEN</cryptocurrency>
+            <cryptocurrency>BVT</cryptocurrency>
             <cryptocurrency>DGB</cryptocurrency>
             <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency>LSK</cryptocurrency>
@@ -566,7 +566,7 @@
             <cryptocurrency>BURST</cryptocurrency>
             <cryptocurrency>CLOAK</cryptocurrency>
             <cryptocurrency>DAI</cryptocurrency>
-            <cryptocurrency>BTOKEN</cryptocurrency>
+            <cryptocurrency>BVT</cryptocurrency>
             <cryptocurrency>BIZZ</cryptocurrency>
             <cryptocurrency>DASH</cryptocurrency>
             <cryptocurrency>DEX</cryptocurrency>
@@ -636,7 +636,7 @@
             <cryptocurrency>BURST</cryptocurrency>
             <cryptocurrency>CLOAK</cryptocurrency>
             <cryptocurrency>DAI</cryptocurrency>
-            <cryptocurrency>BTOKEN</cryptocurrency>
+            <cryptocurrency>BVT</cryptocurrency>
             <cryptocurrency>BIZZ</cryptocurrency>
             <cryptocurrency>DASH</cryptocurrency>
             <cryptocurrency>DEX</cryptocurrency>
@@ -809,7 +809,7 @@
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>DAI</cryptocurrency>
-            <cryptocurrency>BTOKEN</cryptocurrency>
+            <cryptocurrency>BVT</cryptocurrency>
             <cryptocurrency buyonly="true">ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
@@ -821,7 +821,7 @@
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>DAI</cryptocurrency>
-            <cryptocurrency>BTOKEN</cryptocurrency>
+            <cryptocurrency>BVT</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
@@ -835,7 +835,7 @@
             <cryptocurrency>BNB</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>DAI</cryptocurrency>
-            <cryptocurrency>BTOKEN</cryptocurrency>
+            <cryptocurrency>BVT</cryptocurrency>
             <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency buyonly="true">ETH</cryptocurrency>
             <cryptocurrency>HT</cryptocurrency>
@@ -855,7 +855,7 @@
             <cryptocurrency>BNB</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>DAI</cryptocurrency>
-            <cryptocurrency>BTOKEN</cryptocurrency>
+            <cryptocurrency>BVT</cryptocurrency>
             <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>HT</cryptocurrency>
@@ -876,7 +876,7 @@
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>DAI</cryptocurrency>
-            <cryptocurrency>BTOKEN</cryptocurrency>
+            <cryptocurrency>BVT</cryptocurrency>
             <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency buyonly="true">ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
@@ -892,7 +892,7 @@
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>DAI</cryptocurrency>
-            <cryptocurrency>BTOKEN</cryptocurrency>
+            <cryptocurrency>BVT</cryptocurrency>
             <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
@@ -942,7 +942,7 @@
             <cryptocurrency buyonly="true">BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>DAI</cryptocurrency>
-            <cryptocurrency>BTOKEN</cryptocurrency>
+            <cryptocurrency>BVT</cryptocurrency>
             <cryptocurrency>BIZZ</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
@@ -955,7 +955,7 @@
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency buyonly="true">DAI</cryptocurrency>
-            <cryptocurrency>BTOKEN</cryptocurrency>
+            <cryptocurrency>BVT</cryptocurrency>
             <cryptocurrency>BIZZ</cryptocurrency>
             <cryptocurrency buyonly="true">ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
@@ -1493,8 +1493,8 @@
     </extension>
 
 
-    <extension class="com.generalbytes.batm.server.extensions.extra.btoken.BTokenExtension" >
-        <wallet prefix="btoken-wallet" name="btoken-wallet">
+    <extension class="com.generalbytes.batm.server.extensions.extra.betverse.BetVerseExtension" >
+        <wallet prefix="betverse-wallet" name="betverse-wallet">
             <param name="chainID" />
             <param name="tokenSymbol" />
             <param name="tokenDecimalPlaces" />
@@ -1503,19 +1503,19 @@
             <param name="mnemonic" />
             <param name="gaslimit" />
             <param name="gasPriceMultiplier" />
-            <cryptocurrency>BTOKEN</cryptocurrency>
+            <cryptocurrency>BVT</cryptocurrency>
         </wallet>
-        <ratesource prefix="btokenfix" name ="Fix Price - BTOKEN" >
+        <ratesource prefix="betversefix" name ="Fix Price - BETVERSE" >
             <param name="price" />
-            <cryptocurrency>BTOKEN</cryptocurrency>
+            <cryptocurrency>BVT</cryptocurrency>
             <help>USD is default fiat currency.</help>
         </ratesource>
-        <cryptologo cryptocurrency="BTOKEN" file="btoken.png"/>
-        <cryptologo cryptocurrency="BTOKEN" file="btoken.svg"/>
+        <cryptologo cryptocurrency="BVT" file="BETVERSE.png"/>
+        <cryptologo cryptocurrency="BVT" file="BETVERSE.svg"/>
     </extension>
 
-    <extension class="com.generalbytes.batm.server.extensions.extra.btokenICO.BTokenICOExtension" >
-        <wallet prefix="btokenICO-wallet" name="btokenICO-wallet">
+    <extension class="com.generalbytes.batm.server.extensions.extra.betverseico.BetVerseICOExtension" >
+        <wallet prefix="betverseICO-wallet" name="betverseICO-wallet">
             <param name="chainID" />
             <param name="tokenSymbol" />
             <param name="tokenDecimalPlaces" />
@@ -1524,15 +1524,15 @@
             <param name="mnemonic" />
             <param name="gaslimit" />
             <param name="gasPriceMultiplier" />
-            <cryptocurrency>BTOKENICO</cryptocurrency>
+            <cryptocurrency>BVTOKENATMICO</cryptocurrency>
         </wallet>
-        <ratesource prefix="btokenICOfix" name ="Fix Price - BTOKENICO" >
+        <ratesource prefix="betverseICOfix" name ="Fix Price - BETVERSEICO" >
             <param name="price" />
-            <cryptocurrency>BTOKENICO</cryptocurrency>
+            <cryptocurrency>BVTOKENATMICO</cryptocurrency>
             <help>USD is default fiat currency.</help>
         </ratesource>
-        <cryptologo cryptocurrency="BTOKENICO" file="btoken.png"/>
-        <cryptologo cryptocurrency="BTOKENICO" file="btoken.svg"/>
+        <cryptologo cryptocurrency="BVTOKENATMICO" file="BETVERSE.png"/>
+        <cryptologo cryptocurrency="BVTOKENATMICO" file="BETVERSE.svg"/>
     </extension>
 
 

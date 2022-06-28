@@ -15,15 +15,14 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.btokenICO;
+package com.generalbytes.batm.server.extensions.extra.betverseico;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
-import com.generalbytes.batm.server.extensions.extra.btokenICO.sources.fixed.BTokenICOFixedRateSource;
+import com.generalbytes.batm.server.extensions.extra.betverseico.sources.fixed.BetVerseICOFixedRateSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.web3j.tx.gas.DefaultGasProvider;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -31,15 +30,15 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-public class BTokenICOExtension extends AbstractExtension {
+public class BetVerseICOExtension extends AbstractExtension {
 
-    private static final Logger log = LoggerFactory.getLogger(BTokenICOExtension.class);
+    private static final Logger log = LoggerFactory.getLogger(BetVerseICOExtension.class);
 
-    private static final ICryptoCurrencyDefinition DEFINITION = new BTokenICODefinition();
+    private static final ICryptoCurrencyDefinition DEFINITION = new BetVerseICODefinition();
 
     @Override
     public String getName() {
-        return "BATM BTOKEN ICO extension";
+        return "BATM BETVERSE ICO extension";
     }
 
     @Override
@@ -71,7 +70,7 @@ public class BTokenICOExtension extends AbstractExtension {
             //gasPriceMultiplier = DefaultGasProvider.GAS_PRICE;
 
             if (rpcURL != null && passwordOrMnemonic != null) {
-                return new BTokenICOERC20Wallet(chainID, rpcURL,
+                return new BetVerseICOERC20Wallet(chainID, rpcURL,
                         passwordOrMnemonic, tokenSymbol, tokenDecimalPlaces,
                         contractAddress, gasLimit, gasPriceMultiplier);
             }
@@ -82,16 +81,16 @@ public class BTokenICOExtension extends AbstractExtension {
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (CryptoCurrency.BTOKENICO.getCode().equalsIgnoreCase(cryptoCurrency)) {
-            return new BTokenICOAddressValidator();
+        if (CryptoCurrency.BVTOKENATMICO.getCode().equalsIgnoreCase(cryptoCurrency)) {
+            return new BetVerseICOAddressValidator();
         }
         return null;
     }
 
     @Override
     public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency) {
-        if (CryptoCurrency.BTOKENICO.getCode().equalsIgnoreCase(cryptoCurrency)) {
-            return new BTokenICOWalletGenerator(ctx);
+        if (CryptoCurrency.BVTOKENATMICO.getCode().equalsIgnoreCase(cryptoCurrency)) {
+            return new BetVerseICOWalletGenerator(ctx);
         }
         return null;
     }
@@ -112,7 +111,7 @@ public class BTokenICOExtension extends AbstractExtension {
             if (st.hasMoreTokens()) {
                 preferedFiatCurrency = st.nextToken().toUpperCase();
             }
-            return new BTokenICOFixedRateSource(rate, preferedFiatCurrency);
+            return new BetVerseICOFixedRateSource(rate, preferedFiatCurrency);
         }
         return null;
     }
@@ -120,7 +119,7 @@ public class BTokenICOExtension extends AbstractExtension {
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(CryptoCurrency.BTOKENICO.getCode());
+        result.add(CryptoCurrency.BVTOKENATMICO.getCode());
         return result;
     }
 }
