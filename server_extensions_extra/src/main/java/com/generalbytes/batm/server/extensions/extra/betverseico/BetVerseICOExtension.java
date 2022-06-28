@@ -23,6 +23,7 @@ import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.extra.betverseico.sources.fixed.BetVerseICOFixedRateSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.web3j.tx.gas.DefaultGasProvider;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -55,19 +56,19 @@ public class BetVerseICOExtension extends AbstractExtension {
 
             String rpcURL = st.nextToken();
             String passwordOrMnemonic = st.nextToken();
-            BigInteger gasLimit = null;
+            BigInteger gasLimit = DefaultGasProvider.GAS_LIMIT;
             if (st.hasMoreTokens()) {
                 gasLimit = new BigInteger(st.nextToken());
             }
 
 
 
-            BigDecimal gasPriceMultiplier = BigDecimal.ONE;
-            if (st.hasMoreTokens()) {
-                gasPriceMultiplier = new BigDecimal(st.nextToken());
-            }
+            //BigDecimal gasPriceMultiplier = BigDecimal.valueOf(2);
+            //if (st.hasMoreTokens()) {
+                //gasPriceMultiplier = new BigDecimal(st.nextToken());
+            //}
 
-            //gasPriceMultiplier = DefaultGasProvider.GAS_PRICE;
+            BigDecimal gasPriceMultiplier = new BigDecimal(DefaultGasProvider.GAS_PRICE);
 
             if (rpcURL != null && passwordOrMnemonic != null) {
                 return new BetVerseICOERC20Wallet(chainID, rpcURL,
