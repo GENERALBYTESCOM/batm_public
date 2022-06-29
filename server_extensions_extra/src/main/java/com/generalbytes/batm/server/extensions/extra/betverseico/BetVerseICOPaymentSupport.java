@@ -29,7 +29,7 @@ public class BetVerseICOPaymentSupport extends QueryableWalletPaymentSupport {
 
     @Override
     protected String getCryptoCurrency() {
-        return CryptoCurrency.BetVerseIco.getCode();
+        return CryptoCurrency.BetVerseICO.getCode();
     }
 
     protected long getPollingPeriodMillis() {
@@ -41,7 +41,7 @@ public class BetVerseICOPaymentSupport extends QueryableWalletPaymentSupport {
     }
 
     public String getCurrency() {
-        return CryptoCurrency.BetVerseIco.getCode();
+        return CryptoCurrency.BetVerseICO.getCode();
     }
 
     public ICryptoAddressValidator getAddressValidator() {

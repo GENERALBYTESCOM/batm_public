@@ -45,7 +45,7 @@ public class PoloniexExchange extends XChangeExchange {
         SUPPORTED_CRYPTOS.add(CryptoCurrency.DASH.getCode());
         SUPPORTED_CRYPTOS.add(CryptoCurrency.DAI.getCode());
         SUPPORTED_CRYPTOS.add(CryptoCurrency.BetVerse.getCode());
-        SUPPORTED_CRYPTOS.add(CryptoCurrency.BetVerseIco.getCode());
+        SUPPORTED_CRYPTOS.add(CryptoCurrency.BetVerseICO.getCode());
         SUPPORTED_CRYPTOS.add(CryptoCurrency.DGB.getCode());
         SUPPORTED_CRYPTOS.add(CryptoCurrency.DOGE.getCode());
         SUPPORTED_CRYPTOS.add(CryptoCurrency.LSK.getCode());
