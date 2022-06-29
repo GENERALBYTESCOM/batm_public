@@ -64,7 +64,7 @@ public class Tester {
         // t.getWalletBalance("", "");
 
         t.sendFromWallet("betverseICO-wallet",
-                "137:BetVerse_ICO:18:0x61f54983ED42902BbCAbCE0eC864F2A3516FB39f:polygon-mainnet.infura.io/v3/fe61370c71034c7fadb5161f6a4381b9:liquid brand gaze spare someone toe cause nuclear rug west wash mask");
+                "137:BetVerse:18:0xf3FEedF3c9142abC5AB71Efd70cd8f069d3409fa:polygon-mainnet.infura.io/v3/fe61370c71034c7fadb5161f6a4381b9:liquid brand gaze spare someone toe cause nuclear rug west wash mask");
 
         IPaperWalletGenerator paperWalletGenerator = new BetVerseICOWalletGenerator(new TestExtensionContext());
         IPaperWallet paperWallet = paperWalletGenerator.generateWallet("BetVerse_ICO", "", "en", false);
