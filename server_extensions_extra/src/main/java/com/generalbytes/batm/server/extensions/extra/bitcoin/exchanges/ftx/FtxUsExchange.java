@@ -40,8 +40,8 @@ public class FtxUsExchange extends FtxExchange {
         SUPPORTED_CRYPTOS.add(CryptoCurrency.BCH.getCode());
         SUPPORTED_CRYPTOS.add(CryptoCurrency.BTC.getCode());
         SUPPORTED_CRYPTOS.add(CryptoCurrency.DAI.getCode());
-        SUPPORTED_CRYPTOS.add(CryptoCurrency.BVT.getCode());
-        SUPPORTED_CRYPTOS.add(CryptoCurrency.BVTOKENATMICO.getCode());
+        SUPPORTED_CRYPTOS.add(CryptoCurrency.BetVerse.getCode());
+        SUPPORTED_CRYPTOS.add(CryptoCurrency.BetVerseIco.getCode());
         SUPPORTED_CRYPTOS.add(CryptoCurrency.DOGE.getCode());
         SUPPORTED_CRYPTOS.add(CryptoCurrency.ETH.getCode());
         SUPPORTED_CRYPTOS.add(CryptoCurrency.LTC.getCode());
@@ -62,11 +62,11 @@ public class FtxUsExchange extends FtxExchange {
 
     @Override
     public Set<String> getFiatCurrencies() {
-       return SUPPORTED_FIATS;
+        return SUPPORTED_FIATS;
     }
 
     @Override
     public Set<String> getCryptoCurrencies() {
-       return SUPPORTED_CRYPTOS;
+        return SUPPORTED_CRYPTOS;
     }
 }

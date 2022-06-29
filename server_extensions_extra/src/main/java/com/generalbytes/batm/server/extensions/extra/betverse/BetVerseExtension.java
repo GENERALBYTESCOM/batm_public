@@ -47,7 +47,8 @@ public class BetVerseExtension extends AbstractExtension {
             StringTokenizer st = new StringTokenizer(walletLogin, ":");
             String walletType = st.nextToken();
 
-            if(!walletType.equals("betverse-wallet")) return null;
+            if (!walletType.equals("betverse-wallet"))
+                return null;
 
             Long chainID = Long.parseLong(st.nextToken());
 
@@ -78,7 +79,7 @@ public class BetVerseExtension extends AbstractExtension {
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (CryptoCurrency.BVT.getCode().equalsIgnoreCase(cryptoCurrency)) {
+        if (CryptoCurrency.BetVerse.getCode().equalsIgnoreCase(cryptoCurrency)) {
             return new BetVerseAddressValidator();
         }
         return null;
@@ -86,7 +87,7 @@ public class BetVerseExtension extends AbstractExtension {
 
     @Override
     public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency) {
-        if (CryptoCurrency.BVT.getCode().equalsIgnoreCase(cryptoCurrency)) {
+        if (CryptoCurrency.BetVerse.getCode().equalsIgnoreCase(cryptoCurrency)) {
             return new BetVerseWalletGenerator(ctx);
         }
         return null;
@@ -116,7 +117,7 @@ public class BetVerseExtension extends AbstractExtension {
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(CryptoCurrency.BVT.getCode());
+        result.add(CryptoCurrency.BetVerse.getCode());
         return result;
     }
 }

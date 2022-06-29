@@ -60,7 +60,7 @@ public class BetVerseICOFixedRateSource implements IRateSourceAdvanced {
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(CryptoCurrency.BVT.getCode());
+        result.add(CryptoCurrency.BetVerse.getCode());
         return result;
     }
 

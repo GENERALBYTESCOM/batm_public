@@ -44,14 +44,16 @@ public class BetVerseWalletGenerator implements IPaperWalletGenerator {
     }
 
     @Override
-    public IPaperWallet generateWallet(String cryptoCurrency, String oneTimePassword, String userLanguage, boolean shouldBeVanity) {
+    public IPaperWallet generateWallet(String cryptoCurrency, String oneTimePassword, String userLanguage,
+            boolean shouldBeVanity) {
         WalletToolsETH wt = new WalletToolsETH();
         String mnemonic = EtherUtils.generateMnemonic();
 
-        MasterPrivateKeyETH m = wt.getMasterPrivateKey(mnemonic, "", CryptoCurrency.BVT.getCode(), IWalletTools.STANDARD_BIP44);
+        MasterPrivateKeyETH m = wt.getMasterPrivateKey(mnemonic, "", CryptoCurrency.BetVerse.getCode(),
+                IWalletTools.STANDARD_BIP44);
 
-        String privateKey = wt.getWalletPrivateKey(m, CryptoCurrency.BVT.getCode(), 0, 0, 0);
-        String address = wt.getWalletAddress(m, CryptoCurrency.BVT.getCode(), 0, 0, 0);
+        String privateKey = wt.getWalletPrivateKey(m, CryptoCurrency.BetVerse.getCode(), 0, 0, 0);
+        String address = wt.getWalletAddress(m, CryptoCurrency.BetVerse.getCode(), 0, 0, 0);
 
         byte[] content = ctx.createPaperWallet7ZIP(mnemonic, address, oneTimePassword, cryptoCurrency);
 
@@ -66,7 +68,8 @@ public class BetVerseWalletGenerator implements IPaperWalletGenerator {
             }
         }
 
-        return new BetVersePaperWallet(content, address, mnemonic, messageText, "application/zip", "zip", cryptoCurrency);
+        return new BetVersePaperWallet(content, address, mnemonic, messageText, "application/zip", "zip",
+                cryptoCurrency);
     }
 
     private String readTemplate(String templateFile) {

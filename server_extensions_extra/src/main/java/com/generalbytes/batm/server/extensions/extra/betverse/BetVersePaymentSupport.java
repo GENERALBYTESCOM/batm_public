@@ -29,7 +29,7 @@ public class BetVersePaymentSupport extends QueryableWalletPaymentSupport {
 
     @Override
     protected String getCryptoCurrency() {
-        return CryptoCurrency.BVT.getCode();
+        return CryptoCurrency.BetVerse.getCode();
     }
 
     protected long getPollingPeriodMillis() {
@@ -41,7 +41,7 @@ public class BetVersePaymentSupport extends QueryableWalletPaymentSupport {
     }
 
     public String getCurrency() {
-        return CryptoCurrency.BVT.getCode();
+        return CryptoCurrency.BetVerse.getCode();
     }
 
     public ICryptoAddressValidator getAddressValidator() {

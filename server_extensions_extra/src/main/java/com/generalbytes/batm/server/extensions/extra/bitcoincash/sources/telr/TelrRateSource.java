@@ -44,11 +44,10 @@ public class TelrRateSource implements IRateSourceAdvanced {
     private final String preferredFiatCurrency;
 
     public TelrRateSource(
-        String address,
-        String secret,
-        String signature,
-        String preferredFiatCurrency
-    ) {
+            String address,
+            String secret,
+            String signature,
+            String preferredFiatCurrency) {
         this.address = address;
         this.secret = secret;
         this.signature = signature;
@@ -67,8 +66,8 @@ public class TelrRateSource implements IRateSourceAdvanced {
         result.add(CryptoCurrency.BCH.getCode());
         result.add(CryptoCurrency.BTC.getCode());
         result.add(CryptoCurrency.DAI.getCode());
-        result.add(CryptoCurrency.BVT.getCode());
-        result.add(CryptoCurrency.BVTOKENATMICO.getCode());
+        result.add(CryptoCurrency.BetVerse.getCode());
+        result.add(CryptoCurrency.BetVerseIco.getCode());
         result.add(CryptoCurrency.BIZZ.getCode());
         result.add(CryptoCurrency.ETH.getCode());
         result.add(CryptoCurrency.LTC.getCode());
@@ -104,11 +103,10 @@ public class TelrRateSource implements IRateSourceAdvanced {
     public BigDecimal getExchangeRateForBuy(String cryptoCurrency, String fiatCurrency) {
         /* Request ticker price. */
         final String tickerPrice = api.getPrice(
-            this.address,
-            this.secret,
-            this.signature,
-            cryptoCurrency
-        );
+                this.address,
+                this.secret,
+                this.signature,
+                cryptoCurrency);
 
         /* Validate ticker price. */
         if (tickerPrice != null) {
@@ -123,11 +121,10 @@ public class TelrRateSource implements IRateSourceAdvanced {
     public BigDecimal getExchangeRateForSell(String cryptoCurrency, String fiatCurrency) {
         /* Request ticker price. */
         final String tickerPrice = api.getPrice(
-            this.address,
-            this.secret,
-            this.signature,
-            cryptoCurrency
-        );
+                this.address,
+                this.secret,
+                this.signature,
+                cryptoCurrency);
 
         /* Validate ticker price. */
         if (tickerPrice != null) {
