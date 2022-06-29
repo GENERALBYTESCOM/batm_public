@@ -1510,8 +1510,8 @@
             <cryptocurrency>BVT</cryptocurrency>
             <help>USD is default fiat currency.</help>
         </ratesource>
-        <cryptologo cryptocurrency="BVT" file="BETVERSE.png"/>
-        <cryptologo cryptocurrency="BVT" file="BETVERSE.svg"/>
+        <cryptologo cryptocurrency="BVT" file="betverse.png"/>
+        <cryptologo cryptocurrency="BVT" file="betverse.svg"/>
     </extension>
 
     <extension class="com.generalbytes.batm.server.extensions.extra.betverseico.BetVerseICOExtension" >
@@ -1531,8 +1531,8 @@
             <cryptocurrency>BVTOKENATMICO</cryptocurrency>
             <help>USD is default fiat currency.</help>
         </ratesource>
-        <cryptologo cryptocurrency="BVTOKENATMICO" file="BETVERSE.png"/>
-        <cryptologo cryptocurrency="BVTOKENATMICO" file="BETVERSE.svg"/>
+        <cryptologo cryptocurrency="BVTOKENATMICO" file="betverse.png"/>
+        <cryptologo cryptocurrency="BVTOKENATMICO" file="betverse.svg"/>
     </extension>
 
 
