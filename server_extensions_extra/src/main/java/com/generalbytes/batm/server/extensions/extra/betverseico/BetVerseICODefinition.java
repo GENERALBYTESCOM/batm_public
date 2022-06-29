@@ -8,7 +8,7 @@ public class BetVerseICODefinition extends CryptoCurrencyDefinition{
     private final IPaymentSupport paymentSupport = new BetVerseICOPaymentSupport();
 
     public BetVerseICODefinition() {
-        super(CryptoCurrency.BVTOKENATMICO.getCode(), "BetVerse Ico", "ethereum", "https://betverseh.ch/");
+        super(CryptoCurrency.BVTOKENATMICO.getCode(), "BetVerse Ico", "ethereum", "https://betverse.ch/");
     }
 
     @Override

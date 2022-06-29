@@ -61,13 +61,6 @@ public class BetVerseICOExtension extends AbstractExtension {
                 gasLimit = new BigInteger(st.nextToken());
             }
 
-
-
-            //BigDecimal gasPriceMultiplier = BigDecimal.valueOf(2);
-            //if (st.hasMoreTokens()) {
-                //gasPriceMultiplier = new BigDecimal(st.nextToken());
-            //}
-
             BigDecimal gasPriceMultiplier = new BigDecimal(DefaultGasProvider.GAS_PRICE);
 
             if (rpcURL != null && passwordOrMnemonic != null) {
