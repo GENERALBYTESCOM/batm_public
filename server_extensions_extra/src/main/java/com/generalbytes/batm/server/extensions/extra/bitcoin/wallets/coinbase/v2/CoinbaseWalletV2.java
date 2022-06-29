@@ -57,7 +57,7 @@ public class CoinbaseWalletV2 implements IWallet {
             .put(CryptoCurrency.BAT.getCode(), "ethereum")
             .put(CryptoCurrency.DAI.getCode(), "ethereum")
             .put(CryptoCurrency.BetVerse.getCode(), "ethereum")
-            .put(CryptoCurrency.BetVerseICO.getCode(), "ethereum")
+            .put(CryptoCurrency.BetVerse_ICO.getCode(), "ethereum")
             .put(CryptoCurrency.BIZZ.getCode(), "ethereum")
             .put(CryptoCurrency.USDT.getCode(), "ethereum")
             .put(CryptoCurrency.ETC.getCode(), "ethereum_classic")

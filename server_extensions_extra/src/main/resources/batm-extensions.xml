@@ -1524,15 +1524,15 @@
             <param name="mnemonic" />
             <param name="gaslimit" />
             <param name="gasPriceMultiplier" />
-            <cryptocurrency>BetVerseICO</cryptocurrency>
+            <cryptocurrency>BetVerse_ICO</cryptocurrency>
         </wallet>
         <ratesource prefix="betverseICOfix" name ="Fix Price - BETVERSEICO" >
             <param name="price" />
-            <cryptocurrency>BetVerseICO</cryptocurrency>
+            <cryptocurrency>BetVerse_ICO</cryptocurrency>
             <help>USD is default fiat currency.</help>
         </ratesource>
-        <cryptologo cryptocurrency="BetVerseICO" file="betverse.png"/>
-        <cryptologo cryptocurrency="BetVerseICO" file="betverse.svg"/>
+        <cryptologo cryptocurrency="BetVerse_ICO" file="betverse.png"/>
+        <cryptologo cryptocurrency="BetVerse_ICO" file="betverse.svg"/>
     </extension>
 
 
