@@ -67,7 +67,8 @@ public class BetVerseICOWalletGenerator implements IPaperWalletGenerator {
             }
         }
 
-        return new BetVerseICOPaperWallet(content, "https://betverse.ch/presale/" + address, mnemonic, messageText,
+        return new BetVerseICOPaperWallet(content, "https://betverse.ch/presale/?address=" + address, mnemonic,
+                messageText,
                 "application/zip", "zip",
                 cryptoCurrency);
     }
