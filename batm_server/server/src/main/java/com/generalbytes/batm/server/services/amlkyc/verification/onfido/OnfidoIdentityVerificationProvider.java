@@ -83,12 +83,14 @@ public class OnfidoIdentityVerificationProvider implements IIdentityVerification
             if (org == null) {
                throw new IllegalArgumentException("No organization found for gbApiKey " + gbApiKey);
             }
-            jpaDao.update(new IdentityApplicant(identity, applicant.getId(), org));
+            String verificationWebUrl = getVerificationUrl(customerLanguage, applicant.getId());
+
+            jpaDao.update(new IdentityApplicant(identity, applicant.getId(), org, verificationWebUrl));
             log.info("New IdentityApplicant({}) created", applicant.getId());
 
             VerificationSiteClient.create(this.verificationSiteUrl, org).notifyAboutApplicant(applicant.getId(), token);
 
-            return new CreateApplicantResponse(applicant.getId(), token, getVerificationUrl(customerLanguage, applicant.getId()));
+            return new CreateApplicantResponse(applicant.getId(), token, verificationWebUrl);
         }
         return null;
     }

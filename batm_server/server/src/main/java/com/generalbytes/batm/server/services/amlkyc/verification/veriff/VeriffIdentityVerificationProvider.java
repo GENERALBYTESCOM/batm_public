@@ -46,7 +46,7 @@ public class VeriffIdentityVerificationProvider implements IIdentityVerification
             String verificationWebUrl = createSessionResponse.verification.url;
 
             Organization org = getOrganization(identity, gbApiKey);
-            JPADao.getInstance().update(new IdentityApplicant(identity, createSessionResponse.getApplicantId(), org));
+            JPADao.getInstance().update(new IdentityApplicant(identity, createSessionResponse.getApplicantId(), org, verificationWebUrl));
             log.info("New IdentityApplicant({}) created", createSessionResponse.getApplicantId());
             identityVerificationBillingHelper.createBillingRecord(org, verificationWebUrl);
             return new CreateApplicantResponse(createSessionResponse.getApplicantId(), null, verificationWebUrl);
