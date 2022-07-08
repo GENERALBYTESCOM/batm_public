@@ -19,6 +19,7 @@ package com.generalbytes.batm.server.extensions.extra.bitcoincash;
 
 import com.generalbytes.batm.server.extensions.AbstractExtension;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
 import com.generalbytes.batm.server.extensions.IPaperWalletGenerator;
@@ -84,7 +85,9 @@ public class BitcoinCashExtension extends AbstractExtension {
             }
         }
         } catch (Exception e) {
-            log.warn("createWallet failed", e);
+            log.warn("createWallet failed for prefix: {}, {}: {} ",
+                ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
+            );
         }
         return null;
     }
@@ -121,30 +124,36 @@ public class BitcoinCashExtension extends AbstractExtension {
 
     @Override
     public IRateSource createRateSource(String sourceLogin) {
-        if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
-            StringTokenizer st = new StringTokenizer(sourceLogin, ":");
-            String rsType = st.nextToken();
+        try {
+            if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
+                StringTokenizer st = new StringTokenizer(sourceLogin, ":");
+                String rsType = st.nextToken();
 
-            if ("telr".equalsIgnoreCase(rsType)) {
-                /* Set authorization parameters. */
-                String address = st.nextToken();
-                String secret = st.nextToken();
-                String signature = st.nextToken();
+                if ("telr".equalsIgnoreCase(rsType)) {
+                    /* Set authorization parameters. */
+                    String address = st.nextToken();
+                    String secret = st.nextToken();
+                    String signature = st.nextToken();
 
-                /* Set preferred fiat currency. */
-                String preferredFiatCurrency = "USD";
-                if (st.hasMoreTokens()) {
-                    preferredFiatCurrency = st.nextToken().toUpperCase();
+                    /* Set preferred fiat currency. */
+                    String preferredFiatCurrency = "USD";
+                    if (st.hasMoreTokens()) {
+                        preferredFiatCurrency = st.nextToken().toUpperCase();
+                    }
+
+                    /* Initialize Telr Rate Source. */
+                    return new TelrRateSource(
+                        address,
+                        secret,
+                        signature,
+                        preferredFiatCurrency
+                    );
                 }
-
-                /* Initialize Telr Rate Source. */
-                return new TelrRateSource(
-                    address,
-                    secret,
-                    signature,
-                    preferredFiatCurrency
-                );
             }
+        } catch (Exception e) {
+            log.warn("createRateSource failed for prefix: {}, {}: {} ",
+                ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin), e.getClass().getSimpleName(), e.getMessage()
+            );
         }
         return null;
     }
