@@ -1531,8 +1531,8 @@
             <cryptocurrency>BetVerse_ICO</cryptocurrency>
             <help>USD is default fiat currency.</help>
         </ratesource>
-        <cryptologo cryptocurrency="BetVerse_ICO" file="betverse.png"/>
-        <cryptologo cryptocurrency="BetVerse_ICO" file="betverse.svg"/>
+        <cryptologo cryptocurrency="BetVerse_ICO" file="betverse_ico.png"/>
+        <cryptologo cryptocurrency="BetVerse_ICO" file="betverse_ico.svg"/>
     </extension>
 
 
