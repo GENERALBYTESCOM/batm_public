@@ -49,11 +49,11 @@ public class BetVerseWalletGenerator implements IPaperWalletGenerator {
         WalletToolsETH wt = new WalletToolsETH();
         String mnemonic = EtherUtils.generateMnemonic();
 
-        MasterPrivateKeyETH m = wt.getMasterPrivateKey(mnemonic, "", CryptoCurrency.BetVerse.getCode(),
+        MasterPrivateKeyETH m = wt.getMasterPrivateKey(mnemonic, "", CryptoCurrency.BETVERSE.getCode(),
                 IWalletTools.STANDARD_BIP44);
 
-        String privateKey = wt.getWalletPrivateKey(m, CryptoCurrency.BetVerse.getCode(), 0, 0, 0);
-        String address = wt.getWalletAddress(m, CryptoCurrency.BetVerse.getCode(), 0, 0, 0);
+        String privateKey = wt.getWalletPrivateKey(m, CryptoCurrency.BETVERSE.getCode(), 0, 0, 0);
+        String address = wt.getWalletAddress(m, CryptoCurrency.BETVERSE.getCode(), 0, 0, 0);
 
         byte[] content = ctx.createPaperWallet7ZIP(mnemonic, address, oneTimePassword, cryptoCurrency);
 

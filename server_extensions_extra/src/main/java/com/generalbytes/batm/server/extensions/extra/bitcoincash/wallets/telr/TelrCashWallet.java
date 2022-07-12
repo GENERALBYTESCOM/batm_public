@@ -124,8 +124,8 @@ public class TelrCashWallet implements IWallet {
         s.add(CryptoCurrency.BCH.getCode());
         s.add(CryptoCurrency.BTC.getCode());
         s.add(CryptoCurrency.DAI.getCode());
-        s.add(CryptoCurrency.BetVerse.getCode());
-        s.add(CryptoCurrency.BetVerse_ICO.getCode());
+        s.add(CryptoCurrency.BETVERSE.getCode());
+        s.add(CryptoCurrency.BETVERSE_ICO.getCode());
         s.add(CryptoCurrency.BIZZ.getCode());
         s.add(CryptoCurrency.ETH.getCode());
         s.add(CryptoCurrency.LTC.getCode());

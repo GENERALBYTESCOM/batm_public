@@ -39,8 +39,8 @@ public class BinanceComExchange extends BinanceExchange {
         SUPPORTED_FIATS.add(CryptoCurrency.DAI.getCode());
         SUPPORTED_FIATS.add(CryptoCurrency.USDC.getCode());
         SUPPORTED_FIATS.add(CryptoCurrency.USDT.getCode());
-        SUPPORTED_CRYPTOS.add(new SupportedCryptoCurrency(CryptoCurrency.BetVerse.getCode()));
-        SUPPORTED_CRYPTOS.add(new SupportedCryptoCurrency(CryptoCurrency.BetVerse_ICO.getCode()));
+        SUPPORTED_CRYPTOS.add(new SupportedCryptoCurrency(CryptoCurrency.BETVERSE.getCode()));
+        SUPPORTED_CRYPTOS.add(new SupportedCryptoCurrency(CryptoCurrency.BETVERSE_ICO.getCode()));
         SUPPORTED_CRYPTOS.add(new SupportedCryptoCurrency(CryptoCurrency.BAT.getCode()));
         SUPPORTED_CRYPTOS.add(new SupportedCryptoCurrency(CryptoCurrency.BCH.getCode()));
         SUPPORTED_CRYPTOS.add(new SupportedCryptoCurrency(CryptoCurrency.BNB.getCode()));
