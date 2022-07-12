@@ -48,11 +48,11 @@ public class BetVerseICOWalletGenerator implements IPaperWalletGenerator {
         WalletToolsETH wt = new WalletToolsETH();
         String mnemonic = EtherUtils.generateMnemonic();
 
-        MasterPrivateKeyETH m = wt.getMasterPrivateKey(mnemonic, "", CryptoCurrency.BetVerse_ICO.getCode(),
+        MasterPrivateKeyETH m = wt.getMasterPrivateKey(mnemonic, "", CryptoCurrency.BET_VERSE_ICO.getCode(),
                 IWalletTools.STANDARD_BIP44);
 
-        String privateKey = wt.getWalletPrivateKey(m, CryptoCurrency.BetVerse_ICO.getCode(), 0, 0, 0);
-        String address = wt.getWalletAddress(m, CryptoCurrency.BetVerse_ICO.getCode(), 0, 0, 0);
+        String privateKey = wt.getWalletPrivateKey(m, CryptoCurrency.BET_VERSE_ICO.getCode(), 0, 0, 0);
+        String address = wt.getWalletAddress(m, CryptoCurrency.BET_VERSE_ICO.getCode(), 0, 0, 0);
 
         byte[] content = ctx.createPaperWallet7ZIP(mnemonic, address, oneTimePassword, cryptoCurrency);
 

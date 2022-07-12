@@ -48,8 +48,8 @@ public class BitbuyExchange implements IExchangeAdvanced, IRateSourceAdvanced {
     private static final Set<String> cryptoCurrencies = ImmutableSet.of(
             CryptoCurrency.BCH.getCode(),
             CryptoCurrency.BTC.getCode(),
-            CryptoCurrency.BetVerse.getCode(),
-            CryptoCurrency.BetVerse_ICO.getCode(),
+            CryptoCurrency.BET_VERSE.getCode(),
+            CryptoCurrency.BET_VERSE_ICO.getCode(),
             CryptoCurrency.DAI.getCode(),
             CryptoCurrency.ETH.getCode(),
             CryptoCurrency.LTC.getCode(),

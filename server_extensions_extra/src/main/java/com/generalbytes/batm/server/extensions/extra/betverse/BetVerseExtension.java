@@ -79,7 +79,7 @@ public class BetVerseExtension extends AbstractExtension {
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (CryptoCurrency.BetVerse.getCode().equalsIgnoreCase(cryptoCurrency)) {
+        if (CryptoCurrency.BET_VERSE.getCode().equalsIgnoreCase(cryptoCurrency)) {
             return new BetVerseAddressValidator();
         }
         return null;
@@ -87,7 +87,7 @@ public class BetVerseExtension extends AbstractExtension {
 
     @Override
     public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency) {
-        if (CryptoCurrency.BetVerse.getCode().equalsIgnoreCase(cryptoCurrency)) {
+        if (CryptoCurrency.BET_VERSE.getCode().equalsIgnoreCase(cryptoCurrency)) {
             return new BetVerseWalletGenerator(ctx);
         }
         return null;
@@ -117,7 +117,7 @@ public class BetVerseExtension extends AbstractExtension {
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(CryptoCurrency.BetVerse.getCode());
+        result.add(CryptoCurrency.BET_VERSE.getCode());
         return result;
     }
 }

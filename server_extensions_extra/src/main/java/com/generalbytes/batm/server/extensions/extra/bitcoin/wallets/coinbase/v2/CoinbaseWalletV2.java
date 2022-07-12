@@ -37,7 +37,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -56,8 +55,8 @@ public class CoinbaseWalletV2 implements IWallet {
             .put(CryptoCurrency.ETH.getCode(), "ethereum")
             .put(CryptoCurrency.BAT.getCode(), "ethereum")
             .put(CryptoCurrency.DAI.getCode(), "ethereum")
-            .put(CryptoCurrency.BetVerse.getCode(), "ethereum")
-            .put(CryptoCurrency.BetVerse_ICO.getCode(), "ethereum")
+            .put(CryptoCurrency.BET_VERSE.getCode(), "ethereum")
+            .put(CryptoCurrency.BET_VERSE_ICO.getCode(), "ethereum")
             .put(CryptoCurrency.BIZZ.getCode(), "ethereum")
             .put(CryptoCurrency.USDT.getCode(), "ethereum")
             .put(CryptoCurrency.ETC.getCode(), "ethereum_classic")
