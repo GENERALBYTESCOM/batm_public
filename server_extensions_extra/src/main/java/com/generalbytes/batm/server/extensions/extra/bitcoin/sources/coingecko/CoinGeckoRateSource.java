@@ -50,8 +50,8 @@ public class CoinGeckoRateSource implements IRateSource {
         CRYPTOCURRENCIES.put(CryptoCurrency.BURST.getCode(), "burst");
         CRYPTOCURRENCIES.put(CryptoCurrency.CLOAK.getCode(), "cloakcoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.DAI.getCode(), "dai");
-        CRYPTOCURRENCIES.put(CryptoCurrency.BETVERSE.getCode(), "betverse");
-        CRYPTOCURRENCIES.put(CryptoCurrency.BETVERSE_ICO.getCode(), "betverse-ico");
+        CRYPTOCURRENCIES.put(CryptoCurrency.BET_VERSE.getCode(), "betverse");
+        CRYPTOCURRENCIES.put(CryptoCurrency.BET_VERSE_ICO.getCode(), "betverse-ico");
         CRYPTOCURRENCIES.put(CryptoCurrency.BIZZ.getCode(), "bizzcoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.DASH.getCode(), "dash");
         CRYPTOCURRENCIES.put(CryptoCurrency.DEX.getCode(), "dex");

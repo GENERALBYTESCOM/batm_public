@@ -22,13 +22,10 @@ import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import si.mazi.rescu.HttpStatusIOException;
 import si.mazi.rescu.RestProxyFactory;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 public class TelrRateSource implements IRateSourceAdvanced {
@@ -66,8 +63,8 @@ public class TelrRateSource implements IRateSourceAdvanced {
         result.add(CryptoCurrency.BCH.getCode());
         result.add(CryptoCurrency.BTC.getCode());
         result.add(CryptoCurrency.DAI.getCode());
-        result.add(CryptoCurrency.BETVERSE.getCode());
-        result.add(CryptoCurrency.BETVERSE_ICO.getCode());
+        result.add(CryptoCurrency.BET_VERSE.getCode());
+        result.add(CryptoCurrency.BET_VERSE_ICO.getCode());
         result.add(CryptoCurrency.BIZZ.getCode());
         result.add(CryptoCurrency.ETH.getCode());
         result.add(CryptoCurrency.LTC.getCode());

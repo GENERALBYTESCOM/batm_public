@@ -8,7 +8,7 @@ public class BetVerseDefinition extends CryptoCurrencyDefinition {
     private final IPaymentSupport paymentSupport = new BetVersePaymentSupport();
 
     public BetVerseDefinition() {
-        super(CryptoCurrency.BETVERSE.getCode(), "BETVERSE", "ethereum", "https://betverse.ch/");
+        super(CryptoCurrency.BET_VERSE.getCode(), "BetVerse", "ethereum", "https://betverse.ch/");
     }
 
     @Override
