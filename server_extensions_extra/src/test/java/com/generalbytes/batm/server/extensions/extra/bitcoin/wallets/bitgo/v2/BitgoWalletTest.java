@@ -142,7 +142,7 @@ public class BitgoWalletTest {
     @Test
     public void convertBalance() {
         Assertions.assertThat(wallet.divideBalance(CryptoCurrency.BTC.getCode(), BigDecimal.ONE)).isEqualByComparingTo(new BigDecimal("0.00000001"));
-        Assertions.assertThat(wallet.toSatoshis(new BigDecimal("0.00000001"), CryptoCurrency.BTC.getCode())).isEqualByComparingTo(1);
+        Assertions.assertThat(wallet.toSatoshis(new BigDecimal("0.00000001"), CryptoCurrency.BTC.getCode())).isEqualTo("1");
 
         Assert.assertNull("return null for unknown cryptocurrency", wallet.divideBalance("unknown", BigDecimal.ONE));
         for (String cryptoCurrency : wallet.getCryptoCurrencies()) {

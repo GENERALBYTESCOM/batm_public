@@ -17,6 +17,10 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+// the server did not like when we sent null gasPrice, the field has to be omitted instead
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class BitGoCreateAddressRequest {
     private Integer chain;
     private String label;
