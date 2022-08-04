@@ -10,7 +10,7 @@ import com.generalbytes.batm.server.services.amlkyc.verification.veriff.api.webh
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -96,7 +96,8 @@ public class VeriffVerificationResultMapper {
             return null;
         }
         try {
-            return Date.from(DATE_FORMAT.parse(date, Instant::from));
+            LocalDate parsedDate = DATE_FORMAT.parse(date, LocalDate::from);
+            return Date.from(parsedDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
         } catch (DateTimeParseException e) {
             log.error("Error parsing date: " + date, e);
             return null;

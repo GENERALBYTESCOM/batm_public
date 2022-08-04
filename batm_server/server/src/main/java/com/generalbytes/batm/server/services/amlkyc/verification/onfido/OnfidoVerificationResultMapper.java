@@ -9,7 +9,7 @@ import com.onfido.models.Report;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -271,7 +271,8 @@ public class OnfidoVerificationResultMapper {
         String s = (String) props.get(fieldName);
         if (s != null) {
             try {
-                return Date.from(DATE_FORMAT.parse(s, Instant::from));
+                LocalDate parsedDate = DATE_FORMAT.parse(s, LocalDate::from);
+                return Date.from(parsedDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
             } catch (DateTimeParseException e) {
                 log.error("Error parsing date.", e);
                 return null;
