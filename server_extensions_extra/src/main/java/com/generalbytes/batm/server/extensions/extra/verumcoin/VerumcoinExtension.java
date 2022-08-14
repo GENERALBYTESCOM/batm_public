@@ -83,7 +83,7 @@ public class VerumcoinExtension extends AbstractExtension{
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (CryptoCurrency.LTC.getCode().equalsIgnoreCase(cryptoCurrency)) {
+        if (CryptoCurrency.VERUM.getCode().equalsIgnoreCase(cryptoCurrency)) {
             return new VerumcoinAddressValidator();
         }
         return null;
@@ -96,7 +96,7 @@ public class VerumcoinExtension extends AbstractExtension{
                 StringTokenizer st = new StringTokenizer(sourceLogin, ":");
                 String exchangeType = st.nextToken();
 
-                if ("ltcfix".equalsIgnoreCase(exchangeType)) {
+                if ("verumfix".equalsIgnoreCase(exchangeType)) {
                     BigDecimal rate = BigDecimal.ZERO;
                     if (st.hasMoreTokens()) {
                         try {
@@ -122,7 +122,7 @@ public class VerumcoinExtension extends AbstractExtension{
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(CryptoCurrency.LTC.getCode());
+        result.add(CryptoCurrency.VERUM.getCode());
         return result;
     }
 }

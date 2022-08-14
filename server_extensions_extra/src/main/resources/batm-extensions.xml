@@ -2403,7 +2403,7 @@
             <cryptocurrency>VERUM</cryptocurrency>
             <help>This variant generates new addresses for each transaction and does not forward payments from temporary address</help>
         </wallet>
-        <ratesource prefix="ltcfix" name ="Fix Price" >
+        <ratesource prefix="verumfix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>VERUM</cryptocurrency>
             <help>USD is default fiat currency.</help>
