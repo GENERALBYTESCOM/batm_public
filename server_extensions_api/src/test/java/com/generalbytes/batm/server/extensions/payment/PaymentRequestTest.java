@@ -20,7 +20,7 @@ public class PaymentRequestTest {
     }
 
     private PaymentRequest getPaymentRequest(Boolean nonForwarding, IPaymentOutput... outputs) {
-        return new PaymentRequest(null, null, 0L, null, BigDecimal.TEN, null, 0, 0, null, null, Arrays.asList(outputs), nonForwarding, null, null, null);
+        return new PaymentRequest(null, null, 0L, null, BigDecimal.TEN, null, false, 0, 0, null, null, Arrays.asList(outputs), nonForwarding, null, null, null);
     }
 
     private IPaymentOutput getPaymentOutput(final BigDecimal amount) {
