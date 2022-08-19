@@ -78,10 +78,9 @@ public class NanoPaymentSupport extends PollingPaymentSupport {
                 currencyContext.getUtil().parseAddress(spec.getTimeoutRefundAddress());
 
         PaymentRequest request = new PaymentRequest(spec.getCryptoCurrency(), spec.getDescription(), validTillMillis,
-            address, spec.getTotal(), spec.getTolerance(),
-            spec.getRemoveAfterNumberOfConfirmationsOfIncomingTransaction(),
-            spec.getRemoveAfterNumberOfConfirmationsOfOutgoingTransaction(), spec.getWallet(),
-            refundAddr, spec.getOutputs(), spec.isDoNotForward(), null,
+            address, spec.getTotal(), spec.getTolerance(), spec.isOverageAllowed(),
+            spec.getRemoveAfterNumberOfConfirmationsOfIncomingTransaction(), spec.getRemoveAfterNumberOfConfirmationsOfOutgoingTransaction(),
+            spec.getWallet(), refundAddr, spec.getOutputs(), spec.isDoNotForward(), null,
             spec.getMinimumMiningFeePerByte(), spec.getMaximumMiningFeePerByte());
 
         registerPaymentRequest(request);
@@ -204,7 +203,7 @@ public class NanoPaymentSupport extends PollingPaymentSupport {
                 if (confirmations > 0 && request.getState() == PaymentRequest.STATE_SEEN_TRANSACTION
                     && totalReceived.compareTo(request.getAmount()) >= 0) {
                     // Transaction confirmed
-                    if (totalReceived.subtract(request.getTolerance()).compareTo(request.getAmount()) <= 0) {
+                    if (request.isOverageAllowed() || totalReceived.subtract(request.getTolerance()).compareTo(request.getAmount()) <= 0) {
                         // Within tolerance
                         log.info("Transaction confirmed. Total amount received: {}", totalReceived);
                         request.setRemovalConditionForIncomingTransaction();
