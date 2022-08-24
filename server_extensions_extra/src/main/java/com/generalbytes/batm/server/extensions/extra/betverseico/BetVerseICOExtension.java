@@ -53,6 +53,7 @@ public class BetVerseICOExtension extends AbstractExtension {
             String tokenSymbol = st.nextToken();
             int tokenDecimalPlaces = Integer.parseInt(st.nextToken());
             String contractAddress = st.nextToken();
+            String currencyAddress = st.nextToken();
 
             String rpcURL = st.nextToken();
             String passwordOrMnemonic = st.nextToken();
@@ -66,7 +67,7 @@ public class BetVerseICOExtension extends AbstractExtension {
             if (rpcURL != null && passwordOrMnemonic != null) {
                 return new BetVerseICOERC20Wallet(chainID, rpcURL,
                         passwordOrMnemonic, tokenSymbol, tokenDecimalPlaces,
-                        contractAddress, gasLimit, gasPriceMultiplier);
+                        contractAddress,currencyAddress, gasLimit, gasPriceMultiplier);
             }
 
         }

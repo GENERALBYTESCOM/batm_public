@@ -34,12 +34,14 @@ import org.web3j.utils.Convert;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 public class BetVerseICOERC20Wallet implements IWallet {
     private final String contractAddress;
+    private final String currencyAddress;
     private final String tokenSymbol;
     private final int tokenDecimalPlaces;
     private final Credentials credentials;
@@ -51,7 +53,7 @@ public class BetVerseICOERC20Wallet implements IWallet {
     private static final Logger log = LoggerFactory.getLogger(BetVerseICOERC20Wallet.class);
 
     public BetVerseICOERC20Wallet(long chainID, String rpcURL, String mnemonicOrPassword, String tokenSymbol, int tokenDecimalPlaces,
-                                  String contractAddress, BigInteger fixedGasLimit, BigDecimal gasPriceMultiplier) {
+                                  String contractAddress, String currencyAddress, BigInteger fixedGasLimit, BigDecimal gasPriceMultiplier) {
 
         StringBuilder sb = new StringBuilder();
 
@@ -61,6 +63,7 @@ public class BetVerseICOERC20Wallet implements IWallet {
         sb.append("tokenSymbol:: " + tokenSymbol).append("\n");
         sb.append("tokenDecimalPlaces:: " + tokenDecimalPlaces).append("\n");
         sb.append("contractAddress:: " + contractAddress).append("\n");
+        sb.append("currencyAddress:: " + currencyAddress).append("\n");
         sb.append("fixedGasLimit:: " + fixedGasLimit).append("\n");
         sb.append("gasPriceMultiplier:: " + gasPriceMultiplier).append("\n");
         sb.append("mnemonicOrPassword:: " + mnemonicOrPassword).append("\n");
@@ -68,6 +71,7 @@ public class BetVerseICOERC20Wallet implements IWallet {
         this.tokenSymbol = tokenSymbol;
         this.tokenDecimalPlaces = tokenDecimalPlaces;
         this.contractAddress = contractAddress.toLowerCase();
+        this.currencyAddress = currencyAddress.toLowerCase();
         this.fixedGasLimit = fixedGasLimit;
         this.gasPriceMultiplier = gasPriceMultiplier; //gasPriceMultiplier;
         this.chainID = chainID;
@@ -173,7 +177,7 @@ public class BetVerseICOERC20Wallet implements IWallet {
             final BigInteger transferAmountWei = Convert.toWei(amount, Convert.Unit.ETHER).toBigIntegerExact();
 
             TransactionReceipt receipt = getContract(destinationAddress, transferAmountWei)
-                    .buy(destinationAddress, transferAmountWei)
+                    .buy(destinationAddress, transferAmountWei, this.currencyAddress)
                     .sendAsync()
                     .get(240, TimeUnit.SECONDS);
 

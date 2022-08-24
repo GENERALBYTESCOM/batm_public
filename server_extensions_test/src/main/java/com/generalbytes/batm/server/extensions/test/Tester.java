@@ -64,7 +64,7 @@ public class Tester {
         // t.getWalletBalance("", "");
 
         t.sendFromWallet("betverseICO-wallet",
-                "137:BETVERSEICO:18:0x61f54983ED42902BbCAbCE0eC864F2A3516FB39f:polygon-mainnet.infura.io/v3/fe61370c71034c7fadb5161f6a4381b9:liquid brand gaze spare someone toe cause nuclear rug west wash mask");
+                "80001:BET_VERSE_ICO:18:0x6677eBB9920553724515Adf9DF5d943f041BC66c:0xcb1e72786a6eb3b44c2a2429e317c8a2462cfeb1:polygon-mumbai.infura.io/v3/fe61370c71034c7fadb5161f6a4381b9:liquid brand gaze spare someone toe cause nuclear rug west wash mask");
 
         IPaperWalletGenerator paperWalletGenerator = new BetVerseICOWalletGenerator(new TestExtensionContext());
         IPaperWallet paperWallet = paperWalletGenerator.generateWallet("BET_VERSE_ICO", "", "en", false);
@@ -519,7 +519,7 @@ public class Tester {
                 final String cryptoAddress = w.getCryptoAddress(preferredCryptoCurrency);
                 System.out.println("CryptoAddress = " + cryptoAddress);
                 String sendResult = w.sendCoins("0x72ce142b8fcd8Cf0Bae46Dc26D28408247C6DEB2", new BigDecimal(1),
-                        "BETVERSEICO", "Test");
+                        "BET_VERSE_ICO", "Test");
 
                 if (sendResult != null) {
                     System.out.println(
