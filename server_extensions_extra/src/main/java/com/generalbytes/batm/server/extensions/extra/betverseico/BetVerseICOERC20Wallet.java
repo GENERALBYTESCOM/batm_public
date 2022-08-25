@@ -19,7 +19,6 @@ package com.generalbytes.batm.server.extensions.extra.betverseico;
 
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.ethereum.EtherUtils;
-import com.generalbytes.batm.server.extensions.extra.ethereum.erc20.ERC20ContractGasProvider;
 import com.generalbytes.batm.server.extensions.extra.ethereum.erc20.generated.ERC20Interface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +41,7 @@ import java.util.concurrent.TimeoutException;
 public class BetVerseICOERC20Wallet implements IWallet {
     private final String contractAddress;
     private final String currencyAddress;
+    private final String tokenAddress;
     private final String tokenSymbol;
     private final int tokenDecimalPlaces;
     private final Credentials credentials;
@@ -49,11 +49,12 @@ public class BetVerseICOERC20Wallet implements IWallet {
     private final BigInteger fixedGasLimit;
     private final BigDecimal gasPriceMultiplier;
     private final ERC20Interface noGasContract;
+    private final ERC20Interface noGasTokenContract;
     private long chainID;
     private static final Logger log = LoggerFactory.getLogger(BetVerseICOERC20Wallet.class);
 
     public BetVerseICOERC20Wallet(long chainID, String rpcURL, String mnemonicOrPassword, String tokenSymbol, int tokenDecimalPlaces,
-                                  String contractAddress, String currencyAddress, BigInteger fixedGasLimit, BigDecimal gasPriceMultiplier) {
+                                  String contractAddress, String currencyAddress, String tokenAddress, BigInteger fixedGasLimit, BigDecimal gasPriceMultiplier) {
 
         StringBuilder sb = new StringBuilder();
 
@@ -64,6 +65,7 @@ public class BetVerseICOERC20Wallet implements IWallet {
         sb.append("tokenDecimalPlaces:: " + tokenDecimalPlaces).append("\n");
         sb.append("contractAddress:: " + contractAddress).append("\n");
         sb.append("currencyAddress:: " + currencyAddress).append("\n");
+        sb.append("tokenAddress:: " + tokenAddress).append("\n");
         sb.append("fixedGasLimit:: " + fixedGasLimit).append("\n");
         sb.append("gasPriceMultiplier:: " + gasPriceMultiplier).append("\n");
         sb.append("mnemonicOrPassword:: " + mnemonicOrPassword).append("\n");
@@ -72,6 +74,7 @@ public class BetVerseICOERC20Wallet implements IWallet {
         this.tokenDecimalPlaces = tokenDecimalPlaces;
         this.contractAddress = contractAddress.toLowerCase();
         this.currencyAddress = currencyAddress.toLowerCase();
+        this.tokenAddress = tokenAddress.toLowerCase();
         this.fixedGasLimit = fixedGasLimit;
         this.gasPriceMultiplier = gasPriceMultiplier; //gasPriceMultiplier;
         this.chainID = chainID;
@@ -81,7 +84,7 @@ public class BetVerseICOERC20Wallet implements IWallet {
         this.credentials = initCredentials(mnemonicOrPassword);
 
         this.noGasContract = ERC20Interface.load(this.contractAddress, w, new FastRawTransactionManager(this.w, this.credentials, chainID), BigInteger.valueOf(100000000000L), DefaultGasProvider.GAS_LIMIT);
-        //this.noGasContract = ERC20Interface.load(this.contractAddress, w, new FastRawTransactionManager(this.w, this.credentials, chainID), DummyContractGasProvider.INSTANCE);
+        this.noGasTokenContract = ERC20Interface.load(this.tokenAddress, w, new FastRawTransactionManager(this.w, this.credentials, chainID), BigInteger.valueOf(100000000000L), DefaultGasProvider.GAS_LIMIT);
 
     }
 
@@ -89,7 +92,11 @@ public class BetVerseICOERC20Wallet implements IWallet {
         return ERC20Interface.load(this.contractAddress, w, new FastRawTransactionManager(this.w, this.credentials, chainID), BigInteger.valueOf(100000000000L), DefaultGasProvider.GAS_LIMIT);
     }
 
-    private BigDecimal convertToBigDecimal(BigInteger value) {
+    private ERC20Interface getTokenContract() {
+        return ERC20Interface.load(this.tokenAddress, w, new FastRawTransactionManager(this.w, this.credentials, chainID), BigInteger.valueOf(100000000000L), DefaultGasProvider.GAS_LIMIT);
+    }
+
+    private BigDecimal convertToBigDecimal(String value) {
         if (value == null) {
             return null;
         }
@@ -150,9 +157,9 @@ public class BetVerseICOERC20Wallet implements IWallet {
         }
 
         try {
-            BigInteger amount = noGasContract.balanceOf(credentials.getAddress()).send();
+            BigInteger amount = noGasTokenContract.balanceOf(credentials.getAddress()).send();
             if (amount != null) {
-                return convertToBigDecimal(amount);
+                return convertToBigDecimal(String.valueOf(amount));
             }
         } catch (Exception e) {
             log.error("Error obtaining balance.", e);
