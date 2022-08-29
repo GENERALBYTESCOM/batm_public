@@ -54,7 +54,7 @@ public class VerumcoinAddressValidator implements ICryptoAddressValidator {
 
     @Override
     public boolean isPaperWalletSupported() {
-        return true;
+        return false;
     }
 
     @Override
