@@ -20,6 +20,7 @@ package com.generalbytes.batm.server.extensions.extra;
 import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
 import com.generalbytes.batm.server.extensions.extra.betverse.sources.fixed.BetVerseFixedRateSource;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -31,7 +32,7 @@ import java.util.Collection;
 
 // All tests @Ignore'd here because they depend on external resources
 // To be run manually, not as a part of the build
-///////////////////////////////////////////////@Ignore
+@Ignore
 @RunWith(Parameterized.class)
 public class RateSourceTest {
     private final String cryptoCurrency;

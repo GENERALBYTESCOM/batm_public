@@ -23,7 +23,6 @@ import com.generalbytes.batm.server.extensions.watchlist.WatchListQuery;
 import com.generalbytes.batm.server.extensions.watchlist.WatchListResult;
 
 import java.util.List;
-import java.util.Map;
 
 public class WatchlistExtension extends AbstractExtension implements ITransactionListener {
 
@@ -47,11 +46,6 @@ public class WatchlistExtension extends AbstractExtension implements ITransactio
     @Override
     public boolean isTransactionApproved(ITransactionRequest transactionRequest) {
         return isTransactionApprovedInner(transactionRequest.getIdentityPublicId());
-    }
-
-    @Override
-    public OutputQueueInsertConfig overrideOutputQueueInsertConfig(ITransactionQueueRequest transactionQueueRequest, OutputQueueInsertConfig outputQueueInsertConfig) {
-        return null;
     }
 
     private boolean isTransactionApprovedInner(String identityPublicId) {
@@ -97,17 +91,4 @@ public class WatchlistExtension extends AbstractExtension implements ITransactio
         return banned;
     }
 
-    @Override
-    public Map<String, String> onTransactionCreated(ITransactionDetails transactionDetails) {
-        return null;
-    }
-
-    @Override
-    public Map<String, String> onTransactionUpdated(ITransactionDetails transactionDetails) {
-        return null;
-    }
-
-    @Override
-    public void receiptSent(IReceiptDetails receiptDetails) {
-    }
 }

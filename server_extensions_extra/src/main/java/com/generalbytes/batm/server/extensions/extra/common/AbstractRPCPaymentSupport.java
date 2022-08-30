@@ -361,7 +361,7 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
                                 }
                             }
                             if (totalCoinsReceived.compareTo(request.getAmount()) > 0) { //customer sent more coins
-                                if (totalCoinsReceived.subtract(request.getTolerance()).compareTo(request.getAmount()) <= 0) {
+                                if (request.isOverageAllowed() || totalCoinsReceived.subtract(request.getTolerance()).compareTo(request.getAmount()) <= 0) {
                                     matchInTolerance = true;
                                     toleranceRemain = totalCoinsReceived.subtract(request.getAmount());
                                 }
@@ -513,6 +513,7 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
                 paymentAddress,
                 cryptoTotalToSend,
                 spec.getTolerance(),
+                spec.isOverageAllowed(),
                 spec.getRemoveAfterNumberOfConfirmationsOfIncomingTransaction(),
                 spec.getRemoveAfterNumberOfConfirmationsOfOutgoingTransaction(),
                 spec.getWallet(),

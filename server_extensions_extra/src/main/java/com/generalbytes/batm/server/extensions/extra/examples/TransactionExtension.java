@@ -42,21 +42,6 @@ public class TransactionExtension extends AbstractExtension implements ITransact
     }
 
     @Override
-    public boolean isTransactionApproved(ITransactionRequest transactionRequest) {
-        return true; //approve all transactions
-    }
-
-    @Override
-    public OutputQueueInsertConfig overrideOutputQueueInsertConfig(ITransactionQueueRequest transactionQueueRequest, OutputQueueInsertConfig outputQueueInsertConfig) {
-        return null;
-    }
-
-    @Override
-    public boolean isTransactionPreparationApproved(ITransactionPreparation preparation) {
-        return true; //approve all transactions
-    }
-
-    @Override
     public Map<String, String> onTransactionCreated(ITransactionDetails transactionDetails) {
         String terminalSerialNumber = transactionDetails.getTerminalSerialNumber();
         Long previousValue = ticketCounters.get(terminalSerialNumber);

@@ -38,9 +38,9 @@ public class BitGoSendManyRequest {
 
     public static class BitGoRecipient {
         public String address;
-        public Integer amount; // in satoshis
+        public String amount; // in satoshis
 
-        public BitGoRecipient(String address, Integer amount) {
+        public BitGoRecipient(String address, String amount) {
             this.address = address;
             this.amount = amount;
         }

@@ -126,27 +126,30 @@ public class BitgoWallet implements IWallet, ICanSendMany {
         return null;
     }
 
-    protected int toSatoshis(BigDecimal amount, String cryptoCurrency) {
+    protected String toSatoshis(BigDecimal amount, String cryptoCurrency) {
+        return amount.multiply(getConverter(cryptoCurrency)).stripTrailingZeros().toPlainString();
+    }
+
+    private BigDecimal getConverter(String cryptoCurrency) {
         switch (CryptoCurrency.valueOfCode(cryptoCurrency)) {
             case BTC:
-                return amount.multiply(Converters.BTC).intValue();
+                return Converters.BTC;
             case LTC:
-                return amount.multiply(Converters.LTC).intValue();
+                return Converters.LTC;
             case BCH:
-                return amount.multiply(Converters.BCH).intValue();
+                return Converters.BCH;
             case ETH:
-                return amount.multiply(Converters.ETH).intValue();
+                return Converters.ETH;
             case XRP:
-                return amount.multiply(Converters.XRP).intValue();
+                return Converters.XRP;
             case USDT:
-                return amount.multiply(Converters.USDT).intValue();
-
+                return Converters.USDT;
             case TBTC:
-                return amount.multiply(Converters.TBTC).intValue();
+                return Converters.TBTC;
             case TLTC:
-                return amount.multiply(Converters.TLTC).intValue();
+                return Converters.TLTC;
             case TBCH:
-                return amount.multiply(Converters.TBCH).intValue();
+                return Converters.TBCH;
             default:
                 throw new IllegalArgumentException(cryptoCurrency + " not supported");
         }
