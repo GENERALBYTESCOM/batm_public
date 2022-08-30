@@ -53,7 +53,7 @@ public enum CryptoCurrency {
     CLOAK("CloakCoin"),
     DAI("Dai"),
     BET_VERSE("BetVerse"),
-    BET_VERSE_ICO("BetVerse ICO"),
+    ICO("ICO"),
     BIZZ("BIZZCOIN"),
     DASH("Dash"),
     DDB("Discount Distributors Bahamas"),

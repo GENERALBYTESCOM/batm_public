@@ -49,7 +49,7 @@ public class BitbuyExchange implements IExchangeAdvanced, IRateSourceAdvanced {
             CryptoCurrency.BCH.getCode(),
             CryptoCurrency.BTC.getCode(),
             CryptoCurrency.BET_VERSE.getCode(),
-            CryptoCurrency.BET_VERSE_ICO.getCode(),
+            CryptoCurrency.ICO.getCode(),
             CryptoCurrency.DAI.getCode(),
             CryptoCurrency.ETH.getCode(),
             CryptoCurrency.LTC.getCode(),

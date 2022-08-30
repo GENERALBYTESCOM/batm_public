@@ -15,12 +15,12 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.betverseico;
+package com.generalbytes.batm.server.extensions.extra.ico;
 
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.extra.ethereum.EtherUtils;
 
-public class BetVerseICOAddressValidator implements ICryptoAddressValidator {
+public class ICOAddressValidator implements ICryptoAddressValidator {
 
     @Override
     public boolean isAddressValid(String address) {

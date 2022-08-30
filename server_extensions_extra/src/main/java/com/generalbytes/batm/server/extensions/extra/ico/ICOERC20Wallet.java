@@ -15,7 +15,7 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.betverseico;
+package com.generalbytes.batm.server.extensions.extra.ico;
 
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.ethereum.EtherUtils;
@@ -33,12 +33,11 @@ import org.web3j.utils.Convert;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashSet;
-import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-public class BetVerseICOERC20Wallet implements IWallet {
+public class ICOERC20Wallet implements IWallet {
     private final String contractAddress;
     private final String currencyAddress;
     private final String tokenAddress;
@@ -51,10 +50,10 @@ public class BetVerseICOERC20Wallet implements IWallet {
     private final ERC20Interface noGasContract;
     private final ERC20Interface noGasTokenContract;
     private long chainID;
-    private static final Logger log = LoggerFactory.getLogger(BetVerseICOERC20Wallet.class);
+    private static final Logger log = LoggerFactory.getLogger(ICOERC20Wallet.class);
 
-    public BetVerseICOERC20Wallet(long chainID, String rpcURL, String mnemonicOrPassword, String tokenSymbol, int tokenDecimalPlaces,
-                                  String contractAddress, String currencyAddress, String tokenAddress, BigInteger fixedGasLimit, BigDecimal gasPriceMultiplier) {
+    public ICOERC20Wallet(long chainID, String rpcURL, String mnemonicOrPassword, String tokenSymbol, int tokenDecimalPlaces,
+                          String contractAddress, String currencyAddress, String tokenAddress, BigInteger fixedGasLimit, BigDecimal gasPriceMultiplier) {
 
         StringBuilder sb = new StringBuilder();
 

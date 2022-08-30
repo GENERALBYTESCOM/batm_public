@@ -15,11 +15,11 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.betverseico;
+package com.generalbytes.batm.server.extensions.extra.ico;
 
 import com.generalbytes.batm.server.extensions.IPaperWallet;
 
-public class BetVerseICOPaperWallet implements IPaperWallet{
+public class ICOPaperWallet implements IPaperWallet{
     private byte[] content;
     private String address;
     private String privateKey;
@@ -28,7 +28,7 @@ public class BetVerseICOPaperWallet implements IPaperWallet{
     private String fileExtension;
     private String cryptoCurrency;
 
-    public BetVerseICOPaperWallet(byte[] content, String address, String privateKey, String message, String contentType, String fileExtension, String cryptoCurrency) {
+    public ICOPaperWallet(byte[] content, String address, String privateKey, String message, String contentType, String fileExtension, String cryptoCurrency) {
         this.content = content;
         this.address = address;
         this.privateKey = privateKey;

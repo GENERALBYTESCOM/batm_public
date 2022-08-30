@@ -64,7 +64,7 @@ public class EthereumExtension extends AbstractExtension{
         result.add(CryptoCurrency.REP.getCode());
         result.add(CryptoCurrency.MKR.getCode());
         result.add(CryptoCurrency.BET_VERSE.getCode());
-        result.add(CryptoCurrency.BET_VERSE_ICO.getCode());
+        result.add(CryptoCurrency.ICO.getCode());
         result.add(CryptoCurrency.DAI.getCode());
         result.add(CryptoCurrency.BIZZ.getCode());
         result.add(CryptoCurrency.BTBS.getCode());

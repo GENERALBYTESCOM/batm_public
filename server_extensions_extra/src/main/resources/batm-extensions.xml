@@ -1514,25 +1514,27 @@
         <cryptologo cryptocurrency="BET_VERSE" file="bet_verse.svg"/>
     </extension>
 
-    <extension class="com.generalbytes.batm.server.extensions.extra.betverseico.BetVerseICOExtension" >
+    <extension class="com.generalbytes.batm.server.extensions.extra.ico.ICOExtension" >
         <wallet prefix="betverseICO-wallet" name="betverseICO-wallet">
             <param name="chainID" />
             <param name="tokenSymbol" />
             <param name="tokenDecimalPlaces" />
             <param name="contractAddress" />
+            <param name="currencyAddress" />
+            <param name="tokenAddress" />
             <param name="rpcURL" />
             <param name="mnemonic" />
             <param name="gaslimit" />
             <param name="gasPriceMultiplier" />
-            <cryptocurrency>BET_VERSE_ICO</cryptocurrency>
+            <cryptocurrency>ICO</cryptocurrency>
         </wallet>
         <ratesource prefix="betverseICOfix" name ="Fix Price - BETVERSEICO" >
             <param name="price" />
-            <cryptocurrency>BET_VERSE_ICO</cryptocurrency>
+            <cryptocurrency>ICO</cryptocurrency>
             <help>USD is default fiat currency.</help>
         </ratesource>
-        <cryptologo cryptocurrency="BET_VERSE_ICO" file="bet_verse_ico.png"/>
-        <cryptologo cryptocurrency="BET_VERSE_ICO" file="bet_verse_ico.svg"/>
+        <cryptologo cryptocurrency="ICO" file="ICO.png"/>
+        <cryptologo cryptocurrency="ICO" file="ICO.svg"/>
     </extension>
 
 
