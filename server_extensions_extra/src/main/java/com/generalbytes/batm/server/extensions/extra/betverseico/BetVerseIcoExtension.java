@@ -15,15 +15,14 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.ico;
+package com.generalbytes.batm.server.extensions.extra.betverseico;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
-import com.generalbytes.batm.server.extensions.extra.ico.sources.fixed.ICOFixedRateSource;
+import com.generalbytes.batm.server.extensions.extra.betverseico.sources.fixed.BetVerseIcoFixedRateSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.web3j.tx.gas.DefaultGasProvider;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -31,11 +30,11 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-public class ICOExtension extends AbstractExtension {
+public class BetVerseIcoExtension extends AbstractExtension {
 
-    private static final Logger log = LoggerFactory.getLogger(ICOExtension.class);
+    private static final Logger log = LoggerFactory.getLogger(BetVerseIcoExtension.class);
 
-    private static final ICryptoCurrencyDefinition DEFINITION = new ICODefinition();
+    private static final ICryptoCurrencyDefinition DEFINITION = new BetVerseIcoDefinition();
 
     @Override
     public String getName() {
@@ -48,27 +47,30 @@ public class ICOExtension extends AbstractExtension {
             StringTokenizer st = new StringTokenizer(walletLogin, ":");
             String walletType = st.nextToken();
 
+            if (!walletType.equals("betverseICO-wallet"))
+                return null;
+
             Long chainID = Long.parseLong(st.nextToken());
 
             String tokenSymbol = st.nextToken();
             int tokenDecimalPlaces = Integer.parseInt(st.nextToken());
             String contractAddress = st.nextToken();
-            String currencyAddress = st.nextToken();
-            String tokenAddress = st.nextToken();
 
             String rpcURL = st.nextToken();
             String passwordOrMnemonic = st.nextToken();
-            BigInteger gasLimit = DefaultGasProvider.GAS_LIMIT;
+            BigInteger gasLimit = null;
             if (st.hasMoreTokens()) {
                 gasLimit = new BigInteger(st.nextToken());
             }
-
-            BigDecimal gasPriceMultiplier = new BigDecimal(DefaultGasProvider.GAS_PRICE);
+            BigDecimal gasPriceMultiplier = BigDecimal.ONE;
+            if (st.hasMoreTokens()) {
+                gasPriceMultiplier = new BigDecimal(st.nextToken());
+            }
 
             if (rpcURL != null && passwordOrMnemonic != null) {
-                return new ICOERC20Wallet(chainID, rpcURL,
+                return new BetVerseIcoERC20Wallet(chainID, rpcURL,
                         passwordOrMnemonic, tokenSymbol, tokenDecimalPlaces,
-                        contractAddress,currencyAddress, tokenAddress, gasLimit, gasPriceMultiplier);
+                        contractAddress, gasLimit, gasPriceMultiplier);
             }
 
         }
@@ -77,16 +79,16 @@ public class ICOExtension extends AbstractExtension {
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (CryptoCurrency.ICO.getCode().equalsIgnoreCase(cryptoCurrency)) {
-            return new ICOAddressValidator();
+        if (CryptoCurrency.BET_VERSE_ICO.getCode().equalsIgnoreCase(cryptoCurrency)) {
+            return new BetVerseIcoAddressValidator();
         }
         return null;
     }
 
     @Override
     public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency) {
-        if (CryptoCurrency.ICO.getCode().equalsIgnoreCase(cryptoCurrency)) {
-            return new ICOWalletGenerator(ctx);
+        if (CryptoCurrency.BET_VERSE_ICO.getCode().equalsIgnoreCase(cryptoCurrency)) {
+            return new BetVerseIcoWalletGenerator(ctx);
         }
         return null;
     }
@@ -107,7 +109,7 @@ public class ICOExtension extends AbstractExtension {
             if (st.hasMoreTokens()) {
                 preferedFiatCurrency = st.nextToken().toUpperCase();
             }
-            return new ICOFixedRateSource(rate, preferedFiatCurrency);
+            return new BetVerseIcoFixedRateSource(rate, preferedFiatCurrency);
         }
         return null;
     }
@@ -115,7 +117,7 @@ public class ICOExtension extends AbstractExtension {
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(CryptoCurrency.ICO.getCode());
+        result.add(CryptoCurrency.BET_VERSE_ICO.getCode());
         return result;
     }
 }

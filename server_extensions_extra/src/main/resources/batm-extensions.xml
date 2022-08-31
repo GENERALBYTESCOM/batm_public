@@ -810,6 +810,7 @@
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>DAI</cryptocurrency>
             <cryptocurrency>BET_VERSE</cryptocurrency>
+            <cryptocurrency>ICO</cryptocurrency>
             <cryptocurrency buyonly="true">ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
@@ -1514,27 +1515,25 @@
         <cryptologo cryptocurrency="BET_VERSE" file="bet_verse.svg"/>
     </extension>
 
-    <extension class="com.generalbytes.batm.server.extensions.extra.ico.ICOExtension" >
+    <extension class="com.generalbytes.batm.server.extensions.extra.betverseico.BetVerseIcoExtension" >
         <wallet prefix="betverseICO-wallet" name="betverseICO-wallet">
             <param name="chainID" />
             <param name="tokenSymbol" />
             <param name="tokenDecimalPlaces" />
             <param name="contractAddress" />
-            <param name="currencyAddress" />
-            <param name="tokenAddress" />
             <param name="rpcURL" />
             <param name="mnemonic" />
             <param name="gaslimit" />
             <param name="gasPriceMultiplier" />
-            <cryptocurrency>ICO</cryptocurrency>
+            <cryptocurrency>BET_VERSE_ICO</cryptocurrency>
         </wallet>
-        <ratesource prefix="betverseICOfix" name ="Fix Price - BETVERSEICO" >
+        <ratesource prefix="betverseIcofix" name ="Fix Price - BETVERSE ICO" >
             <param name="price" />
-            <cryptocurrency>ICO</cryptocurrency>
+            <cryptocurrency>BET_VERSE_ICO</cryptocurrency>
             <help>USD is default fiat currency.</help>
         </ratesource>
-        <cryptologo cryptocurrency="ICO" file="ICO.png"/>
-        <cryptologo cryptocurrency="ICO" file="ICO.svg"/>
+        <cryptologo cryptocurrency="BET_VERSE_ICO" file="bet_verse_ico.png"/>
+        <cryptologo cryptocurrency="BET_VERSE_ICO" file="bet_verse_ico.svg"/>
     </extension>
 
 

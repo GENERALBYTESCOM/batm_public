@@ -15,7 +15,7 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.ico;
+package com.generalbytes.batm.server.extensions.extra.betverseico;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.IExtensionContext;
@@ -33,12 +33,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class ICOWalletGenerator implements IPaperWalletGenerator {
+public class BetVerseIcoWalletGenerator implements IPaperWalletGenerator {
 
-    private static final Logger log = LoggerFactory.getLogger("batm.master.BTokenWalletGenerator");
+    private static final Logger log = LoggerFactory.getLogger("batm.master.BTokenIcoWalletGenerator");
     private IExtensionContext ctx;
 
-    public ICOWalletGenerator(IExtensionContext ctx) {
+    public BetVerseIcoWalletGenerator(IExtensionContext ctx) {
         this.ctx = ctx;
     }
 
@@ -47,12 +47,11 @@ public class ICOWalletGenerator implements IPaperWalletGenerator {
             boolean shouldBeVanity) {
         WalletToolsETH wt = new WalletToolsETH();
         String mnemonic = EtherUtils.generateMnemonic();
-
-        MasterPrivateKeyETH m = wt.getMasterPrivateKey(mnemonic, "", CryptoCurrency.ICO.getCode(),
+        MasterPrivateKeyETH m = wt.getMasterPrivateKey(mnemonic, "", CryptoCurrency.BET_VERSE_ICO.getCode(),
                 IWalletTools.STANDARD_BIP44);
 
-        String privateKey = wt.getWalletPrivateKey(m, CryptoCurrency.ICO.getCode(), 0, 0, 0);
-        String address = wt.getWalletAddress(m, CryptoCurrency.ICO.getCode(), 0, 0, 0);
+        String privateKey = wt.getWalletPrivateKey(m, CryptoCurrency.BET_VERSE_ICO.getCode(), 0, 0, 0);
+        String address = wt.getWalletAddress(m, CryptoCurrency.BET_VERSE_ICO.getCode(), 0, 0, 0);
 
         byte[] content = ctx.createPaperWallet7ZIP(mnemonic, address, oneTimePassword, cryptoCurrency);
 
@@ -67,9 +66,7 @@ public class ICOWalletGenerator implements IPaperWalletGenerator {
             }
         }
 
-        return new ICOPaperWallet(content, "https://betverse.ch/instalments/?address=" + address, mnemonic,
-                messageText,
-                "application/zip", "zip",
+        return new BetVerseIcoPaperWallet(content, address, mnemonic, messageText, "application/zip", "zip",
                 cryptoCurrency);
     }
 
