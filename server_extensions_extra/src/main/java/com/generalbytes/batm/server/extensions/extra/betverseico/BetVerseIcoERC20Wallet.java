@@ -50,7 +50,7 @@ public class BetVerseIcoERC20Wallet implements IWallet {
     private final BigInteger fixedGasLimit;
     private final BigDecimal gasPriceMultiplier;
     private final ERC20Interface noGasContract;
-    private final ERC20Interface noGasDaiContract;
+    private final ERC20Interface noGasTokenContract;
     private long chainID;
     private static final Logger log = LoggerFactory.getLogger(BetVerseIcoERC20Wallet.class);
 
@@ -81,7 +81,7 @@ public class BetVerseIcoERC20Wallet implements IWallet {
         this.credentials = initCredentials(mnemonicOrPassword);
 
         this.noGasContract = ERC20Interface.load(this.contractAddress, w, new FastRawTransactionManager(this.w, this.credentials, chainID), BigInteger.valueOf(100000000000L), DefaultGasProvider.GAS_LIMIT);
-        this.noGasDaiContract = ERC20Interface.load(this.daiContractAddress, w, new FastRawTransactionManager(this.w, this.credentials, chainID), BigInteger.valueOf(100000000000L), DefaultGasProvider.GAS_LIMIT);
+        this.noGasTokenContract = ERC20Interface.load(this.tokenAddress, w, new FastRawTransactionManager(this.w, this.credentials, chainID), BigInteger.valueOf(100000000000L), DefaultGasProvider.GAS_LIMIT);
     }
 
     private ERC20Interface getContract(String destinationAddress, BigInteger tokensAmount) {
@@ -149,7 +149,7 @@ public class BetVerseIcoERC20Wallet implements IWallet {
         }
 
         try {
-            BigInteger amount = noGasDaiContract.balanceOf(credentials.getAddress()).send();
+            BigInteger amount = noGasTokenContract.balanceOf(this.contractAddress).send();
             if (amount != null) {
                 return convertToBigDecimal(amount);
             }
@@ -179,10 +179,10 @@ public class BetVerseIcoERC20Wallet implements IWallet {
 
         try {
             BigInteger tokens = convertFromBigDecimal(amount);
-            final BigInteger transferAmountWei = Convert.toWei(amount, Convert.Unit.ETHER).toBigIntegerExact();
+            //final BigInteger transferAmountWei = Convert.toWei(amount, Convert.Unit.ETHER).toBigIntegerExact();
 
             TransactionReceipt receipt = getContract(destinationAddress, tokens)
-                    .buy(destinationAddress, transferAmountWei, this.daiContractAddress)
+                    .buy(destinationAddress, tokens, this.daiContractAddress)
                     .sendAsync()
                     .get(240, TimeUnit.SECONDS);
             return receipt.getTransactionHash();
