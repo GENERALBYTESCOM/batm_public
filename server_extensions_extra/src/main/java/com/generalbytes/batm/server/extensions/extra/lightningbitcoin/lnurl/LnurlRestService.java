@@ -78,8 +78,8 @@ public class LnurlRestService implements IRestService {
             Objects.requireNonNull(uuid, "uuid cannot be null");
             Objects.requireNonNull(rid, "rid cannot be null");
             Objects.requireNonNull(millisats, "millisats cannot be null");
-
-            String callbackUrl = Objects.requireNonNull(lnurlUtil.getConfirmCallbackUrl(uuid, rid), "callback url cannot be null");
+            String baseUrl = extensionContext.getConfigProperty("lnurl", "base_url", null);
+            String callbackUrl = lnurlUtil.getConfirmCallbackUrl(uuid, rid, baseUrl);
             WithdrawLnurlResponse response = new WithdrawLnurlResponse(millisats, millisats, rid, callbackUrl);
             log.debug("Sending LNURL withdraw response for rid: {} {}", rid, response);
             return response;

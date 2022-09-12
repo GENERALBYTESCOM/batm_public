@@ -235,4 +235,9 @@ public interface INotificationListener {
      * Travel Rule transaction submission failed
      */
     default void travelRuleSubmissionFailed(String terminalSerialNumber, String identityPublicId, String response, BigDecimal cryptoAmount, String cryptoCurrency, String cryptoAddress) {}
+
+    default void verificationProviderApproved(String terminalSerialNumber, String identityPublicId) {}
+
+    default void verificationProviderDeclined(String terminalSerialNumber, String identityPublicId) {}
+
 }

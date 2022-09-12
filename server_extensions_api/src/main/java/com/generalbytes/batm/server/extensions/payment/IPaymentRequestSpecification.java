@@ -48,6 +48,7 @@ public interface IPaymentRequestSpecification {
     IWallet getWallet();
 
     BigDecimal getTolerance();
+    boolean isOverageAllowed();
 
     BigDecimal getMinimumMiningFeePerByte();
     BigDecimal getMaximumMiningFeePerByte();

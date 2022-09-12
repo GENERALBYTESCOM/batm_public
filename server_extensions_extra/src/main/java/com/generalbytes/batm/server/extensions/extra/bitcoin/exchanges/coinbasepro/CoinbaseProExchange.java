@@ -53,6 +53,7 @@ public class CoinbaseProExchange extends XChangeExchange {
     @Override
     public Set<String> getCryptoCurrencies() {
         Set<String> cryptoCurrencies = new HashSet<>();
+        cryptoCurrencies.add(CryptoCurrency.ADA.getCode());
         cryptoCurrencies.add(CryptoCurrency.BCH.getCode());
         cryptoCurrencies.add(CryptoCurrency.BTC.getCode());
         cryptoCurrencies.add(CryptoCurrency.ETH.getCode());

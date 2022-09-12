@@ -23,19 +23,20 @@ public interface ITransactionListener {
 
     /**
      * Called before the person inserts cash, or sell or withdraw screen is entered but after the moment when identity is established and limits are calculated.
-     * @param preparation
      * @return when returned false, error message is displayed to user or withdrawal reason
      */
-    boolean isTransactionPreparationApproved(ITransactionPreparation preparation);
+    default boolean isTransactionPreparationApproved(ITransactionPreparation preparation) {
+        return true;
+    }
 
     /**
      * Callback method that is called by server before transaction is executed - however the cash is already inserted in machine in case of buy transaction.
      * If your method returns false than transaction will not take place and will fail with error ERROR_NOT_APPROVED.
      * Try to return from this method in less then 10 seconds.
-     * @param transactionRequest
-     * @return
      */
-    boolean isTransactionApproved(ITransactionRequest transactionRequest);
+    default boolean isTransactionApproved(ITransactionRequest transactionRequest) {
+        return true;
+    }
 
     /**
      * Called when there is an Output Queue configured for a BUY transaction on the server
@@ -48,26 +49,29 @@ public interface ITransactionListener {
      * This can be a new {@link OutputQueueInsertConfig} instance or the same one that is passed in (modified or not).
      * Returning null has the same effect as returning unmodified outputQueueInsertConfig argument.
      */
-    OutputQueueInsertConfig overrideOutputQueueInsertConfig(ITransactionQueueRequest transactionQueueRequest, OutputQueueInsertConfig outputQueueInsertConfig);
+    default OutputQueueInsertConfig overrideOutputQueueInsertConfig(ITransactionQueueRequest transactionQueueRequest, OutputQueueInsertConfig outputQueueInsertConfig) {
+        return null;
+    }
 
     /**
      * Callback method that is called by server when transaction is created on server
      * Returned value is a map of keys and values that will be stored in the database and available for later use in ticket template
-     * @param transactionDetails
-     * @return
      */
-    Map<String,String> onTransactionCreated(ITransactionDetails transactionDetails);
+    default Map<String,String> onTransactionCreated(ITransactionDetails transactionDetails) {
+        return null;
+    }
 
     /**
      * Callback method that is called by server when transaction is updated by server
      * Returned value is a map of keys and values that will be stored in the database and available for later use in ticket template
-     * @param transactionDetails
-     * @return
      */
-    Map<String,String> onTransactionUpdated(ITransactionDetails transactionDetails);
+    default Map<String,String> onTransactionUpdated(ITransactionDetails transactionDetails) {
+        return null;
+    }
 
     /**
      * Callback method that is called by server with user email address or cellphone number after the receipt is sent to the user
      */
-    void receiptSent(IReceiptDetails receiptDetails);
+    default void receiptSent(IReceiptDetails receiptDetails) {
+    }
 }
