@@ -82,6 +82,7 @@ public class CoinbaseExchange implements IRateSourceAdvanced, IExchangeAdvanced 
         FIAT_CURRENCIES.add(FiatCurrency.SGD.getCode());
         FIAT_CURRENCIES.add(FiatCurrency.USD.getCode());
 
+        CRYPTO_CURRENCIES.add(CryptoCurrency.ADA.getCode());
         CRYPTO_CURRENCIES.add(CryptoCurrency.BAT.getCode());
         CRYPTO_CURRENCIES.add(CryptoCurrency.BCH.getCode());
         CRYPTO_CURRENCIES.add(CryptoCurrency.BTC.getCode());
