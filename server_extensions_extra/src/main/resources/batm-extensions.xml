@@ -294,6 +294,7 @@
                 <cryptocurrency>TKN</cryptocurrency>
                 <cryptocurrency>USDT</cryptocurrency>
                 <cryptocurrency>USDTTRON</cryptocurrency>
+                <cryptocurrency>VERUM</cryptocurrency>
                 <cryptocurrency>VIA</cryptocurrency>
                 <cryptocurrency>WDC</cryptocurrency>
                 <cryptocurrency>WILC</cryptocurrency>
@@ -2384,6 +2385,37 @@
         <cryptologo cryptocurrency="USDTTRON" file="usdttron.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.ethereumclassic.EthereumClassicExtension">
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.verumcoin.VerumcoinExtension" >
+        <wallet prefix="verumcoind" name="Verumcoind">
+            <tunnel supported="true"/>
+            <sendtomany supported="true"/>
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="label" />
+            <cryptocurrency>VERUM</cryptocurrency>
+        </wallet>
+        <wallet prefix="verumcoindnoforward" name="Verumcoind (no forward)">
+            <tunnel supported="true"/>
+            <sendtomany supported="true"/>
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <cryptocurrency>VERUM</cryptocurrency>
+            <help>This variant generates new addresses for each transaction and does not forward payments from temporary address</help>
+        </wallet>
+        <ratesource prefix="verumfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>VERUM</cryptocurrency>
+            <help>USD is default fiat currency.</help>
+        </ratesource>
+        <cryptologo cryptocurrency="VERUM" file="verum.png"/>
+        <cryptologo cryptocurrency="VERUM" file="verum.svg"/>
     </extension>
 
     <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.notification.NotificationExampleExtension" />
