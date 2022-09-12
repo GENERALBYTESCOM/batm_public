@@ -611,6 +611,7 @@
             <cryptocurrency>TENT</cryptocurrency>
             <cryptocurrency>XZC</cryptocurrency>
             <cryptocurrency>ZPAE</cryptocurrency>
+            <cryptocurrency>GQ</cryptocurrency>
         </ratesource>
         <ratesource prefix="coinpaprika" name="CoinPaprika.com">
             <param name="fiatcurrency"/>
