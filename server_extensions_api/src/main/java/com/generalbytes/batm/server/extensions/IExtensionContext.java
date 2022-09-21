@@ -666,4 +666,10 @@ public interface IExtensionContext {
      * from the server config directory, e.g. do not use any user provided values as the filename parameter etc.
      */
     String getConfigFileContent(final String fileNameInConfigDirectory);
+
+    /**
+     * Marks transaction as withdrawn by given remote or local transaction id.
+     * @param remoteOrLocalTransactionId
+     */
+    void markTransactionAsWithdrawn(String remoteOrLocalTransactionId);
 }

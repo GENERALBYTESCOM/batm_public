@@ -351,4 +351,9 @@ public class TestExtensionContext implements IExtensionContext {
     public String getConfigFileContent(String fileNameInConfigDirectory) {
         return "";
     }
+
+    @Override
+    public void markTransactionAsWithdrawn(String remoteOrLocalTransactionId) {
+
+    }
 }
