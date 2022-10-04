@@ -39,6 +39,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.ftx.FtxUs
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.hitbtc.HitbtcExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.enigma.EnigmaExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.poloniex.PoloniexExchange;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillmandigital.StillmanDigitalExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.bitcoinpay.BitcoinPayPP;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.coinofsale.CoinOfSalePP;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.bitkub.BitKubRateSource;
@@ -248,6 +249,14 @@ public class BitcoinExtension extends AbstractExtension {
                     preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase();
                 }
                 return new BitbuyExchange(apiKey, apiSecret, preferredFiatCurrency);
+            } else if ("stillmandigital".equalsIgnoreCase(prefix)) {
+                String apiKey = paramTokenizer.nextToken();
+                String apiSecret = paramTokenizer.nextToken();
+                String preferredFiatCurrency = FiatCurrency.USD.getCode();
+                if (paramTokenizer.hasMoreTokens()) {
+                    preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase();
+                }
+                return new StillmanDigitalExchange(apiKey, apiSecret, preferredFiatCurrency);
             }
         }
         } catch (Exception e) {
@@ -632,6 +641,14 @@ public class BitcoinExtension extends AbstractExtension {
                     preferredFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new FtxUsExchange(preferredFiatCurrency);
+            } else if ("stillmandigital".equalsIgnoreCase(rsType)) {
+                String apiKey = st.nextToken();
+                String apiSecret = st.nextToken();
+                String preferredFiatCurrency = FiatCurrency.USD.getCode();
+                if (st.hasMoreTokens()) {
+                    preferredFiatCurrency = st.nextToken().toUpperCase();
+                }
+                return new StillmanDigitalExchange(apiKey, apiSecret, preferredFiatCurrency);
             }
         }
         } catch (Exception e) {
