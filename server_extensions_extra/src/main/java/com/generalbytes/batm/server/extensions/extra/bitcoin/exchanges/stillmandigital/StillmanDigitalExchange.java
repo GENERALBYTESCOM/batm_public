@@ -6,6 +6,10 @@ import com.generalbytes.batm.server.extensions.IExchangeAdvanced;
 import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
 import com.generalbytes.batm.server.extensions.ITask;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillmandigital.dto.RowBalanceByAssetResponse;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillmandigital.dto.Ticker;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillmandigital.dto.WithdrawAck;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillmandigital.dto.WithdrawRequest;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillmandigital.dto.WithdrawalAddress;
 import com.google.common.collect.ImmutableSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.security.GeneralSecurityException;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -65,7 +70,8 @@ public class StillmanDigitalExchange implements IExchangeAdvanced, IRateSourceAd
         try {
             for (RowBalanceByAssetResponse assetData : api.getBalance().data) {
                 if (Objects.equals(cryptoCurrency, assetData.asset)) {
-                    return assetData.free;
+                    // crypto is interesting in terms on how much client can withdraw
+                    return assetData.total.add(assetData.netOpenPosition);
                 }
             }
         } catch (IOException e) {
@@ -79,6 +85,7 @@ public class StillmanDigitalExchange implements IExchangeAdvanced, IRateSourceAd
         try {
             for (RowBalanceByAssetResponse assetData : api.getBalance().data) {
                 if (Objects.equals(fiatCurrency, assetData.asset)) {
+                    // fiat is interesting in terms on how much client can spent to buy crypto, due this just FREE
                     return assetData.free;
                 }
             }
@@ -91,6 +98,23 @@ public class StillmanDigitalExchange implements IExchangeAdvanced, IRateSourceAd
     @Override
     public String sendCoins(String destinationAddress,
                             BigDecimal amount, String cryptoCurrency, String description) {
+        try {
+            List<WithdrawalAddress> withdrawalAddresses = api.getWithdrawalAddresses(cryptoCurrency);
+            for (WithdrawalAddress wa : withdrawalAddresses) {
+                if (wa.approved && Objects.equals(wa.walletAddress, destinationAddress)) {
+                    WithdrawRequest withdrawRequest = new WithdrawRequest();
+                    withdrawRequest.destinationId = wa.id;
+                    withdrawRequest.amount = amount;
+                    withdrawRequest.asset = cryptoCurrency;
+                    List<WithdrawAck> withdrawAcks = api.initiateWithdraw(withdrawRequest);
+                    if (withdrawAcks == null || withdrawAcks.isEmpty())
+                        return null;
+                    return withdrawAcks.get(0).id;
+                }
+            }
+        } catch (IOException e) {
+            log.error("Error during withdraw", e);
+        }
         return null;
     }
 
@@ -111,21 +135,53 @@ public class StillmanDigitalExchange implements IExchangeAdvanced, IRateSourceAd
 
     @Override
     public BigDecimal getExchangeRateForBuy(String cryptoCurrency, String fiatCurrency) {
+        try {
+            Ticker ticker = api.getTicker(cryptoCurrency + fiatCurrency);
+            if (ticker != null) {
+                return ticker.ap;
+            }
+        } catch (IOException e) {
+            log.error("Error", e);
+        }
         return null;
     }
 
     @Override
     public BigDecimal getExchangeRateForSell(String cryptoCurrency, String fiatCurrency) {
+        try {
+            Ticker ticker = api.getTicker(cryptoCurrency + fiatCurrency);
+            if (ticker != null) {
+                return ticker.bp;
+            }
+        } catch (IOException e) {
+            log.error("Error", e);
+        }
         return null;
     }
 
     @Override
     public BigDecimal calculateBuyPrice(String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount) {
+        try {
+            Ticker ticker = api.getTicker(cryptoCurrency + fiatCurrency);
+            if (ticker != null && ticker.as.compareTo(cryptoAmount) >= 0) {
+                return ticker.ap;
+            }
+        } catch (IOException e) {
+            log.error("Error", e);
+        }
         return null;
     }
 
     @Override
     public BigDecimal calculateSellPrice(String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount) {
+        try {
+            Ticker ticker = api.getTicker(cryptoCurrency + fiatCurrency);
+            if (ticker != null && ticker.bs.compareTo(cryptoAmount) >= 0) {
+                return ticker.bp;
+            }
+        } catch (IOException e) {
+            log.error("Error", e);
+        }
         return null;
     }
 }
