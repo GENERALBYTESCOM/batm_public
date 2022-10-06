@@ -252,11 +252,7 @@ public class BitcoinExtension extends AbstractExtension {
             } else if ("stillmandigital".equalsIgnoreCase(prefix)) {
                 String apiKey = paramTokenizer.nextToken();
                 String apiSecret = paramTokenizer.nextToken();
-                String preferredFiatCurrency = FiatCurrency.USD.getCode();
-                if (paramTokenizer.hasMoreTokens()) {
-                    preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase();
-                }
-                return new StillmanDigitalExchange(apiKey, apiSecret, preferredFiatCurrency);
+                return new StillmanDigitalExchange(apiKey, apiSecret);
             }
         }
         } catch (Exception e) {
@@ -644,11 +640,7 @@ public class BitcoinExtension extends AbstractExtension {
             } else if ("stillmandigital".equalsIgnoreCase(rsType)) {
                 String apiKey = st.nextToken();
                 String apiSecret = st.nextToken();
-                String preferredFiatCurrency = FiatCurrency.USD.getCode();
-                if (st.hasMoreTokens()) {
-                    preferredFiatCurrency = st.nextToken().toUpperCase();
-                }
-                return new StillmanDigitalExchange(apiKey, apiSecret, preferredFiatCurrency);
+                return new StillmanDigitalExchange(apiKey, apiSecret);
             }
         }
         } catch (Exception e) {

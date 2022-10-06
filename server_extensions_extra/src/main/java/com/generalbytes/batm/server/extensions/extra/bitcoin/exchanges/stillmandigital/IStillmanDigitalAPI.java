@@ -1,6 +1,8 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillmandigital;
 
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillmandigital.dto.BalanceResponse;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillmandigital.dto.OrderRequest;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillmandigital.dto.RowOrderResponse;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillmandigital.dto.Ticker;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillmandigital.dto.WithdrawAck;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillmandigital.dto.WithdrawRequest;
@@ -43,12 +45,12 @@ public interface IStillmanDigitalAPI {
     }
 
     @GET
-    @Path("/trading/v1/balance")
-    BalanceResponse getBalance() throws IOException;
-
-    @GET
     @Path("/marketdata/v1/tickers/{symbol}")
     Ticker getTicker(@PathParam("symbol")  String symbol) throws IOException;
+
+    @GET
+    @Path("/trading/v1/balance")
+    BalanceResponse getBalance() throws IOException;
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -58,5 +60,14 @@ public interface IStillmanDigitalAPI {
     @GET
     @Path("/trading/v1/withdraw/addresses")
     List<WithdrawalAddress> getWithdrawalAddresses(@QueryParam("assetId") String asset) throws IOException;
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/trading/v1/order/new")
+    RowOrderResponse sendOrder(OrderRequest orderRequest) throws IOException;
+
+    @GET
+    @Path("/trading/v1/order/{id}")
+    RowOrderResponse getOrder(@PathParam("id")  long orderId) throws IOException;
 
 }

@@ -1,13 +1,17 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillmandigital;
 
 import com.generalbytes.batm.common.currencies.FiatCurrency;
+import com.generalbytes.batm.server.extensions.ITask;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.security.GeneralSecurityException;
 
-//@Ignore // requires online resources - for manual run only
+import static org.junit.Assert.assertNotNull;
+
+@Ignore // requires online resources - for manual run only
 public class StillmanDigitalExchangeTest {
     private static final String PUBLIC_KEY = "";
     private static final String PRIVATE_KEY = "";
@@ -17,7 +21,7 @@ public class StillmanDigitalExchangeTest {
 
     @BeforeClass
     public static void createExchange() throws GeneralSecurityException {
-        exchange = new StillmanDigitalExchange(PUBLIC_KEY, PRIVATE_KEY, FiatCurrency.USD.getCode(), BASE_URL);
+        exchange = new StillmanDigitalExchange(PUBLIC_KEY, PRIVATE_KEY, BASE_URL);
     }
 
     @Test
@@ -43,6 +47,19 @@ public class StillmanDigitalExchangeTest {
     public void sendCoinsTest() {
         String result = exchange.sendCoins("mv4rnyY3Su5gjcDNzbMLKBQkBicCtHUtFB", BigDecimal.valueOf(0.001), "ETH", "test");
         System.out.println("Send id: " + result);
+    }
+
+
+    @Test
+    public void crateOrderTest() throws InterruptedException {
+        ITask task = exchange.createPurchaseCoinsTask(BigDecimal.valueOf(0.01), "BTC", "USD", null);
+        task.onCreate();
+        for (int i = 0; i < 10 && !task.isFinished(); i++) {
+            Thread.sleep(1000L);
+            task.onDoStep();
+        }
+        assertNotNull(task.getResult());
+        System.out.println("Task result: " + task.getResult());
     }
 
 

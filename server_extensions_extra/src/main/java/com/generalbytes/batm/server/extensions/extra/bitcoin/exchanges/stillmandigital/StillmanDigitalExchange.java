@@ -6,10 +6,8 @@ import com.generalbytes.batm.server.extensions.IExchangeAdvanced;
 import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
 import com.generalbytes.batm.server.extensions.ITask;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillmandigital.dto.RowBalanceByAssetResponse;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillmandigital.dto.Side;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillmandigital.dto.Ticker;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillmandigital.dto.WithdrawAck;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillmandigital.dto.WithdrawRequest;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillmandigital.dto.WithdrawalAddress;
 import com.google.common.collect.ImmutableSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,30 +15,25 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.security.GeneralSecurityException;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
 public class StillmanDigitalExchange implements IExchangeAdvanced, IRateSourceAdvanced {
     private static final Logger log = LoggerFactory.getLogger("batm.master.exchange.StillmanDigitalExchange");
 
-    private final String preferredFiatCurrency;
+    private final String preferredFiatCurrency = FiatCurrency.USD.getCode();
     private final IStillmanDigitalAPI api;
 
     public StillmanDigitalExchange(String apiKey,
-                                   String apiSecret,
-                                   String preferredFiatCurrency) throws GeneralSecurityException {
+                                   String apiSecret) throws GeneralSecurityException {
         this.api = IStillmanDigitalAPI.create(apiKey, apiSecret);
-        this.preferredFiatCurrency = preferredFiatCurrency;
     }
 
     // for tests only
     StillmanDigitalExchange(String apiKey,
                             String apiSecret,
-                            String preferredFiatCurrency,
                             String baseUrl) throws GeneralSecurityException {
         this.api = IStillmanDigitalAPI.create(apiKey, apiSecret, baseUrl);
-        this.preferredFiatCurrency = preferredFiatCurrency;
     }
 
     private static final Set<String> fiatCurrencies = ImmutableSet.of(
@@ -98,24 +91,7 @@ public class StillmanDigitalExchange implements IExchangeAdvanced, IRateSourceAd
     @Override
     public String sendCoins(String destinationAddress,
                             BigDecimal amount, String cryptoCurrency, String description) {
-        try {
-            List<WithdrawalAddress> withdrawalAddresses = api.getWithdrawalAddresses(cryptoCurrency);
-            for (WithdrawalAddress wa : withdrawalAddresses) {
-                if (wa.approved && Objects.equals(wa.walletAddress, destinationAddress)) {
-                    WithdrawRequest withdrawRequest = new WithdrawRequest();
-                    withdrawRequest.destinationId = wa.id;
-                    withdrawRequest.amount = amount;
-                    withdrawRequest.asset = cryptoCurrency;
-                    List<WithdrawAck> withdrawAcks = api.initiateWithdraw(withdrawRequest);
-                    if (withdrawAcks == null || withdrawAcks.isEmpty())
-                        return null;
-                    return withdrawAcks.get(0).id;
-                }
-            }
-        } catch (IOException e) {
-            log.error("Error during withdraw", e);
-        }
-        return null;
+        return "Plz contact your manager for withdraw";
     }
 
     @Override
@@ -125,12 +101,12 @@ public class StillmanDigitalExchange implements IExchangeAdvanced, IRateSourceAd
 
     @Override
     public ITask createPurchaseCoinsTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
-        return null;
+        return new StillmanOrderTask(api, Side.BUY, cryptoCurrency + fiatCurrencyToUse, amount, log);
     }
 
     @Override
     public ITask createSellCoinsTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
-        return null;
+        return new StillmanOrderTask(api, Side.SELL, cryptoCurrency + fiatCurrencyToUse, amount, log);
     }
 
     @Override
