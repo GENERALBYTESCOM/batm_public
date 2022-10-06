@@ -49,7 +49,7 @@ public interface IStillmanDigitalAPI {
     String API_EXPIRES_HEADER = "api-expires";
 
     static IStillmanDigitalAPI create(String apiKey, String apiSecret) throws GeneralSecurityException {
-        return create(apiKey, apiSecret, "https://otc.stillmandigital.com");
+        return create(apiKey, apiSecret, "https://otc.stillmandigital.com/client-api");
     }
 
     static IStillmanDigitalAPI create(String apiKey, String apiSecret, String baseUrl) throws GeneralSecurityException {
