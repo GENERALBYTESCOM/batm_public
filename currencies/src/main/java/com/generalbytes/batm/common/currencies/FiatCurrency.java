@@ -56,7 +56,7 @@ public enum FiatCurrency {
     GIP("Gibraltar pound"),
     GTQ("Guatemalan quetzal"),
     HKD("Hong Kong dollar"),
-    HNL("Honduran Lempia"),
+    HNL("Honduran Lempira"),
     HRK("Croatian kuna"),
     HUF("Hungarian forint"),
     IDR("Indonesian rupiah"),
