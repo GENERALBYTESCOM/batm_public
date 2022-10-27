@@ -117,7 +117,7 @@ public class DummyExchangeAndWalletAndSource implements IExchange, IWallet, IRat
         block();
         if (cryptoCurrency.equalsIgnoreCase(this.cryptoCurrency) && fiatCurrencyToUse.equalsIgnoreCase(this.fiatCurrency)) {
             log.info(String.format("S1%s-DummyExchangeWallet: purchasing coins S2%s", this.cryptoCurrency, amount));
-            return "true";
+            return getPurchaseTransactionId();
         } else {
             log.error(String.format("S1%s-DummyExchangeWallet: S2%s unsupported currency", this.cryptoCurrency, cryptoCurrency));
             return null;
@@ -194,6 +194,14 @@ public class DummyExchangeAndWalletAndSource implements IExchange, IWallet, IRat
             return null;
         }
         return String.format("22222222222222222222222222222222222222222222222222222222%08x", new Random().nextInt());
+    }
+
+    private String getPurchaseTransactionId() {
+        if (simulateFailure) {
+            log.debug("Simulated failure");
+            return null;
+        }
+        return String.format("33333333333333333333333333333333333333333333333333333333%08x", new Random().nextInt());
     }
 
     private String getSendTransactionId() {

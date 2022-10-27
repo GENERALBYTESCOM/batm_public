@@ -131,7 +131,10 @@ public class InfuraWallet implements IWallet{
             return receipt.getTransactionHash();
         } catch (TimeoutException e) {
             log.info("InfuraWallet - ignoring timeout, reporting transaction as successful anyway");
-            return "info_in_future"; //error probably will not happen as we waited already 10 seconds. -- it still happens, probably every time, but coins are being sent
+            return "info_in_future";
+            //error probably will not happen as we waited already 10 seconds.
+            // -- it still happens, probably every time, but coins are being sent
+            // TODO use WalletSendExecutor
         } catch (Exception e) {
             log.error("Error sending coins.", e);
         }
