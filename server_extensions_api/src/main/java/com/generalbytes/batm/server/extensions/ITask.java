@@ -18,44 +18,51 @@
 package com.generalbytes.batm.server.extensions;
 
 
+/**
+ * A task that performs an action repeatedly until it is considered finished and a result is available.
+ */
 public interface ITask {
     /**
-     * Called when task is created
-     * @return
+     * Called once after the task is created
+     *
+     * @return false to indicate an error and to stop further task execution,
+     * true to indicate the task was created/initiated successfully
      */
-    public boolean onCreate();
-    /**
-     * Called periodically to perform repeating jobs
-     * @return
-     */
-    public boolean onDoStep();
-    /**
-     * Called when task is finished
-     * @return
-     */
-    public void onFinish();
+    boolean onCreate();
 
     /**
-     * This method is called by task manager to test if it should be removed from list of tasks
-     * @return
+     * Called periodically to perform repeating jobs until {@link #isFinished()} returns true
+     *
+     * @return anything - the returned value is ignored (deprecated)
      */
-    public boolean isFinished();
+    boolean onDoStep();
 
     /**
-     * Called to obtain result of task
-     * @return
+     * Called once when the task is finished (after {@link #isFinished()} returns true)
      */
-    public Object getResult();
+    void onFinish();
 
     /**
-     * Called to check if task has failed
-     * @return
+     * This method is called by the task manager to test if it is finished and should be removed from the list of tasks
      */
-    public boolean isFailed();
+    boolean isFinished();
+
+    /**
+     * Called after the task processing is finished to obtain the result of the task
+     *
+     * @return null if task failed or not finished yet, the result otherwise
+     */
+    Object getResult();
+
+    /**
+     * Called after the task processing is finished to check if task has failed
+     */
+    boolean isFailed();
 
     /**
      * Called by task manager to correctly schedule next call of onDoStep
-     * @return
+     *
+     * @return minimum time in milliseconds between two consecutive {@link #onDoStep()} calls
      */
-    public long getShortestTimeForNexStepInvocation();
+    long getShortestTimeForNexStepInvocation();
 }
