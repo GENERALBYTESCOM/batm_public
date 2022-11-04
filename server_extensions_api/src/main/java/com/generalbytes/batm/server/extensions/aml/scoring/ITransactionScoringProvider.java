@@ -40,5 +40,6 @@ public interface ITransactionScoringProvider {
      */
     String getName();
 
+    @Deprecated // not used
     Collection<String> getSupportedCryptoCurrencies();
 }
