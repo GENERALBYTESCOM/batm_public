@@ -50,20 +50,19 @@ import java.util.function.Function;
 public class CoinbaseWalletV2 implements IWallet {
     private static final Logger log = LoggerFactory.getLogger("batm.master.CoinbaseWallet2");
     private static final ImmutableMap<String, String> supportedCryptoCurrencyToNetworkMap = new ImmutableMap.Builder<String, String>()
-            .put(CryptoCurrency.BTC.getCode(), "bitcoin")
-            .put(CryptoCurrency.LTC.getCode(), "litecoin")
-            .put(CryptoCurrency.ETH.getCode(), "ethereum")
-            .put(CryptoCurrency.BAT.getCode(), "ethereum")
-            .put(CryptoCurrency.DAI.getCode(), "ethereum")
-            .put(CryptoCurrency.BET_VERSE.getCode(), "ethereum")
-            .put(CryptoCurrency.BET_VERSE_ICO.getCode(), "ethereum")
-            .put(CryptoCurrency.BIZZ.getCode(), "ethereum")
-            .put(CryptoCurrency.USDT.getCode(), "ethereum")
-            .put(CryptoCurrency.ETC.getCode(), "ethereum_classic")
-            .put(CryptoCurrency.BCH.getCode(), "bitcoincash")
-            .put(CryptoCurrency.DASH.getCode(), "dash")
-            .put(CryptoCurrency.XRP.getCode(), "ripple")
-            .build();
+        .put(CryptoCurrency.ADA.getCode(), "cardano")
+        .put(CryptoCurrency.BTC.getCode(), "bitcoin")
+        .put(CryptoCurrency.LTC.getCode(), "litecoin")
+        .put(CryptoCurrency.ETH.getCode(), "ethereum")
+        .put(CryptoCurrency.BAT.getCode(), "ethereum")
+        .put(CryptoCurrency.DAI.getCode(), "ethereum")
+        .put(CryptoCurrency.BIZZ.getCode(), "ethereum")
+        .put(CryptoCurrency.USDT.getCode(), "ethereum")
+        .put(CryptoCurrency.ETC.getCode(), "ethereum_classic")
+        .put(CryptoCurrency.BCH.getCode(), "bitcoincash")
+        .put(CryptoCurrency.DASH.getCode(), "dash")
+        .put(CryptoCurrency.XRP.getCode(), "ripple")
+        .build();
 
     protected static final String API_VERSION = "2016-07-23";
     private String preferredCryptoCurrency;
