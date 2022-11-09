@@ -67,7 +67,7 @@ public class BetVerseIcoWalletGenerator implements IPaperWalletGenerator {
         }
 
         return new BetVerseIcoPaperWallet(content, address, mnemonic, messageText, "application/zip", "zip",
-                cryptoCurrency);
+            cryptoCurrency);
     }
 
     private String readTemplate(String templateFile) {

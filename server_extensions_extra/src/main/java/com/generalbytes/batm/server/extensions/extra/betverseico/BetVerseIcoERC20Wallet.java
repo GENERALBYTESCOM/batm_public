@@ -35,14 +35,16 @@ import org.web3j.utils.Convert;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 public class BetVerseIcoERC20Wallet implements IWallet {
     private final String contractAddress;
-    private final String tokenAddress = "0x6476846bb6138676c2FF4f78dFCB580a9B31DbDe";
-    private final String daiContractAddress = "0xcb1e72786a6eb3b44c2a2429e317c8a2462cfeb1";
+    private final String tokenAddress;
+    private final String daiAddress;
     private final String tokenSymbol;
     private final int tokenDecimalPlaces;
     private final Credentials credentials;
@@ -55,7 +57,7 @@ public class BetVerseIcoERC20Wallet implements IWallet {
     private static final Logger log = LoggerFactory.getLogger(BetVerseIcoERC20Wallet.class);
 
     public BetVerseIcoERC20Wallet(long chainID, String rpcURL, String mnemonicOrPassword, String tokenSymbol, int tokenDecimalPlaces,
-                                  String contractAddress, BigInteger fixedGasLimit, BigDecimal gasPriceMultiplier) {
+                                  String contractAddress, String tokenAddress, String daiAddress, BigInteger fixedGasLimit, BigDecimal gasPriceMultiplier) {
 
         StringBuilder sb = new StringBuilder();
 
@@ -65,6 +67,8 @@ public class BetVerseIcoERC20Wallet implements IWallet {
         sb.append("tokenSymbol:: " + tokenSymbol).append("\n");
         sb.append("tokenDecimalPlaces:: " + tokenDecimalPlaces).append("\n");
         sb.append("contractAddress:: " + contractAddress).append("\n");
+        sb.append("tokenAddress:: " + tokenAddress).append("\n");
+        sb.append("daiAddress:: " + daiAddress).append("\n");
         sb.append("fixedGasLimit:: " + fixedGasLimit).append("\n");
         sb.append("gasPriceMultiplier:: " + gasPriceMultiplier).append("\n");
         sb.append("mnemonicOrPassword:: " + mnemonicOrPassword).append("\n");
@@ -72,6 +76,8 @@ public class BetVerseIcoERC20Wallet implements IWallet {
         this.tokenSymbol = tokenSymbol;
         this.tokenDecimalPlaces = tokenDecimalPlaces;
         this.contractAddress = contractAddress.toLowerCase();
+        this.tokenAddress = tokenAddress.toLowerCase();
+        this.daiAddress = daiAddress.toLowerCase();
         this.fixedGasLimit = fixedGasLimit;
         this.gasPriceMultiplier = gasPriceMultiplier;
         this.chainID = chainID;
@@ -181,8 +187,15 @@ public class BetVerseIcoERC20Wallet implements IWallet {
             BigInteger tokens = convertFromBigDecimal(amount);
             //final BigInteger transferAmountWei = Convert.toWei(amount, Convert.Unit.ETHER).toBigIntegerExact();
 
+            //Convert tokens to usd
+            BigInteger price = getContract(destinationAddress, tokens).AtmPriceICO().send();
+            BigDecimal priceInDecimal = convertToBigDecimal(price);
+
+            BigDecimal totalAmountToBuy = amount.multiply(priceInDecimal);
+            tokens = convertFromBigDecimal(totalAmountToBuy);
+
             TransactionReceipt receipt = getContract(destinationAddress, tokens)
-                    .buy(destinationAddress, tokens, this.daiContractAddress)
+                    .buy(destinationAddress, tokens, this.daiAddress)
                     .sendAsync()
                     .get(240, TimeUnit.SECONDS);
             return receipt.getTransactionHash();

@@ -50,6 +50,8 @@ public class ERC20Interface extends Contract {
 
     public static final String FUNC_BUY = "buyATM";
 
+    public static final String FUNC_PRICE = "icoPriceInWei";
+
     public static final String FUNC_ALLOWANCE = "allowance";
 
     public static final Event TRANSFER_EVENT = new Event("Transfer",
@@ -126,6 +128,13 @@ public class ERC20Interface extends Contract {
             Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(160, customerAddress), new org.web3j.abi.datatypes.generated.Uint256(tokens), new org.web3j.abi.datatypes.Address(160, currencyAddress)),
             Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
+    }
+
+    public RemoteFunctionCall<BigInteger> AtmPriceICO() {
+        final Function function = new Function(FUNC_PRICE,
+            Arrays.<Type>asList(),
+            Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}));
+        return executeRemoteCallSingleValueReturn(function, BigInteger.class);
     }
 
     public RemoteFunctionCall<BigInteger> allowance(String tokenOwner, String spender) {

@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
 
 public class BetVerseWalletGenerator implements IPaperWalletGenerator {
 
-    private static final Logger log = LoggerFactory.getLogger("batm.master.BTokenWalletGenerator");
+    private static final Logger log = LoggerFactory.getLogger("batm.master.BetVerseWalletGenerator");
     private IExtensionContext ctx;
 
     public BetVerseWalletGenerator(IExtensionContext ctx) {
