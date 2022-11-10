@@ -51,7 +51,7 @@ public class TestPaymentSupport {
             Thread.sleep(2500);
 
             PRS spec = new PRS(context.getCurrencyCode(), "Test txn", 60, 1, false, true, BigDecimal.ZERO,
-                    BigDecimal.ZERO, new BigDecimal("0.001"), wallet);
+                    BigDecimal.ZERO, new BigDecimal("0.001"), false, wallet);
             spec.addOutput(paymentAccount, paymentValue);
             PaymentRequest pr = ps.createPaymentRequest(spec);
 

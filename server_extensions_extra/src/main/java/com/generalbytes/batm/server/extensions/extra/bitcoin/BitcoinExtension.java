@@ -34,6 +34,8 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbasep
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coingi.CoingiExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinzix.CoinZixExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.dvchain.DVChainExchange;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.ftx.FtxComExchange;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.ftx.FtxUsExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.hitbtc.HitbtcExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.enigma.EnigmaExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.poloniex.PoloniexExchange;
@@ -207,6 +209,25 @@ public class BitcoinExtension extends AbstractExtension {
                     preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase();
                 }
                 return BitpandaProExchange.asExchange(apikey, preferredFiatCurrency);
+
+            } else if ("ftxcom".equalsIgnoreCase(prefix)) {
+                String apiKey = paramTokenizer.nextToken();
+                String apiSecret = paramTokenizer.nextToken();
+                String preferredFiatCurrency = FiatCurrency.USD.getCode();
+                if (paramTokenizer.hasMoreTokens()) {
+                    preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase();
+                }
+                return new FtxComExchange(apiKey, apiSecret, preferredFiatCurrency);
+
+            } else if ("ftxus".equalsIgnoreCase(prefix)) {
+                String apiKey = paramTokenizer.nextToken();
+                String apiSecret = paramTokenizer.nextToken();
+                String preferredFiatCurrency = FiatCurrency.USD.getCode();
+                if (paramTokenizer.hasMoreTokens()) {
+                    preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase();
+                }
+                return new FtxUsExchange(apiKey, apiSecret, preferredFiatCurrency);
+
             } else if ("poloniex".equalsIgnoreCase(prefix)) {
                 String preferredFiatCurrency = USDT.getCode();
                 String key = paramTokenizer.nextToken();
@@ -230,7 +251,9 @@ public class BitcoinExtension extends AbstractExtension {
             }
         }
         } catch (Exception e) {
-            log.warn("createExchange failed", e);
+            log.warn("createExchange failed for prefix: {}, {}: {} ",
+                ExtensionsUtil.getPrefixWithCountOfParameters(paramString), e.getClass().getSimpleName(), e.getMessage()
+            );
         }
         return null;
     }
@@ -430,7 +453,9 @@ public class BitcoinExtension extends AbstractExtension {
             }
         }
         } catch (Exception e) {
-            log.warn("createWallet failed", e);
+            log.warn("createWallet failed for prefix: {}, {}: {} ",
+                ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
+            );
         }
         return null;
     }
@@ -595,10 +620,24 @@ public class BitcoinExtension extends AbstractExtension {
                     preferredFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new BitbuyExchange(apiKey, apiSecret, preferredFiatCurrency);
+            } else if ("ftxcom".equalsIgnoreCase(rsType)) {
+                String preferredFiatCurrency = FiatCurrency.USD.getCode();
+                if (st.hasMoreTokens()) {
+                    preferredFiatCurrency = st.nextToken().toUpperCase();
+                }
+                return new FtxComExchange(preferredFiatCurrency);
+            } else if ("ftxus".equalsIgnoreCase(rsType)) {
+                String preferredFiatCurrency = FiatCurrency.USD.getCode();
+                if (st.hasMoreTokens()) {
+                    preferredFiatCurrency = st.nextToken().toUpperCase();
+                }
+                return new FtxUsExchange(preferredFiatCurrency);
             }
         }
         } catch (Exception e) {
-            log.warn("createRateSource failed", e);
+            log.warn("createRateSource failed for prefix: {}, {}: {} ",
+                ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin), e.getClass().getSimpleName(), e.getMessage()
+            );
         }
         return null;
     }
@@ -612,6 +651,7 @@ public class BitcoinExtension extends AbstractExtension {
         result.add(CryptoCurrency.BCH.getCode());
         result.add(CryptoCurrency.EGLD.getCode());
         result.add(CryptoCurrency.USDTTRON.getCode());
+        result.add(CryptoCurrency.BNB.getCode());
         return result;
     }
 

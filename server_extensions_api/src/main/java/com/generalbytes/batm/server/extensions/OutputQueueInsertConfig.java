@@ -25,15 +25,28 @@ package com.generalbytes.batm.server.extensions;
  */
 public class OutputQueueInsertConfig {
     private boolean skipQueue = false;
+    private boolean insertIntoSecondaryQueue = false;
+
     private boolean manualApprovalRequired = false;
     private int delaySeconds = 0;
 
-    public boolean skipQueue() {
+    private boolean secondaryManualApprovalRequired = false;
+    private int secondaryDelaySeconds = 0;
+
+    public boolean isSkipQueue() {
         return skipQueue;
     }
 
     public void setSkipQueue(boolean skipQueue) {
         this.skipQueue = skipQueue;
+    }
+
+    public boolean isInsertIntoSecondaryQueue() {
+        return insertIntoSecondaryQueue;
+    }
+
+    public void setInsertIntoSecondaryQueue(boolean insertIntoSecondaryQueue) {
+        this.insertIntoSecondaryQueue = insertIntoSecondaryQueue;
     }
 
     public boolean isManualApprovalRequired() {
@@ -52,12 +65,31 @@ public class OutputQueueInsertConfig {
         this.delaySeconds = delaySeconds;
     }
 
+    public boolean isSecondaryManualApprovalRequired() {
+        return secondaryManualApprovalRequired;
+    }
+
+    public void setSecondaryManualApprovalRequired(boolean secondaryManualApprovalRequired) {
+        this.secondaryManualApprovalRequired = secondaryManualApprovalRequired;
+    }
+
+    public int getSecondaryDelaySeconds() {
+        return secondaryDelaySeconds;
+    }
+
+    public void setSecondaryDelaySeconds(int secondaryDelaySeconds) {
+        this.secondaryDelaySeconds = secondaryDelaySeconds;
+    }
+
     @Override
     public String toString() {
         return "OutputQueueInsertConfig{" +
             "skipQueue=" + skipQueue +
             ", manualApprovalRequired=" + manualApprovalRequired +
             ", delaySeconds=" + delaySeconds +
+            ", insertIntoSecondaryQueue=" + insertIntoSecondaryQueue +
+            ", secondaryManualApprovalRequired=" + secondaryManualApprovalRequired +
+            ", secondaryDelaySeconds=" + secondaryDelaySeconds +
             '}';
     }
 }

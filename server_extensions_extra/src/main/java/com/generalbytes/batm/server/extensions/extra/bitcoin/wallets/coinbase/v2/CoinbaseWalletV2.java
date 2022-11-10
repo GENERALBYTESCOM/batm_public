@@ -51,6 +51,7 @@ import java.util.function.Function;
 public class CoinbaseWalletV2 implements IWallet {
     private static final Logger log = LoggerFactory.getLogger("batm.master.CoinbaseWallet2");
     private static final ImmutableMap<String, String> supportedCryptoCurrencyToNetworkMap = new ImmutableMap.Builder<String, String>()
+        .put(CryptoCurrency.ADA.getCode(), "cardano")
         .put(CryptoCurrency.BTC.getCode(), "bitcoin")
         .put(CryptoCurrency.LTC.getCode(), "litecoin")
         .put(CryptoCurrency.ETH.getCode(), "ethereum")

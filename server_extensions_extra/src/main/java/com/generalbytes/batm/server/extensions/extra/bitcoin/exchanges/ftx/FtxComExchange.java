@@ -34,6 +34,7 @@ public class FtxComExchange extends FtxExchange {
         SUPPORTED_FIATS.add(FiatCurrency.EUR.getCode());
         SUPPORTED_FIATS.add(FiatCurrency.GBP.getCode());
         SUPPORTED_FIATS.add(FiatCurrency.USD.getCode());
+        SUPPORTED_FIATS.add(FiatCurrency.AUD.getCode());
 
         SUPPORTED_CRYPTOS.add(CryptoCurrency.BAT.getCode());
         SUPPORTED_CRYPTOS.add(CryptoCurrency.BCH.getCode());

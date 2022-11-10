@@ -36,6 +36,14 @@ public class TestExtensionContext implements IExtensionContext {
     }
 
     @Override
+    public void addNotificationListener(INotificationListener listener) {
+    }
+
+    @Override
+    public void removeNotificationListener(INotificationListener listener) {
+    }
+
+    @Override
     public ITransactionDetails findTransactionByTransactionId(String remoteOrLocalTransactionId) {
         return null;
     }
@@ -327,5 +335,25 @@ public class TestExtensionContext implements IExtensionContext {
     @Override
     public IVerificationInfo startVerificationByIdentityId(String publicIdentityId, String messageToCustomer) {
         return null;
+    }
+
+    @Override
+    public String getConfigProperty(String fileNameInConfigDirectory, String key, String defaultValue) {
+        return defaultValue;
+    }
+
+    @Override
+    public boolean configFileExists(String fileNameInConfigDirectory) {
+        return false;
+    }
+
+    @Override
+    public String getConfigFileContent(String fileNameInConfigDirectory) {
+        return "";
+    }
+
+    @Override
+    public void markTransactionAsWithdrawn(String remoteOrLocalTransactionId) {
+
     }
 }

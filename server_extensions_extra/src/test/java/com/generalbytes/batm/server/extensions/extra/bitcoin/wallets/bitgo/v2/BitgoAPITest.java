@@ -247,10 +247,10 @@ public class BitgoAPITest {
             final String coin = "tbtc";
             final String id = "5b20e3a9266bbe80095757489d84a6bb";
             final String address = "2N5q4MwNSUxbAtaidhRgkiDrbwVR4yCZDhi";
-            final Integer amount = 10000;
+            final String amount = "10000";
             final String walletPassphrase = "JSZSuGNlHfgqPHjrp0eO";
 
-            final BitGoCoinRequest request = new BitGoCoinRequest(address, amount, walletPassphrase, "TXID");
+            final BitGoCoinRequest request = new BitGoCoinRequest(address, amount, walletPassphrase, "TXID", 2);
             String accessToken = "Bearer v2x8d5e9e46379dc328b2039a400a12b04ea986689b38107fd84cd339bc89e3fb21";
             String contentType = "application/json";
             Map<String, Object> result = localapi.sendCoins(coin, id, request);

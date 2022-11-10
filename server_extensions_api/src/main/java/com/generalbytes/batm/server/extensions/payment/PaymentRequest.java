@@ -68,6 +68,7 @@ public class PaymentRequest {
     private String cryptoCurrency;
     private BigDecimal amount;
     private BigDecimal tolerance;
+    private boolean overageAllowed;
     private boolean nonForwarding;
     private Object tag;
     private IPaymentRequestListener listener;
@@ -102,7 +103,11 @@ public class PaymentRequest {
 
     private IWallet wallet;
 
-    public PaymentRequest(String cryptoCurrency, String description, long validTill, String address, BigDecimal amount, BigDecimal tolerance, int removeAfterNumberOfConfirmationsOfIncomingTransaction, int removeAfterNumberOfConfirmationsOfOutgoingTransaction, IWallet wallet, String timeoutRefundAddress, List<IPaymentOutput> outputs, Boolean nonForwarding, Integer paymentIndex, BigDecimal minimumMiningFeePerByte, BigDecimal maximumMiningFeePerByte) {
+    public PaymentRequest(String cryptoCurrency, String description, long validTill, String address, BigDecimal amount,
+                          BigDecimal tolerance, boolean overageAllowed,
+                          int removeAfterNumberOfConfirmationsOfIncomingTransaction, int removeAfterNumberOfConfirmationsOfOutgoingTransaction,
+                          IWallet wallet, String timeoutRefundAddress, List<IPaymentOutput> outputs, Boolean nonForwarding, Integer paymentIndex,
+                          BigDecimal minimumMiningFeePerByte, BigDecimal maximumMiningFeePerByte) {
         this.cryptoCurrency = cryptoCurrency;
         this.description = description;
         this.validTill = validTill;
@@ -111,6 +116,7 @@ public class PaymentRequest {
         this.removeAfterNumberOfConfirmationsOfIncomingTransaction = removeAfterNumberOfConfirmationsOfIncomingTransaction;
         this.removeAfterNumberOfConfirmationsOfOutgoingTransaction = removeAfterNumberOfConfirmationsOfOutgoingTransaction;
         this.tolerance = tolerance;
+        this.overageAllowed = overageAllowed;
         this.nonForwarding = Boolean.TRUE.equals(nonForwarding);
         txValue = BigDecimal.ZERO;
         this.wallet = wallet;
@@ -207,12 +213,18 @@ public class PaymentRequest {
     }
 
     /**
-     * Amount difference in crypto in which payment is still valid (customer can send a bit less coins)
-     * @return
+     * Amount difference in crypto in which payment is still valid (customer can send a bit less or a bit more coins)
      */
-    @SuppressWarnings("all")
     public BigDecimal getTolerance() {
         return tolerance;
+    }
+
+    /**
+     * @return true if customers are allowed to send more coins (by any amount) and the payment is still considered valid.
+     * If this is true, {@link #getTolerance()} is used only for when customer sends LESS.
+     */
+    public boolean isOverageAllowed() {
+        return overageAllowed;
     }
 
     /**

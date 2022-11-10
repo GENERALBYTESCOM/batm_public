@@ -37,6 +37,7 @@ import org.knowm.xchange.dto.account.Wallet;
 import org.knowm.xchange.dto.marketdata.OrderBook;
 import org.knowm.xchange.dto.trade.LimitOrder;
 import org.knowm.xchange.dto.trade.OpenOrders;
+import org.knowm.xchange.exceptions.CurrencyPairNotValidException;
 import org.knowm.xchange.exceptions.ExchangeException;
 import org.knowm.xchange.service.account.AccountService;
 import org.knowm.xchange.service.marketdata.MarketDataService;
@@ -227,7 +228,9 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
         AccountService accountService = getExchange().getAccountService();
         Currency exchangeCryptoCurrency = Currency.getInstance(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency));
 
-        if (CryptoCurrency.XRP.getCode().equals(cryptoCurrency)) {
+        if (CryptoCurrency.XRP.getCode().equals(cryptoCurrency)
+            || CryptoCurrency.BNB.getCode().equals(cryptoCurrency)) {
+
             String[] addressParts = destinationAddress.split(":");
             if (addressParts.length == 2) {
                 return accountService.withdrawFunds(new DefaultWithdrawFundsParams(new AddressWithTag(addressParts[0], addressParts[1]), exchangeCryptoCurrency, amount));
@@ -354,7 +357,9 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
 
         AccountService accountService = getExchange().getAccountService();
         try {
-            if (CryptoCurrency.XRP.getCode().equals(cryptoCurrency)) {
+            if (CryptoCurrency.XRP.getCode().equals(cryptoCurrency)
+                || CryptoCurrency.BNB.getCode().equals(cryptoCurrency)) {
+
                 AddressWithTag addressWithTag = accountService.requestDepositAddressData(Currency.getInstance(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency)));
                 if (addressWithTag == null) {
                     return null;
@@ -529,7 +534,10 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
             }
             log.debug("Called {} exchange for BUY rate: {}:{} = {}", name, cryptoCurrency, fiatCurrency, tradableLimit);
             return tradableLimit.multiply(cryptoAmount);
-        } catch (Throwable e) {
+        } catch (CurrencyPairNotValidException e) {
+            log.warn("{} exchange failed to calculate buy price: Currency pair {}-{} not valid", name, cryptoCurrency, fiatCurrency);
+            return null;
+        } catch (Exception e) {
             log.error("{} exchange failed to calculate buy price", name, e);
             return null;
         }
@@ -575,7 +583,10 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
             }
             log.debug("Called {} exchange for SELL rate: {}:{} = {}", name, cryptoCurrency, fiatCurrency, tradableLimit);
             return tradableLimit.multiply(cryptoAmount);
-        } catch (Throwable e) {
+        } catch (CurrencyPairNotValidException e) {
+            log.warn("{} exchange failed to calculate sell price: Currency pair {}-{} not valid", name, cryptoCurrency, fiatCurrency);
+            return null;
+        } catch (Exception e) {
             log.error("{} exchange failed to calculate sell price", name, e);
             return null;
         }

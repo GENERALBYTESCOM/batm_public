@@ -57,6 +57,16 @@ public interface IExtensionContext {
     boolean removeTransactionListener(ITransactionListener listener);
 
     /**
+     * Registers a listener for receiving notification
+     */
+    void addNotificationListener(INotificationListener listener);
+
+    /**
+     * Stops a listener from receiving notification
+     */
+    void removeNotificationListener(INotificationListener listener);
+
+    /**
      * Register listener for terminal events
      */
     void addTerminalListener(ITerminalListener listener);
@@ -611,4 +621,55 @@ public interface IExtensionContext {
      * @return info about result of action
      */
     IVerificationInfo startVerificationByIdentityId(String publicIdentityId, String messageToCustomer);
+
+    /**
+     * Reads the given file from the server config directory,
+     * parses the file as java Properties file format ({@code <key>=<value>} on each line)
+     * and searches for the property with the specified key in the file.
+     * <p>
+     * The {@code defaultValue} argument is returned if the property is not found in the file,
+     * if the file does not exist or if reading the file failed.
+     * <p>
+     * The returned value is cached for a few seconds.
+     * <p>
+     * The config directory is typically "/batm/config" so for example
+     * when the {@code fileNameInConfigDirectory} parameter is "sms",
+     * the {@code key} is "country_prefix" and the "/batm/config/sms" file contains a line
+     * "country_prefix=+420", the value "+420" will be returned.
+     * <p>
+     * The extension author calling this method must make sure not to expose any sensitive information
+     * from the server config directory, e.g. do not use any user provided values as the filename parameter etc.
+     */
+    String getConfigProperty(String fileNameInConfigDirectory, String key, String defaultValue);
+
+    /**
+     * @return true if a file of the provided name exist in the server config directory.
+     * <p>
+     * The config directory is typically "/batm/config" so for example
+     * when the {@code fileNameInConfigDirectory} parameter is "extension.debug",
+     * this method will check if a file called "/batm/config/extension.debug" exist.
+     */
+    boolean configFileExists(String fileNameInConfigDirectory);
+
+    /**
+     * @return contents of the given file in the server config directory.
+     * The config directory is typically "/batm/config" so for example
+     * when the {@code fileNameInConfigDirectory} parameter is "version"
+     * the return value will be the content of "/batm/config/version" file.
+     * <p>
+     * The returned value is cached for a few seconds.
+     * <p>
+     * If the file does not exist or any other error occurs
+     * while trying to read the file empty string is returned.
+     * <p>
+     * The extension author calling this method must make sure not to expose any sensitive information
+     * from the server config directory, e.g. do not use any user provided values as the filename parameter etc.
+     */
+    String getConfigFileContent(final String fileNameInConfigDirectory);
+
+    /**
+     * Marks transaction as withdrawn by given remote or local transaction id.
+     * @param remoteOrLocalTransactionId
+     */
+    void markTransactionAsWithdrawn(String remoteOrLocalTransactionId);
 }

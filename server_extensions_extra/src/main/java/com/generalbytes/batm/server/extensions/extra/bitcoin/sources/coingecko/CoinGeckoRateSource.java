@@ -100,6 +100,7 @@ public class CoinGeckoRateSource implements IRateSource {
         CRYPTOCURRENCIES.put(CryptoCurrency.TENT.getCode(), "tent");
         CRYPTOCURRENCIES.put(CryptoCurrency.XZC.getCode(), "zcoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.ZPAE.getCode(), "zelaapayae");
+        CRYPTOCURRENCIES.put(CryptoCurrency.GQ.getCode(), "outer-ring");
     }
 
     private final CoinGeckoV3API api;
