@@ -50,7 +50,8 @@ public class CoinGeckoRateSource implements IRateSource {
         CRYPTOCURRENCIES.put(CryptoCurrency.BURST.getCode(), "burst");
         CRYPTOCURRENCIES.put(CryptoCurrency.CLOAK.getCode(), "cloakcoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.DAI.getCode(), "dai");
-        CRYPTOCURRENCIES.put(CryptoCurrency.BTOKEN.getCode(), "btoken");
+        CRYPTOCURRENCIES.put(CryptoCurrency.BET_VERSE.getCode(), "betverse");
+        CRYPTOCURRENCIES.put(CryptoCurrency.BET_VERSE_ICO.getCode(), "betverse-ico");
         CRYPTOCURRENCIES.put(CryptoCurrency.BIZZ.getCode(), "bizzcoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.DASH.getCode(), "dash");
         CRYPTOCURRENCIES.put(CryptoCurrency.DEX.getCode(), "dex");
@@ -156,7 +157,6 @@ public class CoinGeckoRateSource implements IRateSource {
         return result;
     }
 
-
     @Override
     public String getPreferredFiatCurrency() {
         return preferredFiatCurrency;
@@ -181,7 +181,8 @@ public class CoinGeckoRateSource implements IRateSource {
         return null;
     }
 
-//    public static void main(String[] args) {
-//        System.out.println(new CoinGeckoRateSource("USD").getExchangeRateLast("XMR", "USD"));
-//    }
+    // public static void main(String[] args) {
+    // System.out.println(new CoinGeckoRateSource("USD").getExchangeRateLast("XMR",
+    // "USD"));
+    // }
 }

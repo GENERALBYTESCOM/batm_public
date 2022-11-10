@@ -41,8 +41,9 @@ import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.TestExtensionContext;
-import com.generalbytes.batm.server.extensions.extra.btoken.BTokenWalletGenerator;
+import com.generalbytes.batm.server.extensions.extra.betverseico.BetVerseIcoExtension;
 
+import com.generalbytes.batm.server.extensions.extra.betverseico.BetVerseIcoWalletGenerator;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -61,12 +62,17 @@ public class Tester {
         File file = new File("server_extensions_extra/build/libs/batm_server_extensions_extra.jar");
         t.loadExtensions(file);
 
-        t.getWalletBalance("", "");
+        //t.getWalletBalance("", "");
 
-        t.sendFromWallet("", "");
+        //t.sendFromWallet("betverseICO-wallet",
+             // "137:BET_VERSE_ICO:18:0xBbf4303D40C1ec06a747876d6643A69714843Ce4:0xbD2173E33aE4f2fB482e139Db4d5c2EF1F9AA181:0x8f3cf7ad23cd3cadbd9735aff958023239c6a063:polygon-mainnet.infura.io/v3/fe61370c71034c7fadb5161f6a4381b9:liquid brand gaze spare someone toe cause nuclear rug west wash mask");
 
-        IPaperWalletGenerator paperWalletGenerator = new BTokenWalletGenerator(new TestExtensionContext());
-        IPaperWallet paperWallet = paperWalletGenerator.generateWallet("BTOKEN", "", "en", false);
+        //t.sendFromWallet("betverse-wallet",
+              //"137:BET_VERSE:18:0xbD2173E33aE4f2fB482e139Db4d5c2EF1F9AA181:polygon-mainnet.infura.io/v3/fe61370c71034c7fadb5161f6a4381b9:liquid brand gaze spare someone toe cause nuclear rug west wash mask");
+
+
+        IPaperWalletGenerator paperWalletGenerator = new BetVerseIcoWalletGenerator(new TestExtensionContext());
+        IPaperWallet paperWallet = paperWalletGenerator.generateWallet("BET_VERSE_ICO", "", "en", false);
 
         t.go(args);
     }
@@ -517,8 +523,7 @@ public class Tester {
 
                 final String cryptoAddress = w.getCryptoAddress(preferredCryptoCurrency);
                 System.out.println("CryptoAddress = " + cryptoAddress);
-                String sendResult = w.sendCoins("0x03dD169Bf7e718779Bd2A72279f1D33615FAd306", new BigDecimal(1),
-                        "BTOKEN", "Test");
+                String sendResult = w.sendCoins("0x0707BF36710f3f49c18eA9e02EaF0E63e17dE3db", new BigDecimal(100), "BET_VERSE_ICO", "Test");
 
                 if (sendResult != null) {
                     System.out.println(

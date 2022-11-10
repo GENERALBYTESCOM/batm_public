@@ -53,7 +53,8 @@ public class CoinPaprikaRateSource implements IRateSource {
         CRYPTOCURRENCIES.put(CryptoCurrency.BURST.getCode(), "burst-burst");
         CRYPTOCURRENCIES.put(CryptoCurrency.CLOAK.getCode(), "cloak-cloakcoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.DAI.getCode(), "dai-dai");
-        CRYPTOCURRENCIES.put(CryptoCurrency.BTOKEN.getCode(), "btoken-btoken");
+        CRYPTOCURRENCIES.put(CryptoCurrency.BET_VERSE.getCode(), "betverse-betverse");
+        CRYPTOCURRENCIES.put(CryptoCurrency.BET_VERSE_ICO.getCode(), "betverse-betverseICO");
         CRYPTOCURRENCIES.put(CryptoCurrency.BIZZ.getCode(), "bizz-bizzcoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.DASH.getCode(), "dash-dash");
         CRYPTOCURRENCIES.put(CryptoCurrency.DEX.getCode(), "dex-dex");
@@ -109,7 +110,8 @@ public class CoinPaprikaRateSource implements IRateSource {
 
     public CoinPaprikaRateSource(String preferredFiatCurrency) {
         this.preferredFiatCurrency = preferredFiatCurrency;
-        final ClientConfig config = new ClientConfig().addDefaultParam(HeaderParam.class, "User-Agent", " Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36");
+        final ClientConfig config = new ClientConfig().addDefaultParam(HeaderParam.class, "User-Agent",
+                " Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36");
         api = RestProxyFactory.createProxy(CoinPaprikaV1API.class, "https://api.coinpaprika.com", config);
     }
 
@@ -157,7 +159,6 @@ public class CoinPaprikaRateSource implements IRateSource {
         return result;
     }
 
-
     @Override
     public String getPreferredFiatCurrency() {
         return preferredFiatCurrency;
@@ -181,9 +182,10 @@ public class CoinPaprikaRateSource implements IRateSource {
         return null;
     }
 
-//    public static void main(String[] args) {
-//        BigDecimal exchangeRateLast = new CoinPaprikaRateSource("USD").getExchangeRateLast("BTC", "CZK");
-//        System.out.println("exchangeRateLast = " + exchangeRateLast);
-//        System.out.println(exchangeRateLast);
-//    }
+    // public static void main(String[] args) {
+    // BigDecimal exchangeRateLast = new
+    // CoinPaprikaRateSource("USD").getExchangeRateLast("BTC", "CZK");
+    // System.out.println("exchangeRateLast = " + exchangeRateLast);
+    // System.out.println(exchangeRateLast);
+    // }
 }

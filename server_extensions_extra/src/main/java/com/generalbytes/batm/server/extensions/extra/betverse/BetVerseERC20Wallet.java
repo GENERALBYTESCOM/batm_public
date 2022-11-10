@@ -15,7 +15,7 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.btoken;
+package com.generalbytes.batm.server.extensions.extra.betverse;
 
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.ethereum.EtherUtils;
@@ -26,7 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
-import org.web3j.protocol.core.methods.response.NetVersion;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.FastRawTransactionManager;
@@ -38,7 +37,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-public class BTokenERC20Wallet implements IWallet {
+public class BetVerseERC20Wallet implements IWallet {
     private final String contractAddress;
     private final String tokenSymbol;
     private final int tokenDecimalPlaces;
@@ -48,14 +47,14 @@ public class BTokenERC20Wallet implements IWallet {
     private final BigDecimal gasPriceMultiplier;
     private final ERC20Interface noGasContract;
     private long chainID;
-    private static final Logger log = LoggerFactory.getLogger(BTokenERC20Wallet.class);
+    private static final Logger log = LoggerFactory.getLogger(BetVerseERC20Wallet.class);
 
-    public BTokenERC20Wallet(long chainID, String rpcURL, String mnemonicOrPassword, String tokenSymbol, int tokenDecimalPlaces,
-            String contractAddress, BigInteger fixedGasLimit, BigDecimal gasPriceMultiplier) {
+    public BetVerseERC20Wallet(long chainID, String rpcURL, String mnemonicOrPassword, String tokenSymbol, int tokenDecimalPlaces,
+                               String contractAddress, BigInteger fixedGasLimit, BigDecimal gasPriceMultiplier) {
 
         StringBuilder sb = new StringBuilder();
 
-        sb.append("BTokenERC20Wallet:: ").append("\n");
+        sb.append("BetVerseERC20Wallet:: ").append("\n");
         sb.append("ChainID:: " + chainID).append("\n");
         sb.append("rpcURL:: " + rpcURL).append("\n");
         sb.append("tokenSymbol:: " + tokenSymbol).append("\n");

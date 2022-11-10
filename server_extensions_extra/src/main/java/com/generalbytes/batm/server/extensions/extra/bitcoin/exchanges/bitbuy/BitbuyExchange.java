@@ -42,25 +42,29 @@ public class BitbuyExchange implements IExchangeAdvanced, IRateSourceAdvanced {
     private static final Logger log = LoggerFactory.getLogger("batm.master.exchange.BitbuyExchange");
 
     private static final Set<String> fiatCurrencies = ImmutableSet.of(
-        FiatCurrency.CAD.getCode(),
-        CryptoCurrency.DAI.getCode()); // stable coin as fiat
+            FiatCurrency.CAD.getCode(),
+            CryptoCurrency.DAI.getCode()); // stable coin as fiat
 
     private static final Set<String> cryptoCurrencies = ImmutableSet.of(
-        CryptoCurrency.BCH.getCode(),
-        CryptoCurrency.BTC.getCode(),
-        CryptoCurrency.BTOKEN.getCode(),
-        CryptoCurrency.DAI.getCode(),
-        CryptoCurrency.ETH.getCode(),
-        CryptoCurrency.LTC.getCode(),
-        CryptoCurrency.XRP.getCode());
+            CryptoCurrency.BCH.getCode(),
+            CryptoCurrency.BTC.getCode(),
+            CryptoCurrency.BET_VERSE.getCode(),
+            CryptoCurrency.BET_VERSE_ICO.getCode(),
+            CryptoCurrency.DAI.getCode(),
+            CryptoCurrency.ETH.getCode(),
+            CryptoCurrency.LTC.getCode(),
+            CryptoCurrency.XRP.getCode());
 
     // Supported markets (2021-10-06; see IBitbuyAPI.getMarkets):
-    // [DAI-CAD, ETH-DAI, BTC-AAVE, ETH-AAVE, ETH-CAD, BTC-LINK, ETH-LINK, BCH-CAD, AAVE-CAD, BCH-BTC, BTC-DAI, LINK-CAD, BTC-CAD, XLM-CAD, LTC-CAD, XRP-CAD, EOS-BTC, XLM-BTC, XRP-BTC, ETH-BTC, LTC-BTC, EOS-CAD]
+    // [DAI-CAD, ETH-DAI, BTC-AAVE, ETH-AAVE, ETH-CAD, BTC-LINK, ETH-LINK, BCH-CAD,
+    // AAVE-CAD, BCH-BTC, BTC-DAI, LINK-CAD, BTC-CAD, XLM-CAD, LTC-CAD, XRP-CAD,
+    // EOS-BTC, XLM-BTC, XRP-BTC, ETH-BTC, LTC-BTC, EOS-CAD]
 
     private final String preferredFiatCurrency;
     private final IBitbuyAPI api;
 
-    public BitbuyExchange(String apiKey, String apiSecret, String preferredFiatCurrency) throws GeneralSecurityException {
+    public BitbuyExchange(String apiKey, String apiSecret, String preferredFiatCurrency)
+            throws GeneralSecurityException {
         this.api = IBitbuyAPI.create(apiKey, apiSecret);
         this.preferredFiatCurrency = preferredFiatCurrency;
     }
@@ -102,13 +106,11 @@ public class BitbuyExchange implements IExchangeAdvanced, IRateSourceAdvanced {
     }
 
     private BigDecimal getBalance(String currency) {
-        return call(currency + " balance", () ->
-            api.getWallets().stream()
+        return call(currency + " balance", () -> api.getWallets().stream()
                 .filter(w -> currency.equals(w.symbol))
                 .findAny()
                 .map(w -> w.availableBalance)
-                .orElseThrow(() -> new Exception(currency + " wallet not found"))
-        );
+                .orElseThrow(() -> new Exception(currency + " wallet not found")));
     }
 
     @Override
@@ -131,16 +133,19 @@ public class BitbuyExchange implements IExchangeAdvanced, IRateSourceAdvanced {
     }
 
     @Override
-    public ITask createPurchaseCoinsTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
+    public ITask createPurchaseCoinsTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse,
+            String description) {
         return createOrderTask(amount, cryptoCurrency, fiatCurrencyToUse, OrderSide.BUY);
     }
 
     @Override
-    public ITask createSellCoinsTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
+    public ITask createSellCoinsTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse,
+            String description) {
         return createOrderTask(amount, cryptoCurrency, fiatCurrencyToUse, OrderSide.SELL);
     }
 
-    private ITask createOrderTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, OrderSide orderSide) {
+    private ITask createOrderTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse,
+            OrderSide orderSide) {
         if (!isCryptoCurrencySupported(cryptoCurrency) || !isFiatCurrencySupported(fiatCurrencyToUse)) {
             return null;
         }
@@ -184,15 +189,18 @@ public class BitbuyExchange implements IExchangeAdvanced, IRateSourceAdvanced {
         return calculatePrice(cryptoCurrency, fiatCurrency, cryptoAmount, OrderSide.SELL);
     }
 
-    private BigDecimal calculatePrice(String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount, OrderSide orderSide) {
+    private BigDecimal calculatePrice(String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount,
+            OrderSide orderSide) {
         if (!isCryptoCurrencySupported(cryptoCurrency) || !isFiatCurrencySupported(fiatCurrency)) {
             return null;
         }
-        return call("calculate " + orderSide + " price", () -> api.quoteOrder(new QuoteRequest(cryptoAmount, getMarketSymbol(cryptoCurrency, fiatCurrency), orderSide, OrderType.LIMIT)).fillPrice.multiply(cryptoAmount));
+        return call("calculate " + orderSide + " price",
+                () -> api.quoteOrder(new QuoteRequest(cryptoAmount, getMarketSymbol(cryptoCurrency, fiatCurrency),
+                        orderSide, OrderType.LIMIT)).fillPrice.multiply(cryptoAmount));
     }
 
     class OrderTask implements ITask {
-        private static final long MAXIMUM_TIME_TO_WAIT_FOR_ORDER_TO_FINISH = 5 * 60 * 60 * 1000; //5 hours
+        private static final long MAXIMUM_TIME_TO_WAIT_FOR_ORDER_TO_FINISH = 5 * 60 * 60 * 1000; // 5 hours
 
         private final long checkTillTime;
         private final BigDecimal cryptoAmount;
@@ -216,10 +224,12 @@ public class BitbuyExchange implements IExchangeAdvanced, IRateSourceAdvanced {
         public boolean onCreate() {
             log.info("Calling exchange ({} {} {})", orderSide, cryptoAmount, cryptoCurrency);
             orderId = call("task submitLimitOrder", () -> {
-                QuoteRequest quoteRequest = new QuoteRequest(cryptoAmount, getMarketSymbol(cryptoCurrency, fiatCurrencyToUse), orderSide, OrderType.LIMIT);
+                QuoteRequest quoteRequest = new QuoteRequest(cryptoAmount,
+                        getMarketSymbol(cryptoCurrency, fiatCurrencyToUse), orderSide, OrderType.LIMIT);
                 QuoteResponse quote = api.quoteOrder(quoteRequest);
 
-                OrderRequest orderRequest = new OrderRequest(cryptoAmount, quote.fillPrice, getMarketSymbol(cryptoCurrency, fiatCurrencyToUse), orderSide, OrderType.LIMIT);
+                OrderRequest orderRequest = new OrderRequest(cryptoAmount, quote.fillPrice,
+                        getMarketSymbol(cryptoCurrency, fiatCurrencyToUse), orderSide, OrderType.LIMIT);
                 log.info("Submitting order: {}", orderRequest);
                 OrderResponse order = api.submitOrder(orderRequest);
                 return order.id;
@@ -241,7 +251,8 @@ public class BitbuyExchange implements IExchangeAdvanced, IRateSourceAdvanced {
                 return false;
             }
 
-            OrderResponse order = call("task getOrder", () -> api.getOrder(getMarketSymbol(cryptoCurrency, fiatCurrencyToUse), orderId));
+            OrderResponse order = call("task getOrder",
+                    () -> api.getOrder(getMarketSymbol(cryptoCurrency, fiatCurrencyToUse), orderId));
 
             if (order != null && order.status.equals(OrderResponse.STATUS_CANCELLED)) {
                 log.debug("trade cancelled");
@@ -278,7 +289,7 @@ public class BitbuyExchange implements IExchangeAdvanced, IRateSourceAdvanced {
 
         @Override
         public long getShortestTimeForNexStepInvocation() {
-            return 5 * 1000; //it doesn't make sense to run step sooner than after 5 seconds
+            return 5 * 1000; // it doesn't make sense to run step sooner than after 5 seconds
         }
     }
 

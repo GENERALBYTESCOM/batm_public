@@ -66,11 +66,10 @@ public class TelrCashWallet implements IWallet {
     public String getCryptoAddress(String cryptoCurrency) {
         try {
             return api.getCryptoAddress(
-                this.address,
-                this.secret,
-                this.signature,
-                cryptoCurrency
-            );
+                    this.address,
+                    this.secret,
+                    this.signature,
+                    cryptoCurrency);
         } catch (HttpStatusIOException e) {
             log.error(e.getHttpBody());
         } catch (IOException e) {
@@ -83,11 +82,10 @@ public class TelrCashWallet implements IWallet {
     public BigDecimal getCryptoBalance(String cryptoCurrency) {
         try {
             return new BigDecimal(api.getCryptoBalance(
-                this.address,
-                this.secret,
-                this.signature,
-                cryptoCurrency
-            ));
+                    this.address,
+                    this.secret,
+                    this.signature,
+                    cryptoCurrency));
         } catch (HttpStatusIOException e) {
             log.error(e.getHttpBody());
         } catch (IOException e) {
@@ -98,22 +96,20 @@ public class TelrCashWallet implements IWallet {
 
     @Override
     public String sendCoins(
-        String destinationAddress,
-        BigDecimal amount,
-        String cryptoCurrency,
-        String description
-    ) {
+            String destinationAddress,
+            BigDecimal amount,
+            String cryptoCurrency,
+            String description) {
         try {
             // NOTE a successful tx will return an empty string ("" or NULL)
             return api.sendCoins(
-                this.address,
-                this.secret,
-                this.signature,
-                cryptoCurrency,
-                destinationAddress,
-                toSatoshis(amount),
-                description
-            );
+                    this.address,
+                    this.secret,
+                    this.signature,
+                    cryptoCurrency,
+                    destinationAddress,
+                    toSatoshis(amount),
+                    description);
         } catch (HttpStatusIOException e) {
             log.error(e.getHttpBody());
         } catch (IOException e) {
@@ -128,7 +124,8 @@ public class TelrCashWallet implements IWallet {
         s.add(CryptoCurrency.BCH.getCode());
         s.add(CryptoCurrency.BTC.getCode());
         s.add(CryptoCurrency.DAI.getCode());
-        s.add(CryptoCurrency.BTOKEN.getCode());
+        s.add(CryptoCurrency.BET_VERSE.getCode());
+        s.add(CryptoCurrency.BET_VERSE_ICO.getCode());
         s.add(CryptoCurrency.BIZZ.getCode());
         s.add(CryptoCurrency.ETH.getCode());
         s.add(CryptoCurrency.LTC.getCode());

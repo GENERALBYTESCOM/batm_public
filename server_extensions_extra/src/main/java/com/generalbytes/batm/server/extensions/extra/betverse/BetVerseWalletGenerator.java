@@ -15,7 +15,7 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.btoken;
+package com.generalbytes.batm.server.extensions.extra.betverse;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,24 +34,25 @@ import com.generalbytes.bitrafael.tools.wallet.eth.WalletToolsETH;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class BTokenWalletGenerator implements IPaperWalletGenerator {
+public class BetVerseWalletGenerator implements IPaperWalletGenerator {
 
-    private static final Logger log = LoggerFactory.getLogger("batm.master.BTokenWalletGenerator");
+    private static final Logger log = LoggerFactory.getLogger("batm.master.BetVerseWalletGenerator");
     private IExtensionContext ctx;
 
-    public BTokenWalletGenerator(IExtensionContext ctx) {
+    public BetVerseWalletGenerator(IExtensionContext ctx) {
         this.ctx = ctx;
     }
 
     @Override
-    public IPaperWallet generateWallet(String cryptoCurrency, String oneTimePassword, String userLanguage, boolean shouldBeVanity) {
+    public IPaperWallet generateWallet(String cryptoCurrency, String oneTimePassword, String userLanguage,
+            boolean shouldBeVanity) {
         WalletToolsETH wt = new WalletToolsETH();
         String mnemonic = EtherUtils.generateMnemonic();
+        MasterPrivateKeyETH m = wt.getMasterPrivateKey(mnemonic, "", CryptoCurrency.BET_VERSE.getCode(),
+                IWalletTools.STANDARD_BIP44);
 
-        MasterPrivateKeyETH m = wt.getMasterPrivateKey(mnemonic, "", CryptoCurrency.BTOKEN.getCode(), IWalletTools.STANDARD_BIP44);
-
-        String privateKey = wt.getWalletPrivateKey(m, CryptoCurrency.BTOKEN.getCode(), 0, 0, 0);
-        String address = wt.getWalletAddress(m, CryptoCurrency.BTOKEN.getCode(), 0, 0, 0);
+        String privateKey = wt.getWalletPrivateKey(m, CryptoCurrency.BET_VERSE.getCode(), 0, 0, 0);
+        String address = wt.getWalletAddress(m, CryptoCurrency.BET_VERSE.getCode(), 0, 0, 0);
 
         byte[] content = ctx.createPaperWallet7ZIP(mnemonic, address, oneTimePassword, cryptoCurrency);
 
@@ -66,7 +67,8 @@ public class BTokenWalletGenerator implements IPaperWalletGenerator {
             }
         }
 
-        return new BTokenPaperWallet(content, address, mnemonic, messageText, "application/zip", "zip", cryptoCurrency);
+        return new BetVersePaperWallet(content, address, mnemonic, messageText, "application/zip", "zip",
+                cryptoCurrency);
     }
 
     private String readTemplate(String templateFile) {

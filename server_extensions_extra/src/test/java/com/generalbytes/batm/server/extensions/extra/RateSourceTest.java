@@ -18,9 +18,7 @@
 package com.generalbytes.batm.server.extensions.extra;
 
 import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.ftx.FtxComExchange;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.ftx.FtxUsExchange;
-import com.generalbytes.batm.server.extensions.extra.btoken.sources.fixed.BTokenFixedRateSource;
+import com.generalbytes.batm.server.extensions.extra.betverse.sources.fixed.BetVerseFixedRateSource;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -43,8 +41,8 @@ public class RateSourceTest {
     @Parameterized.Parameters
     public static Collection getTestData() {
         return Arrays.asList(new Object[][] {
-                { "BTOKEN", new BTokenFixedRateSource(new BigDecimal(1), "USD") },
-                { "BTOKEN", new BTokenFixedRateSource(new BigDecimal(1), "CHF") },
+                { "BETVERSE", new BetVerseFixedRateSource(new BigDecimal(1), "USD") },
+                { "BETVERSE", new BetVerseFixedRateSource(new BigDecimal(1), "CHF") },
         });
     }
 

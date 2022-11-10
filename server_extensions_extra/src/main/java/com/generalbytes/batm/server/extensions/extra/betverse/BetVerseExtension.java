@@ -15,12 +15,12 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.btoken;
+package com.generalbytes.batm.server.extensions.extra.betverse;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
-import com.generalbytes.batm.server.extensions.extra.btoken.sources.fixed.BTokenFixedRateSource;
+import com.generalbytes.batm.server.extensions.extra.betverse.sources.fixed.BetVerseFixedRateSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,15 +30,15 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-public class BTokenExtension extends AbstractExtension {
+public class BetVerseExtension extends AbstractExtension {
 
-    private static final Logger log = LoggerFactory.getLogger(BTokenExtension.class);
+    private static final Logger log = LoggerFactory.getLogger(BetVerseExtension.class);
 
-    private static final ICryptoCurrencyDefinition DEFINITION = new BTokenDefinition();
+    private static final ICryptoCurrencyDefinition DEFINITION = new BetVerseDefinition();
 
     @Override
     public String getName() {
-        return "BATM BTOKEN extension";
+        return "BATM BETVERSE extension";
     }
 
     @Override
@@ -46,6 +46,9 @@ public class BTokenExtension extends AbstractExtension {
         if (walletLogin != null && !walletLogin.trim().isEmpty()) {
             StringTokenizer st = new StringTokenizer(walletLogin, ":");
             String walletType = st.nextToken();
+
+            if (!walletType.equals("betverse-wallet"))
+                return null;
 
             Long chainID = Long.parseLong(st.nextToken());
 
@@ -65,7 +68,7 @@ public class BTokenExtension extends AbstractExtension {
             }
 
             if (rpcURL != null && passwordOrMnemonic != null) {
-                return new BTokenERC20Wallet(chainID, rpcURL,
+                return new BetVerseERC20Wallet(chainID, rpcURL,
                         passwordOrMnemonic, tokenSymbol, tokenDecimalPlaces,
                         contractAddress, gasLimit, gasPriceMultiplier);
             }
@@ -76,16 +79,16 @@ public class BTokenExtension extends AbstractExtension {
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (CryptoCurrency.BTOKEN.getCode().equalsIgnoreCase(cryptoCurrency)) {
-            return new BTokenAddressValidator();
+        if (CryptoCurrency.BET_VERSE.getCode().equalsIgnoreCase(cryptoCurrency)) {
+            return new BetVerseAddressValidator();
         }
         return null;
     }
 
     @Override
     public IPaperWalletGenerator createPaperWalletGenerator(String cryptoCurrency) {
-        if (CryptoCurrency.BTOKEN.getCode().equalsIgnoreCase(cryptoCurrency)) {
-            return new BTokenWalletGenerator(ctx);
+        if (CryptoCurrency.BET_VERSE.getCode().equalsIgnoreCase(cryptoCurrency)) {
+            return new BetVerseWalletGenerator(ctx);
         }
         return null;
     }
@@ -106,7 +109,7 @@ public class BTokenExtension extends AbstractExtension {
             if (st.hasMoreTokens()) {
                 preferedFiatCurrency = st.nextToken().toUpperCase();
             }
-            return new BTokenFixedRateSource(rate, preferedFiatCurrency);
+            return new BetVerseFixedRateSource(rate, preferedFiatCurrency);
         }
         return null;
     }
@@ -114,7 +117,7 @@ public class BTokenExtension extends AbstractExtension {
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<String>();
-        result.add(CryptoCurrency.BTOKEN.getCode());
+        result.add(CryptoCurrency.BET_VERSE.getCode());
         return result;
     }
 }

@@ -29,7 +29,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 public class CoinmarketcapRateSource implements IRateSource {
@@ -75,7 +74,8 @@ public class CoinmarketcapRateSource implements IRateSource {
         result.add(CryptoCurrency.BURST.getCode());
         result.add(CryptoCurrency.CLOAK.getCode());
         result.add(CryptoCurrency.DAI.getCode());
-        result.add(CryptoCurrency.BTOKEN.getCode());
+        result.add(CryptoCurrency.BET_VERSE.getCode());
+        result.add(CryptoCurrency.BET_VERSE_ICO.getCode());
         result.add(CryptoCurrency.BIZZ.getCode());
         result.add(CryptoCurrency.DASH.getCode());
         result.add(CryptoCurrency.DOGE.getCode());
@@ -119,7 +119,6 @@ public class CoinmarketcapRateSource implements IRateSource {
         return result;
     }
 
-
     @Override
     public String getPreferredFiatCurrency() {
         return preferredFiatCurrency;
@@ -130,7 +129,7 @@ public class CoinmarketcapRateSource implements IRateSource {
         if (!getFiatCurrencies().contains(fiatCurrency)) {
             return null;
         }
-        if(apiKey == null) {
+        if (apiKey == null) {
             return null;
         }
 
