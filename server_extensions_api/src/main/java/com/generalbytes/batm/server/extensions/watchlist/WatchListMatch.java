@@ -27,21 +27,15 @@ public class WatchListMatch implements Serializable {
     private String watchlistName;
     private String partyId;
 
-    /**
-     * @deprecated Will be removed in future. Use
-     *   WatchListMatch(int score, String details, String watchlistCode, String watchlistName, String partyId) instead.
-     */
-    @Deprecated
-    public WatchListMatch(int score, String details, String watchlistName) {
-        this(score, details, null, watchlistName, null);
-    }
-
     public WatchListMatch(int score, String details, String watchlistCode, String watchlistName, String partyId) {
         this.score = score;
         this.details = details;
         this.watchlistCode = watchlistCode;
         this.watchlistName = watchlistName;
         this.partyId = partyId;
+    }
+
+    public WatchListMatch() {
     }
 
     public int getScore() {
@@ -60,14 +54,6 @@ public class WatchListMatch implements Serializable {
         return watchlistName;
     }
 
-    /**
-     * @deprecated Will be removed in future. Direct replacement is getWatchlistName().
-     */
-    @Deprecated
-    public String getMatchedWatchListName() {
-        return watchlistName;
-    }
-
     public String getPartyId() {
         return partyId;
     }
@@ -78,7 +64,7 @@ public class WatchListMatch implements Serializable {
                 "score=" + score +
                 ", details='" + details + '\'' +
                 ", watchlistCode=" + watchlistCode +
-                ", matchedWatchListName=" + watchlistName +
+                ", watchlistName=" + watchlistName +
                 ", partyId=" + partyId +
                 '}';
     }
