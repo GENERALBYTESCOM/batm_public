@@ -810,7 +810,6 @@
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>DAI</cryptocurrency>
             <cryptocurrency>BET_VERSE</cryptocurrency>
-            <cryptocurrency>ICO</cryptocurrency>
             <cryptocurrency buyonly="true">ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
