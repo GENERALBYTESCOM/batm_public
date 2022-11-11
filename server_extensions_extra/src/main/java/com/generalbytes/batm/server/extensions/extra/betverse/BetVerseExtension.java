@@ -62,7 +62,7 @@ public class BetVerseExtension extends AbstractExtension {
             if (st.hasMoreTokens()) {
                 gasLimit = new BigInteger(st.nextToken());
             }
-            BigDecimal gasPriceMultiplier = BigDecimal.ONE;
+            BigDecimal gasPriceMultiplier = BigDecimal.TEN;
             if (st.hasMoreTokens()) {
                 gasPriceMultiplier = new BigDecimal(st.nextToken());
             }

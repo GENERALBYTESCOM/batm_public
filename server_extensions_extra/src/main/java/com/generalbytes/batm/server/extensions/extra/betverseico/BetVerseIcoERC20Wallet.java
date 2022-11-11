@@ -86,12 +86,12 @@ public class BetVerseIcoERC20Wallet implements IWallet {
 
         this.credentials = initCredentials(mnemonicOrPassword);
 
-        this.noGasContract = ERC20Interface.load(this.contractAddress, w, new FastRawTransactionManager(this.w, this.credentials, chainID), BigInteger.valueOf(100000000000L), DefaultGasProvider.GAS_LIMIT);
-        this.noGasTokenContract = ERC20Interface.load(this.tokenAddress, w, new FastRawTransactionManager(this.w, this.credentials, chainID), BigInteger.valueOf(100000000000L), DefaultGasProvider.GAS_LIMIT);
+        this.noGasContract = ERC20Interface.load(this.contractAddress, w, new FastRawTransactionManager(this.w, this.credentials, chainID), DefaultGasProvider.GAS_PRICE, DefaultGasProvider.GAS_LIMIT);
+        this.noGasTokenContract = ERC20Interface.load(this.tokenAddress, w, new FastRawTransactionManager(this.w, this.credentials, chainID), DefaultGasProvider.GAS_PRICE, DefaultGasProvider.GAS_LIMIT);
     }
 
     private ERC20Interface getContract(String destinationAddress, BigInteger tokensAmount) {
-        return ERC20Interface.load(this.contractAddress, w, new FastRawTransactionManager(this.w, this.credentials, chainID), BigInteger.valueOf(100000000000L), DefaultGasProvider.GAS_LIMIT);
+        return ERC20Interface.load(this.contractAddress, w, new FastRawTransactionManager(this.w, this.credentials, chainID), DefaultGasProvider.GAS_PRICE, DefaultGasProvider.GAS_LIMIT);
     }
 
     private BigDecimal convertToBigDecimal(BigInteger value) {

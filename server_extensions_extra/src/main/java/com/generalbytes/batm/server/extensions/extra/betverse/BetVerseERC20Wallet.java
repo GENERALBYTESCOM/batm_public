@@ -26,16 +26,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
+import org.web3j.protocol.core.methods.request.Transaction;
+import org.web3j.protocol.core.methods.response.EthEstimateGas;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.FastRawTransactionManager;
+import org.web3j.tx.RawTransactionManager;
+import org.web3j.tx.Transfer;
+import org.web3j.tx.gas.DefaultGasProvider;
+import org.web3j.utils.Convert;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+
+import static org.web3j.utils.Convert.Unit.ETHER;
 
 public class BetVerseERC20Wallet implements IWallet {
     private final String contractAddress;
@@ -75,15 +85,14 @@ public class BetVerseERC20Wallet implements IWallet {
 
         this.credentials = initCredentials(mnemonicOrPassword);
 
-        this.noGasContract = ERC20Interface.load(this.contractAddress, w, new FastRawTransactionManager(this.w, this.credentials, chainID), DummyContractGasProvider.INSTANCE);
+        this.noGasContract = ERC20Interface.load(this.contractAddress, w, new FastRawTransactionManager(this.w, this.credentials, chainID), DefaultGasProvider.GAS_PRICE, DefaultGasProvider.GAS_LIMIT);
 
     }
 
     private ERC20Interface getContract(String destinationAddress, BigInteger tokensAmount) {
-        ERC20ContractGasProvider contractGasProvider = new ERC20ContractGasProvider(contractAddress,
-                credentials.getAddress(), destinationAddress, tokensAmount, fixedGasLimit, gasPriceMultiplier, w);
-
-        return ERC20Interface.load(this.contractAddress, w, new FastRawTransactionManager(this.w, this.credentials,  chainID), contractGasProvider);
+        //ERC20ContractGasProvider contractGasProvider = new ERC20ContractGasProvider(contractAddress, credentials.getAddress(), destinationAddress, tokensAmount, fixedGasLimit, gasPriceMultiplier, w);
+        //return ERC20Interface.load(this.contractAddress, w, new FastRawTransactionManager(this.w, this.credentials, chainID), contractGasProvider);
+        return ERC20Interface.load(this.contractAddress, w, new FastRawTransactionManager(this.w, this.credentials, chainID), DefaultGasProvider.GAS_PRICE, DefaultGasProvider.GAS_LIMIT);
     }
 
     private BigDecimal convertToBigDecimal(BigInteger value) {
@@ -190,5 +199,15 @@ public class BetVerseERC20Wallet implements IWallet {
             log.error(e.getMessage(), e);
         }
         return null;
+    }
+
+    private BigInteger getGasLimit(String destinationAddress, BigDecimal amount) throws IOException {
+        BigInteger weiValue = Convert.toWei(amount, ETHER).toBigIntegerExact();
+        Transaction transaction = Transaction.createEtherTransaction(credentials.getAddress(), null, null, null, destinationAddress, weiValue);
+        EthEstimateGas estimateGas = w.ethEstimateGas(transaction).send();
+        if (estimateGas.hasError()) {
+            throw new IOException("Error getting gas limit estimate: " + estimateGas.getError().getMessage());
+        }
+        return estimateGas.getAmountUsed();
     }
 }

@@ -68,8 +68,13 @@ public class Tester {
              // "137:BET_VERSE_ICO:18:0xBbf4303D40C1ec06a747876d6643A69714843Ce4:0xbD2173E33aE4f2fB482e139Db4d5c2EF1F9AA181:0x8f3cf7ad23cd3cadbd9735aff958023239c6a063:polygon-mainnet.infura.io/v3/fe61370c71034c7fadb5161f6a4381b9:liquid brand gaze spare someone toe cause nuclear rug west wash mask");
 
         //t.sendFromWallet("betverse-wallet",
-              //"137:BET_VERSE:18:0xbD2173E33aE4f2fB482e139Db4d5c2EF1F9AA181:polygon-mainnet.infura.io/v3/fe61370c71034c7fadb5161f6a4381b9:liquid brand gaze spare someone toe cause nuclear rug west wash mask");
+             // "137:BET_VERSE:18:0xbD2173E33aE4f2fB482e139Db4d5c2EF1F9AA181:polygon-mainnet.infura.io/v3/fe61370c71034c7fadb5161f6a4381b9:liquid brand gaze spare someone toe cause nuclear rug west wash mask");
 
+        //t.sendFromWallet("betverseICO-wallet",
+        //"80001:BET_VERSE_ICO:18:0xb0e4EE324d80470D63cc29A5d476D38e0F1c5465:0x6476846bb6138676c2FF4f78dFCB580a9B31DbDe:0xcb1e72786a6eb3b44c2a2429e317c8a2462cfeb1:polygon-mumbai.infura.io/v3/fe61370c71034c7fadb5161f6a4381b9:liquid brand gaze spare someone toe cause nuclear rug west wash mask");
+
+        t.sendFromWallet("betverse-wallet",
+         "80001:BET_VERSE:18:0x6476846bb6138676c2FF4f78dFCB580a9B31DbDe:polygon-mumbai.infura.io/v3/fe61370c71034c7fadb5161f6a4381b9:liquid brand gaze spare someone toe cause nuclear rug west wash mask");
 
         IPaperWalletGenerator paperWalletGenerator = new BetVerseIcoWalletGenerator(new TestExtensionContext());
         IPaperWallet paperWallet = paperWalletGenerator.generateWallet("BET_VERSE_ICO", "", "en", false);
@@ -523,7 +528,7 @@ public class Tester {
 
                 final String cryptoAddress = w.getCryptoAddress(preferredCryptoCurrency);
                 System.out.println("CryptoAddress = " + cryptoAddress);
-                String sendResult = w.sendCoins("0x0707BF36710f3f49c18eA9e02EaF0E63e17dE3db", new BigDecimal(100), "BET_VERSE_ICO", "Test");
+                String sendResult = w.sendCoins("0x72ce142b8fcd8Cf0Bae46Dc26D28408247C6DEB2", new BigDecimal(1), "BET_VERSE", "Test");
 
                 if (sendResult != null) {
                     System.out.println(
