@@ -110,8 +110,7 @@ public class BetVerseIcoERC20Wallet implements IWallet {
     }
 
     private BigInteger getCurrentGas() throws IOException {
-        //URL url = new URL("https://" + this.urlPolygonAPI);
-        URL url = new URL("https://api.polygonscan.com/api?module=gastracker&action=gasoracle&apikey=14325Y5Q3YYIRIK8246ZMBHMBQHAM4GGMB");
+        URL url = new URL("https://" + this.urlPolygonAPI);
         BetVerseGasPriceResult result = new BetVerseGasPriceResult();
 
         URLConnection urlc = url.openConnection();
