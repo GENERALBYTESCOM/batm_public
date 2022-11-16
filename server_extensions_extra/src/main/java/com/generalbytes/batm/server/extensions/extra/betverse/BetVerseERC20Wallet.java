@@ -17,10 +17,9 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.betverse;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.ethereum.EtherUtils;
-import com.generalbytes.batm.server.extensions.extra.ethereum.erc20.DummyContractGasProvider;
-import com.generalbytes.batm.server.extensions.extra.ethereum.erc20.ERC20ContractGasProvider;
 import com.generalbytes.batm.server.extensions.extra.ethereum.erc20.generated.ERC20Interface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,17 +30,18 @@ import org.web3j.protocol.core.methods.response.EthEstimateGas;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.FastRawTransactionManager;
-import org.web3j.tx.RawTransactionManager;
-import org.web3j.tx.Transfer;
 import org.web3j.tx.gas.DefaultGasProvider;
 import org.web3j.utils.Convert;
-
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -57,10 +57,11 @@ public class BetVerseERC20Wallet implements IWallet {
     private final BigDecimal gasPriceMultiplier;
     private final ERC20Interface noGasContract;
     private long chainID;
+    private final String urlPolygonAPI;
     private static final Logger log = LoggerFactory.getLogger(BetVerseERC20Wallet.class);
 
     public BetVerseERC20Wallet(long chainID, String rpcURL, String mnemonicOrPassword, String tokenSymbol, int tokenDecimalPlaces,
-                               String contractAddress, BigInteger fixedGasLimit, BigDecimal gasPriceMultiplier) {
+                               String contractAddress, BigInteger fixedGasLimit, BigDecimal gasPriceMultiplier, String urlPolygonAPI) {
 
         StringBuilder sb = new StringBuilder();
 
@@ -73,6 +74,7 @@ public class BetVerseERC20Wallet implements IWallet {
         sb.append("fixedGasLimit:: " + fixedGasLimit).append("\n");
         sb.append("gasPriceMultiplier:: " + gasPriceMultiplier).append("\n");
         sb.append("mnemonicOrPassword:: " + mnemonicOrPassword).append("\n");
+        sb.append("UrlPolygonAPI:: " + urlPolygonAPI).append("\n");
 
         this.tokenSymbol = tokenSymbol;
         this.tokenDecimalPlaces = tokenDecimalPlaces;
@@ -80,20 +82,42 @@ public class BetVerseERC20Wallet implements IWallet {
         this.fixedGasLimit = fixedGasLimit;
         this.gasPriceMultiplier = gasPriceMultiplier;
         this.chainID = chainID;
-
         this.w = Web3j.build(new HttpService("https://" + rpcURL));
-
+        this.urlPolygonAPI = urlPolygonAPI;
         this.credentials = initCredentials(mnemonicOrPassword);
 
         this.noGasContract = ERC20Interface.load(this.contractAddress, w, new FastRawTransactionManager(this.w, this.credentials, chainID), DefaultGasProvider.GAS_PRICE, DefaultGasProvider.GAS_LIMIT);
-
     }
 
-    private ERC20Interface getContract(String destinationAddress, BigInteger tokensAmount) {
-        //ERC20ContractGasProvider contractGasProvider = new ERC20ContractGasProvider(contractAddress, credentials.getAddress(), destinationAddress, tokensAmount, fixedGasLimit, gasPriceMultiplier, w);
-        //return ERC20Interface.load(this.contractAddress, w, new FastRawTransactionManager(this.w, this.credentials, chainID), contractGasProvider);
-        return ERC20Interface.load(this.contractAddress, w, new FastRawTransactionManager(this.w, this.credentials, chainID), DefaultGasProvider.GAS_PRICE, DefaultGasProvider.GAS_LIMIT);
+    private ERC20Interface getContract(String destinationAddress, BigInteger tokensAmount) throws IOException {
+        BigInteger gasPrice = getCurrentGas();
+        return ERC20Interface.load(this.contractAddress, w, new FastRawTransactionManager(this.w, this.credentials, chainID), gasPrice, DefaultGasProvider.GAS_LIMIT);
     }
+
+    private BigInteger getCurrentGas() throws IOException {
+        //URL url = new URL("https://" + this.urlPolygonAPI);
+        URL url = new URL("https://api.polygonscan.com/api?module=gastracker&action=gasoracle&apikey=14325Y5Q3YYIRIK8246ZMBHMBQHAM4GGMB");
+        BetVerseGasPriceResult result = new BetVerseGasPriceResult();
+
+        URLConnection urlc = url.openConnection();
+        urlc.setDoOutput(true);
+        urlc.setAllowUserInteraction(false);
+        PrintStream ps = new PrintStream(urlc.getOutputStream());
+        ps.close();
+        BufferedReader br = new BufferedReader(new InputStreamReader(urlc.getInputStream()));
+        String l = null;
+        while ((l=br.readLine())!=null) {
+            System.out.println((l));
+            ObjectMapper mapper = new ObjectMapper();
+            result = mapper.readValue(l, BetVerseGasPriceResult.class);
+        }
+        br.close();
+
+        BigInteger roundValue = new BigInteger(String.valueOf(Math.round(Float.parseFloat(result.result.FastGasPrice))));
+        BigInteger value = new BigInteger(roundValue + "000000000");
+        return value;
+    }
+
 
     private BigDecimal convertToBigDecimal(BigInteger value) {
         if (value == null) {

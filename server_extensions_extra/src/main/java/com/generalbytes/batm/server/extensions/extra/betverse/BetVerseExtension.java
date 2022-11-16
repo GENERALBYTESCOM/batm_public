@@ -58,6 +58,12 @@ public class BetVerseExtension extends AbstractExtension {
 
             String rpcURL = st.nextToken();
             String passwordOrMnemonic = st.nextToken();
+
+            String urlPolygonAPI = "";
+            if (st.hasMoreTokens()) {
+                urlPolygonAPI = st.nextToken();
+            }
+
             BigInteger gasLimit = null;
             if (st.hasMoreTokens()) {
                 gasLimit = new BigInteger(st.nextToken());
@@ -67,10 +73,11 @@ public class BetVerseExtension extends AbstractExtension {
                 gasPriceMultiplier = new BigDecimal(st.nextToken());
             }
 
+
             if (rpcURL != null && passwordOrMnemonic != null) {
                 return new BetVerseERC20Wallet(chainID, rpcURL,
                         passwordOrMnemonic, tokenSymbol, tokenDecimalPlaces,
-                        contractAddress, gasLimit, gasPriceMultiplier);
+                        contractAddress, gasLimit, gasPriceMultiplier, urlPolygonAPI);
             }
 
         }
