@@ -34,7 +34,7 @@ public abstract class QueryableWalletPaymentSupport extends PollingPaymentSuppor
                 return;
             }
 
-            if (totalReceived.compareTo(request.getAmount()) != 0) {
+            if (!receivedAmountMatchesRequestedAmountInTolerance(request, totalReceived)) {
                 log.info("Received amount ({}) does not match the requested amount ({}), {}", totalReceived, request.getAmount(), request);
                 // stop future polling
                 setState(request, PaymentRequest.STATE_TRANSACTION_INVALID);
@@ -61,5 +61,14 @@ public abstract class QueryableWalletPaymentSupport extends PollingPaymentSuppor
         } catch (Exception e) {
             log.error("", e);
         }
+    }
+
+    private boolean receivedAmountMatchesRequestedAmountInTolerance(PaymentRequest request, BigDecimal totalReceived) {
+        BigDecimal requestedAmount = request.getAmount();
+        BigDecimal tolerance = request.getTolerance();
+
+        return totalReceived.compareTo(requestedAmount) == 0
+            || (totalReceived.compareTo(requestedAmount) > 0 && request.isOverageAllowed())
+            || (tolerance != null && totalReceived.subtract(requestedAmount).abs().compareTo(tolerance) <= 0);
     }
 }
