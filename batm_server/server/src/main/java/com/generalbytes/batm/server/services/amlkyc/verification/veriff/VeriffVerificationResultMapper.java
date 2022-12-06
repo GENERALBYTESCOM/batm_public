@@ -7,6 +7,7 @@ import com.generalbytes.batm.server.common.data.amlkyc.IdentityApplicant;
 import com.generalbytes.batm.server.extensions.Country;
 import com.generalbytes.batm.server.services.amlkyc.verification.veriff.api.webhook.VerificationDecisionWebhookRequest;
 import com.generalbytes.batm.server.services.amlkyc.verification.veriff.api.webhook.VerificationDecisionWebhookRequest.Verification;
+import com.generalbytes.batm.server.util.StringUtils2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,9 +40,33 @@ public class VeriffVerificationResultMapper {
 
         result.setDocumentType(mapDocumentType(verification.document.type));
         result.setExpirationDate(parseDate(verification.document.validUntil));
-        result.setCountry(mapCountry(verification.document.country));
+
+        Verification.Person.Address address = getAddress(verification);
+        if (address != null) {
+            result.setRawAddress(address.fullAddress);
+
+            if (address.parsedAddress != null) {
+                result.setStreetAddress(StringUtils2.joinNonBlankOrNull(address.parsedAddress.street, address.parsedAddress.houseNumber, address.parsedAddress.unit));
+                result.setCity(address.parsedAddress.city);
+                result.setZip(address.parsedAddress.postcode);
+                result.setState(address.parsedAddress.state);
+                result.setCountry(mapCountry(address.parsedAddress.country));
+            }
+        }
+
+        if (result.getCountry() == null) {
+            result.setCountry(mapCountry(verification.document.country));
+        }
+
         result.setDocumentNumber(verification.document.number);
         return result;
+    }
+
+    private Verification.Person.Address getAddress(Verification verification) {
+        if (verification.person.addresses == null || verification.person.addresses.isEmpty()) {
+            return null;
+        }
+        return verification.person.addresses.get(0);
     }
 
     private CheckResult mapCheckResult(Verification.Status status) {

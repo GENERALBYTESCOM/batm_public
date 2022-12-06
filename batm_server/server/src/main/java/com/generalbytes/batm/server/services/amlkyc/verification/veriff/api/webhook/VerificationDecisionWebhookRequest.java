@@ -98,7 +98,22 @@ public class VerificationDecisionWebhookRequest {
             public String yearOfBirth;
             public String placeOfBirth;
             public String pepSanctionMatch;
+            public List<Address> addresses;
 
+            public static class Address {
+                public String fullAddress;
+                public ParsedAddress parsedAddress;
+
+                public static class ParsedAddress {
+                    public String city;
+                    public String unit;
+                    public String state;
+                    public String street;
+                    public String country;
+                    public String postcode;
+                    public String houseNumber;
+                }
+            }
         }
 
         /**
