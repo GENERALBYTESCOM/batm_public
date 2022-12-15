@@ -43,7 +43,7 @@ verifyModule 'com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-w
 verifyModule 'com.google.j2objc:j2objc-annotations:1.3:21af30c92267bd6122c0e0b4d20cccb6641a37eaf956c6540ec471d584e64a7b'
 verifyModule 'com.google.protobuf:protobuf-java-util:3.11.0:54b4cb99ec9196f24d04a47f98416274e34aee16ebb860d5655c6c5a069705e5'
 verifyModule 'com.google.protobuf:protobuf-java:3.12.0:a98ed5a0272cdda6bde98fe15e794e3d99ec04554dba0ba8e0a49ff5cecc5e9e'
-verifyModule 'com.google.zxing:core:2.3.0:d02eec73f8a247d4bfbf94b6f922090179140330e252f4bad424fc769217ba12'
+verifyModule 'com.google.zxing:core:3.5.1:1ba7c0fbb6c267e2fb74e1497d855adae633ccc98edc8c75163aa64bc08e3059'
 verifyModule 'com.lambdaworks:scrypt:1.4.0:9a82d218099fb14c10c0e86e7eefeebd8c104de920acdc47b8b4b7a686fb73b4'
 verifyModule 'com.madgag.spongycastle:core:1.52.0.0:07a401edbe26e1028e2324754557b741cc57306008df7b71a9e12ec32d65be8f'
 verifyModule 'com.nexmo:client:5.5.0:9e164e276d35a012eb25c1e1e84dd5422b1945e5c7dbea250f54ea6130a8617a'
