@@ -218,6 +218,7 @@
                 <cryptocurrency>ECA</cryptocurrency>
                 <cryptocurrency>DOGE</cryptocurrency>
                 <cryptocurrency>NYC</cryptocurrency>
+                <cryptocurrency>VAL</cryptocurrency>
                 <cryptocurrency>ANON</cryptocurrency>
                 <cryptocurrency>XZC</cryptocurrency>
                 <cryptocurrency>CLOAK</cryptocurrency>
@@ -598,6 +599,7 @@
             <cryptocurrency>NULS</cryptocurrency>
             <cryptocurrency>NXT</cryptocurrency>
             <cryptocurrency>NYC</cryptocurrency>
+            <cryptocurrency>VAL</cryptocurrency>
             <cryptocurrency>POT</cryptocurrency>
             <cryptocurrency>REP</cryptocurrency>
             <cryptocurrency>SMART</cryptocurrency>
@@ -667,6 +669,7 @@
             <cryptocurrency>NULS</cryptocurrency>
             <cryptocurrency>NXT</cryptocurrency>
             <cryptocurrency>NYC</cryptocurrency>
+            <cryptocurrency>VAL</cryptocurrency>
             <cryptocurrency>POT</cryptocurrency>
             <cryptocurrency>REP</cryptocurrency>
             <cryptocurrency>SMART</cryptocurrency>
@@ -1071,6 +1074,37 @@
         </ratesource>
         <cryptologo cryptocurrency="EGG" file="egg.png"/>
         <cryptologo cryptocurrency="EGG" file="egg.svg"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.validity.ValidityExtension" >
+        <wallet prefix="validityd" name="Validityd">
+            <tunnel supported="true"/>
+            <sendtomany supported="true"/>
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="label" />
+            <cryptocurrency>VAL</cryptocurrency>
+        </wallet>
+        <wallet prefix="validitydnoforward" name="Validityd (no forward)">
+            <tunnel supported="true"/>
+            <sendtomany supported="true"/>
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <cryptocurrency>VAL</cryptocurrency>
+            <help>This variant generates new addresses for each transaction and does not forward payments from temporary address</help>
+        </wallet>
+        <ratesource prefix="valfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>VAL</cryptocurrency>
+            <help>USD is default fiat currency.</help>
+        </ratesource>
+        <cryptologo cryptocurrency="VAL" file="val.png"/>
+        <cryptologo cryptocurrency="VAL" file="val.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.flashcoin.FlashcoinExtension" >
         <wallet prefix="flashcoind" name="Flashcoind">
