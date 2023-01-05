@@ -41,6 +41,7 @@ public enum CryptoCurrency {
     ANT("Aragon Network Token"),
     BAT("Basic Attention Token"),
     BCH("Bitcoin Cash"),
+    BLK("Blackcoin"),
     BNB("BinanceCoin"),
     BSD("BitSend"),
     BTBS("BitBase"),

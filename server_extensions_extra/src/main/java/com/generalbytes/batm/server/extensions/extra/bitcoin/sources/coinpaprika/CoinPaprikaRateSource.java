@@ -44,6 +44,7 @@ public class CoinPaprikaRateSource implements IRateSource {
         CRYPTOCURRENCIES.put(CryptoCurrency.BAT.getCode(), "bat-basic-attention-token");
         CRYPTOCURRENCIES.put(CryptoCurrency.BAY.getCode(), "bay-bitbay");
         CRYPTOCURRENCIES.put(CryptoCurrency.BCH.getCode(), "bch-bitcoin-cash");
+        CRYPTOCURRENCIES.put(CryptoCurrency.BLK.getCode(), "blk-blackcoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.BNB.getCode(), "bnb-binance-coin");
         CRYPTOCURRENCIES.put(CryptoCurrency.BSD.getCode(), "bsd-bitsend");
         CRYPTOCURRENCIES.put(CryptoCurrency.BTC.getCode(), "btc-bitcoin");

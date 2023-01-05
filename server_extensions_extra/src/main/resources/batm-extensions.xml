@@ -189,6 +189,7 @@
                 <cryptocurrency>LINDA</cryptocurrency>
                 <cryptocurrency>SYS</cryptocurrency>
                 <cryptocurrency>BCH</cryptocurrency>
+                <cryptocurrency>BLK</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>DAI</cryptocurrency>
@@ -559,6 +560,7 @@
             <cryptocurrency>ANT</cryptocurrency>
             <cryptocurrency>BAT</cryptocurrency>
             <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>BLK</cryptocurrency>
             <cryptocurrency>BNB</cryptocurrency>
             <cryptocurrency>BSD</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
@@ -630,6 +632,7 @@
             <cryptocurrency>BAT</cryptocurrency>
             <cryptocurrency>BAY</cryptocurrency>
             <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>BLK</cryptocurrency>
             <cryptocurrency>BNB</cryptocurrency>
             <cryptocurrency>BSD</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
@@ -1105,6 +1108,37 @@
         </ratesource>
         <cryptologo cryptocurrency="VAL" file="val.png"/>
         <cryptologo cryptocurrency="VAL" file="val.svg"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.blackcoin.BlackcoinExtension" >
+        <wallet prefix="blackcoind" name="Blackcoind">
+            <tunnel supported="true"/>
+            <sendtomany supported="true"/>
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="label" />
+            <cryptocurrency>BLK</cryptocurrency>
+        </wallet>
+        <wallet prefix="blackcoindnoforward" name="Blackcoind (no forward)">
+            <tunnel supported="true"/>
+            <sendtomany supported="true"/>
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <cryptocurrency>BLK</cryptocurrency>
+            <help>This variant generates new addresses for each transaction and does not forward payments from temporary address</help>
+        </wallet>
+        <ratesource prefix="blkfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>BLK</cryptocurrency>
+            <help>USD is default fiat currency.</help>
+        </ratesource>
+        <cryptologo cryptocurrency="BLK" file="blk.png"/>
+        <cryptologo cryptocurrency="BLK" file="blk.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.flashcoin.FlashcoinExtension" >
         <wallet prefix="flashcoind" name="Flashcoind">
