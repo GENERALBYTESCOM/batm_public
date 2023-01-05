@@ -31,7 +31,7 @@ import java.math.BigDecimal;
 import java.net.InetSocketAddress;
 import java.util.*;
 
-public class BlackcoinExtension extends AbstractExtension{
+public class GoldcoinExtension extends AbstractExtension{
     private static final Logger log = LoggerFactory.getLogger(GoldcoinExtension.class);
 
     @Override
@@ -67,9 +67,9 @@ public class BlackcoinExtension extends AbstractExtension{
                 if (protocol != null && username != null && password != null && hostname !=null && label != null) {
                     String rpcURL = protocol +"://" + username +":" + password + "@" + hostname +":" + port;
                     if ("goldcoindnoforward".equalsIgnoreCase(walletType)) {
-                        return new BlackcoindUniqueAddressRPCWallet(rpcURL);
+                        return new GoldcoindUniqueAddressRPCWallet(rpcURL);
                     }
-                    return new BlackcoindRPCWallet(rpcURL, label);
+                    return new GoldcoindRPCWallet(rpcURL, label);
                 }
             }
         }
