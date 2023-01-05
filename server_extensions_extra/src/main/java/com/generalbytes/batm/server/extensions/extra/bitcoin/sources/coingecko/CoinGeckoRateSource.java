@@ -69,6 +69,7 @@ public class CoinGeckoRateSource implements IRateSource {
         CRYPTOCURRENCIES.put(CryptoCurrency.LINDA.getCode(), "linda");
         CRYPTOCURRENCIES.put(CryptoCurrency.LSK.getCode(), "lisk");
         CRYPTOCURRENCIES.put(CryptoCurrency.LTC.getCode(), "litecoin");
+        CRYPTOCURRENCIES.put(CryptoCurrency.GLC.getCode(), "goldcoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.MAX.getCode(), "maxcoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.MEC.getCode(), "megacoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.MKR.getCode(), "maker");

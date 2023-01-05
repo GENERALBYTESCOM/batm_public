@@ -82,6 +82,7 @@ public enum CryptoCurrency {
     LINDA("Linda"),
     LSK("Lisk"),
     LTC("Litecoin"),
+    GLC("Goldcoin"),
     MAX("Maxcoin"),
     MEC("Megacoin"),
     MKR("Maker"),

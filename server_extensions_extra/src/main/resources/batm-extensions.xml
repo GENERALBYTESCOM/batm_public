@@ -190,6 +190,7 @@
                 <cryptocurrency>SYS</cryptocurrency>
                 <cryptocurrency>BCH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
+                <cryptocurrency>GLC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>DAI</cryptocurrency>
                 <cryptocurrency>BIZZ</cryptocurrency>
@@ -265,6 +266,7 @@
                 <cryptocurrency>ETC</cryptocurrency>
                 <cryptocurrency>FLASH</cryptocurrency>
                 <cryptocurrency>FTO</cryptocurrency>
+                <cryptocurrency>GLC</cryptocurrency>
                 <cryptocurrency>GRS</cryptocurrency>
                 <cryptocurrency>HATCH</cryptocurrency>
                 <cryptocurrency>HT</cryptocurrency>
@@ -578,6 +580,7 @@
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>FLASH</cryptocurrency>
             <cryptocurrency>FTO</cryptocurrency>
+            <cryptocurrency>GLC</cryptocurrency>
             <cryptocurrency>GRS</cryptocurrency>
             <cryptocurrency>HATCH</cryptocurrency>
             <cryptocurrency>HT</cryptocurrency>
@@ -648,6 +651,7 @@
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>FLASH</cryptocurrency>
             <cryptocurrency>FTO</cryptocurrency>
+            <cryptocurrency>GLC</cryptocurrency>
             <cryptocurrency>GRS</cryptocurrency>
             <cryptocurrency>HATCH</cryptocurrency>
             <cryptocurrency>HT</cryptocurrency>
@@ -1071,6 +1075,37 @@
         </ratesource>
         <cryptologo cryptocurrency="EGG" file="egg.png"/>
         <cryptologo cryptocurrency="EGG" file="egg.svg"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.goldcoin.GoldcoinExtension" >
+        <wallet prefix="goldcoind" name="Goldcoind">
+            <tunnel supported="true"/>
+            <sendtomany supported="true"/>
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="label" />
+            <cryptocurrency>GLC</cryptocurrency>
+        </wallet>
+        <wallet prefix="goldcoindnoforward" name="Goldcoind (no forward)">
+            <tunnel supported="true"/>
+            <sendtomany supported="true"/>
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <cryptocurrency>GLC</cryptocurrency>
+            <help>This variant generates new addresses for each transaction and does not forward payments from temporary address</help>
+        </wallet>
+        <ratesource prefix="glcfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>GLC</cryptocurrency>
+            <help>USD is default fiat currency.</help>
+        </ratesource>
+        <cryptologo cryptocurrency="GLC" file="glc.png"/>
+        <cryptologo cryptocurrency="GLC" file="glc.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.flashcoin.FlashcoinExtension" >
         <wallet prefix="flashcoind" name="Flashcoind">
