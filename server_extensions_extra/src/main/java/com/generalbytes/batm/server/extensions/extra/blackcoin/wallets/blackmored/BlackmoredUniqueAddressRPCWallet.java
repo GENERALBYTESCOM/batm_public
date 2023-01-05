@@ -15,13 +15,12 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.blackcoin.wallets.blackcoinmored;
+package com.generalbytes.batm.server.extensions.extra.blackcoin.wallets.blackmored;
 
-import com.generalbytes.batm.common.currencies.CryptoCurrency;
-import com.generalbytes.batm.server.extensions.extra.common.RPCWallet;
+import com.generalbytes.batm.server.extensions.IGeneratesNewDepositCryptoAddress;
 
-public class BlackcoinmoredRPCWallet extends RPCWallet {
-    public BlackcoinmoredRPCWallet(String rpcURL, String label) {
-        super(rpcURL, label, CryptoCurrency.VAL.getCode());
+public class BlackmoredUniqueAddressRPCWallet extends BlackmoredRPCWallet implements IGeneratesNewDepositCryptoAddress {
+    public BlackmoredUniqueAddressRPCWallet(String rpcURL) {
+        super(rpcURL, ""); // label is used only for reusing the same address
     }
 }

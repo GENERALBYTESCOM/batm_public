@@ -1110,7 +1110,7 @@
         <cryptologo cryptocurrency="VAL" file="val.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.blackcoin.BlackcoinExtension" >
-        <wallet prefix="blackcoinmored" name="Blackcoinmored">
+        <wallet prefix="blackmored" name="Blackmored">
             <tunnel supported="true"/>
             <sendtomany supported="true"/>
             <param name="protocol" />
@@ -1121,7 +1121,7 @@
             <param name="label" />
             <cryptocurrency>BLK</cryptocurrency>
         </wallet>
-        <wallet prefix="blackcoinmorednoforward" name="Blackcoinmored (no forward)">
+        <wallet prefix="blackmorednoforward" name="Blackmored (no forward)">
             <tunnel supported="true"/>
             <sendtomany supported="true"/>
             <param name="protocol" />
