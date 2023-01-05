@@ -22,8 +22,8 @@ import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.ExtensionsUtil;
-import com.generalbytes.batm.server.extensions.extra.blackcoin.wallets.blackcoind.BlackcoindRPCWallet;
-import com.generalbytes.batm.server.extensions.extra.blackcoin.wallets.blackcoind.BlackcoindUniqueAddressRPCWallet;
+import com.generalbytes.batm.server.extensions.extra.blackcoin.wallets.blackcoinmored.BlackcoinmoredRPCWallet;
+import com.generalbytes.batm.server.extensions.extra.blackcoin.wallets.blackcoinmored.BlackcoinmoredUniqueAddressRPCWallet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,9 +46,9 @@ public class BlackcoinExtension extends AbstractExtension{
             StringTokenizer st = new StringTokenizer(walletLogin,":");
             String walletType = st.nextToken();
 
-            if ("blackcoind".equalsIgnoreCase(walletType)
-                || "blackcoindnoforward".equalsIgnoreCase(walletType)) {
-                //"blackcoind:protocol:user:password:ip:port:accountname"
+            if ("blackcoinmored".equalsIgnoreCase(walletType)
+                || "blackcoinmorednoforward".equalsIgnoreCase(walletType)) {
+                //"blackcoinmored:protocol:user:password:ip:port:accountname"
 
                 String protocol = st.nextToken();
                 String username = st.nextToken();
@@ -66,10 +66,10 @@ public class BlackcoinExtension extends AbstractExtension{
 
                 if (protocol != null && username != null && password != null && hostname !=null && label != null) {
                     String rpcURL = protocol +"://" + username +":" + password + "@" + hostname +":" + port;
-                    if ("blackcoindnoforward".equalsIgnoreCase(walletType)) {
-                        return new BlackcoindUniqueAddressRPCWallet(rpcURL);
+                    if ("blackcoinmorednoforward".equalsIgnoreCase(walletType)) {
+                        return new BlackcoinmoredUniqueAddressRPCWallet(rpcURL);
                     }
-                    return new BlackcoindRPCWallet(rpcURL, label);
+                    return new BlackcoinmoredRPCWallet(rpcURL, label);
                 }
             }
         }
