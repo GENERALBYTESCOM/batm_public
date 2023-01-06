@@ -20,9 +20,11 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.sources.coingecko;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.IRateSource;
+import com.generalbytes.batm.server.extensions.util.net.RateLimitingInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import si.mazi.rescu.HttpStatusIOException;
+import si.mazi.rescu.Interceptor;
 import si.mazi.rescu.RestProxyFactory;
 
 import java.math.BigDecimal;
@@ -107,7 +109,8 @@ public class CoinGeckoRateSource implements IRateSource {
 
     public CoinGeckoRateSource(String preferredFiatCurrency) {
         this.preferredFiatCurrency = preferredFiatCurrency;
-        api = RestProxyFactory.createProxy(CoinGeckoV3API.class, "https://api.coingecko.com/api");
+        Interceptor interceptor = new RateLimitingInterceptor(CoinGeckoV3API.class, 50 / 60.0, 5_000);
+        api = RestProxyFactory.createProxy(CoinGeckoV3API.class, "https://api.coingecko.com/api", null, interceptor);
     }
 
     @Override
