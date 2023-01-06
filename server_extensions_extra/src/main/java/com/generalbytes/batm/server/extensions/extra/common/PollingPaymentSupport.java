@@ -76,7 +76,7 @@ public abstract class PollingPaymentSupport implements IPaymentSupport {
         long validTillMillis = System.currentTimeMillis() + (spec.getValidInSeconds() * 1000);
 
         PaymentRequest request = new PaymentRequest(spec.getCryptoCurrency(), spec.getDescription(), validTillMillis,
-            address, spec.getTotal(), BigDecimal.ZERO, false, spec.getRemoveAfterNumberOfConfirmationsOfIncomingTransaction(), spec.getRemoveAfterNumberOfConfirmationsOfOutgoingTransaction(), spec.getWallet(), spec.getTimeoutRefundAddress(),
+            address, spec.getTotal(), spec.getTolerance(), spec.isOverageAllowed(), spec.getRemoveAfterNumberOfConfirmationsOfIncomingTransaction(), spec.getRemoveAfterNumberOfConfirmationsOfOutgoingTransaction(), spec.getWallet(), spec.getTimeoutRefundAddress(),
             spec.getOutputs(), spec.isDoNotForward(), null,
             spec.getMinimumMiningFeePerByte(), spec.getMaximumMiningFeePerByte());
 
