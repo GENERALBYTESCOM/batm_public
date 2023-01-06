@@ -72,6 +72,7 @@ public class CoinPaprikaRateSource implements IRateSource {
         CRYPTOCURRENCIES.put(CryptoCurrency.LINDA.getCode(), "linda-linda");
         CRYPTOCURRENCIES.put(CryptoCurrency.LSK.getCode(), "lsk-lisk");
         CRYPTOCURRENCIES.put(CryptoCurrency.LTC.getCode(), "ltc-litecoin");
+        CRYPTOCURRENCIES.put(CryptoCurrency.GLC.getCode(), "glc-goldcoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.MAX.getCode(), "max-maxcoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.MEC.getCode(), "mec-megacoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.MKR.getCode(), "mkr-maker");
