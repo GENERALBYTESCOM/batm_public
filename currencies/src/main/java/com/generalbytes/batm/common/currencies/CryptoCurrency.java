@@ -67,6 +67,7 @@ public enum CryptoCurrency {
     EURS("STASIS EURO"),
     FLASH("FLASH"),
     FTO("FuturoCoin"),
+    GLC("Goldcoin"),
     GRS("Groestlcoin"),
     GQ("Outer Ring MMO"),
     HATCH("Hatch"),
