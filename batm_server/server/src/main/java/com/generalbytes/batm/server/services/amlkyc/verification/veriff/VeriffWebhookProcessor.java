@@ -47,11 +47,11 @@ public class VeriffWebhookProcessor {
      * @return organization for the applicant that started the verification session.
      * Request signature must be verified after getting the organization.
      */
-    public static Organization getOrganization(String rawPayload, JPADao jpaDao) throws IdentityCheckWebhookException {
+    public static Organization getOrganization(String rawPayload, JPADao jpaDao) /* TODO throws IdentityCheckWebhookException*/ {
         String applicantId = veriffWebhookParser.getApplicantId(rawPayload);
         IdentityApplicant identityApplicant = jpaDao.getApplicantByApplicantId(applicantId);
         if (identityApplicant == null) {
-            throw new IdentityCheckWebhookException(Response.Status.INTERNAL_SERVER_ERROR, "identity applicant not found by verification session ID", rawPayload);
+            throw new RuntimeException(); // TODO IdentityCheckWebhookException(Response.Status.INTERNAL_SERVER_ERROR, "identity applicant not found by verification session ID", rawPayload);
         }
         Organization organization = identityApplicant.getOrganization();
         log.info("Organization found: {} for applicant ID: {}", organization, applicantId);
@@ -79,8 +79,9 @@ public class VeriffWebhookProcessor {
             String applicantId = request.getApplicantId();
             IdentityApplicant identityApplicant = jpaDao.getApplicantByApplicantId(applicantId);
             if (identityApplicant == null) {
-                throw new IdentityCheckWebhookException(Response.Status.INTERNAL_SERVER_ERROR, "applicant not found", applicantId);
+                throw new RuntimeException(); // TODO IdentityCheckWebhookException(Response.Status.INTERNAL_SERVER_ERROR, "applicant not found", applicantId);
             }
+            // TODO save result but also be able to modify identity directly / custom fields etc...
             ApplicantCheckResult result = checkResultMapper.mapResult(request, identityApplicant);
             verificationResultProcessor.process(result);
             jpaDao.update(result);
@@ -134,7 +135,9 @@ public class VeriffWebhookProcessor {
     private void verifySignature(String rawPayload, String signature) throws IdentityCheckWebhookException {
         String computedSignature = veriffDigest.digest(rawPayload);
         if (!computedSignature.equals(signature)) {
-            throw new IdentityCheckWebhookException(Response.Status.UNAUTHORIZED, "signature verification failure", "Wrong api secret used? computed: '" + computedSignature + "', received: '" + signature + "', payload: '" + rawPayload + "'. Are Veriff API keys configured properly? Is this an old webhook with different API keys that got re-sent?");
+            throw new IdentityCheckWebhookException(Status.UNAUTHORIZED.getStatusCode(), "signature verification failure",
+                "Wrong api secret used? computed: '" + computedSignature + "', received: '" + signature + "', payload: '" + rawPayload + "'. " +
+                    "Are Veriff API keys configured properly? Is this an old webhook with different API keys that got re-sent?");
         }
     }
 

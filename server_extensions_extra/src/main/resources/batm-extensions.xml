@@ -2419,6 +2419,21 @@
         <cryptologo cryptocurrency="VERUM" file="verum.svg"/>
     </extension>
 
+    <extension class="com.generalbytes.batm.server.extensions.extra.identityverification.veriff.VeriffExtension">
+        <identityverificationprovider prefix="veriff" name="Veriff" help="">
+            <param sensitive="false" name="Public API key" help=""/>
+            <param sensitive="true"  name="Private API Key" help=""/>
+        </identityverificationprovider>
+    </extension>
+
+    <extension class="com.generalbytes.batm.server.extensions.extra.identityverification.onfido.OnfidoExtension">
+        <identityverificationprovider prefix="onfido" name="Onfido" help="">
+            <param sensitive="true"  name="Api Key" help=""/>
+            <param sensitive="false" name="Verification Site URL" help=""/>
+            <param sensitive="false" name="Onfido region" help="'EU', 'US' or 'CA'. Default: 'EU'."/>
+        </identityverificationprovider>
+    </extension>
+
     <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.notification.NotificationExampleExtension" />
     <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.TransactionExtension" />
     <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.ProfitOverrideExtension" />

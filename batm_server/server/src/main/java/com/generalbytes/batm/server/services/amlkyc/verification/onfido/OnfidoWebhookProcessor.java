@@ -125,7 +125,7 @@ public class OnfidoWebhookProcessor {
                 jpaDao.update(result);
             }
         } catch (OnfidoException e) {
-            throw new IdentityCheckWebhookException(Response.Status.INTERNAL_SERVER_ERROR, "failed to process webhook", rawPayload, e);
+            throw new IdentityCheckWebhookException(Status.INTERNAL_SERVER_ERROR.getStatusCode(), "failed to process webhook", rawPayload, e);
         } finally {
             JPAUtil.releaseEntityManagerWithCommit();
         }
@@ -139,7 +139,7 @@ public class OnfidoWebhookProcessor {
             // signature mismatch could happen if two organizations are using the same Onfido API keys on the same server.
             // The request would come multiple times, but only one with a valid signature.
             // Delete any unused/old webhooks on https://dashboard.onfido.com/api/webhook_management
-            throw new IdentityCheckWebhookException(Response.Status.INTERNAL_SERVER_ERROR, "Failed to parse event", rawPayload, e);
+            throw new IdentityCheckWebhookException(Status.INTERNAL_SERVER_ERROR.getStatusCode(), "Failed to parse event", rawPayload, e);
         }
     }
 

@@ -4,14 +4,15 @@ import com.generalbytes.batm.server.common.data.Organization;
 import com.generalbytes.batm.server.common.data.amlkyc.Identity;
 import com.generalbytes.batm.server.common.data.amlkyc.IdentityApplicant;
 import com.generalbytes.batm.server.dao.JPADao;
-import com.generalbytes.batm.server.services.amlkyc.verification.IIdentityVerificationProvider;
+import com.generalbytes.batm.server.extensions.IIdentity;
+import com.generalbytes.batm.server.extensions.aml.verification.CreateApplicantResponse;
+import com.generalbytes.batm.server.extensions.aml.verification.IIdentityVerificationProvider;
 import com.generalbytes.batm.server.services.amlkyc.verification.IdentityVerificationBillingHelper;
 import com.generalbytes.batm.server.services.amlkyc.verification.veriff.api.CreateIdentityVerificationSessionRequest;
 import com.generalbytes.batm.server.services.amlkyc.verification.veriff.api.CreateIdentityVerificationSessionResponse;
 import com.generalbytes.batm.server.services.amlkyc.verification.veriff.api.IVeriffApi;
 import com.generalbytes.batm.server.services.amlkyc.verification.veriff.api.VeriffDigest;
 import com.generalbytes.batm.server.services.web.IdentityCheckWebhookException;
-import com.generalbytes.batm.server.services.web.client.dto.CreateApplicantResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import si.mazi.rescu.HttpStatusIOException;
@@ -39,16 +40,15 @@ public class VeriffIdentityVerificationProvider implements IIdentityVerification
      * @param vendorData sent to veriff, sent back by veriff to us in the webhook and displayed in veriff dashboard
      */
     @Override
-    public CreateApplicantResponse createApplicant(Identity identity, String gbApiKey, String customerLanguage, String vendorData) {
+    public CreateApplicantResponse createApplicant(IIdentity identity, String gbApiKey, String customerLanguage, String vendorData) {
         try {
             CreateIdentityVerificationSessionResponse createSessionResponse = api.createSession(CreateIdentityVerificationSessionRequest.create(vendorData));
             log.info("Received {} for {}", createSessionResponse, identity);
             String verificationWebUrl = createSessionResponse.verification.url;
 
-            Organization org = getOrganization(identity, gbApiKey);
-            JPADao.getInstance().update(new IdentityApplicant(identity, createSessionResponse.getApplicantId(), org, verificationWebUrl));
-            log.info("New IdentityApplicant({}) created", createSessionResponse.getApplicantId());
-            identityVerificationBillingHelper.createBillingRecord(org, verificationWebUrl);
+//            Organization org = getOrganization(identity, gbApiKey);
+            // TODO billing in main?
+//            identityVerificationBillingHelper.createBillingRecord(org, verificationWebUrl);
             return new CreateApplicantResponse(createSessionResponse.getApplicantId(), null, verificationWebUrl);
 
         } catch (HttpStatusIOException e) {
@@ -78,7 +78,7 @@ public class VeriffIdentityVerificationProvider implements IIdentityVerification
     }
 
     @Override
-    public void processWebhookEvent(String rawPayload, String signature, String webhookKey) throws IdentityCheckWebhookException {
+    public void processWebhookEvent(String rawPayload, String signature, String webhookKey) /* TODO throws IdentityCheckWebhookException*/ {
         veriffWebhookProcessor.process(rawPayload, signature);
     }
 }

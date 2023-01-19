@@ -2,15 +2,13 @@ package com.generalbytes.batm.server.services.amlkyc.verification.onfido;
 
 import com.generalbytes.batm.server.common.data.OnfidoRegion;
 import com.generalbytes.batm.server.common.data.Organization;
-import com.generalbytes.batm.server.common.data.amlkyc.Identity;
 import com.generalbytes.batm.server.common.data.amlkyc.IdentityApplicant;
 import com.generalbytes.batm.server.dao.JPADao;
 import com.generalbytes.batm.server.dao.JPAUtil;
-import com.generalbytes.batm.server.services.amlkyc.verification.IIdentityVerificationProvider;
-import com.generalbytes.batm.server.services.amlkyc.verification.IdentityVerificationBillingHelper;
-import com.generalbytes.batm.server.services.web.IdentityCheckWebhookException;
-import com.generalbytes.batm.server.services.web.client.VerificationSiteClient;
-import com.generalbytes.batm.server.services.web.client.dto.CreateApplicantResponse;
+import com.generalbytes.batm.server.extensions.IIdentity;
+import com.generalbytes.batm.server.extensions.aml.verification.CreateApplicantResponse;
+import com.generalbytes.batm.server.extensions.aml.verification.IIdentityVerificationProvider;
+import com.generalbytes.batm.server.extensions.aml.verification.IdentityCheckWebhookException;
 import com.onfido.Onfido;
 import com.onfido.exceptions.OnfidoException;
 import com.onfido.models.Applicant;
@@ -70,7 +68,7 @@ public class OnfidoIdentityVerificationProvider implements IIdentityVerification
     }
 
     @Override
-    public CreateApplicantResponse createApplicant(Identity identity, String gbApiKey, String customerLanguage, String vendorData) {
+    public CreateApplicantResponse createApplicant(IIdentity identity, String gbApiKey, String customerLanguage, String vendorData) {
         Applicant applicant = callInTry(() -> onfido.applicant.create(
             // We don't want to ask users for their name on the terminal so they don't walk away.
             // John Doe will be displayed in the list of verifications on Onfido web
@@ -84,9 +82,6 @@ public class OnfidoIdentityVerificationProvider implements IIdentityVerification
                throw new IllegalArgumentException("No organization found for gbApiKey " + gbApiKey);
             }
             String verificationWebUrl = getVerificationUrl(customerLanguage, applicant.getId());
-
-            jpaDao.update(new IdentityApplicant(identity, applicant.getId(), org, verificationWebUrl));
-            log.info("New IdentityApplicant({}) created", applicant.getId());
 
             VerificationSiteClient.create(this.verificationSiteUrl, org).notifyAboutApplicant(applicant.getId(), token);
 
@@ -116,6 +111,7 @@ public class OnfidoIdentityVerificationProvider implements IIdentityVerification
                 Check.request().applicantId(applicantId).reportNames("document", "facial_similarity_photo")
             ));
             if (check != null) {
+                /////TODO
                 identityVerificationBillingHelper.createBillingRecord(identityApplicant.getOrganization(), check.getResult());
             }
         } catch (Exception e) {

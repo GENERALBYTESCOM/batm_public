@@ -104,6 +104,7 @@ dependencies {
     testCompile(group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3')
     testCompile(group: 'ch.qos.logback', name: 'logback-core', version: '1.2.3')
     testImplementation("org.assertj:assertj-core:3.19.0")
+    testImplementation('org.glassfish.jersey.core:jersey-common:2.25.1')
 }
 
 dependencySubstitutions {

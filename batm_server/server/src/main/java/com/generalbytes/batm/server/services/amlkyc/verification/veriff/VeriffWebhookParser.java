@@ -56,14 +56,14 @@ public class VeriffWebhookParser {
         if (VerificationEventWebhookRequest.matches(payloadAsMap)) {
             return ifEvent.apply(rawPayload, parse(rawPayload, VerificationEventWebhookRequest.class));
         }
-        throw new IdentityCheckWebhookException(Response.Status.BAD_REQUEST, "cannot determine webhook request type", rawPayload);
+        throw new IdentityCheckWebhookException(Status.BAD_REQUEST.getStatusCode(), "cannot determine webhook request type", rawPayload);
     }
 
     private <T> T parse(String rawPayload, Class<T> valueType) throws IdentityCheckWebhookException {
         try {
             return objectMapper.readValue(rawPayload, valueType);
         } catch (JsonProcessingException e) {
-            throw new IdentityCheckWebhookException(Response.Status.BAD_REQUEST, "failed to parse request data", rawPayload, e);
+            throw new IdentityCheckWebhookException(Status.BAD_REQUEST.getStatusCode(), "failed to parse request data", rawPayload, e);
         }
     }
 
@@ -71,7 +71,7 @@ public class VeriffWebhookParser {
         try {
             return objectMapper.readValue(rawPayload, new TypeReference<Map<String, ?>>() {});
         } catch (JsonProcessingException e) {
-            throw new IdentityCheckWebhookException(Response.Status.BAD_REQUEST, "failed to parse request data", rawPayload, e);
+            throw new IdentityCheckWebhookException(Status.BAD_REQUEST.getStatusCode(), "failed to parse request data", rawPayload, e);
         }
     }
 

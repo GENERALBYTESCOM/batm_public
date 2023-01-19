@@ -20,6 +20,7 @@ package com.generalbytes.batm.server.extensions;
 import com.generalbytes.batm.server.extensions.aml.IAMLProvider;
 import com.generalbytes.batm.server.extensions.aml.IExternalIdentityProvider;
 import com.generalbytes.batm.server.extensions.aml.scoring.ITransactionScoringProvider;
+import com.generalbytes.batm.server.extensions.aml.verification.IIdentityVerificationProvider;
 import com.generalbytes.batm.server.extensions.communication.ICommunicationProvider;
 import com.generalbytes.batm.server.extensions.communication.IPhoneLookupProvider;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
@@ -128,6 +129,11 @@ public abstract class AbstractExtension implements IExtension {
 
     @Override
     public Set<ISsnValidator> getSsnValidators() {
+        return null;
+    }
+
+    @Override
+    public IIdentityVerificationProvider createIdentityVerificationProvider(String colonDelimitedParameters) {
         return null;
     }
 }
