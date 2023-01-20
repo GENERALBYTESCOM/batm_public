@@ -4,6 +4,7 @@ public class CreateApplicantResponse {
     private String applicantId;
     private String sdkToken;
     private String verificationWebUrl;
+    private boolean chargeable = false;
 
     public CreateApplicantResponse() {}
 
@@ -23,5 +24,17 @@ public class CreateApplicantResponse {
 
     public String getVerificationWebUrl() {
         return verificationWebUrl;
+    }
+
+    public boolean isChargeable() {
+        return chargeable;
+    }
+
+    /**
+     * Setting this to true will result in the operator being charged for this identity verification.
+     * Used for the "GB Cloud" verification option
+     */
+    public void setChargeable(boolean chargeable) {
+        this.chargeable = chargeable;
     }
 }

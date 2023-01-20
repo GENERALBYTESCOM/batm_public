@@ -32,7 +32,6 @@ public class OnfidoIdentityVerificationProvider implements IIdentityVerification
     private final String referrer;
     private final String verificationSiteUrl;
     private final OnfidoWebhookProcessor webhookProcessor;
-    private final IdentityVerificationBillingHelper identityVerificationBillingHelper = new IdentityVerificationBillingHelper();
 
     public OnfidoIdentityVerificationProvider(String onfidoApiKey, String verificationSiteUrl, OnfidoRegion region, String webhookKey) {
         this(
@@ -108,13 +107,9 @@ public class OnfidoIdentityVerificationProvider implements IIdentityVerification
                 log.error("Non existent applicantId: {}", applicantId);
                 return null;
             }
-            Check check = callInTry(() -> onfido.check.create(
+            callInTry(() -> onfido.check.create(
                 Check.request().applicantId(applicantId).reportNames("document", "facial_similarity_photo")
             ));
-            if (check != null) {
-                /////TODO
-                identityVerificationBillingHelper.createBillingRecord(identityApplicant.getOrganization(), check.getResult());
-            }
         } catch (Exception e) {
             log.error("submitCheck", e);
         } finally {

@@ -7,7 +7,6 @@ import com.generalbytes.batm.server.dao.JPADao;
 import com.generalbytes.batm.server.extensions.IIdentity;
 import com.generalbytes.batm.server.extensions.aml.verification.CreateApplicantResponse;
 import com.generalbytes.batm.server.extensions.aml.verification.IIdentityVerificationProvider;
-import com.generalbytes.batm.server.services.amlkyc.verification.IdentityVerificationBillingHelper;
 import com.generalbytes.batm.server.services.amlkyc.verification.veriff.api.CreateIdentityVerificationSessionRequest;
 import com.generalbytes.batm.server.services.amlkyc.verification.veriff.api.CreateIdentityVerificationSessionResponse;
 import com.generalbytes.batm.server.services.amlkyc.verification.veriff.api.IVeriffApi;
@@ -25,7 +24,6 @@ public class VeriffIdentityVerificationProvider implements IIdentityVerification
 
     private final IVeriffApi api;
     private final VeriffWebhookProcessor veriffWebhookProcessor;
-    private final IdentityVerificationBillingHelper identityVerificationBillingHelper = new IdentityVerificationBillingHelper();
 
     public VeriffIdentityVerificationProvider(String publicKey, String privateKey) {
         Objects.requireNonNull(publicKey, "veriff public key cannot be null");
@@ -46,9 +44,6 @@ public class VeriffIdentityVerificationProvider implements IIdentityVerification
             log.info("Received {} for {}", createSessionResponse, identity);
             String verificationWebUrl = createSessionResponse.verification.url;
 
-//            Organization org = getOrganization(identity, gbApiKey);
-            // TODO billing in main?
-//            identityVerificationBillingHelper.createBillingRecord(org, verificationWebUrl);
             return new CreateApplicantResponse(createSessionResponse.getApplicantId(), null, verificationWebUrl);
 
         } catch (HttpStatusIOException e) {
