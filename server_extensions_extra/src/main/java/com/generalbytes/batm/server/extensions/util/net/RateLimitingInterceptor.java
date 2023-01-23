@@ -8,10 +8,10 @@ import java.lang.reflect.Method;
 public class RateLimitingInterceptor implements Interceptor {
 
     private final Class<?> clazz;
-    private final int permitsPerSecond;
+    private final double permitsPerSecond;
     private final int timeoutMillis;
 
-    public RateLimitingInterceptor(Class<?> clazz, int permitsPerSecond, int timeoutMillis) {
+    public RateLimitingInterceptor(Class<?> clazz, double permitsPerSecond, int timeoutMillis) {
         this.clazz = clazz;
         this.permitsPerSecond = permitsPerSecond;
         this.timeoutMillis = timeoutMillis;

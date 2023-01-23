@@ -47,7 +47,7 @@ dependencies {
     compile(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.9')
     compile(group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.9')
     compile(group: 'com.google.guava', name: 'guava', version: '27.0.1-android')
-    compile(group: 'com.google.zxing', name: 'core', version: '2.3.0')
+    compile(group: 'com.google.zxing', name: 'core', version: '3.5.1')
     compile(group: 'org.knowm.xchange', name: 'xchange-core', version: xchangeVersion)
     compile(group: 'org.knowm.xchange', name: 'xchange-bitfinex', version: xchangeVersion)
     compile(group: 'org.knowm.xchange', name: 'xchange-binance', version: "5.0.12")
