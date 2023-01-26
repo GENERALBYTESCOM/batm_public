@@ -1,6 +1,6 @@
 package com.generalbytes.batm.server.extensions.extra.identityverification.veriff.api;
 
-import org.apache.commons.io.IOUtils;
+import com.google.common.io.ByteStreams;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
@@ -28,12 +28,12 @@ public class VeriffMediaDownloader {
 
         if (con.getResponseCode() != HttpURLConnection.HTTP_OK) {
             try (InputStream errorStream = con.getErrorStream()) {
-                String errorResponse = IOUtils.toString(errorStream, StandardCharsets.US_ASCII);
+                String errorResponse = new String(ByteStreams.toByteArray(errorStream), StandardCharsets.US_ASCII);
                 throw new IOException("Error downloading media " + mediaId + ": " + con.getResponseCode() + ": " + errorResponse);
             }
         }
         try (InputStream is = con.getInputStream()) {
-            return IOUtils.toByteArray(is);
+            return ByteStreams.toByteArray(is);
         }
     }
 }
