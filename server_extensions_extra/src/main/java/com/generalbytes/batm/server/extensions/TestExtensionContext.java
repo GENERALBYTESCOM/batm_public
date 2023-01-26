@@ -1,5 +1,6 @@
 package com.generalbytes.batm.server.extensions;
 
+import com.generalbytes.batm.server.extensions.aml.verification.IIdentityVerificationProvider;
 import com.generalbytes.batm.server.extensions.exceptions.BuyException;
 import com.generalbytes.batm.server.extensions.exceptions.CashbackException;
 import com.generalbytes.batm.server.extensions.exceptions.SellException;
@@ -249,6 +250,16 @@ public class TestExtensionContext implements IExtensionContext {
 
     @Override
     public IWallet findBuyWallet(String terminalSerialNumber, String cryptoCurrency) {
+        return null;
+    }
+
+    @Override
+    public IIdentityVerificationProvider findIdentityVerificationProviderByApplicantId(String applicantId) {
+        return null;
+    }
+
+    @Override
+    public IIdentityVerificationProvider findIdentityVerificationProviderByOrganizationId(long organizationId) {
         return null;
     }
 

@@ -17,6 +17,7 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions;
 
+import com.generalbytes.batm.server.extensions.aml.verification.IIdentityVerificationProvider;
 import com.generalbytes.batm.server.extensions.exceptions.BuyException;
 import com.generalbytes.batm.server.extensions.exceptions.CashbackException;
 import com.generalbytes.batm.server.extensions.exceptions.SellException;
@@ -478,6 +479,18 @@ public interface IExtensionContext {
      * @return
      */
     IWallet findBuyWallet(String terminalSerialNumber, String cryptoCurrency);
+
+    /**
+     * @param applicantId as returned in {@link com.generalbytes.batm.server.extensions.aml.verification.CreateApplicantResponse}.
+     * @return a provider instance based on parameters configured in Organization of the Applicant.
+     */
+    IIdentityVerificationProvider findIdentityVerificationProviderByApplicantId(String applicantId);
+
+    /**
+     * @param organizationId as in {@link IOrganization#getId()}.
+     * @return a provider instance based on parameters configured in the Organization.
+     */
+    IIdentityVerificationProvider findIdentityVerificationProviderByOrganizationId(long organizationId);
 
     /**
      * Returns crypto configurations used by terminals of specified serial numbers.
