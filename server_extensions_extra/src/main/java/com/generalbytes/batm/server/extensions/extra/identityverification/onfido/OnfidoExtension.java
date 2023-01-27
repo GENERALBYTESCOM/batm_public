@@ -18,25 +18,52 @@
 package com.generalbytes.batm.server.extensions.extra.identityverification.onfido;
 
 import com.generalbytes.batm.server.extensions.AbstractExtension;
+import com.generalbytes.batm.server.extensions.IExtensionContext;
+import com.generalbytes.batm.server.extensions.IRestService;
 import com.generalbytes.batm.server.extensions.aml.verification.IIdentityVerificationProvider;
 import com.generalbytes.batm.server.extensions.util.ExtensionParameters;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+
 public class OnfidoExtension extends AbstractExtension {
+    private static IExtensionContext ctx = null;
+    private final Set<IRestService> restServices = new HashSet<>(Arrays.asList(
+        new OnfidoSubmitRestService(),
+        new OnfidoWebhookRestService()));
+
+    @Override
+    public void init(IExtensionContext ctx) {
+        super.init(ctx);
+        OnfidoExtension.ctx = ctx;
+    }
+
+    public static IExtensionContext getExtensionContext() {
+        return Objects.requireNonNull(ctx, "ctx is null, extension not initialized yet");
+    }
+
     @Override
     public String getName() {
         return "BATM Onfido extra extension";
     }
 
     @Override
-    public IIdentityVerificationProvider createIdentityVerificationProvider(String colonDelimitedParameters) {
+    public IIdentityVerificationProvider createIdentityVerificationProvider(String colonDelimitedParameters, String gbApiKey) {
         ExtensionParameters params = ExtensionParameters.fromDelimited(colonDelimitedParameters);
         if ("onfido".equals(params.getPrefix())) {
             String apiKey = params.get(1);
             String verificationSiteUrl = params.get(2);
             OnfidoRegion region = params.get(3, OnfidoRegion.EU);
-            return new OnfidoIdentityVerificationProvider(apiKey, verificationSiteUrl, region, ctx);
+            return new OnfidoIdentityVerificationProvider(apiKey, verificationSiteUrl, region, gbApiKey, ctx);
         }
         return null;
-
     }
+
+    @Override
+    public Set<IRestService> getRestServices() {
+        return restServices;
+    }
+
 }

@@ -18,13 +18,36 @@
 package com.generalbytes.batm.server.extensions.extra.identityverification.veriff;
 
 import com.generalbytes.batm.server.extensions.AbstractExtension;
+import com.generalbytes.batm.server.extensions.IExtensionContext;
+import com.generalbytes.batm.server.extensions.IRestService;
 import com.generalbytes.batm.server.extensions.aml.verification.IIdentityVerificationProvider;
 import com.generalbytes.batm.server.extensions.util.ExtensionParameters;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class VeriffExtension extends AbstractExtension {
+    private Set<IRestService> restServices = null;
+
     @Override
     public String getName() {
         return "BATM Veriff extra extension";
+    }
+
+    @Override
+    public void init(IExtensionContext ctx) {
+        super.init(ctx);
+        HashSet<IRestService> services = new HashSet<>();
+        services.add(new VeriffRestService(ctx));
+        if (ctx.isGlobalServer()) {
+            services.add(new GlobalVeriffRestService(ctx));
+        }
+        this.restServices = services;
+    }
+
+    @Override
+    public Set<IRestService> getRestServices() {
+        return restServices;
     }
 
     @Override

@@ -18,6 +18,7 @@ import com.onfido.models.SdkToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ws.rs.core.Response;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Objects;
@@ -140,6 +141,19 @@ public class OnfidoIdentityVerificationProvider implements IIdentityVerification
             log.error("Error parsing url " + verificationSiteUrl);
             return verificationSiteUrl + "*";
         }
+    }
+
+    public static OnfidoIdentityVerificationProvider cast(IIdentityVerificationProvider provider, String label) throws IdentityCheckWebhookException {
+        if (provider == null) {
+            throw new IdentityCheckWebhookException(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), "",
+                "Cannot get Identity Verification Provider for " + label);
+        }
+
+        if (!(provider instanceof OnfidoIdentityVerificationProvider)) {
+            throw new IdentityCheckWebhookException(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), "",
+                "Wrong type of Identity Verification Provider for " + label + "; did the provider configuration change?");
+        }
+        return (OnfidoIdentityVerificationProvider) provider;
     }
 
     public static <OUT> OUT callInTry(OnfidoCallSupplier<OUT> fn) {
