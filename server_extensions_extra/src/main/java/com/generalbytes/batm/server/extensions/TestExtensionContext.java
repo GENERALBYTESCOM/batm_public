@@ -364,6 +364,11 @@ public class TestExtensionContext implements IExtensionContext {
     }
 
     @Override
+    public boolean isGlobalServer() {
+        return false;
+    }
+
+    @Override
     public void markTransactionAsWithdrawn(String remoteOrLocalTransactionId) {
 
     }

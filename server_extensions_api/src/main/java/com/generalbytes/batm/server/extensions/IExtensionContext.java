@@ -681,6 +681,12 @@ public interface IExtensionContext {
     String getConfigFileContent(final String fileNameInConfigDirectory);
 
     /**
+     * @return true if the extension is running on global server.
+     * Custom extensions will typically run on a standalone server, not global.
+     */
+    boolean isGlobalServer();
+
+    /**
      * Marks transaction as withdrawn by given remote or local transaction id.
      * @param remoteOrLocalTransactionId
      */
