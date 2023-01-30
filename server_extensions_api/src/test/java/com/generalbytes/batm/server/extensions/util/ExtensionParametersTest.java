@@ -32,6 +32,9 @@ public class ExtensionParametersTest {
         testFromDelimited("a\\;b", "a\\;b:c", 0);
 
         assertEquals("aa::cc:", new ExtensionParameters(Arrays.asList("aa", "", "cc", "")).getDelimited());
+        assertEquals("aa::", new ExtensionParameters(Arrays.asList("aa", null, null)).getDelimited());
+
+        assertEquals("", new ExtensionParameters(null).getDelimited());
 
         ExtensionParameters params = new ExtensionParameters(Arrays.asList("", "A:B:C", "\\X"));
         assertEquals("", params.get(0));
@@ -42,7 +45,9 @@ public class ExtensionParametersTest {
     }
 
     private void testFromDelimited(String expected, String input, int paramNumber) {
-        assertEquals(expected, ExtensionParameters.fromDelimited(input).get(paramNumber));
+        ExtensionParameters params = ExtensionParameters.fromDelimited(input);
+        assertEquals(input == null ? "" : input, params.getDelimited());
+        assertEquals(expected, params.get(paramNumber));
     }
 
     @Test
@@ -63,5 +68,17 @@ public class ExtensionParametersTest {
         ExtensionParameters parameters = ExtensionParameters.fromDelimited("A:b:c:");
         assertEquals(Arrays.asList("b", "c", ""), parameters.getWithoutPrefix());
         assertEquals(Arrays.asList("A", "b", "c", ""), parameters.getAll());
+    }
+
+    private enum Color {
+        YELLOW, RED, UNKNOWN
+    }
+
+    @Test
+    public void getEnum() {
+        assertEquals(Color.YELLOW, ExtensionParameters.fromDelimited("DOG:YELLOW:MEDIUM").get(1, Color.UNKNOWN));
+        assertEquals(Color.UNKNOWN, ExtensionParameters.fromDelimited("DOG:GRAY:MEDIUM").get(1, Color.UNKNOWN));
+        assertEquals(Color.UNKNOWN, ExtensionParameters.fromDelimited("DOG::MEDIUM").get(1, Color.UNKNOWN));
+        assertEquals(Color.UNKNOWN, ExtensionParameters.fromDelimited("DOG").get(1, Color.UNKNOWN));
     }
 }

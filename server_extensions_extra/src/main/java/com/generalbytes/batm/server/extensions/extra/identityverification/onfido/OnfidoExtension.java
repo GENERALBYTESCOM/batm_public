@@ -30,11 +30,11 @@ public class OnfidoExtension extends AbstractExtension {
     @Override
     public IIdentityVerificationProvider createIdentityVerificationProvider(String colonDelimitedParameters) {
         ExtensionParameters params = ExtensionParameters.fromDelimited(colonDelimitedParameters);
-        if ("onfido".equals(params.get(0))) {
+        if ("onfido".equals(params.getPrefix())) {
             String apiKey = params.get(1);
             String verificationSiteUrl = params.get(2);
-            String region = params.get(3);
-            return null;// TODO new Onfido();
+            OnfidoRegion region = params.get(3, OnfidoRegion.EU);
+            return new OnfidoIdentityVerificationProvider(apiKey, verificationSiteUrl, region, ctx);
         }
         return null;
 
