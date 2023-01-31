@@ -1,15 +1,11 @@
 package com.generalbytes.batm.server.extensions.extra.identityverification.onfido;
 
-import com.generalbytes.batm.server.ServerConfigForAll;
-import com.generalbytes.batm.server.common.data.Organization;
-import com.generalbytes.batm.server.common.data.amlkyc.ApplicantCheckResult;
-import com.generalbytes.batm.server.common.data.amlkyc.Identity;
-import com.generalbytes.batm.server.common.data.amlkyc.IdentityApplicant;
-import com.generalbytes.batm.server.core.tp.IdentityHelper;
-import com.generalbytes.batm.server.dao.JPADao;
-import com.generalbytes.batm.server.dao.JPAUtil;
-import com.generalbytes.batm.server.services.amlkyc.verification.VerificationResultProcessor;
-import com.generalbytes.batm.server.services.web.IdentityCheckWebhookException;
+import com.generalbytes.batm.server.extensions.IExtensionContext;
+import com.generalbytes.batm.server.extensions.aml.verification.ApplicantCheckResult;
+import com.generalbytes.batm.server.extensions.aml.verification.IdentityApplicant;
+import com.generalbytes.batm.server.extensions.aml.verification.IdentityCheckWebhookException;
+import com.generalbytes.batm.server.extensions.extra.identityverification.identitypiece.IdScanIdentityPiece;
+import com.generalbytes.batm.server.extensions.extra.identityverification.identitypiece.SelfieIdentityPiece;
 import com.onfido.Onfido;
 import com.onfido.api.FileDownload;
 import com.onfido.exceptions.OnfidoException;
@@ -22,6 +18,7 @@ import com.onfido.webhooks.WebhookEventVerifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ws.rs.core.Response.Status;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,15 +29,15 @@ import java.util.concurrent.Executors;
 /**
  * Onfido has a list of webhooks configured, and it sends the events to ALL of them.
  * We keep a map of Webhook Key -> webhook configuration entry.
- * For onfido implementation Webhook key is database organization ID.
+ * For onfido implementation Webhook key is organization's database ID.
  * When starting a verification:
- * - we check if there is a webhook for this organization (webhook key) in our local map
+ * - we check if there is a webhook for this organization (webhook key) in our local map (static field)
  * - if not we check if the webhook for this organization (webhook key) is configured on onfido
  * - - if yes, we download it and keep it in the local map
  * - - if not we create it on onfido and store it in the local map
  * This could be done with multiple organizations on the same or different server with the same Onfido account (API keys)
  * When a verification is finished, Onfido notifies ALL the webhooks configured for that Onfido account.
- * That will result in one call to {@link #process(String, String, String)} per webhook configured on onfido i.e. per organization using the same API keys.
+ * That will result in one call to the {@link #process} method per webhook configured on onfido i.e. per organization using the same API keys.
  *
  * When webhook is received:
  * - we get the webhookKey from the URL
@@ -57,17 +54,19 @@ public class OnfidoWebhookProcessor {
     private static final Map<String, Webhook> HOOKS = new HashMap<>();
     private static final ExecutorService documentDownloadExecutorService = Executors.newSingleThreadExecutor();
 
-    private final JPADao jpaDao;
     private final Onfido onfido;
     private final OnfidoVerificationResultMapper checkResultMapper;
-    private final VerificationResultProcessor verificationResultProcessor = new VerificationResultProcessor();
+    private final String masterServerProxyAddress;
 
-    public OnfidoWebhookProcessor(Onfido onfido, JPADao jpaDao, String webhookKey) {
-        this.jpaDao = jpaDao;
+    public OnfidoWebhookProcessor(Onfido onfido, String masterServerProxyAddress) {
         this.onfido = onfido;
         this.checkResultMapper = new OnfidoVerificationResultMapper(onfido);
+        this.masterServerProxyAddress = masterServerProxyAddress;
+    }
 
-        getOrCreateWebhook(Objects.requireNonNull(webhookKey, "Webhook key cannot be null"));
+    public void prepare(String webhookKey) {
+        Objects.requireNonNull(webhookKey, "Webhook key cannot be null");
+        getOrCreateWebhook(webhookKey); // ensure webhook is configured on onfido server
     }
 
     private Webhook getOrCreateWebhook(String webhookKey) {
@@ -82,7 +81,7 @@ public class OnfidoWebhookProcessor {
     }
 
     private String getWebhookMasterUrl(String webhookKey) {
-        return ServerConfigForAll.getMasterServerProxyAddress() + "/serverapi/apiv1/identity-check/onfidowh/" + webhookKey;
+        return this.masterServerProxyAddress + "/serverapi/apiv1/identity-check/onfidowh/" + webhookKey;
     }
 
     private Webhook fetchOrCreateWebhook(String webhookMasterUrl) {
@@ -97,7 +96,7 @@ public class OnfidoWebhookProcessor {
         });
     }
 
-    public void process(String rawPayload, String signature, String webhookKey) throws IdentityCheckWebhookException {
+    public void process(String rawPayload, String signature, String webhookKey, IExtensionContext ctx) throws IdentityCheckWebhookException {
         try {
             WebhookEvent event = getWebhookEvent(rawPayload, signature, webhookKey);
             log.debug("Received onfido event {}: id {} status {}", event.getAction(), event.getObject().getId(), event.getObject().getStatus());
@@ -105,28 +104,26 @@ public class OnfidoWebhookProcessor {
             if (event.getAction().equals("check.completed")) {
                 Check check = onfido.check.find(event.getObject().getId());
                 String applicantId = check.getApplicantId();
-                IdentityApplicant identityApplicant = jpaDao.getApplicantByApplicantId(applicantId);
+                IdentityApplicant identityApplicant = ctx.findIdentityVerificationApplicant(applicantId);
                 if (identityApplicant == null) {
                     log.error("Identity applicant {} not found. Skipping check result processing.", applicantId);
                     return;
                 }
-                Organization applicantOrganization = identityApplicant.getOrganization();
-                if (!Long.toString(applicantOrganization.getId()).equals(webhookKey)) {
+                String applicantOrganizationId = identityApplicant.getIdentity().getOrganization().getId();
+                if (!applicantOrganizationId.equals(webhookKey)) {
                     log.info("Ignoring webhook for different organization; webhookKey: {}, identityApplicant: {}, organization ID: {}"
                             + " - are you using the same onfido API keys with multiple organizations?",
-                        webhookKey, identityApplicant, applicantOrganization.getId());
+                        webhookKey, identityApplicant, applicantOrganizationId);
                     return;
                 }
 
-                downloadDocuments(applicantId, identityApplicant);
-                ApplicantCheckResult result = checkResultMapper.mapResult(check, identityApplicant);
-                verificationResultProcessor.process(result);
-                jpaDao.update(result);
+                String identityPublicId = identityApplicant.getIdentity().getPublicId();
+                downloadDocuments(applicantId, identityPublicId, ctx);
+                ApplicantCheckResult result = checkResultMapper.mapResult(check, applicantId);
+                ctx.processIdentityVerificationResult(rawPayload, result);
             }
         } catch (OnfidoException e) {
             throw new IdentityCheckWebhookException(Status.INTERNAL_SERVER_ERROR.getStatusCode(), "failed to process webhook", rawPayload, e);
-        } finally {
-            JPAUtil.releaseEntityManagerWithCommit();
         }
     }
 
@@ -142,31 +139,31 @@ public class OnfidoWebhookProcessor {
         }
     }
 
-    private void downloadDocuments(String applicantId, IdentityApplicant identityApplicant) {
+    private void downloadDocuments(String applicantId, String identityPublicId, IExtensionContext ctx) {
         // we have 10 seconds to reply to the webhook, better download the documents in a background thread
         documentDownloadExecutorService.submit(() -> {
             try {
-                downloadIdScans(applicantId, identityApplicant.getIdentity());
-                downloadSelfies(applicantId, identityApplicant.getIdentity());
+                downloadIdScans(applicantId, identityPublicId, ctx);
+                downloadSelfies(applicantId, identityPublicId, ctx);
             } catch (Exception e) {
-                log.error("Error downloading documents for applicant ID: {}, {}", applicantId, identityApplicant.getIdentity(), e);
+                log.error("Error downloading documents for applicant ID: {}, identity: {}", applicantId, identityPublicId, e);
             }
         });
     }
 
-    private void downloadSelfies(String applicantId, Identity identity) throws OnfidoException {
+    private void downloadSelfies(String applicantId, String identityPublicId, IExtensionContext ctx) throws OnfidoException {
         for (LivePhoto photo : onfido.livePhoto.list(applicantId)) {
-            log.info("Saving selfie for {}", identity);
+            log.info("Saving selfie for identity {}", identityPublicId);
             FileDownload download = downloadSelfie(photo);
-            IdentityHelper.addSelfieToIdentityInCurrentTransaction(identity, download.contentType, download.content);
+            ctx.addIdentityPiece(identityPublicId, new SelfieIdentityPiece(download.contentType, download.content));
         }
     }
 
-    private void downloadIdScans(String applicantId, Identity identity) throws OnfidoException {
+    private void downloadIdScans(String applicantId, String identityPublicId, IExtensionContext ctx) throws OnfidoException {
         for (Document document : onfido.document.list(applicantId)) {
-            log.info("Saving ID scan (type:{}, side:{}) for {}", document.getType(), document.getSide(), identity);
+            log.info("Saving ID scan (type:{}, side:{}) for identity {}", document.getType(), document.getSide(), identityPublicId);
             FileDownload download = downloadIdScan(document);
-            IdentityHelper.addIdScanToIdentityInCurrentTransaction(identity, download.contentType, download.content);
+            ctx.addIdentityPiece(identityPublicId, new IdScanIdentityPiece(download.contentType, download.content));
         }
     }
 

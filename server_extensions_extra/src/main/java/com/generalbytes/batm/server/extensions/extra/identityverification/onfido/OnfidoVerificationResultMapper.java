@@ -1,8 +1,8 @@
 package com.generalbytes.batm.server.extensions.extra.identityverification.onfido;
 
-import com.generalbytes.batm.server.common.data.amlkyc.ApplicantCheckResult;
-import com.generalbytes.batm.server.common.data.amlkyc.CheckResult;
-import com.generalbytes.batm.server.common.data.amlkyc.IdentityApplicant;
+import com.generalbytes.batm.server.extensions.aml.verification.ApplicantCheckResult;
+import com.generalbytes.batm.server.extensions.aml.verification.CheckResult;
+import com.generalbytes.batm.server.extensions.aml.verification.DocumentType;
 import com.onfido.Onfido;
 import com.onfido.models.Check;
 import com.onfido.models.Report;
@@ -20,43 +20,43 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.generalbytes.batm.server.common.data.amlkyc.CheckResult.CAUTION;
-import static com.generalbytes.batm.server.common.data.amlkyc.CheckResult.CAUTION_DATA_COMPARISON;
-import static com.generalbytes.batm.server.common.data.amlkyc.CheckResult.CAUTION_DATA_CONSISTENCY;
-import static com.generalbytes.batm.server.common.data.amlkyc.CheckResult.CAUTION_DATA_VALIDATION;
-import static com.generalbytes.batm.server.common.data.amlkyc.CheckResult.CAUTION_FACIAL_COMPARISON;
-import static com.generalbytes.batm.server.common.data.amlkyc.CheckResult.CAUTION_IMAGE_INTEGRITY;
-import static com.generalbytes.batm.server.common.data.amlkyc.CheckResult.CAUTION_VISUAL_CONSISTENCY;
-import static com.generalbytes.batm.server.common.data.amlkyc.CheckResult.CLEAR;
-import static com.generalbytes.batm.server.common.data.amlkyc.CheckResult.REJECTED;
-import static com.generalbytes.batm.server.common.data.amlkyc.CheckResult.REJECTED_AGE_VALIDATION;
-import static com.generalbytes.batm.server.common.data.amlkyc.CheckResult.REJECTED_IMAGE_INTEGRITY;
-import static com.generalbytes.batm.server.common.data.amlkyc.CheckResult.SUSPECTED;
-import static com.generalbytes.batm.server.common.data.amlkyc.CheckResult.SUSPECTED_COMPROMISED_DOCUMENT;
-import static com.generalbytes.batm.server.common.data.amlkyc.CheckResult.SUSPECTED_DATA_CONSISTENCY;
-import static com.generalbytes.batm.server.common.data.amlkyc.CheckResult.SUSPECTED_DATA_VALIDATION;
-import static com.generalbytes.batm.server.common.data.amlkyc.CheckResult.SUSPECTED_POLICE_RECORD;
-import static com.generalbytes.batm.server.common.data.amlkyc.CheckResult.SUSPECTED_VISUAL_CONSISTENCY;
-import static com.generalbytes.batm.server.common.data.amlkyc.CheckResult.UNKNOWN;
+import static com.generalbytes.batm.server.extensions.aml.verification.CheckResult.CAUTION;
+import static com.generalbytes.batm.server.extensions.aml.verification.CheckResult.CAUTION_DATA_COMPARISON;
+import static com.generalbytes.batm.server.extensions.aml.verification.CheckResult.CAUTION_DATA_CONSISTENCY;
+import static com.generalbytes.batm.server.extensions.aml.verification.CheckResult.CAUTION_DATA_VALIDATION;
+import static com.generalbytes.batm.server.extensions.aml.verification.CheckResult.CAUTION_FACIAL_COMPARISON;
+import static com.generalbytes.batm.server.extensions.aml.verification.CheckResult.CAUTION_IMAGE_INTEGRITY;
+import static com.generalbytes.batm.server.extensions.aml.verification.CheckResult.CAUTION_VISUAL_CONSISTENCY;
+import static com.generalbytes.batm.server.extensions.aml.verification.CheckResult.CLEAR;
+import static com.generalbytes.batm.server.extensions.aml.verification.CheckResult.REJECTED;
+import static com.generalbytes.batm.server.extensions.aml.verification.CheckResult.REJECTED_AGE_VALIDATION;
+import static com.generalbytes.batm.server.extensions.aml.verification.CheckResult.REJECTED_IMAGE_INTEGRITY;
+import static com.generalbytes.batm.server.extensions.aml.verification.CheckResult.SUSPECTED;
+import static com.generalbytes.batm.server.extensions.aml.verification.CheckResult.SUSPECTED_COMPROMISED_DOCUMENT;
+import static com.generalbytes.batm.server.extensions.aml.verification.CheckResult.SUSPECTED_DATA_CONSISTENCY;
+import static com.generalbytes.batm.server.extensions.aml.verification.CheckResult.SUSPECTED_DATA_VALIDATION;
+import static com.generalbytes.batm.server.extensions.aml.verification.CheckResult.SUSPECTED_POLICE_RECORD;
+import static com.generalbytes.batm.server.extensions.aml.verification.CheckResult.SUSPECTED_VISUAL_CONSISTENCY;
+import static com.generalbytes.batm.server.extensions.aml.verification.CheckResult.UNKNOWN;
 import static com.generalbytes.batm.server.extensions.extra.identityverification.onfido.OnfidoIdentityVerificationProvider.callInTry;
-import static com.generalbytes.batm.server.services.amlkyc.verification.onfido.OnfidoReportConstants.CAUTION_CHECK_SUBRESULT;
-import static com.generalbytes.batm.server.services.amlkyc.verification.onfido.OnfidoReportConstants.CLEAR_CHECK_RESULT;
-import static com.generalbytes.batm.server.services.amlkyc.verification.onfido.OnfidoReportConstants.CLEAR_CHECK_SUBRESULT;
-import static com.generalbytes.batm.server.services.amlkyc.verification.onfido.OnfidoReportConstants.DOCUMENT_CHECK_AGE_VALID;
-import static com.generalbytes.batm.server.services.amlkyc.verification.onfido.OnfidoReportConstants.DOCUMENT_CHECK_COMPROMISED;
-import static com.generalbytes.batm.server.services.amlkyc.verification.onfido.OnfidoReportConstants.DOCUMENT_CHECK_DATA_COMPARISON;
-import static com.generalbytes.batm.server.services.amlkyc.verification.onfido.OnfidoReportConstants.DOCUMENT_CHECK_DATA_CONSISTENCY;
-import static com.generalbytes.batm.server.services.amlkyc.verification.onfido.OnfidoReportConstants.DOCUMENT_CHECK_DATA_VALIDATION;
-import static com.generalbytes.batm.server.services.amlkyc.verification.onfido.OnfidoReportConstants.DOCUMENT_CHECK_IMAGE_INTEGRITY;
-import static com.generalbytes.batm.server.services.amlkyc.verification.onfido.OnfidoReportConstants.DOCUMENT_CHECK_POLICE_RECORD;
-import static com.generalbytes.batm.server.services.amlkyc.verification.onfido.OnfidoReportConstants.DOCUMENT_CHECK_VISUAL_CONSISTENCY;
-import static com.generalbytes.batm.server.services.amlkyc.verification.onfido.OnfidoReportConstants.DOCUMENT_REPORT_TYPE;
-import static com.generalbytes.batm.server.services.amlkyc.verification.onfido.OnfidoReportConstants.FACIAL_COMPARISON;
-import static com.generalbytes.batm.server.services.amlkyc.verification.onfido.OnfidoReportConstants.FACIAL_IMAGE_INTEGRITY;
-import static com.generalbytes.batm.server.services.amlkyc.verification.onfido.OnfidoReportConstants.FACIAL_SIMILARITY_REPORT_TYPE;
-import static com.generalbytes.batm.server.services.amlkyc.verification.onfido.OnfidoReportConstants.FACIAL_VISUAL_AUTHENTICITY;
-import static com.generalbytes.batm.server.services.amlkyc.verification.onfido.OnfidoReportConstants.REJECTED_CHECK_SUBRESULT;
-import static com.generalbytes.batm.server.services.amlkyc.verification.onfido.OnfidoReportConstants.SUSPECTED_CHECK_SUBRESULT;
+import static com.generalbytes.batm.server.extensions.extra.identityverification.onfido.OnfidoReportConstants.CAUTION_CHECK_SUBRESULT;
+import static com.generalbytes.batm.server.extensions.extra.identityverification.onfido.OnfidoReportConstants.CLEAR_CHECK_RESULT;
+import static com.generalbytes.batm.server.extensions.extra.identityverification.onfido.OnfidoReportConstants.CLEAR_CHECK_SUBRESULT;
+import static com.generalbytes.batm.server.extensions.extra.identityverification.onfido.OnfidoReportConstants.DOCUMENT_CHECK_AGE_VALID;
+import static com.generalbytes.batm.server.extensions.extra.identityverification.onfido.OnfidoReportConstants.DOCUMENT_CHECK_COMPROMISED;
+import static com.generalbytes.batm.server.extensions.extra.identityverification.onfido.OnfidoReportConstants.DOCUMENT_CHECK_DATA_COMPARISON;
+import static com.generalbytes.batm.server.extensions.extra.identityverification.onfido.OnfidoReportConstants.DOCUMENT_CHECK_DATA_CONSISTENCY;
+import static com.generalbytes.batm.server.extensions.extra.identityverification.onfido.OnfidoReportConstants.DOCUMENT_CHECK_DATA_VALIDATION;
+import static com.generalbytes.batm.server.extensions.extra.identityverification.onfido.OnfidoReportConstants.DOCUMENT_CHECK_IMAGE_INTEGRITY;
+import static com.generalbytes.batm.server.extensions.extra.identityverification.onfido.OnfidoReportConstants.DOCUMENT_CHECK_POLICE_RECORD;
+import static com.generalbytes.batm.server.extensions.extra.identityverification.onfido.OnfidoReportConstants.DOCUMENT_CHECK_VISUAL_CONSISTENCY;
+import static com.generalbytes.batm.server.extensions.extra.identityverification.onfido.OnfidoReportConstants.DOCUMENT_REPORT_TYPE;
+import static com.generalbytes.batm.server.extensions.extra.identityverification.onfido.OnfidoReportConstants.FACIAL_COMPARISON;
+import static com.generalbytes.batm.server.extensions.extra.identityverification.onfido.OnfidoReportConstants.FACIAL_IMAGE_INTEGRITY;
+import static com.generalbytes.batm.server.extensions.extra.identityverification.onfido.OnfidoReportConstants.FACIAL_SIMILARITY_REPORT_TYPE;
+import static com.generalbytes.batm.server.extensions.extra.identityverification.onfido.OnfidoReportConstants.FACIAL_VISUAL_AUTHENTICITY;
+import static com.generalbytes.batm.server.extensions.extra.identityverification.onfido.OnfidoReportConstants.REJECTED_CHECK_SUBRESULT;
+import static com.generalbytes.batm.server.extensions.extra.identityverification.onfido.OnfidoReportConstants.SUSPECTED_CHECK_SUBRESULT;
 import static java.util.Collections.emptyList;
 
 public class OnfidoVerificationResultMapper {
@@ -70,7 +70,7 @@ public class OnfidoVerificationResultMapper {
         this.onfido = onfido;
     }
 
-    public ApplicantCheckResult mapResult(Check check, IdentityApplicant identityApplicant) {
+    public ApplicantCheckResult mapResult(Check check, String identityApplicantId) {
         List<Report> reports = emptyList();
         if (check.getReportIds() != null) {
             reports = check.getReportIds().stream()
@@ -81,7 +81,7 @@ public class OnfidoVerificationResultMapper {
 
         ApplicantCheckResult result = new ApplicantCheckResult();
         result.setCheckId(check.getId());
-        result.setIdentityApplicant(identityApplicant);
+        result.setIdentityApplicantId(identityApplicantId);
         result.setResult(mapCheckResult(check, reports));
         fillPersonalInformations(result, reports);
         return result;
@@ -233,7 +233,7 @@ public class OnfidoVerificationResultMapper {
         reports.forEach(r -> {
             if (DOCUMENT_REPORT_TYPE.equals(r.getName())) {
                 Map<String, Object> docProperties = r.getProperties();
-                result.setFisrtName((String) docProperties.get("first_name"));
+                result.setFirstName((String) docProperties.get("first_name"));
                 result.setLastName((String) docProperties.get("last_name"));
                 result.setDocumentType(mapDocumentType((String) docProperties.get("document_type")));
                 result.setBirthDate(parseDate(docProperties, "date_of_birth"));
@@ -255,15 +255,15 @@ public class OnfidoVerificationResultMapper {
         });
     }
 
-    private ApplicantCheckResult.DocumentType mapDocumentType(String type) {
+    private DocumentType mapDocumentType(String type) {
         if (type == null) {
             return null;
         }
         try {
-            return ApplicantCheckResult.DocumentType.valueOf(type);
+            return DocumentType.valueOf(type);
         } catch (IllegalArgumentException e) {
             log.warn("Unknown document type: " + type);
-            return ApplicantCheckResult.DocumentType.other;
+            return DocumentType.other;
         }
     }
 

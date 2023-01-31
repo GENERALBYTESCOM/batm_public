@@ -7,7 +7,10 @@ import si.mazi.rescu.ClientConfig;
 import si.mazi.rescu.RestProxyFactory;
 
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
 
 public class VerificationSiteClient {
 
@@ -34,8 +37,20 @@ public class VerificationSiteClient {
         try {
             ClientConfig config = new ClientConfig();
             SSLContext sslcontext = SSLContext.getInstance("TLS");
-            sslcontext.init(null, CustomHttpUtils.getTrustManagerWithTrustAllCertificates(), new SecureRandom());
-            config.setHostnameVerifier(CustomHttpUtils.getHostnameVerifierWithAllHostAreValid());
+            sslcontext.init(null, new TrustManager[]{
+                new X509TrustManager() {
+                    public X509Certificate[] getAcceptedIssuers() {
+                        return null;
+                    }
+
+                    public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                    }
+
+                    public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                    }
+                }
+            }, new SecureRandom());
+            config.setHostnameVerifier((hostname, session) -> true);
             config.setIgnoreHttpErrorCodes(true);
             config.setSslSocketFactory(sslcontext.getSocketFactory());
             return RestProxyFactory.createProxy(VerificationSiteAPI.class, verificationSiteUrl, config);
@@ -45,10 +60,4 @@ public class VerificationSiteClient {
         }
     }
 
-    public static VerificationSiteClient create(String url) {
-        String callbackUrl = ServerConfig.getMasterServerApiAddress();
-        // After the documents are submitted, the verification website will call this url (with added path and applicant ID)
-        log.info("Creating new verification-site client for url {} with callbackUrl {}(/serverapi/apiv1/identity-check/submit/<applicantId>)", url, callbackUrl);
-        return new VerificationSiteClient(url, callbackUrl);
-    }
 }

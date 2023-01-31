@@ -12,22 +12,4 @@ public interface IIdentityVerificationProvider {
      */
     CreateApplicantResponse createApplicant(IIdentity identity, String gbApiKey, String customerLanguage, String vendorData);
 
-    /**
-     * Should be called after all documents and data are uploaded to applicant. Starts verification process on
-     * external service.
-     * Called by the verification website.
-     * Some providers (Veriff) start the check automatically after creating the Applicant and this is not called
-     * @param applicantId - external id
-     * @return checkId - id of check in external service
-     */
-    String submitCheck(String applicantId);
-
-    /**
-     * Processes verification results sent from the verification provider
-     * @param webhookKey some implementations (onfido) could use this to identify
-     *                   the organization / identity / verification Applicant that this webhook belongs to
-     */
-    void processWebhookEvent(String rawPayload, String signature, String webhookKey) throws IdentityCheckWebhookException;
-
-
 }

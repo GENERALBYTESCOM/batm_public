@@ -17,7 +17,9 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions;
 
+import com.generalbytes.batm.server.extensions.aml.verification.ApplicantCheckResult;
 import com.generalbytes.batm.server.extensions.aml.verification.IIdentityVerificationProvider;
+import com.generalbytes.batm.server.extensions.aml.verification.IdentityApplicant;
 import com.generalbytes.batm.server.extensions.exceptions.BuyException;
 import com.generalbytes.batm.server.extensions.exceptions.CashbackException;
 import com.generalbytes.batm.server.extensions.exceptions.SellException;
@@ -491,6 +493,22 @@ public interface IExtensionContext {
      * @return a provider instance based on parameters configured in the Organization.
      */
     IIdentityVerificationProvider findIdentityVerificationProviderByOrganizationId(long organizationId);
+
+    /**
+     * @return the identity applicant identified by the provided applicant ID.
+     */
+    IdentityApplicant findIdentityVerificationApplicant(String applicantId);
+
+    /**
+     * Saves the verification result to the DB,
+     * updates Identity state based on the verification result,
+     * sends an SMS to the identity to inform them about the verification result.
+     *
+     * @param rawPayload raw data received from the identity verification provider (e.g. in a webhook). Might be used
+     *                   by a different extension to access additional data not recognized by the identity verification extension.
+     * @param result data parsed by the identity verification extension
+     */
+    void processIdentityVerificationResult(String rawPayload, ApplicantCheckResult result);
 
     /**
      * Returns crypto configurations used by terminals of specified serial numbers.

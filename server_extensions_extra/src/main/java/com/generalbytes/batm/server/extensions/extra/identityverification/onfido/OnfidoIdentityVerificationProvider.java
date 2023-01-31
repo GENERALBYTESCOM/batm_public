@@ -1,15 +1,12 @@
 package com.generalbytes.batm.server.extensions.extra.identityverification.onfido;
 
-import com.generalbytes.batm.server.common.data.OnfidoRegion;
-import com.generalbytes.batm.server.common.data.Organization;
-import com.generalbytes.batm.server.common.data.amlkyc.IdentityApplicant;
-import com.generalbytes.batm.server.dao.JPADao;
-import com.generalbytes.batm.server.dao.JPAUtil;
+import com.generalbytes.batm.server.extensions.IExtensionContext;
 import com.generalbytes.batm.server.extensions.IIdentity;
 import com.generalbytes.batm.server.extensions.aml.verification.CreateApplicantResponse;
 import com.generalbytes.batm.server.extensions.aml.verification.IIdentityVerificationProvider;
 import com.generalbytes.batm.server.extensions.aml.verification.IdentityCheckWebhookException;
 import com.generalbytes.batm.server.extensions.extra.identityverification.onfido.verificationsite.VerificationSiteClient;
+import com.google.common.base.Strings;
 import com.onfido.Onfido;
 import com.onfido.exceptions.OnfidoException;
 import com.onfido.models.Applicant;
@@ -29,17 +26,16 @@ public class OnfidoIdentityVerificationProvider implements IIdentityVerification
     private static final Logger log = LoggerFactory.getLogger("batm.master.OnfidoIdentityVerificationProvider");
 
     public final Onfido onfido;
-    private final JPADao jpaDao;
     private final String referrer;
     private final String verificationSiteUrl;
     private final OnfidoWebhookProcessor webhookProcessor;
+    private final IExtensionContext ctx;
 
-    public OnfidoIdentityVerificationProvider(String onfidoApiKey, String verificationSiteUrl, OnfidoRegion region, String webhookKey) {
+    public OnfidoIdentityVerificationProvider(String onfidoApiKey, String verificationSiteUrl, OnfidoRegion region, IExtensionContext ctx) {
         this(
             buildOnfido(onfidoApiKey, region),
-            JPADao.getInstance(),
             verificationSiteUrl,
-            webhookKey);
+            ctx);
     }
 
     private static Onfido buildOnfido(String apiKey, OnfidoRegion region) {
@@ -57,15 +53,15 @@ public class OnfidoIdentityVerificationProvider implements IIdentityVerification
         }
     }
 
-    public OnfidoIdentityVerificationProvider(Onfido onfido, JPADao jpaDao, String verificationSiteUrl, String webhookKey) {
+    public OnfidoIdentityVerificationProvider(Onfido onfido, String verificationSiteUrl, IExtensionContext ctx) {
         if (verificationSiteUrl == null) {
             throw new IllegalArgumentException("verificationSiteUrl must be configured!");
         }
+        this.ctx = ctx;
         this.onfido = onfido;
-        this.jpaDao = jpaDao;
         this.referrer = getReferrer(verificationSiteUrl);
         this.verificationSiteUrl = verificationSiteUrl;
-        this.webhookProcessor = new OnfidoWebhookProcessor(onfido, jpaDao, webhookKey);
+        this.webhookProcessor = new OnfidoWebhookProcessor(onfido, getMasterServerProxyAddress());
     }
 
     @Override
@@ -84,11 +80,40 @@ public class OnfidoIdentityVerificationProvider implements IIdentityVerification
 //            }
             String verificationWebUrl = getVerificationUrl(customerLanguage, applicant.getId());
 
-            VerificationSiteClient.create(this.verificationSiteUrl).notifyAboutApplicant(applicant.getId(), token);
+            String webhookKey = identity.getOrganization().getId();
+            webhookProcessor.prepare(webhookKey);
+            createVerificationSiteClient().notifyAboutApplicant(applicant.getId(), token);
 
             return new CreateApplicantResponse(applicant.getId(), token, verificationWebUrl);
         }
         return null;
+    }
+
+    private VerificationSiteClient createVerificationSiteClient() {
+        String callbackUrl = getMasterServerApiAddress();
+        // After the documents are submitted, the verification website will call this url (with added path and applicant ID)
+        log.info("Creating new verification-site client for url {} with callbackUrl {}(/serverapi/apiv1/identity-check/submit/<applicantId>)", this.verificationSiteUrl, callbackUrl);
+        return new VerificationSiteClient(this.verificationSiteUrl, callbackUrl);
+    }
+
+    private String getMasterServerApiAddress() {
+        return "https://" + getHostname() + ":" + 7743;
+    }
+
+    /**
+     * @return this server address with hostname form /batm/config/hostname,
+     * port number and path set to the one used by nginx proxy installed with {@code batm-manage install-reverse-proxy}.
+     */
+    private String getMasterServerProxyAddress() {
+        return "https://" + getHostname() + ":" + 8743 + "/server";
+    }
+
+    private String getHostname() {
+        String hostname = Strings.nullToEmpty(ctx.getConfigFileContent("hostname")).trim();
+        if (hostname.isEmpty()) {
+            throw new RuntimeException("Hostname not configured in /batm/config");
+        }
+        return hostname;
     }
 
     private String getVerificationUrl(String customerLanguage, String applicantId) {
@@ -99,29 +124,28 @@ public class OnfidoIdentityVerificationProvider implements IIdentityVerification
         return verificationUrl;
     }
 
-    @Override
+
+
+    /**
+     * Called by the verification website after all documents and data are uploaded by the user.
+     * Starts verification process on onfido.
+     * @param applicantId - external id
+     */
     public String submitCheck(String applicantId) {
-        try {
-            log.info("Submitting check for applicant {}", applicantId);
-            IdentityApplicant identityApplicant = jpaDao.getApplicantByApplicantId(applicantId);
-            if (identityApplicant == null) {
-                log.error("Non existent applicantId: {}", applicantId);
-                return null;
-            }
-            callInTry(() -> onfido.check.create(
-                Check.request().applicantId(applicantId).reportNames("document", "facial_similarity_photo")
-            ));
-        } catch (Exception e) {
-            log.error("submitCheck", e);
-        } finally {
-            JPAUtil.releaseEntityManagerWithCommit();
-        }
+        log.info("Submitting check for applicant {}", applicantId);
+        callInTry(() -> onfido.check.create(
+            Check.request().applicantId(applicantId).reportNames("document", "facial_similarity_photo")
+        ));
         return null;
     }
 
-    @Override
+    /**
+     * Processes verification results sent from the verification provider
+     *
+     * @param webhookKey used to identify the organization / identity / verification Applicant that this webhook belongs to
+     */
     public void processWebhookEvent(String rawPayload, String signature, String webhookKey) throws IdentityCheckWebhookException {
-        webhookProcessor.process(rawPayload, signature, webhookKey);
+        webhookProcessor.process(rawPayload, signature, webhookKey, ctx);
     }
 
     private String getSdkToken(String applicantId) {

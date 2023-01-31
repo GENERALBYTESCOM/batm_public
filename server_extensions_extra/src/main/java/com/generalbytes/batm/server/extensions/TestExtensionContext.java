@@ -1,6 +1,8 @@
 package com.generalbytes.batm.server.extensions;
 
+import com.generalbytes.batm.server.extensions.aml.verification.ApplicantCheckResult;
 import com.generalbytes.batm.server.extensions.aml.verification.IIdentityVerificationProvider;
+import com.generalbytes.batm.server.extensions.aml.verification.IdentityApplicant;
 import com.generalbytes.batm.server.extensions.exceptions.BuyException;
 import com.generalbytes.batm.server.extensions.exceptions.CashbackException;
 import com.generalbytes.batm.server.extensions.exceptions.SellException;
@@ -261,6 +263,15 @@ public class TestExtensionContext implements IExtensionContext {
     @Override
     public IIdentityVerificationProvider findIdentityVerificationProviderByOrganizationId(long organizationId) {
         return null;
+    }
+
+    @Override
+    public IdentityApplicant findIdentityVerificationApplicant(String applicantId) {
+        return null;
+    }
+
+    @Override
+    public void processIdentityVerificationResult(String rawPayload, ApplicantCheckResult result) {
     }
 
     @Override
