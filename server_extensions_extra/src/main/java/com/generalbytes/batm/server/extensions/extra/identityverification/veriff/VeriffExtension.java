@@ -24,9 +24,11 @@ import com.generalbytes.batm.server.extensions.aml.verification.IIdentityVerific
 import com.generalbytes.batm.server.extensions.util.ExtensionParameters;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class VeriffExtension extends AbstractExtension {
+    private static IExtensionContext ctx = null;
     private Set<IRestService> restServices = null;
 
     @Override
@@ -37,26 +39,38 @@ public class VeriffExtension extends AbstractExtension {
     @Override
     public void init(IExtensionContext ctx) {
         super.init(ctx);
-        HashSet<IRestService> services = new HashSet<>();
-        services.add(new VeriffRestService(ctx));
+        VeriffExtension.ctx = ctx;
+        this.restServices = getServices(ctx);
+    }
+
+    private Set<IRestService> getServices(IExtensionContext ctx) {
+        Set<IRestService> services = new HashSet<>();
+        services.add(new VeriffRestService());
         if (ctx.isGlobalServer()) {
-            services.add(new GlobalVeriffRestService(ctx));
+            services.add(new GlobalVeriffRestService());
         }
-        this.restServices = services;
+        return services;
+    }
+
+    public static IExtensionContext getExtensionContext() {
+        return Objects.requireNonNull(ctx, "ctx is null, extension not initialized yet");
     }
 
     @Override
     public Set<IRestService> getRestServices() {
+        if (restServices == null) {
+            throw new IllegalStateException("Extension not initialized yet");
+        }
         return restServices;
     }
 
     @Override
     public IIdentityVerificationProvider createIdentityVerificationProvider(String colonDelimitedParameters) {
         ExtensionParameters params = ExtensionParameters.fromDelimited(colonDelimitedParameters);
-        if ("veriff".equals(params.get(0))) {
+        if ("veriff".equals(params.getPrefix())) {
             String publicKey = params.get(1);
             String privateKey = params.get(2);
-            return null;// TODO new Veriff(publicKey, privateKey);
+            return new VeriffIdentityVerificationProvider(publicKey, privateKey);
         }
         return null;
 

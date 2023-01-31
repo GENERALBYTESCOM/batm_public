@@ -1,13 +1,12 @@
 package com.generalbytes.batm.server.extensions.extra.identityverification.veriff;
 
-import com.generalbytes.batm.server.common.data.amlkyc.ApplicantCheckResult;
-import com.generalbytes.batm.server.common.data.amlkyc.ApplicantCheckResult.DocumentType;
-import com.generalbytes.batm.server.common.data.amlkyc.CheckResult;
-import com.generalbytes.batm.server.common.data.amlkyc.IdentityApplicant;
 import com.generalbytes.batm.server.extensions.Country;
-import com.generalbytes.batm.server.services.amlkyc.verification.veriff.api.webhook.VerificationDecisionWebhookRequest;
-import com.generalbytes.batm.server.services.amlkyc.verification.veriff.api.webhook.VerificationDecisionWebhookRequest.Verification;
-import com.generalbytes.batm.server.util.StringUtils2;
+import com.generalbytes.batm.server.extensions.aml.verification.ApplicantCheckResult;
+import com.generalbytes.batm.server.extensions.aml.verification.CheckResult;
+import com.generalbytes.batm.server.extensions.aml.verification.DocumentType;
+import com.generalbytes.batm.server.extensions.extra.identityverification.veriff.api.webhook.VerificationDecisionWebhookRequest;
+import com.generalbytes.batm.server.extensions.extra.identityverification.veriff.api.webhook.VerificationDecisionWebhookRequest.Verification;
+import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,23 +17,24 @@ import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class VeriffVerificationResultMapper {
     private static final Logger log = LoggerFactory.getLogger(VeriffVerificationResultMapper.class);
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ROOT).withZone(ZoneId.systemDefault());
 
-    public ApplicantCheckResult mapResult(VerificationDecisionWebhookRequest decisionRequest, IdentityApplicant identityApplicant) {
+    public ApplicantCheckResult mapResult(VerificationDecisionWebhookRequest decisionRequest) {
         Objects.requireNonNull(decisionRequest, "decisionRequest cannot be null");
         Verification verification = decisionRequest.verification;
         Objects.requireNonNull(verification, "verification cannot be null");
 
         ApplicantCheckResult result = new ApplicantCheckResult();
         result.setCheckId(decisionRequest.getApplicantId());
-        result.setIdentityApplicant(identityApplicant);
-
+        result.setIdentityApplicantId(decisionRequest.getApplicantId());
         result.setResult(mapCheckResult(verification.status));
 
-        result.setFisrtName(verification.person.firstName);
+        result.setFirstName(verification.person.firstName);
         result.setLastName(verification.person.lastName);
         result.setBirthDate(parseDate(verification.person.dateOfBirth));
 
@@ -46,7 +46,7 @@ public class VeriffVerificationResultMapper {
             result.setRawAddress(address.fullAddress);
 
             if (address.parsedAddress != null) {
-                result.setStreetAddress(StringUtils2.joinNonBlankOrNull(address.parsedAddress.street, address.parsedAddress.houseNumber, address.parsedAddress.unit));
+                result.setStreetAddress(mapStreetAddress(address.parsedAddress));
                 result.setCity(address.parsedAddress.city);
                 result.setZip(address.parsedAddress.postcode);
                 result.setState(address.parsedAddress.state);
@@ -60,6 +60,12 @@ public class VeriffVerificationResultMapper {
 
         result.setDocumentNumber(verification.document.number);
         return result;
+    }
+
+    private String mapStreetAddress(Verification.Person.Address.ParsedAddress parsedAddress) {
+        return Strings.emptyToNull(Stream.of(parsedAddress.street, parsedAddress.houseNumber, parsedAddress.unit)
+            .filter(Objects::nonNull)
+            .collect(Collectors.joining(" ")));
     }
 
     private Verification.Person.Address getAddress(Verification verification) {

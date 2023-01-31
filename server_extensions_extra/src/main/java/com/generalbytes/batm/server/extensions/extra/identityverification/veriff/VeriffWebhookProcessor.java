@@ -1,24 +1,23 @@
 package com.generalbytes.batm.server.extensions.extra.identityverification.veriff;
 
-import com.generalbytes.batm.server.common.data.Organization;
-import com.generalbytes.batm.server.common.data.amlkyc.ApplicantCheckResult;
-import com.generalbytes.batm.server.common.data.amlkyc.Identity;
-import com.generalbytes.batm.server.common.data.amlkyc.IdentityApplicant;
-import com.generalbytes.batm.server.core.tp.IdentityHelper;
-import com.generalbytes.batm.server.dao.JPADao;
-import com.generalbytes.batm.server.dao.JPAUtil;
-import com.generalbytes.batm.server.services.amlkyc.verification.VerificationResultProcessor;
-import com.generalbytes.batm.server.services.amlkyc.verification.veriff.api.IVeriffApi;
-import com.generalbytes.batm.server.services.amlkyc.verification.veriff.api.SessionMediaInfo;
-import com.generalbytes.batm.server.services.amlkyc.verification.veriff.api.VeriffDigest;
-import com.generalbytes.batm.server.services.amlkyc.verification.veriff.api.VeriffMediaDownloader;
-import com.generalbytes.batm.server.services.amlkyc.verification.veriff.api.webhook.VerificationDecisionWebhookRequest;
-import com.generalbytes.batm.server.services.amlkyc.verification.veriff.api.webhook.VerificationEventWebhookRequest;
-import com.generalbytes.batm.server.services.web.IdentityCheckWebhookException;
+import com.generalbytes.batm.server.extensions.IExtensionContext;
+import com.generalbytes.batm.server.extensions.IIdentityPiece;
+import com.generalbytes.batm.server.extensions.aml.verification.ApplicantCheckResult;
+import com.generalbytes.batm.server.extensions.aml.verification.IdentityApplicant;
+import com.generalbytes.batm.server.extensions.aml.verification.IdentityCheckWebhookException;
+import com.generalbytes.batm.server.extensions.extra.identityverification.identitypiece.IdScanIdentityPiece;
+import com.generalbytes.batm.server.extensions.extra.identityverification.identitypiece.SelfieIdentityPiece;
+import com.generalbytes.batm.server.extensions.extra.identityverification.veriff.api.IVeriffApi;
+import com.generalbytes.batm.server.extensions.extra.identityverification.veriff.api.SessionMediaInfo;
+import com.generalbytes.batm.server.extensions.extra.identityverification.veriff.api.VeriffDigest;
+import com.generalbytes.batm.server.extensions.extra.identityverification.veriff.api.VeriffMediaDownloader;
+import com.generalbytes.batm.server.extensions.extra.identityverification.veriff.api.webhook.VerificationDecisionWebhookRequest;
+import com.generalbytes.batm.server.extensions.extra.identityverification.veriff.api.webhook.VerificationEventWebhookRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import si.mazi.rescu.HttpStatusIOException;
 
+import javax.ws.rs.core.Response.Status;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.List;
@@ -34,27 +33,11 @@ public class VeriffWebhookProcessor {
     private final IVeriffApi api;
     private final VeriffMediaDownloader mediaDownloader;
     private final VeriffVerificationResultMapper checkResultMapper = new VeriffVerificationResultMapper();
-    private final VerificationResultProcessor verificationResultProcessor = new VerificationResultProcessor();
 
     public VeriffWebhookProcessor(String publicKey, VeriffDigest veriffDigest, IVeriffApi api) {
         this.veriffDigest = veriffDigest;
         this.api = api;
         this.mediaDownloader = new VeriffMediaDownloader(publicKey, veriffDigest);
-    }
-
-    /**
-     * @return organization for the applicant that started the verification session.
-     * Request signature must be verified after getting the organization.
-     */
-    public static Organization getOrganization(String rawPayload, JPADao jpaDao) /* TODO throws IdentityCheckWebhookException*/ {
-        String applicantId = veriffWebhookParser.getApplicantId(rawPayload);
-        IdentityApplicant identityApplicant = jpaDao.getApplicantByApplicantId(applicantId);
-        if (identityApplicant == null) {
-            throw new RuntimeException(); // TODO IdentityCheckWebhookException(Response.Status.INTERNAL_SERVER_ERROR, "identity applicant not found by verification session ID", rawPayload);
-        }
-        Organization organization = identityApplicant.getOrganization();
-        log.info("Organization found: {} for applicant ID: {}", organization, applicantId);
-        return organization;
     }
 
     public void process(String rawPayload, String signature) throws IdentityCheckWebhookException {
@@ -66,60 +49,50 @@ public class VeriffWebhookProcessor {
         log.info("Veriff event webhook received: {}", rawPayload);
     }
 
-    private void processDecisionWebhook(String rawPayload, VerificationDecisionWebhookRequest request) throws IdentityCheckWebhookException {
+    private void processDecisionWebhook(String rawPayload, VerificationDecisionWebhookRequest request) {
         log.info("Veriff decision webhook received: {}", rawPayload);
-        ApplicantCheckResult result = processDecisionWebhook(request);
+        ApplicantCheckResult result = checkResultMapper.mapResult(request);
+        VeriffExtension.getExtensionContext().processIdentityVerificationResult(rawPayload, result);
         downloadMedia(result);
     }
 
-    private ApplicantCheckResult processDecisionWebhook(VerificationDecisionWebhookRequest request) throws IdentityCheckWebhookException {
-        try {
-            JPADao jpaDao = JPADao.getInstance();
-            String applicantId = request.getApplicantId();
-            IdentityApplicant identityApplicant = jpaDao.getApplicantByApplicantId(applicantId);
-            if (identityApplicant == null) {
-                throw new RuntimeException(); // TODO IdentityCheckWebhookException(Response.Status.INTERNAL_SERVER_ERROR, "applicant not found", applicantId);
-            }
-            // TODO save result but also be able to modify identity directly / custom fields etc...
-            ApplicantCheckResult result = checkResultMapper.mapResult(request, identityApplicant);
-            verificationResultProcessor.process(result);
-            jpaDao.update(result);
-            return result;
-        } finally {
-            JPAUtil.releaseEntityManagerWithCommit();
-        }
-    }
-
     private void downloadMedia(ApplicantCheckResult result) {
-        Identity identity = result.getIdentityApplicant().getIdentity();
-        String applicantId = result.getIdentityApplicant().getApplicantId();
+        String applicantId = result.getIdentityApplicantId();
+        String identityPublicId = VeriffExtension.getExtensionContext()
+            .findIdentityVerificationApplicant(applicantId)
+            .getIdentity()
+            .getPublicId();
+
         // we have just a few seconds to reply to the webhook, better download the documents in a background thread
         documentDownloadExecutorService.submit(() -> {
             try {
-                downloadMedia(identity, applicantId);
+                downloadMedia(identityPublicId, applicantId);
             } catch (HttpStatusIOException e) {
                 log.error("Error downloading documents from Veriff, HTTP response code: {}, body: {}", e.getHttpStatusCode(), e.getHttpBody());
             } catch (Exception e) {
-                log.error("Error downloading documents for applicant ID: {}, {}", applicantId, identity, e);
+                log.error("Error downloading documents for applicant ID: {}, {}", applicantId, identityPublicId, e);
             }
         });
     }
 
-    private void downloadMedia(Identity identity, String applicantId) throws IOException {
+    private void downloadMedia(String identityPublicId, String applicantId) throws IOException {
         List<SessionMediaInfo.Image> images = api.getSessionMediaInfo(applicantId).images;
         if (images == null) {
             return;
         }
         for (SessionMediaInfo.Image image : images) {
             String type = image.context;
-            log.info("Downloading image ({}) for {}, applicantId: {}", type, identity, applicantId);
+            log.info("Downloading image ({}) for applicantId: {}", type, applicantId);
             byte[] content = download(image);
-            if ("face".equals(type)) {
-                IdentityHelper.addSelfieToIdentityInCurrentTransaction(identity, "image/jpeg", content);
-            } else {
-                IdentityHelper.addIdScanToIdentityInCurrentTransaction(identity, "image/jpeg", content);
-            }
+            VeriffExtension.getExtensionContext().addIdentityPiece(identityPublicId, getIdentityPiece(type, content));
         }
+    }
+
+    private IIdentityPiece getIdentityPiece(String type, byte[] content) {
+        if ("face".equals(type)) {
+            return new SelfieIdentityPiece("image/jpeg", content);
+        }
+        return new IdScanIdentityPiece("image/jpeg", content);
     }
 
     private byte[] download(SessionMediaInfo.Image image) throws IOException {

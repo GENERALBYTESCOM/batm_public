@@ -1,8 +1,8 @@
 package com.generalbytes.batm.server.extensions.extra.identityverification.veriff;
 
-import com.generalbytes.batm.server.services.amlkyc.verification.veriff.api.webhook.VerificationDecisionWebhookRequest;
-import com.generalbytes.batm.server.services.amlkyc.verification.veriff.api.webhook.VerificationEventWebhookRequest;
-import com.generalbytes.batm.server.services.web.IdentityCheckWebhookException;
+import com.generalbytes.batm.server.extensions.aml.verification.IdentityCheckWebhookException;
+import com.generalbytes.batm.server.extensions.extra.identityverification.veriff.api.webhook.VerificationDecisionWebhookRequest;
+import com.generalbytes.batm.server.extensions.extra.identityverification.veriff.api.webhook.VerificationEventWebhookRequest;
 import org.junit.Test;
 
 import java.io.IOException;

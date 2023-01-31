@@ -4,11 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.generalbytes.batm.server.services.amlkyc.verification.veriff.api.webhook.VerificationDecisionWebhookRequest;
-import com.generalbytes.batm.server.services.amlkyc.verification.veriff.api.webhook.VerificationEventWebhookRequest;
-import com.generalbytes.batm.server.services.web.IdentityCheckWebhookException;
+import com.generalbytes.batm.server.extensions.aml.verification.IdentityCheckWebhookException;
+import com.generalbytes.batm.server.extensions.extra.identityverification.veriff.api.webhook.VerificationDecisionWebhookRequest;
+import com.generalbytes.batm.server.extensions.extra.identityverification.veriff.api.webhook.VerificationEventWebhookRequest;
 
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import java.util.Map;
 
 public class VeriffWebhookParser {
