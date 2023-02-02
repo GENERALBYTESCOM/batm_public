@@ -84,7 +84,7 @@ public class OnfidoIdentityVerificationProvider implements IIdentityVerification
             webhookProcessor.prepare(webhookKey);
             createVerificationSiteClient().notifyAboutApplicant(applicant.getId(), token);
 
-            return new CreateApplicantResponse(applicant.getId(), token, verificationWebUrl);
+            return new CreateApplicantResponse(applicant.getId(), verificationWebUrl);
         }
         return null;
     }

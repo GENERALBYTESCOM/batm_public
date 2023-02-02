@@ -40,7 +40,7 @@ public class VeriffIdentityVerificationProvider implements IIdentityVerification
             log.info("Received {} for {}", createSessionResponse, identity);
             String verificationWebUrl = createSessionResponse.verification.url;
 
-            return new CreateApplicantResponse(createSessionResponse.getApplicantId(), null, verificationWebUrl);
+            return new CreateApplicantResponse(createSessionResponse.getApplicantId(), verificationWebUrl);
 
         } catch (HttpStatusIOException e) {
             log.error("Error creating Veriff session, HTTP response code: {}, body: {}", e.getHttpStatusCode(), e.getHttpBody());
