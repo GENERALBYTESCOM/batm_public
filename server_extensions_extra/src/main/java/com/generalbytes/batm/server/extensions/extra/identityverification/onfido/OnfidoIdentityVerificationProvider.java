@@ -65,7 +65,7 @@ public class OnfidoIdentityVerificationProvider implements IIdentityVerification
     }
 
     @Override
-    public CreateApplicantResponse createApplicant(IIdentity identity, String gbApiKey, String customerLanguage, String vendorData) {
+    public CreateApplicantResponse createApplicant(String gbApiKey, String customerLanguage, String identityPublicId) {
         Applicant applicant = callInTry(() -> onfido.applicant.create(
             // We don't want to ask users for their name on the terminal so they don't walk away.
             // John Doe will be displayed in the list of verifications on Onfido web

@@ -31,13 +31,13 @@ public class VeriffIdentityVerificationProvider implements IIdentityVerification
 
     /**
      * @param identity null when called from standalone server to global server
-     * @param vendorData sent to veriff, sent back by veriff to us in the webhook and displayed in veriff dashboard
+     * @param identityPublicId sent to veriff, sent back by veriff to us in the webhook and displayed in veriff dashboard
      */
     @Override
-    public CreateApplicantResponse createApplicant(IIdentity identity, String gbApiKey, String customerLanguage, String vendorData) {
+    public CreateApplicantResponse createApplicant(String gbApiKey, String customerLanguage, String identityPublicId) {
         try {
-            CreateIdentityVerificationSessionResponse createSessionResponse = api.createSession(CreateIdentityVerificationSessionRequest.create(vendorData));
-            log.info("Received {} for {}", createSessionResponse, identity);
+            CreateIdentityVerificationSessionResponse createSessionResponse = api.createSession(CreateIdentityVerificationSessionRequest.create(identityPublicId));
+            log.info("Received {} for {}", createSessionResponse, identityPublicId);
             String verificationWebUrl = createSessionResponse.verification.url;
 
             return new CreateApplicantResponse(createSessionResponse.getApplicantId(), verificationWebUrl);
