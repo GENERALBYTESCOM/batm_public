@@ -65,7 +65,7 @@ public class VeriffExtension extends AbstractExtension {
     }
 
     @Override
-    public IIdentityVerificationProvider createIdentityVerificationProvider(String colonDelimitedParameters) {
+    public IIdentityVerificationProvider createIdentityVerificationProvider(String colonDelimitedParameters, String gbApiKey) {
         ExtensionParameters params = ExtensionParameters.fromDelimited(colonDelimitedParameters);
         if ("veriff".equals(params.getPrefix())) {
             String publicKey = params.get(1);

@@ -50,7 +50,7 @@ public class OnfidoExtension extends AbstractExtension {
     }
 
     @Override
-    public IIdentityVerificationProvider createIdentityVerificationProvider(String colonDelimitedParameters) {
+    public IIdentityVerificationProvider createIdentityVerificationProvider(String colonDelimitedParameters, String gbApiKey) {
         ExtensionParameters params = ExtensionParameters.fromDelimited(colonDelimitedParameters);
         if ("onfido".equals(params.getPrefix())) {
             String apiKey = params.get(1);

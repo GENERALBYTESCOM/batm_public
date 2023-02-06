@@ -189,8 +189,9 @@ public interface IExtension {
      *
      * @param colonDelimitedParameters parameters (e.g. api keys, credentials) for the identity verification provider.
      *               The first parameter determines the provider type.
+     * @param gbApiKey used by the delegating provider to call GB cloud
      */
 
-    IIdentityVerificationProvider createIdentityVerificationProvider(String colonDelimitedParameters);
+    IIdentityVerificationProvider createIdentityVerificationProvider(String colonDelimitedParameters, String gbApiKey);
 
 }

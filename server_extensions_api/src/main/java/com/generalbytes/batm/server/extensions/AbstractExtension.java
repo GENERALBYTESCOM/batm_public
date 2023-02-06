@@ -133,7 +133,7 @@ public abstract class AbstractExtension implements IExtension {
     }
 
     @Override
-    public IIdentityVerificationProvider createIdentityVerificationProvider(String colonDelimitedParameters) {
+    public IIdentityVerificationProvider createIdentityVerificationProvider(String colonDelimitedParameters, String gbApiKey) {
         return null;
     }
 }
