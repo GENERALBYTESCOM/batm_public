@@ -1,6 +1,5 @@
 package com.generalbytes.batm.server.extensions.extra.identityverification.veriff;
 
-import com.generalbytes.batm.server.extensions.IIdentity;
 import com.generalbytes.batm.server.extensions.aml.verification.CreateApplicantResponse;
 import com.generalbytes.batm.server.extensions.aml.verification.IIdentityVerificationProvider;
 import com.generalbytes.batm.server.extensions.aml.verification.IdentityCheckWebhookException;
@@ -53,7 +52,7 @@ public class VeriffIdentityVerificationProvider implements IIdentityVerification
      * @param identityPublicId sent to veriff, sent back by veriff to us in the webhook and displayed in veriff dashboard
      */
     @Override
-    public CreateApplicantResponse createApplicant(String gbApiKey, String customerLanguage, String identityPublicId) {
+    public CreateApplicantResponse createApplicant(String customerLanguage, String identityPublicId) {
         try {
             CreateIdentityVerificationSessionResponse createSessionResponse = api.createSession(CreateIdentityVerificationSessionRequest.create(identityPublicId));
             log.info("Received {} for {}", createSessionResponse, identityPublicId);

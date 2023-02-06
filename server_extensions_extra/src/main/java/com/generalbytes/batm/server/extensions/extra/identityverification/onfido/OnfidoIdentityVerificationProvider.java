@@ -1,7 +1,6 @@
 package com.generalbytes.batm.server.extensions.extra.identityverification.onfido;
 
 import com.generalbytes.batm.server.extensions.IExtensionContext;
-import com.generalbytes.batm.server.extensions.IIdentity;
 import com.generalbytes.batm.server.extensions.aml.verification.CreateApplicantResponse;
 import com.generalbytes.batm.server.extensions.aml.verification.IIdentityVerificationProvider;
 import com.generalbytes.batm.server.extensions.aml.verification.IdentityCheckWebhookException;
@@ -65,7 +64,7 @@ public class OnfidoIdentityVerificationProvider implements IIdentityVerification
     }
 
     @Override
-    public CreateApplicantResponse createApplicant(String gbApiKey, String customerLanguage, String identityPublicId) {
+    public CreateApplicantResponse createApplicant(String customerLanguage, String identityPublicId) {
         Applicant applicant = callInTry(() -> onfido.applicant.create(
             // We don't want to ask users for their name on the terminal so they don't walk away.
             // John Doe will be displayed in the list of verifications on Onfido web
