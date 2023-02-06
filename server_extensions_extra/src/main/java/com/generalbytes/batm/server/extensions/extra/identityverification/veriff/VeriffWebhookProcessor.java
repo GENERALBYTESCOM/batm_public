@@ -1,9 +1,8 @@
 package com.generalbytes.batm.server.extensions.extra.identityverification.veriff;
 
-import com.generalbytes.batm.server.extensions.IExtensionContext;
+import com.generalbytes.batm.server.extensions.IIdentity;
 import com.generalbytes.batm.server.extensions.IIdentityPiece;
 import com.generalbytes.batm.server.extensions.aml.verification.ApplicantCheckResult;
-import com.generalbytes.batm.server.extensions.aml.verification.IdentityApplicant;
 import com.generalbytes.batm.server.extensions.aml.verification.IdentityCheckWebhookException;
 import com.generalbytes.batm.server.extensions.extra.identityverification.identitypiece.IdScanIdentityPiece;
 import com.generalbytes.batm.server.extensions.extra.identityverification.identitypiece.SelfieIdentityPiece;
@@ -58,19 +57,23 @@ public class VeriffWebhookProcessor {
 
     private void downloadMedia(ApplicantCheckResult result) {
         String applicantId = result.getIdentityApplicantId();
-        String identityPublicId = VeriffExtension.getExtensionContext()
+        IIdentity identity = VeriffExtension.getExtensionContext()
             .findIdentityVerificationApplicant(applicantId)
-            .getIdentity()
-            .getPublicId();
+            .getIdentity();
+
+        if (identity == null) {
+            log.debug("Skipping media download, missing identity");
+            return;
+        }
 
         // we have just a few seconds to reply to the webhook, better download the documents in a background thread
         documentDownloadExecutorService.submit(() -> {
             try {
-                downloadMedia(identityPublicId, applicantId);
+                downloadMedia(identity.getPublicId(), applicantId);
             } catch (HttpStatusIOException e) {
                 log.error("Error downloading documents from Veriff, HTTP response code: {}, body: {}", e.getHttpStatusCode(), e.getHttpBody());
             } catch (Exception e) {
-                log.error("Error downloading documents for applicant ID: {}, {}", applicantId, identityPublicId, e);
+                log.error("Error downloading documents for applicant ID: {}, {}", applicantId, identity.getPublicId(), e);
             }
         });
     }

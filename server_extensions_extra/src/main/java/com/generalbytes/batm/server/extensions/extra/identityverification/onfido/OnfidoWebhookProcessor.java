@@ -109,7 +109,7 @@ public class OnfidoWebhookProcessor {
                     log.error("Identity applicant {} not found. Skipping check result processing.", applicantId);
                     return;
                 }
-                String applicantOrganizationId = identityApplicant.getIdentity().getOrganization().getId();
+                String applicantOrganizationId = identityApplicant.getOrganization().getId();
                 if (!applicantOrganizationId.equals(webhookKey)) {
                     log.info("Ignoring webhook for different organization; webhookKey: {}, identityApplicant: {}, organization ID: {}"
                             + " - are you using the same onfido API keys with multiple organizations?",

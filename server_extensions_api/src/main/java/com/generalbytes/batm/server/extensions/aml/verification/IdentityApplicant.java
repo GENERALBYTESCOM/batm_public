@@ -1,6 +1,7 @@
 package com.generalbytes.batm.server.extensions.aml.verification;
 
 import com.generalbytes.batm.server.extensions.IIdentity;
+import com.generalbytes.batm.server.extensions.IOrganization;
 
 import java.util.Date;
 
@@ -16,7 +17,14 @@ public class IdentityApplicant {
 
     private Date dateCreated = new Date();
 
+    /**
+     * only present when verification provider is called from the same server this identity belongs to
+     */
     private IIdentity identity;
+    /**
+     * Identity's organization, present even when identity is null (on cloud, when identity is on a different standalone server)
+     */
+    private IOrganization organization;
 
     public IdentityApplicant() {
     }
@@ -53,4 +61,11 @@ public class IdentityApplicant {
         this.identity = identity;
     }
 
+    public IOrganization getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(IOrganization organization) {
+        this.organization = organization;
+    }
 }
