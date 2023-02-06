@@ -71,8 +71,13 @@ public class VeriffExtension extends AbstractExtension {
             String publicKey = params.get(1);
             String privateKey = params.get(2);
             return new VeriffIdentityVerificationProvider(publicKey, privateKey);
-        }
-        return null;
 
+        } else if ("gbcloud_local".equals(params.getPrefix())) {
+            // internal provider, not available from the extensions XML, could not be configured to be used directly.
+            // used by the "GB Cloud" provider when running locally on the global server (cloud)
+            return VeriffIdentityVerificationProvider.getForGlobalServer();
+        }
+
+        return null;
     }
 }

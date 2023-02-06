@@ -30,7 +30,26 @@ public class VeriffIdentityVerificationProvider implements IIdentityVerification
     }
 
     /**
-     * @param identity null when called from standalone server to global server
+     * returns the implementation used by the global server (GB Cloud) for:
+     * - operators on cloud without their own identity verification provider accounts
+     * - operators on standalone servers using GB Cloud using the delegating provider
+     * (this code runs on cloud only)
+     */
+    public static VeriffIdentityVerificationProvider getForGlobalServer() {
+        if (!VeriffExtension.getExtensionContext().isGlobalServer()) {
+            throw new RuntimeException("Server is not global");
+        }
+        String publicKey = getVeriffProperty("public_key");
+        String privateKey = getVeriffProperty("private_key");
+        return new VeriffIdentityVerificationProvider(publicKey, privateKey);
+    }
+
+    private static String getVeriffProperty(String key) {
+        String value = VeriffExtension.getExtensionContext().getConfigProperty("veriff", key, null);
+        return Objects.requireNonNull(value, key + " missing in veriff global properties file (/batm/config)");
+    }
+
+    /**
      * @param identityPublicId sent to veriff, sent back by veriff to us in the webhook and displayed in veriff dashboard
      */
     @Override
