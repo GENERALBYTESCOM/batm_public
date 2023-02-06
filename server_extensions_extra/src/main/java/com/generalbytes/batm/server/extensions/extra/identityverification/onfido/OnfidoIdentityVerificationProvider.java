@@ -28,12 +28,14 @@ public class OnfidoIdentityVerificationProvider implements IIdentityVerification
     private final String referrer;
     private final String verificationSiteUrl;
     private final OnfidoWebhookProcessor webhookProcessor;
+    private final String gbApiKey;
     private final IExtensionContext ctx;
 
-    public OnfidoIdentityVerificationProvider(String onfidoApiKey, String verificationSiteUrl, OnfidoRegion region, IExtensionContext ctx) {
+    public OnfidoIdentityVerificationProvider(String onfidoApiKey, String verificationSiteUrl, OnfidoRegion region, String gbApiKey, IExtensionContext ctx) {
         this(
             buildOnfido(onfidoApiKey, region),
             verificationSiteUrl,
+            gbApiKey,
             ctx);
     }
 
@@ -52,7 +54,7 @@ public class OnfidoIdentityVerificationProvider implements IIdentityVerification
         }
     }
 
-    public OnfidoIdentityVerificationProvider(Onfido onfido, String verificationSiteUrl, IExtensionContext ctx) {
+    public OnfidoIdentityVerificationProvider(Onfido onfido, String verificationSiteUrl, String gbApiKey, IExtensionContext ctx) {
         if (verificationSiteUrl == null) {
             throw new IllegalArgumentException("verificationSiteUrl must be configured!");
         }
@@ -60,6 +62,7 @@ public class OnfidoIdentityVerificationProvider implements IIdentityVerification
         this.onfido = onfido;
         this.referrer = getReferrer(verificationSiteUrl);
         this.verificationSiteUrl = verificationSiteUrl;
+        this.gbApiKey = gbApiKey;
         this.webhookProcessor = new OnfidoWebhookProcessor(onfido, getMasterServerProxyAddress());
     }
 
@@ -73,13 +76,8 @@ public class OnfidoIdentityVerificationProvider implements IIdentityVerification
         ));
         if (applicant != null) {
             String token = getSdkToken(applicant.getId());
-//            Organization org = jpaDao.findOrganizationByApiKey(gbApiKey);
-//            if (org == null) {
-//               throw new IllegalArgumentException("No organization found for gbApiKey " + gbApiKey);
-//            }
             String verificationWebUrl = getVerificationUrl(customerLanguage, applicant.getId());
-
-            String webhookKey = identity.getOrganization().getId();
+            String webhookKey = ctx.getOrganization(gbApiKey).getId();
             webhookProcessor.prepare(webhookKey);
             createVerificationSiteClient().notifyAboutApplicant(applicant.getId(), token);
 

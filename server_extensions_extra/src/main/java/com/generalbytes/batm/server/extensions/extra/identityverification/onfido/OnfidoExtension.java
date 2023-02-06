@@ -56,7 +56,7 @@ public class OnfidoExtension extends AbstractExtension {
             String apiKey = params.get(1);
             String verificationSiteUrl = params.get(2);
             OnfidoRegion region = params.get(3, OnfidoRegion.EU);
-            return new OnfidoIdentityVerificationProvider(apiKey, verificationSiteUrl, region, ctx);
+            return new OnfidoIdentityVerificationProvider(apiKey, verificationSiteUrl, region, gbApiKey, ctx);
         }
         return null;
     }

@@ -604,6 +604,8 @@ public interface IExtensionContext {
      */
     List<IOrganization> getOrganizations();
 
+    IOrganization getOrganization(String gbApiKey);
+
     /**
      * Triggers Surveillance Photo Capture aka Collect Photo on specified Terminals.
      *

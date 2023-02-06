@@ -330,6 +330,11 @@ public class TestExtensionContext implements IExtensionContext {
     }
 
     @Override
+    public IOrganization getOrganization(String gbApiKey) {
+        return null;
+    }
+
+    @Override
     public boolean triggerCollectPhoto(List<String> terminalSerialNumbers) {
         return false;
     }
