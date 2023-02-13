@@ -17,9 +17,14 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions;
 
+import com.generalbytes.batm.server.extensions.customfields.CustomField;
+import com.generalbytes.batm.server.extensions.customfields.CustomFieldDefinition;
+import com.generalbytes.batm.server.extensions.customfields.CustomFieldDefinitionType;
 import com.generalbytes.batm.server.extensions.aml.verification.ApplicantCheckResult;
 import com.generalbytes.batm.server.extensions.aml.verification.IIdentityVerificationProvider;
 import com.generalbytes.batm.server.extensions.aml.verification.IdentityApplicant;
+import com.generalbytes.batm.server.extensions.customfields.CustomFieldDefinitionAvailability;
+import com.generalbytes.batm.server.extensions.customfields.CustomFieldValue;
 import com.generalbytes.batm.server.extensions.exceptions.BuyException;
 import com.generalbytes.batm.server.extensions.exceptions.CashbackException;
 import com.generalbytes.batm.server.extensions.exceptions.SellException;
@@ -31,6 +36,7 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.net.InetSocketAddress;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -75,6 +81,14 @@ public interface IExtensionContext {
     void addTerminalListener(ITerminalListener listener);
 
     void removeTerminalListener(ITerminalListener listener);
+
+    /**
+     * Register listener for terminal events
+     */
+    void addIdentityListener(IIdentityListener listener);
+
+    void removeIdentityListener(IIdentityListener listener);
+
 
     /**
      * Finds and returns transaction by given remote or local transaction id
@@ -263,6 +277,26 @@ public interface IExtensionContext {
                              List<ILimit> limitCashPerTransaction, List<ILimit> limitCashPerHour, List<ILimit> limitCashPerDay, List<ILimit> limitCashPerWeek,
                              List<ILimit> limitCashPerMonth, List<ILimit> limitCashPer3Months, List<ILimit> limitCashPer12Months, List<ILimit> limitCashPerCalendarQuarter,
                              List<ILimit> limitCashPerCalendarYear, List<ILimit> limitCashTotalIdentity, String configurationCashCurrency);
+
+    /**
+     * @param customFieldDefinitionId use {@link CustomFieldDefinition#getId()} of a custom field to set
+     */
+    void setIdentityCustomField(String identityPublicId,
+                                long customFieldDefinitionId,
+                                CustomFieldValue customFieldValue) throws RuntimeException;
+
+    /**
+     * @param customFieldDefinitionId use {@link CustomFieldDefinition#getId()} of a custom field to set
+     */
+    void setLocationCustomField(String locationPublicId,
+                                long customFieldDefinitionId,
+                                CustomFieldValue customFieldValue) throws RuntimeException;
+
+    Collection<CustomField> getIdentityCustomFields(String identityPublicId) throws RuntimeException;
+
+    Collection<CustomField> getLocationCustomFields(String locationPublicId) throws RuntimeException;
+
+    Collection<CustomFieldDefinition> getCustomFieldDefinitions(String organizationId, CustomFieldDefinitionAvailability availability) throws RuntimeException;
 
     /**
      *
