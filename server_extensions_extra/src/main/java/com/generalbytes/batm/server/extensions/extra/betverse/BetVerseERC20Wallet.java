@@ -18,6 +18,7 @@
 package com.generalbytes.batm.server.extensions.extra.betverse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.generalbytes.batm.server.extensions.ICanSendMany;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.ethereum.EtherUtils;
 import com.generalbytes.batm.server.extensions.extra.ethereum.erc20.generated.ERC20Interface;
@@ -40,6 +41,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -47,7 +49,7 @@ import java.util.concurrent.TimeoutException;
 
 import static org.web3j.utils.Convert.Unit.ETHER;
 
-public class BetVerseERC20Wallet implements IWallet {
+public class BetVerseERC20Wallet implements IWallet, ICanSendMany {
     private final String contractAddress;
     private final String tokenSymbol;
     private final int tokenDecimalPlaces;
@@ -60,8 +62,9 @@ public class BetVerseERC20Wallet implements IWallet {
     private final String urlPolygonAPI;
     private static final Logger log = LoggerFactory.getLogger(BetVerseERC20Wallet.class);
 
-    public BetVerseERC20Wallet(long chainID, String rpcURL, String mnemonicOrPassword, String tokenSymbol, int tokenDecimalPlaces,
-                               String contractAddress, BigInteger fixedGasLimit, BigDecimal gasPriceMultiplier, String urlPolygonAPI) {
+    public BetVerseERC20Wallet(long chainID, String rpcURL, String mnemonicOrPassword, String tokenSymbol,
+            int tokenDecimalPlaces,
+            String contractAddress, BigInteger fixedGasLimit, BigDecimal gasPriceMultiplier, String urlPolygonAPI) {
 
         StringBuilder sb = new StringBuilder();
 
@@ -86,12 +89,16 @@ public class BetVerseERC20Wallet implements IWallet {
         this.urlPolygonAPI = urlPolygonAPI;
         this.credentials = initCredentials(mnemonicOrPassword);
 
-        this.noGasContract = ERC20Interface.load(this.contractAddress, w, new FastRawTransactionManager(this.w, this.credentials, chainID), DefaultGasProvider.GAS_PRICE, DefaultGasProvider.GAS_LIMIT);
+        this.noGasContract = ERC20Interface.load(this.contractAddress, w,
+                new FastRawTransactionManager(this.w, this.credentials, chainID), DefaultGasProvider.GAS_PRICE,
+                DefaultGasProvider.GAS_LIMIT);
     }
 
     private ERC20Interface getContract(String destinationAddress, BigInteger tokensAmount) throws IOException {
         BigInteger gasPrice = getCurrentGas();
-        return ERC20Interface.load(this.contractAddress, w, new FastRawTransactionManager(this.w, this.credentials, chainID), gasPrice, DefaultGasProvider.GAS_LIMIT);
+        return ERC20Interface.load(this.contractAddress, w,
+                new FastRawTransactionManager(this.w, this.credentials, chainID), gasPrice,
+                DefaultGasProvider.GAS_LIMIT);
     }
 
     private BigInteger getCurrentGas() throws IOException {
@@ -105,18 +112,18 @@ public class BetVerseERC20Wallet implements IWallet {
         ps.close();
         BufferedReader br = new BufferedReader(new InputStreamReader(urlc.getInputStream()));
         String l = null;
-        while ((l=br.readLine())!=null) {
+        while ((l = br.readLine()) != null) {
             System.out.println((l));
             ObjectMapper mapper = new ObjectMapper();
             result = mapper.readValue(l, BetVerseGasPriceResult.class);
         }
         br.close();
 
-        BigInteger roundValue = new BigInteger(String.valueOf(Math.round(Float.parseFloat(result.result.FastGasPrice))));
+        BigInteger roundValue = new BigInteger(
+                String.valueOf(Math.round(Float.parseFloat(result.result.FastGasPrice))));
         BigInteger value = new BigInteger(roundValue + "000000000");
         return value;
     }
-
 
     private BigDecimal convertToBigDecimal(BigInteger value) {
         if (value == null) {
@@ -226,11 +233,34 @@ public class BetVerseERC20Wallet implements IWallet {
 
     private BigInteger getGasLimit(String destinationAddress, BigDecimal amount) throws IOException {
         BigInteger weiValue = Convert.toWei(amount, ETHER).toBigIntegerExact();
-        Transaction transaction = Transaction.createEtherTransaction(credentials.getAddress(), null, null, null, destinationAddress, weiValue);
+        Transaction transaction = Transaction.createEtherTransaction(credentials.getAddress(), null, null, null,
+                destinationAddress, weiValue);
         EthEstimateGas estimateGas = w.ethEstimateGas(transaction).send();
         if (estimateGas.hasError()) {
             throw new IOException("Error getting gas limit estimate: " + estimateGas.getError().getMessage());
         }
         return estimateGas.getAmountUsed();
     }
+
+    @Override
+    public String sendMany(Collection<Transfer> transfers, String cryptoCurrency, String description) {
+        String transactionHash = null;
+
+        for (Transfer transfer : transfers) {
+            String destinationAddress = transfer.getDestinationAddress();
+            BigDecimal amount = transfer.getAmount();
+            String sendCoinsResult = sendCoins(destinationAddress, amount, cryptoCurrency, description);
+
+            if (sendCoinsResult != null) {
+                if (transactionHash == null) {
+                    transactionHash = sendCoinsResult;
+                } else {
+                    transactionHash += "," + sendCoinsResult;
+                }
+            }
+        }
+
+        return transactionHash;
+    }
+
 }

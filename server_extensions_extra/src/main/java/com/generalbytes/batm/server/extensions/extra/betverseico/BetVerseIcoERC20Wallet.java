@@ -18,10 +18,9 @@
 package com.generalbytes.batm.server.extensions.extra.betverseico;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.generalbytes.batm.server.extensions.ICanSendMany;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.ethereum.EtherUtils;
-import com.generalbytes.batm.server.extensions.extra.ethereum.erc20.DummyContractGasProvider;
-import com.generalbytes.batm.server.extensions.extra.ethereum.erc20.ERC20ContractGasProvider;
 import com.generalbytes.batm.server.extensions.extra.ethereum.erc20.generated.ERC20Interface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,29 +30,21 @@ import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.FastRawTransactionManager;
 import org.web3j.tx.gas.DefaultGasProvider;
-import org.web3j.utils.Convert;
-
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.Locale;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-public class BetVerseIcoERC20Wallet implements IWallet {
+public class BetVerseIcoERC20Wallet implements IWallet, ICanSendMany {
     private final String contractAddress;
     private final String tokenAddress;
     private final String daiAddress;
@@ -69,8 +60,10 @@ public class BetVerseIcoERC20Wallet implements IWallet {
     private final String urlPolygonAPI;
     private static final Logger log = LoggerFactory.getLogger(BetVerseIcoERC20Wallet.class);
 
-    public BetVerseIcoERC20Wallet(long chainID, String rpcURL, String mnemonicOrPassword, String tokenSymbol, int tokenDecimalPlaces,
-                                  String contractAddress, String tokenAddress, String daiAddress, BigInteger fixedGasLimit, BigDecimal gasPriceMultiplier, String urlPolygonAPI) {
+    public BetVerseIcoERC20Wallet(long chainID, String rpcURL, String mnemonicOrPassword, String tokenSymbol,
+            int tokenDecimalPlaces,
+            String contractAddress, String tokenAddress, String daiAddress, BigInteger fixedGasLimit,
+            BigDecimal gasPriceMultiplier, String urlPolygonAPI) {
 
         StringBuilder sb = new StringBuilder();
 
@@ -100,13 +93,19 @@ public class BetVerseIcoERC20Wallet implements IWallet {
 
         this.credentials = initCredentials(mnemonicOrPassword);
 
-        this.noGasContract = ERC20Interface.load(this.contractAddress, w, new FastRawTransactionManager(this.w, this.credentials, chainID), DefaultGasProvider.GAS_PRICE, DefaultGasProvider.GAS_LIMIT);
-        this.noGasTokenContract = ERC20Interface.load(this.tokenAddress, w, new FastRawTransactionManager(this.w, this.credentials, chainID), DefaultGasProvider.GAS_PRICE, DefaultGasProvider.GAS_LIMIT);
+        this.noGasContract = ERC20Interface.load(this.contractAddress, w,
+                new FastRawTransactionManager(this.w, this.credentials, chainID), DefaultGasProvider.GAS_PRICE,
+                DefaultGasProvider.GAS_LIMIT);
+        this.noGasTokenContract = ERC20Interface.load(this.tokenAddress, w,
+                new FastRawTransactionManager(this.w, this.credentials, chainID), DefaultGasProvider.GAS_PRICE,
+                DefaultGasProvider.GAS_LIMIT);
     }
 
     private ERC20Interface getContract(String destinationAddress, BigInteger tokensAmount) throws IOException {
         BigInteger gasPrice = getCurrentGas();
-        return ERC20Interface.load(this.contractAddress, w, new FastRawTransactionManager(this.w, this.credentials, chainID), gasPrice, DefaultGasProvider.GAS_LIMIT);
+        return ERC20Interface.load(this.contractAddress, w,
+                new FastRawTransactionManager(this.w, this.credentials, chainID), gasPrice,
+                DefaultGasProvider.GAS_LIMIT);
     }
 
     private BigInteger getCurrentGas() throws IOException {
@@ -120,14 +119,15 @@ public class BetVerseIcoERC20Wallet implements IWallet {
         ps.close();
         BufferedReader br = new BufferedReader(new InputStreamReader(urlc.getInputStream()));
         String l = null;
-        while ((l=br.readLine())!=null) {
+        while ((l = br.readLine()) != null) {
             System.out.println((l));
             ObjectMapper mapper = new ObjectMapper();
             result = mapper.readValue(l, BetVerseGasPriceResult.class);
         }
         br.close();
 
-        BigInteger roundValue = new BigInteger(String.valueOf(Math.round(Float.parseFloat(result.result.FastGasPrice))));
+        BigInteger roundValue = new BigInteger(
+                String.valueOf(Math.round(Float.parseFloat(result.result.FastGasPrice))));
         BigInteger value = new BigInteger(roundValue + "000000000");
         return value;
     }
@@ -243,4 +243,26 @@ public class BetVerseIcoERC20Wallet implements IWallet {
         }
         return null;
     }
+
+    @Override
+    public String sendMany(Collection<Transfer> transfers, String cryptoCurrency, String description) {
+        String transactionHash = null;
+
+        for (Transfer transfer : transfers) {
+            String destinationAddress = transfer.getDestinationAddress();
+            BigDecimal amount = transfer.getAmount();
+            String sendCoinsResult = sendCoins(destinationAddress, amount, cryptoCurrency, description);
+
+            if (sendCoinsResult != null) {
+                if (transactionHash == null) {
+                    transactionHash = sendCoinsResult;
+                } else {
+                    transactionHash += "," + sendCoinsResult;
+                }
+            }
+        }
+
+        return transactionHash;
+    }
+
 }
