@@ -539,14 +539,28 @@ public interface IExtensionContext {
     List<IEventRecord> getEvents(String terminalSerialNumber, Date dateFrom, Date dateTo);
 
     /**
-     * Return remaining limits for identity.
+     * Returns remaining limits for an identity.
      *
-     * @param fiatCurrency in which currency are limit amounts
+     * @param fiatCurrency         currency of the limit amounts
      * @param terminalSerialNumber serial number for obtaining AML/KYC settings
-     * @param identityPublicId  public ID of an existing identity to be updated
-     * @return Remaining limits for given identity.
+     * @param identityPublicId     public ID of the identity
+     * @return Remaining limits for the identity.
      */
-    List<IRemainingLimit> getIdentityRemainingLimits(String fiatCurrency, String terminalSerialNumber, String identityPublicId);
+    List<ILimitExtended> getIdentityRemainingLimits(String fiatCurrency, String terminalSerialNumber, String identityPublicId);
+
+    /**
+     * Return initial limits for the identity.
+     * This is not affected by transactions already performed by the identity
+     * (see {@link #getIdentityRemainingLimits(String, String, String)} instead)
+     * nor by VIP limits set to the identity
+     * (see {@link IIdentity#getLimitCashPerDay()} etc. methods instead).
+     *
+     * @param fiatCurrency         currency of the limit amounts
+     * @param terminalSerialNumber serial number for obtaining AML/KYC settings
+     * @param identityPublicId     public ID of the identity
+     * @return Initial (total) limits for the identity.
+     */
+    List<ILimitExtended> getIdentityInitialLimits(String fiatCurrency, String terminalSerialNumber, String identityPublicId);
 
     /**
      * Authenticate API key
