@@ -27,11 +27,11 @@ import java.util.Set;
  * Cryptocurrencies
  *
  * Usage e.g.:
- *      CryptoCurrency.USD.getCurrencyName()
- *      CryptoCurrency.valueOfCode("USD").getCurrencyName()
+ * CryptoCurrency.USD.getCurrencyName()
+ * CryptoCurrency.valueOfCode("USD").getCurrencyName()
  *
  * Important note:
- *      CryptoCurrency.valueOf("$PAC") returns IllegalArgumentException.
+ * CryptoCurrency.valueOf("$PAC") returns IllegalArgumentException.
  */
 public enum CryptoCurrency {
 
@@ -52,6 +52,8 @@ public enum CryptoCurrency {
     BUSD("Binance USD"),
     CLOAK("CloakCoin"),
     DAI("Dai"),
+    BET_VERSE("BetVerse"),
+    BET_VERSE_ICO("BetVerse ICO"),
     BIZZ("BIZZCOIN"),
     DASH("Dash"),
     DDB("Discount Distributors Bahamas"),

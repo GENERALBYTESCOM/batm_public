@@ -22,13 +22,10 @@ import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import si.mazi.rescu.HttpStatusIOException;
 import si.mazi.rescu.RestProxyFactory;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 public class TelrRateSource implements IRateSourceAdvanced {
@@ -44,11 +41,10 @@ public class TelrRateSource implements IRateSourceAdvanced {
     private final String preferredFiatCurrency;
 
     public TelrRateSource(
-        String address,
-        String secret,
-        String signature,
-        String preferredFiatCurrency
-    ) {
+            String address,
+            String secret,
+            String signature,
+            String preferredFiatCurrency) {
         this.address = address;
         this.secret = secret;
         this.signature = signature;
@@ -67,6 +63,8 @@ public class TelrRateSource implements IRateSourceAdvanced {
         result.add(CryptoCurrency.BCH.getCode());
         result.add(CryptoCurrency.BTC.getCode());
         result.add(CryptoCurrency.DAI.getCode());
+        result.add(CryptoCurrency.BET_VERSE.getCode());
+        result.add(CryptoCurrency.BET_VERSE_ICO.getCode());
         result.add(CryptoCurrency.BIZZ.getCode());
         result.add(CryptoCurrency.ETH.getCode());
         result.add(CryptoCurrency.LTC.getCode());
@@ -102,11 +100,10 @@ public class TelrRateSource implements IRateSourceAdvanced {
     public BigDecimal getExchangeRateForBuy(String cryptoCurrency, String fiatCurrency) {
         /* Request ticker price. */
         final String tickerPrice = api.getPrice(
-            this.address,
-            this.secret,
-            this.signature,
-            cryptoCurrency
-        );
+                this.address,
+                this.secret,
+                this.signature,
+                cryptoCurrency);
 
         /* Validate ticker price. */
         if (tickerPrice != null) {
@@ -121,11 +118,10 @@ public class TelrRateSource implements IRateSourceAdvanced {
     public BigDecimal getExchangeRateForSell(String cryptoCurrency, String fiatCurrency) {
         /* Request ticker price. */
         final String tickerPrice = api.getPrice(
-            this.address,
-            this.secret,
-            this.signature,
-            cryptoCurrency
-        );
+                this.address,
+                this.secret,
+                this.signature,
+                cryptoCurrency);
 
         /* Validate ticker price. */
         if (tickerPrice != null) {

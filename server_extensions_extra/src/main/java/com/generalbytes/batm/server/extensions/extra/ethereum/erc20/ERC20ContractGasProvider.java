@@ -78,7 +78,8 @@ public class ERC20ContractGasProvider implements ContractGasProvider {
         }
 
         //Make gas limit 10% higher than estimate just to be safe
-        return new BigDecimal(transferGasEstimate).multiply(new BigDecimal("1.1")).setScale(0, RoundingMode.UP).toBigInteger();
+        BigInteger gasTotal = new BigDecimal(transferGasEstimate).multiply(new BigDecimal("2")).setScale(0, RoundingMode.UP).toBigInteger();
+        return gasTotal;
     }
 
     private BigInteger getTransferGasEstimate() {

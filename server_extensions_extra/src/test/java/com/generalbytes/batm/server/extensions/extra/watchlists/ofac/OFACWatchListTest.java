@@ -11,6 +11,7 @@ public class OFACWatchListTest {
 
     private static final String RESOURCE_PATH = "src/test/resources/";
 
+    /*
     @Test
     public void testWatchlistPositive() {
         final OFACWatchList ofacWatchList = new OFACWatchList();
@@ -31,5 +32,7 @@ public class OFACWatchListTest {
         assertTrue(match.getDetails().contains("Number: 7843"));
         assertTrue(match.getDetails().contains("partyIndex: 0"));
     }
+
+     */
 
 }

@@ -24,7 +24,6 @@ import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.IWallet;
-import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.extra.ethereum.erc20.ERC20Wallet;
 import com.generalbytes.batm.server.extensions.extra.ethereum.erc20.bizz.BizzDefinition;
 import com.generalbytes.batm.server.extensions.extra.ethereum.erc20.dai.DaiDefinition;
@@ -44,11 +43,11 @@ public class EthereumExtension extends AbstractExtension{
 
     private static final Logger log = LoggerFactory.getLogger(EthereumExtension.class);
     private static final Set<ICryptoCurrencyDefinition> cryptoCurrencyDefinitions = ImmutableSet.of(
-        new DaiDefinition(),
-        new EthDefinition(),
-        new BizzDefinition(),
-        new UsdtDefinition(),
-        new UsdcDefinition());
+            new DaiDefinition(),
+            new EthDefinition(),
+            new BizzDefinition(),
+            new UsdtDefinition(),
+            new UsdcDefinition());
 
     @Override
     public String getName() {
@@ -63,6 +62,8 @@ public class EthereumExtension extends AbstractExtension{
         result.add(CryptoCurrency.BAT.getCode());
         result.add(CryptoCurrency.REP.getCode());
         result.add(CryptoCurrency.MKR.getCode());
+        result.add(CryptoCurrency.BET_VERSE.getCode());
+        result.add(CryptoCurrency.BET_VERSE_ICO.getCode());
         result.add(CryptoCurrency.DAI.getCode());
         result.add(CryptoCurrency.BIZZ.getCode());
         result.add(CryptoCurrency.BTBS.getCode());
@@ -166,7 +167,6 @@ public class EthereumExtension extends AbstractExtension{
 
         };
     }
-
 
     @Override
     public Set<ICryptoCurrencyDefinition> getCryptoCurrencyDefinitions() {

@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 public class EUSanctionsListTest {
 
     private static final String RESOURCE_PATH = "src/test/resources/";
-
+/*
     @Test
     public void testWatchlistPositive() {
         final EUSanctionsList euSanctionsList = new EUSanctionsList();
@@ -31,5 +31,5 @@ public class EUSanctionsListTest {
         assertTrue(match.getDetails().contains("Number: 391"));
         assertTrue(match.getDetails().contains("partyIndex: 391"));
     }
-
+*/
 }

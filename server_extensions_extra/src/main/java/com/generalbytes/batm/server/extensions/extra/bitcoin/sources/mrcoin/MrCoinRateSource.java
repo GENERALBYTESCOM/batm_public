@@ -17,7 +17,6 @@
  *
  ************************************************************************************/
 
-
 package com.generalbytes.batm.server.extensions.extra.bitcoin.sources.mrcoin;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
@@ -30,8 +29,9 @@ import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
-public class MrCoinRateSource implements IRateSourceAdvanced{
+public class MrCoinRateSource implements IRateSourceAdvanced {
     private final IMrCoin api;
+
     public MrCoinRateSource() {
         api = RestProxyFactory.createProxy(IMrCoin.class, "https://api.mrcoin.eu");
     }
@@ -45,6 +45,8 @@ public class MrCoinRateSource implements IRateSourceAdvanced{
         result.add(CryptoCurrency.LTC.getCode());
         result.add(CryptoCurrency.DASH.getCode());
         result.add(CryptoCurrency.DAI.getCode());
+        result.add(CryptoCurrency.BET_VERSE.getCode());
+        result.add(CryptoCurrency.BET_VERSE_ICO.getCode());
         result.add(CryptoCurrency.BIZZ.getCode());
         return result;
     }
@@ -59,14 +61,13 @@ public class MrCoinRateSource implements IRateSourceAdvanced{
 
     @Override
     public BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency) {
-        return getExchangeRateForSell(cryptoCurrency,fiatCurrency);
+        return getExchangeRateForSell(cryptoCurrency, fiatCurrency);
     }
 
     @Override
     public String getPreferredFiatCurrency() {
         return FiatCurrency.HUF.getCode();
     }
-
 
     @Override
     public BigDecimal getExchangeRateForBuy(String cryptoCurrency, String fiatCurrency) {
