@@ -58,7 +58,6 @@ dependencies {
     compile(group: 'org.knowm.xchange', name: 'xchange-coinbasepro', version: xchangeVersion)
     compile(group: 'org.knowm.xchange', name: 'xchange-coingi', version: xchangeVersion)
     compile(group: 'org.knowm.xchange', name: 'xchange-enigma', version: xchangeVersion)
-    compile(group: 'org.knowm.xchange', name: 'xchange-ftx', version: "5.0.13")
     compile(group: 'org.knowm.xchange', name: 'xchange-poloniex', version: xchangeVersion)
     compile(group: 'org.web3j', name: 'core', version: '4.9.0')
     compile(group: 'org.web3j', name: 'crypto', version: '4.9.0')
