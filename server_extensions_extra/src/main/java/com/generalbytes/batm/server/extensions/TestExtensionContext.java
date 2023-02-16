@@ -1,5 +1,8 @@
 package com.generalbytes.batm.server.extensions;
 
+import com.generalbytes.batm.server.extensions.aml.verification.ApplicantCheckResult;
+import com.generalbytes.batm.server.extensions.aml.verification.IIdentityVerificationProvider;
+import com.generalbytes.batm.server.extensions.aml.verification.IdentityApplicant;
 import com.generalbytes.batm.server.extensions.exceptions.BuyException;
 import com.generalbytes.batm.server.extensions.exceptions.CashbackException;
 import com.generalbytes.batm.server.extensions.exceptions.SellException;
@@ -253,6 +256,25 @@ public class TestExtensionContext implements IExtensionContext {
     }
 
     @Override
+    public IIdentityVerificationProvider findIdentityVerificationProviderByApplicantId(String applicantId) {
+        return null;
+    }
+
+    @Override
+    public IIdentityVerificationProvider findIdentityVerificationProviderByOrganizationId(long organizationId) {
+        return null;
+    }
+
+    @Override
+    public IdentityApplicant findIdentityVerificationApplicant(String applicantId) {
+        return null;
+    }
+
+    @Override
+    public void processIdentityVerificationResult(String rawPayload, ApplicantCheckResult result) {
+    }
+
+    @Override
     public List<ICryptoConfiguration> findCryptoConfigurationsByTerminalSerialNumbers(List<String> serialNumbers) {
         return null;
     }
@@ -308,6 +330,11 @@ public class TestExtensionContext implements IExtensionContext {
     }
 
     @Override
+    public IOrganization getOrganization(String gbApiKey) {
+        return null;
+    }
+
+    @Override
     public boolean triggerCollectPhoto(List<String> terminalSerialNumbers) {
         return false;
     }
@@ -350,6 +377,11 @@ public class TestExtensionContext implements IExtensionContext {
     @Override
     public String getConfigFileContent(String fileNameInConfigDirectory) {
         return "";
+    }
+
+    @Override
+    public boolean isGlobalServer() {
+        return false;
     }
 
     @Override

@@ -21,6 +21,7 @@ package com.generalbytes.batm.server.extensions;
 import com.generalbytes.batm.server.extensions.aml.IAMLProvider;
 import com.generalbytes.batm.server.extensions.aml.IExternalIdentityProvider;
 import com.generalbytes.batm.server.extensions.aml.scoring.ITransactionScoringProvider;
+import com.generalbytes.batm.server.extensions.aml.verification.IIdentityVerificationProvider;
 import com.generalbytes.batm.server.extensions.communication.ICommunicationProvider;
 import com.generalbytes.batm.server.extensions.communication.IPhoneLookupProvider;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
@@ -182,4 +183,15 @@ public interface IExtension {
      * @return Validators that can be used to validate SSNs
      */
     Set<ISsnValidator> getSsnValidators();
+
+    /**
+     * Creates an implementation of identity verification provider as defined by the provided parameters.
+     *
+     * @param colonDelimitedParameters parameters (e.g. api keys, credentials) for the identity verification provider.
+     *               The first parameter determines the provider type.
+     * @param gbApiKey used by the delegating provider to call GB cloud
+     */
+
+    IIdentityVerificationProvider createIdentityVerificationProvider(String colonDelimitedParameters, String gbApiKey);
+
 }
