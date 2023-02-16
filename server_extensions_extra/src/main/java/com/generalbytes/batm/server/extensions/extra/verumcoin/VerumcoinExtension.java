@@ -32,7 +32,6 @@ import java.net.InetSocketAddress;
 import java.util.*;
 
 public class VerumcoinExtension extends AbstractExtension{
-    private static final Logger log = LoggerFactory.getLogger(VerumcoinExtension.class);
 
     @Override
     public String getName() {
@@ -74,9 +73,7 @@ public class VerumcoinExtension extends AbstractExtension{
             }
         }
         } catch (Exception e) {
-            log.warn("createWallet failed for prefix: {}, {}: {} ",
-                ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
-            );
+            ExtensionsUtil.logExtensionParamsException("createWallet", walletLogin, e);
         }
         return null;
     }
@@ -111,9 +108,7 @@ public class VerumcoinExtension extends AbstractExtension{
                     return new FixPriceRateSource(rate, preferedFiatCurrency);
                 }
             } catch (Exception e) {
-                log.warn("createRateSource failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createRateSource", sourceLogin, e);
             }
 
         }

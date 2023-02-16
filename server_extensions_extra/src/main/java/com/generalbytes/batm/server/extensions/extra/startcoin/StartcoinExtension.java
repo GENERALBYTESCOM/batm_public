@@ -33,7 +33,6 @@ import java.util.StringTokenizer;
 
 public class StartcoinExtension extends AbstractExtension{
 
-    private static final Logger log = LoggerFactory.getLogger(StartcoinExtension.class);
     @Override
     public String getName() {
         return "BATM Startcoin extension";
@@ -78,9 +77,7 @@ public class StartcoinExtension extends AbstractExtension{
                     }
                 }
             } catch (Exception e) {
-                log.warn("createWallet failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createWallet", walletLogin, e);
             }
         }
         return null;
@@ -116,9 +113,7 @@ public class StartcoinExtension extends AbstractExtension{
                     return new FixPriceRateSource(rate, preferedFiatCurrency);
                 }
             } catch (Exception e) {
-                log.warn("createRateSource failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createRateSource", sourceLogin, e);
             }
         }
         return null;

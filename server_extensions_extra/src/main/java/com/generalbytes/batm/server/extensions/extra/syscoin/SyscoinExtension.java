@@ -32,7 +32,6 @@ import java.util.*;
 
 public class SyscoinExtension extends AbstractExtension{
 
-    private static final Logger log = LoggerFactory.getLogger(SyscoinExtension.class);
     @Override
     public String getName() {
         return "BATM Syscoin extra extension";
@@ -77,9 +76,7 @@ public class SyscoinExtension extends AbstractExtension{
                     }
                 }
             } catch (Exception e) {
-                log.warn("createWallet failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createWallet", walletLogin, e);
             }
         }
         return null;
@@ -124,9 +121,7 @@ public class SyscoinExtension extends AbstractExtension{
                     return new CoinmarketcapRateSource(apiKey, preferredFiatCurrency);
                 }
             } catch (Exception e) {
-                log.warn("createRateSource failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createRateSource", sourceLogin, e);
             }
         }
         return null;

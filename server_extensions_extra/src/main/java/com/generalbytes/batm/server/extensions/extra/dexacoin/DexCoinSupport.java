@@ -32,7 +32,6 @@ import java.util.StringTokenizer;
 
 public class DexCoinSupport extends AbstractExtension implements IExchange, IWallet, ICryptoAddressValidator {
 
-    private static final Logger log = LoggerFactory.getLogger(DexCoinSupport.class);
     private static final String CRYPTO_CURRENCY = CryptoCurrency.DEX.getCode();
     private static final BigDecimal WALLET_BALANCE = new BigDecimal("1000000");
     private static final BigDecimal EXCHANGE_BALANCE = new BigDecimal("2000000");
@@ -160,9 +159,7 @@ public class DexCoinSupport extends AbstractExtension implements IExchange, IWal
                     return new DexCoinSupport(preferredFiatCurrency, rate);
                 }
             } catch (Exception e) {
-                log.warn("createExchange failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(exchangeLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createExchange", exchangeLogin, e);
             }
         }
         return null;
@@ -203,9 +200,7 @@ public class DexCoinSupport extends AbstractExtension implements IExchange, IWal
                     return new FixPriceRateSource(rate, preferedFiatCurrency);
                 }
             } catch (Exception e) {
-                log.warn("createRateSource failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createRateSource", sourceLogin, e);
             }
         }
         return null;

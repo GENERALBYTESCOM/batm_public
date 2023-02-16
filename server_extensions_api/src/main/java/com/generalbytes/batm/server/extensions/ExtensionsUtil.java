@@ -18,10 +18,16 @@
 
 package com.generalbytes.batm.server.extensions;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import java.util.NoSuchElementException;
 
 public class ExtensionsUtil {
+
+    private static final Logger log = LoggerFactory.getLogger(ExtensionsUtil.class);
 
     /**
      * Check if specified string is valid email address
@@ -48,11 +54,27 @@ public class ExtensionsUtil {
         return body.substring(index1, index2);
     }
 
-    public static String getPrefixWithCountOfParameters(String paramValues) {
-        if (paramValues == null) {
+    public static String getPrefixWithCountOfParameters(String colonDelimitedParameters) {
+        if (colonDelimitedParameters == null) {
             return "null";
         }
-        String[] i = paramValues.split(":");
+        String[] i = colonDelimitedParameters.split(":");
         return i[0] + " + " + (i.length - 1) + " params";
+    }
+
+    public static void logExtensionParamsException(String label, String colonDelimitedParameters, Exception e) {
+        if (e instanceof NoSuchElementException) {
+            // thrown by StringTokenizer.nextToken() if there are no more tokens in the tokenizer's string.
+            // Replace the exception name with a more meaningful message.
+            // The exception message does not contain anything useful
+            log.warn("{} failed for prefix: {}, missing mandatory parameter(s)",
+                label, getPrefixWithCountOfParameters(colonDelimitedParameters)
+            );
+
+        } else {
+            log.warn("{} failed for prefix: {}, {}: {} ",
+                label, getPrefixWithCountOfParameters(colonDelimitedParameters), e.getClass().getSimpleName(), e.getMessage()
+            );
+        }
     }
 }

@@ -35,7 +35,6 @@ import java.util.StringTokenizer;
 
 public class NXTExtension extends AbstractExtension{
 
-    private static final Logger log = LoggerFactory.getLogger(NXTExtension.class);
     @Override
     public String getName() { return "BATM NXT extension"; }
 
@@ -75,9 +74,7 @@ public class NXTExtension extends AbstractExtension{
                     }
                 }
             } catch (Exception e) {
-                log.warn("createWallet failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createWallet", walletLogin, e);
             }
         }
         return null;
@@ -119,9 +116,7 @@ public class NXTExtension extends AbstractExtension{
                     return new PoloniexRateSource(preferredFiatCurrency);
                 }
             } catch (Exception e) {
-                log.warn("createRateSource failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createRateSource", sourceLogin, e);
             }
         }
         return null;

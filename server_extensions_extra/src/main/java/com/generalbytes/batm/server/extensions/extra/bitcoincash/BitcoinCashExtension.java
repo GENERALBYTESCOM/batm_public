@@ -38,7 +38,6 @@ import java.util.StringTokenizer;
 public class BitcoinCashExtension extends AbstractExtension {
     private static final ICryptoCurrencyDefinition DEFINITION = new BitcoinCashDefinition();
     public static final String CURRENCY = CryptoCurrency.BCH.getCode();
-    private static final Logger log = LoggerFactory.getLogger(BitcoinCashExtension.class);
 
     @Override
     public String getName() {
@@ -85,9 +84,7 @@ public class BitcoinCashExtension extends AbstractExtension {
             }
         }
         } catch (Exception e) {
-            log.warn("createWallet failed for prefix: {}, {}: {} ",
-                ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
-            );
+            ExtensionsUtil.logExtensionParamsException("createWallet", walletLogin, e);
         }
         return null;
     }
@@ -151,9 +148,7 @@ public class BitcoinCashExtension extends AbstractExtension {
                 }
             }
         } catch (Exception e) {
-            log.warn("createRateSource failed for prefix: {}, {}: {} ",
-                ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin), e.getClass().getSimpleName(), e.getMessage()
-            );
+            ExtensionsUtil.logExtensionParamsException("createRateSource", sourceLogin, e);
         }
         return null;
     }

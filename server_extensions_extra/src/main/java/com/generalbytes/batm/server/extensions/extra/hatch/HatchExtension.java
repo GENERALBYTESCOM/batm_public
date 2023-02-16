@@ -34,7 +34,6 @@ import java.util.StringTokenizer;
 
 public class HatchExtension extends AbstractExtension{
 
-    private static final Logger log = LoggerFactory.getLogger(HatchExtension.class);
     @Override
     public String getName() {
         return "BATM Hatch extension";
@@ -79,9 +78,7 @@ public class HatchExtension extends AbstractExtension{
                     }
                 }
             } catch (Exception e) {
-                log.warn("createWallet failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createWallet", walletLogin, e);
             }
         }
         return null;
@@ -109,9 +106,7 @@ public class HatchExtension extends AbstractExtension{
                     return new FixPriceRateSource(rate, preferedFiatCurrency);
                 }
             } catch (Exception e) {
-                log.warn("createRateSource failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createRateSource", sourceLogin, e);
             }
 
         }

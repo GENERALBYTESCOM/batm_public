@@ -34,8 +34,6 @@ import java.util.StringTokenizer;
 
 public class MaxcoinExtension extends AbstractExtension{
 
-    private static final Logger log = LoggerFactory.getLogger(MaxcoinExtension.class);
-
     @Override
     public String getName() {
         return "BATM Maxcoin extension";
@@ -80,9 +78,7 @@ public class MaxcoinExtension extends AbstractExtension{
                     }
                 }
             } catch (Exception e) {
-                log.warn("createWallet failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createWallet", walletLogin, e);
             }
         }
         return null;
@@ -120,9 +116,7 @@ public class MaxcoinExtension extends AbstractExtension{
                     return new FixPriceRateSource(rate, preferedFiatCurrency);
                 }
             } catch (Exception e) {
-                log.warn("createRateSource failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createRateSource", sourceLogin, e);
             }
 
         }

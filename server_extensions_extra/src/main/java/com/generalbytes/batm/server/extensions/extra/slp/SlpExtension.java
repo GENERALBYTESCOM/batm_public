@@ -33,7 +33,6 @@ import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 
 public class SlpExtension extends AbstractExtension {
-    private static final Logger log = LoggerFactory.getLogger(SlpExtension.class);
     private static final Set<ICryptoCurrencyDefinition> SLP_DEFINITIONS = SlpToken.SLP_TOKENS.values().stream().map(SlpDefinition::new).collect(Collectors.toSet());
 
     @Override
@@ -57,9 +56,7 @@ public class SlpExtension extends AbstractExtension {
                 }
             }
         } catch (Exception e) {
-            log.warn("createWallet failed for prefix: {}, {}: {} ",
-                ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
-            );
+            ExtensionsUtil.logExtensionParamsException("createWallet", walletLogin, e);
         }
         return null;
     }

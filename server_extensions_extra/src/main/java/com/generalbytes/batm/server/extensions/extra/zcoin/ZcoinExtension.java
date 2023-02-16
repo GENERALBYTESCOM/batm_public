@@ -33,8 +33,6 @@ import java.util.StringTokenizer;
 
 public class ZcoinExtension extends AbstractExtension {
 
-    private static final Logger log = LoggerFactory.getLogger(ZcoinExtension.class);
-
     @Override
     public String getName() { return "BATM Zcoin extension"; }
 
@@ -79,9 +77,7 @@ public class ZcoinExtension extends AbstractExtension {
                     }
                 }
             } catch (Exception e) {
-                log.warn("createWallet failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createWallet", walletLogin, e);
             }
         }
         return  null;
@@ -127,9 +123,7 @@ public class ZcoinExtension extends AbstractExtension {
                     return new FixPriceRateSource(rate, preferredFiatCurrency);
                 }
             } catch (Exception e) {
-                log.warn("createRateSource failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createRateSource", sourceLogin, e);
             }
         }
         return null;

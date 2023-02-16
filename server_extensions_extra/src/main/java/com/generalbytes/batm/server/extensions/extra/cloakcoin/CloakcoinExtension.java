@@ -33,8 +33,6 @@ import java.util.StringTokenizer;
 
 public class CloakcoinExtension extends AbstractExtension {
 
-    private static final Logger log = LoggerFactory.getLogger(CloakcoinExtension.class);
-
     @Override
     public String getName() { return "BATM Cloakcoin extension"; }
 
@@ -78,9 +76,7 @@ public class CloakcoinExtension extends AbstractExtension {
                     }
                 }
             } catch (Exception e) {
-                log.warn("createWallet failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createWallet", walletLogin, e);
             }
         }
         return  null;
@@ -126,9 +122,7 @@ public class CloakcoinExtension extends AbstractExtension {
                     return new FixPriceRateSource(rate, preferredFiatCurrency);
                 }
             } catch (Exception e) {
-                log.warn("createRateSource failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createRateSource", sourceLogin, e);
             }
         }
         return null;

@@ -32,7 +32,6 @@ import java.util.*;
 
 public class LiskExtension extends AbstractExtension{
 
-    private static final Logger log = LoggerFactory.getLogger(LiskExtension.class);
     @Override
     public String getName() {
         return "BATM Lisk extra extension";
@@ -69,9 +68,7 @@ public class LiskExtension extends AbstractExtension{
                     }
                 }
             } catch (Exception e) {
-                log.warn("createWallet failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createWallet", walletLogin, e);
             }
         }
         return null;
@@ -116,9 +113,7 @@ public class LiskExtension extends AbstractExtension{
                     return new BinanceRateSource(preferedFiatCurrency, coinmarketcapApiKey);
                 }
             } catch (Exception e) {
-                log.warn("createRateSource failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createRateSource", sourceLogin, e);
             }
         }
         return null;

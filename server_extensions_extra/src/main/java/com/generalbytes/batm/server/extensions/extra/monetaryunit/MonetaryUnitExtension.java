@@ -35,7 +35,6 @@ import java.util.StringTokenizer;
 
 public class MonetaryUnitExtension extends AbstractExtension{
 
-    private static final Logger log = LoggerFactory.getLogger(MonetaryUnitExtension.class);
     @Override
     public String getName() {
         return "BATM MonetaryUnit extension";
@@ -80,9 +79,7 @@ public class MonetaryUnitExtension extends AbstractExtension{
                     }
                 }
             } catch (Exception e) {
-                log.warn("createWallet failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createWallet", walletLogin, e);
             }
         }
         return null;
@@ -113,9 +110,7 @@ public class MonetaryUnitExtension extends AbstractExtension{
                     return new CoinPaprikaRateSource(preferredFiatCurrency);
                 }
             } catch (Exception e) {
-                log.warn("createRateSource failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createRateSource", sourceLogin, e);
             }
         }
         return null;

@@ -35,7 +35,6 @@ import java.util.StringTokenizer;
 
 public class FuturocoinExtension extends AbstractExtension{
 
-    private static final Logger log = LoggerFactory.getLogger(FuturocoinExtension.class);
     @Override
     public String getName() {
         return "BATM Futurocoin extra extension";
@@ -78,9 +77,7 @@ public class FuturocoinExtension extends AbstractExtension{
                     }
                 }
             } catch (Exception e) {
-                log.warn("createWallet failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createWallet", walletLogin, e);
             }
         }
         return null;
@@ -120,9 +117,7 @@ public class FuturocoinExtension extends AbstractExtension{
                     return new CoindealRateSource();
                 }
             } catch (Exception e) {
-                log.warn("createRateSource failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createRateSource", sourceLogin, e);
             }
         }
         return null;

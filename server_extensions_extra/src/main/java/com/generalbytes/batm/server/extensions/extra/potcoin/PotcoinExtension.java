@@ -31,8 +31,6 @@ import java.util.*;
 
 public class PotcoinExtension extends AbstractExtension{
 
-    private static final Logger log = LoggerFactory.getLogger(PotcoinExtension.class);
-
     @Override
     public String getName() {
         return "BATM Potcoin extension";
@@ -67,9 +65,7 @@ public class PotcoinExtension extends AbstractExtension{
                     }
                 }
             } catch (Exception e) {
-                log.warn("createWallet failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createWallet", walletLogin, e);
             }
         }
         return null;
@@ -104,9 +100,7 @@ public class PotcoinExtension extends AbstractExtension{
 
             }
         } catch (Exception e) {
-            log.warn("createRateSource failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+            ExtensionsUtil.logExtensionParamsException("createRateSource", sourceLogin, e);
         }
         return null;
     }

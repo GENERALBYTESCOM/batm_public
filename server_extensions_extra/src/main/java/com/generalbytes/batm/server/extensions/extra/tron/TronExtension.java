@@ -33,8 +33,6 @@ import java.util.StringTokenizer;
 
 public class TronExtension extends AbstractExtension {
 
-    private static final Logger log = LoggerFactory.getLogger(TronExtension.class);
-
     private static final Collection<String> supportedCryptoCurrencies = Collections.unmodifiableSet(new HashSet<String>() {{
         add(CryptoCurrency.TRX.getCode());
         add(CryptoCurrency.USDTTRON.getCode());
@@ -75,9 +73,7 @@ public class TronExtension extends AbstractExtension {
                     }
                 }
             } catch (Exception e) {
-                log.warn("createWallet failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createWallet", walletLogin, e);
             }
         }
         return null;

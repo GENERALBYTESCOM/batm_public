@@ -41,8 +41,6 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 public class SumcoinExtension extends AbstractExtension {
-    private static final Logger log = LoggerFactory.getLogger(SumcoinExtension.class);
-
     private static final ICryptoCurrencyDefinition DEFINITION = new SumcoinDefinition();
 
     @Override
@@ -97,9 +95,7 @@ public class SumcoinExtension extends AbstractExtension {
             }
         }
         } catch (Exception e) {
-            log.warn("createWallet failed for prefix: {}, {}: {} ",
-                ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
-            );
+            ExtensionsUtil.logExtensionParamsException("createWallet", walletLogin, e);
         }
         return null;
     }
@@ -139,9 +135,7 @@ public class SumcoinExtension extends AbstractExtension {
                     return new FixPriceRateSource(rate, preferedFiatCurrency);
                 }
             } catch (Exception e) {
-                log.warn("createRateSource failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createRateSource", sourceLogin, e);
             }
 
         }

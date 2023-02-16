@@ -30,7 +30,6 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 public class SimpleCoinExtension extends AbstractExtension {
-    private static final Logger log = LoggerFactory.getLogger(SimpleCoinExtension.class);
     private SupportedCurrencies supportedCurrencies;
 
     public SimpleCoinExtension() {
@@ -55,9 +54,7 @@ public class SimpleCoinExtension extends AbstractExtension {
                     return new SimpleCoinRateSource(supportedCurrencies);
                 }
             } catch (Exception e) {
-                log.warn("createRateSource failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createRateSource", sourceLogin, e);
             }
         }
         return null;

@@ -39,7 +39,6 @@ import java.util.StringTokenizer;
 
 public class DigiByteExtension extends AbstractExtension {
 
-    private static final Logger log = LoggerFactory.getLogger(DigiByteExtension.class);
   @Override
   public String getName() {
     return "BATM DigiByte extra extension";
@@ -84,9 +83,7 @@ public class DigiByteExtension extends AbstractExtension {
               }
           }
       } catch (Exception e) {
-          log.warn("createWallet failed for prefix: {}, {}: {} ",
-              ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
-          );
+          ExtensionsUtil.logExtensionParamsException("createWallet", walletLogin, e);
       }
     }
     return null;
@@ -127,9 +124,7 @@ public class DigiByteExtension extends AbstractExtension {
                 return new LiveCoinRateSource(preferedFiatCurrency);
             }
         } catch (Exception e) {
-            log.warn("createRateSource failed for prefix: {}, {}: {} ",
-                ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin), e.getClass().getSimpleName(), e.getMessage()
-            );
+            ExtensionsUtil.logExtensionParamsException("createRateSource", sourceLogin, e);
         }
     }
     return null;

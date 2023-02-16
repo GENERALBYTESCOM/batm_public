@@ -15,8 +15,6 @@ import java.util.StringTokenizer;
 
 public class CardanoExtension extends AbstractExtension {
 
-    private static final Logger log = LoggerFactory.getLogger(CardanoExtension.class);
-
     @Override
     public String getName() {
         return "BATM Cardano extra extension";
@@ -47,9 +45,7 @@ public class CardanoExtension extends AbstractExtension {
                         return new CardanoWallet(protocol, host, port, walletId, passphrase);
                     }
                 } catch (IOException e) {
-                    log.warn("createWallet failed for prefix: {}, {}: {} ",
-                        ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
-                    );
+                    ExtensionsUtil.logExtensionParamsException("createWallet", walletLogin, e);
                 }
             }
         }

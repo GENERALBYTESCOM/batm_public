@@ -34,7 +34,6 @@ import java.util.StringTokenizer;
 
 public class GuldenExtension extends AbstractExtension{
 
-    private static final Logger log = LoggerFactory.getLogger(GuldenExtension.class);
     @Override
     public String getName() {
         return "BATM Gulden extension";
@@ -79,9 +78,7 @@ public class GuldenExtension extends AbstractExtension{
                     }
                 }
             } catch (Exception e) {
-                log.warn("createWallet failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createWallet", walletLogin, e);
             }
         }
         return null;
@@ -119,9 +116,7 @@ public class GuldenExtension extends AbstractExtension{
                     return new GuldenTickerRateSource();
                 }
             } catch (Exception e) {
-                log.warn("createRateSource failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createRateSource", sourceLogin, e);
             }
         }
         return null;

@@ -32,8 +32,6 @@ import java.util.StringTokenizer;
 
 public class TentExtension extends AbstractExtension {
 
-    private static final Logger log = LoggerFactory.getLogger(TentExtension.class);
-
     @Override
     public String getName() {
         return "BATM TENT extra extension";
@@ -71,9 +69,7 @@ public class TentExtension extends AbstractExtension {
                     }
                 }
             } catch (Exception e) {
-                log.warn("createWallet failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createWallet", walletLogin, e);
             }
         }
 
@@ -109,9 +105,7 @@ public class TentExtension extends AbstractExtension {
                     return new FixPriceRateSource(rate, preferredFiatCurrency);
                 }
             } catch (Exception e) {
-                log.warn("createRateSource failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createRateSource", sourceLogin, e);
             }
         }
         return null;

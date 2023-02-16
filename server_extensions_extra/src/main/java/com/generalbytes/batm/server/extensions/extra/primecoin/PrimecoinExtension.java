@@ -16,7 +16,6 @@ import java.util.StringTokenizer;
 
 public class PrimecoinExtension extends AbstractExtension {
 
-    private static final Logger log = LoggerFactory.getLogger(PrimecoinExtension.class);
     @Override
     public String getName() {
         return "BATM Primecoin extension";
@@ -61,9 +60,7 @@ public class PrimecoinExtension extends AbstractExtension {
                     }
                 }
             } catch (Exception e) {
-                log.warn("createWallet failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createWallet", walletLogin, e);
             }
         }
         return null;
@@ -99,9 +96,7 @@ public class PrimecoinExtension extends AbstractExtension {
                     return new CoinmarketcapRateSource(apiKey, preferredFiatCurrency);
                 }
             } catch (Exception e) {
-                log.warn("createRateSource failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createRateSource", sourceLogin, e);
             }
         }
         return null;
