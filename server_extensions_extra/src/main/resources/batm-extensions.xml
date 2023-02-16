@@ -1086,6 +1086,13 @@
             <param name="simulate_sending_failure" />
             <help>For testing use only, simulate_sending_failure could be set to "fail" to simulate error while sending coins</help>
         </wallet>
+        <exchange prefix="lbtcdemo_exchange" name="Demo Exchange">
+            <cryptocurrency>LBTC</cryptocurrency>
+            <param name="simulate_failure" />
+            <param name="simulate_wait_for_call" />
+            <param name="preferred_fiat_currency" />
+            <help>simulate_failure could be set to "fail" to simulate error while trading; simulate_wait_for_call - wait at least this time in milliseconds between calls; preferred_fiat_currency can be set to a fiat currency, default is "USD"</help>
+        </exchange>
         <cryptologo cryptocurrency="LBTC" file="lbtc.png"/>
         <cryptologo cryptocurrency="LBTC" file="lbtc.svg"/>
     </extension>

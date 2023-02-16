@@ -18,13 +18,8 @@
 package com.generalbytes.batm.server.extensions.extra.lightningbitcoin;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
-import com.generalbytes.batm.server.extensions.AbstractExtension;
-import com.generalbytes.batm.server.extensions.ExtensionsUtil;
-import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
-import com.generalbytes.batm.server.extensions.IExtensionContext;
-import com.generalbytes.batm.server.extensions.IRestService;
-import com.generalbytes.batm.server.extensions.IWallet;
-import com.generalbytes.batm.server.extensions.ExtensionsUtil;
+import com.generalbytes.batm.common.currencies.FiatCurrency;
+import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.lnurl.LnurlRestService;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.DemoLightningWallet;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.EclairWallet;
@@ -44,6 +39,7 @@ public class LightningBitcoinExtension extends AbstractExtension {
 
     private static final ICryptoCurrencyDefinition DEFINITION = new LightningBitcoinDefinition();
     public static final IRestService LNURL_REST_SERVICE = new LnurlRestService();
+    public static final String LBTC_DUMMY_PUBKEY = "deadbeefcafebabe000aeb9e96530e7b00e6fa03b571d235f6b4e68cfb4ef9097c";
 
     private static IExtensionContext ctx = null;
 
@@ -118,6 +114,47 @@ public class LightningBitcoinExtension extends AbstractExtension {
             log.warn("createWallet failed for prefix: {}, {}: {} ",
                     ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
                 );
+        }
+        return null;
+    }
+
+    @Override
+    public IExchange createExchange(String paramString) {
+        try {
+            if ((paramString != null) && (!paramString.trim().isEmpty())) {
+                StringTokenizer paramTokenizer = new StringTokenizer(paramString, ":");
+                String prefix = paramTokenizer.nextToken();
+                if ("lbtcdemo_exchange".equalsIgnoreCase(prefix)) {
+                    boolean simulateFailure = false;
+                    if (paramTokenizer.hasMoreTokens()) {
+                        String simulateFailureParam = paramTokenizer.nextToken();
+                        if ("fail".equalsIgnoreCase(simulateFailureParam)) {
+                            simulateFailure = true;
+                        }
+                    }
+
+                    int simulateWaitForCallMillis = 0;
+                    if (paramTokenizer.hasMoreTokens()) {
+                        simulateWaitForCallMillis = Integer.parseInt(paramTokenizer.nextToken());
+                    }
+
+                    String preferredFiatCurrency = FiatCurrency.USD.getCode();
+                    if (paramTokenizer.hasMoreTokens()) {
+                        preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase();
+                    }
+
+                    return new DummyExchangeAndWalletAndSource(preferredFiatCurrency,
+                        CryptoCurrency.LBTC.getCode(),
+                        simulateFailure,
+                        simulateWaitForCallMillis,
+                        LBTC_DUMMY_PUBKEY
+                        );
+                }
+            }
+        } catch (Exception e) {
+            log.warn("createExchange failed for prefix: {}, {}: {} ",
+                ExtensionsUtil.getPrefixWithCountOfParameters(paramString), e.getClass().getSimpleName(), e.getMessage()
+            );
         }
         return null;
     }
