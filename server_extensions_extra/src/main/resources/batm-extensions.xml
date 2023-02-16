@@ -2302,7 +2302,8 @@
         <wallet prefix="tridentTRC20_USDTTRON_6_TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t" name="Tron TRC20 Trident wallet - USDT">
             <param name="apikey"/>
             <param name="privatekey"/>
-            <help>apikey is obtained from trongrid.io. privatekey is 64 characters long hex string</help>
+            <param name="feeLimit"/>
+            <help>apikey is obtained from trongrid.io; privatekey is 64 characters long hex string; feeLimit optional, default 30 [TRX]</help>
             <cryptocurrency>USDTTRON</cryptocurrency>
         </wallet>
         <wallet prefix="usdttrondemo" name="Demo Wallet">
