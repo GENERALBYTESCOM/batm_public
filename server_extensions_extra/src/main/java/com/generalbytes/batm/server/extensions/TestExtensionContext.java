@@ -6,7 +6,7 @@ import com.generalbytes.batm.server.extensions.aml.verification.IdentityApplican
 import com.generalbytes.batm.server.extensions.customfields.CustomField;
 import com.generalbytes.batm.server.extensions.customfields.CustomFieldDefinition;
 import com.generalbytes.batm.server.extensions.customfields.CustomFieldDefinitionAvailability;
-import com.generalbytes.batm.server.extensions.customfields.CustomFieldValue;
+import com.generalbytes.batm.server.extensions.customfields.value.CustomFieldValue;
 import com.generalbytes.batm.server.extensions.exceptions.BuyException;
 import com.generalbytes.batm.server.extensions.exceptions.CashbackException;
 import com.generalbytes.batm.server.extensions.exceptions.SellException;

@@ -12,7 +12,11 @@ import com.generalbytes.batm.server.extensions.aml.verification.ApplicantCheckRe
 import com.generalbytes.batm.server.extensions.aml.verification.IdentityApplicant;
 import com.generalbytes.batm.server.extensions.customfields.CustomFieldDefinitionAvailability;
 import com.generalbytes.batm.server.extensions.customfields.CustomFieldDefinitionType;
-import com.generalbytes.batm.server.extensions.customfields.CustomFieldValue;
+import com.generalbytes.batm.server.extensions.customfields.value.BooleanCustomFieldValue;
+import com.generalbytes.batm.server.extensions.customfields.value.ChoiceCustomFieldValue;
+import com.generalbytes.batm.server.extensions.customfields.value.CustomFieldValue;
+import com.generalbytes.batm.server.extensions.customfields.value.FileCustomFieldValue;
+import com.generalbytes.batm.server.extensions.customfields.value.StringCustomFieldValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,7 +64,7 @@ public class ExampleIdentityListener implements IIdentityListener {
         ctx.setIdentityCustomField(
             identity.getPublicId(),
             decisionTimeCustomFieldDefinition.getId(),
-            CustomFieldValue.string(data.verification.decisionTime));
+            new StringCustomFieldValue(data.verification.decisionTime));
 
         // select another custom field definition, this time a dropdown type
         CustomFieldDefinition documentCountryCustomFieldDefinition = findCustomFieldDefinition(
@@ -79,7 +83,7 @@ public class ExampleIdentityListener implements IIdentityListener {
                 ctx.setIdentityCustomField(
                     identity.getPublicId(),
                     documentCountryCustomFieldDefinition.getId(),
-                    CustomFieldValue.choice(element.getId())));
+                    new ChoiceCustomFieldValue(element.getId())));
     }
 
     private CustomFieldDefinition findCustomFieldDefinition(Collection<CustomFieldDefinition> customFieldDefinitions,
@@ -115,28 +119,26 @@ public class ExampleIdentityListener implements IIdentityListener {
     }
 
     private String getValueText(CustomField field) {
-        switch (field.getDefinition().getType()) {
-            case SINGLE_LINE:
-            case PARAGRAPH:
-                return field.getValue().getStringValue();
+        CustomFieldValue value = field.getValue();
 
-            case CHECKBOX:
-                return Objects.toString(field.getValue().getBooleanValue());
+        if (value instanceof StringCustomFieldValue) {
+            return ((StringCustomFieldValue) value).getStringValue();
 
-            case RADIO_BTN:
-            case DROPDOWN:
-                return field.getDefinition().getElements().stream()
-                    .filter(element -> Objects.equals(element.getId(), field.getValue().getChoiceId()))
-                    .findAny()
-                    .map(CustomFieldDefinition.Element::getValue)
-                    .orElse("(?)");
+        } else if (value instanceof BooleanCustomFieldValue) {
+            return Objects.toString(((BooleanCustomFieldValue) value).getBooleanValue());
 
-            case DOCUMENT:
-            case IMAGE:
-                return "(file)";
+        } else if (value instanceof ChoiceCustomFieldValue) {
+            return field.getDefinition().getElements().stream()
+                .filter(element -> Objects.equals(element.getId(), ((ChoiceCustomFieldValue) value).getChoiceId()))
+                .findAny()
+                .map(CustomFieldDefinition.Element::getValue)
+                .orElse("(?)");
 
-            default:
-                throw new IllegalArgumentException("unexpected definition type");
+        } else if (value instanceof FileCustomFieldValue) {
+            return ((FileCustomFieldValue) value).getFileName() + " (" + ((FileCustomFieldValue) value).getMimeType() + ")";
+
+        } else {
+            throw new IllegalArgumentException("unexpected CustomFieldValue type");
         }
     }
 }

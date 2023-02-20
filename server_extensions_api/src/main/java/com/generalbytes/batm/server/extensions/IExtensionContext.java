@@ -19,12 +19,11 @@ package com.generalbytes.batm.server.extensions;
 
 import com.generalbytes.batm.server.extensions.customfields.CustomField;
 import com.generalbytes.batm.server.extensions.customfields.CustomFieldDefinition;
-import com.generalbytes.batm.server.extensions.customfields.CustomFieldDefinitionType;
 import com.generalbytes.batm.server.extensions.aml.verification.ApplicantCheckResult;
 import com.generalbytes.batm.server.extensions.aml.verification.IIdentityVerificationProvider;
 import com.generalbytes.batm.server.extensions.aml.verification.IdentityApplicant;
 import com.generalbytes.batm.server.extensions.customfields.CustomFieldDefinitionAvailability;
-import com.generalbytes.batm.server.extensions.customfields.CustomFieldValue;
+import com.generalbytes.batm.server.extensions.customfields.value.CustomFieldValue;
 import com.generalbytes.batm.server.extensions.exceptions.BuyException;
 import com.generalbytes.batm.server.extensions.exceptions.CashbackException;
 import com.generalbytes.batm.server.extensions.exceptions.SellException;

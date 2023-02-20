@@ -1,5 +1,7 @@
 package com.generalbytes.batm.server.extensions.customfields;
 
+import com.generalbytes.batm.server.extensions.customfields.value.CustomFieldValue;
+
 import java.util.Objects;
 
 public class CustomField {
