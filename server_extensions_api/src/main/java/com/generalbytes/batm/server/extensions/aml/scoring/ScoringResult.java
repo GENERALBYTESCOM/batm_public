@@ -20,18 +20,21 @@ package com.generalbytes.batm.server.extensions.aml.scoring;
 import java.io.Serializable;
 
 public final class ScoringResult implements Serializable {
-    private final Integer risk;
-    private final boolean highRisk;
+    private Integer score;
+    private boolean highRisk;
     private boolean suspicious;
-    private final String message;
+    private String message;
     private boolean scoringPerformed;
 
-    public ScoringResult(Integer risk, boolean highRisk, boolean suspicious, String message, boolean scoringPerformed) {
-        this.risk = risk;
+    public ScoringResult(Integer score, boolean highRisk, boolean suspicious, String message, boolean scoringPerformed) {
+        this.score = score;
         this.highRisk = highRisk;
         this.suspicious = suspicious;
         this.message = message;
         this.scoringPerformed = scoringPerformed;
+    }
+
+    public ScoringResult() {
     }
 
     /**
@@ -44,10 +47,8 @@ public final class ScoringResult implements Serializable {
     /**
      * @return null if no score was given or scoring failed. Value 0 to 10 otherwise. Higher means more risk.
      */
-
-
     public Integer getScore() {
-        return risk;
+        return score;
     }
 
     /**
@@ -61,7 +62,6 @@ public final class ScoringResult implements Serializable {
     }
 
     /**
-     *
      * @return true if the transaction is scored with a high risk score but not necessarily high enough to be declined.
      *  False otherwise or if scoring was not performed.
      *  Every "High risk" transaction is suspicious, not every "suspicious" one is "high risk".
@@ -85,7 +85,7 @@ public final class ScoringResult implements Serializable {
     public String toString() {
         return "ScoringResult{" +
             "scoringPerformed=" + scoringPerformed +
-            ", risk=" + risk +
+            ", score=" + score +
             ", highRisk=" + highRisk +
             ", message='" + message + '\'' +
             '}';
