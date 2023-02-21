@@ -24,7 +24,7 @@ import com.generalbytes.batm.server.extensions.IRestService;
 import java.util.HashSet;
 import java.util.Set;
 
-// uncomment in batm-extensions.xml
+// enable autoloading in batm-extensions.xml or /batm/config/extensions
 public class IdentityExampleExtension extends AbstractExtension {
 
     private static IExtensionContext ctx;
@@ -32,7 +32,8 @@ public class IdentityExampleExtension extends AbstractExtension {
     @Override
     public void init(IExtensionContext ctx) {
         super.init(ctx);
-        this.ctx = ctx;
+        IdentityExampleExtension.ctx = ctx;
+        ctx.addIdentityListener(new ExampleIdentityListener());
     }
 
     @Override
