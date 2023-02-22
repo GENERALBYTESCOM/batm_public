@@ -56,8 +56,6 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryptx.v2.CryptXWallet;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryptx.v2.CryptXWithUniqueAddresses;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.net.InetSocketAddress;
@@ -70,7 +68,6 @@ import static com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryp
 
 public class BitcoinExtension extends AbstractExtension {
     private IExtensionContext ctx;
-    private static final Logger log = LoggerFactory.getLogger(BitcoinExtension.class);
 
     @Override
     public void init(IExtensionContext ctx) {
@@ -231,9 +228,7 @@ public class BitcoinExtension extends AbstractExtension {
             }
         }
         } catch (Exception e) {
-            log.warn("createExchange failed for prefix: {}, {}: {} ",
-                ExtensionsUtil.getPrefixWithCountOfParameters(paramString), e.getClass().getSimpleName(), e.getMessage()
-            );
+            ExtensionsUtil.logExtensionParamsException("createExchange", getClass().getSimpleName(), paramString, e);
         }
         return null;
     }
@@ -433,9 +428,7 @@ public class BitcoinExtension extends AbstractExtension {
             }
         }
         } catch (Exception e) {
-            log.warn("createWallet failed for prefix: {}, {}: {} ",
-                ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
-            );
+            ExtensionsUtil.logExtensionParamsException("createWallet", getClass().getSimpleName(), walletLogin, e);
         }
         return null;
     }
@@ -603,9 +596,7 @@ public class BitcoinExtension extends AbstractExtension {
             }
         }
         } catch (Exception e) {
-            log.warn("createRateSource failed for prefix: {}, {}: {} ",
-                ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin), e.getClass().getSimpleName(), e.getMessage()
-            );
+            ExtensionsUtil.logExtensionParamsException("createRateSource", getClass().getSimpleName(), sourceLogin, e);
         }
         return null;
     }

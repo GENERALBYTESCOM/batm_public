@@ -26,8 +26,6 @@ import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.coinpaprika.CoinPaprikaRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.coingecko.CoinGeckoRateSource;
 import com.generalbytes.batm.server.extensions.extra.monetaryunit.wallets.monetaryunitd.MonetaryUnitRPCWallet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -35,7 +33,6 @@ import java.util.StringTokenizer;
 
 public class MonetaryUnitExtension extends AbstractExtension{
 
-    private static final Logger log = LoggerFactory.getLogger(MonetaryUnitExtension.class);
     @Override
     public String getName() {
         return "BATM MonetaryUnit extension";
@@ -80,9 +77,7 @@ public class MonetaryUnitExtension extends AbstractExtension{
                     }
                 }
             } catch (Exception e) {
-                log.warn("createWallet failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createWallet", getClass().getSimpleName(), walletLogin, e);
             }
         }
         return null;
@@ -113,9 +108,7 @@ public class MonetaryUnitExtension extends AbstractExtension{
                     return new CoinPaprikaRateSource(preferredFiatCurrency);
                 }
             } catch (Exception e) {
-                log.warn("createRateSource failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createRateSource", getClass().getSimpleName(), sourceLogin, e);
             }
         }
         return null;

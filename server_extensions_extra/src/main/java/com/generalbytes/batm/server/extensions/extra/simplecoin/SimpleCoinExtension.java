@@ -20,17 +20,13 @@ package com.generalbytes.batm.server.extensions.extra.simplecoin;
 import com.generalbytes.batm.server.extensions.AbstractExtension;
 import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.IRateSource;
-import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.extra.simplecoin.sources.SimpleCoinRateSource;
 import com.generalbytes.batm.server.extensions.extra.simplecoin.sources.SupportedCurrencies;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Set;
 import java.util.StringTokenizer;
 
 public class SimpleCoinExtension extends AbstractExtension {
-    private static final Logger log = LoggerFactory.getLogger(SimpleCoinExtension.class);
     private SupportedCurrencies supportedCurrencies;
 
     public SimpleCoinExtension() {
@@ -55,9 +51,7 @@ public class SimpleCoinExtension extends AbstractExtension {
                     return new SimpleCoinRateSource(supportedCurrencies);
                 }
             } catch (Exception e) {
-                log.warn("createRateSource failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createRateSource", getClass().getSimpleName(), sourceLogin, e);
             }
         }
         return null;

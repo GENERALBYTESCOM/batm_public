@@ -24,8 +24,6 @@ import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.extra.gulden.sources.GuldenTickerRateSource;
 import com.generalbytes.batm.server.extensions.extra.gulden.wallets.guldend.GuldendRPCWallet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -34,7 +32,6 @@ import java.util.StringTokenizer;
 
 public class GuldenExtension extends AbstractExtension{
 
-    private static final Logger log = LoggerFactory.getLogger(GuldenExtension.class);
     @Override
     public String getName() {
         return "BATM Gulden extension";
@@ -79,9 +76,7 @@ public class GuldenExtension extends AbstractExtension{
                     }
                 }
             } catch (Exception e) {
-                log.warn("createWallet failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createWallet", getClass().getSimpleName(), walletLogin, e);
             }
         }
         return null;
@@ -119,9 +114,7 @@ public class GuldenExtension extends AbstractExtension{
                     return new GuldenTickerRateSource();
                 }
             } catch (Exception e) {
-                log.warn("createRateSource failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createRateSource", getClass().getSimpleName(), sourceLogin, e);
             }
         }
         return null;

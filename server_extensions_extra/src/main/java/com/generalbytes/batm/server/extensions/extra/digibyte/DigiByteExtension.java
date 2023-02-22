@@ -26,11 +26,8 @@ import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
-import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.extra.digibyte.sources.livecoin.LiveCoinRateSource;
 import com.generalbytes.batm.server.extensions.extra.digibyte.wallets.digibyted.DigiByteRPCWallet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -39,7 +36,6 @@ import java.util.StringTokenizer;
 
 public class DigiByteExtension extends AbstractExtension {
 
-    private static final Logger log = LoggerFactory.getLogger(DigiByteExtension.class);
   @Override
   public String getName() {
     return "BATM DigiByte extra extension";
@@ -84,9 +80,7 @@ public class DigiByteExtension extends AbstractExtension {
               }
           }
       } catch (Exception e) {
-          log.warn("createWallet failed for prefix: {}, {}: {} ",
-              ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
-          );
+          ExtensionsUtil.logExtensionParamsException("createWallet", getClass().getSimpleName(), walletLogin, e);
       }
     }
     return null;
@@ -127,9 +121,7 @@ public class DigiByteExtension extends AbstractExtension {
                 return new LiveCoinRateSource(preferedFiatCurrency);
             }
         } catch (Exception e) {
-            log.warn("createRateSource failed for prefix: {}, {}: {} ",
-                ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin), e.getClass().getSimpleName(), e.getMessage()
-            );
+            ExtensionsUtil.logExtensionParamsException("createRateSource", getClass().getSimpleName(), sourceLogin, e);
         }
     }
     return null;
