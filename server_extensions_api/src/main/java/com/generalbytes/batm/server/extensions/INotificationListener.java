@@ -186,6 +186,8 @@ public interface INotificationListener {
 
     default void customerEnrolled(String terminalSerialNumber, String identityPublicId) {}
 
+    default void identityCreated(String terminalSerialNumber, String identityPublicId) {}
+
     default void customerAgreedToMarketingOptIn(String terminalSerialNumber, String identityPublicId) {}
 
     default void blacklistedAddressUsed(String terminalSerialNumber, String cryptoCurrency, String address, String identityPublicId) {}
