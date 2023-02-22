@@ -228,7 +228,7 @@ public class BitcoinExtension extends AbstractExtension {
             }
         }
         } catch (Exception e) {
-            ExtensionsUtil.logExtensionParamsException("createExchange", paramString, e);
+            ExtensionsUtil.logExtensionParamsException("createExchange", getClass().getSimpleName(), paramString, e);
         }
         return null;
     }
@@ -428,7 +428,7 @@ public class BitcoinExtension extends AbstractExtension {
             }
         }
         } catch (Exception e) {
-            ExtensionsUtil.logExtensionParamsException("createWallet", walletLogin, e);
+            ExtensionsUtil.logExtensionParamsException("createWallet", getClass().getSimpleName(), walletLogin, e);
         }
         return null;
     }
@@ -596,7 +596,7 @@ public class BitcoinExtension extends AbstractExtension {
             }
         }
         } catch (Exception e) {
-            ExtensionsUtil.logExtensionParamsException("createRateSource", sourceLogin, e);
+            ExtensionsUtil.logExtensionParamsException("createRateSource", getClass().getSimpleName(), sourceLogin, e);
         }
         return null;
     }

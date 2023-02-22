@@ -25,8 +25,6 @@ import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.extra.futurocoin.sources.coindeal.CoindealRateSource;
 import com.generalbytes.batm.server.extensions.extra.futurocoin.sources.yobit.YobitRateSource;
 import com.generalbytes.batm.server.extensions.extra.futurocoin.wallets.futurocoind.FuturocoinRPCWallet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -77,7 +75,7 @@ public class FuturocoinExtension extends AbstractExtension{
                     }
                 }
             } catch (Exception e) {
-                ExtensionsUtil.logExtensionParamsException("createWallet", walletLogin, e);
+                ExtensionsUtil.logExtensionParamsException("createWallet", getClass().getSimpleName(), walletLogin, e);
             }
         }
         return null;
@@ -117,7 +115,7 @@ public class FuturocoinExtension extends AbstractExtension{
                     return new CoindealRateSource();
                 }
             } catch (Exception e) {
-                ExtensionsUtil.logExtensionParamsException("createRateSource", sourceLogin, e);
+                ExtensionsUtil.logExtensionParamsException("createRateSource", getClass().getSimpleName(), sourceLogin, e);
             }
         }
         return null;

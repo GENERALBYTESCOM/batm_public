@@ -25,8 +25,6 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.coingecko.C
 import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.CoinmarketcapRateSource;
 import com.generalbytes.batm.server.extensions.extra.ilcoin.sources.nomics.NomicsRateSource;
 import com.generalbytes.batm.server.extensions.extra.ilcoin.wallets.ilcoind.IlcoinRPCWallet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -76,7 +74,7 @@ public class IlcoinExtension extends AbstractExtension {
                     }
                 }
             } catch (Exception e) {
-                ExtensionsUtil.logExtensionParamsException("createWallet", walletLogin, e);
+                ExtensionsUtil.logExtensionParamsException("createWallet", getClass().getSimpleName(), walletLogin, e);
             }
         }
         return null;
@@ -122,7 +120,7 @@ public class IlcoinExtension extends AbstractExtension {
                     return new NomicsRateSource(apiKey, preferredFiatCurrency);
                 }
             } catch (Exception e) {
-                ExtensionsUtil.logExtensionParamsException("createRateSource", sourceLogin, e);
+                ExtensionsUtil.logExtensionParamsException("createRateSource", getClass().getSimpleName(), sourceLogin, e);
             }
         }
         return null;

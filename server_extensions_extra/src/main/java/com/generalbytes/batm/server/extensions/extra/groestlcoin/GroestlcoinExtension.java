@@ -27,8 +27,6 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.coinpaprika
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.coingecko.CoinGeckoRateSource;
 import com.generalbytes.batm.server.extensions.extra.groestlcoin.wallets.groestlcoind.GroestlcoinUniqueAddressRPCWallet;
 import com.generalbytes.batm.server.extensions.extra.groestlcoin.wallets.groestlcoind.GroestlcoindRPCWallet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.net.InetSocketAddress;
@@ -90,7 +88,7 @@ public class GroestlcoinExtension extends AbstractExtension{
             }
         }
         } catch (Exception e) {
-            ExtensionsUtil.logExtensionParamsException("createWallet", walletLogin, e);
+            ExtensionsUtil.logExtensionParamsException("createWallet", getClass().getSimpleName(), walletLogin, e);
         }
         return null;
     }
@@ -148,7 +146,7 @@ public class GroestlcoinExtension extends AbstractExtension{
                     return new CoinPaprikaRateSource(preferredFiatCurrency);
                 }
             } catch (Exception e) {
-                ExtensionsUtil.logExtensionParamsException("createRateSource", sourceLogin, e);
+                ExtensionsUtil.logExtensionParamsException("createRateSource", getClass().getSimpleName(), sourceLogin, e);
             }
         }
         return null;

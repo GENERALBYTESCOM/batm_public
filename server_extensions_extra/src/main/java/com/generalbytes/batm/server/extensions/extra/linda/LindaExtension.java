@@ -24,8 +24,6 @@ import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.CoinmarketcapRateSource;
 import com.generalbytes.batm.server.extensions.extra.linda.wallets.lindad.LindaRPCWallet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -78,7 +76,7 @@ public class LindaExtension extends AbstractExtension{
                     }
                 }
             } catch (Exception e) {
-                ExtensionsUtil.logExtensionParamsException("createWallet", walletLogin, e);
+                ExtensionsUtil.logExtensionParamsException("createWallet", getClass().getSimpleName(), walletLogin, e);
             }
         }
         return null;
@@ -123,7 +121,7 @@ public class LindaExtension extends AbstractExtension{
                     return new CoinmarketcapRateSource(apiKey, preferredFiatCurrency);
                 }
             } catch (Exception e) {
-                ExtensionsUtil.logExtensionParamsException("createRateSource", sourceLogin, e);
+                ExtensionsUtil.logExtensionParamsException("createRateSource", getClass().getSimpleName(), sourceLogin, e);
             }
         }
         return null;

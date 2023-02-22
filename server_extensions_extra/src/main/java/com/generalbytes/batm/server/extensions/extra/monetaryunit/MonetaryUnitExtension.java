@@ -26,8 +26,6 @@ import com.generalbytes.batm.server.extensions.extra.dash.sources.coinmarketcap.
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.coinpaprika.CoinPaprikaRateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.coingecko.CoinGeckoRateSource;
 import com.generalbytes.batm.server.extensions.extra.monetaryunit.wallets.monetaryunitd.MonetaryUnitRPCWallet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -79,7 +77,7 @@ public class MonetaryUnitExtension extends AbstractExtension{
                     }
                 }
             } catch (Exception e) {
-                ExtensionsUtil.logExtensionParamsException("createWallet", walletLogin, e);
+                ExtensionsUtil.logExtensionParamsException("createWallet", getClass().getSimpleName(), walletLogin, e);
             }
         }
         return null;
@@ -110,7 +108,7 @@ public class MonetaryUnitExtension extends AbstractExtension{
                     return new CoinPaprikaRateSource(preferredFiatCurrency);
                 }
             } catch (Exception e) {
-                ExtensionsUtil.logExtensionParamsException("createRateSource", sourceLogin, e);
+                ExtensionsUtil.logExtensionParamsException("createRateSource", getClass().getSimpleName(), sourceLogin, e);
             }
         }
         return null;

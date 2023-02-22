@@ -25,8 +25,6 @@ import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.bitcoincash.SlpAddressValidator;
 import com.generalbytes.batm.server.extensions.extra.slp.wallets.electroncashslp.ElectronCashSlpWallet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -56,7 +54,7 @@ public class SlpExtension extends AbstractExtension {
                 }
             }
         } catch (Exception e) {
-            ExtensionsUtil.logExtensionParamsException("createWallet", walletLogin, e);
+            ExtensionsUtil.logExtensionParamsException("createWallet", getClass().getSimpleName(), walletLogin, e);
         }
         return null;
     }

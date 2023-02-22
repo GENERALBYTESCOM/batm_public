@@ -62,19 +62,17 @@ public class ExtensionsUtil {
         return i[0] + " + " + (i.length - 1) + " params";
     }
 
-    public static void logExtensionParamsException(String label, String colonDelimitedParameters, Exception e) {
+    public static void logExtensionParamsException(String method, String extension, String colonDelimitedParameters, Exception e) {
         if (e instanceof NoSuchElementException) {
             // thrown by StringTokenizer.nextToken() if there are no more tokens in the tokenizer's string.
             // Replace the exception name with a more meaningful message.
             // The exception message does not contain anything useful
-            log.warn("{} failed for prefix: {}, missing mandatory parameter(s)",
-                label, getPrefixWithCountOfParameters(colonDelimitedParameters)
-            );
+            log.warn("{} failed for extension {}, prefix: {}, missing mandatory parameter(s)",
+                method, extension, getPrefixWithCountOfParameters(colonDelimitedParameters));
 
         } else {
-            log.warn("{} failed for prefix: {}, {}: {} ",
-                label, getPrefixWithCountOfParameters(colonDelimitedParameters), e.getClass().getSimpleName(), e.getMessage()
-            );
+            log.warn("{} failed for extension {}, prefix: {}, {}: {} ",
+                method, extension, getPrefixWithCountOfParameters(colonDelimitedParameters), e.getClass().getSimpleName(), e.getMessage());
         }
     }
 }
