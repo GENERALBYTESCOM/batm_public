@@ -23,8 +23,6 @@ import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.extra.nano.util.NanoUtil;
 import com.generalbytes.batm.server.extensions.extra.nano.wallet.demo.DemoWallet;
 import com.generalbytes.batm.server.extensions.extra.nano.wallet.node.NanoNodeWallet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.Set;
@@ -37,8 +35,6 @@ import java.util.StringTokenizer;
  * cryptocurrency being used, including the crypto code identifier, address format and standard unit denomination.
  */
 public class NanoExtension extends AbstractExtension {
-
-    private static final Logger log = LoggerFactory.getLogger(NanoExtension.class);
 
     public static final CryptoCurrency CRYPTO = CryptoCurrency.NANO;
 
@@ -74,9 +70,7 @@ public class NanoExtension extends AbstractExtension {
                 }
             }
         } catch (Exception e) {
-            log.warn("createWallet failed for prefix: {}, {}: {} ",
-                ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
-            );
+            ExtensionsUtil.logExtensionParamsException("createWallet", getClass().getSimpleName(), walletLogin, e);
         }
         return null;
     }

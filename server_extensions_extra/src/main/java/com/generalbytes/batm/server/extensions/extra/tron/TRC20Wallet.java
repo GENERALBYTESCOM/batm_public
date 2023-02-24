@@ -47,7 +47,6 @@ import java.util.concurrent.TimeUnit;
 
 public class TRC20Wallet implements IWallet {
     private static final Logger log = LoggerFactory.getLogger(TRC20Wallet.class);
-    private static final long FEE_LIMIT = 10_000_000; // Maximum TRX consumption, measured in SUN (1 TRX = 1,000,000 SUN).
     private static final long BLOCK_TIME_SECONDS = 3;
 
     private final String tronProApiKey;
@@ -55,15 +54,17 @@ public class TRC20Wallet implements IWallet {
     private final String tokenSymbol;
     private final int tokenDecimalPlaces;
     private final String contractAddress;
+    private final long feeLimitSun; // Maximum TRX consumption, measured in SUN (1 TRX = 1,000,000 SUN).
     private final Set<String> cryptoCurrencies;
     private final String walletAddress;
 
-    public TRC20Wallet(String tronProApiKey, String hexPrivateKey, String tokenSymbol, int tokenDecimalPlaces, String contractAddress) {
+    public TRC20Wallet(String tronProApiKey, String hexPrivateKey, String tokenSymbol, int tokenDecimalPlaces, String contractAddress, int feeLimitTrx) {
         this.tronProApiKey = Objects.requireNonNull(tronProApiKey, "tronProApiKey must not be null");
         this.hexPrivateKey = Objects.requireNonNull(hexPrivateKey, "hexPrivateKey must not be null");
         this.tokenSymbol = Objects.requireNonNull(tokenSymbol, "tokenSymbol must not be null");
         this.tokenDecimalPlaces = tokenDecimalPlaces;
         this.contractAddress = Objects.requireNonNull(contractAddress, "contractAddress must not be null");
+        this.feeLimitSun = feeLimitTrx * 1_000_000L;
 
         cryptoCurrencies = Collections.singleton(tokenSymbol);
         walletAddress = getAddress(hexPrivateKey);
@@ -161,7 +162,7 @@ public class TRC20Wallet implements IWallet {
                 }));
 
             Chain.Transaction transaction = wrapper.get().triggerCall(walletAddress, contractAddress, transfer)
-                .setFeeLimit(FEE_LIMIT)
+                .setFeeLimit(feeLimitSun)
                 .setMemo(description) // this is visible in blockchain explorer
                 .build();
             Chain.Transaction signedTxn = wrapper.get().signTransaction(transaction);

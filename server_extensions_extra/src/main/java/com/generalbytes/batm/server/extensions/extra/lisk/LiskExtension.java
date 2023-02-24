@@ -24,15 +24,12 @@ import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.extra.lisk.sources.binance.BinanceRateSource;
 import com.generalbytes.batm.server.extensions.extra.lisk.wallets.liskbinancewallet.LskWallet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.*;
 
 public class LiskExtension extends AbstractExtension{
 
-    private static final Logger log = LoggerFactory.getLogger(LiskExtension.class);
     @Override
     public String getName() {
         return "BATM Lisk extra extension";
@@ -69,9 +66,7 @@ public class LiskExtension extends AbstractExtension{
                     }
                 }
             } catch (Exception e) {
-                log.warn("createWallet failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createWallet", getClass().getSimpleName(), walletLogin, e);
             }
         }
         return null;
@@ -116,9 +111,7 @@ public class LiskExtension extends AbstractExtension{
                     return new BinanceRateSource(preferedFiatCurrency, coinmarketcapApiKey);
                 }
             } catch (Exception e) {
-                log.warn("createRateSource failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createRateSource", getClass().getSimpleName(), sourceLogin, e);
             }
         }
         return null;

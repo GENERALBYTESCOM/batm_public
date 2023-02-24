@@ -18,8 +18,6 @@
 package com.generalbytes.batm.server.extensions.extra;
 
 import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.ftx.FtxComExchange;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.ftx.FtxUsExchange;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -42,12 +40,7 @@ public class RateSourceTest {
     @Parameterized.Parameters
     public static Collection getTestData() {
         return Arrays.asList(new Object[][]{
-            {"LTC", new FtxComExchange("USD")},
-            {"LTC", new FtxUsExchange("USD")},
-            {"BTC", new FtxComExchange("EUR")},
-            {"BTC", new FtxComExchange("USD")},
-            {"BTC", new FtxUsExchange("EUR")},
-            {"BTC", new FtxUsExchange("USD")},
+//            {"LTC", new BinanceComExchange("USD")},
         });
     }
 

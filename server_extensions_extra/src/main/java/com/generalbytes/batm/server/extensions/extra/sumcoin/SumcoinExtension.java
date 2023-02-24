@@ -27,12 +27,9 @@ import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
-import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.extra.sumcoin.sumcored.SumcoinRPCWallet;
 import com.generalbytes.batm.server.extensions.extra.sumcoin.sources.sumcoinindex.SumcoinindexRateSource;
 import com.generalbytes.batm.server.extensions.extra.sumcoin.sumcored.SumcoinUniqueAddressRPCWallet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.net.InetSocketAddress;
@@ -41,8 +38,6 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 public class SumcoinExtension extends AbstractExtension {
-    private static final Logger log = LoggerFactory.getLogger(SumcoinExtension.class);
-
     private static final ICryptoCurrencyDefinition DEFINITION = new SumcoinDefinition();
 
     @Override
@@ -97,9 +92,7 @@ public class SumcoinExtension extends AbstractExtension {
             }
         }
         } catch (Exception e) {
-            log.warn("createWallet failed for prefix: {}, {}: {} ",
-                ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
-            );
+            ExtensionsUtil.logExtensionParamsException("createWallet", getClass().getSimpleName(), walletLogin, e);
         }
         return null;
     }
@@ -139,9 +132,7 @@ public class SumcoinExtension extends AbstractExtension {
                     return new FixPriceRateSource(rate, preferedFiatCurrency);
                 }
             } catch (Exception e) {
-                log.warn("createRateSource failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createRateSource", getClass().getSimpleName(), sourceLogin, e);
             }
 
         }

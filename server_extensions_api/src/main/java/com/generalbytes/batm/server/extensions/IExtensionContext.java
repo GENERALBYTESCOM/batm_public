@@ -17,6 +17,13 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions;
 
+import com.generalbytes.batm.server.extensions.customfields.CustomField;
+import com.generalbytes.batm.server.extensions.customfields.CustomFieldDefinition;
+import com.generalbytes.batm.server.extensions.aml.verification.ApplicantCheckResult;
+import com.generalbytes.batm.server.extensions.aml.verification.IIdentityVerificationProvider;
+import com.generalbytes.batm.server.extensions.aml.verification.IdentityApplicant;
+import com.generalbytes.batm.server.extensions.customfields.CustomFieldDefinitionAvailability;
+import com.generalbytes.batm.server.extensions.customfields.value.CustomFieldValue;
 import com.generalbytes.batm.server.extensions.exceptions.BuyException;
 import com.generalbytes.batm.server.extensions.exceptions.CashbackException;
 import com.generalbytes.batm.server.extensions.exceptions.SellException;
@@ -28,6 +35,7 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.net.InetSocketAddress;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -72,6 +80,14 @@ public interface IExtensionContext {
     void addTerminalListener(ITerminalListener listener);
 
     void removeTerminalListener(ITerminalListener listener);
+
+    /**
+     * Register listener for terminal events
+     */
+    void addIdentityListener(IIdentityListener listener);
+
+    void removeIdentityListener(IIdentityListener listener);
+
 
     /**
      * Finds and returns transaction by given remote or local transaction id
@@ -260,6 +276,26 @@ public interface IExtensionContext {
                              List<ILimit> limitCashPerTransaction, List<ILimit> limitCashPerHour, List<ILimit> limitCashPerDay, List<ILimit> limitCashPerWeek,
                              List<ILimit> limitCashPerMonth, List<ILimit> limitCashPer3Months, List<ILimit> limitCashPer12Months, List<ILimit> limitCashPerCalendarQuarter,
                              List<ILimit> limitCashPerCalendarYear, List<ILimit> limitCashTotalIdentity, String configurationCashCurrency);
+
+    /**
+     * @param customFieldDefinitionId use {@link CustomFieldDefinition#getId()} of a custom field to set
+     */
+    void setIdentityCustomField(String identityPublicId,
+                                long customFieldDefinitionId,
+                                CustomFieldValue customFieldValue) throws RuntimeException;
+
+    /**
+     * @param customFieldDefinitionId use {@link CustomFieldDefinition#getId()} of a custom field to set
+     */
+    void setLocationCustomField(String locationPublicId,
+                                long customFieldDefinitionId,
+                                CustomFieldValue customFieldValue) throws RuntimeException;
+
+    Collection<CustomField> getIdentityCustomFields(String identityPublicId) throws RuntimeException;
+
+    Collection<CustomField> getLocationCustomFields(String locationPublicId) throws RuntimeException;
+
+    Collection<CustomFieldDefinition> getCustomFieldDefinitions(String organizationId, CustomFieldDefinitionAvailability availability) throws RuntimeException;
 
     /**
      *
@@ -480,6 +516,34 @@ public interface IExtensionContext {
     IWallet findBuyWallet(String terminalSerialNumber, String cryptoCurrency);
 
     /**
+     * @param applicantId as returned in {@link com.generalbytes.batm.server.extensions.aml.verification.CreateApplicantResponse}.
+     * @return a provider instance based on parameters configured in Organization of the Applicant.
+     */
+    IIdentityVerificationProvider findIdentityVerificationProviderByApplicantId(String applicantId);
+
+    /**
+     * @param organizationId as in {@link IOrganization#getId()}.
+     * @return a provider instance based on parameters configured in the Organization.
+     */
+    IIdentityVerificationProvider findIdentityVerificationProviderByOrganizationId(long organizationId);
+
+    /**
+     * @return the identity applicant identified by the provided applicant ID.
+     */
+    IdentityApplicant findIdentityVerificationApplicant(String applicantId);
+
+    /**
+     * Saves the verification result to the DB,
+     * updates Identity state based on the verification result,
+     * sends an SMS to the identity to inform them about the verification result.
+     *
+     * @param rawPayload raw data received from the identity verification provider (e.g. in a webhook). Might be used
+     *                   by a different extension to access additional data not recognized by the identity verification extension.
+     * @param result data parsed by the identity verification extension
+     */
+    void processIdentityVerificationResult(String rawPayload, ApplicantCheckResult result);
+
+    /**
      * Returns crypto configurations used by terminals of specified serial numbers.
      * @param serialNumbers
      * @return
@@ -587,6 +651,8 @@ public interface IExtensionContext {
      */
     List<IOrganization> getOrganizations();
 
+    IOrganization getOrganization(String gbApiKey);
+
     /**
      * Triggers Surveillance Photo Capture aka Collect Photo on specified Terminals.
      *
@@ -680,6 +746,12 @@ public interface IExtensionContext {
      * from the server config directory, e.g. do not use any user provided values as the filename parameter etc.
      */
     String getConfigFileContent(final String fileNameInConfigDirectory);
+
+    /**
+     * @return true if the extension is running on global server.
+     * Custom extensions will typically run on a standalone server, not global.
+     */
+    boolean isGlobalServer();
 
     /**
      * Marks transaction as withdrawn by given remote or local transaction id.
