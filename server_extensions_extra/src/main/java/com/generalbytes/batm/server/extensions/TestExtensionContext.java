@@ -348,7 +348,12 @@ public class TestExtensionContext implements IExtensionContext {
     }
 
     @Override
-    public List<IRemainingLimit> getIdentityRemainingLimits(String fiatCurrency, String terminalSerialNumber, String identityPublicId) {
+    public List<ILimitExtended> getIdentityRemainingLimits(String fiatCurrency, String terminalSerialNumber, String identityPublicId) {
+        return null;
+    }
+
+    @Override
+    public List<ILimitExtended> getIdentityInitialLimits(String fiatCurrency, String terminalSerialNumber, String identityPublicId){
         return null;
     }
 
