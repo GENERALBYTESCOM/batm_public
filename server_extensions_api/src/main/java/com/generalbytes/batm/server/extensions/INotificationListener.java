@@ -196,6 +196,8 @@ public interface INotificationListener {
 
     default void identityCreated(String terminalSerialNumber, String identityPublicId) {}
 
+    default void dispenserBanknoteCountSet(String terminalSerialNumber, String cashBoxName, String cashBoxItemCurrency, BigDecimal cashBoxItemDenomination, int cashBoxItemCountNew, int cashBoxItemCountPrevious) {}
+
     default void customerAgreedToMarketingOptIn(String terminalSerialNumber, String identityPublicId) {}
 
     default void blacklistedAddressUsed(String terminalSerialNumber, String cryptoCurrency, String address, String identityPublicId) {}
