@@ -34,14 +34,22 @@ import java.util.Map;
  */
 public interface INotificationListener {
 
-    default void transactionSuccess(String terminalSerialNumber, BigDecimal cashAmount, String cashCurrency, String transactionRemoteId) {}
-
-    default void transactionFailed(String terminalSerialNumber, BigDecimal cashAmount, String cashCurrency, String transactionRemoteId) {}
+    /**
+     * @param paymentType "CASH", "PAYMENT_CARD", or null
+     */
+    default void transactionSuccess(String terminalSerialNumber, BigDecimal cashAmount, String cashCurrency, String transactionRemoteId, String paymentType) {}
 
     /**
-     * Transaction was successfully inserted into an Output Queue
+     * @param paymentType "CASH", "PAYMENT_CARD", or null
      */
-    default void transactionQueued(String terminalSerialNumber, BigDecimal cashAmount, String cashCurrency, String transactionRemoteId) {}
+    default void transactionFailed(String terminalSerialNumber, BigDecimal cashAmount, String cashCurrency, String transactionRemoteId, String paymentType) {}
+
+    /**
+     * Transaction was successfully inserted into an Output Queue.
+     *
+     * @param paymentType "CASH", "PAYMENT_CARD", or null
+     */
+    default void transactionQueued(String terminalSerialNumber, BigDecimal cashAmount, String cashCurrency, String transactionRemoteId, String paymentType) {}
 
     default void cashbackCreated(String terminalSerialNumber, BigDecimal cashAmount, String cashCurrency) {}
 
