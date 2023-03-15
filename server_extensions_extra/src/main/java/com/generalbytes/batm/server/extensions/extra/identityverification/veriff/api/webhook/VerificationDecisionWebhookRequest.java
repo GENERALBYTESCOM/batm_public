@@ -109,6 +109,9 @@ public class VerificationDecisionWebhookRequest {
                     public String unit;
                     public String state;
                     public String street;
+                    /**
+                     * 2 character ISO country code
+                     */
                     public String country;
                     public String postcode;
                     public String houseNumber;
