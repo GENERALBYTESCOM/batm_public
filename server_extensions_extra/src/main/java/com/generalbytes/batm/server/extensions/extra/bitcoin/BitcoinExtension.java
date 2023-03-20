@@ -252,7 +252,8 @@ public class BitcoinExtension extends AbstractExtension {
             } else if ("stillmandigital".equalsIgnoreCase(prefix)) {
                 String apiKey = paramTokenizer.nextToken();
                 String apiSecret = paramTokenizer.nextToken();
-                return new StillmanDigitalExchange(apiKey, apiSecret);
+                boolean useSandbox = paramTokenizer.hasMoreTokens() && paramTokenizer.nextToken().equals("sandbox");
+                return new StillmanDigitalExchange(apiKey, apiSecret, useSandbox);
             }
         }
         } catch (Exception e) {
@@ -640,7 +641,8 @@ public class BitcoinExtension extends AbstractExtension {
             } else if ("stillmandigital".equalsIgnoreCase(rsType)) {
                 String apiKey = st.nextToken();
                 String apiSecret = st.nextToken();
-                return new StillmanDigitalExchange(apiKey, apiSecret);
+                boolean useSandbox = st.hasMoreTokens() && st.nextToken().equals("sandbox");
+                return new StillmanDigitalExchange(apiKey, apiSecret, useSandbox);
             }
         }
         } catch (Exception e) {

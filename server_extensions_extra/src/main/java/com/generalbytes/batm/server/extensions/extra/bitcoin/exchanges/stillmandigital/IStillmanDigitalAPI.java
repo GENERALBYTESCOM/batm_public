@@ -42,8 +42,10 @@ public interface IStillmanDigitalAPI {
 
     String API_EXPIRES_HEADER = "api-timestamp";
 
-    static IStillmanDigitalAPI create(String apiKey, String apiSecret) throws GeneralSecurityException {
-        return create(apiKey, apiSecret, "https://api.stillmandigital.com");
+    static IStillmanDigitalAPI create(String apiKey, String apiSecret,
+                                      boolean useSandbox) throws GeneralSecurityException {
+        return create(apiKey, apiSecret,
+            useSandbox ? "https://sandbox-api.stillmandigital.com" : "https://api.stillmandigital.com");
     }
 
     static IStillmanDigitalAPI create(String apiKey, String apiSecret, String baseUrl) throws GeneralSecurityException {

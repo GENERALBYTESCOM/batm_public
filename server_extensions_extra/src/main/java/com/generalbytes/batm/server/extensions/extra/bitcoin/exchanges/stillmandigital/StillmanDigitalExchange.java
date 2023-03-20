@@ -43,8 +43,9 @@ public class StillmanDigitalExchange implements IExchangeAdvanced, IRateSourceAd
     private final IStillmanDigitalAPI api;
 
     public StillmanDigitalExchange(String apiKey,
-                                   String apiSecret) throws GeneralSecurityException {
-        this.api = IStillmanDigitalAPI.create(apiKey, apiSecret);
+                                   String apiSecret,
+                                   boolean useSandbox) throws GeneralSecurityException {
+        this.api = IStillmanDigitalAPI.create(apiKey, apiSecret, useSandbox);
     }
 
     // for tests only
