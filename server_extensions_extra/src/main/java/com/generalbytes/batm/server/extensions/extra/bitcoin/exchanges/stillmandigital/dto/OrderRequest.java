@@ -23,11 +23,9 @@ public class OrderRequest {
 
     public Side side;
 
-    public String symbol;
+    public String pairName;
 
     public String clOrdId;
 
-    public OrdType ordType;
-
-    public BigDecimal orderQty;
+    public BigDecimal requestAmount;
 }

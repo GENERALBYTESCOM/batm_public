@@ -11,11 +11,11 @@ import java.security.GeneralSecurityException;
 
 import static org.junit.Assert.assertNotNull;
 
-@Ignore // requires online resources - for manual run only
+//@Ignore // requires online resources - for manual run only
 public class StillmanDigitalExchangeTest {
-    private static final String PUBLIC_KEY = "";
-    private static final String PRIVATE_KEY = "";
-    private static final String BASE_URL = "https://ci.trading.stillmandigital.com/client-api";
+    private static final String PUBLIC_KEY = "E8WPWAEYT0QUDFBUX4DB5I2U";
+    private static final String PRIVATE_KEY = "7JUT5RC2LF0UH9UEVM9VIDFBI96EDQ1CKVOATVCZQ662FJTA";
+    private static final String BASE_URL = "https://sandbox-api.stillmandigital.com";
 
     private static StillmanDigitalExchange exchange;
 
@@ -44,14 +44,7 @@ public class StillmanDigitalExchangeTest {
 
 
     @Test
-    public void sendCoinsTest() {
-        String result = exchange.sendCoins("mv4rnyY3Su5gjcDNzbMLKBQkBicCtHUtFB", BigDecimal.valueOf(0.001), "ETH", "test");
-        System.out.println("Send id: " + result);
-    }
-
-
-    @Test
-    public void crateOrderTest() throws InterruptedException {
+    public void createOrderTest() throws InterruptedException {
         ITask task = exchange.createPurchaseCoinsTask(BigDecimal.valueOf(0.01), "BTC", "USD", null);
         task.onCreate();
         for (int i = 0; i < 10 && !task.isFinished(); i++) {

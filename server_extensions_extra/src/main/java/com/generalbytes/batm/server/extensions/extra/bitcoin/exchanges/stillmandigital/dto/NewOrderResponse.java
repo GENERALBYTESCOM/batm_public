@@ -17,14 +17,8 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillmandigital.dto;
 
-public class WithdrawalAddress {
 
-    public String id;
+public class NewOrderResponse {
 
-    public String label;
-
-    public String walletAddress;
-
-    public Boolean approved;
-
+    public long orderId;
 }

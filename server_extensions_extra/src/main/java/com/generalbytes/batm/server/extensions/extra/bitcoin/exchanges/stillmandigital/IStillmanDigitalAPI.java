@@ -17,13 +17,7 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillmandigital;
 
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillmandigital.dto.BalanceResponse;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillmandigital.dto.OrderRequest;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillmandigital.dto.RowOrderResponse;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillmandigital.dto.Ticker;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillmandigital.dto.WithdrawAck;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillmandigital.dto.WithdrawRequest;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillmandigital.dto.WithdrawalAddress;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillmandigital.dto.*;
 import com.generalbytes.batm.server.extensions.util.net.RateLimitingInterceptor;
 import si.mazi.rescu.ClientConfig;
 import si.mazi.rescu.Interceptor;
@@ -46,10 +40,10 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 public interface IStillmanDigitalAPI {
 
-    String API_EXPIRES_HEADER = "api-expires";
+    String API_EXPIRES_HEADER = "api-timestamp";
 
     static IStillmanDigitalAPI create(String apiKey, String apiSecret) throws GeneralSecurityException {
-        return create(apiKey, apiSecret, "https://otc.stillmandigital.com/client-api");
+        return create(apiKey, apiSecret, "https://api.stillmandigital.com");
     }
 
     static IStillmanDigitalAPI create(String apiKey, String apiSecret, String baseUrl) throws GeneralSecurityException {
@@ -61,30 +55,22 @@ public interface IStillmanDigitalAPI {
         return RestProxyFactory.createProxy(IStillmanDigitalAPI.class, baseUrl, config, interceptor);
     }
 
-    @GET
-    @Path("/marketdata/v1/tickers/{symbol}")
-    Ticker getTicker(@PathParam("symbol")  String symbol) throws IOException;
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/v1/trading/rate")
+    Rate requestRate(RateRequest request) throws IOException;
 
     @GET
-    @Path("/trading/v1/balance")
-    BalanceResponse getBalance() throws IOException;
+    @Path("/v1/balances")
+    List<RowBalanceByAssetResponse> getBalance() throws IOException;
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/trading/v1/withdraw")
-    List<WithdrawAck> initiateWithdraw(WithdrawRequest withdrawRequest) throws IOException;
+    @Path("/v1/trading/new")
+    NewOrderResponse sendOrder(OrderRequest orderRequest) throws IOException;
 
     @GET
-    @Path("/trading/v1/withdraw/addresses")
-    List<WithdrawalAddress> getWithdrawalAddresses(@QueryParam("assetId") String asset) throws IOException;
-
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/trading/v1/order/new")
-    RowOrderResponse sendOrder(OrderRequest orderRequest) throws IOException;
-
-    @GET
-    @Path("/trading/v1/order/{id}")
+    @Path("/v1/orders/{id}")
     RowOrderResponse getOrder(@PathParam("id")  long orderId) throws IOException;
 
 }

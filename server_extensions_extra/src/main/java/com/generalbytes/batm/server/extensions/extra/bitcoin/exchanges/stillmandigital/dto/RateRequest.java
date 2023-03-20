@@ -19,9 +19,20 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillman
 
 import java.math.BigDecimal;
 
-public class WithdrawRequest {
+public class RateRequest {
 
-    public BigDecimal amount;
-    public String asset;
-    public String destinationId;
+    public RateRequest(String pairName) {
+        this(pairName, BigDecimal.ZERO);
+    }
+
+    public RateRequest(String pairName, BigDecimal requestAmount) {
+        this.pairName = pairName;
+        this.requestAmount = requestAmount;
+    }
+
+    public String pairName;
+
+    public Boolean requestInBaseAsset = true;
+
+    public BigDecimal requestAmount;
 }

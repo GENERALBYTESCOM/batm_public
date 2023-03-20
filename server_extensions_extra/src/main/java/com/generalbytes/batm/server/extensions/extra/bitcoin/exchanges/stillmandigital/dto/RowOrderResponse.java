@@ -22,16 +22,15 @@ import java.math.BigDecimal;
 
 public class RowOrderResponse {
 
-    public long id;
-    public String clOrdId;
-    public String origClOrdId;
-    public String symbol;
+    public long orderId;
+    public String pairName;
     public Side side;
-    public BigDecimal orderQty;
-    public OrdType ordType;
     public BigDecimal price;
-    public OrderStatus ordStatus;
-    public BigDecimal leavesQty;
-    public BigDecimal cumQty;
-    public BigDecimal avgPx;
+    public OrdType ordType;
+    public BigDecimal quantity;
+    public BigDecimal filledQty;
+    public BigDecimal avgPrice;
+    public BigDecimal volume;
+
+    public OrderStatus status;
 }

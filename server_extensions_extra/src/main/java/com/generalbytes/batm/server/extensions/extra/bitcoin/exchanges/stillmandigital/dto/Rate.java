@@ -19,8 +19,20 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillman
 
 import java.math.BigDecimal;
 
-public class WithdrawAck {
-    public BigDecimal amount;
-    public String id;
-    public String account;
+public class Rate {
+
+    public String pairName;
+
+    public BigDecimal buyQuantity;
+
+    public BigDecimal buyRate;
+
+    public BigDecimal buyTotal;
+
+    public BigDecimal sellQuantity;
+
+    public BigDecimal sellRate;
+
+    public BigDecimal sellTotal;
+
 }

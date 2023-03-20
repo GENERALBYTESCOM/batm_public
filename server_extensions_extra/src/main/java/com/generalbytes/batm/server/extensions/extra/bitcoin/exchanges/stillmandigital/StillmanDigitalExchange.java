@@ -22,9 +22,10 @@ import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.IExchangeAdvanced;
 import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
 import com.generalbytes.batm.server.extensions.ITask;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillmandigital.dto.RateRequest;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillmandigital.dto.RowBalanceByAssetResponse;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillmandigital.dto.Side;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillmandigital.dto.Ticker;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillmandigital.dto.Rate;
 import com.google.common.collect.ImmutableSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,10 +79,10 @@ public class StillmanDigitalExchange implements IExchangeAdvanced, IRateSourceAd
     @Override
     public BigDecimal getCryptoBalance(String cryptoCurrency) {
         try {
-            for (RowBalanceByAssetResponse assetData : api.getBalance().data) {
+            for (RowBalanceByAssetResponse assetData : api.getBalance()) {
                 if (Objects.equals(cryptoCurrency, assetData.asset)) {
                     // crypto is interesting in terms on how much client can withdraw
-                    return assetData.total.add(assetData.netOpenPosition);
+                    return assetData.total;
                 }
             }
         } catch (IOException e) {
@@ -93,7 +94,7 @@ public class StillmanDigitalExchange implements IExchangeAdvanced, IRateSourceAd
     @Override
     public BigDecimal getFiatBalance(String fiatCurrency) {
         try {
-            for (RowBalanceByAssetResponse assetData : api.getBalance().data) {
+            for (RowBalanceByAssetResponse assetData : api.getBalance()) {
                 if (Objects.equals(fiatCurrency, assetData.asset)) {
                     // fiat is interesting in terms on how much client can spent to buy crypto, due this just FREE
                     return assetData.free;
@@ -129,9 +130,9 @@ public class StillmanDigitalExchange implements IExchangeAdvanced, IRateSourceAd
     @Override
     public BigDecimal getExchangeRateForBuy(String cryptoCurrency, String fiatCurrency) {
         try {
-            Ticker ticker = api.getTicker(cryptoCurrency + fiatCurrency);
-            if (ticker != null) {
-                return ticker.ap;
+            Rate rate = api.requestRate(new RateRequest(cryptoCurrency + fiatCurrency));
+            if (rate != null) {
+                return rate.buyRate;
             }
         } catch (IOException e) {
             log.error("Error", e);
@@ -142,9 +143,9 @@ public class StillmanDigitalExchange implements IExchangeAdvanced, IRateSourceAd
     @Override
     public BigDecimal getExchangeRateForSell(String cryptoCurrency, String fiatCurrency) {
         try {
-            Ticker ticker = api.getTicker(cryptoCurrency + fiatCurrency);
-            if (ticker != null) {
-                return ticker.bp;
+            Rate rate = api.requestRate(new RateRequest(cryptoCurrency + fiatCurrency));
+            if (rate != null) {
+                return rate.sellRate;
             }
         } catch (IOException e) {
             log.error("Error", e);
@@ -155,9 +156,9 @@ public class StillmanDigitalExchange implements IExchangeAdvanced, IRateSourceAd
     @Override
     public BigDecimal calculateBuyPrice(String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount) {
         try {
-            Ticker ticker = api.getTicker(cryptoCurrency + fiatCurrency);
-            if (ticker != null && ticker.as.compareTo(cryptoAmount) >= 0) {
-                return ticker.ap;
+            Rate rate = api.requestRate(new RateRequest(cryptoCurrency + fiatCurrency, cryptoAmount));
+            if (rate != null && rate.buyRate != null) {
+                return rate.buyRate;
             }
         } catch (IOException e) {
             log.error("Error", e);
@@ -168,9 +169,9 @@ public class StillmanDigitalExchange implements IExchangeAdvanced, IRateSourceAd
     @Override
     public BigDecimal calculateSellPrice(String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount) {
         try {
-            Ticker ticker = api.getTicker(cryptoCurrency + fiatCurrency);
-            if (ticker != null && ticker.bs.compareTo(cryptoAmount) >= 0) {
-                return ticker.bp;
+            Rate rate = api.requestRate(new RateRequest(cryptoCurrency + fiatCurrency, cryptoAmount));
+            if (rate != null && rate.sellRate != null) {
+                return rate.sellRate;
             }
         } catch (IOException e) {
             log.error("Error", e);

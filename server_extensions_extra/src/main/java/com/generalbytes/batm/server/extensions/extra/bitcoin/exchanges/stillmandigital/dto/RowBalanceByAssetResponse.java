@@ -27,8 +27,6 @@ public class RowBalanceByAssetResponse {
 
     public BigDecimal free;
 
-    public BigDecimal dailyLimit;
-
-    public BigDecimal netOpenPosition;
+    public BigDecimal credit;
 
 }
