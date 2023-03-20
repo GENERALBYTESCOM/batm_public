@@ -31,8 +31,6 @@ import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
 import com.generalbytes.batm.server.extensions.IPaperWalletGenerator;
 import com.generalbytes.batm.server.extensions.IWallet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
 import java.util.HashSet;
@@ -43,8 +41,6 @@ import java.math.BigDecimal;
 import java.net.MalformedURLException;
 
 public class DashExtension extends AbstractExtension{
-    private static final Logger log = LoggerFactory.getLogger(DashExtension.class);
-
     private static final ICryptoCurrencyDefinition DEFINITION = new DashDefinition();
     public static final String CURRENCY = CryptoCurrency.DASH.getCode();
 
@@ -91,9 +87,7 @@ public class DashExtension extends AbstractExtension{
             }
         }
         } catch (Exception e) {
-            log.warn("createWallet failed for prefix: {}, {}: {} ",
-                ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
-            );
+            ExtensionsUtil.logExtensionParamsException("createWallet", getClass().getSimpleName(), walletLogin, e);
         }
         return null;
     }
@@ -142,9 +136,7 @@ public class DashExtension extends AbstractExtension{
                     return new CoinmarketcapRateSource(apiKey, preferredFiatCurrency);
                 }
             } catch (Exception e) {
-                log.warn("createRateSource failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createRateSource", getClass().getSimpleName(), sourceLogin, e);
             }
         }
         return null;

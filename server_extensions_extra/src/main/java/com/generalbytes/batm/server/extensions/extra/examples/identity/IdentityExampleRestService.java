@@ -23,7 +23,7 @@ import com.generalbytes.batm.server.extensions.IIdentityNote;
 import com.generalbytes.batm.server.extensions.IIdentityPiece;
 import com.generalbytes.batm.server.extensions.IIdentityBase;
 import com.generalbytes.batm.server.extensions.ILimit;
-import com.generalbytes.batm.server.extensions.IRemainingLimit;
+import com.generalbytes.batm.server.extensions.ILimitExtended;
 import com.generalbytes.batm.server.extensions.IVerificationInfo;
 import com.generalbytes.batm.server.extensions.PhoneNumberQueryResult;
 import org.slf4j.Logger;
@@ -142,7 +142,7 @@ public class IdentityExampleRestService {
     @POST
     @Path("/getidentityremaininglimits")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<IRemainingLimit> getIdentityRemainingLimits(@FormParam("fiatCurrency") String fiatCurrency, @FormParam("terminalSerialNumber") String terminalSerialNumber, @FormParam("identityPublicId") String identityPublicId /* , fiatCurrency */) {
+    public List<ILimitExtended> getIdentityRemainingLimits(@FormParam("fiatCurrency") String fiatCurrency, @FormParam("terminalSerialNumber") String terminalSerialNumber, @FormParam("identityPublicId") String identityPublicId /* , fiatCurrency */) {
 
         IExtensionContext ctx = IdentityExampleExtension.getExtensionContext();
 

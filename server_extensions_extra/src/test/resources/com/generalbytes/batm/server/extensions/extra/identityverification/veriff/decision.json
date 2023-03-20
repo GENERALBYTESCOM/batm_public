@@ -1,0 +1,76 @@
+{
+  "status": "success",
+  "verification": {
+    "id": "12df6045-3846-3e45-946a-14fa6136d78b",
+    "code": 9001,
+    "person": {
+      "gender": null,
+      "idNumber": null,
+      "lastName": "MORGAN",
+      "addresses": [
+        {
+          "fullAddress": "1234 Snowy Ridge Road, Indiana, 56789 USA",
+          "parsedAddress": {
+            "city": null,
+            "unit": null,
+            "state": "Indiana",
+            "street": "1234 Snowy Ridge Road",
+            "country": "USA",
+            "postcode": "56789",
+            "houseNumber": "null"
+          }
+        }
+      ],
+      "firstName": "SARAH",
+      "citizenship": null,
+      "dateOfBirth": "1967-03-30",
+      "nationality": null,
+      "yearOfBirth": "1967",
+      "placeOfBirth": "MADRID",
+      "pepSanctionMatch": null
+    },
+    "reason": null,
+    "status": "approved",
+    "comments": [],
+    "document": {
+      "type": "DRIVERS_LICENSE",
+      "number": "MORGA753116SM9IJ",
+      "country": "GB",
+      "validFrom": null,
+      "validUntil": "2022-04-20",
+      "placeOfIssue": "MADRID",
+      "firstIssue": "2015-03-21",
+      "issueNumber": "01",
+      "issuedBy": "ISSUER"
+    },
+    "reasonCode": null,
+    "vendorData": "12345678",
+    "decisionTime": "2019-11-06T07:18:36.916Z",
+    "acceptanceTime": "2019-11-06T07:15:27.000Z",
+    "additionalVerifiedData": {
+      "driversLicenseCategory": {
+        "B": true
+      },
+      "driversLicenseCategoryFrom": {
+        "B": "2019-10-06"
+      },
+      "driversLicenseCategoryUntil": {
+        "B": "2025-10-05"
+      }
+    },
+    "riskLabels": [
+    {
+      "label": "document_integration_level_crosslinked_with_fraud",
+      "category": "document",
+      "sessionIds": ["5a2358e7-fd31-4fcb-a23f-4d76651ba68a"]
+    },
+    {
+      "label": "document_integration_level_crosslinked_with_multiple_declines",
+      "category": "document",
+      "sessionIds": ["fd5c1563-1d23-4b1a-ae46-7ba429927ed8"]
+    }]
+  },
+  "technicalData": {
+    "ip": "186.153.67.122"
+  }
+}

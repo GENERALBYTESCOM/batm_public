@@ -1,5 +1,12 @@
 package com.generalbytes.batm.server.extensions;
 
+import com.generalbytes.batm.server.extensions.aml.verification.ApplicantCheckResult;
+import com.generalbytes.batm.server.extensions.aml.verification.IIdentityVerificationProvider;
+import com.generalbytes.batm.server.extensions.aml.verification.IdentityApplicant;
+import com.generalbytes.batm.server.extensions.customfields.CustomField;
+import com.generalbytes.batm.server.extensions.customfields.CustomFieldDefinition;
+import com.generalbytes.batm.server.extensions.customfields.CustomFieldDefinitionAvailability;
+import com.generalbytes.batm.server.extensions.customfields.value.CustomFieldValue;
 import com.generalbytes.batm.server.extensions.exceptions.BuyException;
 import com.generalbytes.batm.server.extensions.exceptions.CashbackException;
 import com.generalbytes.batm.server.extensions.exceptions.SellException;
@@ -9,6 +16,7 @@ import com.generalbytes.batm.server.extensions.watchlist.WatchListResult;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -27,12 +35,18 @@ public class TestExtensionContext implements IExtensionContext {
 
     @Override
     public void addTerminalListener(ITerminalListener listener) {
-
     }
 
     @Override
     public void removeTerminalListener(ITerminalListener listener) {
+    }
 
+    @Override
+    public void addIdentityListener(IIdentityListener listener) {
+    }
+
+    @Override
+    public void removeIdentityListener(IIdentityListener listener) {
     }
 
     @Override
@@ -140,6 +154,33 @@ public class TestExtensionContext implements IExtensionContext {
     @Override
     public IIdentity updateIdentity(String identityId, String externalId, int state, int type, Date created, Date registered, BigDecimal vipBuyDiscount, BigDecimal vipSellDiscount, String note, List<ILimit> limitCashPerTransaction, List<ILimit> limitCashPerHour, List<ILimit> limitCashPerDay, List<ILimit> limitCashPerWeek, List<ILimit> limitCashPerMonth, List<ILimit> limitCashPer3Months, List<ILimit> limitCashPer12Months, List<ILimit> limitCashPerCalendarQuarter, List<ILimit> limitCashPerCalendarYear, List<ILimit> limitCashTotalIdentity, String configurationCashCurrency) {
         return null;
+    }
+
+    @Override
+    public void setIdentityCustomField(String identityPublicId,
+                                       long customFieldDefinitionId,
+                                       CustomFieldValue customFieldValue) {
+    }
+
+    @Override
+    public void setLocationCustomField(String locationPublicId,
+                                       long customFieldDefinitionId,
+                                       CustomFieldValue customFieldValue) {
+    }
+
+    @Override
+    public Collection<CustomField> getIdentityCustomFields(String identityPublicId) {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public Collection<CustomField> getLocationCustomFields(String locationPublicId) {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public Collection<CustomFieldDefinition> getCustomFieldDefinitions(String organizationId, CustomFieldDefinitionAvailability availability) {
+        return Collections.emptyList();
     }
 
     @Override
@@ -253,6 +294,25 @@ public class TestExtensionContext implements IExtensionContext {
     }
 
     @Override
+    public IIdentityVerificationProvider findIdentityVerificationProviderByApplicantId(String applicantId) {
+        return null;
+    }
+
+    @Override
+    public IIdentityVerificationProvider findIdentityVerificationProviderByOrganizationId(long organizationId) {
+        return null;
+    }
+
+    @Override
+    public IdentityApplicant findIdentityVerificationApplicant(String applicantId) {
+        return null;
+    }
+
+    @Override
+    public void processIdentityVerificationResult(String rawPayload, ApplicantCheckResult result) {
+    }
+
+    @Override
     public List<ICryptoConfiguration> findCryptoConfigurationsByTerminalSerialNumbers(List<String> serialNumbers) {
         return null;
     }
@@ -288,7 +348,12 @@ public class TestExtensionContext implements IExtensionContext {
     }
 
     @Override
-    public List<IRemainingLimit> getIdentityRemainingLimits(String fiatCurrency, String terminalSerialNumber, String identityPublicId) {
+    public List<ILimitExtended> getIdentityRemainingLimits(String fiatCurrency, String terminalSerialNumber, String identityPublicId) {
+        return null;
+    }
+
+    @Override
+    public List<ILimitExtended> getIdentityInitialLimits(String fiatCurrency, String terminalSerialNumber, String identityPublicId){
         return null;
     }
 
@@ -305,6 +370,11 @@ public class TestExtensionContext implements IExtensionContext {
     @Override
     public List<IOrganization> getOrganizations() {
         return Collections.emptyList();
+    }
+
+    @Override
+    public IOrganization getOrganization(String gbApiKey) {
+        return null;
     }
 
     @Override
@@ -350,6 +420,11 @@ public class TestExtensionContext implements IExtensionContext {
     @Override
     public String getConfigFileContent(String fileNameInConfigDirectory) {
         return "";
+    }
+
+    @Override
+    public boolean isGlobalServer() {
+        return false;
     }
 
     @Override

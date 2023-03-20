@@ -25,15 +25,12 @@ import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.bitcoincash.SlpAddressValidator;
 import com.generalbytes.batm.server.extensions.extra.slp.wallets.electroncashslp.ElectronCashSlpWallet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 
 public class SlpExtension extends AbstractExtension {
-    private static final Logger log = LoggerFactory.getLogger(SlpExtension.class);
     private static final Set<ICryptoCurrencyDefinition> SLP_DEFINITIONS = SlpToken.SLP_TOKENS.values().stream().map(SlpDefinition::new).collect(Collectors.toSet());
 
     @Override
@@ -57,9 +54,7 @@ public class SlpExtension extends AbstractExtension {
                 }
             }
         } catch (Exception e) {
-            log.warn("createWallet failed for prefix: {}, {}: {} ",
-                ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
-            );
+            ExtensionsUtil.logExtensionParamsException("createWallet", getClass().getSimpleName(), walletLogin, e);
         }
         return null;
     }

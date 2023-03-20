@@ -40,7 +40,7 @@
                 <cryptocurrency buyonly="true">BCH</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
-                <cryptocurrency>ETH</cryptocurrency><!--BitGo’s Ethereum wallets are only available to BitGo Enterprise customers-->
+                <cryptocurrency buyonly="true">ETH</cryptocurrency><!--BitGo’s Ethereum wallets are only available to BitGo Enterprise customers-->
                 <cryptocurrency>XRP</cryptocurrency><!-- BitGo Enterprise-->
                 <cryptocurrency buyonly="true">USDT</cryptocurrency>
                 <help>Host should start with http:// or https://. num_blocks is an integer greater than 2.</help>
@@ -59,7 +59,7 @@
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency><!--BitGo’s Ethereum wallets are only available to BitGo Enterprise customers-->
                 <cryptocurrency>XRP</cryptocurrency><!-- BitGo Enterprise-->
-                <cryptocurrency buyonly="true">USDT</cryptocurrency>
+                <cryptocurrency>USDT</cryptocurrency>
                 <help>This variant of the wallet generates new addresses for each transaction and does not forward payments from temporary address. Host should start with http:// or https://. num_blocks is an integer greater than 2.</help>
             </wallet>
             <wallet prefix="cryptx" name="CryptX Wallet System">
@@ -823,78 +823,6 @@
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
-        </ratesource>
-        <exchange prefix="ftxcom" name="ftx.com">
-            <param name="apikey"/>
-            <param name="apisecret"/>
-            <param name="fiatcurrency"/>
-            <cryptocurrency>BAT</cryptocurrency>
-            <cryptocurrency>BCH</cryptocurrency>
-            <cryptocurrency>BNB</cryptocurrency>
-            <cryptocurrency>BTC</cryptocurrency>
-            <cryptocurrency>DAI</cryptocurrency>
-            <cryptocurrency>DOGE</cryptocurrency>
-            <cryptocurrency buyonly="true">ETH</cryptocurrency>
-            <cryptocurrency>HT</cryptocurrency>
-            <cryptocurrency>LEO</cryptocurrency>
-            <cryptocurrency>LTC</cryptocurrency>
-            <cryptocurrency>MKR</cryptocurrency>
-            <cryptocurrency>PAXG</cryptocurrency>
-            <cryptocurrency>SHIB</cryptocurrency>
-            <cryptocurrency>TRX</cryptocurrency>
-            <cryptocurrency buyonly="true">USDT</cryptocurrency>
-            <cryptocurrency>XRP</cryptocurrency>
-        </exchange>
-        <ratesource prefix="ftxcom" name="ftx.com">
-            <param name="fiatcurrency" />
-            <cryptocurrency>BAT</cryptocurrency>
-            <cryptocurrency>BCH</cryptocurrency>
-            <cryptocurrency>BNB</cryptocurrency>
-            <cryptocurrency>BTC</cryptocurrency>
-            <cryptocurrency>DAI</cryptocurrency>
-            <cryptocurrency>DOGE</cryptocurrency>
-            <cryptocurrency>ETH</cryptocurrency>
-            <cryptocurrency>HT</cryptocurrency>
-            <cryptocurrency>LEO</cryptocurrency>
-            <cryptocurrency>LTC</cryptocurrency>
-            <cryptocurrency>MKR</cryptocurrency>
-            <cryptocurrency>PAXG</cryptocurrency>
-            <cryptocurrency>SHIB</cryptocurrency>
-            <cryptocurrency>TRX</cryptocurrency>
-            <cryptocurrency>USDT</cryptocurrency>
-            <cryptocurrency>XRP</cryptocurrency>
-        </ratesource>
-        <exchange prefix="ftxus" name="ftx.us">
-            <param name="apikey"/>
-            <param name="apisecret"/>
-            <param name="fiatcurrency"/>
-            <cryptocurrency>BAT</cryptocurrency>
-            <cryptocurrency>BCH</cryptocurrency>
-            <cryptocurrency>BTC</cryptocurrency>
-            <cryptocurrency>DAI</cryptocurrency>
-            <cryptocurrency>DOGE</cryptocurrency>
-            <cryptocurrency buyonly="true">ETH</cryptocurrency>
-            <cryptocurrency>LTC</cryptocurrency>
-            <cryptocurrency>MKR</cryptocurrency>
-            <cryptocurrency>PAXG</cryptocurrency>
-            <cryptocurrency>SHIB</cryptocurrency>
-            <cryptocurrency>TRX</cryptocurrency>
-            <cryptocurrency buyonly="true">USDT</cryptocurrency>
-        </exchange>
-        <ratesource prefix="ftxus" name="ftx.us">
-            <param name="fiatcurrency" />
-            <cryptocurrency>BAT</cryptocurrency>
-            <cryptocurrency>BCH</cryptocurrency>
-            <cryptocurrency>BTC</cryptocurrency>
-            <cryptocurrency>DAI</cryptocurrency>
-            <cryptocurrency>DOGE</cryptocurrency>
-            <cryptocurrency>ETH</cryptocurrency>
-            <cryptocurrency>LTC</cryptocurrency>
-            <cryptocurrency>MKR</cryptocurrency>
-            <cryptocurrency>PAXG</cryptocurrency>
-            <cryptocurrency>SHIB</cryptocurrency>
-            <cryptocurrency>TRX</cryptocurrency>
-            <cryptocurrency>USDT</cryptocurrency>
         </ratesource>
         <exchange prefix="stillmandigital" name="Stillman Digital">
             <param name="apikey" />
@@ -2387,7 +2315,8 @@
         <wallet prefix="tridentTRC20_USDTTRON_6_TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t" name="Tron TRC20 Trident wallet - USDT">
             <param name="apikey"/>
             <param name="privatekey"/>
-            <help>apikey is obtained from trongrid.io. privatekey is 64 characters long hex string</help>
+            <param name="feeLimit"/>
+            <help>apikey is obtained from trongrid.io; privatekey is 64 characters long hex string; feeLimit optional, default 30 [TRX]</help>
             <cryptocurrency>USDTTRON</cryptocurrency>
         </wallet>
         <wallet prefix="usdttrondemo" name="Demo Wallet">
@@ -2430,6 +2359,21 @@
         </ratesource>
         <cryptologo cryptocurrency="VERUM" file="verum.png"/>
         <cryptologo cryptocurrency="VERUM" file="verum.svg"/>
+    </extension>
+
+    <extension class="com.generalbytes.batm.server.extensions.extra.identityverification.veriff.VeriffExtension">
+        <identityverificationprovider prefix="veriff" name="Veriff" help="">
+            <param sensitive="false" name="Public API key" help=""/>
+            <param sensitive="true"  name="Private API Key" help=""/>
+        </identityverificationprovider>
+    </extension>
+
+    <extension class="com.generalbytes.batm.server.extensions.extra.identityverification.onfido.OnfidoExtension">
+        <identityverificationprovider prefix="onfido" name="Onfido" help="">
+            <param sensitive="true"  name="Api Key" help=""/>
+            <param sensitive="false" name="Verification Site URL" help=""/>
+            <param sensitive="false" name="Onfido region" help="'EU', 'US' or 'CA'. Default: 'EU'."/>
+        </identityverificationprovider>
     </extension>
 
     <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.notification.NotificationExampleExtension" />

@@ -1,11 +1,9 @@
 package com.generalbytes.batm.server.extensions;
 
-import java.math.BigDecimal;
-
 /**
  * Class that represents identity's remaining limit
  */
-public interface IRemainingLimit {
+public interface ILimitExtended extends ILimit {
     /**
      * Type of the limit
      * Limit type has following structure: buy/sell_limitshortcut
@@ -23,14 +21,6 @@ public interface IRemainingLimit {
      * ct - total cash identity limit
      * cpta - total cash limit per crypto address
      * resulting_limit - effective current limit
-     *
-     * @return
      */
     String getLimitType();
-
-    /**
-     * Limit amount
-     * @return
-     */
-    BigDecimal getAmount();
 }
