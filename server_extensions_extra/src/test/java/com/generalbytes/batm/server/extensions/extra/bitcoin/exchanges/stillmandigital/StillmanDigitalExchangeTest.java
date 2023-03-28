@@ -1,6 +1,5 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillmandigital;
 
-import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.ITask;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -11,7 +10,7 @@ import java.security.GeneralSecurityException;
 
 import static org.junit.Assert.assertNotNull;
 
-//@Ignore // requires online resources - for manual run only
+@Ignore // requires online resources - for manual run only
 public class StillmanDigitalExchangeTest {
     private static final String PUBLIC_KEY = "E8WPWAEYT0QUDFBUX4DB5I2U";
     private static final String PRIVATE_KEY = "7JUT5RC2LF0UH9UEVM9VIDFBI96EDQ1CKVOATVCZQ662FJTA";
