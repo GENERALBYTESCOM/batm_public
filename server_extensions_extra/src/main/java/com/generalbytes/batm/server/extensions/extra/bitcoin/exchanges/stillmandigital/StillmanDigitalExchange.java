@@ -38,6 +38,7 @@ import java.util.Set;
 
 public class StillmanDigitalExchange implements IExchangeAdvanced, IRateSourceAdvanced {
     private static final Logger log = LoggerFactory.getLogger("batm.master.exchange.StillmanDigitalExchange");
+    public static final String SEPARATOR = "/";
 
     private final String preferredFiatCurrency = FiatCurrency.USD.getCode();
     private final IStillmanDigitalAPI api;
@@ -120,18 +121,18 @@ public class StillmanDigitalExchange implements IExchangeAdvanced, IRateSourceAd
 
     @Override
     public ITask createPurchaseCoinsTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
-        return new StillmanOrderTask(api, Side.BUY, cryptoCurrency + fiatCurrencyToUse, amount, log);
+        return new StillmanOrderTask(api, Side.BUY, cryptoCurrency + SEPARATOR + fiatCurrencyToUse, amount, log);
     }
 
     @Override
     public ITask createSellCoinsTask(BigDecimal amount, String cryptoCurrency, String fiatCurrencyToUse, String description) {
-        return new StillmanOrderTask(api, Side.SELL, cryptoCurrency + fiatCurrencyToUse, amount, log);
+        return new StillmanOrderTask(api, Side.SELL, cryptoCurrency + SEPARATOR + fiatCurrencyToUse, amount, log);
     }
 
     @Override
     public BigDecimal getExchangeRateForBuy(String cryptoCurrency, String fiatCurrency) {
         try {
-            Rate rate = api.requestRate(new RateRequest(cryptoCurrency + fiatCurrency));
+            Rate rate = api.requestRate(new RateRequest(cryptoCurrency + SEPARATOR + fiatCurrency));
             if (rate != null) {
                 return rate.buyRate;
             }
@@ -144,7 +145,7 @@ public class StillmanDigitalExchange implements IExchangeAdvanced, IRateSourceAd
     @Override
     public BigDecimal getExchangeRateForSell(String cryptoCurrency, String fiatCurrency) {
         try {
-            Rate rate = api.requestRate(new RateRequest(cryptoCurrency + fiatCurrency));
+            Rate rate = api.requestRate(new RateRequest(cryptoCurrency + SEPARATOR + fiatCurrency));
             if (rate != null) {
                 return rate.sellRate;
             }
@@ -157,7 +158,7 @@ public class StillmanDigitalExchange implements IExchangeAdvanced, IRateSourceAd
     @Override
     public BigDecimal calculateBuyPrice(String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount) {
         try {
-            Rate rate = api.requestRate(new RateRequest(cryptoCurrency + fiatCurrency, cryptoAmount));
+            Rate rate = api.requestRate(new RateRequest(cryptoCurrency + SEPARATOR + fiatCurrency, cryptoAmount));
             if (rate != null && rate.buyRate != null) {
                 return rate.buyRate;
             }
@@ -170,7 +171,7 @@ public class StillmanDigitalExchange implements IExchangeAdvanced, IRateSourceAd
     @Override
     public BigDecimal calculateSellPrice(String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount) {
         try {
-            Rate rate = api.requestRate(new RateRequest(cryptoCurrency + fiatCurrency, cryptoAmount));
+            Rate rate = api.requestRate(new RateRequest(cryptoCurrency + SEPARATOR + fiatCurrency, cryptoAmount));
             if (rate != null && rate.sellRate != null) {
                 return rate.sellRate;
             }
