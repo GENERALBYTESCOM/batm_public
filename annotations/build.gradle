@@ -5,11 +5,6 @@ apply plugin: 'maven-publish'
 group = projectGroup
 version = projectVersion
 
-
-dependencies {
-    compile(group: 'org.slf4j', name: 'slf4j-api', version: '1.7.28')
-}
-
 publishing {
     if (hasGbUploadArtifactory) {
         repositories {
