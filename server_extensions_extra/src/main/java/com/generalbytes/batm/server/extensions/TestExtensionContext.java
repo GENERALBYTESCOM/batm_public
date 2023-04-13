@@ -198,6 +198,11 @@ public class TestExtensionContext implements IExtensionContext {
     }
 
     @Override
+    public ITransactionSellInfo sellCrypto(String terminalSerialNumber, BigDecimal fiatAmount, String fiatCurrency, BigDecimal cryptoAmount, String cryptoCurrency, String identityPublicId, String discountCode, String phoneNumber) throws SellException {
+        return null;
+    }
+
+    @Override
     public ITransactionBuyInfo buyCrypto(String terminalSerialNumber, BigDecimal fiatAmount, String fiatCurrency, BigDecimal cryptoAmount, String cryptoCurrency, String destinationAddress, String identityPublicId, String discountCode) throws BuyException {
         return null;
     }
