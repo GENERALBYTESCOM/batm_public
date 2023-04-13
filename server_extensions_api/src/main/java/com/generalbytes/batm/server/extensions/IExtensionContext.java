@@ -373,8 +373,23 @@ public interface IExtensionContext {
      * @param identityPublicId
      * @param discountCode
      * @return - read ITransactionSellInfo.getTransactionUUID() to find out what should be filled in sell QR code.
+     * @throws SellException
      */
     ITransactionSellInfo sellCrypto(String terminalSerialNumber, BigDecimal fiatAmount, String fiatCurrency, BigDecimal cryptoAmount, String cryptoCurrency, String identityPublicId, String discountCode) throws SellException;
+
+    /**
+     * Call this transaction to create a sell transaction. After this call server will await crypto transaction to arrive and allocate cash for the customer.
+     * @param fiatAmount
+     * @param fiatCurrency
+     * @param cryptoAmount - ignored but must be filled - reserved for future.
+     * @param cryptoCurrency
+     * @param identityPublicId
+     * @param discountCode
+     * @param phoneNumber The phone number used at the sell transaction. (optional)
+     * @return - read ITransactionSellInfo.getTransactionUUID() to find out what should be filled in sell QR code.
+     * @throws SellException
+     */
+    ITransactionSellInfo sellCrypto(String terminalSerialNumber, BigDecimal fiatAmount, String fiatCurrency, BigDecimal cryptoAmount, String cryptoCurrency, String identityPublicId, String discountCode, String phoneNumber) throws SellException;
 
     /**
      * Create a buy transaction (sends crypto to the provided destination address)
