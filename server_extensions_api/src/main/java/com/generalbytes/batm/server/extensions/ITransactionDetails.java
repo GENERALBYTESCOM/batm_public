@@ -277,7 +277,6 @@ public interface ITransactionDetails {
     BigDecimal getCryptoDiscountAmount();
 
     /**
-     * TODO: I don't know
      * @return
      */
     BigDecimal getDiscountQuotient();
