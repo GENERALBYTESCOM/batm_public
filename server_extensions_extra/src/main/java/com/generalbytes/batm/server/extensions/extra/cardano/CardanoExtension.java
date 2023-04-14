@@ -6,16 +6,12 @@ import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.cardano.wallets.CardanoWallet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.StringTokenizer;
 
 public class CardanoExtension extends AbstractExtension {
-
-    private static final Logger log = LoggerFactory.getLogger(CardanoExtension.class);
 
     @Override
     public String getName() {
@@ -47,9 +43,7 @@ public class CardanoExtension extends AbstractExtension {
                         return new CardanoWallet(protocol, host, port, walletId, passphrase);
                     }
                 } catch (IOException e) {
-                    log.warn("createWallet failed for prefix: {}, {}: {} ",
-                        ExtensionsUtil.getPrefixWithCountOfParameters(walletLogin), e.getClass().getSimpleName(), e.getMessage()
-                    );
+                    ExtensionsUtil.logExtensionParamsException("createWallet", getClass().getSimpleName(), walletLogin, (Exception) e);
                 }
             }
         }

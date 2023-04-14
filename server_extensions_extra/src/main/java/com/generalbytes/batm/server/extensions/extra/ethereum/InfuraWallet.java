@@ -26,22 +26,20 @@ import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.request.Transaction;
 import org.web3j.protocol.core.methods.response.EthEstimateGas;
+import org.web3j.protocol.core.methods.response.EthGasPrice;
 import org.web3j.protocol.core.methods.response.EthGetBalance;
-import org.web3j.protocol.core.methods.response.TransactionReceipt;
+import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.RawTransactionManager;
-import org.web3j.tx.Transfer;
 import org.web3j.utils.Convert;
+import org.web3j.utils.Numeric;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import static org.web3j.utils.Convert.Unit.ETHER;
 
@@ -109,36 +107,68 @@ public class InfuraWallet implements IWallet{
 
     @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
-        if (!getCryptoCurrencies().contains(cryptoCurrency)) {
-            log.error("InfuraWallet wallet error: unknown cryptocurrency.");
-            return null;
-        }
-
-        if (destinationAddress != null) {
-            destinationAddress = destinationAddress.toLowerCase();
-        }
         try {
-            log.info("InfuraWallet - sending {} {} from {} to {}", amount, cryptoCurrency, credentials.getAddress(), destinationAddress);
-            Transfer transfer = new Transfer(w, new RawTransactionManager(w, credentials));
-            BigInteger gasLimit = getGasLimit(destinationAddress, amount);
-            if (gasLimit == null) return null;
-            BigInteger gasPrice = transfer.requestCurrentGasPrice();
-            log.info("InfuraWallet - gasPrice: {} gasLimit: {}", gasPrice, gasLimit);
+            if (!getCryptoCurrencies().contains(cryptoCurrency)) {
+                log.error("InfuraWallet wallet error: unknown cryptocurrency: {}", cryptoCurrency);
+                return null;
+            }
+            if (destinationAddress == null) {
+                log.error("Destination address is null");
+                return null;
+            }
+            if (!EtherUtils.isEtherAddressValid(destinationAddress)) {
+                log.error("ETH destination adddress is not valid or has no valid checksum: {}", destinationAddress);
+                return null;
+            }
 
-            CompletableFuture<TransactionReceipt> future = transfer.sendFunds(destinationAddress, amount, ETHER, gasPrice, gasLimit).sendAsync();
-            TransactionReceipt receipt = future.get(10, TimeUnit.SECONDS);
-            log.debug("InfuraWallet receipt = " + receipt);
-            return receipt.getTransactionHash();
-        } catch (TimeoutException e) {
-            log.info("InfuraWallet - ignoring timeout, reporting transaction as successful anyway");
-            return "info_in_future";
-            //error probably will not happen as we waited already 10 seconds.
-            // -- it still happens, probably every time, but coins are being sent
-            // TODO use WalletSendExecutor
+            destinationAddress = destinationAddress.toLowerCase();
+            BigInteger amountInWei = convertEthToWei(amount);
+            log.info("InfuraWallet - sending {} {} (= {} wei) from {} to {}", amount, cryptoCurrency, amountInWei, credentials.getAddress(), destinationAddress);
+            RawTransactionManager transactionManager = new RawTransactionManager(w, credentials);
+            BigInteger gasLimit = getGasLimit(destinationAddress, amount);
+            BigInteger gasPrice = getCurrentGasPrice();
+
+            log.info("InfuraWallet - gasPrice: {} gasLimit: {}", gasPrice, gasLimit);
+            String txId = broadcastEthTransaction(destinationAddress, amountInWei, transactionManager, gasLimit, gasPrice);
+            log.info("InfuraWallet - txId: {}, successfully broadcasted tx to send {} {} to {}", txId, amount, cryptoCurrency, destinationAddress);
+            return txId;
+
         } catch (Exception e) {
-            log.error("Error sending coins.", e);
+            log.error("Error sending {} {} to {} (description: {})", amount, cryptoCurrency, destinationAddress, description, e);
         }
         return null;
+    }
+
+    private String broadcastEthTransaction(String destinationAddress, BigInteger amountInWei, RawTransactionManager transactionManager, BigInteger gasLimit, BigInteger gasPrice) throws IOException {
+        final EthSendTransaction ethSentTransaction = transactionManager.sendTransaction(gasPrice, gasLimit, destinationAddress, "", amountInWei);
+        if (ethSentTransaction.hasError()) {
+            throw new IOException("error sending ETH tx: " + ethSentTransaction.getError().getMessage());
+        }
+        return ethSentTransaction.getTransactionHash();
+    }
+
+    private BigInteger getCurrentGasPrice() throws IOException {
+        EthGasPrice ethGasPrice = w.ethGasPrice().send();
+        if (ethGasPrice == null) {
+            throw new IOException("Couldn't fetch gasPrice");
+        }
+        if (ethGasPrice.hasError()) {
+            throw new IOException("Error getting gasPrice: " + ethGasPrice.getError().getMessage());
+        }
+        BigInteger recommendedGasPriceFromInfura = ethGasPrice.getGasPrice();
+        if (recommendedGasPriceFromInfura.compareTo(BigInteger.ZERO) <= 0) {
+            throw new RuntimeException("Couldn't fetch valid gasPrice, got: " + recommendedGasPriceFromInfura);
+        }
+        log.info("Gasprice from Infura: {} Gwei", Convert.fromWei(String.valueOf(recommendedGasPriceFromInfura), Convert.Unit.GWEI));
+        return recommendedGasPriceFromInfura;
+    }
+
+    private BigInteger convertEthToWei(BigDecimal valueInEth) {
+        BigDecimal weiValue = Convert.toWei(valueInEth, Convert.Unit.ETHER);
+        if (!Numeric.isIntegerValue(weiValue)) {
+            throw new UnsupportedOperationException("Non decimal Wei value provided: " + valueInEth + " " + ETHER + " = " + weiValue + " Wei");
+        }
+        return weiValue.toBigIntegerExact();
     }
 
     private BigInteger getGasLimit(String destinationAddress, BigDecimal amount) throws IOException {

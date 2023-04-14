@@ -22,8 +22,6 @@ import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.ExtensionsUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -32,7 +30,6 @@ import java.util.StringTokenizer;
 
 public class DexCoinSupport extends AbstractExtension implements IExchange, IWallet, ICryptoAddressValidator {
 
-    private static final Logger log = LoggerFactory.getLogger(DexCoinSupport.class);
     private static final String CRYPTO_CURRENCY = CryptoCurrency.DEX.getCode();
     private static final BigDecimal WALLET_BALANCE = new BigDecimal("1000000");
     private static final BigDecimal EXCHANGE_BALANCE = new BigDecimal("2000000");
@@ -160,9 +157,7 @@ public class DexCoinSupport extends AbstractExtension implements IExchange, IWal
                     return new DexCoinSupport(preferredFiatCurrency, rate);
                 }
             } catch (Exception e) {
-                log.warn("createExchange failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(exchangeLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createExchange", getClass().getSimpleName(), exchangeLogin, e);
             }
         }
         return null;
@@ -203,9 +198,7 @@ public class DexCoinSupport extends AbstractExtension implements IExchange, IWal
                     return new FixPriceRateSource(rate, preferedFiatCurrency);
                 }
             } catch (Exception e) {
-                log.warn("createRateSource failed for prefix: {}, {}: {} ",
-                    ExtensionsUtil.getPrefixWithCountOfParameters(sourceLogin), e.getClass().getSimpleName(), e.getMessage()
-                );
+                ExtensionsUtil.logExtensionParamsException("createRateSource", getClass().getSimpleName(), sourceLogin, e);
             }
         }
         return null;
