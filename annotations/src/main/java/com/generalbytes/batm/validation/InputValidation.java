@@ -1,4 +1,4 @@
-package com.generalbytes.batm.validation.annotations;
+package com.generalbytes.batm.validation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
