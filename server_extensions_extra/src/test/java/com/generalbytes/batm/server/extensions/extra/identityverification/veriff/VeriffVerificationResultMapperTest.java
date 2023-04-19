@@ -14,12 +14,13 @@ import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 public class VeriffVerificationResultMapperTest {
+    private static final VeriffVerificationResultMapper mapper = new VeriffVerificationResultMapper();
 
     @Test
     public void testMapping() {
-        VeriffVerificationResultMapper mapper = new VeriffVerificationResultMapper();
         ApplicantCheckResult result = mapper.mapResult(createRequest());
 
         assertNotNull(result);
@@ -35,11 +36,30 @@ public class VeriffVerificationResultMapperTest {
 
         assertEquals("4360 Lone Wolf Ranch Road, Navasota TX US", result.getRawAddress());
 
-        assertEquals("Lone Wolf Ranch Road 4360", result.getStreetAddress());
+        assertEquals("4360 Lone Wolf Ranch Road", result.getStreetAddress());
         assertEquals("Navasota", result.getCity());
         assertEquals("TX", result.getState());
         assertEquals("123 45", result.getZip());
         assertEquals("USA", result.getCountry());
+    }
+
+    @Test
+    public void testStreetAddress() {
+        assertNull(mapStreetAddress(null, null, null));
+        assertNull(mapStreetAddress("us", null, null));
+
+        assertEquals("Sněmovní 176/4", mapStreetAddress("cz", "Sněmovní", "176/4"));
+        assertEquals("10 Downing Street", mapStreetAddress("gb", "Downing Street", "10"));
+        assertEquals("4360 Lone Wolf Ranch Road", mapStreetAddress("us", "Lone Wolf Ranch Road", "4360"));
+        assertEquals("streetname housenumber", mapStreetAddress(null, "streetname", "housenumber"));
+    }
+
+    private String mapStreetAddress(String country, String street, String houseNumber) {
+        VerificationDecisionWebhookRequest request = createRequest();
+        request.verification.person.addresses.get(0).parsedAddress.country = country;
+        request.verification.person.addresses.get(0).parsedAddress.street = street;
+        request.verification.person.addresses.get(0).parsedAddress.houseNumber = houseNumber;
+        return mapper.mapResult(request).getStreetAddress();
     }
 
     private VerificationDecisionWebhookRequest createRequest() {
@@ -79,7 +99,9 @@ public class VeriffVerificationResultMapperTest {
         address.parsedAddress.street = "Lone Wolf Ranch Road";
         address.parsedAddress.postcode = "123 45";
         address.parsedAddress.country = "US";
-        address.parsedAddress.state = "TX";
+        // according to CF-470 parsedAddress.state comes from veriff as lowercase,
+        // but we need to save it as uppercase. State in fullAddress comes as uppercase.
+        address.parsedAddress.state = "tx";
         return address;
     }
 }
