@@ -141,14 +141,23 @@ public class BitgoWalletTest {
 
     @Test
     public void convertBalance() {
-        Assertions.assertThat(wallet.divideBalance(CryptoCurrency.BTC.getCode(), BigDecimal.ONE)).isEqualByComparingTo(new BigDecimal("0.00000001"));
-        Assertions.assertThat(wallet.toSatoshis(new BigDecimal("0.00000001"), CryptoCurrency.BTC.getCode())).isEqualTo("1");
+        Assertions.assertThat(wallet.toSatoshis(new BigDecimal("15.50581145"), CryptoCurrency.USDT.getCode())).isEqualTo("15505811");
 
-        Assert.assertNull("return null for unknown cryptocurrency", wallet.divideBalance("unknown", BigDecimal.ONE));
+        Assertions.assertThat(wallet.toSatoshis(new BigDecimal("0.00000001"), CryptoCurrency.BTC.getCode())).isEqualTo("1");
+        Assertions.assertThat(wallet.toSatoshis(new BigDecimal("0.00000001000"), CryptoCurrency.LTC.getCode())).isEqualTo("1");
+        Assertions.assertThat(wallet.toSatoshis(new BigDecimal("0.000000000000000001000"), CryptoCurrency.ETH.getCode())).isEqualTo("1");
+        Assertions.assertThat(wallet.toSatoshis(new BigDecimal("0.000001000"), CryptoCurrency.USDT.getCode())).isEqualTo("1");
+
+        Assertions.assertThat(wallet.toSatoshis(new BigDecimal("0.000000000000"), CryptoCurrency.BTC.getCode())).isEqualTo("0");
+        Assertions.assertThat(wallet.toSatoshis(new BigDecimal("0.000000009"), CryptoCurrency.BTC.getCode())).isEqualTo("0");
+        Assertions.assertThat(wallet.toSatoshis(new BigDecimal("0.000000019"), CryptoCurrency.BTC.getCode())).isEqualTo("1");
+
+        Assertions.assertThat(wallet.fromSatoshis(CryptoCurrency.BTC.getCode(), new BigDecimal("1.000"))).isEqualByComparingTo("0.00000001");
+        Assertions.assertThat(wallet.fromSatoshis(CryptoCurrency.BTC.getCode(), new BigDecimal("1.999"))).isEqualByComparingTo("0.00000001");
+
+        Assert.assertThrows(IllegalArgumentException.class, () -> wallet.fromSatoshis("unknown", BigDecimal.ONE));
         for (String cryptoCurrency : wallet.getCryptoCurrencies()) {
-            wallet.toSatoshis(BigDecimal.ONE, cryptoCurrency);
-            BigDecimal divided = wallet.divideBalance(cryptoCurrency, BigDecimal.ONE);
-            Assert.assertNotNull("divide failed for " + cryptoCurrency, divided);
+            Assert.assertEquals(BigDecimal.ONE, wallet.fromSatoshis(cryptoCurrency, new BigDecimal(wallet.toSatoshis(BigDecimal.ONE, cryptoCurrency))));
         }
     }
 }
