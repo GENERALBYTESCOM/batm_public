@@ -18,10 +18,11 @@ public class OFACWatchListTest {
         ofacWatchList.init(RESOURCE_PATH);
         ofacWatchList.parseSanctionsList();
 
-        final WatchListResult emptyResult = ofacWatchList.search(new WatchListQuery("Unknown", "NotProvided"));
+        String identityPublicId = null;
+        final WatchListResult emptyResult = ofacWatchList.search(new WatchListQuery("Unknown", "NotProvided", identityPublicId));
         assertTrue(emptyResult.getMatches().isEmpty());
 
-        final WatchListResult result = ofacWatchList.search(new WatchListQuery("Saddam", "Hussein"));
+        final WatchListResult result = ofacWatchList.search(new WatchListQuery("Saddam", "Hussein", identityPublicId));
         assertEquals(WatchListResult.RESULT_TYPE_WATCHLIST_SEARCHED, result.getResultType());
         assertEquals(1, result.getMatches().size());
 
