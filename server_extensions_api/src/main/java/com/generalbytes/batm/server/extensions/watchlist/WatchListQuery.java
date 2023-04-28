@@ -29,6 +29,7 @@ public class WatchListQuery implements Serializable{
     private String name;
     private String firstName;
     private String lastName;
+    private String identityPublicId;
 
 
     public WatchListQuery(String name) {
@@ -36,10 +37,11 @@ public class WatchListQuery implements Serializable{
         this.name = name;
     }
 
-    public WatchListQuery(String firstName, String lastName) {
+    public WatchListQuery(String firstName, String lastName, String identityPublicId) {
         this.type = TYPE_INDIVIDUAL;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.identityPublicId = identityPublicId;
     }
 
     public int getType() {
@@ -56,5 +58,9 @@ public class WatchListQuery implements Serializable{
 
     public String getFirstName() {
         return firstName;
+    }
+
+    public String getIdentityPublicId() {
+        return identityPublicId;
     }
 }
