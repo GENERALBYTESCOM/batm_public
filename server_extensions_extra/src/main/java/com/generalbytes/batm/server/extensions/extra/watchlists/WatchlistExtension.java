@@ -69,7 +69,7 @@ public class WatchlistExtension extends AbstractExtension implements ITransactio
             return true;
         }
 
-        WatchListQuery query = new WatchListQuery(personalInfo.getFirstname(), personalInfo.getLastname());
+        WatchListQuery query = new WatchListQuery(personalInfo.getFirstname(), personalInfo.getLastname(), identityPublicId);
         WatchListResult result = ctx.searchWatchList(query);
 
         if (WatchListResult.RESULT_TYPE_WATCHLIST_SEARCHED != result.getResultType() || result.getMatches().size() == 0) {
