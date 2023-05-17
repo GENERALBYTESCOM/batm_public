@@ -1,0 +1,34 @@
+apply plugin: "java"
+apply plugin: "com.generalbytes.gradle.main"
+apply plugin: 'maven-publish'
+
+group = projectGroup
+version = projectVersion
+
+publishing {
+    if (hasGbUploadArtifactory) {
+        repositories {
+            maven {
+                credentials {
+                    username gbArtifactoryUser
+                    password gbArtifactoryPassword
+                }
+                url gbArtifactoryUploadUrl
+            }
+        }
+    }
+
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}
+
+dependencySubstitutions {
+    substitute file(batmDependencySubstitutionConfig)
+}
+dependencyVerifications {
+    checksums batmDependencyChecksumsConfig
+    printUnusedAssertions false
+}

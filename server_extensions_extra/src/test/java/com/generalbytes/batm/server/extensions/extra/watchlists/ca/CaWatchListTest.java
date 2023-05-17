@@ -18,10 +18,11 @@ public class CaWatchListTest {
         caWatchList.init(RESOURCE_PATH);
         caWatchList.parseSanctionsList();
 
-        final WatchListResult emptyResult = caWatchList.search(new WatchListQuery("Unknown", "NotProvided"));
+        String identityPublicId = null;
+        final WatchListResult emptyResult = caWatchList.search(new WatchListQuery("Unknown", "NotProvided", identityPublicId));
         assertTrue(emptyResult.getMatches().isEmpty());
 
-        final WatchListResult result = caWatchList.search(new WatchListQuery("Samuel Creighton", "Mumbengegwi"));
+        final WatchListResult result = caWatchList.search(new WatchListQuery("Samuel Creighton", "Mumbengegwi", identityPublicId));
         assertEquals(WatchListResult.RESULT_TYPE_WATCHLIST_SEARCHED, result.getResultType());
         assertEquals(1, result.getMatches().size());
 
@@ -33,7 +34,7 @@ public class CaWatchListTest {
         assertTrue(match.getDetails().contains("Number: Zimbabwe/26"));
         assertTrue(match.getDetails().contains("partyIndex: Zimbabwe/26"));
 
-        final WatchListResult scheduleNumberPartyIdResult = caWatchList.search(new WatchListQuery("Jumah", "Al-Ahmad"));
+        final WatchListResult scheduleNumberPartyIdResult = caWatchList.search(new WatchListQuery("Jumah", "Al-Ahmad", identityPublicId));
         final WatchListMatch scheduleNumberPartyIdMatch = scheduleNumberPartyIdResult.getMatches().iterator().next();
         assertEquals("Syria/2-60", scheduleNumberPartyIdMatch.getPartyId());
     }

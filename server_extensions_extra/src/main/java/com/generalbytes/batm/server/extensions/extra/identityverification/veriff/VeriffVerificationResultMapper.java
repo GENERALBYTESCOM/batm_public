@@ -14,15 +14,26 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Collections;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class VeriffVerificationResultMapper {
     private static final Logger log = LoggerFactory.getLogger(VeriffVerificationResultMapper.class);
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ROOT).withZone(ZoneId.systemDefault());
+
+    // Countries that have house number before street name, list not complete, source: https://en.wikipedia.org/wiki/Address#Address_format
+    private static final Set<Country> houseNumberFirstCountries = Collections.unmodifiableSet(EnumSet.of(
+        Country.US,
+        Country.GB,
+        Country.AU,
+        Country.CA,
+        Country.FR));
 
     public ApplicantCheckResult mapResult(VerificationDecisionWebhookRequest decisionRequest) {
         Objects.requireNonNull(decisionRequest, "decisionRequest cannot be null");
@@ -49,7 +60,7 @@ public class VeriffVerificationResultMapper {
                 result.setStreetAddress(mapStreetAddress(address.parsedAddress));
                 result.setCity(address.parsedAddress.city);
                 result.setZip(address.parsedAddress.postcode);
-                result.setState(address.parsedAddress.state);
+                result.setState(mapState(address.parsedAddress.state));
                 result.setCountry(mapCountry(address.parsedAddress.country));
             }
         }
@@ -62,10 +73,23 @@ public class VeriffVerificationResultMapper {
         return result;
     }
 
+    /**
+     * @return House number, street name and unit number (if present) formatted as one string.
+     * Depending on the address country the formatted line starts with the house number (e.g. "10 Downing Street")
+     * or with the street name (e.g. "Dlouhá 33").
+     */
     private String mapStreetAddress(Verification.Person.Address.ParsedAddress parsedAddress) {
-        return Strings.emptyToNull(Stream.of(parsedAddress.street, parsedAddress.houseNumber, parsedAddress.unit)
-            .filter(Objects::nonNull)
-            .collect(Collectors.joining(" ")));
+        if (houseNumberFirstCountries.contains(getCountry(parsedAddress.country))) {
+            return join(parsedAddress.houseNumber, parsedAddress.street, parsedAddress.unit);
+        }
+        return join(parsedAddress.street, parsedAddress.houseNumber, parsedAddress.unit);
+    }
+
+    private String join(String... values) {
+        return Strings.emptyToNull(
+            Stream.of(values)
+                .filter(Objects::nonNull)
+                .collect(Collectors.joining(" ")));
     }
 
     private Verification.Person.Address getAddress(Verification verification) {
@@ -92,14 +116,23 @@ public class VeriffVerificationResultMapper {
         }
     }
 
+    private String mapState(String state) {
+        return state == null ? null : state.toUpperCase();
+    }
+
     /**
      * Converts iso2 to iso3 country code
      */
     private String mapCountry(String iso2) {
+        Country country = getCountry(iso2);
+        return country == null ? null : country.getIso3();
+    }
+
+    private Country getCountry(String iso2) {
         if (iso2 == null) {
             return null;
         }
-        return Country.valueOf(iso2.toUpperCase(Locale.ROOT)).getIso3();
+        return Country.valueOf(iso2.toUpperCase(Locale.ROOT));
     }
 
     private DocumentType mapDocumentType(Verification.Document.Type type) {

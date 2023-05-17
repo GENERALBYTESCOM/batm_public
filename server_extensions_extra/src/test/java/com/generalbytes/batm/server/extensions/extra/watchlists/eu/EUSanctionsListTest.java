@@ -18,10 +18,11 @@ public class EUSanctionsListTest {
         euSanctionsList.init(RESOURCE_PATH);
         euSanctionsList.parseSanctionsList();
 
-        final WatchListResult emptyResult = euSanctionsList.search(new WatchListQuery("Unknown", "NotProvided"));
+        String identityPublicId = null;
+        final WatchListResult emptyResult = euSanctionsList.search(new WatchListQuery("Unknown", "NotProvided", identityPublicId));
         assertTrue(emptyResult.getMatches().isEmpty());
 
-        final WatchListResult result = euSanctionsList.search(new WatchListQuery("Mohammed Hamza", "Zoubaïdi"));
+        final WatchListResult result = euSanctionsList.search(new WatchListQuery("Mohammed Hamza", "Zoubaïdi", identityPublicId));
         assertEquals(WatchListResult.RESULT_TYPE_WATCHLIST_SEARCHED, result.getResultType());
         assertEquals(1, result.getMatches().size());
 
