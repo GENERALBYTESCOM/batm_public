@@ -49,7 +49,7 @@ public class TransactionExtension extends AbstractExtension implements ITransact
         Long value =  (previousValue == null) ? 1 : (previousValue + 1);
         ticketCounters.put(terminalSerialNumber, value);
         result.put("ticket.counter", "" + value);
-        result.put("ticket.previous.counter", ( (previousValue == null) ? "N/A" : "" + previousValue ) ); //result will be stored into database, linked to transdaction record and later be available in ticket template under key ticket.previous.counter
+        result.put("ticket.previous.counter", ( (previousValue == null) ? "N/A" : "" + previousValue ) ); //result will be stored into database, linked to transaction record and later be available in ticket template under key ticket.previous.counter
         return result;
     }
 
