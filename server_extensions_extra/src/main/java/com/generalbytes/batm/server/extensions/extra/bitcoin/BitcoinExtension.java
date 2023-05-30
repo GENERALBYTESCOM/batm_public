@@ -37,6 +37,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.dvchain.D
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.hitbtc.HitbtcExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.enigma.EnigmaExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.poloniex.PoloniexExchange;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillmandigital.StillmanDigitalExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.bitcoinpay.BitcoinPayPP;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.coinofsale.CoinOfSalePP;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.bitkub.BitKubRateSource;
@@ -225,6 +226,11 @@ public class BitcoinExtension extends AbstractExtension {
                     preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase();
                 }
                 return new BitbuyExchange(apiKey, apiSecret, preferredFiatCurrency);
+            } else if ("stillmandigital".equalsIgnoreCase(prefix)) {
+                String apiKey = paramTokenizer.nextToken();
+                String apiSecret = paramTokenizer.nextToken();
+                boolean useSandbox = paramTokenizer.hasMoreTokens() && paramTokenizer.nextToken().equals("sandbox");
+                return new StillmanDigitalExchange(apiKey, apiSecret, useSandbox);
             }
         }
         } catch (Exception e) {
@@ -593,6 +599,11 @@ public class BitcoinExtension extends AbstractExtension {
                     preferredFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new BitbuyExchange(apiKey, apiSecret, preferredFiatCurrency);
+            } else if ("stillmandigital".equalsIgnoreCase(rsType)) {
+                String apiKey = st.nextToken();
+                String apiSecret = st.nextToken();
+                boolean useSandbox = st.hasMoreTokens() && st.nextToken().equals("sandbox");
+                return new StillmanDigitalExchange(apiKey, apiSecret, useSandbox);
             }
         }
         } catch (Exception e) {

@@ -824,6 +824,20 @@
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
         </ratesource>
+
+        <exchange prefix="stillmandigital" name="Stillman Digital">
+            <param name="apikey" />
+            <param name="apisecret" />
+            <cryptocurrency buyonly="true">BTC</cryptocurrency>
+            <cryptocurrency buyonly="true">ETH</cryptocurrency>
+            <help>https://www.stillmandigital.com</help>
+        </exchange>
+        <ratesource prefix="stillmandigital" name="Stillman Digital">
+            <param name="apikey" />
+            <param name="apisecret" />
+            <cryptocurrency buyonly="true">BTC</cryptocurrency>
+            <cryptocurrency buyonly="true">ETH</cryptocurrency>
+        </ratesource>
         <cryptologo cryptocurrency="BNB" file="bnb.png"/>
         <cryptologo cryptocurrency="BNB" file="bnb.svg"/>
         <cryptologo cryptocurrency="KMD" file="kmd.png"/>
