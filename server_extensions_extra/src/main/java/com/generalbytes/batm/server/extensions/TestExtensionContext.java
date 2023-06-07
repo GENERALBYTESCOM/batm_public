@@ -102,6 +102,11 @@ public class TestExtensionContext implements IExtensionContext {
     }
 
     @Override
+    public IIdentityBase findIdentityBaseByIdentityId(String publicIdentityId) {
+        return null;
+    }
+
+    @Override
     public List<IIdentity> findIdentitiesByPhoneNumber(String phoneNumber) {
         return null;
     }
@@ -113,6 +118,11 @@ public class TestExtensionContext implements IExtensionContext {
 
     @Override
     public List<IIdentity> findAllIdentitiesByState(int state) {
+        return null;
+    }
+
+    @Override
+    public List<IIdentityBase> findAllIdentitiesBaseByState(int state) {
         return null;
     }
 
@@ -133,6 +143,11 @@ public class TestExtensionContext implements IExtensionContext {
 
     @Override
     public List<IIdentity> findIdentitiesByDocumentNumber(String documentNumber) {
+        return null;
+    }
+
+    @Override
+    public List<IIdentityBase> findIdentitiesBaseByDocumentNumber(String documentNumber) {
         return null;
     }
 
