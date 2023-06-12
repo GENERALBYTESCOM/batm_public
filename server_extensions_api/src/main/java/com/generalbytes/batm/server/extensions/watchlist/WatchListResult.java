@@ -22,21 +22,28 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WatchListResult implements Serializable{
+public class WatchListResult implements Serializable {
+    /**
+     * Search performed, can have 0 or more matches.
+     */
     public static final int RESULT_TYPE_WATCHLIST_SEARCHED = 0;
+    /**
+     * Search not performed due to the watchlist not ready (not yet downloaded for example).
+     */
     public static final int RESULT_TYPE_WATCHLIST_NOT_READY = 1;
 
-    private int resultType = RESULT_TYPE_WATCHLIST_NOT_READY;
-    private List<WatchListMatch> matches = new ArrayList<WatchListMatch>();
+    private final int resultType;
+    private final List<WatchListMatch> matches;
 
 
     public WatchListResult(int resultType) {
+        this.matches = new ArrayList<>();
         this.resultType = resultType;
     }
 
     public WatchListResult(List<WatchListMatch> matches) {
         this.matches = matches;
-        this.resultType=RESULT_TYPE_WATCHLIST_SEARCHED;
+        this.resultType = RESULT_TYPE_WATCHLIST_SEARCHED;
     }
 
     public List<WatchListMatch> getMatches() {
