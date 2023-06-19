@@ -20,6 +20,7 @@ package com.generalbytes.batm.server.extensions;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 public interface ITransactionDetails {
 
@@ -295,6 +296,11 @@ public interface ITransactionDetails {
      * @return transaction note
      */
     String getNote();
+
+    /**
+     * @return Names of organization tags assigned to the transaction
+     */
+    Set<String> getTags();
 
     List<IBanknoteCounts> getBanknotes();
 }
