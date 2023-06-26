@@ -81,9 +81,9 @@ public class BitgoWalletWithUniqueAddresses extends BitgoWallet implements IGene
         try {
             BitGoAddressResponse resp = api.getAddress(cryptoCurrency, walletId, address);
             if (resp.getBalance().getConfirmedBalance().compareTo(BigDecimal.ZERO) > 0) {
-                return new ReceivedAmount(divideBalance(cryptoCurrency, resp.getBalance().getConfirmedBalance()), 999);
+                return new ReceivedAmount(fromSatoshis(cryptoCurrency, resp.getBalance().getConfirmedBalance()), 999);
             }
-            return new ReceivedAmount(divideBalance(cryptoCurrency, resp.getBalance().getBalance()), 0);
+            return new ReceivedAmount(fromSatoshis(cryptoCurrency, resp.getBalance().getBalance()), 0);
         } catch (HttpStatusIOException e) {
             log.debug("get address error: {}", e.getHttpBody());
         } catch (ErrorResponseException e) {

@@ -18,11 +18,15 @@
 package com.generalbytes.batm.server.extensions.extra.examples;
 
 import com.generalbytes.batm.server.extensions.*;
+import com.generalbytes.batm.server.extensions.exceptions.UpdateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /* Comment out this extension class in batm-extensions.xml */
 public class TransactionExtension extends AbstractExtension implements ITransactionListener {
@@ -55,6 +59,17 @@ public class TransactionExtension extends AbstractExtension implements ITransact
 
     @Override
     public Map<String, String> onTransactionUpdated(ITransactionDetails transactionDetails) {
+        log.info("Transaction updated; tags: {}", transactionDetails.getTags());
+        try {
+            String organizationId = ctx.findIdentityByIdentityId(transactionDetails.getIdentityPublicId()).getOrganization().getId();
+            log.info("Defined transaction tags: {}", ctx.getTransactionTags(organizationId));
+            Set<String> tags = Collections.singleton(transactionDetails.getCryptoCurrency());
+            ITransactionDetails updated = ctx.updateTransaction(transactionDetails.getRemoteTransactionId(), null, null, tags);
+            log.info("Transaction updated; tags: {}", updated.getTags());
+        } catch (UpdateException e) {
+            log.error("", e);
+        }
+
         Map<String, String> result = new HashMap<>();
         result.put("last.updated.at", "" + System.currentTimeMillis());
         return result;

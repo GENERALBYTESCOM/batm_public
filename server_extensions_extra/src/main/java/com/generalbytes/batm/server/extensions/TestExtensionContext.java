@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class TestExtensionContext implements IExtensionContext {
     @Override
@@ -78,6 +79,16 @@ public class TestExtensionContext implements IExtensionContext {
     }
     @Override
     public ITransactionDetails updateTransaction(String rid, Integer status, String detail) throws UpdateException {
+        return null;
+    }
+
+    @Override
+    public ITransactionDetails updateTransaction(String rid, Integer status, String detail, Set<String> tags) throws UpdateException {
+        return null;
+    }
+
+    @Override
+    public Set<String> getTransactionTags(String organizationId) {
         return null;
     }
 

@@ -39,6 +39,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface IExtensionContext {
 
@@ -119,10 +120,23 @@ public interface IExtensionContext {
      * @param rid    remote transaction ID of the transaction to be updated
      * @param status new status to be set or null to keep it unmodified
      * @param detail detail message to be appended if there already is a detail set. Null to keep it unmodified
+     * @param tags   tags to be set to the transaction.
+     *               If the transaction has some tags assigned already, those will be removed (un-assigned)
+     *               and only the tags provided here would be set.
+     *               Providing an empty set will un-assign all existing tags of the transaction.
+     *               Null keeps the existing tags unchanged.
+     *               Tags that are being set must exist (see {@link #getTransactionTags(String)}), non-existent tags are ignored.
      * @return modified transaction details
      * @throws UpdateException if the update was not successful
      */
+    ITransactionDetails updateTransaction(String rid, Integer status, String detail, Set<String> tags) throws UpdateException;
+
     ITransactionDetails updateTransaction(String rid, Integer status, String detail) throws UpdateException;
+
+    /**
+     * @return Names of organization tags that could be assigned to transactions
+     */
+    Set<String> getTransactionTags(String organizationId);
 
     /**
      * Finds person by chat user id
