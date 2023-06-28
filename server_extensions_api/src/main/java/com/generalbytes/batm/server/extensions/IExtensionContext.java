@@ -171,6 +171,12 @@ public interface IExtensionContext {
     IIdentity findIdentityByIdentityId(String publicIdentityId);
 
     /**
+     * Finds and returns identity based on provided publicIdentityId
+     * @return identity with only basic attributes without related data represented by collections
+     */
+    IIdentityBase findIdentityBaseByIdentityId(String publicIdentityId);
+
+    /**
      * Finds and returns identity based on provided phone number. This number has to be in international format (leading +countrycode is required)
      * @param phoneNumber
      * @return
@@ -191,6 +197,12 @@ public interface IExtensionContext {
      */
     List<IIdentity> findAllIdentitiesByState(int state);
 
+    /**
+     * Finds and returns all identities of given state)
+     * @param state @see IIdentity
+     * @return list of identities with only basic attributes without related data represented by collections
+     */
+    List<IIdentityBase> findAllIdentitiesBaseByState(int state);
 
     /**
      * Finds and returns identity based on provided phone number. If you don't specify country then number has to be in international format (leading +countrycode is required)
@@ -222,6 +234,12 @@ public interface IExtensionContext {
      * @return identities with the provided document (ID, passport, ... ) number. Empty list if nothing is found, never null.
      */
     List<IIdentity> findIdentitiesByDocumentNumber(String documentNumber);
+
+    /**
+     * @return identities (with only basic attributes without related data represented by collections)
+     * with the provided document (ID, passport, ... ) number. Empty list if nothing is found, never null.
+     */
+    List<IIdentityBase> findIdentitiesBaseByDocumentNumber(String documentNumber);
 
     /**
      *
