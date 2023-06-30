@@ -157,6 +157,10 @@ public interface INotificationListener {
      */
     default void acceptorAcceptanceProblem(String terminalSerialNumber) {}
 
+    default void acceptorIsNotDetected(String terminalSerialNumber) {}
+
+    default void acceptorDisconnected(String terminalSerialNumber) {}
+
     /**
      * Machine is inactive for long time period
      */
