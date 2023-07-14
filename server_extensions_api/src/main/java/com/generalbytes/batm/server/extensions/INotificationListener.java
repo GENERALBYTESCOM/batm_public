@@ -79,7 +79,13 @@ public interface INotificationListener {
      */
     default void cashHigh(String terminalSerialNumber, BigDecimal cashboxTotalAmount, String currency, String cashboxName) {}
 
+    /**
+     * Deprecated from version 1.1.7, use {@link INotificationListener#cashLow(String, Map, String)} instead.
+     */
+    @Deprecated
     default void cashLow(String terminalSerialNumber, BigDecimal cashboxTotalAmount, String currency, String cashboxName) {}
+
+    default void cashLow(String terminalSerialNumber, Map<String, BigDecimal> cashboxesAmounts, String currency) {}
 
     /**
      * Current banknote count in a cashbox
