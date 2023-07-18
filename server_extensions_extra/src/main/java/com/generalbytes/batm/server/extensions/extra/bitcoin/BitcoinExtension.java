@@ -319,7 +319,7 @@ public class BitcoinExtension extends AbstractExtension {
                     port = Integer.parseInt(next);
                     token = st.nextToken();
                 }
-                String walletAddress = st.nextToken();
+                String walletId = st.nextToken();
                 String walletPassphrase = st.nextToken();
 
                 InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(walletLogin, tunnelPassword, InetSocketAddress.createUnresolved(host, port));
@@ -338,10 +338,10 @@ public class BitcoinExtension extends AbstractExtension {
                 }
 
                 if ("bitgonoforward".equalsIgnoreCase(walletType)) {
-                  return new BitgoWalletWithUniqueAddresses(scheme, host, port, token, walletAddress, walletPassphrase, numBlocks);
+                  return new BitgoWalletWithUniqueAddresses(scheme, host, port, token, walletId, walletPassphrase, numBlocks);
                 }
 
-                return new BitgoWallet(scheme, host, port, token, walletAddress, walletPassphrase, numBlocks);
+                return new BitgoWallet(scheme, host, port, token, walletId, walletPassphrase, numBlocks);
 
             } else if ("coinbasewallet2".equalsIgnoreCase(walletType)
                 || "coinbasewallet2noforward".equalsIgnoreCase(walletType)) {

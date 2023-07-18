@@ -40,8 +40,7 @@ import java.math.RoundingMode;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
-import java.util.EnumMap;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -59,9 +58,39 @@ public class BitgoWallet implements IWallet, ICanSendMany {
     protected static final Integer readTimeout = 90 * 1000; //90 seconds
     protected Integer numBlocks;
 
-    public BitgoWallet(String scheme, String host, int port, String token, String walletId, String walletPassphrase) {
-      this(scheme, host, port, token, walletId, walletPassphrase, 2);
-    }
+    protected static final Map<String, String> cryptoCurrencies = new HashMap<String, String>() {
+        {
+            put(CryptoCurrency.BCH.getCode(), "bch");
+            put(CryptoCurrency.BTC.getCode(), "btc");
+            put(CryptoCurrency.ETH.getCode(), "eth");
+            put(CryptoCurrency.LTC.getCode(), "ltc");
+            put(CryptoCurrency.USDT.getCode(), "usdt"); // ERC-20 (eth)
+            put(CryptoCurrency.USDTTRON.getCode(), "trx:usdt");
+            put(CryptoCurrency.XRP.getCode(), "xrp");
+            put(CryptoCurrency.TBTC.getCode(), "tbtc");
+        }
+    };
+
+    private static final Map<String, Integer> decimals = new HashMap<String, Integer>() {
+        {
+            put(CryptoCurrency.BTC.getCode(), pow10Exp(Converters.BTC));
+            put(CryptoCurrency.LTC.getCode(), pow10Exp(Converters.LTC));
+            put(CryptoCurrency.BCH.getCode(), pow10Exp(Converters.BCH));
+            put(CryptoCurrency.ETH.getCode(), pow10Exp(Converters.ETH));
+            put(CryptoCurrency.XRP.getCode(), pow10Exp(Converters.XRP));
+            put(CryptoCurrency.USDT.getCode(), pow10Exp(Converters.USDT));
+            put(CryptoCurrency.USDTTRON.getCode(), pow10Exp(Converters.USDTTRON));
+            put(CryptoCurrency.TBTC.getCode(), pow10Exp(Converters.TBTC));
+            put(CryptoCurrency.TLTC.getCode(), pow10Exp(Converters.TLTC));
+            put(CryptoCurrency.TBCH.getCode(), pow10Exp(Converters.TBCH));
+        }
+
+        private int pow10Exp(BigDecimal val) {
+            // return exp for val=10^exp
+            // e.g. for 10^3=1000: precision=4, exp=3
+            return val.precision() - 1;
+        }
+    };
 
     public BitgoWallet(String scheme, String host, int port, String token, String walletId, String walletPassphrase, Integer numBlocks) {
         this.walletId = walletId;
@@ -102,7 +131,8 @@ public class BitgoWallet implements IWallet, ICanSendMany {
                 .map(transfer -> new BitGoRecipient(transfer.getDestinationAddress(), toSatoshis(transfer.getAmount(), cryptoCurrency)))
                 .collect(Collectors.toList());
             final BitGoSendManyRequest request = new BitGoSendManyRequest(recipients, walletPassphrase, description, this.numBlocks);
-            return getResultTxId(api.sendMany(cryptoCurrency.toLowerCase(), this.walletId, request));
+            String bitgoCryptoCurrency = cryptoCurrencies.get(cryptoCurrency);
+            return getResultTxId(api.sendMany(bitgoCryptoCurrency, this.walletId, request));
         } catch (HttpStatusIOException hse) {
             log.debug("send many error, HTTP status: {}, body: {}", hse.getHttpStatusCode(), hse.getHttpBody());
         } catch (ErrorResponseException e) {
@@ -117,7 +147,8 @@ public class BitgoWallet implements IWallet, ICanSendMany {
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
         try {
             final BitGoCoinRequest request = new BitGoCoinRequest(destinationAddress, toSatoshis(amount, cryptoCurrency), walletPassphrase, description, this.numBlocks);
-            return getResultTxId(api.sendCoins(cryptoCurrency.toLowerCase(), this.walletId, request));
+            String bitgoCryptoCurrency = cryptoCurrencies.get(cryptoCurrency);
+            return getResultTxId(api.sendCoins(bitgoCryptoCurrency, this.walletId, request));
         } catch (HttpStatusIOException hse) {
             log.debug("send coins error, HTTP status: {}, body: {}", hse.getHttpStatusCode(), hse.getHttpBody());
         } catch (ErrorResponseException e) {
@@ -135,30 +166,8 @@ public class BitgoWallet implements IWallet, ICanSendMany {
             .toPlainString();
     }
 
-    private static final Map<CryptoCurrency, Integer> decimals = new EnumMap<CryptoCurrency, Integer>(CryptoCurrency.class) {
-        {
-            put(CryptoCurrency.BTC, pow10Exp(Converters.BTC));
-            put(CryptoCurrency.LTC, pow10Exp(Converters.LTC));
-            put(CryptoCurrency.BCH, pow10Exp(Converters.BCH));
-            put(CryptoCurrency.ETH, pow10Exp(Converters.ETH));
-            put(CryptoCurrency.XRP, pow10Exp(Converters.XRP));
-            put(CryptoCurrency.USDT, pow10Exp(Converters.USDT));
-            put(CryptoCurrency.TBTC, pow10Exp(Converters.TBTC));
-            put(CryptoCurrency.TLTC, pow10Exp(Converters.TLTC));
-            put(CryptoCurrency.TBCH, pow10Exp(Converters.TBCH));
-        }
-
-        private int pow10Exp(BigDecimal val) {
-            // return exp for val=10^exp
-            // e.g. for 10^3=1000: precision=4, exp=3
-            return val.precision() - 1;
-        }
-    };
-
     private Integer getDecimals(String cryptoCurrency) {
-        return Objects.requireNonNull(
-            decimals.get(CryptoCurrency.valueOfCode(cryptoCurrency)),
-            cryptoCurrency + " not supported");
+        return Objects.requireNonNull(decimals.get(cryptoCurrency), cryptoCurrency + " not supported");
     }
 
     @Override
@@ -166,12 +175,12 @@ public class BitgoWallet implements IWallet, ICanSendMany {
         if(cryptoCurrency == null) {
             cryptoCurrency = getPreferredCryptoCurrency();
         }
-        if (!getCryptoCurrencies().contains(cryptoCurrency)) {
+        String bitgoCryptoCurrency = cryptoCurrencies.get(cryptoCurrency);
+        if (bitgoCryptoCurrency == null) {
             return null;
         }
-        cryptoCurrency = cryptoCurrency.toLowerCase();
         try {
-            final Map<String, Object> response = api.getWalletById(cryptoCurrency, walletId);
+            final Map<String, Object> response = api.getWalletById(bitgoCryptoCurrency, walletId);
             if(response == null || response.isEmpty()) {
                 return null;
             }
@@ -199,16 +208,7 @@ public class BitgoWallet implements IWallet, ICanSendMany {
 
     @Override
     public Set<String> getCryptoCurrencies() {
-        HashSet<String> s = new HashSet<>();
-        s.add(CryptoCurrency.BCH.getCode());
-        s.add(CryptoCurrency.BTC.getCode());
-        s.add(CryptoCurrency.ETH.getCode());
-        s.add(CryptoCurrency.LTC.getCode());
-        s.add(CryptoCurrency.USDT.getCode());
-        s.add(CryptoCurrency.XRP.getCode());
-
-        s.add(CryptoCurrency.TBTC.getCode());
-        return s;
+        return cryptoCurrencies.keySet();
     }
 
     @Override
@@ -221,12 +221,13 @@ public class BitgoWallet implements IWallet, ICanSendMany {
         if (cryptoCurrency == null) {
             cryptoCurrency = getPreferredCryptoCurrency();
         }
-        if (!getCryptoCurrencies().contains(cryptoCurrency)) {
+        String bitgoCryptoCurrency = cryptoCurrencies.get(cryptoCurrency);
+        if (bitgoCryptoCurrency == null) {
             return null;
         }
-        cryptoCurrency = cryptoCurrency.toLowerCase();
+
         try {
-            final Map<String, Object> response = api.getWalletById(cryptoCurrency, walletId);
+            final Map<String, Object> response = api.getWalletById(bitgoCryptoCurrency, walletId);
             if (response == null || response.isEmpty()) {
                 return null;
             }

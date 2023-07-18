@@ -23,11 +23,7 @@ public class BitgoWalletTest {
 
     private static final Logger log = LoggerFactory.getLogger(BitgoWalletTest.class);
 
-    private static IBitgoAPI api;
-
     private static BitgoWallet wallet;
-
-    private static BitgoWallet walletParams;
 
     private static void setLoggerLevel(String name, String level) {
         try {
@@ -50,7 +46,7 @@ public class BitgoWalletTest {
         setLoggerLevel("batm", "trace");
         setLoggerLevel("si.mazi.rescu","trace");
 
-        api = RestProxyFactory.createProxy(IBitgoAPI.class, "http://localhost:3080/");
+        RestProxyFactory.createProxy(IBitgoAPI.class, "http://localhost:3080/");
 
         String scheme = "http";
         String host = "localhost";
@@ -60,8 +56,7 @@ public class BitgoWalletTest {
         String walletPassphrase = "JSZSuGNlHfgqPHjrp0eO";
         int numBlocks = 10;
 
-        wallet = new BitgoWallet(scheme, host, port, token, walletId, walletPassphrase);
-        walletParams = new BitgoWallet(scheme, host, port, token, walletId, walletPassphrase, numBlocks);
+        wallet = new BitgoWallet(scheme, host, port, token, walletId, walletPassphrase, numBlocks);
     }
 
     @Test
@@ -75,7 +70,7 @@ public class BitgoWalletTest {
         String walletId = "5b20e3a9266bbe80095757489d84a6bb";
         String walletPassphrase = "JSZSuGNlHfgqPHjrp0eO";
 
-        final BitgoWallet remotewallet = new BitgoWallet(scheme, host, port, token, walletId, walletPassphrase);
+        final BitgoWallet remotewallet = new BitgoWallet(scheme, host, port, token, walletId, walletPassphrase, 2);
         final String address = remotewallet.getCryptoAddress(coin);
         Assert.assertNotNull(address);
         Assert.assertEquals("2N2WR6aVSEgq5ZLTED9vHvCWFdAMf6yhebd", address);
@@ -92,7 +87,7 @@ public class BitgoWalletTest {
         String walletId = "5b20e3a9266bbe80095757489d84a6bb";
         String walletPassphrase = "JSZSuGNlHfgqPHjrp0eO";
 
-        final BitgoWallet remotewallet = new BitgoWallet(scheme, host, port, token, walletId, walletPassphrase);
+        final BitgoWallet remotewallet = new BitgoWallet(scheme, host, port, token, walletId, walletPassphrase, 2);
         BigDecimal balance = remotewallet.getCryptoBalance(coin);
         Assert.assertNotNull(balance);
         log.info("balance = {}", balance);
@@ -135,13 +130,14 @@ public class BitgoWalletTest {
         BigDecimal amount = BigDecimal.valueOf(amountInt).divide(Converters.TBTC);
         String description = "CAS: uses the numBlocks API parameter";
 
-        String result = walletParams.sendCoins(destinationAddress, amount, coin, description);
+        String result = wallet.sendCoins(destinationAddress, amount, coin, description);
         log.info("send coins with numBlocks parameter status = {}", result);
     }
 
     @Test
     public void convertBalance() {
         Assertions.assertThat(wallet.toSatoshis(new BigDecimal("15.50581145"), CryptoCurrency.USDT.getCode())).isEqualTo("15505811");
+        Assertions.assertThat(wallet.toSatoshis(new BigDecimal("15.50581145"), CryptoCurrency.USDTTRON.getCode())).isEqualTo("15505811");
 
         Assertions.assertThat(wallet.toSatoshis(new BigDecimal("0.00000001"), CryptoCurrency.BTC.getCode())).isEqualTo("1");
         Assertions.assertThat(wallet.toSatoshis(new BigDecimal("0.00000001000"), CryptoCurrency.LTC.getCode())).isEqualTo("1");
@@ -155,7 +151,8 @@ public class BitgoWalletTest {
         Assertions.assertThat(wallet.fromSatoshis(CryptoCurrency.BTC.getCode(), new BigDecimal("1.000"))).isEqualByComparingTo("0.00000001");
         Assertions.assertThat(wallet.fromSatoshis(CryptoCurrency.BTC.getCode(), new BigDecimal("1.999"))).isEqualByComparingTo("0.00000001");
 
-        Assert.assertThrows(IllegalArgumentException.class, () -> wallet.fromSatoshis("unknown", BigDecimal.ONE));
+        Exception exception = Assert.assertThrows(NullPointerException.class, () -> wallet.fromSatoshis("unknown", BigDecimal.ONE));
+        Assertions.assertThat(exception.getMessage()).contains("not supported");
         for (String cryptoCurrency : wallet.getCryptoCurrencies()) {
             Assert.assertEquals(BigDecimal.ONE, wallet.fromSatoshis(cryptoCurrency, new BigDecimal(wallet.toSatoshis(BigDecimal.ONE, cryptoCurrency))));
         }
