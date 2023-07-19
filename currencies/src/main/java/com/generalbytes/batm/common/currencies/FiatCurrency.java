@@ -65,6 +65,7 @@ public enum FiatCurrency {
     ISK("Icelandic króna"),
     IXP("Northern Ireland pound"),
     JEP("Jersey pound"),
+    JMD("Jamaican dollar"),
     JPY("Japanese yen"),
     KES("Kenyan shilling"),
     KRW("South Korean won"),
