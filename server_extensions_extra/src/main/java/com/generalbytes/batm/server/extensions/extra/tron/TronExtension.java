@@ -22,11 +22,13 @@ import com.generalbytes.batm.server.extensions.AbstractExtension;
 import com.generalbytes.batm.server.extensions.DummyExchangeAndWalletAndSource;
 import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
+import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
 import com.generalbytes.batm.server.extensions.IWallet;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 public class TronExtension extends AbstractExtension {
@@ -36,6 +38,7 @@ public class TronExtension extends AbstractExtension {
         add(CryptoCurrency.USDTTRON.getCode());
     }});
 
+    private static final Set<ICryptoCurrencyDefinition> cryptoCurrencyDefinitions = Collections.singleton(new UsdttronDefinition());
 
     @Override
     public String getName() {
@@ -87,4 +90,8 @@ public class TronExtension extends AbstractExtension {
         return new TronCryptoAddressValidator();
     }
 
+    @Override
+    public Set<ICryptoCurrencyDefinition> getCryptoCurrencyDefinitions() {
+        return cryptoCurrencyDefinitions;
+    }
 }

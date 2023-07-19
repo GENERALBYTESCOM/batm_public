@@ -23,13 +23,11 @@ import com.generalbytes.batm.server.extensions.watchlist.WatchListMatch;
 import com.generalbytes.batm.server.extensions.watchlist.WatchListQuery;
 import com.generalbytes.batm.server.extensions.watchlist.WatchListResult;
 
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-import static com.generalbytes.batm.server.extensions.watchlist.WatchListQuery.*;
-
-public class CzechSanctionList implements IWatchList{
+public class CzechSanctionList implements IWatchList {
 
     private Sanctions sanctions;
 
@@ -68,7 +66,6 @@ public class CzechSanctionList implements IWatchList{
         return LIST_NOT_CHANGED;
     }
 
-
     @Override
     public WatchListResult search(WatchListQuery query) {
         synchronized (this) {
@@ -78,23 +75,26 @@ public class CzechSanctionList implements IWatchList{
         }
 
         //do the actual matching
-        Set<Match> result = new HashSet<>();
-
-        if (query.getType() == TYPE_INDIVIDUAL) {
-            result = sanctions.search(query.getFirstName(), query.getLastName());
-        }else if (query.getType() == TYPE_ENTITY){
-            result = sanctions.search(query.getName());
+        switch (query.getType()) {
+            case WatchListQuery.TYPE_INDIVIDUAL:
+                return mapResult(sanctions.search(query.getFirstName(), query.getLastName()));
+            case WatchListQuery.TYPE_ENTITY:
+                return mapResult(sanctions.search(query.getName()));
+            default:
+                throw new IllegalStateException("Unexpected query type: " + query.getType());
         }
+    }
 
-        if (result.isEmpty()) {
-            return new WatchListResult(WatchListResult.RESULT_TYPE_WATCHLIST_SEARCHED);
-        }else{
-            final ArrayList<WatchListMatch> matches = new ArrayList<>();
-            for (Match match : result) {
-                final String partyIndex = sanctions.getPartyIndexByPartyId(match.getPartyId());
-                matches.add(new WatchListMatch(match.getScore(), "Matched Czech Sanction list. PartyIndex: " + partyIndex + ".", getId(), getName(), match.getPartyId()));
-            }
-            return new WatchListResult(matches);
-        }
+    private WatchListResult mapResult(Set<Match> result) {
+        List<WatchListMatch> matches = result.stream()
+            .map(match -> new WatchListMatch(
+                match.getScore(),
+                "Matched Czech Sanction list. PartyIndex: " + sanctions.getPartyIndexByPartyId(match.getPartyId()) + ".",
+                getId(),
+                getName(),
+                match.getPartyId()))
+            .collect(Collectors.toList());
+
+        return new WatchListResult(matches);
     }
 }

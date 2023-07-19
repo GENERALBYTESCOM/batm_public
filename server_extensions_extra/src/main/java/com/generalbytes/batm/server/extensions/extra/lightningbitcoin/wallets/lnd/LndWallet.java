@@ -90,8 +90,8 @@ public class LndWallet extends AbstractLightningWallet {
             return null;
         }
 
-        if (paymentResponse.payment_preimage == null) {
-            log.warn("SendPayment failed: {}", paymentResponse.payment_error);
+        if (paymentResponse.payment_preimage == null || paymentResponse.payment_preimage.isEmpty()) {
+            log.warn("SendPayment failed; preimage: {}, error: {}", paymentResponse.payment_preimage, paymentResponse.payment_error);
             return null;
         }
         return paymentResponse.payment_preimage;

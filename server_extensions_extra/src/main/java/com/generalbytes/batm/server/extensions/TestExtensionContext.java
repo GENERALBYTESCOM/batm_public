@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class TestExtensionContext implements IExtensionContext {
     @Override
@@ -82,6 +83,16 @@ public class TestExtensionContext implements IExtensionContext {
     }
 
     @Override
+    public ITransactionDetails updateTransaction(String rid, Integer status, String detail, Set<String> tags) throws UpdateException {
+        return null;
+    }
+
+    @Override
+    public Set<String> getTransactionTags(String organizationId) {
+        return null;
+    }
+
+    @Override
     public IPerson findPersonByChatId(String chatUserId) {
         return null;
     }
@@ -102,6 +113,11 @@ public class TestExtensionContext implements IExtensionContext {
     }
 
     @Override
+    public IIdentityBase findIdentityBaseByIdentityId(String publicIdentityId) {
+        return null;
+    }
+
+    @Override
     public List<IIdentity> findIdentitiesByPhoneNumber(String phoneNumber) {
         return null;
     }
@@ -113,6 +129,11 @@ public class TestExtensionContext implements IExtensionContext {
 
     @Override
     public List<IIdentity> findAllIdentitiesByState(int state) {
+        return null;
+    }
+
+    @Override
+    public List<IIdentityBase> findAllIdentitiesBaseByState(int state) {
         return null;
     }
 
@@ -133,6 +154,11 @@ public class TestExtensionContext implements IExtensionContext {
 
     @Override
     public List<IIdentity> findIdentitiesByDocumentNumber(String documentNumber) {
+        return null;
+    }
+
+    @Override
+    public List<IIdentityBase> findIdentitiesBaseByDocumentNumber(String documentNumber) {
         return null;
     }
 
