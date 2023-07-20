@@ -183,6 +183,10 @@ public class TestExtensionContext implements IExtensionContext {
     }
 
     @Override
+    public void updateIdentityMarketingOptIn(String identityId, boolean agreeWithMarketingOptIn) {
+    }
+
+    @Override
     public void setIdentityCustomField(String identityPublicId,
                                        long customFieldDefinitionId,
                                        CustomFieldValue customFieldValue) {
