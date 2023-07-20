@@ -138,7 +138,7 @@ public enum CountryItaly {
     /**
      * Private constructor.
      */
-    CountryItaly(String iso, String provinceName) {
+    private CountryItaly(String iso, String provinceName) {
         this.iso = iso;
         this.provinceName = provinceName;
     }
