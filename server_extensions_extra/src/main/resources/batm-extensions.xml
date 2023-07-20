@@ -805,24 +805,18 @@
         <exchange prefix="bitbuy" name="Bitbuy.ca Exchange">
             <param name="apikey" />
             <param name="apisecret" />
-            <param name="fiatcurrency" />
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
-            <cryptocurrency>DAI</cryptocurrency>
             <cryptocurrency buyonly="true">ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
-            <cryptocurrency>XRP</cryptocurrency>
-            <help>fiatcurrency is optional, default: CAD</help>
         </exchange>
         <ratesource prefix="bitbuy" name="Bitbuy.ca Exchange">
             <param name="apikey" />
             <param name="apisecret" />
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
-            <cryptocurrency>DAI</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
-            <cryptocurrency>XRP</cryptocurrency>
         </ratesource>
         <cryptologo cryptocurrency="BNB" file="bnb.png"/>
         <cryptologo cryptocurrency="BNB" file="bnb.svg"/>
