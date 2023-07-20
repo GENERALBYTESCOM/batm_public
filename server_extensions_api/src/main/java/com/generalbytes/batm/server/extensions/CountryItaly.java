@@ -111,7 +111,7 @@ public enum CountryItaly {
     SV("SV", "Savona"),
     SI("SI", "Siena"),
     SO("SO", "Sondrio"),
-    CI("SU", "South Sardinia"),
+    SU("SU", "South Sardinia"),
     BZ("BZ", "South Tyrol"),
     SR("SR", "Syracuse"),
     TA("TA", "Taranto"),
@@ -138,7 +138,7 @@ public enum CountryItaly {
     /**
      * Private constructor.
      */
-    CountryItaly(String iso, String provinceName) {
+    private CountryItaly(String iso, String provinceName) {
         this.iso = iso;
         this.provinceName = provinceName;
     }
