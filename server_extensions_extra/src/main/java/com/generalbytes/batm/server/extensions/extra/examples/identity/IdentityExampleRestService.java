@@ -123,6 +123,20 @@ public class IdentityExampleRestService {
         return updatedIdentity.getPublicId();
     }
 
+    // curl -k -XPOST https://localhost:7743/extensions/identity-example/update-opt-in -d "identityPublicId=IE3BVEBUIIXZ3SZV&agreeWithMarketingOptIn=true"
+    @POST
+    @Path("/update-opt-in")
+    @Produces(MediaType.APPLICATION_JSON)
+    public void updateOptInAgreement(@FormParam("identityPublicId") String identityPublicId, @FormParam("agreeWithMarketingOptIn") boolean agreeWithMarketingOptIn) {
+        IExtensionContext ctx = IdentityExampleExtension.getExtensionContext();
+        IIdentity identity = ctx.findIdentityByIdentityId(identityPublicId);
+        if (identity == null) {
+            log.debug("Identity {} not found", identityPublicId);
+            return;
+        }
+        ctx.updateIdentityMarketingOptIn(identityPublicId, agreeWithMarketingOptIn);
+    }
+
     // curl -k -XPOST https://localhost:7743/extensions/identity-example/getnotes -d "identityPublicId=IE3BVEBUIIXZ3SZV"
     @POST
     @Path("/getnotes")
