@@ -1,3 +1,20 @@
+/*************************************************************************************
+ * Copyright (C) 2014-2020 GENERAL BYTES s.r.o. All rights reserved.
+ *
+ * This software may be distributed and modified under the terms of the GNU
+ * General Public License version 2 (GPL2) as published by the Free Software
+ * Foundation and appearing in the file GPL2.TXT included in the packaging of
+ * this file. Please note that GPL2 Section 2[b] requires that all works based
+ * on this software must also be made publicly available under the terms of
+ * the GPL2 ("Copyleft").
+ *
+ * Contact information
+ * -------------------
+ *
+ * GENERAL BYTES s.r.o.
+ * Web      :  http://www.generalbytes.com
+ *
+ ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.verumcoin;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
@@ -57,12 +74,12 @@ public class VerumcoinPaymentSupport extends AbstractRPCPaymentSupport {
         try {
             BigDecimal estimate = new BigDecimal(client.getEstimateFee());
             if (BigDecimal.ZERO.compareTo(estimate) == 0 || estimate.compareTo(new BigDecimal("-1")) == 0 ) {
-                // verumcoind is clueless
+                //bitcoind is clueless
                 return getMinimumNetworkFee(client);
             }
             return estimate.divide(new BigDecimal("1000"), RoundingMode.UP).multiply(new BigDecimal(transactionSize));
         } catch (Exception e) {
-            log.error("", e);
+            log.error("CUSTOM VERUM LOG", e);
             return getMinimumNetworkFee(client);
         }
     }

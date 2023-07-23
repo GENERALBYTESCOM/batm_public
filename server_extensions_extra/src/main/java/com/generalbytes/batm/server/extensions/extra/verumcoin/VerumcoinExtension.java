@@ -80,13 +80,6 @@ public class VerumcoinExtension extends AbstractExtension{
     }
 
     @Override
-    public Set<ICryptoCurrencyDefinition> getCryptoCurrencyDefinitions() {
-        Set<ICryptoCurrencyDefinition> result = new HashSet<>();
-        result.add(DEFINITION);
-        return result;
-    }
-
-    @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
         if (CryptoCurrency.VERUM.getCode().equalsIgnoreCase(cryptoCurrency)) {
             return new VerumcoinAddressValidator();
@@ -128,4 +121,12 @@ public class VerumcoinExtension extends AbstractExtension{
         result.add(CryptoCurrency.VERUM.getCode());
         return result;
     }
+
+    @Override
+    public Set<ICryptoCurrencyDefinition> getCryptoCurrencyDefinitions() {
+        Set<ICryptoCurrencyDefinition> result = new HashSet<>();
+        result.add(DEFINITION);
+        return result;
+    }
+
 }
