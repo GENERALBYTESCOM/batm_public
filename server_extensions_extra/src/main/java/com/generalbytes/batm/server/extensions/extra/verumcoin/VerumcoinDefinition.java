@@ -25,7 +25,7 @@ public class VerumcoinDefinition extends CryptoCurrencyDefinition{
     private IPaymentSupport paymentSupport = new VerumcoinPaymentSupport();
 
     public VerumcoinDefinition() {
-        super(CryptoCurrency.BCH.getCode(), "Verumcoin", "verumcoin","https://verumchain.info");
+        super(CryptoCurrency.VERUM.getCode(), "Verumcoin", "verumcoin","https://verumchain.info");
     }
 
     @Override
