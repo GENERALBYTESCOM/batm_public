@@ -77,6 +77,11 @@ public class VerumcoinExtension extends AbstractExtension{
     }
 
     @Override
+    public Set<ICryptoCurrencyDefinition> getCryptoCurrencyDefinitions() {
+        return cryptoCurrencyDefinitions;
+    }
+
+    @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
         if (CryptoCurrency.VERUM.getCode().equalsIgnoreCase(cryptoCurrency)) {
             return new VerumcoinAddressValidator();
