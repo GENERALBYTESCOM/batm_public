@@ -18,6 +18,7 @@
 package com.generalbytes.batm.server.extensions.extra.verumcoin;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
@@ -30,6 +31,8 @@ import java.net.InetSocketAddress;
 import java.util.*;
 
 public class VerumcoinExtension extends AbstractExtension{
+
+    private static final ICryptoCurrencyDefinition DEFINITION = new VerumcoinDefinition();
 
     @Override
     public String getName() {
