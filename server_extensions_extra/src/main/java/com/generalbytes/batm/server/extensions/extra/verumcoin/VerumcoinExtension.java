@@ -78,7 +78,9 @@ public class VerumcoinExtension extends AbstractExtension{
 
     @Override
     public Set<ICryptoCurrencyDefinition> getCryptoCurrencyDefinitions() {
-        return cryptoCurrencyDefinitions;
+        Set<ICryptoCurrencyDefinition> result = new HashSet<>();
+        result.add(DEFINITION);
+        return result;
     }
 
     @Override
