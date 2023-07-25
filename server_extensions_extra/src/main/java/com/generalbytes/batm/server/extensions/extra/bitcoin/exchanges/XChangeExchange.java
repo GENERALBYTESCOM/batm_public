@@ -554,7 +554,8 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
             }
 
             if (tradableLimit == null) {
-                log.error("Not enough bids received from the exchange, bids count: {}, bids total: {}, crypto amount: {}", bids.size(), bidsTotal, cryptoAmount);
+                log.error("Not enough bids received from the exchange, bids count: {}, bids total: {}, crypto amount: {}, currency pair: {}",
+                    bids.size(), bidsTotal, cryptoAmount, currencyPair);
                 return null;
             }
             log.debug("Called {} exchange for SELL rate: {}:{} = {}", name, cryptoCurrency, fiatCurrency, tradableLimit);
