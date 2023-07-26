@@ -84,4 +84,9 @@ public class VerumcoinPaymentSupport extends AbstractRPCPaymentSupport {
         }
     }
 
+    @Override
+    public String getSigHashType() {
+        return "ALL";
+    }
+
 }

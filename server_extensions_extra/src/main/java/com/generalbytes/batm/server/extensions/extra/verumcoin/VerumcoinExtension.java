@@ -55,21 +55,21 @@ public class VerumcoinExtension extends AbstractExtension{
                 String password = st.nextToken();
                 String hostname = st.nextToken();
                 int port = Integer.parseInt(st.nextToken());
-                String label = "";
+                String accountName = "";
                 if (st.hasMoreTokens()) {
-                    label = st.nextToken();
+                    accountName = st.nextToken();
                 }
 
                 InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(walletLogin, tunnelPassword, InetSocketAddress.createUnresolved(hostname, port));
                 hostname = tunnelAddress.getHostString();
                 port = tunnelAddress.getPort();
 
-                if (protocol != null && username != null && password != null && hostname !=null && label != null) {
+                if (protocol != null && username != null && password != null && hostname !=null && accountName != null) {
                     String rpcURL = protocol +"://" + username +":" + password + "@" + hostname +":" + port;
                     if ("verumcoindnoforward".equalsIgnoreCase(walletType)) {
-                        return new VerumcoindUniqueAddressRPCWallet(rpcURL);
+                        return new VerumcoindUniqueAddressRPCWallet(rpcURL, accountName);
                     }
-                    return new VerumcoindRPCWallet(rpcURL, label);
+                    return new VerumcoindRPCWallet(rpcURL, accountName);
                 }
             }
         }

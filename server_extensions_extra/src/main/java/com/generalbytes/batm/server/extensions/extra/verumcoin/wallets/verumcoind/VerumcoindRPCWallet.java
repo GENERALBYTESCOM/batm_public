@@ -18,9 +18,12 @@
 package com.generalbytes.batm.server.extensions.extra.verumcoin.wallets.verumcoind;
 
 import wf.bitcoin.javabitcoindrpcclient.BitcoinRPCException;
-import wf.bitcoin.javabitcoindrpcclient.BitcoinJSONRPCClient;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.IWallet;
+import com.generalbytes.batm.server.extensions.extra.common.IRPCWallet;
+import com.generalbytes.batm.server.extensions.extra.common.RPCClient;
+import com.generalbytes.batm.server.extensions.extra.verumcoin.wallets.VerumcoindRPCClient;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,11 +33,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class VerumcoindRPCWallet implements IWallet{
+public class VerumcoindRPCWallet implements IWallet, IRPCWallet {
     private static final Logger log = LoggerFactory.getLogger(VerumcoindRPCWallet.class);
     private static final String CRYPTO_CURRENCY = CryptoCurrency.VERUM.getCode();
 
-    public VerumcoindRPCWallet(String rpcURL, String accountName) {
+    public VerumcoindRPCWallet(String rpcURL, String accountName) throws MalformedURLException {
         this.rpcURL = rpcURL;
         this.accountName = accountName;
     }
@@ -64,7 +67,7 @@ public class VerumcoindRPCWallet implements IWallet{
 
         log.info("Verumcoind sending coins from " + accountName + " to: " + destinationAddress + " " + amount);
         try {
-            String result = getClient(rpcURL).sendFrom(accountName, destinationAddress, amount);
+            String result = getClient(rpcURL).sendToAddress(destinationAddress, amount);
             log.debug("result = " + result);
             return result;
         } catch (BitcoinRPCException e) {
@@ -93,6 +96,20 @@ public class VerumcoindRPCWallet implements IWallet{
         }
     }
 
+    public String generateNewDepositCryptoAddress(String cryptoCurrency, String label) {
+        if (!CRYPTO_CURRENCY.equalsIgnoreCase(cryptoCurrency)) {
+            log.error("Verumcoind wallet error: unknown cryptocurrency.");
+            return null;
+        }
+
+        try {
+            return getClient(rpcURL).getNewAddress();
+        } catch (BitcoinRPCException e) {
+            log.error("Error", e);
+            return null;
+        }
+    }
+
     @Override
     public BigDecimal getCryptoBalance(String cryptoCurrency) {
         if (!CRYPTO_CURRENCY.equalsIgnoreCase(cryptoCurrency)) {
@@ -107,27 +124,17 @@ public class VerumcoindRPCWallet implements IWallet{
         }
     }
 
-    private BitcoinJSONRPCClient getClient(String rpcURL) {
+    private VerumcoindRPCClient getClient(String rpcURL) {
         try {
-            return new BitcoinJSONRPCClient(rpcURL);
+            return new VerumcoindRPCClient(rpcURL);
         } catch (MalformedURLException e) {
             log.error("Error", e);
         }
         return null;
     }
 
-    public String generateNewDepositCryptoAddress(String cryptoCurrency, String label) {
-        if (!CRYPTO_CURRENCY.equalsIgnoreCase(cryptoCurrency)) {
-            log.error("Verumcoind wallet error: unknown cryptocurrency.");
-            return null;
-        }
-
-        try {
-            return getClient(rpcURL).getNewAddress(accountName);
-        } catch (BitcoinRPCException e) {
-            log.error("Error", e);
-            return null;
-        }
+    @Override
+    public RPCClient getClient() {
+        return getClient(rpcURL);
     }
-
 }
