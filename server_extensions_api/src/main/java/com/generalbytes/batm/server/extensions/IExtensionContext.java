@@ -131,6 +131,20 @@ public interface IExtensionContext {
      */
     ITransactionDetails updateTransaction(String rid, Integer status, String detail, Set<String> tags) throws UpdateException;
 
+    /**
+     * @param rid        remote transaction ID of the transaction to be updated
+     * @param status     new status to be set or null to keep it unmodified
+     * @param detail     detail message to be appended if there already is a detail set. Null to keep it unmodified
+     * @param customData custom data to be set to the transaction.
+     *                   This will replace existing custom data stored for the transaction.
+     *                   If you need to keep existing data obtain them first using {@link ITransactionDetails#getCustomData()}.
+     *                   Providing an empty map will remove all existing custom data.
+     *                   Null keeps the existing custom data unchanged.
+     * @return modified transaction details
+     * @throws UpdateException if the update was not successful
+     */
+    ITransactionDetails updateTransaction(String rid, Integer status, String detail,  Map<String, String> customData) throws UpdateException;
+
     ITransactionDetails updateTransaction(String rid, Integer status, String detail) throws UpdateException;
 
     /**
