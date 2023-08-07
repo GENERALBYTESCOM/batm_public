@@ -51,7 +51,15 @@ public interface INotificationListener {
      */
     default void transactionQueued(String terminalSerialNumber, BigDecimal cashAmount, String cashCurrency, String transactionRemoteId, String paymentType) {}
 
-    default void queuedTransactionsFailed(Map<String, String> terminalIdentificationTransactions, String batchUid, BigDecimal cashAmount, String cashCurrency, BigDecimal cryptoAmount, String cryptoCurrency) {}
+    /**
+     * Invoked when one or more transactions in a queue have failed.
+     *
+     * @param queueName          The name of the queue in which the transactions were queued.
+     * @param batchUid           A unique identifier representing the batch of transactions.
+     * @param failedTransactions A list of transaction details for those transactions which failed.
+     *                           Each transaction detail includes information such as the serial number of the terminal.
+     */
+    default void queuedTransactionsFailed(String queueName, String batchUid, List<ITransactionDetails> failedTransactions) {}
 
     default void cashbackCreated(String terminalSerialNumber, BigDecimal cashAmount, String cashCurrency) {}
 
