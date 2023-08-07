@@ -51,6 +51,8 @@ public interface INotificationListener {
      */
     default void transactionQueued(String terminalSerialNumber, BigDecimal cashAmount, String cashCurrency, String transactionRemoteId, String paymentType) {}
 
+    default void queuedTransactionsFailed(Map<String, String> terminalIdentificationTransactions, String batchUid, BigDecimal cashAmount, String cashCurrency, BigDecimal cryptoAmount, String cryptoCurrency) {}
+
     default void cashbackCreated(String terminalSerialNumber, BigDecimal cashAmount, String cashCurrency) {}
 
     default void invalidPaymentReceived(String terminalSerialNumber, BigDecimal amount, String cryptoCurrency, String fromAddress, String toAddress, String transactionRemoteId) {}
