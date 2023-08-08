@@ -58,6 +58,25 @@ public interface INotificationListener {
      * @param batchUid           A unique identifier representing the batch of transactions.
      * @param failedTransactions A list of transaction details for those transactions which failed.
      *                           Each transaction detail includes information such as the serial number of the terminal.
+     *
+     * <p>
+     * ITransactionDetails will have the following attributes populated:
+     * <ul>
+     *     <li><b>Terminal Serial Number</b>: Sourced from the transaction's terminal..</li>
+     *     <li><b>Remote ID (Rid)</b>: The Rid associated with the transaction</li>
+     *     <li><b>Local ID (Lid)</b>: The Lid associated with the transaction.</li>
+     *     <li><b>Cash Amount</b>: The fiat amount of transaction.</li>
+     *     <li><b>Cash Currency</b>: The type of fiat currency used in the transaction (e.g., USD, EUR).</li>
+     *     <li><b>Crypto Amount</b>: The fiat amount of transaction.</li>
+     *     <li><b>Crypto Currency</b>: The type of cryptocurrency used in the transaction (e.g., BTC, ETH).</li>
+     *     <li><b>Crypto Address</b>: The destination address for the cryptocurrency transaction.</li>
+     *     <li><b>Identity Public ID</b>: Public identity associated with the transaction, if any.</li>
+     * </ul>
+     * </p>
+     * <p>
+     * All other attributes are either set to default values or empty.
+     * </p>
+     *
      */
     default void queuedTransactionsFailed(String queueName, String batchUid, List<ITransactionDetails> failedTransactions) {}
 
