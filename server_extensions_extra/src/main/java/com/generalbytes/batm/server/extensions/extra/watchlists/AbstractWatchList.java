@@ -13,8 +13,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
-import java.util.ArrayList;
-import java.util.Set;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Abstract class to provide common methods used when implementing watch lists.
@@ -47,18 +47,16 @@ public abstract class AbstractWatchList<T extends IParsedSanctions> implements I
         }
 
         //do the actual matching
-        final Set<Match> result = sanctions.search(query.getFirstName(), query.getLastName());
+        List<WatchListMatch> matches = sanctions.search(query.getFirstName(), query.getLastName()).stream()
+            .map(match -> new WatchListMatch(
+                match.getScore(),
+                "Matched " + sanctionDesc + " Number: " + match.getPartyId() + " partyIndex: " + sanctions.getPartyIndexByPartyId(match.getPartyId()) + ". For more details click <a href='" + detailUrl + "'>here</a>.",
+                getId(),
+                getName(),
+                match.getPartyId()))
+            .collect(Collectors.toList());
 
-        if (result.isEmpty()) {
-            return new WatchListResult(WatchListResult.RESULT_TYPE_WATCHLIST_SEARCHED);
-        } else {
-            final ArrayList<WatchListMatch> matches = new ArrayList<>();
-            for (Match match : result) {
-                final String partyIndex = sanctions.getPartyIndexByPartyId(match.getPartyId());
-                matches.add(new WatchListMatch(match.getScore(), "Matched " + sanctionDesc + " Number: " + match.getPartyId() + " partyIndex: " + partyIndex + ". For more details click <a href='" + detailUrl + "'>here</a>.", getId(), getName(), match.getPartyId()));
-            }
-            return new WatchListResult(matches);
-        }
+        return new WatchListResult(matches);
     }
 
     /**

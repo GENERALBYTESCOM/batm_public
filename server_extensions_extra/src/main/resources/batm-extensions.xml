@@ -59,8 +59,9 @@
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency><!--BitGo’s Ethereum wallets are only available to BitGo Enterprise customers-->
                 <cryptocurrency>XRP</cryptocurrency><!-- BitGo Enterprise-->
-                <cryptocurrency>USDT</cryptocurrency>
-                <help>This variant of the wallet generates new addresses for each transaction and does not forward payments from temporary address. Host should start with http:// or https://. num_blocks is an integer greater than 2.</help>
+                <cryptocurrency>USDT</cryptocurrency><!-- BitGo Enterprise-->
+                <cryptocurrency>USDTTRON</cryptocurrency>
+                <help>This variant of the wallet generates new addresses for each sell transaction and does not forward payments from temporary address. Host should start with http:// or https://. num_blocks is an integer greater than 2.</help>
             </wallet>
             <wallet prefix="cryptx" name="CryptX Wallet System">
                 <sendtomany supported="true"/>
@@ -805,24 +806,18 @@
         <exchange prefix="bitbuy" name="Bitbuy.ca Exchange">
             <param name="apikey" />
             <param name="apisecret" />
-            <param name="fiatcurrency" />
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
-            <cryptocurrency>DAI</cryptocurrency>
             <cryptocurrency buyonly="true">ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
-            <cryptocurrency>XRP</cryptocurrency>
-            <help>fiatcurrency is optional, default: CAD</help>
         </exchange>
         <ratesource prefix="bitbuy" name="Bitbuy.ca Exchange">
             <param name="apikey" />
             <param name="apisecret" />
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
-            <cryptocurrency>DAI</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
-            <cryptocurrency>XRP</cryptocurrency>
         </ratesource>
         <cryptologo cryptocurrency="BNB" file="bnb.png"/>
         <cryptologo cryptocurrency="BNB" file="bnb.svg"/>

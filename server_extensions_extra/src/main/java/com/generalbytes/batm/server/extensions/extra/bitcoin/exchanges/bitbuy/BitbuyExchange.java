@@ -22,46 +22,40 @@ import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.IExchangeAdvanced;
 import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
 import com.generalbytes.batm.server.extensions.ITask;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitbuy.dto.OrderRequest;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitbuy.dto.OrderResponse;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitbuy.dto.OrderBook;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitbuy.dto.OrderBookLevel;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitbuy.dto.OrderSide;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitbuy.dto.OrderType;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitbuy.dto.QuoteRequest;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitbuy.dto.QuoteResponse;
+import com.generalbytes.batm.server.extensions.util.OrderBookPriceCalculator;
 import com.google.common.collect.ImmutableSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import si.mazi.rescu.HttpStatusIOException;
 
 import java.math.BigDecimal;
-import java.security.GeneralSecurityException;
+import java.math.RoundingMode;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
 public class BitbuyExchange implements IExchangeAdvanced, IRateSourceAdvanced {
     private static final Logger log = LoggerFactory.getLogger("batm.master.exchange.BitbuyExchange");
-
-    private static final Set<String> fiatCurrencies = ImmutableSet.of(
-        FiatCurrency.CAD.getCode(),
-        CryptoCurrency.DAI.getCode()); // stable coin as fiat
-
+    private static final OrderBookPriceCalculator<OrderBookLevel> orderBookPriceCalculator = new OrderBookPriceCalculator<>(o -> o.pricePerUnit, o -> o.quantity);
+    private static final int orderBookDepth = 200;
+    private static final String preferredFiatCurrency = FiatCurrency.CAD.getCode();
+    private static final Set<String> fiatCurrencies = ImmutableSet.of(FiatCurrency.CAD.getCode());
     private static final Set<String> cryptoCurrencies = ImmutableSet.of(
         CryptoCurrency.BCH.getCode(),
         CryptoCurrency.BTC.getCode(),
-        CryptoCurrency.DAI.getCode(),
         CryptoCurrency.ETH.getCode(),
-        CryptoCurrency.LTC.getCode(),
-        CryptoCurrency.XRP.getCode());
+        CryptoCurrency.LTC.getCode());
 
-    // Supported markets (2021-10-06; see IBitbuyAPI.getMarkets):
-    // [DAI-CAD, ETH-DAI, BTC-AAVE, ETH-AAVE, ETH-CAD, BTC-LINK, ETH-LINK, BCH-CAD, AAVE-CAD, BCH-BTC, BTC-DAI, LINK-CAD, BTC-CAD, XLM-CAD, LTC-CAD, XRP-CAD, EOS-BTC, XLM-BTC, XRP-BTC, ETH-BTC, LTC-BTC, EOS-CAD]
+    // Supported markets (2022-07-17) $ curl https://api-crypto.bitbuy.ca/public/markets | jq -r '.data|.[].symbol' | sort
+    // AAVE-CAD, ADA-CAD, APE-CAD, AXS-CAD, BAT-CAD, BCH-CAD, BTC-CAD, COMP-CAD, CRV-CAD, DOGE-CAD, DOT-CAD, EOS-CAD, ETH-CAD, FTM-CAD, LINK-CAD, LTC-CAD, MANA-CAD, MATIC-CAD, MKR-CAD, SOL-CAD, SUSHI-CAD, UNI-CAD, USDC-CAD, XLM-CAD
 
-    private final String preferredFiatCurrency;
     private final IBitbuyAPI api;
 
-    public BitbuyExchange(String apiKey, String apiSecret, String preferredFiatCurrency) throws GeneralSecurityException {
-        this.api = IBitbuyAPI.create(apiKey, apiSecret);
-        this.preferredFiatCurrency = preferredFiatCurrency;
+    public BitbuyExchange(String clientId, String secretKey) {
+        this.api = IBitbuyAPI.create(clientId, secretKey);
     }
 
     private String getMarketSymbol(String cryptoCurrency, String fiatCurrency) {
@@ -101,13 +95,7 @@ public class BitbuyExchange implements IExchangeAdvanced, IRateSourceAdvanced {
     }
 
     private BigDecimal getBalance(String currency) {
-        return call(currency + " balance", () ->
-            api.getWallets().stream()
-                .filter(w -> currency.equals(w.symbol))
-                .findAny()
-                .map(w -> w.availableBalance)
-                .orElseThrow(() -> new Exception(currency + " wallet not found"))
-        );
+        return call(currency + " balance", () -> api.getBalance(currency).data.available);
     }
 
     @Override
@@ -116,17 +104,13 @@ public class BitbuyExchange implements IExchangeAdvanced, IRateSourceAdvanced {
             return null;
         }
 
-        return call("deposit address", () -> api.getDepositAddress(cryptoCurrency).address);
+        return call("deposit address", () -> api.getDepositAddress(cryptoCurrency).data.address);
     }
 
     @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
-        if (!isCryptoCurrencySupported(cryptoCurrency)) {
-            return null;
-        }
-
-        log.info("withdrawing {} {} to {}", amount, cryptoCurrency, destinationAddress);
-        return call("send coins", () -> api.withdraw(cryptoCurrency, destinationAddress, amount).transactionReference);
+        log.info("Sending coins from this exchange is not supported. Configure a different strategy in your crypto settings please");
+        return null;
     }
 
     @Override
@@ -158,7 +142,7 @@ public class BitbuyExchange implements IExchangeAdvanced, IRateSourceAdvanced {
         BigDecimal rateSourceCryptoVolume = getRateSourceCryptoVolume(cryptoCurrency);
         BigDecimal result = calculateBuyPrice(cryptoCurrency, fiatCurrency, rateSourceCryptoVolume);
         if (result != null) {
-            return result.divide(rateSourceCryptoVolume, 2, BigDecimal.ROUND_UP);
+            return result.divide(rateSourceCryptoVolume, 2, RoundingMode.UP);
         }
         return null;
     }
@@ -168,7 +152,7 @@ public class BitbuyExchange implements IExchangeAdvanced, IRateSourceAdvanced {
         BigDecimal rateSourceCryptoVolume = getRateSourceCryptoVolume(cryptoCurrency);
         BigDecimal result = calculateSellPrice(cryptoCurrency, fiatCurrency, rateSourceCryptoVolume);
         if (result != null) {
-            return result.divide(rateSourceCryptoVolume, 2, BigDecimal.ROUND_DOWN);
+            return result.divide(rateSourceCryptoVolume, 2, RoundingMode.DOWN);
         }
         return null;
     }
@@ -187,7 +171,16 @@ public class BitbuyExchange implements IExchangeAdvanced, IRateSourceAdvanced {
         if (!isCryptoCurrencySupported(cryptoCurrency) || !isFiatCurrencySupported(fiatCurrency)) {
             return null;
         }
-        return call("calculate " + orderSide + " price", () -> api.quoteOrder(new QuoteRequest(cryptoAmount, getMarketSymbol(cryptoCurrency, fiatCurrency), orderSide, OrderType.LIMIT)).fillPrice.multiply(cryptoAmount));
+        String marketSymbol = getMarketSymbol(cryptoCurrency, fiatCurrency);
+        OrderBook orderBook = call(marketSymbol + " orderBook", () -> api.getOrderBook(marketSymbol, orderBookDepth).data);
+        if (orderBook == null) {
+            log.error("failed to get order book");
+            return null;
+        }
+        if (orderSide == OrderSide.SELL) {
+            return orderBookPriceCalculator.getSellPrice(cryptoAmount, orderBook.bids);
+        }
+        return orderBookPriceCalculator.getBuyPrice(cryptoAmount, orderBook.asks);
     }
 
     class OrderTask implements ITask {
@@ -196,7 +189,7 @@ public class BitbuyExchange implements IExchangeAdvanced, IRateSourceAdvanced {
         private final long checkTillTime;
         private final BigDecimal cryptoAmount;
         private final String cryptoCurrency;
-        private final String fiatCurrencyToUse;
+        private final String fiatCurrency;
         private final OrderSide orderSide;
 
         private String orderId;
@@ -206,24 +199,19 @@ public class BitbuyExchange implements IExchangeAdvanced, IRateSourceAdvanced {
         OrderTask(BigDecimal cryptoAmount, String cryptoCurrency, String fiatCurrencyToUse, OrderSide orderSide) {
             this.cryptoAmount = cryptoAmount;
             this.cryptoCurrency = cryptoCurrency;
-            this.fiatCurrencyToUse = fiatCurrencyToUse;
+            fiatCurrency = fiatCurrencyToUse;
             this.orderSide = orderSide;
             this.checkTillTime = System.currentTimeMillis() + MAXIMUM_TIME_TO_WAIT_FOR_ORDER_TO_FINISH;
         }
 
         @Override
         public boolean onCreate() {
-            log.info("Calling exchange ({} {} {})", orderSide, cryptoAmount, cryptoCurrency);
-            orderId = call("task submitLimitOrder", () -> {
-                QuoteRequest quoteRequest = new QuoteRequest(cryptoAmount, getMarketSymbol(cryptoCurrency, fiatCurrencyToUse), orderSide, OrderType.LIMIT);
-                QuoteResponse quote = api.quoteOrder(quoteRequest);
+            log.info("Calling exchange ({} {} {}-{})", orderSide, cryptoAmount, cryptoCurrency, fiatCurrency);
 
-                OrderRequest orderRequest = new OrderRequest(cryptoAmount, quote.fillPrice, getMarketSymbol(cryptoCurrency, fiatCurrencyToUse), orderSide, OrderType.LIMIT);
-                log.info("Submitting order: {}", orderRequest);
-                OrderResponse order = api.submitOrder(orderRequest);
-                return order.id;
-            });
-            return (orderId != null);
+            QuoteRequest request = new QuoteRequest(orderSide, cryptoCurrency, fiatCurrency, cryptoAmount);
+            orderId = call("task createOrder", () -> api.createOrder(request).data.rfqResponse.id);
+            call("task executeOrder", () -> api.executeOrder(orderId));
+            return orderId != null;
         }
 
         @Override
@@ -240,19 +228,12 @@ public class BitbuyExchange implements IExchangeAdvanced, IRateSourceAdvanced {
                 return false;
             }
 
-            OrderResponse order = call("task getOrder", () -> api.getOrder(getMarketSymbol(cryptoCurrency, fiatCurrencyToUse), orderId));
+            // we assume the order was executed already when we called api.executeOrder()
+            // we're not able to query the order status from the API
 
-            if (order != null && order.status.equals(OrderResponse.STATUS_CANCELLED)) {
-                log.debug("trade cancelled");
-                finished = true;
-                return false;
-            }
-            if (order != null && order.status.equals(OrderResponse.STATUS_FILLED)) {
-                result = orderId;
-                finished = true;
-            }
-
-            return result != null;
+            result = orderId;
+            finished = true;
+            return true;
         }
 
         @Override

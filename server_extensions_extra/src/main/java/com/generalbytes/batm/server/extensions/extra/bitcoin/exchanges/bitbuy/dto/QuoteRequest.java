@@ -3,28 +3,20 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitbuy.d
 import java.math.BigDecimal;
 
 public class QuoteRequest {
-    public BigDecimal quantity;
-    public String marketSymbol;
-    public OrderSide orderSide;
-    public OrderType orderType;
+    public CurrencySide currencySide;
+    public String quantity;
+    public OrderSide side;
+    public String quote; // CAD
+    public String base; // crypto
 
     public QuoteRequest() {
     }
 
-    public QuoteRequest(BigDecimal quantity, String marketSymbol, OrderSide orderSide, OrderType orderType) {
-        this.quantity = quantity;
-        this.marketSymbol = marketSymbol;
-        this.orderSide = orderSide;
-        this.orderType = orderType;
-    }
-
-    @Override
-    public String toString() {
-        return "OrderRequest{" +
-            "quantity=" + quantity +
-            ", marketSymbol='" + marketSymbol + '\'' +
-            ", orderSide=" + orderSide +
-            ", orderType=" + orderType +
-            '}';
+    public QuoteRequest(OrderSide orderSide, String cryptoCurrency, String fiatCurrency, BigDecimal cryptoAmount) {
+        this.currencySide = CurrencySide.BASE;
+        this.quantity = cryptoAmount.toPlainString();
+        this.side = orderSide;
+        this.quote = fiatCurrency;
+        this.base = cryptoCurrency;
     }
 }
