@@ -22,14 +22,14 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v
  */
 
 public class CBAccountResponse extends CBResponse{
-    private CBAccount data;
+    private CbAccountV2 data;
 
 
-    public CBAccount getData() {
+    public CbAccountV2 getData() {
         return data;
     }
 
-    public void setData(CBAccount data) {
+    public void setData(CbAccountV2 data) {
         this.data = data;
     }
 }
