@@ -29,7 +29,7 @@ public class Converters {
     public static final BigDecimal GQ = BigDecimal.TEN.pow(18);
     public static final BigDecimal USDT = BigDecimal.TEN.pow(6);
     public static final BigDecimal USDTTRON = BigDecimal.TEN.pow(6);
-    public static final BigDecimal XRP = BigDecimal.TEN.pow(8);
+    public static final BigDecimal XRP = BigDecimal.TEN.pow(6);
     public static final BigDecimal VERUM = BigDecimal.TEN.pow(8);
 
     public static final BigDecimal TBCH = BigDecimal.TEN.pow(8);
