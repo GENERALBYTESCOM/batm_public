@@ -324,6 +324,14 @@ public interface IExtensionContext {
                              List<ILimit> limitCashPerCalendarYear, List<ILimit> limitCashTotalIdentity, String configurationCashCurrency);
 
     /**
+     * Updates the marketing opt-in agreement for the identity identified by {@code identityId}).
+     *
+     * @param identityId              public ID of an existing identity to be updated
+     * @param agreeWithMarketingOptIn True if the customer agrees to marketing opt-in, false otherwise.
+     */
+    void updateIdentityMarketingOptIn(String identityId, boolean agreeWithMarketingOptIn);
+
+    /**
      * @param customFieldDefinitionId use {@link CustomFieldDefinition#getId()} of a custom field to set
      */
     void setIdentityCustomField(String identityPublicId,
