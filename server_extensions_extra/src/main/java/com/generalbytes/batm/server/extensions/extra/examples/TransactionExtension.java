@@ -61,10 +61,19 @@ public class TransactionExtension extends AbstractExtension implements ITransact
     public Map<String, String> onTransactionUpdated(ITransactionDetails transactionDetails) {
         log.info("Transaction updated; tags: {}", transactionDetails.getTags());
         try {
+            String rid = transactionDetails.getRemoteTransactionId();
+
+            ITransactionDetails details = ctx.findTransactionByTransactionId(rid);
+            log.info("Transaction custom data: {}", details.getCustomData());
+            Map<String, String> customData = new HashMap<>(details.getCustomData());
+            customData.remove("ticket.previous.counter");
+            customData.put("ticket.footer", "Enjoy!");
+            ctx.updateTransaction(rid, null, null, customData);
+
             String organizationId = ctx.findIdentityByIdentityId(transactionDetails.getIdentityPublicId()).getOrganization().getId();
             log.info("Defined transaction tags: {}", ctx.getTransactionTags(organizationId));
             Set<String> tags = Collections.singleton(transactionDetails.getCryptoCurrency());
-            ITransactionDetails updated = ctx.updateTransaction(transactionDetails.getRemoteTransactionId(), null, null, tags);
+            ITransactionDetails updated = ctx.updateTransaction(rid, null, null, tags);
             log.info("Transaction updated; tags: {}", updated.getTags());
         } catch (UpdateException e) {
             log.error("", e);

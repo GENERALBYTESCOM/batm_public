@@ -88,6 +88,11 @@ public class TestExtensionContext implements IExtensionContext {
     }
 
     @Override
+    public ITransactionDetails updateTransaction(String rid, Integer status, String detail, Map<String, String> customData) throws UpdateException {
+        return null;
+    }
+
+    @Override
     public Set<String> getTransactionTags(String organizationId) {
         return null;
     }

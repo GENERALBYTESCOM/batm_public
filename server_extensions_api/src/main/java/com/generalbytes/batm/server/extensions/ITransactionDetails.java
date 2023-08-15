@@ -20,6 +20,7 @@ package com.generalbytes.batm.server.extensions;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public interface ITransactionDetails {
@@ -303,4 +304,12 @@ public interface ITransactionDetails {
     Set<String> getTags();
 
     List<IBanknoteCounts> getBanknotes();
+
+    /**
+     * @return Custom data for the transaction.
+     * Saved when returned from {@link ITransactionListener#onTransactionCreated(ITransactionDetails)}
+     * or {@link ITransactionListener#onTransactionUpdated(ITransactionDetails)}
+     * or using {@link IExtensionContext#updateTransaction(String, Integer, String, Map)}.
+     */
+    Map<String, String> getCustomData();
 }
