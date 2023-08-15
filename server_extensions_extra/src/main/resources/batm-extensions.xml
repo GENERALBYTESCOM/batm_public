@@ -77,10 +77,8 @@
                 <cryptocurrency buyonly="true">BCH</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
-                <cryptocurrency buyonly="true">BTBS</cryptocurrency>
-                <cryptocurrency buyonly="true">GQ</cryptocurrency>
-                <cryptocurrency buyonly="true">ETH</cryptocurrency>
-                <cryptocurrency buyonly="true">USDT</cryptocurrency>
+                <cryptocurrency>ETH</cryptocurrency>
+                <cryptocurrency>USDT</cryptocurrency>
                 <help>
                     *host: https://api.cryptx.com/ (required) -
                     port: (not required) - *token: generate Access tokens from CryptX Settings (required) -
@@ -105,8 +103,8 @@
                 <cryptocurrency buyonly="true">BCH</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
-                <cryptocurrency buyonly="true">ETH</cryptocurrency>
-                <cryptocurrency buyonly="true">USDT</cryptocurrency>
+                <cryptocurrency>ETH</cryptocurrency>
+                <cryptocurrency>USDT</cryptocurrency>
                 <help>
                     *host: https://api.cryptx.com/ (required) -
                     port: (not required) - *token: generate Access tokens from CryptX Settings (required) -
