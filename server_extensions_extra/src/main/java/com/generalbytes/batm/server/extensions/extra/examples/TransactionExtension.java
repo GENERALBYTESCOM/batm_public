@@ -72,7 +72,7 @@ public class TransactionExtension extends AbstractExtension implements ITransact
 
             String organizationId = ctx.findIdentityByIdentityId(transactionDetails.getIdentityPublicId()).getOrganization().getId();
             log.info("Defined transaction tags: {}", ctx.getTransactionTags(organizationId));
-            Set<String> tags = Collections.singleton(transactionDetails.getCryptoCurrency());
+            Set<String> tags = Collections.singleton(transactionDetails.getCryptoCurrency().toLowerCase());
             ITransactionDetails updated = ctx.updateTransaction(rid, null, null, tags);
             log.info("Transaction updated; tags: {}", updated.getTags());
         } catch (UpdateException e) {
