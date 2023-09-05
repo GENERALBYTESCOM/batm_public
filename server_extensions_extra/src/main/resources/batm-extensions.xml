@@ -68,12 +68,11 @@
                 <tunnel supported="true"/>
                 <param name="host" />
                 <param name="port" />
-                <param name="token" />
+                <param name="api_key" />
                 <param name="wallet_id" />
-                <param name="password"/>
+                <param name="passphrase"/>
                 <param name="priority" />
                 <param name="max_custom_fee" />
-                <param name="max_custom_gas_limit" />
                 <cryptocurrency buyonly="true">BCH</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
@@ -82,13 +81,13 @@
                 <cryptocurrency buyonly="true">ETH</cryptocurrency>
                 <cryptocurrency buyonly="true">USDT</cryptocurrency>
                 <help>
-                    *host: https://api.cryptx.com/ (required) -
-                    port: (not required) - *token: generate Access tokens from CryptX Settings (required) -
-                    *walletid: find under [Wallet] > Settings > Wallet Info > Wallet ID (required) -
-                    password: wallet password (not required) -
-                    priority: Select "high" (2 blocks, default), "medium" (8 blocks), "low" (24 blocks), or "custom" -
-                    max_custom_fee: fee rate (in s/vByte for bitcoin, gas price for ethereum) when "custom" priority is set (instead of estimating one using blocks) -
-                    limit: gas limit - only for ETH, e.g., 50000 (not required)
+                    *host: https://api.walletpro.cryptal.com/ (required) -
+                    port: (not required) -
+                    *api_key: the API Key obtained from CryptX (required) -
+                    *walletid: the name of the wallet on CryptX (required) -
+                    passphrase: the wallet passphrase (if used) (not required) -
+                    priority: high: (default) = 2 blocks, medium = 8, low = 24, custom - also indicate the number of required blocks (e.g. custom:12) -
+                    max_custom_fee: the maximum fee (in s/vByte) when "custom" priority is used
                 </help>
             </wallet>
             <wallet prefix="cryptxnoforward" name="CryptX Wallet System (no forward)">
@@ -96,25 +95,24 @@
                 <tunnel supported="true"/>
                 <param name="host" />
                 <param name="port" />
-                <param name="token" />
+                <param name="api_key" />
                 <param name="wallet_id" />
-                <param name="password"/>
+                <param name="passphrase"/>
                 <param name="priority" />
                 <param name="max_custom_fee" />
-                <param name="max_custom_gas_limit" />
                 <cryptocurrency buyonly="true">BCH</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency buyonly="true">ETH</cryptocurrency>
                 <cryptocurrency buyonly="true">USDT</cryptocurrency>
                 <help>
-                    *host: https://api.cryptx.com/ (required) -
-                    port: (not required) - *token: generate Access tokens from CryptX Settings (required) -
-                    *walletid: find under [Wallet] > Settings > Wallet Info > Wallet ID (required) -
-                    password: wallet password (not required) -
-                    priority: Select high (2 blocks, default), medium (8 blocks), low (24 blocks), or custom -
-                    max_custom_fee: fee rate in s/vByte when "custom" priority is set (instead of estimating one using blocks) -
-                    limit: gas limit - only for ETH, e.g., 50000 (not required)
+                    *host: https://api.walletpro.cryptal.com/ (required) -
+                    port: (not required) -
+                    *api_key: the API Key obtained from CryptX (required) -
+                    *walletid: the name of the wallet on CryptX (required) -
+                    passphrase: the wallet passphrase (if used) (not required) -
+                    priority: high: (default) = 2 blocks, medium = 8, low = 24, custom - also indicate the number of required blocks (e.g. custom:12) -
+                    max_custom_fee: the maximum fee (in s/vByte) when "custom" priority is used
                 </help>
             </wallet>
             <ratesource prefix="btcfix" name ="Fix Price" >
