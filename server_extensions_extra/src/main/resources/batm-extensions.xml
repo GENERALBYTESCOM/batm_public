@@ -2295,7 +2295,7 @@
             <param name="privatekey"/>
             <param name="feeLimit"/>
             <help>apikey is obtained from trongrid.io; privatekey is 64 characters long hex string; feeLimit optional, default 30 [TRX]</help>
-            <cryptocurrency>USDTTRON</cryptocurrency>
+            <cryptocurrency buyonly="true">USDTTRON</cryptocurrency>
         </wallet>
         <wallet prefix="usdttrondemo" name="Demo Wallet">
             <param name="fiatCurrency" />
