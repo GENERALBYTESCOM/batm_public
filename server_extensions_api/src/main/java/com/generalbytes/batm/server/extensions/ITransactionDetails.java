@@ -312,4 +312,9 @@ public interface ITransactionDetails {
      * or using {@link IExtensionContext#updateTransaction(String, Integer, String, Map)}.
      */
     Map<String, String> getCustomData();
+
+    /**
+     * @return Payment type: CASH/PAYMENT_CARD
+     */
+    String getPaymentType();
 }
