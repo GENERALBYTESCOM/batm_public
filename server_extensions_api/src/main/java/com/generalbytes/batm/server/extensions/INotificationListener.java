@@ -243,6 +243,31 @@ public interface INotificationListener {
      */
     default void cashCollectionMissed(String terminalSerialNumber, LocalDate missedCashCollectionDate) {}
 
+    /**
+     * Invoked when a new cash collection record has been created.
+     *
+     * @param cashCollectionRecord Represents the details of the created cash collection record.
+     *
+     * <p>
+     * ITerminalCashCollectionRecord will have the following attributes populated:
+     * <ul>
+     *     <li><b>Terminal Serial Number</b>: The serial number of the terminal where the cash collection event occurred.</li>
+     *     <li><b>Terminal Time</b>: Timestamp when event was created on terminal.</li>
+     *     <li><b>Server Time</b>: Timestamp when event was delivered and stored on server.</li>
+     *     <li><b>Amounts</b>: A collection of the total amounts in the cashbox, broken down by fiat currency. For example, if the ATM only sells BTC for USD, this will contain one member.</li>
+     *     <li><b>Collecting Person</b>: Details of the person who performed the cash collection, if available.</li>
+     *     <li><b>Contains</b>: A string containing a description of what was in the cashbox during the cash collection.</li>
+     *     <li><b>Note</b>: Any additional text description set by the user via admin.</li>
+     *     <li><b>Counters Long</b>: The value of the long counter at the time of cash collection.</li>
+     *     <li><b>Counters Short</b>: The value of the short counter at the time of cash collection before it was reset.</li>
+     *     <li><b>Cashbox Name</b>: The name of the cashbox.</li>
+     *     <li><b>Public ID</b>: The public ID of the cash collection.</li>
+     *     <li><b>Location Public ID</b>: The public ID of the related location.</li>
+     * </ul>
+     * </p>
+     */
+    default void cashCollectionCreated(ITerminalCashCollectionRecord cashCollectionRecord) {}
+
     default void customerEnrolled(String terminalSerialNumber, String identityPublicId) {}
 
     default void identityCreated(String terminalSerialNumber, String identityPublicId) {}
