@@ -21,6 +21,20 @@ import com.generalbytes.batm.server.extensions.aml.verification.ApplicantCheckRe
 import com.generalbytes.batm.server.extensions.aml.verification.IdentityApplicant;
 
 public interface IIdentityListener {
+
+    /**
+     * @deprecated Use {@link #onIdentityVerificationResult(String, ApplicantCheckResult)} instead.
+     *
+     * @param rawPayload raw data received from the identity verification provider (e.g., in a webhook).
+     *                   Might be used to access additional data not recognized by the identity verification extension.
+     * @param result     data parsed by the identity verification extension.
+     *                   Contains identity applicant ID that could be used to obtain the Identity,
+     *                   see {@link IExtensionContext#findIdentityVerificationApplicant(String)}
+     *                   and {@link IdentityApplicant#getIdentity()}
+     */
+    @Deprecated
+    default void onVerificationResult(String rawPayload, ApplicantCheckResult result) {
+    }
     /**
      * Called by the server when an identity verification result is received from an identity verification provider.
      *
