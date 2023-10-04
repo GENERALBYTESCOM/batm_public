@@ -25,6 +25,16 @@ import java.util.Set;
 
 public class TestExtensionContext implements IExtensionContext {
     @Override
+    public void addApplicationListener(IApplicationListener listener) {
+
+    }
+
+    @Override
+    public boolean removeApplicationListener(IApplicationListener listener) {
+        return false;
+    }
+
+    @Override
     public void addTransactionListener(ITransactionListener listener) {
 
     }

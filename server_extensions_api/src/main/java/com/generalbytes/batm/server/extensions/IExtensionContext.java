@@ -52,6 +52,10 @@ public interface IExtensionContext {
     int PERMISSION_WRITE = 2;
     int PERMISSION_EXECUTE = 4;
 
+    void addApplicationListener(IApplicationListener listener);
+
+    boolean removeApplicationListener(IApplicationListener listener);
+
     /**
      * Registers listener for listening to transaction events
      * @param listener
