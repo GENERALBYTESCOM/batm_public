@@ -1,0 +1,35 @@
+plugins {
+    id("java")
+    id("maven-publish")
+    id("com.generalbytes.gradle.main")
+}
+
+publishing {
+    if (hasGbUploadArtifactory()) {
+        repositories {
+            maven {
+                credentials {
+                    username gbArtifactoryUser
+                    password gbArtifactoryPassword
+                }
+                url gbArtifactoryUploadUrl
+            }
+        }
+    }
+
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}
+
+dependencySubstitutions {
+    substitute file(batmDependencySubstitutionConfig)
+}
+
+boolean hasGbUploadArtifactory() {
+    return project.hasProperty("gbArtifactoryUploadUrl")
+        && project.hasProperty("gbArtifactoryUser")
+        && project.hasProperty("gbArtifactoryPassword")
+}
