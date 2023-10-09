@@ -1,5 +1,7 @@
 plugins {
     id("shared-build-conventions")
+    id("shared-publish-conventions")
+    id("shared-repositories-ext-conventions")
 }
 
 group = projectGroup

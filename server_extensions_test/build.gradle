@@ -1,7 +1,7 @@
 plugins {
-    id("java")
     id("application")
-    id("com.generalbytes.gradle.main")
+    id("shared-build-conventions")
+    id("shared-repositories-ext-conventions")
 }
 
 application {
@@ -18,8 +18,4 @@ dependencies {
 
     implementation("net.sf.jopt-simple:jopt-simple:4.9")
     runtimeOnly("org.slf4j:slf4j-simple:1.7.28")
-}
-
-dependencySubstitutions {
-    substitute file(batmDependencySubstitutionConfig)
 }

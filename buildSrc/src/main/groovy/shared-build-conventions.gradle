@@ -1,35 +1,39 @@
 plugins {
     id("java")
-    id("maven-publish")
     id("com.generalbytes.gradle.main")
 }
 
-publishing {
-    if (hasGbUploadArtifactory()) {
-        repositories {
-            maven {
-                credentials {
-                    username gbArtifactoryUser
-                    password gbArtifactoryPassword
-                }
-                url gbArtifactoryUploadUrl
-            }
-        }
-    }
+repositories {
+    mavenCentral()
+}
 
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-        }
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(8))
     }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+    options.incremental = true
 }
 
 dependencySubstitutions {
-    substitute file(batmDependencySubstitutionConfig)
+    substitute file("$project.rootDir/dependencySubstitutions.txt")
 }
 
-boolean hasGbUploadArtifactory() {
-    return project.hasProperty("gbArtifactoryUploadUrl")
-        && project.hasProperty("gbArtifactoryUser")
-        && project.hasProperty("gbArtifactoryPassword")
+tasks.withType(AbstractArchiveTask).configureEach {
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+}
+
+afterEvaluate {
+    if (pluginManager.hasPlugin('com.generalbytes.gradle.dependency.verification')) {
+        dependencyChecksums {
+            global = true
+        }
+        dependencyVerifications {
+            setConfigurations([]) // effectively turns off all checksum verifications - replaced by gradle's verification-metadata.xml
+        }
+    }
 }

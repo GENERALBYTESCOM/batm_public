@@ -1,6 +1,10 @@
 plugins {
-    id("java")
     id("application")
+    id("shared-build-conventions")
+}
+
+repositories {
+    mavenCentral()
 }
 
 version = "1.0.0"

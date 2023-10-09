@@ -1,0 +1,29 @@
+plugins {
+    id("maven-publish")
+}
+
+publishing {
+    if (hasGbUploadArtifactory()) {
+        repositories {
+            maven {
+                credentials {
+                    username gbArtifactoryUser
+                    password gbArtifactoryPassword
+                }
+                url gbArtifactoryUploadUrl
+            }
+        }
+    }
+
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}
+
+private boolean hasGbUploadArtifactory() {
+    return project.hasProperty("gbArtifactoryUploadUrl")
+        && project.hasProperty("gbArtifactoryUser")
+        && project.hasProperty("gbArtifactoryPassword")
+}
