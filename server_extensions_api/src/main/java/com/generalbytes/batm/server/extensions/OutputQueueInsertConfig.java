@@ -17,6 +17,8 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions;
 
+import java.util.Date;
+
 /**
  * Information about how a transaction should be inserted into an Output Queue.
  * This is initially configured in admin per Output Queue and it can be overridden by extensions for each transaction.
@@ -32,6 +34,7 @@ public class OutputQueueInsertConfig {
 
     private boolean secondaryManualApprovalRequired = false;
     private int secondaryDelaySeconds = 0;
+    private Date unlockTime;
 
     public boolean isSkipQueue() {
         return skipQueue;
@@ -81,6 +84,14 @@ public class OutputQueueInsertConfig {
         this.secondaryDelaySeconds = secondaryDelaySeconds;
     }
 
+    public Date getUnlockTime() {
+        return unlockTime;
+    }
+
+    public void setUnlockTime(Date unlockTime) {
+        this.unlockTime = unlockTime;
+    }
+
     @Override
     public String toString() {
         return "OutputQueueInsertConfig{" +
@@ -90,6 +101,7 @@ public class OutputQueueInsertConfig {
             ", insertIntoSecondaryQueue=" + insertIntoSecondaryQueue +
             ", secondaryManualApprovalRequired=" + secondaryManualApprovalRequired +
             ", secondaryDelaySeconds=" + secondaryDelaySeconds +
+            ", unlockTime=" + unlockTime +
             '}';
     }
 }
