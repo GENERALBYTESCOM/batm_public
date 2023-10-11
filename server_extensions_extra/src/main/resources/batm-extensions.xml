@@ -78,6 +78,7 @@
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>USDT</cryptocurrency>
+                <cryptocurrency>USDTTRON</cryptocurrency>
                 <help>
                     *host: https://api.walletpro.cryptal.com/ (required) -
                     port: (not required) -
@@ -103,6 +104,7 @@
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>USDT</cryptocurrency>
+                <cryptocurrency>USDTTRON</cryptocurrency>
                 <help>
                     *host: https://api.walletpro.cryptal.com/ (required) -
                     port: (not required) -
