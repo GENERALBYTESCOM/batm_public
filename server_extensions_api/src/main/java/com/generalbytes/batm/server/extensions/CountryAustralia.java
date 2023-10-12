@@ -9,12 +9,14 @@ package com.generalbytes.batm.server.extensions;
  */
 public enum CountryAustralia {
 
-    NSW("NSW", "New South Wales"),
-    VIC("VIC", "Victoria"),
-    QLD("QLD", "Queensland"),
-    WA("WA", "Western Australia"),
-    SA("SA", "South Australia"),
-    TAS("TAS", "Tasmania");
+    AU_NSW("AU-NSW", "New South Wales"),
+    AU_QLD("AU-QLD", "Queensland"),
+    AU_SA("AU-SA", "South Australia"),
+    AU_TAS("AU-TAS", "Tasmania"),
+    AU_VIC("AU-VIC", "Victoria"),
+    AU_WA("AU-WA", "Western Australia"),
+    AU_ACT("AU-ACT", "Australian Capital Territory"),
+    AU_NT("AU-NT", "Northern Territory");
 
     private final String iso;
 
