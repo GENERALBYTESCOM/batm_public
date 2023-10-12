@@ -150,11 +150,7 @@ public class BitbuyExchange implements IExchangeAdvanced, IRateSourceAdvanced {
     @Override
     public BigDecimal getExchangeRateForSell(String cryptoCurrency, String fiatCurrency) {
         BigDecimal rateSourceCryptoVolume = getRateSourceCryptoVolume(cryptoCurrency);
-        BigDecimal result = calculateSellPrice(cryptoCurrency, fiatCurrency, rateSourceCryptoVolume);
-        if (result != null) {
-            return result.divide(rateSourceCryptoVolume, 2, RoundingMode.DOWN);
-        }
-        return null;
+        return calculateSellPrice(cryptoCurrency, fiatCurrency, rateSourceCryptoVolume);
     }
 
     @Override
