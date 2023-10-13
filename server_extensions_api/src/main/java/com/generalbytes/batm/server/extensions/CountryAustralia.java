@@ -4,8 +4,8 @@ package com.generalbytes.batm.server.extensions;
  * Australia province identifiers.
  * <p>
  * Usage e.g.:
- * CountryAustralia.NSW.getProvinceName()
- * CountryAustralia.valueOf("NSW").getProvinceName()
+ * CountryAustralia.AU-NSW.getProvinceName()
+ * CountryAustralia.valueOf("AU-NSW").getProvinceName()
  */
 public enum CountryAustralia {
 
