@@ -30,8 +30,8 @@ public interface ITransactionListener {
     }
 
     /**
-     * Allows the operator to override certain resulting values that CAS calculated before calling an Extension.
-     * Operators can change the crypto address format, transaction limits, and allow/disallow discount codes for the current transaction only.
+     * Allows the operator to override values in {@link ITransactionPreparation}.
+     * Operators can change the crypto address format, transaction limits, allow/disallow discount codes for the current transaction etc.
      * This method is called for both BUY and SELL transactions.
      *
      * @param preparation The transaction preparation details, including calculated values.
