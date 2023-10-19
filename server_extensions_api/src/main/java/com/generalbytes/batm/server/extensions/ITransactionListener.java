@@ -30,8 +30,14 @@ public interface ITransactionListener {
     }
 
     /**
-     * Allows the operator to override values in {@link ITransactionPreparation}.
-     * Operators can change the crypto address format, transaction limits, allow/disallow discount codes for the current transaction etc.
+     * Allows the operator to override following values in {@link ITransactionPreparation}.
+     * <ul>
+     *     <li>cryptoAddress</li>
+     *     <li>cashTransactionLimitWithName</li>
+     *     <li>cashTransactionMinimum</li>
+     *     <li>supplyTransactionLimit</li>
+     *     <li>allowedDiscountCode</li>
+     * </ul>
      * This method is called for both BUY and SELL transactions.
      *
      * @param preparation The transaction preparation details, including calculated values.
