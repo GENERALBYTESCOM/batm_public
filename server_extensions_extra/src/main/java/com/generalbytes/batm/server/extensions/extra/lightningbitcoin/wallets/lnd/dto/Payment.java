@@ -17,6 +17,9 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.lnd.dto;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
+
 public class Payment {
     /**
      * A bare-bones invoice for a payment within the Lightning Network. With the details of the invoice, the sender has all the data necessary to send a payment to the recipient
@@ -33,6 +36,14 @@ public class Payment {
      * a percentage of the amount being sent, or as a fixed amount of the maximum fee the user is willing the pay to send the payment
      */
     public FeeLimit fee_limit;
+
+    /**
+     * An optional field that can be used to pass an arbitrary set of TLV records to a peer which understands the new records.
+     * This can be used to pass application specific data during the payment attempt.
+     * Record types are required to be in the custom range >= 65536.
+     * When using REST, the values must be encoded as base64.
+     */
+    public Map<Long, byte[]> dest_custom_records;
 
     public static class FeeLimit {
         /**
@@ -52,6 +63,10 @@ public class Payment {
 
     @Override
     public String toString() {
-        return "Payment{" + amt + " sat, fee limit: " + fee_limit + " to " + payment_request + '}';
+        String rid = "";
+        if (dest_custom_records != null && !dest_custom_records.containsKey(1L)) {
+            rid = new String(dest_custom_records.get(1L), StandardCharsets.UTF_8);
+        }
+        return "Payment{" + amt + " sat, fee limit: " + fee_limit + " to " + payment_request + ", rid: " + rid + '}';
     }
 }
