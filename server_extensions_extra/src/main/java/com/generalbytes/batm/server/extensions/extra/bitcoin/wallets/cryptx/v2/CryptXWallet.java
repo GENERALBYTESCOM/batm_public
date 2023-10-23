@@ -109,6 +109,7 @@ public class CryptXWallet implements IWallet, ICanSendMany {
         coins.add(CryptoCurrency.LTC.getCode());
         coins.add(CryptoCurrency.BCH.getCode());
         coins.add(CryptoCurrency.ETH.getCode());
+        coins.add(CryptoCurrency.TRX.getCode());
         coins.add(CryptoCurrency.USDT.getCode());
         coins.add(CryptoCurrency.USDTTRON.getCode());
         coins.add(CryptoCurrency.TBTC.getCode());
@@ -158,6 +159,9 @@ public class CryptXWallet implements IWallet, ICanSendMany {
         if (cryptoCurrency.equalsIgnoreCase(CryptoCurrency.USDT.getCode())) {
             return CryptoCurrency.ETH.getCode();
         }
+        if (cryptoCurrency.equalsIgnoreCase(CryptoCurrency.USDTTRON.getCode())) {
+            return CryptoCurrency.TRX.getCode();
+        }
         return cryptoCurrency;
     }
 
@@ -176,6 +180,8 @@ public class CryptXWallet implements IWallet, ICanSendMany {
                 case TETH:
                 case ETH:
                     return amount.multiply(Converters.ETH).toBigInteger();
+                case TRX:
+                    return amount.multiply(Converters.TRX).toBigInteger();
                 case BTBS:
                     return amount.multiply(Converters.BTBS).toBigInteger();
                 case GQ:
@@ -223,6 +229,7 @@ public class CryptXWallet implements IWallet, ICanSendMany {
                 return new BigDecimal(bigIntegerAmount).movePointLeft(18);
             case USDT:
             case USDTTRON:
+            case TRX:
                 return new BigDecimal(bigIntegerAmount).movePointLeft(6);
             default:
                 throw new IllegalArgumentException("Unsupported crypto currency");
