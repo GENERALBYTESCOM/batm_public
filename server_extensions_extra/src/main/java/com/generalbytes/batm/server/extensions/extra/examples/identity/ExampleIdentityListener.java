@@ -28,7 +28,7 @@ public class ExampleIdentityListener implements IIdentityListener {
     Logger log = LoggerFactory.getLogger(ExampleIdentityListener.class);
 
     @Override
-    public void onVerificationResult(String rawPayload, ApplicantCheckResult result) {
+    public void onIdentityVerificationResult(String rawPayload, ApplicantCheckResult result) {
         WebhookData data = parsePayload(rawPayload);
         IExtensionContext ctx = IdentityExampleExtension.getExtensionContext();
         IdentityApplicant applicant = ctx.findIdentityVerificationApplicant(result.getIdentityApplicantId());
@@ -84,6 +84,16 @@ public class ExampleIdentityListener implements IIdentityListener {
                     identity.getPublicId(),
                     documentCountryCustomFieldDefinition.getId(),
                     new ChoiceCustomFieldValue(element.getId())));
+    }
+
+    @Override
+    public void onIdentityCreated(String publicIdentityId) {
+        log.info("Identity with public ID {} has been created", publicIdentityId);
+    }
+
+    @Override
+    public void onIdentityStateChanged(String publicIdentityId, int stateFrom, int stateTo) {
+        log.info("Identity with public ID {} changed from state {} to state {}", publicIdentityId, stateFrom, stateTo);
     }
 
     private CustomFieldDefinition findCustomFieldDefinition(Collection<CustomFieldDefinition> customFieldDefinitions,
