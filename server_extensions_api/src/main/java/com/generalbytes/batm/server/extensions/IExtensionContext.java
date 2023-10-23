@@ -831,4 +831,14 @@ public interface IExtensionContext {
      * @param remoteOrLocalTransactionId
      */
     void markTransactionAsWithdrawn(String remoteOrLocalTransactionId);
+
+    /**
+     * Allows to manage the unlock time of a specific transaction.
+     * This can be used to unlock the transaction sooner or prolong it.
+     * Transactions that are locked will remain in the output queue and won't be flushed until they are unlocked.
+     *
+     * @param rid                Remote transaction ID
+     * @param serverTimeToUnlock The absolute datetime when the transaction should unlock.
+     */
+    void unlockTransaction(String rid, Date serverTimeToUnlock);
 }
