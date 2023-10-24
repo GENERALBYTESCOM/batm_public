@@ -1,10 +1,16 @@
-apply plugin: "java"
-apply plugin: 'application'
+plugins {
+    id("application")
+    id("shared-build-conventions")
+}
+
+repositories {
+    mavenCentral()
+}
 
 version = "1.0.0"
 
 application {
-    mainClassName = 'com.generalbytes.batm.sshtunnel.Main'
+    mainClass = "com.generalbytes.batm.sshtunnel.Main"
 }
 
 distributions {
@@ -18,12 +24,13 @@ distributions {
     }
 }
 
+configurations.configureEach {
+    exclude group: "org.eclipse.ee4j"
+}
 
 dependencies {
-    compile(group: 'org.apache.sshd', name: 'sshd-core', version: '2.3.0')
-    compile(group: 'org.apache.sshd', name: 'sshd-common', version: '2.3.0')
-    compile(group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3')
-
-    compile group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.63'
-
+    implementation("org.apache.sshd:sshd-core:2.3.0")
+    implementation("org.apache.sshd:sshd-common:2.3.0")
+    implementation("ch.qos.logback:logback-classic:1.2.9")
+    implementation("org.bouncycastle:bcpkix-jdk15on:1.63")
 }

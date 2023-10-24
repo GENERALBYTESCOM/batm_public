@@ -1,0 +1,24 @@
+ext {
+    hasGbArtifactory = hasGbArtifactory()
+}
+
+repositories {
+    maven {
+        url = uri("https://jitpack.io")
+    }
+    if (hasGbArtifactory) {
+        maven {
+            url = uri(project.findProperty("gbArtifactoryUrl").toString())
+            credentials {
+                username = project.findProperty("gbArtifactoryUser").toString()
+                password = project.findProperty("gbArtifactoryPassword").toString()
+            }
+        }
+    }
+}
+
+private boolean hasGbArtifactory() {
+    return project.hasProperty('gbArtifactoryUrl')
+        && project.hasProperty('gbArtifactoryUser')
+        && project.hasProperty('gbArtifactoryPassword')
+}
