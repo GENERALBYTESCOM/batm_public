@@ -24,6 +24,7 @@ import com.generalbytes.batm.server.extensions.aml.scoring.ITransactionScoringPr
 import com.generalbytes.batm.server.extensions.aml.verification.IIdentityVerificationProvider;
 import com.generalbytes.batm.server.extensions.communication.ICommunicationProvider;
 import com.generalbytes.batm.server.extensions.communication.IPhoneLookupProvider;
+import com.generalbytes.batm.server.extensions.communication.voicecall.IVoiceCallProvider;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.util.Set;
@@ -174,10 +175,16 @@ public interface IExtension {
     ITransactionScoringProvider createTransactionScoringProvider(String transactionScoringProviderParamValues);
 
     /**
-     * Optionally returns external communication providers that can be used by server to sending SMS or making voice calls.
+     * Optionally returns external communication providers that can be used by server to sending SMS.
      * @return
      */
     Set<ICommunicationProvider> getCommunicationProviders();
+
+    /**
+     * Optionally returns external communication providers that can be used by server to making voice call.
+     * @return
+     */
+    Set<IVoiceCallProvider> getVoiceCallProviders();
 
     /**
      * @return Validators that can be used to validate SSNs
