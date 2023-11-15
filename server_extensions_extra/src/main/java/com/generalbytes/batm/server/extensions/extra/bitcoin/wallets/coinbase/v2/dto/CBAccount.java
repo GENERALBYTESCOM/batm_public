@@ -28,7 +28,7 @@ public class CBAccount implements CBPaginatedItem {
     private boolean primary;
     private boolean ready;
     private String type;
-    private String currency;
+    private CBCurrency currency;
     private CBBalance balance;
     private CBBalance native_balance;
 
@@ -127,11 +127,11 @@ public class CBAccount implements CBPaginatedItem {
         this.type = type;
     }
 
-    public String getCurrency() {
+    public CBCurrency getCurrency() {
         return currency;
     }
 
-    public void setCurrency(String currency) {
+    public void setCurrency(CBCurrency currency) {
         this.currency = currency;
     }
 
