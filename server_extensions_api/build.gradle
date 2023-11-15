@@ -1,59 +1,31 @@
-apply plugin: "java"
-apply plugin: "distribution"
-apply plugin: "com.generalbytes.gradle.main"
-apply plugin: 'maven-publish'
+plugins {
+    id("shared-build-conventions")
+    id("distribution")
+}
 
 group = projectGroup
 version = projectVersion
 
 jar {
-    baseName 'batm_server_extensions_api'
-    archiveName "${baseName}.${extension}"
+    archiveFileName = "batm_server_extensions_api.${archiveExtension.get()}"
 }
 
 distributions {
     main {
         contents {
             from jar
-            from configurations.runtime
+            from configurations.runtimeClasspath
         }
     }
 }
 
 dependencies {
-    compile project(':currencies')
-    compile(group: 'org.slf4j', name: 'slf4j-api', version: '1.7.28')
-    compile(group: 'com.sun.mail', name: 'javax.mail', version: '1.6.2')
-    compile(group: 'com.vdurmont', name: 'emoji-java', version: '3.1.3') //for chat emojis
+    implementation project(":currencies")
 
-    testCompile(group: 'junit', name: 'junit', version: '4.13.1')
-    testImplementation(group: 'org.assertj', name: 'assertj-core', version: '3.19.0')
-}
+    implementation("org.slf4j:slf4j-api:1.7.28")
+    implementation("com.sun.mail:javax.mail:1.6.2")
+    implementation("com.vdurmont:emoji-java:3.1.3") //for chat emojis
 
-publishing {
-    if (hasGbUploadArtifactory) {
-        repositories {
-            maven {
-                credentials {
-                    username gbArtifactoryUser
-                    password gbArtifactoryPassword
-                }
-                url gbArtifactoryUploadUrl
-            }
-        }
-    }
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-        }
-    }
-}
-
-dependencySubstitutions {
-    substitute file(batmDependencySubstitutionConfig)
-}
-
-dependencyVerifications {
-    checksums batmDependencyChecksumsConfig
-    printUnusedAssertions false
+    testImplementation("junit:junit:4.13.1")
+    testImplementation("org.assertj:assertj-core:3.19.0")
 }

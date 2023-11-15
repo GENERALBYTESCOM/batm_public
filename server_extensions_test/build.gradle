@@ -1,25 +1,21 @@
-apply plugin: "java"
-apply plugin: "application"
-apply plugin: "com.generalbytes.gradle.main"
+plugins {
+    id("application")
+    id("shared-build-conventions")
+    id("shared-repositories-ext-conventions")
+}
 
-mainClassName = 'com.generalbytes.batm.server.extensions.test.Tester'
+application {
+    mainClass = "com.generalbytes.batm.server.extensions.test.Tester"
+}
 
 jar {
-    baseName 'batm_server_extensions_test'
+    archiveFileName = "batm_server_extensions_test.jar"
 }
 
 dependencies {
-    compile project(':server_extensions_api');
-    compile project(':server_extensions_extra');
-    compile(group: 'net.sf.jopt-simple', name: 'jopt-simple', version: '4.9')
-    runtime(group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25')
-}
+    implementation project(":server_extensions_api")
+    implementation project(":server_extensions_extra")
 
-dependencySubstitutions {
-    substitute file(batmDependencySubstitutionConfig)
-}
-
-dependencyVerifications {
-    checksums batmDependencyChecksumsConfig
-    printUnusedAssertions false
+    implementation("net.sf.jopt-simple:jopt-simple:4.9")
+    runtimeOnly("org.slf4j:slf4j-simple:1.7.28")
 }
