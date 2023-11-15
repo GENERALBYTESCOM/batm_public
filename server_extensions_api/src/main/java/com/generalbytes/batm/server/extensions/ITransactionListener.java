@@ -30,6 +30,24 @@ public interface ITransactionListener {
     }
 
     /**
+     * Allows the operator to override following values in {@link ITransactionPreparation}.
+     * <ul>
+     *     <li>cryptoAddress</li>
+     *     <li>cashTransactionLimitWithName</li>
+     *     <li>cashTransactionMinimum</li>
+     *     <li>supplyTransactionLimit</li>
+     *     <li>allowedDiscountCode</li>
+     * </ul>
+     * This method is called for both BUY and SELL transactions.
+     *
+     * @param preparation The transaction preparation details, including calculated values.
+     * @return {@link ITransactionPreparation} that may contain modified transaction details.
+     */
+    default ITransactionPreparation overrideTransactionPreparation(ITransactionPreparation preparation) {
+        return preparation;
+    }
+
+    /**
      * Callback method that is called by server before transaction is executed - however the cash is already inserted in machine in case of buy transaction.
      * If your method returns false than transaction will not take place and will fail with error ERROR_NOT_APPROVED.
      * Try to return from this method in less then 10 seconds.

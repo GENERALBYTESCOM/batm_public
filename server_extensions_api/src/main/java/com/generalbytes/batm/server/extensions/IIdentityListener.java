@@ -21,6 +21,20 @@ import com.generalbytes.batm.server.extensions.aml.verification.ApplicantCheckRe
 import com.generalbytes.batm.server.extensions.aml.verification.IdentityApplicant;
 
 public interface IIdentityListener {
+
+    /**
+     * @deprecated Use {@link #onIdentityVerificationResult(String, ApplicantCheckResult)} instead.
+     *
+     * @param rawPayload raw data received from the identity verification provider (e.g., in a webhook).
+     *                   Might be used to access additional data not recognized by the identity verification extension.
+     * @param result     data parsed by the identity verification extension.
+     *                   Contains identity applicant ID that could be used to obtain the Identity,
+     *                   see {@link IExtensionContext#findIdentityVerificationApplicant(String)}
+     *                   and {@link IdentityApplicant#getIdentity()}
+     */
+    @Deprecated
+    default void onVerificationResult(String rawPayload, ApplicantCheckResult result) {
+    }
     /**
      * Called by the server when an identity verification result is received from an identity verification provider.
      *
@@ -31,6 +45,24 @@ public interface IIdentityListener {
      *                   see {@link IExtensionContext#findIdentityVerificationApplicant(String)}
      *                   and {@link IdentityApplicant#getIdentity()}
      */
-    default void onVerificationResult(String rawPayload, ApplicantCheckResult result) {
+    default void onIdentityVerificationResult(String rawPayload, ApplicantCheckResult result) {
+    }
+
+    /**
+     * Called when a new identity is created by the master or admin service.
+     *
+     * @param publicIdentityId Public ID of the newly created identity.
+     */
+    default void onIdentityCreated(String publicIdentityId) {
+    }
+
+    /**
+     * Called whenever the admin or master service changes the state of an identity.
+     *
+     * @param publicIdentityId Public ID of the identity whose state has changed.
+     * @param stateFrom        The previous state of the identity before the change.
+     * @param stateTo          The new state of the identity after the change.
+     */
+    default void onIdentityStateChanged(String publicIdentityId, int stateFrom, int stateTo) {
     }
 }
