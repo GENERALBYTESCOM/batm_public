@@ -118,8 +118,8 @@ public class CoinbaseWalletV2 implements IWallet {
         if (accountName != null) {
             for (CBAccount cbAccount : accounts) {
                 if (accountName.equalsIgnoreCase(cbAccount.getName())) {
-                    if (cryptoCurrency.equalsIgnoreCase(cbAccount.getCurrency())) {
-                        preferredCryptoCurrency = cbAccount.getCurrency();
+                    if (cryptoCurrency.equalsIgnoreCase(cbAccount.getCurrency().getCode())) {
+                        preferredCryptoCurrency = cbAccount.getCurrency().getCode();
                         return cbAccount.getId();
                     }
                 }
@@ -127,22 +127,22 @@ public class CoinbaseWalletV2 implements IWallet {
         } else {
             for (CBAccount cbAccount : accounts) {
                 if (cbAccount.isPrimary()) {
-                    if (cryptoCurrency.equalsIgnoreCase(cbAccount.getCurrency())) {
-                        preferredCryptoCurrency = cbAccount.getCurrency();
+                    if (cryptoCurrency.equalsIgnoreCase(cbAccount.getCurrency().getCode())) {
+                        preferredCryptoCurrency = cbAccount.getCurrency().getCode();
                         return cbAccount.getId();
                     }
                 }
             }
         }
         for (CBAccount cbAccount : accounts) {
-            if (cryptoCurrency.equalsIgnoreCase(cbAccount.getCurrency())) {
-                preferredCryptoCurrency = cbAccount.getCurrency();
+            if (cryptoCurrency.equalsIgnoreCase(cbAccount.getCurrency().getCode())) {
+                preferredCryptoCurrency = cbAccount.getCurrency().getCode();
                 return cbAccount.getId();
             }
         }
 
         CBAccount cbAccount = accounts.get(0);
-        preferredCryptoCurrency = cbAccount.getCurrency();
+        preferredCryptoCurrency = cbAccount.getCurrency().getCode();
         return cbAccount.getId();
     }
 
@@ -165,8 +165,7 @@ public class CoinbaseWalletV2 implements IWallet {
             String network  = getNetworkName(cryptoCurrency);
             CBAddress address = null;
             if (network != null) {
-                for (int i = 0; i < addresses.size(); i++) {
-                    CBAddress a = addresses.get(i);
+                for (CBAddress a : addresses) {
                     if (a.getNetwork().equalsIgnoreCase(network)) {
                         address = a;
                     }
