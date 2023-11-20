@@ -1,0 +1,33 @@
+plugins {
+    id("shared-build-conventions")
+    id("shared-repositories-ext-conventions")
+}
+
+group = projectGroup
+version = projectVersion
+
+jar {
+    archiveFileName = "myfirstextension.${archiveExtension.get()}"
+}
+
+configurations {
+    artifactOnly
+
+    // handle Github (e.g. community) vs GENERAL BYTES dichotomy
+    generalBytesCompile
+    githubCompile
+    if (hasGbArtifactory) {
+        implementation { extendsFrom generalBytesCompile }
+    } else {
+        implementation { extendsFrom githubCompile }
+    }
+}
+
+artifacts {
+    artifactOnly jar
+}
+
+dependencies {
+    implementation project(":server_extensions_api")
+    implementation project(":currencies")
+}
