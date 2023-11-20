@@ -65,7 +65,7 @@ Requirements:
 * Java **1.8** (we recommend using https://sdkman.io/ for managing multiple JDK versions on your computer)
 * Gradle
 
-When you implement support for a new crypto-coin, please add it to **server_extensions_extra** - so that it may get into the default CAS installation pack for customers.
+When you implement support for a new crypto-coin, please add it to **server_extensions_extra** - so that it may get into the default CAS distribution ready to be used by other operators.
 Please use the appropriate Fork and Pull Request in the GitHub workflow when adding new functions, and bear in mind that your code will be reviewed prior to any merge with the master.
 
 When adding new cryptocurrency support, please remember to provide its logo! This logo will later be downloaded by the BATM from CAS and displayed on the BATM screen. Both SVG and PNG logos are supported; however, only the SVG logo is used on newer BATM versions. A PNG logo is offered only for backward compatibility, and in the few cases where the SVG logo has an unusually large size.
@@ -87,6 +87,16 @@ cp server_extensions_extra/build/libs/batm_server_extensions_extra.jar /batm/app
 Note that on startup, CAS scans the: <code>/batm/app/master/extensions/</code> folder for all files that have the .jar extension.
 
 If you happen to add new cryptocurrency in CryptoCurrency class in currencies module then don't forget to make sure that you copy your version of currencies-1.0.XX-SNAPSHOT.jar to /batm/app/master/lib
+
+Creating your own extension
+=================
+When you want to develop your own operator specific extension please create a new module and implement your extension there.
+Use server_extensions_template module as a termplate for your first extension. Just copy this module and rename it.
+You will need to modify also settings.gradle file to contain your new extension module's name. See how is the server_extensions_template module mentioned and add line for your new extension module.
+After building the whole project your built extension shoud be in following file: <code>yournewextension/build/libs/yournewextension.jar</code>
+Copy it to CAS server at following location: <code>/batm/app/master/extensions/</code>
+You may also want to modify build.gradle in your new module to change at least package names and final output filename.
+
 
 How to run Tester
 ==========
