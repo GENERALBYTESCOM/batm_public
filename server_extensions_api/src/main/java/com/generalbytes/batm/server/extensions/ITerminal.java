@@ -20,6 +20,7 @@ package com.generalbytes.batm.server.extensions;
 import java.util.Date;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public interface ITerminal {
 
     int TYPE_PHYSICAL = 0;
@@ -59,111 +60,132 @@ public interface ITerminal {
     long ERROR_ACCEPTOR_IS_NOT_DETECTED                    = 1 << 18; //"ACCEPTOR IS NOT DETECTED"
 
     /**
-     * Type of terminal @see TYPE_PHYSICAL and @see TYPE_VIRTUAL(Deprecated)
-     * @return
+     * Get the type of this terminal. See TYPE_PHYSICAL and TYPE_VIRTUAL.
+     *
+     * @return The type.
      */
     Integer getType();
 
     /**
-     * Serial number of terminal
-     * @return
+     * Get the serial number of this terminal.
+     *
+     * @return The serial number.
      */
     String getSerialNumber();
 
     /**
-     * Name of the terminal
-     * @return
+     * Get the name of this terminal.
+     *
+     * @return The name.
      */
     String getName();
 
     /**
      * Terminal is active = Server will not refuse terminal communication requests
-     * @return
+     *
+     * @return True if this terminal is active
      */
     boolean isActive();
 
     /**
      * Terminal is locked
-     * @return
+     *
+     * @return True if this terminal is locked
      */
     boolean isLocked();
 
     /**
-     * Deleted terminals are not displayed in administration but are still stored in database and marked as deleted
-     * @return
+     * Deleted terminals are not displayed in administration but are still stored
+     * in a database and marked as deleted.
+     *
+     * @return True if this terminal is deleted
      */
     boolean isDeleted();
 
     /**
-     * Location of terminal
-     * @return
+     * Get the location of this terminal.
+     *
+     * @return The location
      */
     ILocation getLocation();
 
     /**
-     * Server time of moment when terminal connected to server last time
-     * @return
+     * Get the server time of the moment this terminal last connected to the server.
+     *
+     * @return The date and time
      */
     Date getConnectedAt();
 
     /**
-     * Server time of moment when server received last ping request from terminal
-     * @return
+     * Get the server time of the moment the server last received a ping request from this terminal.
+     *
+     * @return The date and time
      */
     Date getLastPingAt();
 
     /**
      * Duration in number of milliseconds of last ping operation measured by terminal (request + response time)
-     * @return
+     *
+     * @return The duration
      */
 
     long getLastPingDuration();
 
     /**
-     * Server date and time when terminal asked for exchange rate at last time
-     * @return
+     * Server date and time when the terminal asked for exchange rate the last time
+     *
+     * @return The date and time
      */
     Date getExchangeRateUpdatedAt();
 
     /**
      * String representation of BUY exchange rate displayed on terminal on last successful ping
-     * @return
+     *
+     * @return The exchange rate
      */
     String getExchangeRatesBuy();
 
     /**
      * String representation of SELL exchange rate displayed on terminal on last successful ping
-     * @return
+     *
+     * @return The exchange rate
      */
     String getExchangeRatesSell();
 
     /**
      * Terminal error signalized by bit value see error constants in this interface ie ERROR_NO_ERROR
-     * @return
+     *
+     * @return The error code
      */
     long getErrors();
 
     /**
      * Signalizes current mode in which is terminal operating see different modes in this interface i.e.: MODE_
-     * @return
+     *
+     * @return The mode in which is terminal operating
      */
     int getOperationalMode();
 
     /**
-     * When server refuses to talk to terminal it signalizes the this by a REASON see list of possible reasons in this interface: MODE_REJECTED_REASON_...
-     * @return
+     * When a server refuses to talk to the terminal, it signalizes this by a REASON.
+     * See the list of possible reasons in this interface:
+     * MODE_REJECTED_REASON_...
+     *
+     * @return The reason why the server refused to talk to the terminal
      */
     int getRejectedReason();
 
     /**
-     * Returns list of enabled fiat currencies on Terminal
-     * @return
+     * Returns list of enabled fiat currencies on this terminal.
+     *
+     * @return The list of fiat currencies
      */
     List<String> getAllowedCashCurrencies();
 
     /**
-     * Returns list of enabled cryptocurrencies on Terminal
-     * @return
+     * Returns list of enabled cryptocurrencies on this terminal.
+     *
+     * @return The list of cryptocurrencies
      */
     List<String> getAllowedCryptoCurrencies();
 }
