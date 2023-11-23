@@ -19,6 +19,7 @@ package com.generalbytes.batm.server.extensions;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @SuppressWarnings("unused")
 public interface ITerminal {
@@ -188,4 +189,12 @@ public interface ITerminal {
      * @return The list of cryptocurrencies
      */
     List<String> getAllowedCryptoCurrencies();
+
+    /**
+     * Returns a set of tags that are attached to this terminal.
+     *
+     * @return The tags.
+     */
+    Set<String> getTags();
+
 }
