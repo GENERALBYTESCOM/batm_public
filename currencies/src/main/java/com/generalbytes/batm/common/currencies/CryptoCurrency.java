@@ -132,6 +132,7 @@ public enum CryptoCurrency {
     TLTC("test LTC"),
     TRMG("test RMG"),
     TXRP("test XRP"),
+    XLM("Stellar")
     ;
 
     private static Map<String, CryptoCurrency> cryptoCurrenciesUpperCase = new HashMap<>();

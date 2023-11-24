@@ -1424,6 +1424,29 @@
         </ratesource>
         <cryptologo cryptocurrency="START" file="start.png"/>
     </extension>
+    
+    <extension class="com.generalbytes.batm.server.extensions.extra.stellar.StellarCoinExtension" >
+        <wallet prefix="stellarcoind" name="stellarcoind">
+            <param name="apikey" />
+            <param name="hostname" />
+            <cryptocurrency>XLM</cryptocurrency>
+        </wallet>
+          <wallet prefix="stellarcoind" name="stellarcoind (no forward)">
+            <param name="apikey" />
+            <param name="hostname" />
+            <cryptocurrency>XLM</cryptocurrency>
+            <help>This variant generates new addresses for each transaction and does not forward payments from temporary address</help>
+        </wallet>
+        <ratesource prefix="stellar" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>XLM</cryptocurrency>
+            <help>USD is default fiat currency.</help>
+        </ratesource>
+        <cryptologo cryptocurrency="XLM" file="stellar.png"/>
+        <cryptologo cryptocurrency="XLM" file="stellar.svg"/>
+    </extension>
+    
+    
     <extension class="com.generalbytes.batm.server.extensions.extra.nubits.NubitsExtension" >
         <wallet prefix="nud" name="Nud">
             <param name="protocol" />
