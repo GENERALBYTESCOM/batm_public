@@ -64,8 +64,8 @@ public class Payment {
     @Override
     public String toString() {
         String rid = "";
-        if (dest_custom_records != null && !dest_custom_records.containsKey(1L)) {
-            rid = new String(dest_custom_records.get(1L), StandardCharsets.UTF_8);
+        if (dest_custom_records != null && !dest_custom_records.containsKey(70000L)) {
+            rid = new String(dest_custom_records.get(70000L), StandardCharsets.UTF_8);
         }
         return "Payment{" + amt + " sat, fee limit: " + fee_limit + " to " + payment_request + ", rid: " + rid + '}';
     }

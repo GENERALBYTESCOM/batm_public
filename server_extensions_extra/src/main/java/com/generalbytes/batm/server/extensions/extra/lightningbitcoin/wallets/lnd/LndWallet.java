@@ -116,7 +116,7 @@ public class LndWallet extends AbstractLightningWallet {
     private static Map<Long, byte[]> getCustomRecords(String description) {
         Map<Long, byte[]> customRecords = new HashMap<>();
         if (description != null && !description.trim().isEmpty()) {
-            customRecords.put(1L, description.getBytes());
+            customRecords.put(70000L, description.getBytes());
         }
         return customRecords;
     }
