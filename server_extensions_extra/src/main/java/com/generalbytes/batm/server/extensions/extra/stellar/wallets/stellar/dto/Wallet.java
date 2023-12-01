@@ -2,21 +2,27 @@ package com.generalbytes.batm.server.extensions.extra.stellar.wallets.stellar.dt
 
 public class Wallet {
 	private String id;
-    private Balance balance;
+	private String pubkey;
+	private String secret;
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getPubkey() {
+		return pubkey;
+	}
+	public void setPubkey(String pubkey) {
+		this.pubkey = pubkey;
+	}
+	public String getSecret() {
+		return secret;
+	}
+	public void setSecret(String secret) {
+		this.secret = secret;
+	}
+	
+	
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public Balance getBalance() {
-        return balance;
-    }
-
-    public void setBalance(Balance balance) {
-        this.balance = balance;
-    }
 }
