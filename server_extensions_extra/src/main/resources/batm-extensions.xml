@@ -2179,7 +2179,6 @@
         <cryptologo cryptocurrency="USDC" file="usdc.svg"/>
         <!-- ADD your ERC20 tokens here. And don't forget to add cryptologos. -->
     </extension>
-    <extension class="com.generalbytes.batm.server.extensions.extra.examples.chat.ChatBotExtensionExample" />
     <extension class="com.generalbytes.batm.server.extensions.extra.nuls.NulsExtension" >
         <wallet prefix="nulsBinance" name="NULS">
             <param name="address" />
@@ -2366,16 +2365,4 @@
             <param sensitive="false" name="Onfido region" help="'EU', 'US' or 'CA'. Default: 'EU'."/>
         </identityverificationprovider>
     </extension>
-
-    <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.notification.NotificationExampleExtension" />
-    <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.TransactionExtension" />
-    <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.ProfitOverrideExtension" />
-    <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.identity.IdentityExampleExtension" />
-    <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.location.LocationExampleExtension" />
-    <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.identity.ExternalIdentityExampleExtension" />
-    <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.watchlists.WatchlistExtension" />
-    <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.rest.RESTExampleExtension" />
-    <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.communication.ExternalCommunicationExampleExtension" />
-    <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.activeTerminals.ActiveTerminalsExtension" />
-
 </extensions>
