@@ -12,15 +12,6 @@ jar {
 
 configurations {
     artifactOnly
-
-    // handle Github (e.g. community) vs GENERAL BYTES dichotomy
-    generalBytesCompile
-    githubCompile
-    if (hasGbArtifactory) {
-        implementation { extendsFrom generalBytesCompile }
-    } else {
-        implementation { extendsFrom githubCompile }
-    }
 }
 
 artifacts {
