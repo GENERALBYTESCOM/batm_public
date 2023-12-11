@@ -73,6 +73,42 @@ public class DiscountSpec {
         this.notes = notes;
     }
 
+    /**
+     * @deprecated Use first constructor instead.
+     * Creates Discount Specification.
+     *
+     * @param buyDiscount
+     * @param sellDiscount
+     * @param validityFrom
+     * @param validityTill
+     * @param maximumUsages
+     * @param maximumUsagesPerIdentity
+     * @param minimumTransactionAmount
+     * @param totalLimit
+     * @param fiatCurrency in which currency are limit amounts
+     * @param firstTransactionOnly
+     * @param code (Optional) Defined code to be used (upper-cased) or null for code to be generated.
+     * @param linkedIdentityPublicId (Optional) Public ID of an existing identity to be linked to the Discount.
+     * @param notes (Optional) Notes worth noting.
+     *
+     */
+    @Deprecated
+    public DiscountSpec(BigDecimal buyDiscount, BigDecimal sellDiscount, Date validityFrom, Date validityTill, Long maximumUsages, Long maximumUsagesPerIdentity, BigDecimal minimumTransactionAmount, BigDecimal totalLimit, String fiatCurrency, boolean firstTransactionOnly, String code, String linkedIdentityPublicId, String notes) {
+        this.buyDiscount = buyDiscount;
+        this.sellDiscount = sellDiscount;
+        this.validityFrom = validityFrom;
+        this.validityTill = validityTill;
+        this.maximumUsages = maximumUsages;
+        this.maximumUsagesPerIdentity = maximumUsagesPerIdentity;
+        this.minimumTransactionAmount = minimumTransactionAmount;
+        this.totalLimit = totalLimit;
+        this.fiatCurrency = fiatCurrency;
+        this.firstTransactionOnly = firstTransactionOnly;
+        this.code = code;
+        this.linkedIdentityPublicId = linkedIdentityPublicId;
+        this.notes = notes;
+    }
+
     public BigDecimal getBuyDiscount() {
         return buyDiscount;
     }
