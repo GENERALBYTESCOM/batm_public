@@ -697,6 +697,7 @@
             <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency buyonly="true">ETH</cryptocurrency>
             <cryptocurrency>GRS</cryptocurrency>
+            <cryptocurrency>EGLD</cryptocurrency>
             <cryptocurrency>LSK</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>NANO</cryptocurrency>
@@ -723,6 +724,7 @@
             <cryptocurrency>DOGE</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>GRS</cryptocurrency>
+            <cryptocurrency>EGLD</cryptocurrency>
             <cryptocurrency>LSK</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>NANO</cryptocurrency>
