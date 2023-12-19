@@ -18,5 +18,6 @@ public class CustomFieldDefinitionTypeTest {
         assertFalse(CustomFieldDefinitionType.CHECKBOX.isValueTypeAllowed(str.getClass()));
         assertFalse(CustomFieldDefinitionType.IMAGE.isValueTypeAllowed(str.getClass()));
         assertFalse(CustomFieldDefinitionType.DOCUMENT.isValueTypeAllowed(str.getClass()));
+        assertFalse(CustomFieldDefinitionType.DATE.isValueTypeAllowed(str.getClass()));
     }
 }
