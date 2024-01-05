@@ -212,7 +212,7 @@ public class CryptXWallet implements IWallet, ICanSendMany {
         return null;
     }
 
-    private BigDecimal toMajorUnit(String cryptoCurrency, String amount) {
+    protected BigDecimal toMajorUnit(String cryptoCurrency, String amount) {
         BigInteger bigIntegerAmount = new BigInteger(amount);
         switch (CryptoCurrency.valueOfCode(cryptoCurrency)) {
             case TBTC:
