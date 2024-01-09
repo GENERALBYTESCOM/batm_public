@@ -1429,6 +1429,7 @@
         <wallet prefix="stellarcoind" name="stellarcoind">
             <param name="apikey" />
             <param name="hostname" />
+             <param name="true" />
             <cryptocurrency>XLM</cryptocurrency>
         </wallet>
           <wallet prefix="stellarcoind" name="stellarcoind (no forward)">

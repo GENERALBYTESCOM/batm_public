@@ -21,6 +21,7 @@ import com.google.gson.Gson;
 
 public class StellarCoinExtension extends AbstractExtension {
 	private static final Logger log = LoggerFactory.getLogger(StellarCoinExtension.class);
+	String requestBody;
 
 	@Override
 	public String getName() {
@@ -37,7 +38,11 @@ public class StellarCoinExtension extends AbstractExtension {
 	                if ("startcoind".equalsIgnoreCase(walletType)) {
 	                	String apikey = st.nextToken();
 	                    String hostname = st.nextToken();
-	                    String requestBody="{\"testnet\": "+Const.TESTNET+"}";
+	                    String testnet = st.nextToken();
+	                    if(testnet.equals("true"))
+	                    {
+	                     requestBody="{\"testnet\": "+testnet+"}";
+	                    }
 	                    try {
 	            			URL url = new URL(hostname+Const.CREATEWALLET);
 	            			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
