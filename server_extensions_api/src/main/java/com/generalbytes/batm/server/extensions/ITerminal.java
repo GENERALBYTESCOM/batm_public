@@ -21,7 +21,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-@SuppressWarnings("unused")
 public interface ITerminal {
 
     int TYPE_PHYSICAL = 0;
