@@ -4,19 +4,19 @@ package com.generalbytes.batm.server.extensions;
  * Australia province identifiers.
  * <p>
  * Usage e.g.:
- * CountryAustralia.AU-NSW.getProvinceName()
- * CountryAustralia.valueOf("AU-NSW").getProvinceName()
+ * CountryAustralia.NSW.getProvinceName()
+ * CountryAustralia.valueOf("NSW").getProvinceName()
  */
 public enum CountryAustralia {
 
-    AU_NSW("AU-NSW", "New South Wales"),
-    AU_QLD("AU-QLD", "Queensland"),
-    AU_SA("AU-SA", "South Australia"),
-    AU_TAS("AU-TAS", "Tasmania"),
-    AU_VIC("AU-VIC", "Victoria"),
-    AU_WA("AU-WA", "Western Australia"),
-    AU_ACT("AU-ACT", "Australian Capital Territory"),
-    AU_NT("AU-NT", "Northern Territory");
+    NSW("NSW", "New South Wales"),
+    QLD("QLD", "Queensland"),
+    SA("SA", "South Australia"),
+    TAS("TAS", "Tasmania"),
+    VIC("VIC", "Victoria"),
+    WA("WA", "Western Australia"),
+    ACT("ACT", "Australian Capital Territory"),
+    NT("NT", "Northern Territory");
 
     private final String iso;
 
