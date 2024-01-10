@@ -23,6 +23,7 @@ import com.generalbytes.batm.server.extensions.aml.scoring.ITransactionScoringPr
 import com.generalbytes.batm.server.extensions.aml.verification.IIdentityVerificationProvider;
 import com.generalbytes.batm.server.extensions.communication.ICommunicationProvider;
 import com.generalbytes.batm.server.extensions.communication.IPhoneLookupProvider;
+import com.generalbytes.batm.server.extensions.communication.voicecall.IVoiceCallProvider;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.util.Set;
@@ -126,6 +127,9 @@ public abstract class AbstractExtension implements IExtension {
     public Set<ICommunicationProvider> getCommunicationProviders() {
         return null;
     }
+
+    @Override
+    public Set<IVoiceCallProvider> getVoiceCallProviders() { return null; }
 
     @Override
     public Set<ISsnValidator> getSsnValidators() {
