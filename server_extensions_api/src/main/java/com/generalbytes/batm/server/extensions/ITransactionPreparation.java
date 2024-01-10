@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2020 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2024 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -18,8 +18,11 @@
 
 package com.generalbytes.batm.server.extensions;
 
+import com.generalbytes.batm.server.extensions.quiz.QuizResult;
+
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 public interface ITransactionPreparation {
@@ -201,5 +204,11 @@ public interface ITransactionPreparation {
      */
     void setWithdrawalReason(int reason);
 
+    /**
+     * Returns quiz results if any quiz has been activated.
+     *
+     * @return List of {@link QuizResult}. Can be null.
+     */
+    List<QuizResult> getQuizResults();
 
 }
