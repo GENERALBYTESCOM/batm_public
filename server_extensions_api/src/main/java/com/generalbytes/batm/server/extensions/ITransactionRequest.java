@@ -17,8 +17,11 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions;
 
+import com.generalbytes.batm.server.extensions.quiz.QuizResult;
+
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 public interface ITransactionRequest {
 
@@ -156,8 +159,11 @@ public interface ITransactionRequest {
      */
     BigDecimal getDiscountQuotient();
 
-
-
-
+    /**
+     * Returns quiz results if any quiz has been activated.
+     *
+     * @return List of {@link QuizResult}. Can be null.
+     */
+    List<QuizResult> getQuizResults();
 
 }
