@@ -4,5 +4,6 @@ public interface IVerificationInfo {
 
     boolean isSuccess();
     String getErrorMessage();
-
+    String getApplicantId();
+    String getVerificationWebUrl();
 }
