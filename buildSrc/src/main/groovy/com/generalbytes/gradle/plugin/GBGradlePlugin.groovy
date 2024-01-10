@@ -63,7 +63,7 @@ class GBGradlePlugin implements Plugin<Project> {
             project.dependencyVerifications.configuration('releaseRuntimeClasspath')
             project.dependencyVerifications.configuration('debugRuntimeClasspath')
         } else if (pluginMgr.hasPlugin('org.gradle.java')) {
-            project.dependencyVerifications.configuration('runtime')
+            project.dependencyVerifications.configuration('runtimeClasspath')
         }
 
         final Configuration buildScriptClasspathConfiguration =

@@ -39,6 +39,7 @@ import java.math.BigDecimal;
 import java.net.ConnectException;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -81,6 +82,7 @@ public class LndWallet extends AbstractLightningWallet {
         payment.amt = CoinUnit.bitcoinToSat(amount).toString();
         payment.payment_request = destinationAddress;
         payment.fee_limit = getFeeLimit(feeLimit);
+        payment.dest_custom_records = getCustomRecords(description);
 
         log.info("Sending payment: {}", payment);
         SendPaymentResponse paymentResponse = callChecked(() -> api.sendPayment(payment));
@@ -109,6 +111,14 @@ public class LndWallet extends AbstractLightningWallet {
             feeLimit.fixed = fee;
         }
         return feeLimit;
+    }
+
+    private static Map<Long, byte[]> getCustomRecords(String description) {
+        Map<Long, byte[]> customRecords = new HashMap<>();
+        if (description != null && !description.trim().isEmpty()) {
+            customRecords.put(70000L, description.getBytes());
+        }
+        return customRecords;
     }
 
     @Override

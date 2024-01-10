@@ -481,4 +481,8 @@ public class TestExtensionContext implements IExtensionContext {
     public void markTransactionAsWithdrawn(String remoteOrLocalTransactionId) {
 
     }
+
+    @Override
+    public void unlockTransaction(String rid, Date serverTimeToUnlock) {
+    }
 }
