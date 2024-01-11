@@ -4,6 +4,7 @@ public class Wallet {
 	private String id;
 	private String pubkey;
 	private String secret;
+	private String apiKey;
 	public String getId() {
 		return id;
 	}
@@ -21,6 +22,12 @@ public class Wallet {
 	}
 	public void setSecret(String secret) {
 		this.secret = secret;
+	}
+	public String getApiKey() {
+		return apiKey;
+	}
+	public void setApiKey(String apiKey) {
+		this.apiKey = apiKey;
 	}
 	
 	

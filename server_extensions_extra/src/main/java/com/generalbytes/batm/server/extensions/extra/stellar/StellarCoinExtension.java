@@ -59,7 +59,7 @@ public class StellarCoinExtension extends AbstractExtension {
 	            				while ((line = reader.readLine()) != null) {
 	            					 Gson gson = new Gson();
 	            					 Wallet wallet = gson.fromJson(reader.readLine(), Wallet.class);
-	            					 
+	            					 wallet.setApiKey(apikey);
 	            					 return new StellarCoinWallet(wallet);
 	            				}
 	            			} catch (IOException e) {
