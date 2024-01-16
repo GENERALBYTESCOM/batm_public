@@ -166,4 +166,17 @@ public interface ITransactionRequest {
      */
     List<QuizResult> getQuizResults();
 
+    /**
+     * Error message displayed to the customer.
+     *
+     * @return Error message.
+     */
+    String getErrorMessage();
+
+
+    /**
+     * Error message displayed to the customer.
+     */
+    void setErrorMessage(String errorMessage);
+
 }
