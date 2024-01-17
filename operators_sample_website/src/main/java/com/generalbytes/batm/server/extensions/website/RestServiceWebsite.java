@@ -7,8 +7,10 @@ import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
@@ -29,10 +31,10 @@ public class RestServiceWebsite {
     @Path("/terminals-with-available-cash")
     @Produces(MediaType.APPLICATION_JSON)
     public Object terminalsWithAvailableCash(@HeaderParam("X-Api-Key") String apiKey, @QueryParam("amount") BigDecimal amount,
-                                             @QueryParam("fiat_currency") String fiatCurrency) {
+                                             @QueryParam("fiat_currency") String fiatCurrency, @Context HttpServletRequest request) {
 
         try {
-            checkSecurity(apiKey);
+            checkSecurity(apiKey, request);
             List<String> params = new ArrayList<>();
             if (amount == null) {
                 params.add("amount");
@@ -53,7 +55,7 @@ public class RestServiceWebsite {
             }
             return filteredTerminals;
         } catch (AuthenticationException e) {
-            return responseInvalidApiKey();
+            return responseInvalidApiKey(e);
         } catch (Throwable e) {
             log.error("Error - terminals with available cash", e);
         }
@@ -73,10 +75,11 @@ public class RestServiceWebsite {
     public Object sellCrypto(@HeaderParam("X-Api-Key") String apiKey, @QueryParam("serial_number") String serialNumber,
                              @QueryParam("fiat_amount") BigDecimal fiatAmount, @QueryParam("fiat_currency") String fiatCurrency,
                              @QueryParam("crypto_amount") BigDecimal cryptoAmount, @QueryParam("crypto_currency") String cryptoCurrency,
-                             @QueryParam("identity_public_id") String identityPublicId, @QueryParam("discount_code") String discountCode) {
+                             @QueryParam("identity_public_id") String identityPublicId, @QueryParam("discount_code") String discountCode,
+                             @Context HttpServletRequest request) {
 
         try {
-            checkSecurity(apiKey);
+            checkSecurity(apiKey, request);
             List<String> params = new ArrayList<>();
             if (serialNumber == null || serialNumber.trim().isEmpty()) {
                 params.add("serial_number");
@@ -96,7 +99,7 @@ public class RestServiceWebsite {
             return SellExtension.getExtensionContext().sellCrypto(serialNumber, fiatAmount, fiatCurrency, cryptoAmount, cryptoCurrency, identityPublicId, discountCode);
 
         } catch (AuthenticationException e) {
-            return responseInvalidApiKey();
+            return responseInvalidApiKey(e);
 
         } catch (Throwable e) {
             log.error("Error - sell crypto", e);
@@ -112,16 +115,18 @@ public class RestServiceWebsite {
     @GET
     @Path("/status")
     @Produces(MediaType.APPLICATION_JSON)
-    public Object status(@HeaderParam("X-Api-Key") String apiKey, @QueryParam("transaction_id") String transactionId) {
+    public Object status(@HeaderParam("X-Api-Key") String apiKey,
+                         @QueryParam("transaction_id") String transactionId,
+                         @Context HttpServletRequest request) {
 
         try {
-            checkSecurity(apiKey);
+            checkSecurity(apiKey, request);
             if (transactionId == null) {
                 return Response.status(HttpServletResponse.SC_BAD_REQUEST).entity("{ \"error\": \"Missing parameter transaction_id\" }").build();
             }
             return SellExtension.getExtensionContext().findTransactionByTransactionId(transactionId).getStatus();
         } catch (AuthenticationException e) {
-            return responseInvalidApiKey();
+            return responseInvalidApiKey(e);
         } catch (Throwable e) {
             log.error("Error - status", e);
         }
@@ -137,13 +142,13 @@ public class RestServiceWebsite {
     @GET
     @Path("/terminals")
     @Produces(MediaType.APPLICATION_JSON)
-    public Object terminals(@HeaderParam("X-Api-Key") String apiKey) {
+    public Object terminals(@HeaderParam("X-Api-Key") String apiKey, @Context HttpServletRequest request) {
 
         try {
-            IApiAccess iApiAccess = checkSecurity(apiKey);
+            IApiAccess iApiAccess = checkSecurity(apiKey, request);
             return getTerminalsByApiKey(iApiAccess);
         } catch (AuthenticationException e) {
-            return responseInvalidApiKey();
+            return responseInvalidApiKey(e);
         } catch (Throwable e) {
             log.error("Error - terminals", e);
         }
@@ -184,12 +189,20 @@ public class RestServiceWebsite {
      * @param apiKey - key generated in CAS / Third Party / Operators sample website (OSW)
      * @return IApiAccess - Authenticated API key
      */
-    private IApiAccess checkSecurity(String apiKey) throws AuthenticationException {
+    private IApiAccess checkSecurity(String apiKey, HttpServletRequest request) throws AuthenticationException {
         IApiAccess iApiAccess = SellExtension.getExtensionContext().getAPIAccessByKey(apiKey, ApiAccessType.OSW);
         if (iApiAccess == null) {
-            throw new AuthenticationException("Authentication failed");
+            throw new AuthenticationException("Invalid X-Api-Key");
+        }
+        log.info("IP whitelist check, from apiAccess={}, from request={}", iApiAccess.getIpWhitelist(), request.getRemoteAddr());
+        if (isIpWhitelistSet(iApiAccess) && !iApiAccess.getIpWhitelist().equals(request.getRemoteAddr())) {
+            throw new AuthenticationException("Access from not allowed IP address");
         }
         return iApiAccess;
+    }
+
+    private boolean isIpWhitelistSet(IApiAccess iApiAccess) {
+        return iApiAccess.getIpWhitelist() != null && !iApiAccess.getIpWhitelist().isEmpty();
     }
 
     private Response responseInvalidParameter(List<String> params) {
@@ -198,9 +211,9 @@ public class RestServiceWebsite {
         return Response.status(HttpServletResponse.SC_BAD_REQUEST).entity(createJsonString(map)).build();
     }
 
-    private Response responseInvalidApiKey() {
+    private Response responseInvalidApiKey(AuthenticationException e) {
         Map<String, String> map = new HashMap<>();
-        map.put("error", "Invalid X-Api-Key");
+        map.put("error", e.getMessage());
         return Response.status(HttpServletResponse.SC_UNAUTHORIZED).entity(createJsonString(map)).build();
     }
 
