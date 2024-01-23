@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2020 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2024 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -44,6 +44,10 @@ public class BitgoWalletWithUniqueAddresses extends BitgoWallet implements IGene
 
     public BitgoWalletWithUniqueAddresses(String scheme, String host, int port, String token, String walletId, String walletPassphrase, Integer numBlocks) {
         super(scheme, host, port, token, walletId, walletPassphrase, numBlocks);
+    }
+
+    public BitgoWalletWithUniqueAddresses(String scheme, String host, int port, String token, String walletId, String walletPassphrase, Integer numBlocks, Integer feeRate, Integer maxFeeRate) {
+        super(scheme, host, port, token, walletId, walletPassphrase, numBlocks, feeRate, maxFeeRate);
     }
 
     @Override
