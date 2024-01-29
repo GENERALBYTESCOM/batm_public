@@ -819,6 +819,19 @@
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
         </ratesource>
+        <exchange prefix="stillmandigital" name="Stillman Digital">
+            <param name="apikey" />
+            <param name="apisecret" />
+            <cryptocurrency buyonly="true">BTC</cryptocurrency>
+            <cryptocurrency buyonly="true">ETH</cryptocurrency>
+            <help>https://www.stillmandigital.com</help>
+        </exchange>
+        <ratesource prefix="stillmandigital" name="Stillman Digital">
+            <param name="apikey" />
+            <param name="apisecret" />
+            <cryptocurrency buyonly="true">BTC</cryptocurrency>
+            <cryptocurrency buyonly="true">ETH</cryptocurrency>
+        </ratesource>
         <cryptologo cryptocurrency="BNB" file="bnb.png"/>
         <cryptologo cryptocurrency="BNB" file="bnb.svg"/>
         <cryptologo cryptocurrency="KMD" file="kmd.png"/>
@@ -2170,7 +2183,6 @@
         <cryptologo cryptocurrency="USDC" file="usdc.svg"/>
         <!-- ADD your ERC20 tokens here. And don't forget to add cryptologos. -->
     </extension>
-    <extension class="com.generalbytes.batm.server.extensions.extra.examples.chat.ChatBotExtensionExample" />
     <extension class="com.generalbytes.batm.server.extensions.extra.nuls.NulsExtension" >
         <wallet prefix="nulsBinance" name="NULS">
             <param name="address" />
@@ -2357,16 +2369,4 @@
             <param sensitive="false" name="Onfido region" help="'EU', 'US' or 'CA'. Default: 'EU'."/>
         </identityverificationprovider>
     </extension>
-
-    <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.notification.NotificationExampleExtension" />
-    <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.TransactionExtension" />
-    <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.ProfitOverrideExtension" />
-    <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.identity.IdentityExampleExtension" />
-    <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.location.LocationExampleExtension" />
-    <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.identity.ExternalIdentityExampleExtension" />
-    <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.watchlists.WatchlistExtension" />
-    <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.rest.RESTExampleExtension" />
-    <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.communication.ExternalCommunicationExampleExtension" />
-    <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.activeTerminals.ActiveTerminalsExtension" />
-
 </extensions>
