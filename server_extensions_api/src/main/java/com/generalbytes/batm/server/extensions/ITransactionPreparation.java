@@ -18,7 +18,7 @@
 
 package com.generalbytes.batm.server.extensions;
 
-import com.generalbytes.batm.server.extensions.quiz.QuizResult;
+import com.generalbytes.batm.server.extensions.questionnaire.QuestionnaireResult;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -205,10 +205,10 @@ public interface ITransactionPreparation {
     void setWithdrawalReason(int reason);
 
     /**
-     * Returns quiz results if any quiz has been activated.
+     * Returns questionnaire results if any questionnaire has been activated.
      *
-     * @return List of {@link QuizResult}. Can be null.
+     * @return List of {@link QuestionnaireResult}. Can be null.
      */
-    List<QuizResult> getQuizResults();
+    List<QuestionnaireResult> getQuestionnaireResults();
 
 }
