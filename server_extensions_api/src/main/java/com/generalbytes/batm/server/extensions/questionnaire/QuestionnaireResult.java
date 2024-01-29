@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2023 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2024 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -15,34 +15,34 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.quiz;
+package com.generalbytes.batm.server.extensions.questionnaire;
 
 import java.util.List;
 
 /**
- * An object representing data about quiz result.
+ * An object representing data about questionnaire result.
  */
-public class QuizResult {
+public class QuestionnaireResult {
 
-    private String quizName;
+    private String questionnaireName;
 
     private List<QuestionAnswer> answers;
 
-    public QuizResult() {
+    public QuestionnaireResult() {
 
     }
 
-    public QuizResult(String quizName, List<QuestionAnswer> answers) {
-        this.quizName = quizName;
+    public QuestionnaireResult(String questionnaireName, List<QuestionAnswer> answers) {
+        this.questionnaireName = questionnaireName;
         this.answers = answers;
     }
 
-    public String getQuizName() {
-        return quizName;
+    public String getQuestionnaireName() {
+        return questionnaireName;
     }
 
-    public void setQuizName(String quizName) {
-        this.quizName = quizName;
+    public void setQuestionnaireName(String questionnaireName) {
+        this.questionnaireName = questionnaireName;
     }
 
     public List<QuestionAnswer> getAnswers() {

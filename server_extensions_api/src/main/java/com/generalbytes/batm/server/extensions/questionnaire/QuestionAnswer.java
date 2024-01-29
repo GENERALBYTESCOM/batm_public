@@ -15,13 +15,13 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.quiz;
+package com.generalbytes.batm.server.extensions.questionnaire;
 
 import com.generalbytes.batm.server.extensions.customfields.CustomFieldDefinition;
 import com.generalbytes.batm.server.extensions.customfields.CustomFieldDefinitionType;
 
 /**
- * An object representing the question and answer data in the {@link QuizResult}.
+ * An object representing the question and answer data in the {@link QuestionnaireResult}.
  */
 public class QuestionAnswer {
 
