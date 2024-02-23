@@ -27,7 +27,7 @@ CAS then parses any "batm-extensions.xml" found in the JAR file to enumerate the
 
 <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/main/java/com/generalbytes/batm/server/extensions/IExtension.java">Extension</a> is a high level component - something like a plugin - that encapsulates and instantiates the rest of the features.
 
-Extension can be asked to provide wallet X for currency Y etc. The best way to learn more about extensions is to read the sample code and examine how other people have implemented support for their wallet or cryptocurrency in the <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_extra">server_extensions_extra</a> module. <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_extra/src/main/java/com/generalbytes/batm/server/extensions/extra/examples">Additional examples can be found here</a>.
+Extension can be asked to provide wallet X for currency Y etc. The best way to learn more about extensions is to read the sample code and examine how other people have implemented support for their wallet or cryptocurrency in the <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_extra">server_extensions_extra</a> module. <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_examples/src/main/java/com/generalbytes/batm/server/extensions/examples">Additional examples can be found here</a>.
 
 Here is the list of some functionality that can be extended using Extensions API:
 * **Implement support for different cryptocurrency wallets** - for more information, see the <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/main/java/com/generalbytes/batm/server/extensions/IWallet.java">IWallet</a> interface.
@@ -43,14 +43,16 @@ Here is the list of some functionality that can be extended using Extensions API
 * **Send emails or SMSes from extension** - To notify your customer via SMS or email with custom messages, call the methods exposed by the <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/main/java/com/generalbytes/batm/server/extensions/IExtensionContext.java">IExtensionContext</a> interface.
 * **<a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/main/java/com/generalbytes/batm/server/extensions/IExtensionContext.java">ExtensionContext</a>** is your main entrypoint for interacting with CAS.
 ExtensionContext may be called from any extension. A reference to ExtensionContext is passed to an Extension when the **init** method is called by CAS on any Extension. Please make sure you read all of the methods that are available on the IExtensionContext interface. There are, for example: cash related operations, sell functionality, and more!
-* **Implement RESTful services** - facilitates integration of the Server with a 3rd party system. Extensions enable you to quickly and easily create a RESTful service that sends/receives data via JSON and HTTPS. Do you want your website to contact  CAS to find the current exchange rate on your BATM (or even more complicated functions)? Use <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/main/java/com/generalbytes/batm/server/extensions/IRestService.java">IRestService</a> for that. A simple example that returns your current CAS version can be found <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_extra/src/main/java/com/generalbytes/batm/server/extensions/extra/examples/rest">here</a>.
-* **Implement ChatBot commands** - Do you need to execute some tasks on server by sending message to server via Telegram Messenger? Simply implement Telegram your command and you are ready to go. A simple example that returns your current CAS version can be found <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_extra/src/main/java/com/generalbytes/batm/server/extensions/extra/examples/chat">here</a>.
+* **Implement RESTful services** - facilitates integration of the Server with a 3rd party system. Extensions enable you to quickly and easily create a RESTful service that sends/receives data via JSON and HTTPS. Do you want your website to contact  CAS to find the current exchange rate on your BATM (or even more complicated functions)? Use <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_api/src/main/java/com/generalbytes/batm/server/extensions/IRestService.java">IRestService</a> for that. A simple example that returns your current CAS version can be found <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_examples/src/main/java/com/generalbytes/batm/server/extensions/examples/rest">here</a>.
+* **Implement ChatBot commands** - Do you need to execute some tasks on server by sending message to server via Telegram Messenger? Simply implement Telegram your command and you are ready to go. A simple example that returns your current CAS version can be found <a href="https://github.com/GENERALBYTESCOM/batm_public/blob/master/server_extensions_examples/src/main/java/com/generalbytes/batm/server/extensions/examples/chat">here</a>.
 
 
 Content
 =======
 * **server_extensions_api** - contains the extension API that all extensions use to extend CAS' functionality.
 * **server_extensions_extra** - reference extension implementation that demonstrates BTC, LTC, CLOAK, DGB, DASH, HATCH, POT, VIA, BTX, SYS, FLASH, DOGE, NLG, ICG, NBT, GRS, MAX, BSD, MEC, BTDX, NANO, SUM, BURST, ECA, LINDA, $PAC, DAI, MKR, BTBS, GQ, VERUM, MUE, BAT and REP coin support functionality.
+* **server_extensions_examples** - contains example implementations of various extensions.
+* **server_extensions_template** - contains template for developer's own extension.
 * **server_extensions_test** - contains tester for testing the extensions (CAS not required).
 * **operators_sample_website** - The OSW is a sample web application that demonstrates how operators can enable their customers initiate sell transactions online via operator's website and later visit two-way BATMThree or BATMFour ATM when cash is ready for withdrawal. For more detailed information see <a href="https://github.com/GENERALBYTESCOM/batm_public/tree/master/operators_sample_website">description</a>.
 <p align="center">`
@@ -65,7 +67,7 @@ Requirements:
 * Java **1.8** (we recommend using https://sdkman.io/ for managing multiple JDK versions on your computer)
 * Gradle
 
-When you implement support for a new crypto-coin, please add it to **server_extensions_extra** - so that it may get into the default CAS installation pack for customers.
+When you implement support for a new crypto-coin, please add it to **server_extensions_extra** - so that it may get into the default CAS distribution ready to be used by other operators.
 Please use the appropriate Fork and Pull Request in the GitHub workflow when adding new functions, and bear in mind that your code will be reviewed prior to any merge with the master.
 
 When adding new cryptocurrency support, please remember to provide its logo! This logo will later be downloaded by the BATM from CAS and displayed on the BATM screen. Both SVG and PNG logos are supported; however, only the SVG logo is used on newer BATM versions. A PNG logo is offered only for backward compatibility, and in the few cases where the SVG logo has an unusually large size.
@@ -87,6 +89,16 @@ cp server_extensions_extra/build/libs/batm_server_extensions_extra.jar /batm/app
 Note that on startup, CAS scans the: <code>/batm/app/master/extensions/</code> folder for all files that have the .jar extension.
 
 If you happen to add new cryptocurrency in CryptoCurrency class in currencies module then don't forget to make sure that you copy your version of currencies-1.0.XX-SNAPSHOT.jar to /batm/app/master/lib
+
+Creating your own extension
+=================
+When you want to develop your own operator specific extension please create a new module and implement your extension there.
+Use server_extensions_template module as a termplate for your first extension. Just copy this module and rename it.
+You will need to modify also settings.gradle file to contain your new extension module's name. See how is the server_extensions_template module mentioned and add line for your new extension module.
+After building the whole project your built extension shoud be in following file: <code>yournewextension/build/libs/yournewextension.jar</code>
+Copy it to CAS server at following location: <code>/batm/app/master/extensions/</code>
+You may also want to modify build.gradle in your new module to change at least package names and final output filename.
+
 
 How to run Tester
 ==========
