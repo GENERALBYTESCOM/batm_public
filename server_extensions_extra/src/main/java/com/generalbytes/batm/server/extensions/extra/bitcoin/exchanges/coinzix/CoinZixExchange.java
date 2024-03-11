@@ -53,7 +53,7 @@ public class CoinZixExchange implements IRateSourceAdvanced, IExchangeAdvanced {
 
     private static void initConstants() {
         FIAT_CURRENCIES.add(FiatCurrency.EUR.getCode());
-
+        CRYPTO_CURRENCIES.add(CryptoCurrency.XLM.getCode());
         CRYPTO_CURRENCIES.add(CryptoCurrency.BTC.getCode());
         CRYPTO_CURRENCIES.add(CryptoCurrency.ETH.getCode());
         CRYPTO_CURRENCIES.add(CryptoCurrency.EGLD.getCode());

@@ -78,6 +78,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
     static {
         FIAT_CURRENCIES.add(FiatCurrency.USD.getCode());
         FIAT_CURRENCIES.add(CryptoCurrency.USDT.getCode());
+        FIAT_CURRENCIES.add(CryptoCurrency.XLM.getCode());
     }
 
     /**

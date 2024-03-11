@@ -125,15 +125,13 @@ public enum CryptoCurrency {
     MUE("MonetaryUnit"),
     XPM("Primecoin"),
     ZPAE("ZelaaPayAE"),
-
+    XLM("Stellar"),
     TBCH("test BCH"),
     TBTC("test BTC"),
     TETH("test ETH"),
     TLTC("test LTC"),
     TRMG("test RMG"),
-    TXRP("test XRP"),
-    XLM("Stellar")
-    ;
+    TXRP("test XRP");
 
     private static Map<String, CryptoCurrency> cryptoCurrenciesUpperCase = new HashMap<>();
     private static Map<String, CryptoCurrency> cryptoCurrencies = new LinkedHashMap<>();

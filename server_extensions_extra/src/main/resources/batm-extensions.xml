@@ -120,10 +120,12 @@
             </ratesource>
             <ratesource prefix="bity" name ="Bity.com" >
                 <param name="fiatcurrency" />
+                  <cryptocurrency>XLM</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
             </ratesource>
             <ratesource prefix="mrcoin" name ="MrCoin.eu" >
+				  <cryptocurrency>XLM</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>BCH</cryptocurrency>
@@ -133,6 +135,7 @@
                 <cryptocurrency>BIZZ</cryptocurrency>
             </ratesource>
             <ratesource prefix="bitkub" name ="BitKub.com" >
+				  <cryptocurrency>XLM</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>BCH</cryptocurrency>
@@ -143,6 +146,7 @@
                 <help>Fiat currency is THB.</help>
             </ratesource>
             <ratesource prefix="satangpro" name ="Satang.pro" >
+				  <cryptocurrency>XLM</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>BCH</cryptocurrency>
                 <cryptocurrency>DOGE</cryptocurrency>
@@ -154,6 +158,7 @@
             </ratesource>
             <ratesource prefix="bitfinex" name ="Bitfinex.com Exchange" >
                 <param name="fiatcurrency" />
+                  <cryptocurrency>XLM</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
@@ -163,6 +168,7 @@
             </ratesource>
             <ratesource prefix="bitstamp" name="Bitstamp.net Exchange" >
                 <param name="fiatcurrency" />
+                  <cryptocurrency>XLM</cryptocurrency>
                 <cryptocurrency>BCH</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
@@ -171,6 +177,7 @@
             </ratesource>
             <ratesource prefix="bittrex" name ="Bittrex.com Exchange" >
                 <param name="fiatcurrency"/>
+                  <cryptocurrency>XLM</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
@@ -182,6 +189,7 @@
             <ratesource prefix="coinmarketcap" name ="CoinMarketCap.com" >
                 <param name="fiatcurrency" />
                 <param name="api_key" />
+                 <cryptocurrency>XLM</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>LINDA</cryptocurrency>
                 <cryptocurrency>SYS</cryptocurrency>
@@ -231,10 +239,12 @@
                 <cryptocurrency>VOLTZ</cryptocurrency>
                 <cryptocurrency>THBX</cryptocurrency>
                 <cryptocurrency>MUSD</cryptocurrency>
+                  <cryptocurrency>XLM</cryptocurrency>
             </ratesource>
             <ratesource prefix="fixprice" name ="Fix Price Universal" >
                 <param name="price"/>
                 <param name="fiatcurrency"/>
+                  <cryptocurrency>XLM</cryptocurrency>
                 <cryptocurrency>$PAC</cryptocurrency>
                 <cryptocurrency>ANON</cryptocurrency>
                 <cryptocurrency>ANT</cryptocurrency>
@@ -379,6 +389,7 @@
         <exchange prefix="hitbtc" name="HitBTC Exchange">
             <param name="apikey" />
             <param name="apisecret" />
+              <cryptocurrency>XLM</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency buyonly="true">ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
@@ -396,6 +407,7 @@
         <cryptologo cryptocurrency="ETC" file="etc.png"/>
         <ratesource prefix="coinbasers" name="Coinbase.com Rate Source" >
             <param name="fiatcurrency" />
+              <cryptocurrency>XLM</cryptocurrency>
             <cryptocurrency>ADA</cryptocurrency>
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
@@ -428,6 +440,7 @@
             <param name="apikey" />
             <param name="secretkey" />
             <param name="accountname" />
+              <cryptocurrency>XLM</cryptocurrency>
             <cryptocurrency>ADA</cryptocurrency>
             <cryptocurrency>BAT</cryptocurrency>
             <cryptocurrency buyonly="true">BCH</cryptocurrency>
@@ -462,6 +475,7 @@
             <param name="secret"/>
             <param name="passphrase"/>
             <param name="fiatcurrency" />
+              <cryptocurrency>XLM</cryptocurrency>
             <cryptocurrency>ADA</cryptocurrency>
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
@@ -472,6 +486,7 @@
             <param name="key"/>
             <param name="secret"/>
             <param name="fiatcurrency" />
+              <cryptocurrency>XLM</cryptocurrency>
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>BURST</cryptocurrency>
@@ -551,6 +566,7 @@
         </ratesource>
         <ratesource prefix="coingecko" name ="CoinGecko.com" >
             <param name="fiatcurrency" />
+              <cryptocurrency>XLM</cryptocurrency>
             <cryptocurrency>ANON</cryptocurrency>
             <cryptocurrency>ANT</cryptocurrency>
             <cryptocurrency>BAT</cryptocurrency>
@@ -619,6 +635,7 @@
         </ratesource>
         <ratesource prefix="coinpaprika" name="CoinPaprika.com">
             <param name="fiatcurrency"/>
+              <cryptocurrency>XLM</cryptocurrency>
             <cryptocurrency>ANON</cryptocurrency>
             <cryptocurrency>ANON</cryptocurrency>
             <cryptocurrency>ANT</cryptocurrency>
@@ -688,6 +705,7 @@
             <param name="apikey"/>
             <param name="secretkey"/>
             <param name="fiatcurrency"/>
+              <cryptocurrency>XLM</cryptocurrency>
             <cryptocurrency>BAT</cryptocurrency>
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BNB</cryptocurrency>
@@ -714,6 +732,7 @@
         </exchange>
         <ratesource prefix="binancecom" name="Binance.com">
             <param name="fiatcurrency" />
+              <cryptocurrency>XLM</cryptocurrency>
             <cryptocurrency>BAT</cryptocurrency>
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BNB</cryptocurrency>
@@ -810,6 +829,7 @@
         <ratesource prefix="bitbuy" name="Bitbuy.ca Exchange">
             <param name="apikey" />
             <param name="apisecret" />
+              <cryptocurrency>XLM</cryptocurrency>
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
