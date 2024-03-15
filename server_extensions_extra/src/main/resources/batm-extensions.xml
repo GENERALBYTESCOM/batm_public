@@ -1446,17 +1446,12 @@
     </extension>
     
     <extension class="com.generalbytes.batm.server.extensions.extra.stellar.StellarCoinExtension" >
-        <wallet prefix="stellarcoind" name="stellarcoind">
+        <wallet prefix="bpventures.us" name="bpventures.us">
+			<param name="secret" />
             <param name="apikey" />
             <param name="hostname" />
              <param name="true" />
             <cryptocurrency>XLM</cryptocurrency>
-        </wallet>
-          <wallet prefix="stellarcoind" name="stellarcoind (no forward)">
-            <param name="apikey" />
-            <param name="hostname" />
-            <cryptocurrency>XLM</cryptocurrency>
-            <help>This variant generates new addresses for each transaction and does not forward payments from temporary address</help>
         </wallet>
         <ratesource prefix="stellar" name ="Fix Price" >
             <param name="price" />

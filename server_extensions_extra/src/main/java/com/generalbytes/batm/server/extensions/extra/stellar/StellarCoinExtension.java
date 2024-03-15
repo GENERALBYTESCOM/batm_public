@@ -38,15 +38,16 @@ public class StellarCoinExtension extends AbstractExtension {
 				StringTokenizer st = new StringTokenizer(walletLogin, ":");
 				String walletType = st.nextToken();
 
-				if ("startcoind".equalsIgnoreCase(walletType)) {
+				if ("bpventures.us".equalsIgnoreCase(walletType)) {
+					String secret = st.nextToken();
 					String apikey = st.nextToken();
 					String hostname = st.nextToken();
 					String testnet = st.nextToken();
 					if (testnet.equals("true")) {
-						requestBody = "{\"testnet\": " + testnet + "}";
+						requestBody = "{\"testnet\":"+ testnet+" , \"secret\":"+secret+"}";
 					}
 					try {
-						URL url = new URL(hostname + Const.CREATEWALLET);
+						URL url = new URL(hostname + Const.ADDWALLET);
 						HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 						connection.setRequestMethod("POST");
 						connection.setRequestProperty("Content-Type", "application/json");
@@ -63,6 +64,7 @@ public class StellarCoinExtension extends AbstractExtension {
 								Gson gson = new Gson();
 								Wallet wallet = gson.fromJson(reader.readLine(), Wallet.class);
 								wallet.setApiKey(apikey);
+								wallet.setSecret(secret);
 								return new StellarCoinWallet(wallet);
 							}
 						} catch (IOException e) {
