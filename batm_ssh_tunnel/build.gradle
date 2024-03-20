@@ -3,10 +3,6 @@ plugins {
     id("shared-build-conventions")
 }
 
-repositories {
-    mavenCentral()
-}
-
 version = "1.0.0"
 
 application {
