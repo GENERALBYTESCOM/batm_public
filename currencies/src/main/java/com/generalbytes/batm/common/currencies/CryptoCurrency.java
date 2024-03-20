@@ -34,7 +34,7 @@ import java.util.Set;
  *      CryptoCurrency.valueOf("$PAC") returns IllegalArgumentException.
  */
 public enum CryptoCurrency {
-
+	XLM("Stellar"),
     ADA("Cardano Ada"),
     ANON("ANON"),
     AQUA("Aquachain"),
@@ -124,8 +124,8 @@ public enum CryptoCurrency {
     NULS("NULS"),
     MUE("MonetaryUnit"),
     XPM("Primecoin"),
-    ZPAE("ZelaaPayAE"),
-    XLM("Stellar"),
+    ZPAE("ZelaaPayAE --test"),
+   
     TBCH("test BCH"),
     TBTC("test BTC"),
     TETH("test ETH"),

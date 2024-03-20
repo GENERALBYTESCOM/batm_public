@@ -1446,11 +1446,11 @@
     </extension>
     
     <extension class="com.generalbytes.batm.server.extensions.extra.stellar.StellarCoinExtension" >
-        <wallet prefix="bpventures.us" name="bpventures.us">
+        <wallet prefix="bpventures" name="bpventures">
 			<param name="secret" />
             <param name="apikey" />
             <param name="hostname" />
-             <param name="true" />
+             <param name="testnet" />
             <cryptocurrency>XLM</cryptocurrency>
         </wallet>
         <ratesource prefix="stellar" name ="Fix Price" >

@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.slf4j.Logger;
@@ -16,7 +18,6 @@ import com.generalbytes.batm.server.extensions.AbstractExtension;
 import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.IWallet;
-import com.generalbytes.batm.server.extensions.extra.startcoin.StartcoinAddressValidator;
 import com.generalbytes.batm.server.extensions.extra.stellar.wallets.stellar.StellarCoinWallet;
 import com.generalbytes.batm.server.extensions.extra.stellar.wallets.stellar.consts.Const;
 import com.generalbytes.batm.server.extensions.extra.stellar.wallets.stellar.dto.Wallet;
@@ -33,20 +34,26 @@ public class StellarCoinExtension extends AbstractExtension {
 
 	@Override
 	public IWallet createWallet(String walletLogin, String tunnelPassword) {
+		
+		log.debug("Stellar:CreateWallet Started");
 		if (walletLogin != null && !walletLogin.trim().isEmpty()) {
 			try {
+				log.debug("Stellar: Step 1");
 				StringTokenizer st = new StringTokenizer(walletLogin, ":");
 				String walletType = st.nextToken();
 
 				if ("bpventures.us".equalsIgnoreCase(walletType)) {
+					log.debug("Stellar: Step 2");
 					String secret = st.nextToken();
 					String apikey = st.nextToken();
 					String hostname = st.nextToken();
 					String testnet = st.nextToken();
 					if (testnet.equals("true")) {
+						log.debug("Stellar: Step 3");
 						requestBody = "{\"testnet\":"+ testnet+" , \"secret\":"+secret+"}";
 					}
 					try {
+						log.debug("Stellar: Step 4");
 						URL url = new URL(hostname + Const.ADDWALLET);
 						HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 						connection.setRequestMethod("POST");
@@ -65,6 +72,7 @@ public class StellarCoinExtension extends AbstractExtension {
 								Wallet wallet = gson.fromJson(reader.readLine(), Wallet.class);
 								wallet.setApiKey(apikey);
 								wallet.setSecret(secret);
+								log.debug("Stellar: Step 5");
 								return new StellarCoinWallet(wallet);
 							}
 						} catch (IOException e) {
@@ -87,10 +95,19 @@ public class StellarCoinExtension extends AbstractExtension {
 
 	@Override
 	public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
+		log.debug("Stellar: Step 6");
 		if (CryptoCurrency.XLM.getCode().equalsIgnoreCase(cryptoCurrency)) {
 			return new StellarcoinAddressValidator();
 		}
 		return null;
 	}
+	
+	@Override
+	    public Set<String> getSupportedCryptoCurrencies() {
+		log.debug("Stellar: Step 7");
+	        Set<String> result = new HashSet<String>();
+	        result.add(CryptoCurrency.XLM.getCode());
+	        return result;
+	    }
 
 }
