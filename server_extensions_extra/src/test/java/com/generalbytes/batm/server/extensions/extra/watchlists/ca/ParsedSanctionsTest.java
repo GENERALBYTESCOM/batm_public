@@ -67,6 +67,23 @@ public class ParsedSanctionsTest {
         assertTrue(result.isEmpty());
     }
 
+    @Test
+    public void testSearchAliasNoMatchWithGivenName() {
+        final Record record = createRecord("Raman", "Podlineu");
+        record.setAliases("Roman Leonidovich Podlinev");
+        final ParsedSanctions parsedSanctions = initializeParsedSanctions(record);
+        Set<Match> result = parsedSanctions.search("ALIN-COSMIN", "ROMAN");
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void testSearchAliasMatchWithLastName() {
+        final Record record = createRecord("Raman", "Podlineu");
+        record.setAliases("Roman Leonidovich Podlinev");
+        final ParsedSanctions parsedSanctions = initializeParsedSanctions(record);
+        assertMatch(parsedSanctions.search("ALIN-COSMIN", "PODLINEV"), 50);
+    }
+
     private void assertMatch(Set<Match> result, int i) {
         assertEquals(1, result.size());
         final Match foundMatch = result.iterator().next();
