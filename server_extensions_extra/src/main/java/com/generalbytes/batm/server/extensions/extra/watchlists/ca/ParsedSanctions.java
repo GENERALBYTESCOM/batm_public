@@ -112,14 +112,15 @@ public class ParsedSanctions implements IParsedSanctions {
         return input != null && input.toLowerCase().contains(substring.toLowerCase());
     }
 
-    private boolean aliasContainsLastName(String lastName, String alias) {
-        if (alias == null) {
+    private boolean aliasContainsLastName(String lastName, String aliases) {
+        if (aliases == null) {
             return false;
         }
-        String aliasNoSeparators = alias.replaceAll(";", "");
-        String[] aliasWords = aliasNoSeparators.split(" ");
-        for (String aliasWord : aliasWords) {
-            if (aliasWord.equalsIgnoreCase(lastName)) {
+        String[] aliasesArray = aliases.split(";");
+        for (String alias : aliasesArray) {
+            String[] aliasWords = alias.split(" ");
+            String aliasLastName = aliasWords[aliasWords.length - 1];
+            if (aliasLastName.equalsIgnoreCase(lastName)) {
                 return true;
             }
         }
