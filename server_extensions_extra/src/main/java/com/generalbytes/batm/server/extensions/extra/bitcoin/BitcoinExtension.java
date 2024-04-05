@@ -291,6 +291,8 @@ public class BitcoinExtension extends AbstractExtension {
                 String proxyUrl = st.nextToken("\n").replaceFirst(":", "");
                 return new BitcoreWallet(apiKey, proxyUrl);
             } else if ("bitgo".equalsIgnoreCase(walletType) || "bitgonoforward".equalsIgnoreCase(walletType)) {
+                // BitGo API Specification: https://developers.bitgo.com/api/express.wallet.sendcoins
+                //
                 // bitgo:host:port:token:wallet_address:wallet_passphrase:num_blocks:fee_rate:max_fee_rate
                 // but host is optionally including the "http://" and port is optional,
                 // num_blocks is an optional integer greater than 2 and it's used to calculate mining fee,
@@ -340,6 +342,9 @@ public class BitcoinExtension extends AbstractExtension {
 
                 Integer feeRate = st.hasMoreTokens() ? Integer.parseInt(st.nextToken()) : null;
                 Integer maxFeeRate = st.hasMoreTokens() ? Integer.parseInt(st.nextToken()) : null;
+                if (feeRate != null && (maxFeeRate == null || feeRate > maxFeeRate)) {
+                    maxFeeRate = feeRate;
+                }
 
                 if ("bitgonoforward".equalsIgnoreCase(walletType)) {
                     return new BitgoWalletWithUniqueAddresses(scheme, host, port, token, walletId, walletPassphrase, numBlocks, feeRate, maxFeeRate);
