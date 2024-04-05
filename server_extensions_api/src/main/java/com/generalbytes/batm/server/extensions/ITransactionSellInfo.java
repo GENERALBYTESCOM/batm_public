@@ -18,6 +18,7 @@
 package com.generalbytes.batm.server.extensions;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.Map;
 
 public interface ITransactionSellInfo {
@@ -93,4 +94,18 @@ public interface ITransactionSellInfo {
      * @return
      */
     Map<String, String> getCustomData();
+
+    /**
+     * Server time of the transaction
+     *
+     * @return {@link Date}
+     */
+    Date getServerTime();
+
+    /**
+     * Terminal time of the transaction - calculated from the terminal location timezone (you may have terminals across multiple time zones)
+     *
+     * @return {@link Date}
+     */
+    Date getTerminalTime();
 }

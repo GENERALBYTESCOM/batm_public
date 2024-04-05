@@ -309,6 +309,17 @@ public interface IExtensionContext {
     boolean addIdentityPiece(String identityPublicId, IIdentityPiece iidentityPiece);
 
     /**
+     * Update an existing personal info identity piece.
+     *
+     * <p>This method can only be used to update <b>Personal Info</b> identity pieces.
+     *
+     * @param identityPublicId public ID of an existing identity to be updated
+     * @param identityPiece identity piece to be updated
+     * @return true in case of success, false otherwise
+     */
+    boolean updateIdentityPiecePersonalInfo(String identityPublicId, IIdentityPiece identityPiece);
+
+    /**
      * @param identityId     public ID of an existing identity to be updated
      * @param state new state to be set
      * @param note new note to be set

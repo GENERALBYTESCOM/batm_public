@@ -109,9 +109,9 @@ public class CryptXWallet implements IWallet, ICanSendMany {
         coins.add(CryptoCurrency.LTC.getCode());
         coins.add(CryptoCurrency.BCH.getCode());
         coins.add(CryptoCurrency.ETH.getCode());
+        coins.add(CryptoCurrency.TRX.getCode());
         coins.add(CryptoCurrency.USDT.getCode());
-        coins.add(CryptoCurrency.BTBS.getCode());
-        coins.add(CryptoCurrency.GQ.getCode());
+        coins.add(CryptoCurrency.USDTTRON.getCode());
         coins.add(CryptoCurrency.TBTC.getCode());
         coins.add(CryptoCurrency.TLTC.getCode());
         coins.add(CryptoCurrency.TBCH.getCode());
@@ -159,6 +159,9 @@ public class CryptXWallet implements IWallet, ICanSendMany {
         if (cryptoCurrency.equalsIgnoreCase(CryptoCurrency.USDT.getCode())) {
             return CryptoCurrency.ETH.getCode();
         }
+        if (cryptoCurrency.equalsIgnoreCase(CryptoCurrency.USDTTRON.getCode())) {
+            return CryptoCurrency.TRX.getCode();
+        }
         return cryptoCurrency;
     }
 
@@ -177,12 +180,16 @@ public class CryptXWallet implements IWallet, ICanSendMany {
                 case TETH:
                 case ETH:
                     return amount.multiply(Converters.ETH).toBigInteger();
+                case TRX:
+                    return amount.multiply(Converters.TRX).toBigInteger();
                 case BTBS:
                     return amount.multiply(Converters.BTBS).toBigInteger();
                 case GQ:
                     return amount.multiply(Converters.GQ).toBigInteger();
                 case USDT:
                     return amount.multiply(Converters.USDT).toBigInteger();
+                case USDTTRON:
+                    return amount.multiply(Converters.USDTTRON).toBigInteger();
                 default:
                     return amount.toBigInteger();
             }
@@ -205,7 +212,7 @@ public class CryptXWallet implements IWallet, ICanSendMany {
         return null;
     }
 
-    private BigDecimal toMajorUnit(String cryptoCurrency, String amount) {
+    protected BigDecimal toMajorUnit(String cryptoCurrency, String amount) {
         BigInteger bigIntegerAmount = new BigInteger(amount);
         switch (CryptoCurrency.valueOfCode(cryptoCurrency)) {
             case TBTC:
@@ -221,6 +228,8 @@ public class CryptXWallet implements IWallet, ICanSendMany {
             case GQ:
                 return new BigDecimal(bigIntegerAmount).movePointLeft(18);
             case USDT:
+            case USDTTRON:
+            case TRX:
                 return new BigDecimal(bigIntegerAmount).movePointLeft(6);
             default:
                 throw new IllegalArgumentException("Unsupported crypto currency");

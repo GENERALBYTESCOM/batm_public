@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extensions>
+    <extension                  class="com.generalbytes.batm.server.extensions.examples.chat.ChatBotExtensionExample" />
+    <extension autoload="false" class="com.generalbytes.batm.server.extensions.examples.watchlists.WatchlistExtension" />
+
+    <extension autoload="false" class="com.generalbytes.batm.server.extensions.examples.notification.NotificationExampleExtension" />
+    <extension autoload="false" class="com.generalbytes.batm.server.extensions.examples.TransactionExtension" />
+    <extension autoload="false" class="com.generalbytes.batm.server.extensions.examples.ProfitOverrideExtension" />
+    <extension autoload="false" class="com.generalbytes.batm.server.extensions.examples.identity.IdentityExampleExtension" />
+    <extension autoload="false" class="com.generalbytes.batm.server.extensions.examples.location.LocationExampleExtension" />
+    <extension autoload="false" class="com.generalbytes.batm.server.extensions.examples.identity.ExternalIdentityExampleExtension" />
+    <extension autoload="false" class="com.generalbytes.batm.server.extensions.examples.rest.RESTExampleExtension" />
+    <extension autoload="false" class="com.generalbytes.batm.server.extensions.examples.communication.ExternalCommunicationExampleExtension" />
+    <extension autoload="false" class="com.generalbytes.batm.server.extensions.examples.activeterminals.ActiveTerminalsExtension" />
+
+
+
+</extensions>
