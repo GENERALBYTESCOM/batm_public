@@ -33,6 +33,40 @@ public class BitcoinExtensionTest {
     }
 
     @Test
+    public void testCreateWalletBitGoFees() {
+        // Both fee rate and max fee rate are set -> parse fee rate and max fee rate individually
+        doTestCreateWalletBitGoFees(createBitGoWalletUrl(1000, 2000), 1000, 2000);
+        // Max fee rate is lower than fee rate -> use fee rate as max fee rate
+        doTestCreateWalletBitGoFees(createBitGoWalletUrl(1000, 500), 1000, 1000);
+        // Max fee rate is not set -> use fee rate as max fee rate
+        doTestCreateWalletBitGoFees(createBitGoWalletUrl(1000, null), 1000, 1000);
+        // Neither fee rate nor max fee rate is set -> expect nulls
+        doTestCreateWalletBitGoFees(createBitGoWalletUrl(null, null), null, null);
+    }
+
+    private String createBitGoWalletUrl(Integer feeRate, Integer maxFeeRate) {
+        StringBuilder builder = new StringBuilder("bitgo:http://localhost:3080:tokentoken:wallet_address:wallet_passphrase:2");
+        if (feeRate != null) {
+            builder.append(":").append(feeRate);
+            if (maxFeeRate != null) {
+                builder.append(":").append(maxFeeRate);
+            }
+        }
+        return builder.toString();
+    }
+
+    private void doTestCreateWalletBitGoFees(String url, Integer expectedFeeRate, Integer expectedMaxFeeRate) {
+        final BitcoinExtension bitcoinExtension = new BitcoinExtension();
+        bitcoinExtension.init(new TestExtensionContext());
+        final IWallet wallet = bitcoinExtension.createWallet(url, null);
+        Assert.assertTrue(wallet instanceof BitgoWallet);
+        final BitgoWallet bitgoWallet = (BitgoWallet) wallet;
+        Assert.assertNotNull(bitgoWallet);
+        Assert.assertEquals(expectedFeeRate, bitgoWallet.getFeeRate());
+        Assert.assertEquals(expectedMaxFeeRate, bitgoWallet.getMaxFeeRate());
+    }
+
+    @Test
     public void bitgoFullTokenTest() {
         String wallet = "bitgo:http://localhost:3080:v2x8d5e9e46379dc328b2039a400a12b04ea986689b38107fd84cd339bc89e3fb21:5b20e3a9266bbe80095757489d84a6bb:Vranec8586";
         StringTokenizer st = new StringTokenizer(wallet,":");
