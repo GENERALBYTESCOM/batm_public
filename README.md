@@ -93,7 +93,7 @@ If you happen to add new cryptocurrency in CryptoCurrency class in currencies mo
 Creating your own extension
 =================
 When you want to develop your own operator specific extension please create a new module and implement your extension there.
-Use server_extensions_template module as a termplate for your first extension. Just copy this module and rename it.
+Use server_extensions_template module as a template for your first extension. Just copy this module and rename it.
 You will need to modify also settings.gradle file to contain your new extension module's name. See how is the server_extensions_template module mentioned and add line for your new extension module.
 After building the whole project your built extension shoud be in following file: <code>yournewextension/build/libs/yournewextension.jar</code>
 Copy it to CAS server at following location: <code>/batm/app/master/extensions/</code>
