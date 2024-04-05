@@ -282,4 +282,12 @@ public class BitgoWallet implements IWallet, ICanSendMany {
     public String getWalletId() {
         return walletId;
     }
+
+    public Integer getFeeRate() {
+        return feeRate;
+    }
+
+    public Integer getMaxFeeRate() {
+        return maxFeeRate;
+    }
 }
