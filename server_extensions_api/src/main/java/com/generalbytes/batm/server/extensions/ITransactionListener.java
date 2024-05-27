@@ -106,4 +106,8 @@ public interface ITransactionListener {
      */
     default void receiptSent(IReceiptDetails receiptDetails) {
     }
+
+    default Map<String, String> onDepositCreated(IDepositDetails depositDetails) {
+        return null;
+    }
 }
