@@ -31,7 +31,7 @@ public interface IDepositPreparation {
     String getSafeSerialNumber();
 
     /**
-     * Deposit code used to identify the deposit.
+     * Deposit code used to identify the deposit. Equals to the RID of the order transaction.
      */
     String getDepositCode();
 
@@ -56,7 +56,7 @@ public interface IDepositPreparation {
     IIdentity getIdentity();
 
     /**
-     * Error message in case of error
+     * Error message in case of error.
      */
     String getErrorMessage();
 

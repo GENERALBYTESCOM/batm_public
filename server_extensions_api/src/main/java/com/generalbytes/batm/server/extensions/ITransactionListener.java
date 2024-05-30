@@ -131,7 +131,7 @@ public interface ITransactionListener {
     /**
      * Allows the operator to override following values in {@link IDepositPreparation}.
      * <ul>
-     *     <li>cashAmount</li>
+     *     <li>cashAmount</li> - cannot be higher than the provided amount, if yes will be reduced back to the provided amount
      *     <li>errorMessage</li>
      * </ul>
      * The method is called right before {@link ITransactionListener#isDepositPreparationApproved(IDepositPreparation)},
@@ -158,7 +158,7 @@ public interface ITransactionListener {
     /**
      * Allows the operator to override following values in {@link IDepositRequest}.
      * <ul>
-     *     <li>cashAmount</li>
+     *     <li>cashAmount</li> - cannot be higher than the provided amount, if yes will be reduced back to the provided amount
      *     <li>errorMessage</li>
      * </ul>
      * This method is called for both BUY and SELL transactions.
