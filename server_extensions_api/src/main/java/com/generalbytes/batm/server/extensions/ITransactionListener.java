@@ -151,7 +151,7 @@ public interface ITransactionListener {
      *
      * @return result of the approval
      */
-    default boolean isTransactionApproved(IDepositRequest depositRequest) {
+    default boolean isDepositApproved(IDepositRequest request) {
         return true;
     }
 
@@ -166,7 +166,7 @@ public interface ITransactionListener {
      * @param request The transaction request initialized by server
      * @return {@link ITransactionRequest} that may contain modified transaction request.
      */
-    default IDepositRequest overrideTransactionRequest(IDepositRequest request) {
+    default IDepositRequest overrideDepositRequest(IDepositRequest request) {
         return request;
     }
 
