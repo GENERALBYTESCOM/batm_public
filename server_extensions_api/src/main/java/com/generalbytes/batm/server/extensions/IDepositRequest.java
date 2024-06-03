@@ -55,9 +55,9 @@ public interface IDepositRequest {
     String getCashCurrency();
 
     /**
-     * Identity of the customer who made the deposit.
+     * Identity public ID of the customer who made the deposit.
      */
-    IIdentity getIdentity();
+    String getIdentityPublicId();
 
     /**
      * Error message in case of error.

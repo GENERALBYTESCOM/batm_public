@@ -39,9 +39,9 @@ public interface IDepositDetails {
     String getDepositCode();
 
     /**
-     * Identity of the customer who made the deposit.
+     * Identity public ID of the customer who made the deposit.
      */
-    IIdentity getIdentity();
+    String getIdentityPublicId();
 
     /**
      * Amount of cash deposited.
@@ -63,8 +63,4 @@ public interface IDepositDetails {
      */
     String getLocalTransactionId();
 
-    /**
-     * List of banknotes deposited in the transaction.
-     */
-    List<IBanknoteCounts> getBanknotes();
 }
