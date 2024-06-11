@@ -152,3 +152,15 @@ By default, verification-site runs on port 8443. You should change it and most i
         ```bash
         java -jar verification_site-<ver>.jar --server.port=443 --security.require-ssl=true --server.ssl.key-store=/etc/letsencrypt/live/example.com/keystore.p12 --server.ssl.key-store-password=<your-password> --server.ssl.keyStoreType=PKCS12 --server.ssl.keyAlias=tomcat
         ```
+How to enable extension hot reload feature
+=================
+You can turn on/off extension hot reaload feature to be able to replace extension classes without restarting CAS.
+
+:warning: Use this feature with caution as it may allow anyone with access to the server to change extension code on the fly.
+
+To enable hot reload feature you need to modify `/batm/config/extensions` configuration file and set:
+
+```
+hot-reload=true
+```
+
