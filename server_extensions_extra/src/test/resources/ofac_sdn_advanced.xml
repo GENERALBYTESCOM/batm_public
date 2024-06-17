@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<Sanctions xmlns="http://www.un.org/sanctions/1.0" Version="3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="http://www.un.org/sanctions/1.0 http://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xsd">
+<Sanctions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3"
+           xsi:schemaLocation="https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/ADVANCED_XML https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/ADVANCED_XML.xsd"
+           xmlns="https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/ADVANCED_XML">
     <DateOfIssue CalendarTypeID="1">
         <Year>2021</Year>
         <Month>1</Month>
