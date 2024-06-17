@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-            xmlns:un="http://www.un.org/sanctions/1.0"
-            xmlns="http://www.un.org/sanctions/1.0"
-            targetNamespace="http://www.un.org/sanctions/1.0"
+            xmlns:un="https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/ADVANCED_XML"
+            xmlns="https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/ADVANCED_XML"
+            targetNamespace="https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/ADVANCED_XML"
             elementFormDefault="qualified">
   <xsd:element name="Sanctions">
       <xsd:complexType>
