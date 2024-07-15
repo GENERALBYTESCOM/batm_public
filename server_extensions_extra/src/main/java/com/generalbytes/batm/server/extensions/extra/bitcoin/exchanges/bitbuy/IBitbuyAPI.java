@@ -17,24 +17,21 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitbuy;
 
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitbuy.dto.Coin;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitbuy.dto.Balance;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitbuy.dto.BitbuyResponse;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitbuy.dto.CreateOrderResponse;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitbuy.dto.DepositAddress;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitbuy.dto.Market;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitbuy.dto.OrderResponse;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitbuy.dto.OrderRequest;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitbuy.dto.OrderBook;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitbuy.dto.QuoteRequest;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitbuy.dto.QuoteResponse;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitbuy.dto.Wallet;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitbuy.dto.WithdrawResult;
+import com.generalbytes.batm.server.extensions.util.OrderBookPriceCalculator;
 import com.generalbytes.batm.server.extensions.util.net.RateLimitingInterceptor;
-import org.knowm.xchange.utils.nonce.CurrentTimeIncrementalNonceFactory;
 import si.mazi.rescu.ClientConfig;
+import si.mazi.rescu.ClientConfigUtil;
 import si.mazi.rescu.Interceptor;
 import si.mazi.rescu.RestProxyFactory;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -42,62 +39,48 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.security.GeneralSecurityException;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-@Path("/api/v1")
+@Path("/")
 @Produces(MediaType.APPLICATION_JSON)
 public interface IBitbuyAPI {
+    String prodUrl = "https://api-crypto.bitbuy.ca";
+    String testUrl = "https://bb-api-crypto-qa.blockchainmarkets.com";
 
-    static IBitbuyAPI create(String apiKey, String apiSecret) throws GeneralSecurityException {
+    static IBitbuyAPI create(String clientId, String secretKey) {
         final ClientConfig config = new ClientConfig();
-        config.addDefaultParam(QueryParam.class, "apikey", apiKey);
-        config.addDefaultParam(QueryParam.class, "stamp", new CurrentTimeIncrementalNonceFactory(TimeUnit.MILLISECONDS));
-        config.addDefaultParam(HeaderParam.class, "signature", new BitbuyDigest(apiSecret));
+        ClientConfigUtil.addBasicAuthCredentials(config, clientId, secretKey);
         Interceptor interceptor = new RateLimitingInterceptor(IBitbuyAPI.class, 25, 30_000);
-        return RestProxyFactory.createProxy(IBitbuyAPI.class, "https://partner.bcm.exchange", config, interceptor);
+        return RestProxyFactory.createProxy(IBitbuyAPI.class, prodUrl, config, interceptor);
     }
 
-
+    /**
+     * @param currency fiat or crypto currency
+     */
     @GET
-    @Path("/wallets")
-    List<Wallet> getWallets() throws IOException;
-
-    @GET
-    @Path("/coins")
-    List<Coin> getCoins() throws IOException;
-
-    @GET
-    @Path("/markets")
-    List<Market> getMarkets() throws IOException;
+    @Path("/account/balance")
+    BitbuyResponse<Balance> getBalance(@QueryParam("currency") String currency) throws IOException;
 
     /**
      * @return deposit address for the given coin (new address is NOT generated on each call)
      */
     @GET
-    @Path("/wallets/{coin}/deposit-address")
-    DepositAddress getDepositAddress(@PathParam("coin") String coin) throws IOException;
-
-    @POST
-    @Path("/wallets/{coin}/withdraw")
-    WithdrawResult withdraw(@PathParam("coin") String coin, @QueryParam("address") String address, @QueryParam("amount") BigDecimal amount) throws IOException;
-
+    @Path("/account/deposit-address")
+    BitbuyResponse<DepositAddress> getDepositAddress(@QueryParam("coin") String coin) throws IOException;
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/submit/order")
-    OrderResponse submitOrder(OrderRequest orderRequest) throws IOException;
+    @Path("/rfq/create")
+    BitbuyResponse<CreateOrderResponse> createOrder(QuoteRequest quoteRequest) throws IOException;
 
+    @POST
+    @Path("/rfq/execute")
+    BitbuyResponse<Void> executeOrder(@QueryParam("id") String orderId) throws IOException;
+
+    /**
+     * @param depth number of bids and asks, e.g. for depth 10, 10 asks + 10 bids will be returned.
+     *              Increase this if {@link OrderBookPriceCalculator} does not have enough orders to compute the price.
+     */
     @GET
-    @Path("/single-order")
-    OrderResponse getOrder(@QueryParam("marketSymbol") String marketSymbol, @QueryParam("orderId") String orderId) throws IOException;
-
-
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/quote/trade")
-    QuoteResponse quoteOrder(QuoteRequest quoteRequest) throws IOException;
-
+    @Path("/public/markets/{marketId}/{depth}")
+    BitbuyResponse<OrderBook> getOrderBook(@PathParam("marketId") String market, @PathParam("depth") int depth) throws IOException;
 }

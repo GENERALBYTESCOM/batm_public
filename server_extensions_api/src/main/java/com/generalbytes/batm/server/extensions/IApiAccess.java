@@ -5,4 +5,5 @@ import java.util.Collection;
 public interface IApiAccess {
     Collection<String> getTerminalSerialNumbers();
 
+    String getIpWhitelist();
 }

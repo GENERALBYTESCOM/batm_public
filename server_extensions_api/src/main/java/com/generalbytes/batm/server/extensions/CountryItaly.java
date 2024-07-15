@@ -20,8 +20,8 @@ package com.generalbytes.batm.server.extensions;
 /**
  * Italy province identifiers.
  * Usage e.g.:
- * CountryItaly.QC.getProvinceName()
- * CountryItaly.valueOf("QC").getProvinceName()
+ * CountryItaly.AG.getProvinceName()
+ * CountryItaly.valueOf("AG").getProvinceName()
  */
 public enum CountryItaly {
     AG("AG", "Agrigento"),

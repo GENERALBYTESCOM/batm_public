@@ -2,9 +2,4 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitbuy.d
 
 public class DepositAddress {
     public String address;
-
-    @Override
-    public String toString() {
-        return address;
-    }
 }

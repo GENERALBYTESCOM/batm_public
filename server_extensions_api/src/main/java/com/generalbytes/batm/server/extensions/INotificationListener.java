@@ -51,6 +51,35 @@ public interface INotificationListener {
      */
     default void transactionQueued(String terminalSerialNumber, BigDecimal cashAmount, String cashCurrency, String transactionRemoteId, String paymentType) {}
 
+    /**
+     * Invoked when one or more transactions in a queue have failed.
+     *
+     * @param queueName          The name of the queue in which the transactions were queued.
+     * @param batchUid           A unique identifier representing the batch of transactions.
+     * @param failedTransactions A list of transaction details for those transactions which failed.
+     *                           Each transaction detail includes information such as the serial number of the terminal.
+     *
+     * <p>
+     * ITransactionDetails will have the following attributes populated:
+     * <ul>
+     *     <li><b>Terminal Serial Number</b>: Sourced from the transaction's terminal..</li>
+     *     <li><b>Remote ID (Rid)</b>: The Rid associated with the transaction</li>
+     *     <li><b>Local ID (Lid)</b>: The Lid associated with the transaction.</li>
+     *     <li><b>Cash Amount</b>: The fiat amount of transaction.</li>
+     *     <li><b>Cash Currency</b>: The type of fiat currency used in the transaction (e.g., USD, EUR).</li>
+     *     <li><b>Crypto Amount</b>: The fiat amount of transaction.</li>
+     *     <li><b>Crypto Currency</b>: The type of cryptocurrency used in the transaction (e.g., BTC, ETH).</li>
+     *     <li><b>Crypto Address</b>: The destination address for the cryptocurrency transaction.</li>
+     *     <li><b>Identity Public ID</b>: Public identity associated with the transaction, if any.</li>
+     * </ul>
+     * </p>
+     * <p>
+     * All other attributes are either set to default values or empty.
+     * </p>
+     *
+     */
+    default void queuedTransactionsFailed(String queueName, String batchUid, List<ITransactionDetails> failedTransactions) {}
+
     default void cashbackCreated(String terminalSerialNumber, BigDecimal cashAmount, String cashCurrency) {}
 
     default void invalidPaymentReceived(String terminalSerialNumber, BigDecimal amount, String cryptoCurrency, String fromAddress, String toAddress, String transactionRemoteId) {}
@@ -213,6 +242,31 @@ public interface INotificationListener {
      * Planned cash collection is missing
      */
     default void cashCollectionMissed(String terminalSerialNumber, LocalDate missedCashCollectionDate) {}
+
+    /**
+     * Invoked when a new cash collection record has been created.
+     *
+     * @param cashCollectionRecord Represents the details of the created cash collection record.
+     *
+     * <p>
+     * ITerminalCashCollectionRecord will have the following attributes populated:
+     * <ul>
+     *     <li><b>Terminal Serial Number</b>: The serial number of the terminal where the cash collection event occurred.</li>
+     *     <li><b>Terminal Time</b>: Timestamp when event was created on terminal.</li>
+     *     <li><b>Server Time</b>: Timestamp when event was delivered and stored on server.</li>
+     *     <li><b>Amounts</b>: A collection of the total amounts in the cashbox, broken down by fiat currency. For example, if the ATM only sells BTC for USD, this will contain one member.</li>
+     *     <li><b>Collecting Person</b>: Details of the person who performed the cash collection, if available.</li>
+     *     <li><b>Contains</b>: A string containing a description of what was in the cashbox during the cash collection.</li>
+     *     <li><b>Note</b>: Any additional text description set by the user via admin.</li>
+     *     <li><b>Counters Long</b>: The value of the long counter at the time of cash collection.</li>
+     *     <li><b>Counters Short</b>: The value of the short counter at the time of cash collection before it was reset.</li>
+     *     <li><b>Cashbox Name</b>: The name of the cashbox.</li>
+     *     <li><b>Public ID</b>: The public ID of the cash collection.</li>
+     *     <li><b>Location Public ID</b>: The public ID of the related location.</li>
+     * </ul>
+     * </p>
+     */
+    default void cashCollectionCreated(ITerminalCashCollectionRecord cashCollectionRecord) {}
 
     default void customerEnrolled(String terminalSerialNumber, String identityPublicId) {}
 

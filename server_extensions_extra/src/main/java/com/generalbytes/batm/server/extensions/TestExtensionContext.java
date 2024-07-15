@@ -25,6 +25,16 @@ import java.util.Set;
 
 public class TestExtensionContext implements IExtensionContext {
     @Override
+    public void addApplicationListener(IApplicationListener listener) {
+
+    }
+
+    @Override
+    public boolean removeApplicationListener(IApplicationListener listener) {
+        return false;
+    }
+
+    @Override
     public void addTransactionListener(ITransactionListener listener) {
 
     }
@@ -84,6 +94,11 @@ public class TestExtensionContext implements IExtensionContext {
 
     @Override
     public ITransactionDetails updateTransaction(String rid, Integer status, String detail, Set<String> tags) throws UpdateException {
+        return null;
+    }
+
+    @Override
+    public ITransactionDetails updateTransaction(String rid, Integer status, String detail, Map<String, String> customData) throws UpdateException {
         return null;
     }
 
@@ -178,8 +193,17 @@ public class TestExtensionContext implements IExtensionContext {
     }
 
     @Override
+    public boolean updateIdentityPiecePersonalInfo(String identityPublicId, IIdentityPiece identityPiece) {
+        return false;
+    }
+
+    @Override
     public IIdentity updateIdentity(String identityId, String externalId, int state, int type, Date created, Date registered, BigDecimal vipBuyDiscount, BigDecimal vipSellDiscount, String note, List<ILimit> limitCashPerTransaction, List<ILimit> limitCashPerHour, List<ILimit> limitCashPerDay, List<ILimit> limitCashPerWeek, List<ILimit> limitCashPerMonth, List<ILimit> limitCashPer3Months, List<ILimit> limitCashPer12Months, List<ILimit> limitCashPerCalendarQuarter, List<ILimit> limitCashPerCalendarYear, List<ILimit> limitCashTotalIdentity, String configurationCashCurrency) {
         return null;
+    }
+
+    @Override
+    public void updateIdentityMarketingOptIn(String identityId, boolean agreeWithMarketingOptIn) {
     }
 
     @Override
@@ -461,5 +485,9 @@ public class TestExtensionContext implements IExtensionContext {
     @Override
     public void markTransactionAsWithdrawn(String remoteOrLocalTransactionId) {
 
+    }
+
+    @Override
+    public void unlockTransaction(String rid, Date serverTimeToUnlock) {
     }
 }

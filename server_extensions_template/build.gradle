@@ -1,0 +1,24 @@
+plugins {
+    id("shared-build-conventions")
+}
+
+group = projectGroup
+version = projectVersion
+
+jar {
+    archiveFileName = "myfirstextension.${archiveExtension.get()}"
+}
+
+configurations {
+    artifactOnly
+}
+
+artifacts {
+    artifactOnly jar
+}
+
+dependencies {
+    implementation("org.slf4j:slf4j-api:1.7.28")
+    implementation project(":server_extensions_api")
+    implementation project(":currencies")
+}

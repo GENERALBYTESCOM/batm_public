@@ -37,6 +37,8 @@
                 <param name="wallet_id" />
                 <param name="wallet_passphrase" />
                 <param name="num_blocks" />
+                <param name="fee_rate" />
+                <param name="max_fee_rate" />
                 <cryptocurrency buyonly="true">BCH</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
@@ -54,6 +56,8 @@
                 <param name="wallet_id" />
                 <param name="wallet_passphrase" />
                 <param name="num_blocks" />
+                <param name="fee_rate" />
+                <param name="max_fee_rate" />
                 <cryptocurrency buyonly="true">BCH</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
@@ -68,27 +72,26 @@
                 <tunnel supported="true"/>
                 <param name="host" />
                 <param name="port" />
-                <param name="token" />
+                <param name="api_key" />
                 <param name="wallet_id" />
-                <param name="password"/>
+                <param name="passphrase"/>
                 <param name="priority" />
                 <param name="max_custom_fee" />
-                <param name="max_custom_gas_limit" />
                 <cryptocurrency buyonly="true">BCH</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
-                <cryptocurrency buyonly="true">BTBS</cryptocurrency>
-                <cryptocurrency buyonly="true">GQ</cryptocurrency>
-                <cryptocurrency buyonly="true">ETH</cryptocurrency>
-                <cryptocurrency buyonly="true">USDT</cryptocurrency>
+                <cryptocurrency>ETH</cryptocurrency>
+                <cryptocurrency>TRX</cryptocurrency>
+                <cryptocurrency>USDT</cryptocurrency>
+                <cryptocurrency>USDTTRON</cryptocurrency>
                 <help>
-                    *host: https://api.cryptx.com/ (required) -
-                    port: (not required) - *token: generate Access tokens from CryptX Settings (required) -
-                    *walletid: find under [Wallet] > Settings > Wallet Info > Wallet ID (required) -
-                    password: wallet password (not required) -
-                    priority: Select "high" (2 blocks, default), "medium" (8 blocks), "low" (24 blocks), or "custom" -
-                    max_custom_fee: fee rate (in s/vByte for bitcoin, gas price for ethereum) when "custom" priority is set (instead of estimating one using blocks) -
-                    limit: gas limit - only for ETH, e.g., 50000 (not required)
+                    *host: https://api.walletpro.cryptal.com/ (required) -
+                    port: (not required) -
+                    *api_key: the API Key obtained from CryptX (required) -
+                    *walletid: the name of the wallet on CryptX (required) -
+                    passphrase: the wallet passphrase (if used) (not required) -
+                    priority: high: (default) = 2 blocks, medium = 8, low = 24, custom - also indicate the number of required blocks (e.g. custom:12) -
+                    max_custom_fee: the maximum fee (in s/vByte) when "custom" priority is used
                 </help>
             </wallet>
             <wallet prefix="cryptxnoforward" name="CryptX Wallet System (no forward)">
@@ -96,25 +99,26 @@
                 <tunnel supported="true"/>
                 <param name="host" />
                 <param name="port" />
-                <param name="token" />
+                <param name="api_key" />
                 <param name="wallet_id" />
-                <param name="password"/>
+                <param name="passphrase"/>
                 <param name="priority" />
                 <param name="max_custom_fee" />
-                <param name="max_custom_gas_limit" />
                 <cryptocurrency buyonly="true">BCH</cryptocurrency>
                 <cryptocurrency>BTC</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
-                <cryptocurrency buyonly="true">ETH</cryptocurrency>
-                <cryptocurrency buyonly="true">USDT</cryptocurrency>
+                <cryptocurrency>ETH</cryptocurrency>
+                <cryptocurrency>TRX</cryptocurrency>
+                <cryptocurrency>USDT</cryptocurrency>
+                <cryptocurrency>USDTTRON</cryptocurrency>
                 <help>
-                    *host: https://api.cryptx.com/ (required) -
-                    port: (not required) - *token: generate Access tokens from CryptX Settings (required) -
-                    *walletid: find under [Wallet] > Settings > Wallet Info > Wallet ID (required) -
-                    password: wallet password (not required) -
-                    priority: Select high (2 blocks, default), medium (8 blocks), low (24 blocks), or custom -
-                    max_custom_fee: fee rate in s/vByte when "custom" priority is set (instead of estimating one using blocks) -
-                    limit: gas limit - only for ETH, e.g., 50000 (not required)
+                    *host: https://api.walletpro.cryptal.com/ (required) -
+                    port: (not required) -
+                    *api_key: the API Key obtained from CryptX (required) -
+                    *walletid: the name of the wallet on CryptX (required) -
+                    passphrase: the wallet passphrase (if used) (not required) -
+                    priority: high: (default) = 2 blocks, medium = 8, low = 24, custom - also indicate the number of required blocks (e.g. custom:12) -
+                    max_custom_fee: the maximum fee (in s/vByte) when "custom" priority is used
                 </help>
             </wallet>
             <ratesource prefix="btcfix" name ="Fix Price" >
@@ -806,24 +810,31 @@
         <exchange prefix="bitbuy" name="Bitbuy.ca Exchange">
             <param name="apikey" />
             <param name="apisecret" />
-            <param name="fiatcurrency" />
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
-            <cryptocurrency>DAI</cryptocurrency>
             <cryptocurrency buyonly="true">ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
-            <cryptocurrency>XRP</cryptocurrency>
-            <help>fiatcurrency is optional, default: CAD</help>
         </exchange>
         <ratesource prefix="bitbuy" name="Bitbuy.ca Exchange">
             <param name="apikey" />
             <param name="apisecret" />
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BTC</cryptocurrency>
-            <cryptocurrency>DAI</cryptocurrency>
             <cryptocurrency>ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
-            <cryptocurrency>XRP</cryptocurrency>
+        </ratesource>
+        <exchange prefix="stillmandigital" name="Stillman Digital">
+            <param name="apikey" />
+            <param name="apisecret" />
+            <cryptocurrency buyonly="true">BTC</cryptocurrency>
+            <cryptocurrency buyonly="true">ETH</cryptocurrency>
+            <help>https://www.stillmandigital.com</help>
+        </exchange>
+        <ratesource prefix="stillmandigital" name="Stillman Digital">
+            <param name="apikey" />
+            <param name="apisecret" />
+            <cryptocurrency buyonly="true">BTC</cryptocurrency>
+            <cryptocurrency buyonly="true">ETH</cryptocurrency>
         </ratesource>
         <cryptologo cryptocurrency="BNB" file="bnb.png"/>
         <cryptologo cryptocurrency="BNB" file="bnb.svg"/>
@@ -2176,7 +2187,6 @@
         <cryptologo cryptocurrency="USDC" file="usdc.svg"/>
         <!-- ADD your ERC20 tokens here. And don't forget to add cryptologos. -->
     </extension>
-    <extension class="com.generalbytes.batm.server.extensions.extra.examples.chat.ChatBotExtensionExample" />
     <extension class="com.generalbytes.batm.server.extensions.extra.nuls.NulsExtension" >
         <wallet prefix="nulsBinance" name="NULS">
             <param name="address" />
@@ -2300,12 +2310,12 @@
         <cryptologo cryptocurrency="ADA" file="cardano_ada.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.tron.TronExtension">
-        <wallet prefix="tridentTRC20_USDTTRON_6_TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t" name="Tron TRC20 Trident wallet - USDT">
+        <wallet prefix="tridentTRC20_USDTTRON_6_TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t" name="TRON TRC-20 TronGrid.io">
             <param name="apikey"/>
             <param name="privatekey"/>
             <param name="feeLimit"/>
             <help>apikey is obtained from trongrid.io; privatekey is 64 characters long hex string; feeLimit optional, default 30 [TRX]</help>
-            <cryptocurrency>USDTTRON</cryptocurrency>
+            <cryptocurrency buyonly="true">USDTTRON</cryptocurrency>
         </wallet>
         <wallet prefix="usdttrondemo" name="Demo Wallet">
             <param name="fiatCurrency" />
@@ -2363,16 +2373,4 @@
             <param sensitive="false" name="Onfido region" help="'EU', 'US' or 'CA'. Default: 'EU'."/>
         </identityverificationprovider>
     </extension>
-
-    <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.notification.NotificationExampleExtension" />
-    <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.TransactionExtension" />
-    <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.ProfitOverrideExtension" />
-    <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.identity.IdentityExampleExtension" />
-    <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.location.LocationExampleExtension" />
-    <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.identity.ExternalIdentityExampleExtension" />
-    <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.watchlists.WatchlistExtension" />
-    <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.rest.RESTExampleExtension" />
-    <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.communication.ExternalCommunicationExampleExtension" />
-    <extension autoload="false" class="com.generalbytes.batm.server.extensions.extra.examples.activeTerminals.ActiveTerminalsExtension" />
-
 </extensions>

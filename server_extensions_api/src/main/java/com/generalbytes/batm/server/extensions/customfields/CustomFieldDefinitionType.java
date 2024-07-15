@@ -4,6 +4,7 @@ import com.generalbytes.batm.server.extensions.customfields.value.BooleanCustomF
 import com.generalbytes.batm.server.extensions.customfields.value.ChoiceCustomFieldValue;
 import com.generalbytes.batm.server.extensions.customfields.value.CustomFieldValue;
 import com.generalbytes.batm.server.extensions.customfields.value.FileCustomFieldValue;
+import com.generalbytes.batm.server.extensions.customfields.value.LocalDateCustomFieldValue;
 import com.generalbytes.batm.server.extensions.customfields.value.StringCustomFieldValue;
 
 /**
@@ -39,7 +40,12 @@ public enum CustomFieldDefinitionType {
     /**
      * Document scan or other file
      */
-    DOCUMENT(FileCustomFieldValue.class);
+    DOCUMENT(FileCustomFieldValue.class),
+    /**
+     * A date value.
+     * Presented as date picker.
+     */
+    DATE(LocalDateCustomFieldValue.class);
 
     private final Class<? extends CustomFieldValue> allowedValueType;
 

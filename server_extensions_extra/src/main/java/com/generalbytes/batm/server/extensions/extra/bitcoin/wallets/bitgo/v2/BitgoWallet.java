@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2020 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2024 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -57,6 +57,8 @@ public class BitgoWallet implements IWallet, ICanSendMany {
     protected String url;
     protected static final Integer readTimeout = 90 * 1000; //90 seconds
     protected Integer numBlocks;
+    protected Integer feeRate;
+    protected Integer maxFeeRate;
 
     protected static final Map<String, String> cryptoCurrencies = new HashMap<String, String>() {
         {
@@ -93,10 +95,16 @@ public class BitgoWallet implements IWallet, ICanSendMany {
     };
 
     public BitgoWallet(String scheme, String host, int port, String token, String walletId, String walletPassphrase, Integer numBlocks) {
+        this(scheme, host, port, token, walletId, walletPassphrase, numBlocks, null, null);
+    }
+
+    public BitgoWallet(String scheme, String host, int port, String token, String walletId, String walletPassphrase, Integer numBlocks, Integer feeRate, Integer maxFeeRate) {
         this.walletId = walletId;
         this.walletPassphrase = walletPassphrase;
         this.url = new HttpUrl.Builder().scheme(scheme).host(host).port(port).build().toString();
         this.numBlocks = numBlocks;
+        this.feeRate = feeRate;
+        this.maxFeeRate = maxFeeRate;
 
         ClientConfig config = new ClientConfig();
         config.setHttpReadTimeout(readTimeout);
@@ -146,7 +154,7 @@ public class BitgoWallet implements IWallet, ICanSendMany {
     @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
         try {
-            final BitGoCoinRequest request = new BitGoCoinRequest(destinationAddress, toSatoshis(amount, cryptoCurrency), walletPassphrase, description, this.numBlocks);
+            final BitGoCoinRequest request = new BitGoCoinRequest(destinationAddress, toSatoshis(amount, cryptoCurrency), walletPassphrase, description, this.numBlocks, this.feeRate, this.maxFeeRate);
             String bitgoCryptoCurrency = cryptoCurrencies.get(cryptoCurrency);
             return getResultTxId(api.sendCoins(bitgoCryptoCurrency, this.walletId, request));
         } catch (HttpStatusIOException hse) {
@@ -172,7 +180,7 @@ public class BitgoWallet implements IWallet, ICanSendMany {
 
     @Override
     public String getCryptoAddress(String cryptoCurrency) {
-        if(cryptoCurrency == null) {
+        if (cryptoCurrency == null) {
             cryptoCurrency = getPreferredCryptoCurrency();
         }
         String bitgoCryptoCurrency = cryptoCurrencies.get(cryptoCurrency);
@@ -181,18 +189,18 @@ public class BitgoWallet implements IWallet, ICanSendMany {
         }
         try {
             final Map<String, Object> response = api.getWalletById(bitgoCryptoCurrency, walletId);
-            if(response == null || response.isEmpty()) {
+            if (response == null || response.isEmpty()) {
                 return null;
             }
 
             Object receiveAddressObj = response.get("receiveAddress");
-            if(receiveAddressObj == null || !(receiveAddressObj instanceof Map)) {
+            if (!(receiveAddressObj instanceof Map)) {
                 return null;
             }
 
             Map receiveAddressMap = (Map)receiveAddressObj;
             Object addressObj = receiveAddressMap.get("address");
-            if(addressObj == null || !(addressObj instanceof String)) {
+            if (!(addressObj instanceof String)) {
                 return null;
             }
             return (String)addressObj;
@@ -273,5 +281,13 @@ public class BitgoWallet implements IWallet, ICanSendMany {
 
     public String getWalletId() {
         return walletId;
+    }
+
+    public Integer getFeeRate() {
+        return feeRate;
+    }
+
+    public Integer getMaxFeeRate() {
+        return maxFeeRate;
     }
 }

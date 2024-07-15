@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2020 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2024 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -37,6 +37,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.dvchain.D
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.hitbtc.HitbtcExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.enigma.EnigmaExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.poloniex.PoloniexExchange;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillmandigital.StillmanDigitalExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.bitcoinpay.BitcoinPayPP;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.coinofsale.CoinOfSalePP;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.bitkub.BitKubRateSource;
@@ -220,11 +221,12 @@ public class BitcoinExtension extends AbstractExtension {
             } else if ("bitbuy".equalsIgnoreCase(prefix)) {
                 String apiKey = paramTokenizer.nextToken();
                 String apiSecret = paramTokenizer.nextToken();
-                String preferredFiatCurrency = FiatCurrency.CAD.getCode();
-                if (paramTokenizer.hasMoreTokens()) {
-                    preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase();
-                }
-                return new BitbuyExchange(apiKey, apiSecret, preferredFiatCurrency);
+                return new BitbuyExchange(apiKey, apiSecret);
+            } else if ("stillmandigital".equalsIgnoreCase(prefix)) {
+                String apiKey = paramTokenizer.nextToken();
+                String apiSecret = paramTokenizer.nextToken();
+                boolean useSandbox = paramTokenizer.hasMoreTokens() && paramTokenizer.nextToken().equals("sandbox");
+                return new StillmanDigitalExchange(apiKey, apiSecret, useSandbox);
             }
         }
         } catch (Exception e) {
@@ -289,9 +291,13 @@ public class BitcoinExtension extends AbstractExtension {
                 String proxyUrl = st.nextToken("\n").replaceFirst(":", "");
                 return new BitcoreWallet(apiKey, proxyUrl);
             } else if ("bitgo".equalsIgnoreCase(walletType) || "bitgonoforward".equalsIgnoreCase(walletType)) {
-                // bitgo:host:port:token:wallet_address:wallet_passphrase:num_blocks
+                // BitGo API Specification: https://developers.bitgo.com/api/express.wallet.sendcoins
+                //
+                // bitgo:host:port:token:wallet_address:wallet_passphrase:num_blocks:fee_rate:max_fee_rate
                 // but host is optionally including the "http://" and port is optional,
-                // num_blocks is an optional integer greater than 2 and it's used to calculate mining fee.
+                // num_blocks is an optional integer greater than 2 and it's used to calculate mining fee,
+                // fee_rate is an optional integer defined fee rate,
+                // max_fee_rate is an optional integer defined maximum fee rate.
                 // bitgo:http://localhost:80:token:wallet_address:wallet_passphrase
                 // bitgo:http://localhost:token:wallet_address:wallet_passphrase
                 // bitgo:localhost:token:wallet_address:wallet_passphrase
@@ -326,22 +332,25 @@ public class BitcoinExtension extends AbstractExtension {
                 host = tunnelAddress.getHostString();
                 port = tunnelAddress.getPort();
 
-                String blocks;
-                int num;
-                Integer numBlocks = 2;
-                if(st.hasMoreTokens()){
-                  blocks = st.nextToken();
-                  num = Integer.parseInt(blocks);
-                  if(num > 2) {
-                    numBlocks = num;
-                  }
+                int numBlocks = 2;
+                if (st.hasMoreTokens()) {
+                    int number = Integer.parseInt(st.nextToken());
+                    if (number > 2) {
+                        numBlocks = number;
+                    }
+                }
+
+                Integer feeRate = st.hasMoreTokens() ? Integer.parseInt(st.nextToken()) : null;
+                Integer maxFeeRate = st.hasMoreTokens() ? Integer.parseInt(st.nextToken()) : null;
+                if (feeRate != null && (maxFeeRate == null || feeRate > maxFeeRate)) {
+                    maxFeeRate = feeRate;
                 }
 
                 if ("bitgonoforward".equalsIgnoreCase(walletType)) {
-                  return new BitgoWalletWithUniqueAddresses(scheme, host, port, token, walletId, walletPassphrase, numBlocks);
+                    return new BitgoWalletWithUniqueAddresses(scheme, host, port, token, walletId, walletPassphrase, numBlocks, feeRate, maxFeeRate);
                 }
 
-                return new BitgoWallet(scheme, host, port, token, walletId, walletPassphrase, numBlocks);
+                return new BitgoWallet(scheme, host, port, token, walletId, walletPassphrase, numBlocks, feeRate, maxFeeRate);
 
             } else if ("coinbasewallet2".equalsIgnoreCase(walletType)
                 || "coinbasewallet2noforward".equalsIgnoreCase(walletType)) {
@@ -588,11 +597,12 @@ public class BitcoinExtension extends AbstractExtension {
             } else if ("bitbuy".equalsIgnoreCase(rsType)) {
                 String apiKey = st.nextToken();
                 String apiSecret = st.nextToken();
-                String preferredFiatCurrency = FiatCurrency.CAD.getCode();
-                if (st.hasMoreTokens()) {
-                    preferredFiatCurrency = st.nextToken().toUpperCase();
-                }
-                return new BitbuyExchange(apiKey, apiSecret, preferredFiatCurrency);
+                return new BitbuyExchange(apiKey, apiSecret);
+            } else if ("stillmandigital".equalsIgnoreCase(rsType)) {
+                String apiKey = st.nextToken();
+                String apiSecret = st.nextToken();
+                boolean useSandbox = st.hasMoreTokens() && st.nextToken().equals("sandbox");
+                return new StillmanDigitalExchange(apiKey, apiSecret, useSandbox);
             }
         }
         } catch (Exception e) {

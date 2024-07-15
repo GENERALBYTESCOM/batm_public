@@ -21,6 +21,7 @@ import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.IExchangeAdvanced;
 import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
 import com.generalbytes.batm.server.extensions.ITask;
+import com.generalbytes.batm.server.extensions.util.OrderBookPriceCalculator;
 import com.generalbytes.batm.server.extensions.util.net.RateLimiter;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -50,8 +51,6 @@ import si.mazi.rescu.HttpStatusIOException;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -61,8 +60,7 @@ import java.util.concurrent.TimeoutException;
 import static java.util.Comparator.comparing;
 
 public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceAdvanced {
-    private static final Comparator<LimitOrder> asksComparator = comparing(LimitOrder::getLimitPrice);
-    private static final Comparator<LimitOrder> bidsComparator = comparing(LimitOrder::getLimitPrice).reversed();
+    private static final OrderBookPriceCalculator<LimitOrder> orderBookPriceCalculator = new OrderBookPriceCalculator<>(LimitOrder::getLimitPrice, LimitOrder::getOriginalAmount);
 
     private String preferredFiatCurrency;
     private static final long cacheRefreshSeconds = 30;
@@ -262,10 +260,9 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
 
             OrderBook orderBook = marketDataService.getOrderBook(currencyPair);
             List<LimitOrder> asks = orderBook.getAsks();
-
-            Collections.sort(asks, asksComparator);
-
-            LimitOrder order = new LimitOrder(Order.OrderType.BID, getTradableAmount(amount, currencyPair), currencyPair, "", null, getTradablePrice(amount, asks));
+            BigDecimal tradablePrice = orderBookPriceCalculator.getBuyPrice(amount, asks);
+            log.debug("tradablePrice: {}", tradablePrice);
+            LimitOrder order = new LimitOrder(Order.OrderType.BID, getTradableAmount(amount, currencyPair), currencyPair, "", null, tradablePrice);
             log.debug("order = {}", order);
             RateLimiter.waitForPossibleCall(getClass());
             String orderId = tradeService.placeLimitOrder(order);
@@ -326,26 +323,6 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
         return new PurchaseCoinsTask(amount, cryptoCurrency, fiatCurrencyToUse, description);
     }
 
-    /**
-     *
-     * @param cryptoAmount
-     * @param bidsOrAsksSorted bids: highest first, asks: lowest first
-     * @return
-     * @throws IOException when tradable price not found, e.g orderbook not received or too small.
-     */
-    private BigDecimal getTradablePrice(BigDecimal cryptoAmount, List<LimitOrder> bidsOrAsksSorted) throws IOException {
-        BigDecimal total = BigDecimal.ZERO;
-
-        for (LimitOrder order : bidsOrAsksSorted) {
-            total = total.add(order.getOriginalAmount());
-            if (cryptoAmount.compareTo(total) <= 0) {
-                log.debug("tradablePrice: {}", order.getLimitPrice());
-                return order.getLimitPrice();
-            }
-        }
-        throw new IOException("tradable price not available");
-    }
-
     @Override
     public String getDepositAddress(String cryptoCurrency) {
         if (cryptoCurrency == null) {
@@ -404,10 +381,9 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
             List<LimitOrder> bids = orderBook.getBids();
             log.debug("bids.size(): {}", bids.size());
 
-            Collections.sort(bids, bidsComparator);
-
-            LimitOrder order = new LimitOrder(Order.OrderType.ASK, getTradableAmount(cryptoAmount, currencyPair), currencyPair,
-                "", null, getTradablePrice(cryptoAmount, bids));
+            BigDecimal tradablePrice = orderBookPriceCalculator.getSellPrice(cryptoAmount, bids);
+            log.debug("tradablePrice: {}", tradablePrice);
+            LimitOrder order = new LimitOrder(Order.OrderType.ASK, getTradableAmount(cryptoAmount, currencyPair), currencyPair, "", null, tradablePrice);
 
             log.debug("order: {}", order);
             RateLimiter.waitForPossibleCall(getClass());
@@ -578,7 +554,8 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
             }
 
             if (tradableLimit == null) {
-                log.error("Not enough bids received from the exchange, bids count: {}, bids total: {}, crypto amount: {}", bids.size(), bidsTotal, cryptoAmount);
+                log.error("Not enough bids received from the exchange, bids count: {}, bids total: {}, crypto amount: {}, currency pair: {}",
+                    bids.size(), bidsTotal, cryptoAmount, currencyPair);
                 return null;
             }
             log.debug("Called {} exchange for SELL rate: {}:{} = {}", name, cryptoCurrency, fiatCurrency, tradableLimit);
@@ -628,10 +605,9 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
                 OrderBook orderBook = marketDataService.getOrderBook(currencyPair);
                 List<LimitOrder> asks = orderBook.getAsks();
 
-                asks.sort(asksComparator);
-
-                LimitOrder order = new LimitOrder(Order.OrderType.BID, getTradableAmount(amount, currencyPair), currencyPair, "", null,
-                    getTradablePrice(amount, asks));
+                BigDecimal tradablePrice = orderBookPriceCalculator.getBuyPrice(amount, asks);
+                log.debug("tradablePrice: {}", tradablePrice);
+                LimitOrder order = new LimitOrder(Order.OrderType.BID, getTradableAmount(amount, currencyPair), currencyPair, "", null, tradablePrice);
 
                 log.debug("limitOrder = {}", order);
 
@@ -759,10 +735,9 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
                 List<LimitOrder> bids = orderBook.getBids();
                 log.debug("bids.size(): {}", bids.size());
 
-                Collections.sort(bids, bidsComparator);
-
-                LimitOrder order = new LimitOrder(Order.OrderType.ASK, getTradableAmount(cryptoAmount, currencyPair), currencyPair,
-                    "", null, getTradablePrice(cryptoAmount, bids));
+                BigDecimal tradablePrice = orderBookPriceCalculator.getSellPrice(cryptoAmount, bids);
+                log.debug("tradablePrice: {}", tradablePrice);
+                LimitOrder order = new LimitOrder(Order.OrderType.ASK, getTradableAmount(cryptoAmount, currencyPair), currencyPair, "", null, tradablePrice);
                 log.debug("order = {}", order);
 
                 RateLimiter.waitForPossibleCall(getClass());

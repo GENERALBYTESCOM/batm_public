@@ -36,7 +36,7 @@ public class ParsedSanctions implements IParsedSanctions {
                         matchedParties.add(new Match(getPartyId(item), 100));
                         continue;
                     }
-                    if (containsSubstring(lastName, item.getAliases())) {
+                    if (aliasContainsLastName(lastName, item.getAliases())) {
                         matchedParties.add(new Match(getPartyId(item), 50));
                     }
                 }
@@ -56,7 +56,7 @@ public class ParsedSanctions implements IParsedSanctions {
                     }
                     continue;
                 }
-                if (containsSubstring(lastName, item.getAliases())) {
+                if (aliasContainsLastName(lastName, item.getAliases())) {
                     candidateRecords.add(item);
                 }
             }
@@ -110,5 +110,19 @@ public class ParsedSanctions implements IParsedSanctions {
 
     private boolean containsSubstring(String substring, String input) {
         return input != null && input.toLowerCase().contains(substring.toLowerCase());
+    }
+
+    private boolean aliasContainsLastName(String lastName, String alias) {
+        if (alias == null) {
+            return false;
+        }
+        String aliasNoSeparators = alias.replaceAll(";", "");
+        String[] aliasWords = aliasNoSeparators.split(" ");
+        for (String aliasWord : aliasWords) {
+            if (aliasWord.equalsIgnoreCase(lastName)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

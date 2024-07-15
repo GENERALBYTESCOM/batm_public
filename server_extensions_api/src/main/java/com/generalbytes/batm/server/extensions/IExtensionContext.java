@@ -52,6 +52,10 @@ public interface IExtensionContext {
     int PERMISSION_WRITE = 2;
     int PERMISSION_EXECUTE = 4;
 
+    void addApplicationListener(IApplicationListener listener);
+
+    boolean removeApplicationListener(IApplicationListener listener);
+
     /**
      * Registers listener for listening to transaction events
      * @param listener
@@ -130,6 +134,20 @@ public interface IExtensionContext {
      * @throws UpdateException if the update was not successful
      */
     ITransactionDetails updateTransaction(String rid, Integer status, String detail, Set<String> tags) throws UpdateException;
+
+    /**
+     * @param rid        remote transaction ID of the transaction to be updated
+     * @param status     new status to be set or null to keep it unmodified
+     * @param detail     detail message to be appended if there already is a detail set. Null to keep it unmodified
+     * @param customData custom data to be set to the transaction.
+     *                   This will replace existing custom data stored for the transaction.
+     *                   If you need to keep existing data obtain them first using {@link ITransactionDetails#getCustomData()}.
+     *                   Providing an empty map will remove all existing custom data.
+     *                   Null keeps the existing custom data unchanged.
+     * @return modified transaction details
+     * @throws UpdateException if the update was not successful
+     */
+    ITransactionDetails updateTransaction(String rid, Integer status, String detail,  Map<String, String> customData) throws UpdateException;
 
     ITransactionDetails updateTransaction(String rid, Integer status, String detail) throws UpdateException;
 
@@ -291,6 +309,17 @@ public interface IExtensionContext {
     boolean addIdentityPiece(String identityPublicId, IIdentityPiece iidentityPiece);
 
     /**
+     * Update an existing personal info identity piece.
+     *
+     * <p>This method can only be used to update <b>Personal Info</b> identity pieces.
+     *
+     * @param identityPublicId public ID of an existing identity to be updated
+     * @param identityPiece identity piece to be updated
+     * @return true in case of success, false otherwise
+     */
+    boolean updateIdentityPiecePersonalInfo(String identityPublicId, IIdentityPiece identityPiece);
+
+    /**
      * @param identityId     public ID of an existing identity to be updated
      * @param state new state to be set
      * @param note new note to be set
@@ -308,6 +337,14 @@ public interface IExtensionContext {
                              List<ILimit> limitCashPerTransaction, List<ILimit> limitCashPerHour, List<ILimit> limitCashPerDay, List<ILimit> limitCashPerWeek,
                              List<ILimit> limitCashPerMonth, List<ILimit> limitCashPer3Months, List<ILimit> limitCashPer12Months, List<ILimit> limitCashPerCalendarQuarter,
                              List<ILimit> limitCashPerCalendarYear, List<ILimit> limitCashTotalIdentity, String configurationCashCurrency);
+
+    /**
+     * Updates the marketing opt-in agreement for the identity identified by {@code identityId}).
+     *
+     * @param identityId              public ID of an existing identity to be updated
+     * @param agreeWithMarketingOptIn True if the customer agrees to marketing opt-in, false otherwise.
+     */
+    void updateIdentityMarketingOptIn(String identityId, boolean agreeWithMarketingOptIn);
 
     /**
      * @param customFieldDefinitionId use {@link CustomFieldDefinition#getId()} of a custom field to set
@@ -805,4 +842,14 @@ public interface IExtensionContext {
      * @param remoteOrLocalTransactionId
      */
     void markTransactionAsWithdrawn(String remoteOrLocalTransactionId);
+
+    /**
+     * Allows to manage the unlock time of a specific transaction.
+     * This can be used to unlock the transaction sooner or prolong it.
+     * Transactions that are locked will remain in the output queue and won't be flushed until they are unlocked.
+     *
+     * @param rid                Remote transaction ID
+     * @param serverTimeToUnlock The absolute datetime when the transaction should unlock.
+     */
+    void unlockTransaction(String rid, Date serverTimeToUnlock);
 }

@@ -20,6 +20,7 @@ package com.generalbytes.batm.server.extensions;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public interface ITransactionDetails {
@@ -29,6 +30,8 @@ public interface ITransactionDetails {
     int TYPE_SELL_CRYPTO = 1;
     int TYPE_WITHDRAW_CASH = 2;
     int TYPE_CASHBACK = 3;
+    int TYPE_ORDER_CRYPTO = 4;
+    int TYPE_DEPOSIT_CASH = 5;
 
     //Buy states
     int STATUS_BUY_IN_PROGRESS = 0;
@@ -52,6 +55,16 @@ public interface ITransactionDetails {
     //Cashback states
     int STATUS_CASHBACK_COMPLETED = 0;
     int STATUS_CASHBACK_ERROR = 1;
+
+    // ORDER STATES
+    int STATUS_ORDER_IN_PROGRESS = 0;
+    int STATUS_ORDER_CASH_DEPOSITED = 1;
+    int STATUS_ORDER_COMPLETED = 2;
+    int STATUS_ORDER_ERROR = 3;
+
+    // DEPOSIT STATES
+    int STATUS_DEPOSIT_COMPLETED = 0;
+    int STATUS_DEPOSIT_ERROR = 1;
 
     //error codes
     int BUY_ERROR_NO_ERROR = 0;
@@ -303,4 +316,17 @@ public interface ITransactionDetails {
     Set<String> getTags();
 
     List<IBanknoteCounts> getBanknotes();
+
+    /**
+     * @return Custom data for the transaction.
+     * Saved when returned from {@link ITransactionListener#onTransactionCreated(ITransactionDetails)}
+     * or {@link ITransactionListener#onTransactionUpdated(ITransactionDetails)}
+     * or using {@link IExtensionContext#updateTransaction(String, Integer, String, Map)}.
+     */
+    Map<String, String> getCustomData();
+
+    /**
+     * @return Payment type: CASH/PAYMENT_CARD
+     */
+    String getPaymentType();
 }

@@ -21,7 +21,7 @@ public class LndWalletTest {
     public void sendCoins() {
         IWalletInformation i = w.getWalletInformation();
         String paymentHash = w.sendCoins("LNBC1U1PWJMJJNPP5YRDV8EPPK74UZ69QVHK940EHE9469H8GHXE626MZGCLZ202REZKQDPY2PKXZ7FQVYSXWCTDV5SX7E3QWD3HYCT5VD5QCQZPGQNL8L0227LDNLEJA3HQWUFHF788ADMD640YKFZ8A9FAGYG4RQE7XGC4CXFMTVU8SAWPE3WVU8WNUHW52R6LSD4797RZ0DPMPTHH3K0CQ378HK2",
-            new BigDecimal("0.000001"), CryptoCurrency.LBTC.getCode(), "");
+            new BigDecimal("0.000001"), CryptoCurrency.LBTC.getCode(), "R23V4C");
         System.out.println(paymentHash);
     }
 
