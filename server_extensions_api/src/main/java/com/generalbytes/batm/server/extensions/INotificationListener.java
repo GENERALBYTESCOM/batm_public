@@ -291,11 +291,8 @@ public interface INotificationListener {
     default void watchlistScanBan(String terminalSerialNumber) {}
 
     /**
-     * Deprecated since 1.6.4, use {@link INotificationListener#watchlistScanIdentityMatches(WatchListScanIdentityMatchesData)} instead.
-     *
-     * @param identityPublicId Public ID of Identity.
+     * There is a match for Identity on a Watchlist
      */
-    @Deprecated
     default void watchlistScanIdentityMatches(String identityPublicId) {}
 
     /**

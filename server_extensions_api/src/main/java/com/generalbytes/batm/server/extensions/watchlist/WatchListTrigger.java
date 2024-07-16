@@ -19,19 +19,9 @@ package com.generalbytes.batm.server.extensions.watchlist;
 
 public enum WatchListTrigger {
 
-    MANUAL("Manual"),
-    PRE_TRANSACTION("Pre-Transaction"),
-    PERIODIC("Periodic"),
-    EXTENSION("Extension");
-
-    private final String title;
-
-    WatchListTrigger(String title) {
-        this.title = title;
-    }
-
-    public String getTitle() {
-        return title;
-    }
+    MANUAL,
+    PRE_TRANSACTION,
+    PERIODIC,
+    EXTENSION
 
 }

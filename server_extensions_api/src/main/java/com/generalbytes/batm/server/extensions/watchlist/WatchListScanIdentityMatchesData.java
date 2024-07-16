@@ -17,70 +17,86 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.watchlist;
 
-public class WatchListScanIdentityMatchesData {
+import java.io.Serializable;
+
+public class WatchListScanIdentityMatchesData implements Serializable {
 
     /**
-     * Public ID of identity. Can be null.
+     * Public ID of identity.
      */
-    private final String identityPublicId;
+    private String identityPublicId;
+
     /**
-     * Message body.
+     * Code of WatchList.
      */
-    private final String messageBody;
+    private String watchListCode;
+
+    /**
+     * Unique identifier of the matching entity.
+     */
+    private String partyId;
+
     /**
      * Type of WatchList trigger.
      */
-    private final WatchListTrigger trigger;
-    /**
-     * Terminal serial number. Can be null.
-     */
-    private final String terminalSerialNumber;
-    /**
-     * Match score by WatchList provider. Can be null.
-     */
-    private final Integer matchScore;
+    private WatchListTrigger trigger;
+
     /**
      * Result of scan.
      */
-    private final WatchListScanResult scanResult;
+    private WatchListScanResult scanResult;
 
-    public WatchListScanIdentityMatchesData(String identityPublicId,
-                                            String messageBody,
-                                            WatchListTrigger trigger,
-                                            String terminalSerialNumber,
-                                            Integer matchScore,
-                                            WatchListScanResult scanResult
-    ) {
-        this.identityPublicId = identityPublicId;
-        this.messageBody = messageBody;
-        this.trigger = trigger;
-        this.terminalSerialNumber = terminalSerialNumber;
-        this.matchScore = matchScore;
-        this.scanResult = scanResult;
-    }
+    /**
+     * Terminal serial number. It is available if the trigger is {@link WatchListTrigger#PRE_TRANSACTION}, otherwise null.
+     */
+    private String terminalSerialNumber;
 
     public String getIdentityPublicId() {
         return identityPublicId;
     }
 
-    public String getMessageBody() {
-        return messageBody;
+    public void setIdentityPublicId(String identityPublicId) {
+        this.identityPublicId = identityPublicId;
+    }
+
+    public String getWatchListCode() {
+        return watchListCode;
+    }
+
+    public void setWatchListCode(String watchListCode) {
+        this.watchListCode = watchListCode;
+    }
+
+    public String getPartyId() {
+        return partyId;
+    }
+
+    public void setPartyId(String partyId) {
+        this.partyId = partyId;
     }
 
     public WatchListTrigger getTrigger() {
         return trigger;
     }
 
-    public String getTerminalSerialNumber() {
-        return terminalSerialNumber;
-    }
-
-    public Integer getMatchScore() {
-        return matchScore;
+    public void setTrigger(WatchListTrigger trigger) {
+        this.trigger = trigger;
     }
 
     public WatchListScanResult getScanResult() {
         return scanResult;
+    }
+
+    public void setScanResult(WatchListScanResult scanResult) {
+        this.scanResult = scanResult;
+    }
+
+    public String getTerminalSerialNumber() {
+        return terminalSerialNumber;
+    }
+
+    public void setTerminalSerialNumber(String terminalSerialNumber) {
+        this.terminalSerialNumber = terminalSerialNumber;
     }
 
 }

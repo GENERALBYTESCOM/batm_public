@@ -19,18 +19,8 @@ package com.generalbytes.batm.server.extensions.watchlist;
 
 public enum WatchListScanResult {
 
-    NO_MATCH("OK"),
-    PARTIAL_MATCH("Partial Match"),
-    FULL_MATCH("Full Match");
-
-    private final String title;
-
-    WatchListScanResult(String title) {
-        this.title = title;
-    }
-
-    public String getTitle() {
-        return title;
-    }
+    NO_MATCH,
+    PARTIAL_MATCH,
+    FULL_MATCH
 
 }
