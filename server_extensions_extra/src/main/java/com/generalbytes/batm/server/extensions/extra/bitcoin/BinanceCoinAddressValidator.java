@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2020 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2024 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -29,7 +29,7 @@ public class BinanceCoinAddressValidator implements ICryptoAddressValidator {
     @Override
     public boolean isAddressValid(String address) {
         try {
-            Bech32.Bech32Data bech32Data = Bech32.decodeUnlimitedLength(address);
+            Bech32.Bech32Data bech32Data = Bech32.decodeUnlimitedLength(getAddressWithoutTag(address));
             if (!bech32Data.hrp.equals("bnb")) {
                 log.info("Address HRP is not 'bnb'");
                 return false;
@@ -50,4 +50,9 @@ public class BinanceCoinAddressValidator implements ICryptoAddressValidator {
     public boolean mustBeBase58Address() {
         return false;
     }
+
+    private String getAddressWithoutTag(String address) {
+        return address.split(":")[0];
+    }
+
 }
