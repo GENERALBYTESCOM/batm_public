@@ -64,6 +64,7 @@ public class BitFlyerExchange implements IRateSourceAdvanced, IExchangeAdvanced 
 
     static {
         CRYPTO_CURRENCIES.add(CryptoCurrency.BTC.getCode());
+        CRYPTO_CURRENCIES.add(CryptoCurrency.XLM.getCode());
     }
 
     private void initConstants(String baseUrl) {
