@@ -337,4 +337,11 @@ public interface INotificationListener {
 
     default void verificationProviderDeclined(String terminalSerialNumber, String identityPublicId) {}
 
+    /**
+     * Notification triggered when a used exchange pair is not available.
+     *
+     * @param fromCurrency Source currency in the exchange pair.
+     * @param toCurrency Destination currency in the exchange pair.
+     */
+    default void exchangePairNotAvailable(String fromCurrency, String toCurrency) {}
 }
