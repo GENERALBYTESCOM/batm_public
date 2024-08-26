@@ -20,8 +20,10 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.IGeneratesNewDepositCryptoAddress;
 import com.generalbytes.batm.server.extensions.IQueryableWallet;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.BitGoCreateAddressRequest;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.BitGoAddressResponse;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.BitGoCreateAddressRequest;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.BitGoTransfer;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.BitGoTransfersResponse;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.ErrorResponseException;
 import com.generalbytes.batm.server.extensions.payment.ReceivedAmount;
 import org.slf4j.Logger;
@@ -29,12 +31,16 @@ import org.slf4j.LoggerFactory;
 import si.mazi.rescu.HttpStatusIOException;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class BitgoWalletWithUniqueAddresses extends BitgoWallet implements IGeneratesNewDepositCryptoAddress, IQueryableWallet {
     private static final Logger log = LoggerFactory.getLogger(BitgoWalletWithUniqueAddresses.class);
 
+    private static final String TRANSFER_STATE_CONFIRMED = "confirmed";
+    private static final String TRANSFER_TYPE_RECEIVE = "receive";
     private static final Map<String, String> newAddressCryptoCurrency = new HashMap<String, String>() {
         {
             put(CryptoCurrency.USDT.getCode(), "eth");
@@ -93,11 +99,30 @@ public class BitgoWalletWithUniqueAddresses extends BitgoWallet implements IGene
         }
 
         try {
-            BitGoAddressResponse resp = api.getAddress(bitgoCryptoCurrency, walletId, address);
-            if (resp.getBalance().getConfirmedBalance().compareTo(BigDecimal.ZERO) > 0) {
-                return new ReceivedAmount(fromSatoshis(cryptoCurrency, resp.getBalance().getConfirmedBalance()), 999);
+            BitGoTransfersResponse transfersResponse = api.getTransfers(
+                bitgoCryptoCurrency,
+                walletId,
+                TRANSFER_STATE_CONFIRMED,
+                TRANSFER_TYPE_RECEIVE,
+                address
+            );
+            BigDecimal totalInBaseUnits = BigDecimal.ZERO;
+            int confirmations = 0;
+            List<String> transactionHashes = new ArrayList<>();
+
+            for (BitGoTransfer confirmedTransfer : transfersResponse.getTransfers()) {
+                BigDecimal valueInBaseUnits = fromSatoshis(cryptoCurrency, confirmedTransfer.getValue());
+
+                totalInBaseUnits = totalInBaseUnits.add(valueInBaseUnits);
+                if (confirmations == 0 || confirmedTransfer.getConfirmations() < confirmations) {
+                    confirmations = confirmedTransfer.getConfirmations();
+                }
+                transactionHashes.add(confirmedTransfer.getTransactionHash());
             }
-            return new ReceivedAmount(fromSatoshis(cryptoCurrency, resp.getBalance().getBalance()), 0);
+
+            ReceivedAmount receivedAmount = new ReceivedAmount(totalInBaseUnits, confirmations);
+            receivedAmount.setTransactionHashes(transactionHashes);
+            return receivedAmount;
         } catch (HttpStatusIOException e) {
             log.debug("get address error: {}", e.getHttpBody());
         } catch (ErrorResponseException e) {
