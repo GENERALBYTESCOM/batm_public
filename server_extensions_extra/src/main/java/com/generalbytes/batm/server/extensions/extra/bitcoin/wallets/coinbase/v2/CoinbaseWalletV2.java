@@ -220,7 +220,7 @@ public class CoinbaseWalletV2 implements IWallet {
                 destinationTag = addressParts[1];
             }
         }
-        if (CryptoCurrency.USDT.getCode().equals(cryptoCurrency)) {
+        if (CryptoCurrency.USDT.getCode().equals(cryptoCurrency) || CryptoCurrency.ADA.getCode().equals(cryptoCurrency)) {
             amount = amount.setScale(6, RoundingMode.FLOOR);
         }
         log.info("sending {} {} to {}", amount, cryptoCurrency, destinationAddress);

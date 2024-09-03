@@ -41,6 +41,7 @@ import si.mazi.rescu.RestProxyFactory;
 import javax.net.ssl.SSLContext;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -264,6 +265,9 @@ public class CoinbaseExchange implements IRateSourceAdvanced, IExchangeAdvanced 
     @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
         try {
+            if (CryptoCurrency.USDT.getCode().equals(cryptoCurrency) || CryptoCurrency.ADA.getCode().equals(cryptoCurrency)) {
+                amount = amount.setScale(6, RoundingMode.FLOOR);
+            }
             String coinBaseTime = getTime();
             CBSendCoinsRequest sendCoinsRequest = new CBSendCoinsRequest();
             sendCoinsRequest.to = destinationAddress;
@@ -271,6 +275,7 @@ public class CoinbaseExchange implements IRateSourceAdvanced, IExchangeAdvanced 
             sendCoinsRequest.currency = cryptoCurrency.toUpperCase();
             sendCoinsRequest.description = description;
             RateLimiter.waitForPossibleCall(getClass());
+            log.info("sending {} {} to {}", amount, cryptoCurrency, destinationAddress);
             CBSendCoinsResponse sendCoinsResponse = api.sendCoins(CB_VERSION, apiKey, CoinbaseDigest.createInstance(secretKey), coinBaseTime, getAccountId(accountName, cryptoCurrency), sendCoinsRequest);
             if (sendCoinsResponse.errors == null) {
                 return sendCoinsResponse.data.id;
