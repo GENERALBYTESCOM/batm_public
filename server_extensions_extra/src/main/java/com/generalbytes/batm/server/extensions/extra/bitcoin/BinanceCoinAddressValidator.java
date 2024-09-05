@@ -36,7 +36,7 @@ public class BinanceCoinAddressValidator implements ICryptoAddressValidator {
             }
             return true;
         } catch (AddressFormatException e) {
-            log.error("Cannot decode Bech32 address", e);
+            log.info("Invalid BNB address format.");
             return false;
         }
     }
