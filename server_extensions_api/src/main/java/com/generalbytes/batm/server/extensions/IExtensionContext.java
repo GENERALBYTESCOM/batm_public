@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2020 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2024 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -307,6 +307,14 @@ public interface IExtensionContext {
      * @return true in case of success
      */
     boolean addIdentityPiece(String identityPublicId, IIdentityPiece iidentityPiece);
+
+    /**
+     * Add note to identity.
+     * @param identityPublicId Public ID of identity.
+     * @param note             Text of note.
+     * @return Return true if note has been set to the identity. Otherwise, return false.
+     */
+    boolean addNoteToIdentity(String identityPublicId, String note);
 
     /**
      * Update an existing personal info identity piece.
