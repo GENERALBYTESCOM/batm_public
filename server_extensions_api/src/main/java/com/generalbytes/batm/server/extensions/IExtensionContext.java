@@ -314,7 +314,9 @@ public interface IExtensionContext {
      * @param note             Text of note.
      * @return Return true if note has been set to the identity. Otherwise, return false.
      */
-    boolean addNoteToIdentity(String identityPublicId, String note);
+    default boolean addNoteToIdentity(String identityPublicId, String note) {
+        return false;
+    }
 
     /**
      * Update an existing personal info identity piece.

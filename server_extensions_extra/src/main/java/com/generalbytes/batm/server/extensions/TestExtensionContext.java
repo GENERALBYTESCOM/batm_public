@@ -210,11 +210,6 @@ public class TestExtensionContext implements IExtensionContext {
     }
 
     @Override
-    public boolean addNoteToIdentity(String identityPublicId, String note) {
-        return false;
-    }
-
-    @Override
     public boolean updateIdentityPiecePersonalInfo(String identityPublicId, IIdentityPiece identityPiece) {
         return false;
     }
