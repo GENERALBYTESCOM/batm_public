@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2020 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2024 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -852,4 +852,19 @@ public interface IExtensionContext {
      * @param serverTimeToUnlock The absolute datetime when the transaction should unlock.
      */
     void unlockTransaction(String rid, Date serverTimeToUnlock);
+
+    /**
+     * Returns the custom string value set in CAS.
+     *
+     * @param machineSerialNumber Terminal or GB Safe serial number.
+     * @param customStringName    Name of custom string.
+     * @param language            Language. For default value, set language to {@code "default"} or leave blank.
+     *                            If no value is found for the specified language, the value for the default language
+     *                            will be returned (if available), otherwise {@code null}.
+     * @return Custom string value from the selected terminal or GB Safe in the selected language. Returns {@code null} if not found.
+     */
+    default String getCustomStringValue(String machineSerialNumber, String customStringName, String language) {
+        return null;
+    }
+
 }
