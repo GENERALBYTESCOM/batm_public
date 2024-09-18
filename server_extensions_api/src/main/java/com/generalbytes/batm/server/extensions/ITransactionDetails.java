@@ -331,8 +331,7 @@ public interface ITransactionDetails {
     String getPaymentType();
 
     /**
-     * UUID used for LBTC (Lightning network) transactions.
-     * @return UUID of LBTC (Lightning network) transaction.
+     * @return UUID of transaction.
      */
     String getUuid();
 
