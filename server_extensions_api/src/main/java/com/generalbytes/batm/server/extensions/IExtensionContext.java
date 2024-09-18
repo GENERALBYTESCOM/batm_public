@@ -852,4 +852,19 @@ public interface IExtensionContext {
      * @param serverTimeToUnlock The absolute datetime when the transaction should unlock.
      */
     void unlockTransaction(String rid, Date serverTimeToUnlock);
+
+    /**
+     * Returns the custom string value set in CAS.
+     *
+     * @param serialNumber     Terminal or GB Safe serial number.
+     * @param customStringName Name of custom string.
+     * @param language         Language in the ISO standard (for example 'en' for English, 'de' for German, 'de_CH' for Swiss German etc.).
+     *                         For default value, set language to {@code "default"} or leave blank. If no value is found for the specified
+     *                         language, the value for the default language will be returned (if available), otherwise {@code null}.
+     * @return Custom string value from the selected terminal or GB Safe in the selected language. Returns {@code null} if not found.
+     */
+    default String getCustomStringValue(String serialNumber, String customStringName, String language) {
+        return null;
+    }
+
 }
