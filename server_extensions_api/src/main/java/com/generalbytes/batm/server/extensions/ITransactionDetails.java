@@ -329,4 +329,17 @@ public interface ITransactionDetails {
      * @return Payment type: CASH/PAYMENT_CARD
      */
     String getPaymentType();
+
+    /**
+     * UUID used for LBTC (Lightning network) transactions.
+     * @return UUID of LBTC (Lightning network) transaction.
+     */
+    String getUuid();
+
+    /**
+     * Returns the name of the crypto setting used for the transaction.
+     * @return Name of crypto setting used for the transaction.
+     */
+    String getNameOfCryptoSettingUsed();
+
 }
