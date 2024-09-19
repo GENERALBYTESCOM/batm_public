@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2020 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2024 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -35,6 +35,7 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.net.InetSocketAddress;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -309,6 +310,16 @@ public interface IExtensionContext {
     boolean addIdentityPiece(String identityPublicId, IIdentityPiece iidentityPiece);
 
     /**
+     * Add note to identity.
+     * @param identityPublicId Public ID of identity.
+     * @param note             Text of note.
+     * @return Return true if note has been set to the identity. Otherwise, return false.
+     */
+    default boolean addNoteToIdentity(String identityPublicId, String note) {
+        return false;
+    }
+
+    /**
      * Update an existing personal info identity piece.
      *
      * <p>This method can only be used to update <b>Personal Info</b> identity pieces.
@@ -508,13 +519,13 @@ public interface IExtensionContext {
      * @throws BuyException
      */
     ITransactionBuyInfo buyCrypto(String terminalSerialNumber, BigDecimal fiatAmount, String fiatCurrency, BigDecimal cryptoAmount, String cryptoCurrency, String destinationAddress, String identityPublicId, String discountCode) throws BuyException;
-        /**
-         * Call this transaction to create a cash back transaction. After this call server will allocate cash for the customer that can visit machine and withdraw cash.
-         * @param fiatAmount
-         * @param fiatCurrency
-         * @param identityPublicId
-         * @return - read ITransactionSellInfo.getTransactionUUID() to find out what should be filled in sell QR code.
-         */
+    /**
+     * Call this transaction to create a cash back transaction. After this call server will allocate cash for the customer that can visit machine and withdraw cash.
+     * @param fiatAmount
+     * @param fiatCurrency
+     * @param identityPublicId
+     * @return - read ITransactionSellInfo.getTransactionUUID() to find out what should be filled in sell QR code.
+     */
     ITransactionCashbackInfo cashback(String terminalSerialNumber, BigDecimal fiatAmount, String fiatCurrency, String identityPublicId) throws CashbackException;
 
 
@@ -852,4 +863,17 @@ public interface IExtensionContext {
      * @param serverTimeToUnlock The absolute datetime when the transaction should unlock.
      */
     void unlockTransaction(String rid, Date serverTimeToUnlock);
+
+    /**
+     * Returns the list of custom strings.
+     *
+     * @param serialNumber     Serial number of terminal or GB Safe.
+     * @param customStringName Name of custom string. If null, returns all custom strings of selected terminal or GB Safe.
+     * @return Values of the selected custom string in all available languages from the selected terminal or GB Safe.
+     *         Returns an empty list if no custom string is found.
+     */
+    default List<ICustomString> getCustomStrings(String serialNumber, String customStringName) {
+        return new ArrayList<>();
+    }
+
 }

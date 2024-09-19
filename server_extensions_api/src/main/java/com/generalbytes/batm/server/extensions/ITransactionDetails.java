@@ -329,4 +329,16 @@ public interface ITransactionDetails {
      * @return Payment type: CASH/PAYMENT_CARD
      */
     String getPaymentType();
+
+    /**
+     * @return UUID of transaction.
+     */
+    String getUuid();
+
+    /**
+     * Returns the name of the crypto setting used for the transaction.
+     * @return Name of crypto setting used for the transaction.
+     */
+    String getNameOfCryptoSettingUsed();
+
 }

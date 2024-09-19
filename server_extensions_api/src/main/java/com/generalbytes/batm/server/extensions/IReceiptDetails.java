@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2020 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2024 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -16,6 +16,8 @@
  *
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions;
+
+import java.util.Set;
 
 public interface IReceiptDetails {
 
@@ -48,5 +50,10 @@ public interface IReceiptDetails {
      * @return user selected language on the terminal
      */
     String getUserLanguage();
+
+    /**
+     * @return Methods used to send the receipt. It always contains at least one transfer method.
+     */
+    Set<ReceiptTransferMethod> getTransferMethods();
 
 }
