@@ -35,6 +35,7 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.net.InetSocketAddress;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -852,4 +853,17 @@ public interface IExtensionContext {
      * @param serverTimeToUnlock The absolute datetime when the transaction should unlock.
      */
     void unlockTransaction(String rid, Date serverTimeToUnlock);
+
+    /**
+     * Returns the list of custom strings.
+     *
+     * @param serialNumber     Serial number of terminal or GB Safe.
+     * @param customStringName Name of custom string. If null, returns all custom strings of selected terminal or GB Safe.
+     * @return Values of the selected custom string in all available languages from the selected terminal or GB Safe.
+     *         Returns an empty list if no custom string is found.
+     */
+    default List<ICustomString> getCustomStrings(String serialNumber, String customStringName) {
+        return new ArrayList<>();
+    }
+
 }
