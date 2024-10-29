@@ -28,7 +28,6 @@ import com.generalbytes.batm.server.extensions.communication.voicecall.IVoiceCal
 import com.generalbytes.batm.server.extensions.travelrule.IWalletTypeEvaluationProvider;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
-import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -209,6 +208,6 @@ public interface IExtension {
      * @return Set of wallet type evaluation providers.
      * @see IWalletTypeEvaluationProvider
      */
-    Collection<IWalletTypeEvaluationProvider> getWalletTypeEvaluationProviders();
+    Set<IWalletTypeEvaluationProvider> getWalletTypeEvaluationProviders();
 
 }

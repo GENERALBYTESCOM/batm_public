@@ -27,7 +27,6 @@ import com.generalbytes.batm.server.extensions.communication.voicecall.IVoiceCal
 import com.generalbytes.batm.server.extensions.travelrule.IWalletTypeEvaluationProvider;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 
@@ -145,7 +144,7 @@ public abstract class AbstractExtension implements IExtension {
     }
 
     @Override
-    public Collection<IWalletTypeEvaluationProvider> getWalletTypeEvaluationProviders() {
+    public Set<IWalletTypeEvaluationProvider> getWalletTypeEvaluationProviders() {
         return Collections.emptySet();
     }
 }
