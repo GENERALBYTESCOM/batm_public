@@ -25,8 +25,10 @@ import com.generalbytes.batm.server.extensions.aml.verification.IIdentityVerific
 import com.generalbytes.batm.server.extensions.communication.ICommunicationProvider;
 import com.generalbytes.batm.server.extensions.communication.IPhoneLookupProvider;
 import com.generalbytes.batm.server.extensions.communication.voicecall.IVoiceCallProvider;
+import com.generalbytes.batm.server.extensions.travelrule.IWalletTypeEvaluationProvider;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
+import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -200,5 +202,13 @@ public interface IExtension {
      */
 
     IIdentityVerificationProvider createIdentityVerificationProvider(String colonDelimitedParameters, String gbApiKey);
+
+    /**
+     * Get wallet type evaluation providers.
+     *
+     * @return Set of wallet type evaluation providers.
+     * @see IWalletTypeEvaluationProvider
+     */
+    Collection<IWalletTypeEvaluationProvider> getWalletTypeEvaluationProviders();
 
 }

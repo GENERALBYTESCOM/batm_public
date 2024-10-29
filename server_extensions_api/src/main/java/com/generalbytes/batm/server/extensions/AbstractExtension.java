@@ -24,8 +24,11 @@ import com.generalbytes.batm.server.extensions.aml.verification.IIdentityVerific
 import com.generalbytes.batm.server.extensions.communication.ICommunicationProvider;
 import com.generalbytes.batm.server.extensions.communication.IPhoneLookupProvider;
 import com.generalbytes.batm.server.extensions.communication.voicecall.IVoiceCallProvider;
+import com.generalbytes.batm.server.extensions.travelrule.IWalletTypeEvaluationProvider;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -139,5 +142,10 @@ public abstract class AbstractExtension implements IExtension {
     @Override
     public IIdentityVerificationProvider createIdentityVerificationProvider(String colonDelimitedParameters, String gbApiKey) {
         return null;
+    }
+
+    @Override
+    public Collection<IWalletTypeEvaluationProvider> getWalletTypeEvaluationProviders() {
+        return Collections.emptySet();
     }
 }
