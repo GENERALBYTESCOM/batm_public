@@ -26,9 +26,11 @@ package com.generalbytes.batm.server.extensions.travelrule;
 public class WalletTypeEvaluationResult {
 
     private final CryptoWalletType walletType;
+    private final boolean belongsToIdentity;
 
-    private WalletTypeEvaluationResult(CryptoWalletType walletType) {
+    private WalletTypeEvaluationResult(CryptoWalletType walletType, boolean belongsToIdentity) {
         this.walletType = walletType;
+        this.belongsToIdentity = belongsToIdentity;
     }
 
     /**
@@ -41,21 +43,26 @@ public class WalletTypeEvaluationResult {
     }
 
     /**
+     * @return True if the wallet belongs to the provided identity, false otherwise.
+     */
+    public boolean isBelongsToIdentity() {
+        return belongsToIdentity;
+    }
+
+    /**
      * Create a {@link WalletTypeEvaluationResult} for cases where a wallet type
      * is successfully evaluated.
      *
      * @param walletType The {@link CryptoWalletType} of the evaluated wallet.
+     * @param belongsToIdentity True if the wallet belongs to the provided identity, false otherwise.
      * @return The new {@link WalletTypeEvaluationResult}.
-     * @throws IllegalArgumentException If the walletType is null or unknown.
+     * @throws IllegalArgumentException If the walletType is null.
      */
-    public static WalletTypeEvaluationResult evaluated(CryptoWalletType walletType) {
+    public static WalletTypeEvaluationResult evaluated(CryptoWalletType walletType, boolean belongsToIdentity) {
         if (walletType == null) {
             throw new IllegalArgumentException("walletType cannot be null");
         }
-        if (walletType == CryptoWalletType.UNKNOWN) {
-            throw new IllegalArgumentException("walletType cannot be unknown");
-        }
-        return new WalletTypeEvaluationResult(walletType);
+        return new WalletTypeEvaluationResult(walletType, belongsToIdentity);
     }
 
     /**
@@ -65,7 +72,7 @@ public class WalletTypeEvaluationResult {
      * @return The new {@link WalletTypeEvaluationResult}.
      */
     public static WalletTypeEvaluationResult unknown() {
-        return new WalletTypeEvaluationResult(CryptoWalletType.UNKNOWN);
+        return new WalletTypeEvaluationResult(CryptoWalletType.UNKNOWN, false);
     }
 
 }

@@ -28,7 +28,7 @@ public interface IWalletTypeEvaluationProvider {
     /**
      * Attempt to evaluate the type of wallet based on the provided {@link IWalletContext}.
      * <p>
-     * This method should either return {@link WalletTypeEvaluationResult#evaluated(CryptoWalletType)},
+     * This method should either return {@link WalletTypeEvaluationResult#evaluated(CryptoWalletType, boolean)},
      * with the respective {@link CryptoWalletType} if the wallet was successfully evaluated.
      * If the wallet type cannot be evaluated, it returns {@link WalletTypeEvaluationResult#unknown()}.
      * </p>
