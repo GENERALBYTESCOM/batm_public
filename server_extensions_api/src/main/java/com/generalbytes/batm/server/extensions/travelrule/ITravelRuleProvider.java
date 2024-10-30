@@ -18,12 +18,17 @@
 package com.generalbytes.batm.server.extensions.travelrule;
 
 /**
- * Definition of Travel Rule Provider.
+ * A Travel Rule Provider definition that makes it possible to connect to an external provider using its API.
+ * Provider is responsible for implementing compliance checks and procedures necessary to ensure adherence to the Travel Rule regulations.
  */
 public interface ITravelRuleProvider {
 
-    // TODO: This interface is not final! New method definitions will be added soon.
-
+    /**
+     * This is used as the provider identifier that is displayed in CAS.
+     * @return Name of Travel Rule Provider.
+     */
     String getName();
+
+    // TODO: implement methods
 
 }

@@ -29,6 +29,7 @@ import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProvider;
 import com.generalbytes.batm.server.extensions.travelrule.IWalletTypeEvaluationProvider;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
+import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -192,7 +193,7 @@ public interface IExtension {
      * Returns set of external Travel Rule Providers.
      * @return {@link Set} of {@link ITravelRuleProvider}.
      */
-    default Set<ITravelRuleProvider> getTravelRuleProviders() { return null; }
+    default Set<ITravelRuleProvider> getTravelRuleProviders() { return Collections.emptySet(); }
 
     /**
      * @return Validators that can be used to validate SSNs
