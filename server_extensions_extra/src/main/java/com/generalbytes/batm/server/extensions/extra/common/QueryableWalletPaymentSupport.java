@@ -7,6 +7,7 @@ import com.generalbytes.batm.server.extensions.payment.PaymentRequest;
 import com.generalbytes.batm.server.extensions.payment.ReceivedAmount;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public abstract class QueryableWalletPaymentSupport extends PollingPaymentSupport {
 
@@ -46,6 +47,7 @@ public abstract class QueryableWalletPaymentSupport extends PollingPaymentSuppor
             if (request.getState() == PaymentRequest.STATE_NEW) {
                 log.info("Received: {}, amounts matches. {}", totalReceived, request);
                 request.setTxValue(totalReceived);
+                request.setIncomingTransactionHash(getLastTransactionHash(receivedAmount));
                 setState(request, PaymentRequest.STATE_SEEN_TRANSACTION);
             }
 
@@ -61,6 +63,14 @@ public abstract class QueryableWalletPaymentSupport extends PollingPaymentSuppor
         } catch (Exception e) {
             log.error("", e);
         }
+    }
+
+    private String getLastTransactionHash(ReceivedAmount receivedAmount) {
+        List<String> transactionHashes = receivedAmount.getTransactionHashes();
+        if (transactionHashes != null && !transactionHashes.isEmpty()) {
+            return transactionHashes.get(transactionHashes.size() - 1);
+        }
+        return null;
     }
 
     private boolean receivedAmountMatchesRequestedAmountInTolerance(PaymentRequest request, BigDecimal totalReceived) {

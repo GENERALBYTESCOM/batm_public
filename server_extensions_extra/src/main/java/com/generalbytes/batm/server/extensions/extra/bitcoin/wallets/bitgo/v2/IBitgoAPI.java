@@ -17,13 +17,20 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2;
 
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.BitGoAddressResponse;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.BitGoCoinRequest;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.BitGoCreateAddressRequest;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.BitGoAddressResponse;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.BitGoSendManyRequest;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.BitGoTransfersResponse;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.ErrorResponseException;
 
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.util.Map;
@@ -53,6 +60,14 @@ public interface IBitgoAPI {
     @GET
     @Path("/{coin}/wallet/{id}")
     Map<String, Object> getWalletById(@PathParam("coin") String coin, @PathParam("id") String id) throws IOException, ErrorResponseException;
+
+    @GET
+    @Path("/{coin}/wallet/{walletId}/transfer")
+    BitGoTransfersResponse getTransfers(@PathParam("coin") String coin,
+                                        @PathParam("walletId") String walletId,
+                                        @QueryParam("state") String state,
+                                        @QueryParam("type") String type,
+                                        @QueryParam("address") String address) throws IOException, ErrorResponseException;
 
     @GET
     @Path("/{coin}/wallet/{walletId}/address/{addressOrId}")
