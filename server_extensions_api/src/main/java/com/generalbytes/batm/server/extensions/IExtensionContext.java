@@ -876,4 +876,19 @@ public interface IExtensionContext {
         return new ArrayList<>();
     }
 
+    /**
+     * Retrieves the data required to generate a receipt, including placeholder variables
+     * and any additional elements needed based on the specified template and transaction details.
+     *
+     * @param receiptTransferMethod The method used to send the receipt,
+     *                              determining the format and additional data required.
+     * @param transactionDetails    The details of the transaction for which the receipt
+     *                              is being generated, providing values for relevant placeholders.
+     * @param template              The template used for generating the receipt,
+     *                              which defines the structure and required placeholders.
+     * @return A {@link ReceiptData} instance containing all necessary data and placeholders
+     * for constructing the receipt according to the specified template.
+     */
+    ReceiptData getReceiptData(ReceiptTransferMethod receiptTransferMethod, ITransactionDetails transactionDetails, String template);
+
 }

@@ -507,4 +507,9 @@ public class TestExtensionContext implements IExtensionContext {
     @Override
     public void unlockTransaction(String rid, Date serverTimeToUnlock) {
     }
+
+    @Override
+    public ReceiptData getReceiptData(ReceiptTransferMethod receiptTransferMethod, ITransactionDetails transactionDetails, String template) {
+        return null;
+    }
 }
