@@ -1,6 +1,5 @@
 plugins {
     id("application")
-    id("shared-build-conventions")
 }
 
 version = "1.0.0"

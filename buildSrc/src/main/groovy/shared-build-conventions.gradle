@@ -1,7 +1,6 @@
 plugins {
     id("java")
     id("com.generalbytes.gradle.main")
-    id("shared-publish-conventions")
 }
 
 repositories {
