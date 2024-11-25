@@ -48,4 +48,11 @@ public interface IWalletContext {
      */
     String getCryptoAddress();
 
+    /**
+     * Get the cryptocurrency of the wallet.
+     *
+     * @return The cryptocurrency of the wallet.
+     */
+    String getCryptocurrency();
+
 }
