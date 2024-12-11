@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2020 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2024 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -25,8 +25,11 @@ import com.generalbytes.batm.server.extensions.aml.verification.IIdentityVerific
 import com.generalbytes.batm.server.extensions.communication.ICommunicationProvider;
 import com.generalbytes.batm.server.extensions.communication.IPhoneLookupProvider;
 import com.generalbytes.batm.server.extensions.communication.voicecall.IVoiceCallProvider;
+import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProvider;
+import com.generalbytes.batm.server.extensions.travelrule.IWalletTypeEvaluationProvider;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
+import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -187,6 +190,12 @@ public interface IExtension {
     Set<IVoiceCallProvider> getVoiceCallProviders();
 
     /**
+     * Returns set of external Travel Rule Providers.
+     * @return {@link Set} of {@link ITravelRuleProvider}.
+     */
+    default Set<ITravelRuleProvider> getTravelRuleProviders() { return Collections.emptySet(); }
+
+    /**
      * @return Validators that can be used to validate SSNs
      */
     Set<ISsnValidator> getSsnValidators();
@@ -200,5 +209,13 @@ public interface IExtension {
      */
 
     IIdentityVerificationProvider createIdentityVerificationProvider(String colonDelimitedParameters, String gbApiKey);
+
+    /**
+     * Get wallet type evaluation providers.
+     *
+     * @return Set of wallet type evaluation providers.
+     * @see IWalletTypeEvaluationProvider
+     */
+    Set<IWalletTypeEvaluationProvider> getWalletTypeEvaluationProviders();
 
 }
