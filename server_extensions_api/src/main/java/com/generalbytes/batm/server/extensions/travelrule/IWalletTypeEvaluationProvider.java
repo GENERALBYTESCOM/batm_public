@@ -26,7 +26,7 @@ package com.generalbytes.batm.server.extensions.travelrule;
 public interface IWalletTypeEvaluationProvider {
 
     /**
-     * Attempt to evaluate the type of wallet based on the provided {@link IWalletContext}.
+     * Attempt to evaluate the type of wallet based on the provided {@link IIdentityWalletEvaluationRequest}.
      * <p>
      * This method should either return {@link WalletTypeEvaluationResult#evaluated(CryptoWalletType, boolean)},
      * with the respective {@link CryptoWalletType} if the wallet was successfully evaluated.
@@ -36,6 +36,6 @@ public interface IWalletTypeEvaluationProvider {
      * @param walletContext The context containing information needed to identify the wallet type.
      * @return A {@link WalletTypeEvaluationResult} indicating success with the wallet type, or failure if not evaluated.
      */
-    WalletTypeEvaluationResult evaluateWalletType(IWalletContext walletContext);
+    WalletTypeEvaluationResult evaluateWalletType(IIdentityWalletEvaluationRequest walletContext);
 
 }
