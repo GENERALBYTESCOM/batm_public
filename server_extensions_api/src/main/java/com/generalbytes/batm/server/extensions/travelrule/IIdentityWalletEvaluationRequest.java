@@ -23,7 +23,7 @@ import com.generalbytes.batm.server.extensions.IIdentity;
 /**
  * This class holds basic information required to identify a wallet.
  */
-public interface IWalletContext {
+public interface IIdentityWalletEvaluationRequest {
 
     /**
      * Get the public id of the identity that the wallet belongs to (if any.)
