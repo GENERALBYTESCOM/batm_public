@@ -27,18 +27,10 @@ public class WalletTypeEvaluationResult {
 
     private final CryptoWalletType walletType;
     private final boolean belongsToIdentity;
-    private final String vaspDid;
-    private final String travelRuleProviderId;
 
-    private WalletTypeEvaluationResult(CryptoWalletType walletType,
-                                       boolean belongsToIdentity,
-                                       String vaspDid,
-                                       String travelRuleProviderId
-    ) {
+    private WalletTypeEvaluationResult(CryptoWalletType walletType, boolean belongsToIdentity) {
         this.walletType = walletType;
         this.belongsToIdentity = belongsToIdentity;
-        this.vaspDid = vaspDid;
-        this.travelRuleProviderId = travelRuleProviderId;
     }
 
     /**
@@ -58,52 +50,19 @@ public class WalletTypeEvaluationResult {
     }
 
     /**
-     * @return Get the VASP DID (decentralized identifier) of wallet owner.
-     */
-    public String getVaspDid() {
-        return vaspDid;
-    }
-
-    /**
-     * @return Get the ID (name) of the used Travel Rule Provider.
-     */
-    public String getTravelRuleProviderId() {
-        return travelRuleProviderId;
-    }
-
-    /**
      * Create a {@link WalletTypeEvaluationResult} for cases where a wallet type
      * is successfully evaluated.
      *
-     * @param walletType        The {@link CryptoWalletType} of the evaluated wallet.
+     * @param walletType The {@link CryptoWalletType} of the evaluated wallet.
      * @param belongsToIdentity True if the wallet belongs to the provided identity, false otherwise.
      * @return The new {@link WalletTypeEvaluationResult}.
      * @throws IllegalArgumentException If the walletType is null.
      */
     public static WalletTypeEvaluationResult evaluated(CryptoWalletType walletType, boolean belongsToIdentity) {
-        return evaluated(walletType, belongsToIdentity, null, null);
-    }
-
-    /**
-     * Create a {@link WalletTypeEvaluationResult} for cases where a wallet type
-     * is successfully evaluated.
-     *
-     * @param walletType           The {@link CryptoWalletType} of the evaluated wallet.
-     * @param belongsToIdentity    True if the wallet belongs to the provided identity, false otherwise.
-     * @param vaspDid              VASP DID (decentralized identifier) of wallet owner.
-     * @param travelRuleProviderId ID (name) of the used Travel Rule Provider.
-     * @return The new {@link WalletTypeEvaluationResult}.
-     * @throws IllegalArgumentException If the walletType is null.
-     */
-    public static WalletTypeEvaluationResult evaluated(CryptoWalletType walletType,
-                                                       boolean belongsToIdentity,
-                                                       String vaspDid,
-                                                       String travelRuleProviderId
-    ) {
         if (walletType == null) {
             throw new IllegalArgumentException("walletType cannot be null");
         }
-        return new WalletTypeEvaluationResult(walletType, belongsToIdentity, vaspDid, travelRuleProviderId);
+        return new WalletTypeEvaluationResult(walletType, belongsToIdentity);
     }
 
     /**
@@ -113,7 +72,7 @@ public class WalletTypeEvaluationResult {
      * @return The new {@link WalletTypeEvaluationResult}.
      */
     public static WalletTypeEvaluationResult unknown() {
-        return new WalletTypeEvaluationResult(CryptoWalletType.UNKNOWN, false, null, null);
+        return new WalletTypeEvaluationResult(CryptoWalletType.UNKNOWN, false);
     }
 
 }
