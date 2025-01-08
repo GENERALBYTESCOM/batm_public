@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2024 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2025 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -28,6 +28,8 @@ import com.generalbytes.batm.server.extensions.exceptions.BuyException;
 import com.generalbytes.batm.server.extensions.exceptions.CashbackException;
 import com.generalbytes.batm.server.extensions.exceptions.SellException;
 import com.generalbytes.batm.server.extensions.exceptions.UpdateException;
+import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProviderIdentification;
+import com.generalbytes.batm.server.extensions.travelrule.IVaspIdentification;
 import com.generalbytes.batm.server.extensions.watchlist.WatchListQuery;
 import com.generalbytes.batm.server.extensions.watchlist.WatchListResult;
 
@@ -890,5 +892,20 @@ public interface IExtensionContext {
      * for constructing the receipt according to the specified template.
      */
     ReceiptData getReceiptData(ReceiptTransferMethod receiptTransferMethod, ITransactionDetails transactionDetails, String template);
+
+    /**
+     * Returns the list of all implemented Travel Rule Providers.
+     *
+     * @return List of all implemented Travel Rule Providers.
+     */
+    default List<ITravelRuleProviderIdentification> getTravelRuleProviders() { return new ArrayList<>(); }
+
+    /**
+     * Returns the list of all VASPs of given Travel Rule Provider.
+     *
+     * @param travelRuleProviderId ID of Travel Rule Provider.
+     * @return List of all VASPs.
+     */
+    default List<IVaspIdentification> getVasps(long travelRuleProviderId) { return new ArrayList<>(); }
 
 }
