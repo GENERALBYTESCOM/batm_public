@@ -17,30 +17,19 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.travelrule;
 
-import com.generalbytes.batm.server.extensions.IOrganization;
-
 /**
- * An object that identifies the Travel Rule Provider.
+ * An object that identifies the VASP.
  */
-public interface ITravelRuleProviderIdentification {
+public interface IVaspIdentification {
 
     /**
-     * @return ID of Travel Rule Provider.
+     * @return DID (decentralized identifier) of VASP.
      */
-    long getId();
+    String getDid();
 
     /**
-     * It is used as an identifier in CAS. Different organizations may have Travel Rule Provider with the same name.
-     *
-     * @return Name of Travel Rule Provider.
+     * @return Name of VASP.
      */
     String getName();
-
-    /**
-     * It serves to clearly identify the right Travel Rule Provider.
-     *
-     * @return Data about organization.
-     */
-    IOrganization getOrganization();
 
 }

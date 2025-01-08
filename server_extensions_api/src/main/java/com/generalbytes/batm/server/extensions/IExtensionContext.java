@@ -29,6 +29,7 @@ import com.generalbytes.batm.server.extensions.exceptions.CashbackException;
 import com.generalbytes.batm.server.extensions.exceptions.SellException;
 import com.generalbytes.batm.server.extensions.exceptions.UpdateException;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProviderIdentification;
+import com.generalbytes.batm.server.extensions.travelrule.IVaspIdentification;
 import com.generalbytes.batm.server.extensions.watchlist.WatchListQuery;
 import com.generalbytes.batm.server.extensions.watchlist.WatchListResult;
 
@@ -900,11 +901,11 @@ public interface IExtensionContext {
     default List<ITravelRuleProviderIdentification> getTravelRuleProviders() { return new ArrayList<>(); }
 
     /**
-     * Returns the list of DIDs (decentralized identifiers) of all VASPs of given Travel Rule Provider.
+     * Returns the list of all VASPs of given Travel Rule Provider.
      *
-     * @param travelRuleProviderId Database ID of Travel Rule Provider.
-     * @return List of DIDs (decentralized identifiers) of all VASPs.
+     * @param travelRuleProviderId ID of Travel Rule Provider.
+     * @return List of all VASPs.
      */
-    default List<String> getVaspDids(long travelRuleProviderId) { return new ArrayList<>(); }
+    default List<IVaspIdentification> getVasps(long travelRuleProviderId) { return new ArrayList<>(); }
 
 }

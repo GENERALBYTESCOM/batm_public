@@ -65,7 +65,7 @@ public class WalletTypeEvaluationResult {
     }
 
     /**
-     * @return Get the database ID of the used Travel Rule Provider.
+     * @return Get ID of the used Travel Rule Provider.
      */
     public Long getTravelRuleProviderId() {
         return travelRuleProviderId;
@@ -90,7 +90,7 @@ public class WalletTypeEvaluationResult {
      *
      * @param walletType           The {@link CryptoWalletType} of the evaluated wallet.
      * @param belongsToIdentity    True if the wallet belongs to the provided identity, false otherwise.
-     * @param travelRuleProviderId Database ID of the used Travel Rule Provider.
+     * @param travelRuleProviderId ID of the used Travel Rule Provider.
      * @param vaspDid              VASP DID (decentralized identifier) of wallet owner.
      * @return The new {@link WalletTypeEvaluationResult}.
      * @throws IllegalArgumentException If the walletType is null.
