@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2024 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2025 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -45,6 +45,7 @@ public class BitgoWalletWithUniqueAddresses extends BitgoWallet implements IGene
         {
             put(CryptoCurrency.USDT.getCode(), "eth");
             put(CryptoCurrency.USDTTRON.getCode(), "trx");
+            put(CryptoCurrency.USDC.getCode(), "eth");
         }
     };
 

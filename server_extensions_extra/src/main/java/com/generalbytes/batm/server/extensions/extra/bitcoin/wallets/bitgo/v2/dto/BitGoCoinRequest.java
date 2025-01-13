@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2024 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2025 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -28,6 +28,7 @@ public class BitGoCoinRequest {
     private String comment;
     private Integer feeRate;
     private Integer maxFeeRate;
+    private String type;
 
 
     public BitGoCoinRequest(String address, String amount, String walletPassphrase, String comment, Integer numBlocks) {
@@ -38,11 +39,32 @@ public class BitGoCoinRequest {
         this.comment = comment;
     }
 
-    public BitGoCoinRequest(String address, String amount, String walletPassphrase, String comment, Integer numBlocks, Integer feeRate, Integer maxFeeRate) {
+    public BitGoCoinRequest(String address,
+                            String amount,
+                            String walletPassphrase,
+                            String comment,
+                            Integer numBlocks,
+                            Integer feeRate,
+                            Integer maxFeeRate
+    ) {
         this(address, amount, walletPassphrase, comment, numBlocks);
 
         this.feeRate = feeRate;
         this.maxFeeRate = maxFeeRate;
+    }
+
+    public BitGoCoinRequest(String address,
+                            String amount,
+                            String walletPassphrase,
+                            String comment,
+                            Integer numBlocks,
+                            Integer feeRate,
+                            Integer maxFeeRate,
+                            String type
+    ) {
+        this(address, amount, walletPassphrase, comment, numBlocks, feeRate, maxFeeRate);
+
+        this.type = type;
     }
 
     public String getAddress() {
@@ -99,5 +121,13 @@ public class BitGoCoinRequest {
 
     public void setMaxFeeRate(Integer maxFeeRate) {
         this.maxFeeRate = maxFeeRate;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

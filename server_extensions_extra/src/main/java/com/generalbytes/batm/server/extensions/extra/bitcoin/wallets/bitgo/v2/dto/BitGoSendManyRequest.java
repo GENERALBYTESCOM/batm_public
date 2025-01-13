@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2019 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2025 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -24,6 +24,7 @@ public class BitGoSendManyRequest {
     public String walletPassphrase;
     public Integer numBlocks;
     public String comment;
+    public String type;
 
     public BitGoSendManyRequest(List<BitGoRecipient> recipients, String walletPassphrase, String comment){
       this(recipients, walletPassphrase, comment, 2);
@@ -34,6 +35,12 @@ public class BitGoSendManyRequest {
         this.walletPassphrase = walletPassphrase;
         this.numBlocks = numBlocks;
         this.comment = comment;
+    }
+
+    public BitGoSendManyRequest(List<BitGoRecipient> recipients, String walletPassphrase, String comment, Integer numBlocks, String type) {
+        this(recipients, walletPassphrase, comment, numBlocks);
+
+        this.type = type;
     }
 
     public static class BitGoRecipient {
