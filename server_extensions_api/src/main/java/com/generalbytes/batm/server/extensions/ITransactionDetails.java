@@ -341,4 +341,8 @@ public interface ITransactionDetails {
      */
     String getNameOfCryptoSettingUsed();
 
+    /**
+     * @return Public ID of terminal location.
+     */
+    String getLocationPublicId();
 }
