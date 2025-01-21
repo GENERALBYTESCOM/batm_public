@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2024 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2025 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -70,6 +70,7 @@ public class BitgoWallet implements IWallet, ICanSendMany {
             put(CryptoCurrency.USDTTRON.getCode(), "trx:usdt");
             put(CryptoCurrency.XRP.getCode(), "xrp");
             put(CryptoCurrency.TBTC.getCode(), "tbtc");
+            put(CryptoCurrency.USDC.getCode(), "usdc");
         }
     };
 
@@ -85,6 +86,7 @@ public class BitgoWallet implements IWallet, ICanSendMany {
             put(CryptoCurrency.TBTC.getCode(), pow10Exp(Converters.TBTC));
             put(CryptoCurrency.TLTC.getCode(), pow10Exp(Converters.TLTC));
             put(CryptoCurrency.TBCH.getCode(), pow10Exp(Converters.TBCH));
+            put(CryptoCurrency.USDC.getCode(), pow10Exp(Converters.USDC));
         }
 
         private int pow10Exp(BigDecimal val) {
@@ -138,7 +140,7 @@ public class BitgoWallet implements IWallet, ICanSendMany {
             List<BitGoRecipient> recipients = transfers.stream()
                 .map(transfer -> new BitGoRecipient(transfer.getDestinationAddress(), toSatoshis(transfer.getAmount(), cryptoCurrency)))
                 .collect(Collectors.toList());
-            final BitGoSendManyRequest request = new BitGoSendManyRequest(recipients, walletPassphrase, description, this.numBlocks);
+            final BitGoSendManyRequest request = createBitGoSendManyRequest(recipients, cryptoCurrency, description);
             String bitgoCryptoCurrency = cryptoCurrencies.get(cryptoCurrency);
             return getResultTxId(api.sendMany(bitgoCryptoCurrency, this.walletId, request));
         } catch (HttpStatusIOException hse) {
@@ -154,7 +156,7 @@ public class BitgoWallet implements IWallet, ICanSendMany {
     @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
         try {
-            final BitGoCoinRequest request = new BitGoCoinRequest(destinationAddress, toSatoshis(amount, cryptoCurrency), walletPassphrase, description, this.numBlocks, this.feeRate, this.maxFeeRate);
+            final BitGoCoinRequest request = createBitGoCoinRequest(destinationAddress, amount, cryptoCurrency, description);
             String bitgoCryptoCurrency = cryptoCurrencies.get(cryptoCurrency);
             return getResultTxId(api.sendCoins(bitgoCryptoCurrency, this.walletId, request));
         } catch (HttpStatusIOException hse) {
@@ -165,6 +167,43 @@ public class BitgoWallet implements IWallet, ICanSendMany {
             log.error("Error", e);
         }
         return null;
+    }
+
+    private BitGoSendManyRequest createBitGoSendManyRequest(List<BitGoRecipient> recipients, String cryptoCurrency, String description) {
+        if (CryptoCurrency.USDC.getCode().equalsIgnoreCase(cryptoCurrency)) {
+            return new BitGoSendManyRequest(recipients, this.walletPassphrase, description, this.numBlocks, "transfer");
+        }
+
+        return new BitGoSendManyRequest(recipients, this.walletPassphrase, description, this.numBlocks);
+    }
+
+    private BitGoCoinRequest createBitGoCoinRequest(String destinationAddress,
+                                                    BigDecimal amount,
+                                                    String cryptoCurrency,
+                                                    String description
+    ) {
+        if (CryptoCurrency.USDC.getCode().equalsIgnoreCase(cryptoCurrency)) {
+            return new BitGoCoinRequest(
+                destinationAddress,
+                toSatoshis(amount, cryptoCurrency),
+                this.walletPassphrase,
+                description,
+                this.numBlocks,
+                this.feeRate,
+                this.maxFeeRate,
+                "transfer"
+            );
+        }
+
+        return new BitGoCoinRequest(
+            destinationAddress,
+            toSatoshis(amount, cryptoCurrency),
+            this.walletPassphrase,
+            description,
+            this.numBlocks,
+            this.feeRate,
+            this.maxFeeRate
+        );
     }
 
     protected String toSatoshis(BigDecimal amount, String cryptoCurrency) {

@@ -32,6 +32,7 @@ public class Converters {
     public static final BigDecimal XRP = BigDecimal.TEN.pow(6);
     public static final BigDecimal VERUM = BigDecimal.TEN.pow(8);
     public static final BigDecimal TRX = BigDecimal.TEN.pow(6);
+    public static final BigDecimal USDC = BigDecimal.TEN.pow(6);
 
     public static final BigDecimal TBCH = BigDecimal.TEN.pow(8);
     public static final BigDecimal TBTC = BigDecimal.TEN.pow(8);

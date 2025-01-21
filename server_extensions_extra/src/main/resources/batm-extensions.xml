@@ -45,6 +45,7 @@
                 <cryptocurrency buyonly="true">ETH</cryptocurrency><!--BitGo’s Ethereum wallets are only available to BitGo Enterprise customers-->
                 <cryptocurrency>XRP</cryptocurrency><!-- BitGo Enterprise-->
                 <cryptocurrency buyonly="true">USDT</cryptocurrency>
+                <cryptocurrency buyonly="true">USDC</cryptocurrency>
                 <help>Host should start with http:// or https://. num_blocks is an integer greater than 2.</help>
             </wallet>
             <wallet prefix="bitgonoforward" name="BitGo Wallet (no forward)">
@@ -65,6 +66,7 @@
                 <cryptocurrency>XRP</cryptocurrency><!-- BitGo Enterprise-->
                 <cryptocurrency>USDT</cryptocurrency><!-- BitGo Enterprise-->
                 <cryptocurrency>USDTTRON</cryptocurrency>
+                <cryptocurrency>USDC</cryptocurrency>
                 <help>This variant of the wallet generates new addresses for each sell transaction and does not forward payments from temporary address. Host should start with http:// or https://. num_blocks is an integer greater than 2.</help>
             </wallet>
             <wallet prefix="cryptx" name="CryptX Wallet System">

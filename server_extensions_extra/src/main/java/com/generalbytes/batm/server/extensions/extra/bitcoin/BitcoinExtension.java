@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2024 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2025 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -56,7 +56,9 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.CoinbaseWalletV2WithUniqueAddresses;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryptx.v2.CryptXWallet;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryptx.v2.CryptXWithUniqueAddresses;
+import com.generalbytes.batm.server.extensions.extra.ethereum.UsdcDefinition;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
+import com.google.common.collect.ImmutableSet;
 
 import java.math.BigDecimal;
 import java.net.InetSocketAddress;
@@ -613,7 +615,7 @@ public class BitcoinExtension extends AbstractExtension {
 
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         result.add(CryptoCurrency.BTC.getCode());
         result.add(CryptoCurrency.ETH.getCode());
         result.add(CryptoCurrency.LTC.getCode());
@@ -621,6 +623,7 @@ public class BitcoinExtension extends AbstractExtension {
         result.add(CryptoCurrency.EGLD.getCode());
         result.add(CryptoCurrency.USDTTRON.getCode());
         result.add(CryptoCurrency.BNB.getCode());
+        result.add(CryptoCurrency.USDC.getCode());
         return result;
     }
 
@@ -636,6 +639,6 @@ public class BitcoinExtension extends AbstractExtension {
 
     @Override
     public Set<ICryptoCurrencyDefinition> getCryptoCurrencyDefinitions() {
-        return null;
+        return ImmutableSet.of(new UsdcDefinition());
     }
 }
