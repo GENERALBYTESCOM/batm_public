@@ -19,9 +19,13 @@ import si.mazi.rescu.HttpStatusIOException;
 import javax.ws.rs.core.Response.Status;
 import java.io.IOException;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class VeriffWebhookProcessor {
     private static final Logger log = LoggerFactory.getLogger("batm.master.VeriffWebhookProcessor");
@@ -83,13 +87,66 @@ public class VeriffWebhookProcessor {
         if (images == null) {
             return;
         }
-        for (SessionMediaInfo.Image image : images) {
-            String type = image.context;
-            log.info("Downloading image ({}) for applicantId: {}", type, applicantId);
-            byte[] content = download(image);
-            VeriffExtension.getExtensionContext().addIdentityPiece(identityPublicId, getIdentityPiece(type, content));
+
+        final int maxRetries = 3;
+        List<SessionMediaInfo.Image> failedImages = retryDownload(images, identityPublicId, applicantId, maxRetries, 1);
+
+        if (!failedImages.isEmpty()) {
+            List<String> failedImageDetails = failedImages.stream()
+                    .map(image -> image.id + " (" + image.context + ")")
+                    .collect(Collectors.toList());
+            log.error("Failed to download the following images after {} attempts: {}", maxRetries, failedImageDetails);
         }
     }
+
+    private List<SessionMediaInfo.Image> retryDownload(List<SessionMediaInfo.Image> images,
+                                                       String identityPublicId,
+                                                       String applicantId,
+                                                       int maxRetries,
+                                                       int attempt) {
+        if (attempt > maxRetries) {
+            return images;
+        }
+
+        List<SessionMediaInfo.Image> failedThisRound = attemptDownload(images, identityPublicId, applicantId, attempt);
+
+        if (failedThisRound.isEmpty()) {
+            log.info("All images downloaded successfully for applicantId: {}", applicantId);
+            return Collections.emptyList();
+        }
+
+        addRetryDelay(attempt);
+        return retryDownload(failedThisRound, identityPublicId, applicantId, maxRetries, attempt + 1);
+    }
+
+    private List<SessionMediaInfo.Image> attemptDownload(List<SessionMediaInfo.Image> images,
+                                                         String identityPublicId,
+                                                         String applicantId,
+                                                         int attempt) {
+        List<SessionMediaInfo.Image> failedImages = new ArrayList<>();
+        for (SessionMediaInfo.Image image : images) {
+            try {
+                String type = image.context;
+                log.info("Attempt {}: Downloading image ({}) for applicantId: {}", attempt, type, applicantId);
+                byte[] content = download(image);
+                VeriffExtension.getExtensionContext().addIdentityPiece(identityPublicId, getIdentityPiece(type, content));
+            } catch (IOException e) {
+                log.warn("Attempt {} failed for image ID: {}, type: {}, error: {}", attempt, image.id, image.context, e.getMessage());
+                failedImages.add(image);
+            }
+        }
+        return failedImages;
+    }
+
+    private void addRetryDelay(int attempt) {
+        try {
+            TimeUnit.SECONDS.sleep(attempt);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            log.error("Retry interrupted", e);
+        }
+    }
+
 
     private IIdentityPiece getIdentityPiece(String type, byte[] content) {
         if ("face".equals(type)) {
