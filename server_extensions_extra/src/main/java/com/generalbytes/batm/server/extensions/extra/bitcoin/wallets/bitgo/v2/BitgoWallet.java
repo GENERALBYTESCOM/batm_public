@@ -154,6 +154,12 @@ public class BitgoWallet implements IWallet, ICanSendMany {
     }
 
     @Override
+    public String sendMany(Collection<Transfer> transfers, String cryptoCurrency, String description, String batchId) {
+        log.info("Sending {} transactions with batchId: {}", cryptoCurrency, batchId);
+        return sendMany(transfers, cryptoCurrency, description);
+    }
+
+    @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
         try {
             final BitGoCoinRequest request = createBitGoCoinRequest(destinationAddress, amount, cryptoCurrency, description);

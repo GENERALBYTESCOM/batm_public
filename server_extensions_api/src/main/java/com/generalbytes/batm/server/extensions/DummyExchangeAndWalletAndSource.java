@@ -145,6 +145,12 @@ public class DummyExchangeAndWalletAndSource implements IExchange, IWallet, IRat
     }
 
     @Override
+    public String sendMany(Collection<Transfer> transfers, String cryptoCurrency, String description, String batchId) {
+        log.info("Sending {} transactions with batchId: {}", cryptoCurrency, batchId);
+        return sendMany(transfers, cryptoCurrency, description);
+    }
+
+    @Override
     public String getDepositAddress(String cryptoCurrency) {
         block();
         return getAddress(cryptoCurrency);
