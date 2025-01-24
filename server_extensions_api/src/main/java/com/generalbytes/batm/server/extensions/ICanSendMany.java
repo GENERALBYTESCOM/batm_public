@@ -32,11 +32,25 @@ public interface ICanSendMany {
      * Used to reduce network fees.
      *
      * @param transfers amounts and destination addresses
-     * @param cryptoCurrency
-     * @param description
+     * @param cryptoCurrency cryptocurrency representing the coin to be sent
+     * @param description description of the transaction contains comma separated RIDs of all transactions e.g. 'ROOOOO, ROOOO1, ROOOO2'
      * @return transaction ID of the only transaction created or null in case of any error
      */
     String sendMany(Collection<Transfer> transfers, String cryptoCurrency, String description);
+
+    /**
+     * Send coins to multiple addresses in a single transaction.
+     * Used to reduce network fees.
+     *
+     * @param transfers amounts and destination addresses
+     * @param cryptoCurrency cryptocurrency representing the coin to be sent
+     * @param description description of the transaction contains comma separated RIDs of all transactions e.g. 'ROOOOO, ROOOO1, ROOOO2'
+     * @param batchId unique identifier of the batch of transactions
+     * @return transaction ID of the only transaction created or null in case of any error
+     */
+    default String sendMany(Collection<Transfer> transfers, String cryptoCurrency, String description, String batchId) {
+        return sendMany(transfers, cryptoCurrency, description);
+    }
 
     class Transfer {
         private final String destinationAddress;

@@ -72,6 +72,12 @@ public class CryptXWallet implements IWallet, ICanSendMany {
     }
 
     @Override
+    public String sendMany(Collection<Transfer> transfers, String cryptoCurrency, String description, String batchId) {
+        log.info("Sending {} transactions with batchId: {}", cryptoCurrency, batchId);
+        return sendMany(transfers, cryptoCurrency, description);
+    }
+
+    @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
         CryptXSendTransactionRequest sendTransactionRequest = new CryptXSendTransactionRequest(destinationAddress, toMinorUnit(cryptoCurrency, amount), description, priority, customFeePrice, customGasLimit, password);
         return sendCryptXTransaction(cryptoCurrency, sendTransactionRequest);
