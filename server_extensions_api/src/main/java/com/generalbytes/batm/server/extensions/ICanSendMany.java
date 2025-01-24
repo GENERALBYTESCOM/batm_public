@@ -28,6 +28,12 @@ import java.util.Collection;
 public interface ICanSendMany {
 
     /**
+     * <strong>WARNING:</strong>
+     * <p>
+     * This method was effectively replaced by {@link ICanSendMany#sendMany(Collection, String, String, String)}
+     * with 'batchId' parameter.
+     * As of now, this method is not directly used by the server and is kept for compatibility reasons.
+     * <p>
      * Send coins to multiple addresses in a single transaction.
      * Used to reduce network fees.
      *
@@ -36,10 +42,11 @@ public interface ICanSendMany {
      * @param description description of the transaction contains comma separated RIDs of all transactions e.g. 'ROOOOO, ROOOO1, ROOOO2'
      * @return transaction ID of the only transaction created or null in case of any error
      */
+    @Deprecated
     String sendMany(Collection<Transfer> transfers, String cryptoCurrency, String description);
 
     /**
-     * Send coins to multiple addresses in a single transaction.
+     * Send coins to multiple addresses in a single transaction, grouped by a unique batch ID.
      * Used to reduce network fees.
      *
      * @param transfers amounts and destination addresses
@@ -49,6 +56,7 @@ public interface ICanSendMany {
      * @return transaction ID of the only transaction created or null in case of any error
      */
     default String sendMany(Collection<Transfer> transfers, String cryptoCurrency, String description, String batchId) {
+        // Default implementation for compatibility reasons, can be overridden by implementing classes
         return sendMany(transfers, cryptoCurrency, description);
     }
 
