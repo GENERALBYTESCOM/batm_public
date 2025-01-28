@@ -27,9 +27,9 @@ import com.nimbusds.jwt.SignedJWT;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
-import org.knowm.xchange.service.BaseParamsDigest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import si.mazi.rescu.ParamsDigest;
 import si.mazi.rescu.RestInvocation;
 
 import java.io.StringReader;
@@ -49,31 +49,41 @@ import java.util.Map;
  *
  * @see <a href="https://docs.cdp.coinbase.com/get-started/docs/jwt-authentication">Coinbase Documentation</a>
  */
-public class CoinbaseCdpDigest extends BaseParamsDigest {
+public class CoinbaseCdpDigest implements ParamsDigest {
 
     private static final Logger log = LoggerFactory.getLogger(CoinbaseCdpDigest.class);
     private final String cdpPrivateKey;
     private final String cdpKeyName;
-
-    private CoinbaseCdpDigest(String cdpPrivateKey, String cdpKeyName) {
-        super("nothing", "HmacSHA256");
-        this.cdpPrivateKey = cdpPrivateKey;
-        this.cdpKeyName = cdpKeyName;
-    }
 
     /**
      * Create a new instance of CoinbaseCdpDigest.
      *
      * @param cdpPrivateKey The private key.
      * @param cdpKeyName    The key name.
-     * @return The instance of CoinbaseCdpDigest.
+     * @throws IllegalArgumentException If cdpPrivateKey or cdpKeyName is null.
      */
-    public static CoinbaseCdpDigest create(String cdpPrivateKey, String cdpKeyName) {
+    public CoinbaseCdpDigest(String cdpPrivateKey, String cdpKeyName) {
         validateNotNull(cdpPrivateKey, "cdpPrivateKey cannot be null");
         validateNotNull(cdpKeyName, "cdpKeyName cannot be null");
-        return new CoinbaseCdpDigest(cdpPrivateKey, cdpKeyName);
+        this.cdpPrivateKey = cdpPrivateKey;
+        this.cdpKeyName = cdpKeyName;
     }
 
+    /**
+     * Generates a signed JWT to authorize requests for Coinbase API.
+     *
+     * <p>This method is invoked automatically when a REST API request includes
+     * this digest as a header parameter.</p>
+     *
+     * <p>It processes the request details, including the URL and HTTP method,
+     * to generate a JWT signed using the private key provided during this
+     * digest's initialization.</p>
+     *
+     * @param restInvocation The request details encapsulated in a {@link RestInvocation}.
+     * @return A signed JWT (prefixed with "Bearer ") for authenticating the request.
+     * @throws CoinbaseException If the JWT generation fails for any reason, such as an
+     *                           invalid private key format.
+     */
     @Override
     public String digestParams(RestInvocation restInvocation) {
         String path = restInvocation.getInvocationUrl()

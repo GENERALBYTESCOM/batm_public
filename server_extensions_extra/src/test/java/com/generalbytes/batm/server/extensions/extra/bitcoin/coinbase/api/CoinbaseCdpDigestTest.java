@@ -32,15 +32,15 @@ public class CoinbaseCdpDigestTest {
     }
 
     @Test
-    public void testCreate_invalid() {
-        doTestCreate_invalid(null, null, "cdpPrivateKey cannot be null");
-        doTestCreate_invalid(null, "keyName", "cdpPrivateKey cannot be null");
-        doTestCreate_invalid("privateKey", null, "cdpKeyName cannot be null");
+    public void testConstruct_invalid() {
+        doTestConstruct_invalid(null, null, "cdpPrivateKey cannot be null");
+        doTestConstruct_invalid(null, "keyName", "cdpPrivateKey cannot be null");
+        doTestConstruct_invalid("privateKey", null, "cdpKeyName cannot be null");
     }
 
-    private void doTestCreate_invalid(String cdpPrivateKey, String cdpKeyName, String expectedErrorMessage) {
+    private void doTestConstruct_invalid(String cdpPrivateKey, String cdpKeyName, String expectedErrorMessage) {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-            () -> CoinbaseCdpDigest.create(cdpPrivateKey, cdpKeyName));
+            () -> new CoinbaseCdpDigest(cdpPrivateKey, cdpKeyName));
 
         assertEquals(expectedErrorMessage, exception.getMessage());
     }
@@ -55,7 +55,7 @@ public class CoinbaseCdpDigestTest {
         when(restInvocation.getQueryString()).thenReturn(mockQueryString);
         when(restInvocation.getHttpMethod()).thenReturn(mockHttpMethod);
 
-        CoinbaseCdpDigest digest = CoinbaseCdpDigest.create(FAKE_PRIVATE_KEY, FAKE_KEY_NAME);
+        CoinbaseCdpDigest digest = new CoinbaseCdpDigest(FAKE_PRIVATE_KEY, FAKE_KEY_NAME);
 
         String jwt = digest.digestParams(restInvocation);
 
@@ -86,7 +86,7 @@ public class CoinbaseCdpDigestTest {
         when(restInvocation.getQueryString()).thenReturn(mockQueryString);
         when(restInvocation.getHttpMethod()).thenReturn(mockHttpMethod);
 
-        CoinbaseCdpDigest digest = CoinbaseCdpDigest.create("invalidPrivateKey", FAKE_KEY_NAME);
+        CoinbaseCdpDigest digest = new CoinbaseCdpDigest("invalidPrivateKey", FAKE_KEY_NAME);
 
         CoinbaseException exception = assertThrows(CoinbaseException.class, () -> digest.digestParams(restInvocation));
 
