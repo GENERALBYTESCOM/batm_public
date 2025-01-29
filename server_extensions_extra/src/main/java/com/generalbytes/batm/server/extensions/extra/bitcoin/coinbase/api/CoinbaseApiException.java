@@ -51,14 +51,25 @@ public class CoinbaseApiException extends CoinbaseException {
 
     @Override
     public String getMessage() {
+        StringBuilder messageBuilder = new StringBuilder();
+
         String message = super.getMessage();
+        if (message != null && !message.isEmpty()) {
+            messageBuilder.append(message);
+        }
+
+        appendErrorsIfPresent(errors, messageBuilder, "Errors: ");
+        appendErrorsIfPresent(warnings, messageBuilder, "Warnings: ");
+        return messageBuilder.toString();
+    }
+
+    private void appendErrorsIfPresent(CoinbaseApiError[] errors, StringBuilder messageBuilder, String prefix) {
         if (errors != null && errors.length > 0) {
-            message += " | Errors: " + Arrays.toString(errors);
+            if (messageBuilder.length() > 0) {
+                messageBuilder.append(" | ");
+            }
+            messageBuilder.append(prefix).append(Arrays.toString(errors));
         }
-        if (warnings != null && warnings.length > 0) {
-            message += " | Warnings: " + Arrays.toString(warnings);
-        }
-        return message;
     }
 
     public String getError() {
