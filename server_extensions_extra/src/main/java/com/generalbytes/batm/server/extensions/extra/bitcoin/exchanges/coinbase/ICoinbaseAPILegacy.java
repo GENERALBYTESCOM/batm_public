@@ -37,7 +37,7 @@ import java.io.IOException;
 @Path("/v2")
 @Produces(MediaType.APPLICATION_JSON)
 @SuppressWarnings("all")
-public interface ICoinbaseAPI {
+public interface ICoinbaseAPILegacy {
 
     @GET
     @Path("/currencies")
