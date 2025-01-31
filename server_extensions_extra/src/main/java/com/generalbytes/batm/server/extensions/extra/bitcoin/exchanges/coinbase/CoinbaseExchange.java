@@ -669,6 +669,7 @@ public class CoinbaseExchange implements IRateSourceAdvanced, IExchangeAdvanced 
 
     @Override
     public String toString() {
+        // TODO BATM-7123: Remove apiKey from toString
         return String.format("accountName = %s, preferedFiatCurrency = %s, apiKey = %s",
             accountName, preferedFiatCurrency, apiKey);
     }

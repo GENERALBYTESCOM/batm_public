@@ -42,12 +42,6 @@ public class CoinbaseApiWrapperLegacyTest {
     }
 
     @Test
-    public void testGetApiKey() {
-        String apiKey = apiWrapper.getApiKey();
-        assertEquals(API_KEY, apiKey);
-    }
-
-    @Test
     public void testGetPrice() throws IOException {
         CBPriceResponse expectedResponse = mock(CBPriceResponse.class);
         when(api.getPrice(any(), anyString(), anyString())).thenReturn(expectedResponse);

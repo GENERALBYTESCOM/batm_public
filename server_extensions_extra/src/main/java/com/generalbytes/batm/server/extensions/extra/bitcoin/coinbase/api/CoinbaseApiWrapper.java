@@ -18,8 +18,6 @@ import java.io.IOException;
  */
 public interface CoinbaseApiWrapper {
 
-    String getApiKey();
-
     CBPriceResponse getPrice(String apiVersion, String currencyPair, String priceType) throws IOException, RuntimeException;
 
     CBNewAddressResponse getNewAddress(String apiVersion, String coinbaseTime, String accountId) throws IOException, RuntimeException;

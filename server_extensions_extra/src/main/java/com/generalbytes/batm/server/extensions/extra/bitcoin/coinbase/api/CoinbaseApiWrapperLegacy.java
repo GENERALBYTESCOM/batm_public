@@ -27,11 +27,6 @@ public class CoinbaseApiWrapperLegacy implements CoinbaseApiWrapper {
     }
 
     @Override
-    public String getApiKey() {
-        return apiKey;
-    }
-
-    @Override
     public CBPriceResponse getPrice(String apiVersion, String currencyPair, String priceType) throws IOException, RuntimeException {
         return api.getPrice(apiVersion, currencyPair, priceType);
     }
