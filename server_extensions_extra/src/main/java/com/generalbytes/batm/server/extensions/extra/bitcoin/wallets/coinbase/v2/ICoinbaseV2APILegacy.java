@@ -46,7 +46,7 @@ import si.mazi.rescu.ParamsDigest;
  */
 @Path("/v2")
 @Produces(MediaType.APPLICATION_JSON)
-public interface ICoinbaseV2API {
+public interface ICoinbaseV2APILegacy {
 
     @GET
     @Path("/exchange-rates")

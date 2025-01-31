@@ -37,7 +37,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -69,7 +68,7 @@ public class CoinbaseWalletV2 implements IWallet {
     private String preferredCryptoCurrency;
     protected String apiKey;
     protected String apiSecret;
-    protected ICoinbaseV2API api;
+    protected ICoinbaseV2APILegacy api;
     protected String accountName;
     protected Map<String,String> accountIds = new HashMap<>();
 
@@ -79,7 +78,7 @@ public class CoinbaseWalletV2 implements IWallet {
         this.apiSecret = apiSecret;
         ClientConfig config = new ClientConfig();
         config.setIgnoreHttpErrorCodes(true);
-        api = RestProxyFactory.createProxy(ICoinbaseV2API.class, "https://api.coinbase.com", config);
+        api = RestProxyFactory.createProxy(ICoinbaseV2APILegacy.class, "https://api.coinbase.com", config);
     }
 
     @Override

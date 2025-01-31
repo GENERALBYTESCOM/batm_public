@@ -42,7 +42,7 @@ public class CoinbaseV2RateSource implements IRateSource{
     private static final long MAXIMUM_ALLOWED_TIME_OFFSET = 30 * 1000;
 
     private String preferredFiatCurrency;
-    private ICoinbaseV2API api;
+    private ICoinbaseV2APILegacy api;
 
     public CoinbaseV2RateSource(String preferredFiatCurrency) {
         if (preferredFiatCurrency == null) {
@@ -52,7 +52,7 @@ public class CoinbaseV2RateSource implements IRateSource{
         ClientConfig config = new ClientConfig();
         config.setIgnoreHttpErrorCodes(true);
 
-        api = RestProxyFactory.createProxy(ICoinbaseV2API.class, "https://api.coinbase.com", config);
+        api = RestProxyFactory.createProxy(ICoinbaseV2APILegacy.class, "https://api.coinbase.com", config);
 
     }
 
