@@ -64,17 +64,15 @@ public interface ICoinbaseApi {
      *
      * <p>This endpoint doesn't require authentication.</p>
      *
-     * @param cryptocurrency The cryptocurrency to get price of. (Example: "BTC")
-     * @param fiatCurrency   The fiat currency in which to get the price. (Example: "USD")
-     * @param priceType      Type of the price.
+     * @param currencyPair The cryptocurrency-fiatCurrency pair to get price for. (Example: "BTC-USD")
+     * @param priceType    Type of the price.
      * @return The price of the given cryptocurrency in the given fiat currency.
      * @throws CoinbaseApiException If the API call fails.
      * @see <a href="https://docs.cdp.coinbase.com/coinbase-app/docs/api-prices">Coinbase Documentation</a>
      */
     @GET
-    @Path("/v2/prices/{cryptocurrency}-{fiatCurrency}/{priceType}")
-    CoinbasePriceResponse getPrice(@PathParam("cryptocurrency") String cryptocurrency,
-                                   @PathParam("fiatCurrency") String fiatCurrency,
+    @Path("/v2/prices/{currencyPair}/{priceType}")
+    CoinbasePriceResponse getPrice(@PathParam("currencyPair") String currencyPair,
                                    @PathParam("priceType") String priceType) throws CoinbaseApiException;
 
     /**
