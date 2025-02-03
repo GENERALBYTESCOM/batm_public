@@ -34,7 +34,6 @@ public class CoinbaseApiFactoryTest {
 
     @Test
     public void testCreateCoinbaseApiLegacy_valid() throws KeyManagementException {
-        CoinbaseApiFactory apiFactory = new CoinbaseApiFactory();
         ICoinbaseAPILegacy mockedCoinbaseApi = mock(ICoinbaseAPILegacy.class);
         SSLContext sslContext = mock(SSLContext.class);
         SSLSocketFactory sslSocketFactory = mock(SSLSocketFactory.class);
@@ -45,7 +44,7 @@ public class CoinbaseApiFactoryTest {
             mockedSslContext.when(() -> SSLContext.getInstance(anyString())).thenReturn(sslContext);
             when(sslContext.getSocketFactory()).thenReturn(sslSocketFactory);
 
-            ICoinbaseAPILegacy result = apiFactory.createCoinbaseApiLegacy();
+            ICoinbaseAPILegacy result = CoinbaseApiFactory.createCoinbaseApiLegacy();
 
             assertEquals(mockedCoinbaseApi, result);
             mockedSslContext.verify(() -> SSLContext.getInstance("TLS"));
@@ -63,14 +62,13 @@ public class CoinbaseApiFactoryTest {
 
     @Test
     public void testCreateCoinbaseApiLegacy_KeyManagementException() throws KeyManagementException {
-        CoinbaseApiFactory apiFactory = new CoinbaseApiFactory();
         SSLContext sslContext = mock(SSLContext.class);
 
         try (MockedStatic<SSLContext> mockedSslContext = mockStatic(SSLContext.class)) {
             mockedSslContext.when(() -> SSLContext.getInstance(anyString())).thenReturn(sslContext);
             doThrow(new KeyManagementException("Test Exception")).when(sslContext).init(any(), any(), any());
 
-            CoinbaseException exception = assertThrows(CoinbaseException.class, apiFactory::createCoinbaseApiLegacy);
+            CoinbaseException exception = assertThrows(CoinbaseException.class, CoinbaseApiFactory::createCoinbaseApiLegacy);
 
             assertEquals("Unable to create ICoinbaseAPILegacy proxy", exception.getMessage());
             mockedSslContext.verify(() -> SSLContext.getInstance("TLS"));
@@ -80,12 +78,11 @@ public class CoinbaseApiFactoryTest {
 
     @Test
     public void testCreateCoinbaseApiLegacy_NoSuchAlgorithmException() {
-        CoinbaseApiFactory apiFactory = new CoinbaseApiFactory();
 
         try (MockedStatic<SSLContext> mockedSslContext = mockStatic(SSLContext.class)) {
             mockedSslContext.when(() -> SSLContext.getInstance(anyString())).thenThrow(new NoSuchAlgorithmException("Test Exception"));
 
-            CoinbaseException exception = assertThrows(CoinbaseException.class, apiFactory::createCoinbaseApiLegacy);
+            CoinbaseException exception = assertThrows(CoinbaseException.class, CoinbaseApiFactory::createCoinbaseApiLegacy);
 
             assertEquals("Unable to create ICoinbaseAPILegacy proxy", exception.getMessage());
             mockedSslContext.verify(() -> SSLContext.getInstance("TLS"));
@@ -94,13 +91,12 @@ public class CoinbaseApiFactoryTest {
 
     @Test
     public void testCreateCoinbaseV2ApiLegacy() {
-        CoinbaseApiFactory apiFactory = new CoinbaseApiFactory();
         ICoinbaseV2APILegacy mockedCoinbaseApi = mock(ICoinbaseV2APILegacy.class);
 
         try (MockedStatic<RestProxyFactory> mockedRestProxyFactory = mockStatic(RestProxyFactory.class)) {
             mockedRestProxyFactory.when(() -> RestProxyFactory.createProxy(any(), anyString(), any())).thenReturn(mockedCoinbaseApi);
 
-            ICoinbaseV2APILegacy result = apiFactory.createCoinbaseV2ApiLegacy();
+            ICoinbaseV2APILegacy result = CoinbaseApiFactory.createCoinbaseV2ApiLegacy();
 
             assertEquals(mockedCoinbaseApi, result);
             ArgumentCaptor<ClientConfig> configCaptor = ArgumentCaptor.forClass(ClientConfig.class);

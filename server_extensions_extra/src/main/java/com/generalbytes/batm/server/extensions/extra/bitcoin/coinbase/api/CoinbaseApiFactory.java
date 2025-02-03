@@ -43,7 +43,7 @@ public class CoinbaseApiFactory {
      * @return A configured proxy instance of {@link ICoinbaseAPILegacy}.
      * @throws CoinbaseException If the proxy creation fails.
      */
-    public ICoinbaseAPILegacy createCoinbaseApiLegacy() {
+    public static ICoinbaseAPILegacy createCoinbaseApiLegacy() {
         try {
             ClientConfig config = new ClientConfig();
             SSLContext sslcontext = SSLContext.getInstance("TLS");
@@ -64,7 +64,7 @@ public class CoinbaseApiFactory {
      * @return A configured proxy instance of {@link ICoinbaseV2APILegacy}.
      * @throws CoinbaseException If the proxy creation fails.
      */
-    public ICoinbaseV2APILegacy createCoinbaseV2ApiLegacy() {
+    public static ICoinbaseV2APILegacy createCoinbaseV2ApiLegacy() {
         ClientConfig config = new ClientConfig();
         config.setIgnoreHttpErrorCodes(true);
         return RestProxyFactory.createProxy(ICoinbaseV2APILegacy.class, "https://api.coinbase.com", config);
