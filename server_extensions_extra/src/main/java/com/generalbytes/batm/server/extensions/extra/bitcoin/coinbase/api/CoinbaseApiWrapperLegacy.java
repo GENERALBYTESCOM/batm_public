@@ -20,8 +20,8 @@ public class CoinbaseApiWrapperLegacy implements CoinbaseApiWrapper {
     private final String apiKey;
     private final String secretKey;
 
-    public CoinbaseApiWrapperLegacy(CoinbaseApiFactory apiFactory, String apiKey, String secretKey) {
-        this.api = apiFactory.createCoinbaseApiLegacy();
+    public CoinbaseApiWrapperLegacy(ICoinbaseAPILegacy api, String apiKey, String secretKey) {
+        this.api = api;
         this.apiKey = apiKey;
         this.secretKey = secretKey;
     }

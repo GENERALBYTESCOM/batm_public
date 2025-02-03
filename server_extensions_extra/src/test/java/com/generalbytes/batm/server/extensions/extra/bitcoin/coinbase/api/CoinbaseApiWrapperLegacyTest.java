@@ -38,9 +38,7 @@ public class CoinbaseApiWrapperLegacyTest {
     public void setup() {
         api = mock(ICoinbaseAPILegacy.class);
         coinbaseDigest = mock(CoinbaseDigest.class);
-        CoinbaseApiFactory apiFactory = mock(CoinbaseApiFactory.class);
-        when(apiFactory.createCoinbaseApiLegacy()).thenReturn(api);
-        apiWrapper = new CoinbaseApiWrapperLegacy(apiFactory, API_KEY, SECRET_KEY);
+        apiWrapper = new CoinbaseApiWrapperLegacy(api, API_KEY, SECRET_KEY);
     }
 
     @Test
