@@ -1,14 +1,30 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin;
 
+import com.generalbytes.batm.server.extensions.IExchange;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.TestExtensionContext;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.CoinbaseApiFactory;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.CoinbaseApiWrapperLegacy;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.CoinbaseExchange;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.ICoinbaseAPILegacy;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.BitgoWallet;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.MockedStatic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Objects;
 import java.util.StringTokenizer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 
 public class BitcoinExtensionTest {
 
@@ -295,6 +311,68 @@ public class BitcoinExtensionTest {
         value = body.substring(index1, index2);
         Assert.assertNotNull(value);
         Assert.assertEquals("needs unlock", value);
+    }
+
+    @Test
+    public void testCreateExchange_validLegacyCoinbase() {
+        // accountName, preferredFiatCurrency and paymentMethodName are all optional
+        doTestCreateExchange_validLegacyCoinbase(null, null, null);
+        doTestCreateExchange_validLegacyCoinbase("accountName", null, null);
+        doTestCreateExchange_validLegacyCoinbase("accountName", "CZK", null);
+        doTestCreateExchange_validLegacyCoinbase("accountName", "CZK", "paymentMethodName");
+    }
+
+    private void doTestCreateExchange_validLegacyCoinbase(String accountName, String preferredFiatCurrency, String paymentMethodName) {
+        String prefix = "coinbaseexchange";
+        String apiKey = "apiKey";
+        String secretKey = "secretKey";
+        String paramString = getCoinbaseParams(prefix, apiKey, secretKey, accountName, preferredFiatCurrency, paymentMethodName);
+
+        BitcoinExtension bitcoinExtension = new BitcoinExtension();
+        bitcoinExtension.init(new TestExtensionContext());
+
+        try (MockedStatic<CoinbaseApiFactory> mockedApiFactory = mockStatic(CoinbaseApiFactory.class)) {
+            mockedApiFactory.when(CoinbaseApiFactory::createCoinbaseApiLegacy).thenReturn(mock(ICoinbaseAPILegacy.class));
+
+            IExchange exchange = bitcoinExtension.createExchange(paramString);
+
+            assertNotNull(exchange);
+            assertTrue(exchange instanceof CoinbaseExchange);
+            CoinbaseExchange coinbaseExchange = (CoinbaseExchange) exchange;
+            assertEquals(accountName, coinbaseExchange.getAccountName());
+            assertEquals(preferredFiatCurrency, coinbaseExchange.getPreferredFiatCurrency());
+            assertEquals(paymentMethodName, coinbaseExchange.getPaymentMethodName());
+            assertTrue(coinbaseExchange.getApiWrapper() instanceof CoinbaseApiWrapperLegacy);
+            mockedApiFactory.verify(CoinbaseApiFactory::createCoinbaseApiLegacy);
+        }
+    }
+
+    private String getCoinbaseParams(String prefix,
+                                     String apiKey,
+                                     String secretKey,
+                                     String accountName,
+                                     String preferredFiatCurrency,
+                                     String paymentMethodName) {
+        return Stream.of(prefix, apiKey, secretKey, accountName, preferredFiatCurrency, paymentMethodName)
+            .filter(Objects::nonNull)
+            .collect(Collectors.joining(":"));
+    }
+
+    @Test
+    public void testCreateExchange_invalidLegacyCoinbase() {
+        // Missing mandatory parameter: secretKey
+        doTestCreateExchange_invalidLegacyCoinbase("coinbaseexchange:apiKey");
+        // Missing mandatory parameters: apiKey, secretKey
+        doTestCreateExchange_invalidLegacyCoinbase("coinbaseexchange");
+    }
+
+    private void doTestCreateExchange_invalidLegacyCoinbase(String paramString) {
+        BitcoinExtension bitcoinExtension = new BitcoinExtension();
+        bitcoinExtension.init(new TestExtensionContext());
+
+        IExchange exchange = bitcoinExtension.createExchange(paramString);
+
+        assertNull(exchange);
     }
 
 }
