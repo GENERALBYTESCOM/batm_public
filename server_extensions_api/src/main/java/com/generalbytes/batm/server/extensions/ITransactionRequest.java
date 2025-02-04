@@ -31,6 +31,7 @@ public interface ITransactionRequest {
     int TYPE_WITHDRAW_CASH = 2;
     int TYPE_CASHBACK = 3;
     int TYPE_ORDER_CRYPTO = 4;
+    int TYPE_DEPOSIT_CASH = 5;
 
     /**
      * Server time of the transaction
