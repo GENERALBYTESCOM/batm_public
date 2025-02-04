@@ -30,7 +30,9 @@ public interface ITransactionPreparation {
     int TYPE_BUY_CRYPTO = 0;
     int TYPE_SELL_CRYPTO = 1;
     int TYPE_WITHDRAW_CASH = 2;
-
+    int TYPE_CASHBACK = 3;
+    int TYPE_ORDER_CRYPTO = 4;
+    int TYPE_DEPOSIT_CASH = 5;
 
     int RESPONSE_WITHDRAWAL_NOT_POSSIBLE = 0;
     int RESPONSE_WITHDRAWAL_POSSIBLE = 1;
