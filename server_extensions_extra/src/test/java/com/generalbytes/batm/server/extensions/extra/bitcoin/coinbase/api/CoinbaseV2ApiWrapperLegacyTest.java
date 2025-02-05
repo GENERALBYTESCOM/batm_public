@@ -17,7 +17,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockedStatic;
 
+import java.util.function.Consumer;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -169,6 +172,40 @@ public class CoinbaseV2ApiWrapperLegacyTest {
             verify(api).getAddresses(API_KEY, API_VERSION, coinbaseDigest, 1L, "accountId", 10, "startingAfterAddressId");
             mockedCbDigest.verify(() -> CBDigest.createInstance(SECRET_KEY, 1L));
         }
+    }
+
+    @Test
+    public void testCredentialsValidation() {
+        doTestCredentialsValidationForEachCredential(apiWrapper -> apiWrapper.getAccounts(
+                API_VERSION, 100L, 100, null));
+        doTestCredentialsValidationForEachCredential(apiWrapper -> apiWrapper.getAccountAddresses(
+                API_VERSION, 100L, "accountId"));
+        doTestCredentialsValidationForEachCredential(apiWrapper -> apiWrapper.getAccount(
+                API_VERSION, 100L, "accountId"));
+        doTestCredentialsValidationForEachCredential(apiWrapper -> apiWrapper.send(
+                API_VERSION, 100L, "accountId", new CBSendRequest()));
+        doTestCredentialsValidationForEachCredential(apiWrapper -> apiWrapper.createAddress(
+                API_VERSION, 100L, "accountId", new CBCreateAddressRequest("address")));
+        doTestCredentialsValidationForEachCredential(apiWrapper -> apiWrapper.getAddressTransactions(
+                API_VERSION, 100L, "accountId", "addressId", 100, null));
+        doTestCredentialsValidationForEachCredential(apiWrapper -> apiWrapper.getAddresses(
+                API_VERSION, 100L, "accountId", 100, null));
+    }
+
+    private void doTestCredentialsValidationForEachCredential(Consumer<CoinbaseV2ApiWrapperLegacy> testCall) {
+        doTestCredentialsValidation("apiKey", null, "secretKey", testCall);
+        doTestCredentialsValidation("secretKey", "apiKey", null, testCall);
+    }
+
+    private void doTestCredentialsValidation(String expectedInvalidFieldName,
+                                             String apiKey,
+                                             String secretKey,
+                                             Consumer<CoinbaseV2ApiWrapperLegacy> testCall) {
+        CoinbaseV2ApiWrapperLegacy apiWrapper = new CoinbaseV2ApiWrapperLegacy(api, apiKey, secretKey);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> testCall.accept(apiWrapper));
+
+        assertEquals(expectedInvalidFieldName + " cannot be null", exception.getMessage());
     }
 
 }
