@@ -544,7 +544,10 @@ public class BitcoinExtension extends AbstractExtension {
                 if (st.hasMoreTokens()) {
                     preferredFiatCurrency = st.nextToken().toUpperCase();
                 }
-                return new CoinbaseV2RateSource(preferredFiatCurrency);
+                // Rate Source doesn't need credentials
+                ICoinbaseV2APILegacy api = CoinbaseApiFactory.createCoinbaseV2ApiLegacy();
+                CoinbaseV2ApiWrapperLegacy apiWrapper = new CoinbaseV2ApiWrapperLegacy(api, null, null);
+                return new CoinbaseV2RateSource(preferredFiatCurrency, apiWrapper);
             } else if ("coinbasepro".equalsIgnoreCase(rsType)) {
                 String preferredFiatCurrency = FiatCurrency.USD.getCode();
                 if (st.hasMoreTokens()) {
