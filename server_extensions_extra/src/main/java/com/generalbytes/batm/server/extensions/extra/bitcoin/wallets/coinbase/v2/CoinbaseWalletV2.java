@@ -19,6 +19,7 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.IWallet;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.CoinbaseV2ApiWrapper;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBAccount;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBAccountResponse;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBAddress;
@@ -30,8 +31,6 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2
 import com.google.common.collect.ImmutableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import si.mazi.rescu.ClientConfig;
-import si.mazi.rescu.RestProxyFactory;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -66,19 +65,13 @@ public class CoinbaseWalletV2 implements IWallet {
 
     protected static final String API_VERSION="2016-07-23";
     private String preferredCryptoCurrency;
-    protected String apiKey;
-    protected String apiSecret;
-    protected ICoinbaseV2APILegacy api;
+    protected CoinbaseV2ApiWrapper api;
     protected String accountName;
     protected Map<String,String> accountIds = new HashMap<>();
 
-    public CoinbaseWalletV2(String apiKey, String apiSecret, String accountName) {
+    public CoinbaseWalletV2(CoinbaseV2ApiWrapper api, String accountName) {
         this.accountName = accountName;
-        this.apiKey = apiKey;
-        this.apiSecret = apiSecret;
-        ClientConfig config = new ClientConfig();
-        config.setIgnoreHttpErrorCodes(true);
-        api = RestProxyFactory.createProxy(ICoinbaseV2APILegacy.class, "https://api.coinbase.com", config);
+        this.api = api;
     }
 
     @Override
@@ -108,7 +101,7 @@ public class CoinbaseWalletV2 implements IWallet {
     private List<CBAccount> getAccounts() {
         return paginate(startingAfter -> {
             long timeStamp = getTimestamp();
-            return api.getAccounts(apiKey, API_VERSION, CBDigest.createInstance(apiSecret, timeStamp), timeStamp, 100, startingAfter);
+            return api.getAccounts(API_VERSION, timeStamp, 100, startingAfter);
         });
     }
 
@@ -158,7 +151,7 @@ public class CoinbaseWalletV2 implements IWallet {
         }
         initIfNeeded(cryptoCurrency);
         long timeStamp = getTimestamp();
-        CBAddressesResponse addressesResponse = api.getAccountAddresses(apiKey, API_VERSION, CBDigest.createInstance(apiSecret, timeStamp), timeStamp, accountIds.get(cryptoCurrency));
+        CBAddressesResponse addressesResponse = api.getAccountAddresses(API_VERSION, timeStamp, accountIds.get(cryptoCurrency));
         if (addressesResponse != null && addressesResponse.getData() != null && !addressesResponse.getData().isEmpty()) {
             List<CBAddress> addresses = addressesResponse.getData();
             String network  = getNetworkName(cryptoCurrency);
@@ -193,7 +186,7 @@ public class CoinbaseWalletV2 implements IWallet {
         }
         initIfNeeded(cryptoCurrency);
         long timeStamp = getTimestamp();
-        CBAccountResponse accountResponse = api.getAccount(apiKey, API_VERSION, CBDigest.createInstance(apiSecret, timeStamp), timeStamp,accountIds.get(cryptoCurrency));
+        CBAccountResponse accountResponse = api.getAccount(API_VERSION, timeStamp,accountIds.get(cryptoCurrency));
         if (accountResponse != null && accountResponse.getData() != null && cryptoCurrency.equalsIgnoreCase(accountResponse.getData().getBalance().getCurrency())) {
             return accountResponse.getData().getBalance().getAmount().stripTrailingZeros();
         }
@@ -224,7 +217,7 @@ public class CoinbaseWalletV2 implements IWallet {
         }
         log.info("sending {} {} to {}", amount, cryptoCurrency, destinationAddress);
         CBSendRequest sendRequest = new CBSendRequest("send",destinationAddress,amount.stripTrailingZeros().toPlainString(),cryptoCurrency,description, description, destinationTag); //note that description is here used as unique token as reply protection
-        CBSendResponse response = api.send(apiKey,API_VERSION, CBDigest.createInstance(apiSecret, timeStamp), timeStamp,accountIds.get(cryptoCurrency), sendRequest);
+        CBSendResponse response = api.send(API_VERSION, timeStamp,accountIds.get(cryptoCurrency), sendRequest);
         if (response != null && response.getData() != null) {
             return response.getData().getId();
         }
@@ -264,6 +257,13 @@ public class CoinbaseWalletV2 implements IWallet {
         return items;
     }
 
+    public CoinbaseV2ApiWrapper getApi() {
+        return api;
+    }
+
+    public String getAccountName() {
+        return accountName;
+    }
 
 //    public static void main(String[] args) {
 //        ServerUtil.setLoggerLevel("si.mazi.rescu","trace");

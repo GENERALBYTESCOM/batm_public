@@ -33,6 +33,7 @@ import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.CoinbaseApiFactory;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.CoinbaseApiWrapper;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.CoinbaseApiWrapperLegacy;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.CoinbaseV2ApiWrapperLegacy;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.binance.BinanceComExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.binance.BinanceUsExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitbuy.BitbuyExchange;
@@ -67,6 +68,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.Bi
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.CoinbaseV2RateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.CoinbaseWalletV2;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.CoinbaseWalletV2WithUniqueAddresses;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.ICoinbaseV2APILegacy;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryptx.v2.CryptXWallet;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryptx.v2.CryptXWithUniqueAddresses;
 import com.generalbytes.batm.server.extensions.extra.ethereum.UsdcDefinition;
@@ -386,10 +388,12 @@ public class BitcoinExtension extends AbstractExtension {
                         accountName = null;
                     }
                 }
+                ICoinbaseV2APILegacy api = CoinbaseApiFactory.createCoinbaseV2ApiLegacy();
+                CoinbaseV2ApiWrapperLegacy apiWrapper = new CoinbaseV2ApiWrapperLegacy(api, apiKey, secretKey);
                 if ("coinbasewallet2noforward".equalsIgnoreCase(walletType)) {
-                    return new CoinbaseWalletV2WithUniqueAddresses(apiKey, secretKey, accountName);
+                    return new CoinbaseWalletV2WithUniqueAddresses(apiWrapper, accountName);
                 }
-                return new CoinbaseWalletV2(apiKey, secretKey, accountName);
+                return new CoinbaseWalletV2(apiWrapper, accountName);
             } else if ("cryptx".equalsIgnoreCase(walletType) || "cryptxnoforward".equalsIgnoreCase(walletType)) {
 
                 String first = st.nextToken();
