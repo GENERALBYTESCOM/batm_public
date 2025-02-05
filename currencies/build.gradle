@@ -9,3 +9,10 @@ dependencies {
     implementation("org.slf4j:slf4j-api:1.7.28")
     testImplementation("junit:junit:4.13.1")
 }
+
+java {
+    toolchain {
+        // must stay on Java 11 due to compatibility issues
+        languageVersion.set(JavaLanguageVersion.of(11))
+    }
+}
