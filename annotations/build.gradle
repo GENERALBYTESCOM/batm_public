@@ -5,3 +5,9 @@ plugins {
 group = projectGroup
 version = projectVersion
 
+java {
+    toolchain {
+        // must stay on Java 11 due to compatibility issues
+        languageVersion.set(JavaLanguageVersion.of(11))
+    }
+}
