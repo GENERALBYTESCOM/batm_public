@@ -894,9 +894,9 @@ public interface IExtensionContext {
     ReceiptData getReceiptData(ReceiptTransferMethod receiptTransferMethod, ITransactionDetails transactionDetails, String template);
 
     /**
-     * Returns the list of all implemented Travel Rule Providers.
+     * Returns the list of all configured Travel Rule Providers.
      *
-     * @return List of all implemented Travel Rule Providers.
+     * @return List of all configured Travel Rule Providers.
      */
     default List<ITravelRuleProviderIdentification> getTravelRuleProviders() { return new ArrayList<>(); }
 
