@@ -26,6 +26,7 @@ import com.generalbytes.batm.server.extensions.communication.ICommunicationProvi
 import com.generalbytes.batm.server.extensions.communication.IPhoneLookupProvider;
 import com.generalbytes.batm.server.extensions.communication.voicecall.IVoiceCallProvider;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProvider;
+import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProviderFactory;
 import com.generalbytes.batm.server.extensions.travelrule.IWalletTypeEvaluationProvider;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
@@ -190,10 +191,15 @@ public interface IExtension {
     Set<IVoiceCallProvider> getVoiceCallProviders();
 
     /**
-     * Returns set of external Travel Rule Providers.
-     * @return {@link Set} of {@link ITravelRuleProvider}.
+     * Returns the list of all Travel Rule Provider Factories.
+     * <p>
+     * Each factory is responsible for creating instance of {@link ITravelRuleProvider} based on the implementation.
+     *
+     * @return Set of all Travel Rule Provider Factories.
      */
-    default Set<ITravelRuleProvider> getTravelRuleProviders() { return Collections.emptySet(); }
+    default Set<ITravelRuleProviderFactory> getTravelRuleProviderFactories() {
+        return Collections.emptySet();
+    }
 
     /**
      * @return Validators that can be used to validate SSNs
