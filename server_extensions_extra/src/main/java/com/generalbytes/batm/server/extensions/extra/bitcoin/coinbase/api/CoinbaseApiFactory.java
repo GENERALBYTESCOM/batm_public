@@ -18,8 +18,8 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api;
 
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.CoinbaseException;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.ICoinbaseAPILegacy;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.ICoinbaseV2APILegacy;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.ICoinbaseAPI;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.ICoinbaseV2API;
 import com.generalbytes.batm.server.extensions.util.net.CompatSSLSocketFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,10 +40,10 @@ public class CoinbaseApiFactory {
     /**
      * Creates a proxy instance for interacting with the Coinbase API.
      *
-     * @return A configured proxy instance of {@link ICoinbaseAPILegacy}.
+     * @return A configured proxy instance of {@link ICoinbaseAPI}.
      * @throws CoinbaseException If the proxy creation fails.
      */
-    public static ICoinbaseAPILegacy createCoinbaseApiLegacy() {
+    public static ICoinbaseAPI createCoinbaseApiLegacy() {
         try {
             ClientConfig config = new ClientConfig();
             SSLContext sslcontext = SSLContext.getInstance("TLS");
@@ -51,7 +51,7 @@ public class CoinbaseApiFactory {
             CompatSSLSocketFactory socketFactory = new CompatSSLSocketFactory(sslcontext.getSocketFactory());
             config.setSslSocketFactory(socketFactory);
             config.setIgnoreHttpErrorCodes(true);
-            return RestProxyFactory.createProxy(ICoinbaseAPILegacy.class, "https://api.coinbase.com", config);
+            return RestProxyFactory.createProxy(ICoinbaseAPI.class, "https://api.coinbase.com", config);
         } catch (NoSuchAlgorithmException | KeyManagementException e) {
             log.error("Failed to create ICoinbaseAPILegacy proxy.", e);
             throw new CoinbaseException("Unable to create ICoinbaseAPILegacy proxy");
@@ -61,13 +61,13 @@ public class CoinbaseApiFactory {
     /**
      * Creates a proxy instance for interacting with the Coinbase API.
      *
-     * @return A configured proxy instance of {@link ICoinbaseV2APILegacy}.
+     * @return A configured proxy instance of {@link ICoinbaseV2API}.
      * @throws CoinbaseException If the proxy creation fails.
      */
-    public static ICoinbaseV2APILegacy createCoinbaseV2ApiLegacy() {
+    public static ICoinbaseV2API createCoinbaseV2ApiLegacy() {
         ClientConfig config = new ClientConfig();
         config.setIgnoreHttpErrorCodes(true);
-        return RestProxyFactory.createProxy(ICoinbaseV2APILegacy.class, "https://api.coinbase.com", config);
+        return RestProxyFactory.createProxy(ICoinbaseV2API.class, "https://api.coinbase.com", config);
     }
 
 }

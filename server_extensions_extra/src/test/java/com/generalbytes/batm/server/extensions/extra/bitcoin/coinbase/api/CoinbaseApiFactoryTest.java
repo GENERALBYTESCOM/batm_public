@@ -1,8 +1,8 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api;
 
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.CoinbaseException;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.ICoinbaseAPILegacy;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.ICoinbaseV2APILegacy;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.ICoinbaseAPI;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.ICoinbaseV2API;
 import com.generalbytes.batm.server.extensions.util.net.CompatSSLSocketFactory;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -34,7 +34,7 @@ public class CoinbaseApiFactoryTest {
 
     @Test
     public void testCreateCoinbaseApiLegacy_valid() throws KeyManagementException {
-        ICoinbaseAPILegacy mockedCoinbaseApi = mock(ICoinbaseAPILegacy.class);
+        ICoinbaseAPI mockedCoinbaseApi = mock(ICoinbaseAPI.class);
         SSLContext sslContext = mock(SSLContext.class);
         SSLSocketFactory sslSocketFactory = mock(SSLSocketFactory.class);
 
@@ -44,14 +44,14 @@ public class CoinbaseApiFactoryTest {
             mockedSslContext.when(() -> SSLContext.getInstance(anyString())).thenReturn(sslContext);
             when(sslContext.getSocketFactory()).thenReturn(sslSocketFactory);
 
-            ICoinbaseAPILegacy result = CoinbaseApiFactory.createCoinbaseApiLegacy();
+            ICoinbaseAPI result = CoinbaseApiFactory.createCoinbaseApiLegacy();
 
             assertEquals(mockedCoinbaseApi, result);
             mockedSslContext.verify(() -> SSLContext.getInstance("TLS"));
             verify(sslContext).init(null, null, null);
             verify(sslContext).getSocketFactory();
             ArgumentCaptor<ClientConfig> configCaptor = ArgumentCaptor.forClass(ClientConfig.class);
-            mockedRestProxyFactory.verify(() -> RestProxyFactory.createProxy(eq(ICoinbaseAPILegacy.class), eq(API_URL), configCaptor.capture()));
+            mockedRestProxyFactory.verify(() -> RestProxyFactory.createProxy(eq(ICoinbaseAPI.class), eq(API_URL), configCaptor.capture()));
             ClientConfig clientConfig = configCaptor.getValue();
             assertNotNull(clientConfig);
             assertTrue(clientConfig.isIgnoreHttpErrorCodes());
@@ -91,16 +91,16 @@ public class CoinbaseApiFactoryTest {
 
     @Test
     public void testCreateCoinbaseV2ApiLegacy() {
-        ICoinbaseV2APILegacy mockedCoinbaseApi = mock(ICoinbaseV2APILegacy.class);
+        ICoinbaseV2API mockedCoinbaseApi = mock(ICoinbaseV2API.class);
 
         try (MockedStatic<RestProxyFactory> mockedRestProxyFactory = mockStatic(RestProxyFactory.class)) {
             mockedRestProxyFactory.when(() -> RestProxyFactory.createProxy(any(), anyString(), any())).thenReturn(mockedCoinbaseApi);
 
-            ICoinbaseV2APILegacy result = CoinbaseApiFactory.createCoinbaseV2ApiLegacy();
+            ICoinbaseV2API result = CoinbaseApiFactory.createCoinbaseV2ApiLegacy();
 
             assertEquals(mockedCoinbaseApi, result);
             ArgumentCaptor<ClientConfig> configCaptor = ArgumentCaptor.forClass(ClientConfig.class);
-            mockedRestProxyFactory.verify(() -> RestProxyFactory.createProxy(eq(ICoinbaseV2APILegacy.class), eq(API_URL), configCaptor.capture()));
+            mockedRestProxyFactory.verify(() -> RestProxyFactory.createProxy(eq(ICoinbaseV2API.class), eq(API_URL), configCaptor.capture()));
             ClientConfig clientConfig = configCaptor.getValue();
             assertNotNull(clientConfig);
             assertTrue(clientConfig.isIgnoreHttpErrorCodes());

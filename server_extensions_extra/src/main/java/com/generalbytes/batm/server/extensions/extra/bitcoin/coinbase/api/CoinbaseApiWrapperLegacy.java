@@ -1,7 +1,7 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api;
 
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.CoinbaseDigest;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.ICoinbaseAPILegacy;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.ICoinbaseAPI;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.dto.CBAccountsResponse;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.dto.CBNewAddressResponse;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.dto.CBOrderRequest;
@@ -16,11 +16,11 @@ import java.io.IOException;
 
 public class CoinbaseApiWrapperLegacy implements CoinbaseApiWrapper {
 
-    private final ICoinbaseAPILegacy api;
+    private final ICoinbaseAPI api;
     private final String apiKey;
     private final String secretKey;
 
-    public CoinbaseApiWrapperLegacy(ICoinbaseAPILegacy api, String apiKey, String secretKey) {
+    public CoinbaseApiWrapperLegacy(ICoinbaseAPI api, String apiKey, String secretKey) {
         this.api = api;
         this.apiKey = apiKey;
         this.secretKey = secretKey;

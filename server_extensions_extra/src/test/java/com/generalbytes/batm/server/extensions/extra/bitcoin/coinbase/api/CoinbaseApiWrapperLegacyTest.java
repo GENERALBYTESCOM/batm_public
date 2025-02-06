@@ -1,7 +1,7 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api;
 
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.CoinbaseDigest;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.ICoinbaseAPILegacy;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.ICoinbaseAPI;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.dto.CBAccountsResponse;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.dto.CBNewAddressResponse;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.dto.CBOrderRequest;
@@ -30,13 +30,13 @@ public class CoinbaseApiWrapperLegacyTest {
     private static final String API_KEY = "apiKey";
     private static final String API_VERSION = "apiVersion";
     private static final String SECRET_KEY = "secretKey";
-    private ICoinbaseAPILegacy api;
+    private ICoinbaseAPI api;
     private CoinbaseDigest coinbaseDigest;
     private CoinbaseApiWrapperLegacy apiWrapper;
 
     @Before
     public void setup() {
-        api = mock(ICoinbaseAPILegacy.class);
+        api = mock(ICoinbaseAPI.class);
         coinbaseDigest = mock(CoinbaseDigest.class);
         apiWrapper = new CoinbaseApiWrapperLegacy(api, API_KEY, SECRET_KEY);
     }

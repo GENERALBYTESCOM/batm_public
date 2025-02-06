@@ -43,7 +43,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitpandap
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitstamp.BitstampExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bittrex.BittrexExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.CoinbaseExchange;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.ICoinbaseAPILegacy;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.ICoinbaseAPI;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbasepro.CoinbaseProExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coingi.CoingiExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinzix.CoinZixExchange;
@@ -68,7 +68,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.Bi
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.CoinbaseV2RateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.CoinbaseWalletV2;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.CoinbaseWalletV2WithUniqueAddresses;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.ICoinbaseV2APILegacy;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.ICoinbaseV2API;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryptx.v2.CryptXWallet;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryptx.v2.CryptXWithUniqueAddresses;
 import com.generalbytes.batm.server.extensions.extra.ethereum.UsdcDefinition;
@@ -160,7 +160,7 @@ public class BitcoinExtension extends AbstractExtension {
                 if(paramTokenizer.hasMoreTokens()) {
                     paymentMethodName = paramTokenizer.nextToken().trim();
                 }
-                ICoinbaseAPILegacy api = CoinbaseApiFactory.createCoinbaseApiLegacy();
+                ICoinbaseAPI api = CoinbaseApiFactory.createCoinbaseApiLegacy();
                 CoinbaseApiWrapper apiWrapper = new CoinbaseApiWrapperLegacy(api, apiKey, secretKey);
                 return new CoinbaseExchange(apiWrapper, accountName, preferedFiatCurrency, paymentMethodName);
             } else if ("coinbasepro".equalsIgnoreCase(prefix)) {
@@ -388,7 +388,7 @@ public class BitcoinExtension extends AbstractExtension {
                         accountName = null;
                     }
                 }
-                ICoinbaseV2APILegacy api = CoinbaseApiFactory.createCoinbaseV2ApiLegacy();
+                ICoinbaseV2API api = CoinbaseApiFactory.createCoinbaseV2ApiLegacy();
                 CoinbaseV2ApiWrapperLegacy apiWrapper = new CoinbaseV2ApiWrapperLegacy(api, apiKey, secretKey);
                 if ("coinbasewallet2noforward".equalsIgnoreCase(walletType)) {
                     return new CoinbaseWalletV2WithUniqueAddresses(apiWrapper, accountName);
@@ -545,7 +545,7 @@ public class BitcoinExtension extends AbstractExtension {
                     preferredFiatCurrency = st.nextToken().toUpperCase();
                 }
                 // Rate Source doesn't need credentials
-                ICoinbaseV2APILegacy api = CoinbaseApiFactory.createCoinbaseV2ApiLegacy();
+                ICoinbaseV2API api = CoinbaseApiFactory.createCoinbaseV2ApiLegacy();
                 CoinbaseV2ApiWrapperLegacy apiWrapper = new CoinbaseV2ApiWrapperLegacy(api, null, null);
                 return new CoinbaseV2RateSource(preferredFiatCurrency, apiWrapper);
             } else if ("coinbasepro".equalsIgnoreCase(rsType)) {

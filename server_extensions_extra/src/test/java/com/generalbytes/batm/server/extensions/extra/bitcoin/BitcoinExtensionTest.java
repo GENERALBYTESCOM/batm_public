@@ -8,12 +8,12 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.Coinba
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.CoinbaseApiWrapperLegacy;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.CoinbaseV2ApiWrapperLegacy;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.CoinbaseExchange;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.ICoinbaseAPILegacy;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.ICoinbaseAPI;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.BitgoWallet;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.CoinbaseV2RateSource;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.CoinbaseWalletV2;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.CoinbaseWalletV2WithUniqueAddresses;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.ICoinbaseV2APILegacy;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.ICoinbaseV2API;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.MockedStatic;
@@ -338,7 +338,7 @@ public class BitcoinExtensionTest {
         bitcoinExtension.init(new TestExtensionContext());
 
         try (MockedStatic<CoinbaseApiFactory> mockedApiFactory = mockStatic(CoinbaseApiFactory.class)) {
-            mockedApiFactory.when(CoinbaseApiFactory::createCoinbaseApiLegacy).thenReturn(mock(ICoinbaseAPILegacy.class));
+            mockedApiFactory.when(CoinbaseApiFactory::createCoinbaseApiLegacy).thenReturn(mock(ICoinbaseAPI.class));
 
             IExchange exchange = bitcoinExtension.createExchange(paramString);
 
@@ -406,7 +406,7 @@ public class BitcoinExtensionTest {
         bitcoinExtension.init(new TestExtensionContext());
 
         try (MockedStatic<CoinbaseApiFactory> mockedApiFactory = mockStatic(CoinbaseApiFactory.class)) {
-            mockedApiFactory.when(CoinbaseApiFactory::createCoinbaseV2ApiLegacy).thenReturn(mock(ICoinbaseV2APILegacy.class));
+            mockedApiFactory.when(CoinbaseApiFactory::createCoinbaseV2ApiLegacy).thenReturn(mock(ICoinbaseV2API.class));
 
             IWallet wallet = bitcoinExtension.createWallet(paramString, null);
 
@@ -447,7 +447,7 @@ public class BitcoinExtensionTest {
         bitcoinExtension.init(new TestExtensionContext());
 
         try (MockedStatic<CoinbaseApiFactory> mockedApiFactory = mockStatic(CoinbaseApiFactory.class)) {
-            mockedApiFactory.when(CoinbaseApiFactory::createCoinbaseV2ApiLegacy).thenReturn(mock(ICoinbaseV2APILegacy.class));
+            mockedApiFactory.when(CoinbaseApiFactory::createCoinbaseV2ApiLegacy).thenReturn(mock(ICoinbaseV2API.class));
 
             IRateSource rateSource = bitcoinExtension.createRateSource(paramString);
 

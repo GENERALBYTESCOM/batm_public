@@ -18,7 +18,7 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api;
 
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.CBDigest;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.ICoinbaseV2APILegacy;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.ICoinbaseV2API;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBAccount;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBAccountResponse;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBAddress;
@@ -33,11 +33,11 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2
 
 public class CoinbaseV2ApiWrapperLegacy implements CoinbaseV2ApiWrapper {
 
-    private final ICoinbaseV2APILegacy api;
+    private final ICoinbaseV2API api;
     private final String apiKey;
     private final String secretKey;
 
-    public CoinbaseV2ApiWrapperLegacy(ICoinbaseV2APILegacy api, String apiKey, String secretKey) {
+    public CoinbaseV2ApiWrapperLegacy(ICoinbaseV2API api, String apiKey, String secretKey) {
         this.api = api;
         this.apiKey = apiKey;
         this.secretKey = secretKey;
