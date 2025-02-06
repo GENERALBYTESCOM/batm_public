@@ -93,4 +93,12 @@ public class CBSendRequest {
     public void setIdem(String idem) {
         this.idem = idem;
     }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }
