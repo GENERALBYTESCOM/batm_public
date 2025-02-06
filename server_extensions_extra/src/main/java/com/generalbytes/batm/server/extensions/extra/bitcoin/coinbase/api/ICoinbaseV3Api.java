@@ -19,13 +19,25 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api;
 
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseAccountResponse;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseAccountsResponse;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseAddressesResponse;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseCreateAddressRequest;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseCreateAddressResponse;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseCreateOrderRequest;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseCreateOrderResponse;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseExchangeRatesResponse;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseOrderResponse;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbasePaymentMethodsResponse;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbasePriceResponse;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseSendCoinsRequest;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseServerTimeResponse;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseTransactionResponse;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseTransactionsResponse;
 import si.mazi.rescu.ParamsDigest;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -106,6 +118,106 @@ public interface ICoinbaseV3Api {
                                          @QueryParam("starting_after") String startingAfter) throws CoinbaseApiException;
 
     /**
+     * Creates a new address for an account. Addresses can be created for wallet account types.
+     *
+     * @param accountId ID of the account.
+     * @param request   The request.
+     * @return Information about the created address.
+     * @throws CoinbaseApiException If the API call fails.
+     * @see <a href="https://docs.cdp.coinbase.com/coinbase-app/docs/api-addresses#create-address">Coinbase Documentation</a>
+     */
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/v2/accounts/{accountId}/addresses")
+    CoinbaseCreateAddressResponse createAddress(@HeaderParam(HEADER_AUTHORIZATION) ParamsDigest authorization,
+                                                @PathParam("accountId") String accountId,
+                                                CoinbaseCreateAddressRequest request) throws CoinbaseApiException;
+
+    /**
+     * Lists addresses for an account.
+     *
+     * @param accountId     ID of the account.
+     * @param limit         The maximum number of records.
+     * @param startingAfter ID of the address to start from (not included in response).
+     * @return The addresses.
+     * @throws CoinbaseApiException If the API call fails.
+     * @see <a href="https://docs.cdp.coinbase.com/coinbase-app/docs/api-addresses#list-addresses">Coinbase Documentation</a>
+     */
+    @GET
+    @Path("/v2/accounts/{accountId}/addresses")
+    CoinbaseAddressesResponse getAddresses(@HeaderParam(HEADER_AUTHORIZATION) ParamsDigest authorization,
+                                           @PathParam("accountId") String accountId,
+                                           @QueryParam("limit") Integer limit,
+                                           @QueryParam("starting_after") String startingAfter) throws CoinbaseApiException;
+
+    /**
+     * Lists addresses for an account.
+     *
+     * @param accountId ID of the account.
+     * @return The addresses.
+     * @throws CoinbaseApiException If the API call fails.
+     * @see <a href="https://docs.cdp.coinbase.com/coinbase-app/docs/api-addresses#list-addresses">Coinbase Documentation</a>
+     */
+    @GET
+    @Path("/v2/accounts/{accountId}/addresses")
+    CoinbaseAddressesResponse getAddresses(@HeaderParam(HEADER_AUTHORIZATION) ParamsDigest authorization,
+                                           @PathParam("accountId") String accountId) throws CoinbaseApiException;
+
+    /**
+     * List transactions that have been sent to a specific address.
+     * A regular cryptocurrency address can be used in place of addressId,
+     * but the address must be associated with the correct account.
+     *
+     * @param accountId     ID of the account.
+     * @param addressId     ID of the address.
+     * @param limit         Maximum number of records.
+     * @param startingAfter ID of the transaction to start from (not included in response).
+     * @return The transactions.
+     * @throws CoinbaseApiException If the API call fails.
+     * @see <a href="https://docs.cdp.coinbase.com/coinbase-app/docs/api-addresses#list-transactions">Coinbase Documentation</a>
+     */
+    @GET
+    @Path("/v2/accounts/{accountId}/addresses/{addressId}/transactions")
+    CoinbaseTransactionsResponse getAddressTransactions(@HeaderParam(HEADER_AUTHORIZATION) ParamsDigest authorization,
+                                                        @PathParam("accountId") String accountId,
+                                                        @PathParam("addressId") String addressId,
+                                                        @QueryParam("limit") Integer limit,
+                                                        @QueryParam("starting_after") String startingAfter) throws CoinbaseApiException;
+
+    /**
+     * Send funds to a network address for any Coinbase supported asset, or email address of the recipient.
+     * No transaction fees are required for off-blockchain cryptocurrency transactions.
+     *
+     * @param accountId ID of the account.
+     * @param request   The request.
+     * @return Information about the created transaction.
+     * @throws CoinbaseApiException If the API call fails.
+     * @see <a href="https://docs.cdp.coinbase.com/coinbase-app/docs/api-transactions#send-money">Coinbase Documentation</a>
+     */
+    // TODO BATM-6210: Test with real funds
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/v2/accounts/{accountId}/transactions")
+    CoinbaseTransactionResponse sendCoins(@HeaderParam(HEADER_AUTHORIZATION) ParamsDigest authorization,
+                                          @PathParam("accountId") String accountId,
+                                          CoinbaseSendCoinsRequest request) throws CoinbaseApiException;
+
+    /**
+     * Get a single transaction for an account.
+     *
+     * @param accountId     ID of the account.
+     * @param transactionId ID of the transaction.
+     * @return The transaction.
+     * @throws CoinbaseApiException If the API call fails.
+     * @see <a href="https://docs.cdp.coinbase.com/coinbase-app/docs/api-transactions#show-transaction">Coinbase Documentation</a>
+     */
+    @GET
+    @Path("/v2/accounts/{accountId}/transactions/{transactionId}")
+    CoinbaseTransactionResponse getTransaction(@HeaderParam(HEADER_AUTHORIZATION) ParamsDigest authorization,
+                                               @PathParam("accountId") String accountId,
+                                               @PathParam("transactionId") String transactionId) throws CoinbaseApiException;
+
+    /**
      * Get a list of payment methods for the current user.
      *
      * @return The payment methods.
@@ -115,5 +227,46 @@ public interface ICoinbaseV3Api {
     @GET
     @Path("/api/v3/brokerage/payment_methods")
     CoinbasePaymentMethodsResponse getPaymentMethods(@HeaderParam(HEADER_AUTHORIZATION) ParamsDigest authorization) throws CoinbaseApiException;
+
+    /**
+     * Create an order with a specified product_id (asset-pair), side (buy/sell), etc.
+     *
+     * @param request The request.
+     * @return Information about the new order.
+     * @throws CoinbaseApiException If the API call fails.
+     * @see <a href="https://docs.cdp.coinbase.com/advanced-trade/reference/retailbrokerageapi_postorder">Coinbase Documentation</a>
+     */
+    // TODO BATM-6210: Test with real funds
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/api/v3/brokerage/orders")
+    CoinbaseCreateOrderResponse createOrder(@HeaderParam(HEADER_AUTHORIZATION) ParamsDigest authorization,
+                                            CoinbaseCreateOrderRequest request) throws CoinbaseApiException;
+
+    /**
+     * Get a single order by order ID.
+     *
+     * @param orderId ID of the order to get.
+     * @return The order.
+     * @throws CoinbaseApiException If the API call fails.
+     * @see <a href="https://docs.cdp.coinbase.com/advanced-trade/reference/retailbrokerageapi_gethistoricalorder">Coinbase Documentation</a>
+     */
+    @GET
+    @Path("/api/v3/brokerage/orders/historical/{orderId}")
+    CoinbaseOrderResponse getOrder(@HeaderParam(HEADER_AUTHORIZATION) ParamsDigest authorization,
+                                   @PathParam("orderId") String orderId) throws CoinbaseApiException;
+
+    /**
+     * Get the API server time.
+     *
+     * <p>This endpoint doesn't require authentication.</p>
+     *
+     * @return The Coinbase API server time.
+     * @throws CoinbaseApiException If the API call fails.
+     * @see <a href="https://docs.cdp.coinbase.com/coinbase-app/docs/api-time#get-current-time">Coinbase Documentation</a>
+     */
+    @GET
+    @Path("/v2/time")
+    CoinbaseServerTimeResponse getServerTime() throws CoinbaseApiException;
 
 }
