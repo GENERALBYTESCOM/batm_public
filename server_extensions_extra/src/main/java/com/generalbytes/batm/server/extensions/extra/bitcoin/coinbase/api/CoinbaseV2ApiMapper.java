@@ -62,7 +62,7 @@ import java.util.stream.Collectors;
 /**
  * Mapper between new and legacy Coinbase V2 API DTOs.
  */
-public class CoinbaseV2ApiLegacyMapper {
+public class CoinbaseV2ApiMapper {
 
     /**
      * Map {@link CoinbaseApiException} to a legacy {@link CBResponse}.
@@ -89,7 +89,7 @@ public class CoinbaseV2ApiLegacyMapper {
         }
 
         return Arrays.stream(errors)
-            .map(CoinbaseV2ApiLegacyMapper::mapCoinbaseApiErrorToLegacyError)
+            .map(CoinbaseV2ApiMapper::mapCoinbaseApiErrorToLegacyError)
             .collect(Collectors.toList());
     }
 
@@ -99,7 +99,7 @@ public class CoinbaseV2ApiLegacyMapper {
         }
 
         return Arrays.stream(warnings)
-            .map(CoinbaseV2ApiLegacyMapper::mapCoinbaseApiWarningToLegacyWarning)
+            .map(CoinbaseV2ApiMapper::mapCoinbaseApiWarningToLegacyWarning)
             .collect(Collectors.toList());
 
     }
@@ -161,7 +161,7 @@ public class CoinbaseV2ApiLegacyMapper {
         legacyResponse.setPagination(mapPaginationToLegacyPagination(response.getPagination()));
         if (response.getAccounts() != null) {
             legacyResponse.setData(response.getAccounts().stream()
-                .map(CoinbaseV2ApiLegacyMapper::mapAccountToLegacyAccount)
+                .map(CoinbaseV2ApiMapper::mapAccountToLegacyAccount)
                 .collect(Collectors.toList()));
         }
         return legacyResponse;
@@ -228,7 +228,7 @@ public class CoinbaseV2ApiLegacyMapper {
         legacyResponse.setPagination(mapPaginationToLegacyPagination(response.getPagination()));
         if (response.getAddresses() != null) {
             legacyResponse.setData(response.getAddresses().stream()
-                .map(CoinbaseV2ApiLegacyMapper::mapAddressToLegacyAddress)
+                .map(CoinbaseV2ApiMapper::mapAddressToLegacyAddress)
                 .collect(Collectors.toList()));
         }
         return legacyResponse;
@@ -386,7 +386,7 @@ public class CoinbaseV2ApiLegacyMapper {
         legacyResponse.setPagination(mapPaginationToLegacyPagination(response.getPagination()));
         if (response.getTransactions() != null) {
             legacyResponse.setData(response.getTransactions().stream()
-                .map(CoinbaseV2ApiLegacyMapper::mapTransactionToLegacyTransaction)
+                .map(CoinbaseV2ApiMapper::mapTransactionToLegacyTransaction)
                 .collect(Collectors.toList()));
         }
         return legacyResponse;
@@ -422,7 +422,7 @@ public class CoinbaseV2ApiLegacyMapper {
         legacyResponse.setPagination(mapPaginationToLegacyPagination(response.getPagination()));
         if (response.getAddresses() != null) {
             legacyResponse.setData(response.getAddresses().stream()
-                .map(CoinbaseV2ApiLegacyMapper::mapAddressToLegacyAddress)
+                .map(CoinbaseV2ApiMapper::mapAddressToLegacyAddress)
                 .collect(Collectors.toList()));
         }
         return legacyResponse;

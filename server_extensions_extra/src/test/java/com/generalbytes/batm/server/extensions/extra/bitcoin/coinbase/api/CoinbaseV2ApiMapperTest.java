@@ -42,7 +42,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-public class CoinbaseV2ApiLegacyMapperTest {
+public class CoinbaseV2ApiMapperTest {
 
     @Test
     public void testMapExceptionToLegacyResponse() {
@@ -56,7 +56,7 @@ public class CoinbaseV2ApiLegacyMapperTest {
         };
         CoinbaseApiException exception = new CoinbaseApiException("error", 0, "message", errors, warnings);
 
-        CBExchangeRatesResponse response = CoinbaseV2ApiLegacyMapper.mapExceptionToLegacyResponse(exception, new CBExchangeRatesResponse());
+        CBExchangeRatesResponse response = CoinbaseV2ApiMapper.mapExceptionToLegacyResponse(exception, new CBExchangeRatesResponse());
 
         assertNotNull(response);
         assertNull(response.getData());
@@ -70,7 +70,7 @@ public class CoinbaseV2ApiLegacyMapperTest {
         CoinbaseApiError[] warnings = new CoinbaseApiError[0];
         CoinbaseApiException exception = new CoinbaseApiException("error", 0, "message", errors, warnings);
 
-        CBExchangeRatesResponse response = CoinbaseV2ApiLegacyMapper.mapExceptionToLegacyResponse(exception, new CBExchangeRatesResponse());
+        CBExchangeRatesResponse response = CoinbaseV2ApiMapper.mapExceptionToLegacyResponse(exception, new CBExchangeRatesResponse());
 
         assertNotNull(response);
         assertNull(response.getData());
@@ -82,7 +82,7 @@ public class CoinbaseV2ApiLegacyMapperTest {
     public void testMapExceptionToLegacyResponse_nullErrors() {
         CoinbaseApiException exception = new CoinbaseApiException("error", 0, "message", null, null);
 
-        CBExchangeRatesResponse response = CoinbaseV2ApiLegacyMapper.mapExceptionToLegacyResponse(exception, new CBExchangeRatesResponse());
+        CBExchangeRatesResponse response = CoinbaseV2ApiMapper.mapExceptionToLegacyResponse(exception, new CBExchangeRatesResponse());
 
         assertNotNull(response);
         assertNull(response.getData());
@@ -92,7 +92,7 @@ public class CoinbaseV2ApiLegacyMapperTest {
 
     @Test
     public void testMapExceptionToLegacyResponse_nullException() {
-        CBExchangeRatesResponse response = CoinbaseV2ApiLegacyMapper.mapExceptionToLegacyResponse(null, new CBExchangeRatesResponse());
+        CBExchangeRatesResponse response = CoinbaseV2ApiMapper.mapExceptionToLegacyResponse(null, new CBExchangeRatesResponse());
 
         assertNotNull(response);
         assertNull(response.getData());
@@ -104,7 +104,7 @@ public class CoinbaseV2ApiLegacyMapperTest {
     public void testMapExceptionToLegacyResponse_nullResponse() {
         CoinbaseApiException exception = new CoinbaseApiException("error", 0, "message", null, null);
 
-        assertNull(CoinbaseV2ApiLegacyMapper.mapExceptionToLegacyResponse(exception, null));
+        assertNull(CoinbaseV2ApiMapper.mapExceptionToLegacyResponse(exception, null));
     }
 
     @Test
@@ -119,7 +119,7 @@ public class CoinbaseV2ApiLegacyMapperTest {
         CoinbaseExchangeRatesResponse response = new CoinbaseExchangeRatesResponse();
         response.setExchangeRates(exchangeRates);
 
-        CBExchangeRatesResponse legacyResponse = CoinbaseV2ApiLegacyMapper.mapExchangeRatesResponseToLegacyResponse(response);
+        CBExchangeRatesResponse legacyResponse = CoinbaseV2ApiMapper.mapExchangeRatesResponseToLegacyResponse(response);
 
         assertNotNull(legacyResponse);
         assertNotNull(legacyResponse.getData());
@@ -129,7 +129,7 @@ public class CoinbaseV2ApiLegacyMapperTest {
 
     @Test
     public void testMapExchangeRatesResponseToLegacyResponse_nullExchangeRates() {
-        CBExchangeRatesResponse legacyResponse = CoinbaseV2ApiLegacyMapper.mapExchangeRatesResponseToLegacyResponse(new CoinbaseExchangeRatesResponse());
+        CBExchangeRatesResponse legacyResponse = CoinbaseV2ApiMapper.mapExchangeRatesResponseToLegacyResponse(new CoinbaseExchangeRatesResponse());
 
         assertNotNull(legacyResponse);
         assertNull(legacyResponse.getData());
@@ -137,7 +137,7 @@ public class CoinbaseV2ApiLegacyMapperTest {
 
     @Test
     public void testMapExchangeRatesResponseToLegacyResponse_nullResponse() {
-        assertNull(CoinbaseV2ApiLegacyMapper.mapExchangeRatesResponseToLegacyResponse(null));
+        assertNull(CoinbaseV2ApiMapper.mapExchangeRatesResponseToLegacyResponse(null));
     }
 
     @Test
@@ -167,7 +167,7 @@ public class CoinbaseV2ApiLegacyMapperTest {
         response.setPagination(pagination);
         response.setAccounts(Collections.singletonList(account));
 
-        CBPaginatedResponse<CBAccount> legacyResponse = CoinbaseV2ApiLegacyMapper.mapAccountsResponseToLegacyResponse(response);
+        CBPaginatedResponse<CBAccount> legacyResponse = CoinbaseV2ApiMapper.mapAccountsResponseToLegacyResponse(response);
 
         assertNotNull(legacyResponse);
         assertNotNull(legacyResponse.getPagination());
@@ -206,7 +206,7 @@ public class CoinbaseV2ApiLegacyMapperTest {
         response.setPagination(null);
         response.setAccounts(Collections.singletonList(account));
 
-        CBPaginatedResponse<CBAccount> legacyResponse = CoinbaseV2ApiLegacyMapper.mapAccountsResponseToLegacyResponse(response);
+        CBPaginatedResponse<CBAccount> legacyResponse = CoinbaseV2ApiMapper.mapAccountsResponseToLegacyResponse(response);
 
         assertNotNull(legacyResponse);
         assertNull(legacyResponse.getPagination());
@@ -228,7 +228,7 @@ public class CoinbaseV2ApiLegacyMapperTest {
         CoinbaseAccountsResponse response = new CoinbaseAccountsResponse();
         response.setAccounts(Collections.emptyList());
 
-        CBPaginatedResponse<CBAccount> legacyResponse = CoinbaseV2ApiLegacyMapper.mapAccountsResponseToLegacyResponse(response);
+        CBPaginatedResponse<CBAccount> legacyResponse = CoinbaseV2ApiMapper.mapAccountsResponseToLegacyResponse(response);
 
         assertNotNull(legacyResponse);
         assertNull(legacyResponse.getPagination());
@@ -238,7 +238,7 @@ public class CoinbaseV2ApiLegacyMapperTest {
 
     @Test
     public void testMapAccountsResponseToLegacyResponse_nullAccounts() {
-        CBPaginatedResponse<CBAccount> legacyResponse = CoinbaseV2ApiLegacyMapper.mapAccountsResponseToLegacyResponse(new CoinbaseAccountsResponse());
+        CBPaginatedResponse<CBAccount> legacyResponse = CoinbaseV2ApiMapper.mapAccountsResponseToLegacyResponse(new CoinbaseAccountsResponse());
 
         assertNotNull(legacyResponse);
         assertNull(legacyResponse.getPagination());
@@ -247,7 +247,7 @@ public class CoinbaseV2ApiLegacyMapperTest {
 
     @Test
     public void testMapAccountsResponseToLegacyResponse_nullResponse() {
-        assertNull(CoinbaseV2ApiLegacyMapper.mapAccountsResponseToLegacyResponse(null));
+        assertNull(CoinbaseV2ApiMapper.mapAccountsResponseToLegacyResponse(null));
     }
 
     @Test
@@ -268,7 +268,7 @@ public class CoinbaseV2ApiLegacyMapperTest {
         response.setAddresses(Collections.singletonList(address));
         response.setPagination(pagination);
 
-        CBAddressesResponse legacyResponse = CoinbaseV2ApiLegacyMapper.mapAddressesResponseToLegacyResponse(response);
+        CBAddressesResponse legacyResponse = CoinbaseV2ApiMapper.mapAddressesResponseToLegacyResponse(response);
 
         assertNotNull(legacyResponse);
         assertNotNull(legacyResponse.getPagination());
@@ -299,7 +299,7 @@ public class CoinbaseV2ApiLegacyMapperTest {
         response.setAddresses(Collections.singletonList(address));
         response.setPagination(null);
 
-        CBAddressesResponse legacyResponse = CoinbaseV2ApiLegacyMapper.mapAddressesResponseToLegacyResponse(response);
+        CBAddressesResponse legacyResponse = CoinbaseV2ApiMapper.mapAddressesResponseToLegacyResponse(response);
 
         assertNotNull(legacyResponse);
         assertNull(legacyResponse.getPagination());
@@ -320,7 +320,7 @@ public class CoinbaseV2ApiLegacyMapperTest {
         response.setAddresses(Collections.emptyList());
         response.setPagination(null);
 
-        CBAddressesResponse legacyResponse = CoinbaseV2ApiLegacyMapper.mapAddressesResponseToLegacyResponse(response);
+        CBAddressesResponse legacyResponse = CoinbaseV2ApiMapper.mapAddressesResponseToLegacyResponse(response);
 
         assertNotNull(legacyResponse);
         assertNull(legacyResponse.getPagination());
@@ -330,7 +330,7 @@ public class CoinbaseV2ApiLegacyMapperTest {
 
     @Test
     public void testMapAddressesResponseToLegacyResponse_nullAddresses() {
-        CBAddressesResponse legacyResponse = CoinbaseV2ApiLegacyMapper.mapAddressesResponseToLegacyResponse(new CoinbaseAddressesResponse());
+        CBAddressesResponse legacyResponse = CoinbaseV2ApiMapper.mapAddressesResponseToLegacyResponse(new CoinbaseAddressesResponse());
 
         assertNotNull(legacyResponse);
         assertNull(legacyResponse.getPagination());
@@ -339,7 +339,7 @@ public class CoinbaseV2ApiLegacyMapperTest {
 
     @Test
     public void testMapAddressesResponseToLegacyResponse_nullResponse() {
-        assertNull(CoinbaseV2ApiLegacyMapper.mapAddressesResponseToLegacyResponse(null));
+        assertNull(CoinbaseV2ApiMapper.mapAddressesResponseToLegacyResponse(null));
     }
 
     @Test
@@ -361,7 +361,7 @@ public class CoinbaseV2ApiLegacyMapperTest {
         CoinbaseAccountResponse response = new CoinbaseAccountResponse();
         response.setAccount(account);
 
-        CBAccountResponse legacyResponse = CoinbaseV2ApiLegacyMapper.mapAccountResponseToLegacyResponse(response);
+        CBAccountResponse legacyResponse = CoinbaseV2ApiMapper.mapAccountResponseToLegacyResponse(response);
 
         assertNotNull(legacyResponse);
         assertNotNull(legacyResponse.getData());
@@ -387,7 +387,7 @@ public class CoinbaseV2ApiLegacyMapperTest {
         CoinbaseAccountResponse response = new CoinbaseAccountResponse();
         response.setAccount(account);
 
-        CBAccountResponse legacyResponse = CoinbaseV2ApiLegacyMapper.mapAccountResponseToLegacyResponse(response);
+        CBAccountResponse legacyResponse = CoinbaseV2ApiMapper.mapAccountResponseToLegacyResponse(response);
 
         assertNotNull(legacyResponse);
         assertNotNull(legacyResponse.getData());
@@ -400,7 +400,7 @@ public class CoinbaseV2ApiLegacyMapperTest {
 
     @Test
     public void testMapAccountResponseToLegacyResponse_nullAccount() {
-        CBAccountResponse legacyResponse = CoinbaseV2ApiLegacyMapper.mapAccountResponseToLegacyResponse(new CoinbaseAccountResponse());
+        CBAccountResponse legacyResponse = CoinbaseV2ApiMapper.mapAccountResponseToLegacyResponse(new CoinbaseAccountResponse());
 
         assertNotNull(legacyResponse);
         assertNull(legacyResponse.getData());
@@ -408,7 +408,7 @@ public class CoinbaseV2ApiLegacyMapperTest {
 
     @Test
     public void testMapAccountResponseToLegacyResponse_nullResponse() {
-        assertNull(CoinbaseV2ApiLegacyMapper.mapAccountResponseToLegacyResponse(null));
+        assertNull(CoinbaseV2ApiMapper.mapAccountResponseToLegacyResponse(null));
     }
 
     @Test
@@ -420,7 +420,7 @@ public class CoinbaseV2ApiLegacyMapperTest {
         legacySendRequest.setIdem("idem");
         legacySendRequest.setDescription("description");
 
-        CoinbaseSendCoinsRequest request = CoinbaseV2ApiLegacyMapper.mapLegacySendRequestToRequest(legacySendRequest);
+        CoinbaseSendCoinsRequest request = CoinbaseV2ApiMapper.mapLegacySendRequestToRequest(legacySendRequest);
 
         assertNotNull(request);
         assertEquals(legacySendRequest.getTo(), request.getTo());
@@ -433,7 +433,7 @@ public class CoinbaseV2ApiLegacyMapperTest {
 
     @Test
     public void testMapLegacySendRequestToRequest_nullRequest() {
-        assertNull(CoinbaseV2ApiLegacyMapper.mapLegacySendRequestToRequest(null));
+        assertNull(CoinbaseV2ApiMapper.mapLegacySendRequestToRequest(null));
     }
 
     @Test
@@ -444,7 +444,7 @@ public class CoinbaseV2ApiLegacyMapperTest {
         CoinbaseTransactionResponse response = new CoinbaseTransactionResponse();
         response.setTransaction(transaction);
 
-        CBSendResponse legacyResponse = CoinbaseV2ApiLegacyMapper.mapTransactionResponseToLegacySendResponse(response);
+        CBSendResponse legacyResponse = CoinbaseV2ApiMapper.mapTransactionResponseToLegacySendResponse(response);
 
         assertNotNull(legacyResponse);
         assertNotNull(legacyResponse.getData());
@@ -453,7 +453,7 @@ public class CoinbaseV2ApiLegacyMapperTest {
 
     @Test
     public void testMapTransactionResponseToLegacySendResponse_nullTransaction() {
-        CBSendResponse legacyResponse = CoinbaseV2ApiLegacyMapper.mapTransactionResponseToLegacySendResponse(new CoinbaseTransactionResponse());
+        CBSendResponse legacyResponse = CoinbaseV2ApiMapper.mapTransactionResponseToLegacySendResponse(new CoinbaseTransactionResponse());
 
         assertNotNull(legacyResponse);
         assertNull(legacyResponse.getData());
@@ -461,14 +461,14 @@ public class CoinbaseV2ApiLegacyMapperTest {
 
     @Test
     public void testMapTransactionResponseToLegacySendResponse_nullResponse() {
-        assertNull(CoinbaseV2ApiLegacyMapper.mapTransactionResponseToLegacySendResponse(null));
+        assertNull(CoinbaseV2ApiMapper.mapTransactionResponseToLegacySendResponse(null));
     }
 
     @Test
     public void testMapLegacyCreateAddressRequestToRequest() {
         CBCreateAddressRequest legacyRequest = new CBCreateAddressRequest("name");
 
-        CoinbaseCreateAddressRequest request = CoinbaseV2ApiLegacyMapper.mapLegacyCreateAddressRequestToRequest(legacyRequest);
+        CoinbaseCreateAddressRequest request = CoinbaseV2ApiMapper.mapLegacyCreateAddressRequestToRequest(legacyRequest);
 
         assertNotNull(request);
         assertEquals(legacyRequest.name, request.getName());
@@ -476,7 +476,7 @@ public class CoinbaseV2ApiLegacyMapperTest {
 
     @Test
     public void testMapLegacyCreateAddressRequestToRequest_nullRequest() {
-        assertNull(CoinbaseV2ApiLegacyMapper.mapLegacyCreateAddressRequestToRequest(null));
+        assertNull(CoinbaseV2ApiMapper.mapLegacyCreateAddressRequestToRequest(null));
     }
 
     @Test
@@ -493,7 +493,7 @@ public class CoinbaseV2ApiLegacyMapperTest {
         CoinbaseCreateAddressResponse response = new CoinbaseCreateAddressResponse();
         response.setAddress(address);
 
-        CBCreateAddressResponse legacyResponse = CoinbaseV2ApiLegacyMapper.mapCreateAddressResponseToLegacyResponse(response);
+        CBCreateAddressResponse legacyResponse = CoinbaseV2ApiMapper.mapCreateAddressResponseToLegacyResponse(response);
 
         assertNotNull(legacyResponse);
         assertNotNull(legacyResponse.getData());
@@ -509,7 +509,7 @@ public class CoinbaseV2ApiLegacyMapperTest {
 
     @Test
     public void testMapCreateAddressResponseToLegacyResponse_nullAddress() {
-        CBCreateAddressResponse legacyResponse = CoinbaseV2ApiLegacyMapper.mapCreateAddressResponseToLegacyResponse(new CoinbaseCreateAddressResponse());
+        CBCreateAddressResponse legacyResponse = CoinbaseV2ApiMapper.mapCreateAddressResponseToLegacyResponse(new CoinbaseCreateAddressResponse());
 
         assertNotNull(legacyResponse);
         assertNull(legacyResponse.getData());
@@ -517,7 +517,7 @@ public class CoinbaseV2ApiLegacyMapperTest {
 
     @Test
     public void testMapCreateAddressResponseToLegacyResponse_nullResponse() {
-        assertNull(CoinbaseV2ApiLegacyMapper.mapCreateAddressResponseToLegacyResponse(null));
+        assertNull(CoinbaseV2ApiMapper.mapCreateAddressResponseToLegacyResponse(null));
     }
 
     @Test
@@ -548,7 +548,7 @@ public class CoinbaseV2ApiLegacyMapperTest {
         response.setPagination(pagination);
         response.setTransactions(Collections.singletonList(transaction));
 
-        CBPaginatedResponse<CBTransaction> legacyResponse = CoinbaseV2ApiLegacyMapper.mapTransactionsResponseToLegacyPaginatedResponse(response);
+        CBPaginatedResponse<CBTransaction> legacyResponse = CoinbaseV2ApiMapper.mapTransactionsResponseToLegacyPaginatedResponse(response);
 
         assertNotNull(legacyResponse);
         assertNotNull(legacyResponse.getPagination());
@@ -588,7 +588,7 @@ public class CoinbaseV2ApiLegacyMapperTest {
         response.setPagination(null);
         response.setTransactions(Collections.singletonList(transaction));
 
-        CBPaginatedResponse<CBTransaction> legacyResponse = CoinbaseV2ApiLegacyMapper.mapTransactionsResponseToLegacyPaginatedResponse(response);
+        CBPaginatedResponse<CBTransaction> legacyResponse = CoinbaseV2ApiMapper.mapTransactionsResponseToLegacyPaginatedResponse(response);
         assertNotNull(legacyResponse);
         assertNull(legacyResponse.getPagination());
         assertNotNull(legacyResponse.getData());
@@ -611,7 +611,7 @@ public class CoinbaseV2ApiLegacyMapperTest {
         response.setPagination(null);
         response.setTransactions(Collections.emptyList());
 
-        CBPaginatedResponse<CBTransaction> legacyResponse = CoinbaseV2ApiLegacyMapper.mapTransactionsResponseToLegacyPaginatedResponse(response);
+        CBPaginatedResponse<CBTransaction> legacyResponse = CoinbaseV2ApiMapper.mapTransactionsResponseToLegacyPaginatedResponse(response);
 
         assertNotNull(legacyResponse);
         assertNull(legacyResponse.getPagination());
@@ -621,7 +621,7 @@ public class CoinbaseV2ApiLegacyMapperTest {
 
     @Test
     public void testMapTransactionsResponseToLegacyPaginatedResponse_nullTransactions() {
-        CBPaginatedResponse<CBTransaction> legacyResponse = CoinbaseV2ApiLegacyMapper.mapTransactionsResponseToLegacyPaginatedResponse(new CoinbaseTransactionsResponse());
+        CBPaginatedResponse<CBTransaction> legacyResponse = CoinbaseV2ApiMapper.mapTransactionsResponseToLegacyPaginatedResponse(new CoinbaseTransactionsResponse());
 
         assertNotNull(legacyResponse);
         assertNull(legacyResponse.getPagination());
@@ -630,7 +630,7 @@ public class CoinbaseV2ApiLegacyMapperTest {
 
     @Test
     public void testMapTransactionsResponseToLegacyPaginatedResponse_nullResponse() {
-        assertNull(CoinbaseV2ApiLegacyMapper.mapTransactionsResponseToLegacyPaginatedResponse(null));
+        assertNull(CoinbaseV2ApiMapper.mapTransactionsResponseToLegacyPaginatedResponse(null));
     }
 
     @Test
@@ -651,7 +651,7 @@ public class CoinbaseV2ApiLegacyMapperTest {
         response.setPagination(pagination);
         response.setAddresses(Collections.singletonList(address));
 
-        CBPaginatedResponse<CBAddress> legacyResponse = CoinbaseV2ApiLegacyMapper.mapAddressesResponseToLegacyPaginatedResponse(response);
+        CBPaginatedResponse<CBAddress> legacyResponse = CoinbaseV2ApiMapper.mapAddressesResponseToLegacyPaginatedResponse(response);
 
         assertNotNull(legacyResponse);
         assertNotNull(legacyResponse.getPagination());
@@ -683,7 +683,7 @@ public class CoinbaseV2ApiLegacyMapperTest {
         response.setPagination(null);
         response.setAddresses(Collections.singletonList(address));
 
-        CBPaginatedResponse<CBAddress> legacyResponse = CoinbaseV2ApiLegacyMapper.mapAddressesResponseToLegacyPaginatedResponse(response);
+        CBPaginatedResponse<CBAddress> legacyResponse = CoinbaseV2ApiMapper.mapAddressesResponseToLegacyPaginatedResponse(response);
         assertNotNull(legacyResponse);
         assertNull(legacyResponse.getPagination());
         assertNotNull(legacyResponse.getData());
@@ -704,7 +704,7 @@ public class CoinbaseV2ApiLegacyMapperTest {
         response.setPagination(null);
         response.setAddresses(Collections.emptyList());
 
-        CBPaginatedResponse<CBAddress> legacyResponse = CoinbaseV2ApiLegacyMapper.mapAddressesResponseToLegacyPaginatedResponse(response);
+        CBPaginatedResponse<CBAddress> legacyResponse = CoinbaseV2ApiMapper.mapAddressesResponseToLegacyPaginatedResponse(response);
 
         assertNotNull(legacyResponse);
         assertNull(legacyResponse.getPagination());
@@ -714,7 +714,7 @@ public class CoinbaseV2ApiLegacyMapperTest {
 
     @Test
     public void testMapAddressesResponseToLegacyPaginatedResponse_nullAddresses() {
-        CBPaginatedResponse<CBAddress> legacyResponse = CoinbaseV2ApiLegacyMapper.mapAddressesResponseToLegacyPaginatedResponse(new CoinbaseAddressesResponse());
+        CBPaginatedResponse<CBAddress> legacyResponse = CoinbaseV2ApiMapper.mapAddressesResponseToLegacyPaginatedResponse(new CoinbaseAddressesResponse());
 
         assertNotNull(legacyResponse);
         assertNull(legacyResponse.getPagination());
@@ -723,7 +723,7 @@ public class CoinbaseV2ApiLegacyMapperTest {
 
     @Test
     public void testMapAddressesResponseToLegacyPaginatedResponse_nullResponse() {
-        assertNull(CoinbaseV2ApiLegacyMapper.mapAddressesResponseToLegacyPaginatedResponse(null));
+        assertNull(CoinbaseV2ApiMapper.mapAddressesResponseToLegacyPaginatedResponse(null));
     }
 
     private void assertCbErrors(CoinbaseApiError[] expectedErrors, List<CBError> errors) {
