@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2020 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2025 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -17,6 +17,8 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class CBOrderRequest {
 
     public String amount;
@@ -26,4 +28,6 @@ public class CBOrderRequest {
     public boolean agree_btc_amount_varies;
     public boolean commit;
     public boolean quote;
+    @JsonIgnore
+    public String fiatCurrency;
 }

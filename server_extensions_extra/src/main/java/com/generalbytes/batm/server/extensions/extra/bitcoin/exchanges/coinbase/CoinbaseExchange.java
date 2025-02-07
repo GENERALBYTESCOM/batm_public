@@ -365,6 +365,7 @@ public class CoinbaseExchange implements IRateSourceAdvanced, IExchangeAdvanced 
                     orderRequest.commit = true;
                     orderRequest.quote = false;
                     orderRequest.payment_method = methodId;
+                    orderRequest.fiatCurrency = fiatCurrency;
 
                     String coinBaseTime = getTime();
                     RateLimiter.waitForPossibleCall(getClass());
@@ -467,6 +468,7 @@ public class CoinbaseExchange implements IRateSourceAdvanced, IExchangeAdvanced 
                     orderRequest.commit = true;
                     orderRequest.quote = false;
                     orderRequest.payment_method = methodId;
+                    orderRequest.fiatCurrency = fiatCurrency;
 
                     String coinBaseTime = getTime();
                     RateLimiter.waitForPossibleCall(getClass());
