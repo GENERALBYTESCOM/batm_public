@@ -8,10 +8,12 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.MockedStatic;
 import si.mazi.rescu.ClientConfig;
+import si.mazi.rescu.Params;
 import si.mazi.rescu.RestProxyFactory;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
+import javax.ws.rs.HeaderParam;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 
@@ -104,6 +106,27 @@ public class CoinbaseApiFactoryTest {
             ClientConfig clientConfig = configCaptor.getValue();
             assertNotNull(clientConfig);
             assertTrue(clientConfig.isIgnoreHttpErrorCodes());
+        }
+    }
+
+    @Test
+    public void testCreateCoinbaseV3Api() {
+        ICoinbaseV3Api mockedCoinbaseApi = mock(ICoinbaseV3Api.class);
+
+        try (MockedStatic<RestProxyFactory> mockedRestProxyFactory = mockStatic(RestProxyFactory.class)) {
+            mockedRestProxyFactory.when(() -> RestProxyFactory.createProxy(any(), anyString(), any())).thenReturn(mockedCoinbaseApi);
+
+            ICoinbaseV3Api result = CoinbaseApiFactory.createCoinbaseV3Api();
+
+            assertEquals(mockedCoinbaseApi, result);
+            ArgumentCaptor<ClientConfig> configCaptor = ArgumentCaptor.forClass(ClientConfig.class);
+            mockedRestProxyFactory.verify(() -> RestProxyFactory.createProxy(eq(ICoinbaseV3Api.class), eq(API_URL), configCaptor.capture()));
+            ClientConfig clientConfig = configCaptor.getValue();
+            assertNotNull(clientConfig);
+            assertEquals(1, clientConfig.getDefaultParamsMap().size());
+            Params defaultParams = clientConfig.getDefaultParamsMap().get(HeaderParam.class);
+            assertNotNull(defaultParams);
+            assertEquals(CoinbaseApiFactory.CB_VERSION, defaultParams.getParamValue("CB-VERSION"));
         }
     }
 

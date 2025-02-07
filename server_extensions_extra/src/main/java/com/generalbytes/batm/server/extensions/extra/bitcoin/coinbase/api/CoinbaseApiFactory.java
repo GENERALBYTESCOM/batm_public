@@ -27,6 +27,7 @@ import si.mazi.rescu.ClientConfig;
 import si.mazi.rescu.RestProxyFactory;
 
 import javax.net.ssl.SSLContext;
+import javax.ws.rs.HeaderParam;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 
@@ -36,6 +37,19 @@ import java.security.NoSuchAlgorithmException;
 public class CoinbaseApiFactory {
 
     private static final Logger log = LoggerFactory.getLogger(CoinbaseApiFactory.class);
+    /**
+     * All API calls should be made with a 'CB-VERSION' header
+     * which guarantees that your call is using the correct API version.
+     *
+     * <p>Version is passed in as a date (UTC) of the implementation in YYYY-MM-DD format.</p>
+     *
+     * <p>If no version is passed, the version from the user's CDP API settings will be used
+     * and a warning will be shown.</p>
+     *
+     * @see <a href="https://docs.cdp.coinbase.com/coinbase-app/docs/versioning">Coinbase Documentation</a>
+     */
+    static final String CB_VERSION = "2025-02-05";
+    private static final String API_URL = "https://api.coinbase.com";
 
     /**
      * Creates a proxy instance for interacting with the Coinbase API.
@@ -51,7 +65,7 @@ public class CoinbaseApiFactory {
             CompatSSLSocketFactory socketFactory = new CompatSSLSocketFactory(sslcontext.getSocketFactory());
             config.setSslSocketFactory(socketFactory);
             config.setIgnoreHttpErrorCodes(true);
-            return RestProxyFactory.createProxy(ICoinbaseAPI.class, "https://api.coinbase.com", config);
+            return RestProxyFactory.createProxy(ICoinbaseAPI.class, API_URL, config);
         } catch (NoSuchAlgorithmException | KeyManagementException e) {
             log.error("Failed to create ICoinbaseAPILegacy proxy.", e);
             throw new CoinbaseException("Unable to create ICoinbaseAPILegacy proxy");
@@ -67,7 +81,19 @@ public class CoinbaseApiFactory {
     public static ICoinbaseV2API createCoinbaseV2ApiLegacy() {
         ClientConfig config = new ClientConfig();
         config.setIgnoreHttpErrorCodes(true);
-        return RestProxyFactory.createProxy(ICoinbaseV2API.class, "https://api.coinbase.com", config);
+        return RestProxyFactory.createProxy(ICoinbaseV2API.class, API_URL, config);
+    }
+
+    /**
+     * Creates a proxy instance for interacting with the Coinbase API.
+     *
+     * @return A configured proxy instance of {@link ICoinbaseV3Api}.
+     * @throws CoinbaseException If the proxy creation fails.
+     */
+    public static ICoinbaseV3Api createCoinbaseV3Api() {
+        ClientConfig config = new ClientConfig();
+        config.addDefaultParam(HeaderParam.class, "CB-VERSION", CB_VERSION);
+        return RestProxyFactory.createProxy(ICoinbaseV3Api.class, API_URL, config);
     }
 
 }
