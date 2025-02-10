@@ -4,10 +4,9 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.LoggerContext;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.BitGoCoinRequest;
 import com.generalbytes.batm.server.extensions.util.net.CompatSSLSocketFactory;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import si.mazi.rescu.ClientConfig;
@@ -23,8 +22,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.*;
 
-public class BitgoAPITest {
+
+class BitgoAPITest {
 
     private static final Logger log = LoggerFactory.getLogger(BitgoAPITest.class);
 
@@ -48,8 +49,8 @@ public class BitgoAPITest {
         }
     }
 
-    @BeforeClass
-    public static void setup() {
+    @BeforeEach
+    void setUp() {
         setLoggerLevel("batm", "trace");
         setLoggerLevel("si.mazi.rescu","trace");
 
@@ -72,97 +73,97 @@ public class BitgoAPITest {
     }
 
     @Test
-    @Ignore
-    public void getWalletsTest() throws IOException {
+    @Disabled
+    void getWalletsTest() throws IOException {
 
         final Map<String, Object> result = api.getWallets("tbtc");
-        Assert.assertNotNull(result);
+        assertNotNull(result);
 
         final Object coin = result.get("coin");
-        Assert.assertNotNull(coin);
-        Assert.assertTrue(coin instanceof String);
+        assertNotNull(coin);
+        assertTrue(coin instanceof String);
         final String stringCoin = (String) coin;
-        Assert.assertEquals("tbtc", stringCoin);
+        assertEquals("tbtc", stringCoin);
 
         final Object wallets = result.get("wallets");
-        Assert.assertNotNull(wallets);
-        Assert.assertTrue(wallets instanceof ArrayList);
+        assertNotNull(wallets);
+        assertTrue(wallets instanceof ArrayList);
         final ArrayList list = (ArrayList)wallets;
-        Assert.assertFalse(list.isEmpty());
+        assertFalse(list.isEmpty());
         final Object element = list.get(0);
-        Assert.assertNotNull(element);
-        Assert.assertTrue(element instanceof LinkedHashMap);
+        assertNotNull(element);
+        assertTrue(element instanceof LinkedHashMap);
         final LinkedHashMap map = (LinkedHashMap)element;
-        Assert.assertNotNull(map);
+        assertNotNull(map);
 
         final String id = (String) map.get("id");
-        Assert.assertNotNull(id);
-        Assert.assertEquals("5b20e3a9266bbe80095757489d84a6bb", id);
+        assertNotNull(id);
+        assertEquals("5b20e3a9266bbe80095757489d84a6bb", id);
 
         final Object users = map.get("users");
-        Assert.assertNotNull(users);
-        Assert.assertTrue(users instanceof ArrayList);
+        assertNotNull(users);
+        assertTrue(users instanceof ArrayList);
 
         final ArrayList userList = (ArrayList)users;
-        Assert.assertFalse(userList.isEmpty());
+        assertFalse(userList.isEmpty());
         final Object user = userList.get(0);
-        Assert.assertNotNull(user);
-        Assert.assertTrue(user instanceof LinkedHashMap);
+        assertNotNull(user);
+        assertTrue(user instanceof LinkedHashMap);
         LinkedHashMap userMap = (LinkedHashMap)user;
         String username = (String) userMap.get("user");
-        Assert.assertNotNull(username);
-        Assert.assertEquals("5b20e31ebd6c12af0983fcb383e19a21", username);
+        assertNotNull(username);
+        assertEquals("5b20e31ebd6c12af0983fcb383e19a21", username);
 
         final String cryptoCoin = (String) map.get("coin");
-        Assert.assertNotNull(cryptoCoin);
-        Assert.assertEquals("tbtc", cryptoCoin);
+        assertNotNull(cryptoCoin);
+        assertEquals("tbtc", cryptoCoin);
         String label = (String) map.get("label");
-        Assert.assertEquals("TBTCWallet", label);
+        assertEquals("TBTCWallet", label);
 
         log.debug("Wallet label = {}", label);
     }
 
     @Test
-    @Ignore
-    public void getBalancesTest() throws IOException {
+    @Disabled
+    void getBalancesTest() throws IOException {
         final String accessToken = "Bearer v2x8d5e9e46379dc328b2039a400a12b04ea986689b38107fd84cd339bc89e3fb21";
         final Map<String, Object> result = api.getTotalBalances("tbtc");
-        Assert.assertNotNull(result);
-        Assert.assertTrue(result instanceof LinkedHashMap);
+        assertNotNull(result);
+        assertTrue(result instanceof LinkedHashMap);
 
         final LinkedHashMap<String, Object> map = (LinkedHashMap<String, Object>)result;
-        Assert.assertFalse(map.isEmpty());
+        assertFalse(map.isEmpty());
 
         final Integer balance = (Integer) map.get("balance");
-        Assert.assertNotNull(balance);
-        Assert.assertTrue(balance instanceof Integer);
+        assertNotNull(balance);
+        assertTrue(balance instanceof Integer);
 
         final String balanceString = (String) map.get("balanceString");
-        Assert.assertNotNull(balanceString);
-        Assert.assertTrue(balanceString instanceof String);
+        assertNotNull(balanceString);
+        assertTrue(balanceString instanceof String);
 
         final Integer confirmedBalance = (Integer) map.get("confirmedBalance");
-        Assert.assertNotNull(confirmedBalance);
+        assertNotNull(confirmedBalance);
 
         final String confirmedBalanceString = (String) map.get("confirmedBalanceString");
-        Assert.assertNotNull(confirmedBalanceString);
+        assertNotNull(confirmedBalanceString);
 
         final Integer spendableBalance = (Integer) map.get("spendableBalance");
-        Assert.assertNotNull(spendableBalance);
+        assertNotNull(spendableBalance);
 
         final String spendableBalanceString = (String) map.get("spendableBalanceString");
-        Assert.assertNotNull(spendableBalanceString);
+        assertNotNull(spendableBalanceString);
     }
 
     @Test
-    @Ignore
-    public void getWalletByLabelTest() throws IOException {
+    @Disabled
+    void getWalletByLabelTest() throws IOException {
         final String accessToken = "Bearer v2x8d5e9e46379dc328b2039a400a12b04ea986689b38107fd84cd339bc89e3fb21";
         final String walletLabel = "TBTCWallet";
         final Map<String, Object> result = api.getWallets("tbtc");
-        Assert.assertNotNull(result);
+        assertNotNull(result);
         List wallets = (List) result.get("wallets");
-        Assert.assertNotNull(wallets);
+        assertNotNull(wallets);
         boolean walletFound = false;
         for(Object o : wallets) {
             if(!(o instanceof Map)) {
@@ -175,73 +176,73 @@ public class BitgoAPITest {
             }
         }
 
-        Assert.assertTrue(walletFound);
+        assertTrue(walletFound);
     }
 
-    @Ignore
+    @Disabled
     @Test
-    public void getWalletTest() throws IOException {
+    void getWalletTest() throws IOException {
         final String accessToken = "Bearer v2x8d5e9e46379dc328b2039a400a12b04ea986689b38107fd84cd339bc89e3fb21";
         final String walletId = "5b20e3a9266bbe80095757489d84a6bb";
         final Map<String, Object> result = api.getWalletById("tbtc", walletId);
-        Assert.assertNotNull(result);
-        Assert.assertTrue(result instanceof LinkedHashMap);
+        assertNotNull(result);
+        assertTrue(result instanceof LinkedHashMap);
 
         final String id = (String) result.get("id");
-        Assert.assertEquals("5b20e3a9266bbe80095757489d84a6bb", id);
+        assertEquals("5b20e3a9266bbe80095757489d84a6bb", id);
 
         final String coin = (String) result.get("coin");
-        Assert.assertNotNull(coin);
-        Assert.assertEquals("tbtc", coin);
+        assertNotNull(coin);
+        assertEquals("tbtc", coin);
 
         final String label = (String) result.get("label");
-        Assert.assertEquals("TBTCWallet", label);
+        assertEquals("TBTCWallet", label);
     }
 
-    @Ignore
+    @Disabled
     @Test
-    public void getWalletByAIdTest() throws IOException {
+    void getWalletByAIdTest() throws IOException {
         final String accessToken = "Bearer v2x8d5e9e46379dc328b2039a400a12b04ea986689b38107fd84cd339bc89e3fb21";
         String address = "5b20e3a9266bbe80095757489d84a6bb";
 
         final Map<String, Object> result = api.getWalletById("tbtc", address);
-        Assert.assertNotNull(result);
-        Assert.assertTrue(result instanceof LinkedHashMap);
+        assertNotNull(result);
+        assertTrue(result instanceof LinkedHashMap);
 
         String id = (String) result.get("id");
-        Assert.assertEquals("5b20e3a9266bbe80095757489d84a6bb", id);
+        assertEquals("5b20e3a9266bbe80095757489d84a6bb", id);
 
         String coin = (String) result.get("coin");
-        Assert.assertNotNull(coin);
-        Assert.assertEquals("tbtc", coin);
+        assertNotNull(coin);
+        assertEquals("tbtc", coin);
 
         final String label = (String) result.get("label");
-        Assert.assertEquals("TBTCWallet", label);
+        assertEquals("TBTCWallet", label);
 
         final Map<String, Object> receiveAddressMap = (Map<String, Object>) result.get("receiveAddress");
-        Assert.assertNotNull(receiveAddressMap);
-        Assert.assertFalse(receiveAddressMap.isEmpty());
+        assertNotNull(receiveAddressMap);
+        assertFalse(receiveAddressMap.isEmpty());
 
         id = (String) receiveAddressMap.get("id");
-        Assert.assertNotNull(id);
-        Assert.assertTrue(id.startsWith("5b"));
+        assertNotNull(id);
+        assertTrue(id.startsWith("5b"));
 
         String walletId = (String) receiveAddressMap.get("wallet");
-        Assert.assertNotNull(walletId);
-        Assert.assertEquals("5b20e3a9266bbe80095757489d84a6bb", walletId);
+        assertNotNull(walletId);
+        assertEquals("5b20e3a9266bbe80095757489d84a6bb", walletId);
 
         coin = (String)receiveAddressMap.get("coin");
-        Assert.assertNotNull(coin);
-        Assert.assertEquals("tbtc", coin);
+        assertNotNull(coin);
+        assertEquals("tbtc", coin);
 
         address = (String)receiveAddressMap.get("address");
-        Assert.assertNotNull(address);
+        assertNotNull(address);
         log.info("Address = {}", address);
     }
 
     @Test
-    @Ignore("Local instance of bitgo-express test environment is required to run")
-    public void sendCoinsTest() {
+    @Disabled("Local instance of bitgo-express test environment is required to run")
+    void sendCoinsTest() {
         try {
             IBitgoAPI localapi = RestProxyFactory.createProxy(IBitgoAPI.class, "http://localhost:3080/");
             final String coin = "tbtc";
@@ -254,19 +255,19 @@ public class BitgoAPITest {
             String accessToken = "Bearer v2x8d5e9e46379dc328b2039a400a12b04ea986689b38107fd84cd339bc89e3fb21";
             String contentType = "application/json";
             Map<String, Object> result = localapi.sendCoins(coin, id, request);
-            Assert.assertNotNull(result);
+            assertNotNull(result);
 
             Object statusO = result.get("status");
-            Assert.assertTrue(statusO instanceof String);
+            assertTrue(statusO instanceof String);
             String status = (String) statusO;
-            Assert.assertNotNull(status);
-            Assert.assertEquals("signed", status);
+            assertNotNull(status);
+            assertEquals("signed", status);
 
             Object tx = result.get("tx");
-            Assert.assertNotNull(tx);
+            assertNotNull(tx);
 
             Object txid = result.get("txid");
-            Assert.assertNotNull(txid);
+            assertNotNull(txid);
         } catch (Exception e) {
             log.error("Error", e);
         }

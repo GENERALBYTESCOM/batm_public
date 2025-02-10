@@ -6,7 +6,7 @@ import com.generalbytes.batm.server.extensions.extra.nano.NanoExtensionContext;
 import com.generalbytes.batm.server.extensions.extra.nano.rpc.NanoRpcClient;
 import com.generalbytes.batm.server.extensions.extra.nano.wallet.node.NanoNodeWallet;
 import com.generalbytes.batm.server.extensions.payment.ReceivedAmount;
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 
 import java.math.BigDecimal;
 import java.net.URL;
@@ -16,8 +16,8 @@ import java.util.UUID;
  * THIS CLASS MAY BE IGNORED.
  * Its only purpose is to test and help during development.
  */
-@Ignore
-public class TestNodeWallet {
+@Disabled
+class TestNodeWallet {
 
     public static void main(String[] args) throws Exception {
         NanoRpcClient rpcClient = new NanoRpcClient(new URL("http://[::1]:7076"));

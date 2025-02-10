@@ -1,16 +1,16 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.binance;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class BinanceExchangeRoundingTest {
+class BinanceExchangeRoundingTest {
     BinanceUsExchange e = new BinanceUsExchange("USD");
 
     @Test
-    public void testGetAmountRoundedToMinStep() {
+    void testGetAmountRoundedToMinStep() {
         assertEquals("1.1", "0.00001", "1.1");
         assertEquals("1.12345789", "0.0001", "1.1234");
         assertEquals("1.12345789", "0.002", "1.122");

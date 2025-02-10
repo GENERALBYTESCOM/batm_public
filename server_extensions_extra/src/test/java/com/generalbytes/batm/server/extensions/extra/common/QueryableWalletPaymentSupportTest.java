@@ -6,20 +6,20 @@ import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.ethereum.UsdtPaymentSupport;
 import com.generalbytes.batm.server.extensions.payment.PaymentRequest;
 import com.generalbytes.batm.server.extensions.payment.ReceivedAmount;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class QueryableWalletPaymentSupportTest {
+class QueryableWalletPaymentSupportTest {
 
     private ReceivedAmount received;
     private final QueryableWalletPaymentSupport paymentSupport = new UsdtPaymentSupport();
 
     @Test
-    public void invalidAmount() {
+    void invalidAmount() {
         received = ReceivedAmount.ZERO;
         PaymentRequest request = getPaymentRequest("1", "0", false);
         paymentSupport.poll(request);
@@ -30,7 +30,7 @@ public class QueryableWalletPaymentSupportTest {
     }
 
     @Test
-    public void exactAmount() {
+    void exactAmount() {
         PaymentRequest request = getPaymentRequest("1", "0", false);
         received = new ReceivedAmount(new BigDecimal("1"), 0);
         paymentSupport.poll(request);
@@ -41,32 +41,32 @@ public class QueryableWalletPaymentSupportTest {
     }
 
     @Test
-    public void inTolerance() {
+    void inTolerance() {
         test("1", "0.2", false, "0.85", PaymentRequest.STATE_SEEN_IN_BLOCK_CHAIN);
     }
 
     @Test
-    public void notInTolerance() {
+    void notInTolerance() {
         test("1", "0.1", false, "0.85", PaymentRequest.STATE_TRANSACTION_INVALID);
     }
 
     @Test
-    public void overInTolerance() {
+    void overInTolerance() {
         test("1", "0.2", false, "1.15", PaymentRequest.STATE_SEEN_IN_BLOCK_CHAIN);
     }
 
     @Test
-    public void overNotInTolerance() {
+    void overNotInTolerance() {
         test("1", "0.1", false, "1.15", PaymentRequest.STATE_TRANSACTION_INVALID);
     }
 
     @Test
-    public void overInToleranceWithOverageAllowed() {
+    void overInToleranceWithOverageAllowed() {
         test("1", "0.2", true, "1.15", PaymentRequest.STATE_SEEN_IN_BLOCK_CHAIN);
     }
 
     @Test
-    public void overNotInToleranceWithOverageAllowed() {
+    void overNotInToleranceWithOverageAllowed() {
         test("1", "0.1", true, "1.15", PaymentRequest.STATE_SEEN_IN_BLOCK_CHAIN);
     }
 

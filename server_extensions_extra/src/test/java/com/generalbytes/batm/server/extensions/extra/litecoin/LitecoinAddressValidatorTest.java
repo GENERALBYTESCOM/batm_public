@@ -1,15 +1,16 @@
 package com.generalbytes.batm.server.extensions.extra.litecoin;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class LitecoinAddressValidatorTest {
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+class LitecoinAddressValidatorTest {
 
     @Test
-    public void addressValidTest() {
+    void addressValidTest() {
         LitecoinAddressValidator lav = new LitecoinAddressValidator();
         String address = "MMR2PV6EqX617NYzVsztfMFRZTr6zDHWQx";
         boolean isValid = lav.isAddressValid(address);
-        Assert.assertTrue(isValid);
+        assertTrue(isValid);
     }
 }
