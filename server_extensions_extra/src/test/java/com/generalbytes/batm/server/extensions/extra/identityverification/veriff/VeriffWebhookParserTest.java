@@ -3,37 +3,37 @@ package com.generalbytes.batm.server.extensions.extra.identityverification.verif
 import com.generalbytes.batm.server.extensions.aml.verification.IdentityCheckWebhookException;
 import com.generalbytes.batm.server.extensions.extra.identityverification.veriff.api.webhook.VerificationDecisionWebhookRequest;
 import com.generalbytes.batm.server.extensions.extra.identityverification.veriff.api.webhook.VerificationEventWebhookRequest;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class VeriffWebhookParserTest {
+class VeriffWebhookParserTest {
     private static final VeriffWebhookParser parser = new VeriffWebhookParser();
 
     @Test
-    public void invalidJson() {
+    void invalidJson() {
         assertThrows(IdentityCheckWebhookException.class, () -> test("{invalid"));
     }
 
     @Test
-    public void unknownType() {
+    void unknownType() {
         assertThrows(IdentityCheckWebhookException.class, () -> test("{}"));
     }
 
     @Test
-    public void event() throws IOException, URISyntaxException, IdentityCheckWebhookException {
+    void event() throws IOException, URISyntaxException, IdentityCheckWebhookException {
         AcceptResults results = test(readResource("verification-event.json"));
         assertEquals("submitted", results.event.action);
         assertEquals("QWE123", results.event.vendorData);
     }
 
     @Test
-    public void decision() throws IOException, URISyntaxException, IdentityCheckWebhookException {
+    void decision() throws IOException, URISyntaxException, IdentityCheckWebhookException {
         AcceptResults results = test(readResource("decision.json"));
         assertEquals("MORGAN", results.decision.verification.person.lastName);
         assertEquals("1234 Snowy Ridge Road, Indiana, 56789 USA", results.decision.verification.person.addresses.get(0).fullAddress);

@@ -1,7 +1,7 @@
 package com.generalbytes.batm.server.extensions.extra.nano.dev;
 
 import com.generalbytes.batm.server.extensions.extra.nano.rpc.NanoWsClient;
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 
 import java.net.URI;
 
@@ -9,8 +9,8 @@ import java.net.URI;
  * THIS CLASS MAY BE IGNORED.
  * Its only purpose is to test and help during development.
  */
-@Ignore
-public class TestWebSocket {
+@Disabled
+class TestWebSocket {
 
     public static void main(String[] args) throws Exception {
         NanoWsClient wsClient = new NanoWsClient(new URI("ws://[::1]:7078"));

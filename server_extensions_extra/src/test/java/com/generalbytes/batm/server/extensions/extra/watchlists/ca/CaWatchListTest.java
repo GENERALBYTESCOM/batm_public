@@ -3,16 +3,17 @@ package com.generalbytes.batm.server.extensions.extra.watchlists.ca;
 import com.generalbytes.batm.server.extensions.watchlist.WatchListMatch;
 import com.generalbytes.batm.server.extensions.watchlist.WatchListQuery;
 import com.generalbytes.batm.server.extensions.watchlist.WatchListResult;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class CaWatchListTest {
+class CaWatchListTest {
 
     private static final String RESOURCE_PATH = "src/test/resources/";
 
     @Test
-    public void testWatchlistPositive() {
+    void testWatchlistPositive() {
         final CaWatchList caWatchList = new CaWatchList();
 
         caWatchList.init(RESOURCE_PATH);
