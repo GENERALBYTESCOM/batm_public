@@ -1,16 +1,16 @@
 package com.generalbytes.batm.server.extensions.payment;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class PaymentRequestTest {
+class PaymentRequestTest {
 
     @Test
-    public void getForwardingTransactionMiningFee() {
+    void getForwardingTransactionMiningFee() {
         assertThat(getPaymentRequest(false, getPaymentOutput(new BigDecimal(8)), getPaymentOutput(BigDecimal.ONE)).getForwardingTransactionMiningFee()).isEqualByComparingTo(BigDecimal.ONE);
         assertThat(getPaymentRequest(null, getPaymentOutput(new BigDecimal(8)), getPaymentOutput(BigDecimal.ONE)).getForwardingTransactionMiningFee()).isEqualByComparingTo(BigDecimal.ONE);
         assertThat(getPaymentRequest(false, getPaymentOutput(new BigDecimal(9))).getForwardingTransactionMiningFee()).isEqualByComparingTo(BigDecimal.ONE);

@@ -1,33 +1,35 @@
 package com.generalbytes.batm.common.currencies;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class FiatCurrencyTest {
+
+class FiatCurrencyTest {
 
     @Test
-    public void getCurrencyName() {
+    void getCurrencyName() {
         assertEquals("Czech koruna", FiatCurrency.CZK.getCurrencyName());
         for (FiatCurrency c : FiatCurrency.values()) {
-            assertTrue(c.name() + " name", c.getCurrencyName() != null && !c.getCurrencyName().isEmpty());
+            assertTrue(c.getCurrencyName() != null && !c.getCurrencyName().isEmpty(), c.name() + " name");
         }
     }
 
     @Test
-    public void getCode() {
+    void getCode() {
         assertEquals("CZK", FiatCurrency.CZK.getCode());
         for (FiatCurrency c : FiatCurrency.values()) {
-            assertTrue(c.name() + " code", c.getCurrencyName().length() > 1);
-            assertEquals(c.name() + " code should be uppercase", c.getCode(), c.getCode().toUpperCase());
-            assertEquals(c.name() + " enum should be uppercase", c.name(), c.name().toUpperCase());
+            assertTrue(c.getCurrencyName().length() > 1, c.name() + " code");
+            assertEquals(c.getCode(), c.getCode().toUpperCase(), c.name() + " code should be uppercase");
+            assertEquals(c.name(), c.name().toUpperCase(), c.name() + " enum should be uppercase");
         }
     }
 
     @Test
-    public void getCodes() {
+    void getCodes() {
         assertEquals(FiatCurrency.values().length, FiatCurrency.getCodes().size());
         assertTrue(FiatCurrency.getCodes().containsAll(Arrays.asList("CZK", "EUR", "USD")));
     }
