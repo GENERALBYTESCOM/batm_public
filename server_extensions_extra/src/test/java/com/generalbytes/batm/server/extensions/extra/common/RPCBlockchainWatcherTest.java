@@ -2,19 +2,19 @@ package com.generalbytes.batm.server.extensions.extra.common;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.payment.IBlockchainWatcherTransactionListener;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.MalformedURLException;
 
-public class RPCBlockchainWatcherTest {
+class RPCBlockchainWatcherTest {
     private static final Logger log = LoggerFactory.getLogger(RPCBlockchainWatcherTest.class);
 
-    @Ignore
+    @Disabled
     @Test
-    public void test() {
+    void test() {
         try {
             RPCClient rpcClient = new RPCClient(CryptoCurrency.BCH.getCode(), "...");
             final RPCBlockchainWatcher w = new RPCBlockchainWatcher(rpcClient);

@@ -18,26 +18,23 @@
 package com.generalbytes.batm.server.extensions.extra;
 
 import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.Collection;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 // All tests @Ignore'd here because they depend on external resources
 // To be run manually, not as a part of the build
-@Ignore
-@RunWith(Parameterized.class)
-public class RateSourceTest {
+@Disabled
+class RateSourceTest {
     private final String cryptoCurrency;
     private final IRateSourceAdvanced rateSource;
 
-    @Parameterized.Parameters
     public static Collection getTestData() {
         return Arrays.asList(new Object[][]{
 //            {"LTC", new BinanceComExchange("USD")},
@@ -51,40 +48,40 @@ public class RateSourceTest {
     }
 
     @Test
-    public void testExchangeRateLast() {
+    void testExchangeRateLast() {
         BigDecimal rate = rateSource.getExchangeRateLast(cryptoCurrency, rateSource.getPreferredFiatCurrency());
         System.out.println(rate);
-        Assert.assertNotNull(rate);
+        assertNotNull(rate);
     }
 
     @Test
-    public void testExchangeRateForSell() {
+    void testExchangeRateForSell() {
         BigDecimal rate = rateSource.getExchangeRateForSell(cryptoCurrency, rateSource.getPreferredFiatCurrency());
         System.out.println(rate);
-        Assert.assertNotNull(rate);
+        assertNotNull(rate);
     }
 
     @Test
-    public void testExchangeRateForBuy() {
+    void testExchangeRateForBuy() {
         BigDecimal rate = rateSource.getExchangeRateForBuy(cryptoCurrency, rateSource.getPreferredFiatCurrency());
         System.out.println(rate);
-        Assert.assertNotNull(rate);
+        assertNotNull(rate);
     }
 
     @Test
-    public void testcalculateBuyPrice() {
+    void testcalculateBuyPrice() {
         BigDecimal cryptoAmount = new BigDecimal("0.5");
         BigDecimal rate = rateSource.calculateBuyPrice(cryptoCurrency, rateSource.getPreferredFiatCurrency(), cryptoAmount).divide(cryptoAmount, RoundingMode.FLOOR);
         System.out.println(rate);
-        Assert.assertNotNull(rate);
+        assertNotNull(rate);
     }
 
     @Test
-    public void testcalculateSellPrice() {
+    void testcalculateSellPrice() {
         BigDecimal cryptoAmount = new BigDecimal("0.5");
         BigDecimal rate = rateSource.calculateSellPrice(cryptoCurrency, rateSource.getPreferredFiatCurrency(), cryptoAmount).divide(cryptoAmount, RoundingMode.FLOOR);
         System.out.println(rate);
-        Assert.assertNotNull(rate);
+        assertNotNull(rate);
     }
 
 }

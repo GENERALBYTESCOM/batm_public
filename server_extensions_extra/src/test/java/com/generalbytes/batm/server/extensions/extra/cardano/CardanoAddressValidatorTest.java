@@ -1,14 +1,14 @@
 package com.generalbytes.batm.server.extensions.extra.cardano;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class CardanoAddressValidatorTest {
+class CardanoAddressValidatorTest {
 
     @Test
-    public void isAddressValid() {
+    void isAddressValid() {
         CardanoAddressValidator v = new CardanoAddressValidator();
         assertTrue(v.isAddressValid("addr1u8pcjgmx7962w6hey5hhsd502araxp26kdtgagakhaqtq8sxy9w7g"));
         assertTrue(v.isAddressValid("addr1g9u5vlrf4xkxv2qpwngf6cjhtw542ayty80v8dyr49rf5evph3wczvf2kd5vam"));

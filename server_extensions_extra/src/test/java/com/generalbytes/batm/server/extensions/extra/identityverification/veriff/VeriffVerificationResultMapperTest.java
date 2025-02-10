@@ -5,22 +5,20 @@ import com.generalbytes.batm.server.extensions.aml.verification.CheckResult;
 import com.generalbytes.batm.server.extensions.aml.verification.DocumentType;
 import com.generalbytes.batm.server.extensions.extra.identityverification.veriff.api.webhook.VerificationDecisionWebhookRequest;
 import com.generalbytes.batm.server.extensions.extra.identityverification.veriff.api.webhook.VerificationDecisionWebhookRequest.Verification.Person;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Collections;
 import java.util.Date;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class VeriffVerificationResultMapperTest {
+class VeriffVerificationResultMapperTest {
     private static final VeriffVerificationResultMapper mapper = new VeriffVerificationResultMapper();
 
     @Test
-    public void testMapping() {
+    void testMapping() {
         ApplicantCheckResult result = mapper.mapResult(createRequest());
 
         assertNotNull(result);
@@ -44,7 +42,7 @@ public class VeriffVerificationResultMapperTest {
     }
 
     @Test
-    public void testStreetAddress() {
+    void testStreetAddress() {
         assertNull(mapStreetAddress(null, null, null));
         assertNull(mapStreetAddress("us", null, null));
 

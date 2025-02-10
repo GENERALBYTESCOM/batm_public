@@ -11,7 +11,7 @@ import com.generalbytes.batm.server.extensions.extra.nano.rpc.NanoWsClient;
 import com.generalbytes.batm.server.extensions.extra.nano.wallet.node.NanoNodeWallet;
 import com.generalbytes.batm.server.extensions.payment.IPaymentRequestListener;
 import com.generalbytes.batm.server.extensions.payment.PaymentRequest;
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 
 import java.math.BigDecimal;
 import java.net.URI;
@@ -21,8 +21,8 @@ import java.net.URL;
  * THIS CLASS MAY BE IGNORED.
  * Its only purpose is to test and help during development.
  */
-@Ignore
-public class TestPaymentSupport {
+@Disabled
+class TestPaymentSupport {
 
     public static void main(String[] args) throws Exception {
         try {
