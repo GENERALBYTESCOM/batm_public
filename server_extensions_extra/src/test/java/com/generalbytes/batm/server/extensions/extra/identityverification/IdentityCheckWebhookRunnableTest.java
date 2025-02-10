@@ -1,16 +1,17 @@
 package com.generalbytes.batm.server.extensions.extra.identityverification;
 
 import com.generalbytes.batm.server.extensions.aml.verification.IdentityCheckWebhookException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.core.Response;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class IdentityCheckWebhookRunnableTest {
+class IdentityCheckWebhookRunnableTest {
 
     @Test
-    public void getResponse() {
+    void getResponse() {
         Response ok = IdentityCheckWebhookRunnable.getResponse("label", () -> {});
         assertEquals(200, ok.getStatus());
         assertNull(ok.getEntity());

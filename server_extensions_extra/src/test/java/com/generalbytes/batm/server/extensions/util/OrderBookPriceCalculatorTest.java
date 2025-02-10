@@ -1,15 +1,16 @@
 package com.generalbytes.batm.server.extensions.util;
 
 import org.assertj.core.api.Assertions;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderBookPriceCalculatorTest {
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+class OrderBookPriceCalculatorTest {
 
     private static class Order {
         public final BigDecimal price;
@@ -23,13 +24,13 @@ public class OrderBookPriceCalculatorTest {
     private static final OrderBookPriceCalculator<Order> calc = new OrderBookPriceCalculator<>(order -> order.price, order -> order.amount);
 
     @Test
-    public void test() throws IOException {
+    void test() throws IOException {
 
         List<Order> asks = new ArrayList<>();
         List<Order> bids = new ArrayList<>();
 
-        Assert.assertThrows(IllegalArgumentException.class, () -> calc.getBuyPrice(BigDecimal.ONE, asks));
-        Assert.assertThrows(IllegalArgumentException.class, () -> calc.getSellPrice(BigDecimal.ONE, bids));
+        assertThrows(IllegalArgumentException.class, () -> calc.getBuyPrice(BigDecimal.ONE, asks));
+        assertThrows(IllegalArgumentException.class, () -> calc.getSellPrice(BigDecimal.ONE, bids));
 
         bids.add(new Order(50, 2));
         bids.add(new Order(70, 2));
@@ -51,8 +52,8 @@ public class OrderBookPriceCalculatorTest {
         Assertions.assertThat(calc.getBuyPrice(new BigDecimal("6"), asks)).isEqualByComparingTo("150");
         Assertions.assertThat(calc.getSellPrice(new BigDecimal("6"), bids)).isEqualByComparingTo("50");
 
-        Assert.assertThrows(IllegalArgumentException.class, () -> calc.getBuyPrice(new BigDecimal("6.1"), asks));
-        Assert.assertThrows(IllegalArgumentException.class, () -> calc.getSellPrice(new BigDecimal("6.1"), bids));
+        assertThrows(IllegalArgumentException.class, () -> calc.getBuyPrice(new BigDecimal("6.1"), asks));
+        assertThrows(IllegalArgumentException.class, () -> calc.getSellPrice(new BigDecimal("6.1"), bids));
 
     }
 

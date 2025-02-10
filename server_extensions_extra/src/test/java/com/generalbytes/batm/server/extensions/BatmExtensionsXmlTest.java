@@ -2,8 +2,7 @@ package com.generalbytes.batm.server.extensions;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.google.common.collect.ImmutableSet;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -23,25 +22,28 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class BatmExtensionsXmlTest {
+import static org.assertj.core.api.AssertionsForClassTypes.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+class BatmExtensionsXmlTest {
 
     private static final String XML_FILENAME = "src/main/resources/batm-extensions.xml";
 
     @Test
-    public void testCryptoCurrencies() throws Exception {
+    void testCryptoCurrencies() throws Exception {
         for (String cryptocurrency : getXmlElementValues(XML_FILENAME, "//cryptocurrency/text()|//cryptologo/@cryptocurrency")) {
             try {
                 CryptoCurrency.valueOfCode(cryptocurrency);
             } catch (IllegalArgumentException e) {
-                Assert.fail(cryptocurrency + " not in " + CryptoCurrency.class.getSimpleName() + " enum");
+                fail(cryptocurrency + " not in " + CryptoCurrency.class.getSimpleName() + " enum");
             }
         }
     }
 
     @Test
-    public void testCryptoLogos() throws Exception {
+    void testCryptoLogos() throws Exception {
         for (String file : getXmlElementValues(XML_FILENAME, "//cryptologo/@file")) {
-            Assert.assertTrue(file + " cryptologo file does not exist", new File("src/main/resources", file).exists());
+            assertTrue(new File("src/main/resources", file).exists(), file + " cryptologo file does not exist");
         }
     }
 
@@ -49,7 +51,7 @@ public class BatmExtensionsXmlTest {
      * tests that all extension class names mentioned in the XML exist
      */
     @Test
-    public void testExtensionClassesExist() throws Exception {
+    void testExtensionClassesExist() throws Exception {
         getExtensionInstances();
     }
 
@@ -57,7 +59,7 @@ public class BatmExtensionsXmlTest {
      * tests that CryptoCurrencyValidator exist for all crypto currencies used in the XML
      */
     @Test
-    public void testCryptoCurrencyValidators() throws Exception {
+    void testCryptoCurrencyValidators() throws Exception {
         // currencies mentioned in batm_extensions.xml but having CryptoCurrencyValidators implemented in the non-opensourced part of the codebase
         Set<String> supportedInBuiltin = ImmutableSet.of("TRTL", "BTC", "LBTC", "XMR", "ETC");
 
@@ -65,7 +67,7 @@ public class BatmExtensionsXmlTest {
         getCryptoCurrencies().stream()
             .filter(cryptoCurrency -> !supportedInBuiltin.contains(cryptoCurrency))
             .filter(cryptoCurrency -> !anyExtensionProvidesCryptoCurrencyValidator(extensions, cryptoCurrency))
-            .forEach(cryptoCurrency -> Assert.fail("No ICryptoAddressValidator found for " + cryptoCurrency));
+            .forEach(cryptoCurrency -> fail("No ICryptoAddressValidator found for " + cryptoCurrency));
     }
 
     private boolean anyExtensionProvidesCryptoCurrencyValidator(List<IExtension> extensions, String cryptoCurrency) {

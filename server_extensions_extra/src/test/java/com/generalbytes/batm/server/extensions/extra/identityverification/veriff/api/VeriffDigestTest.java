@@ -1,13 +1,13 @@
 package com.generalbytes.batm.server.extensions.extra.identityverification.veriff.api;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class VeriffDigestTest {
+class VeriffDigestTest {
 
     @Test
-    public void digest() {
+    void digest() {
         // https://developers.veriff.com/#generating-x-hmac-signature
         VeriffDigest d = new VeriffDigest("abcdef12-abcd-abcd-abcd-abcdef012345");
         String testPayload = "{\"verification\":{\"callback\":\"https://veriff.com\",\"person\":{\"firstName\":\"John\",\"lastName\":\"Smith\"},\"document\":{\"type\":\"PASSPORT\",\"country\":\"EE\"},\"vendorData\":\"unique id of a user\",\"timestamp\":\"2016-05-19T08:30:25.597Z\"}}";

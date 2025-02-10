@@ -1,8 +1,8 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitpandapro;
 
 import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
@@ -14,33 +14,30 @@ import static com.generalbytes.batm.common.currencies.FiatCurrency.CHF;
 import static com.generalbytes.batm.common.currencies.FiatCurrency.EUR;
 import static com.generalbytes.batm.common.currencies.FiatCurrency.GBP;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
-@Ignore // requires online resources - for manual run only
-public class BitpandaProRateSourceTest {
+@Disabled // requires online resources - for manual run only
+class BitpandaProRateSourceTest {
 
     private final IRateSourceAdvanced subject = BitpandaProExchange.asRateSource(EUR.getCode());
 
     @Test
-    public void shouldFetchCryptoCurrencies() {
+    void shouldFetchCryptoCurrencies() {
         assertNotNull(subject.getCryptoCurrencies());
     }
 
     @Test
-    public void shouldFetchFiatCurrencies() {
+    void shouldFetchFiatCurrencies() {
         assertNotNull(subject.getFiatCurrencies());
     }
 
     @Test
-    public void shouldYieldConfiguredPreferredFiatCurrency() {
+    void shouldYieldConfiguredPreferredFiatCurrency() {
         assertEquals("EUR", subject.getPreferredFiatCurrency());
     }
 
     @Test
-    public void shouldFailOnInvalidInstrument() {
+    void shouldFailOnInvalidInstrument() {
         // bogus crypto
         assertNull(subject.getExchangeRateLast("GAGA", "EUR"));
         // bogus fiat
@@ -56,7 +53,7 @@ public class BitpandaProRateSourceTest {
     }
 
     @Test
-    public void shouldFetchLastExchangeRate() {
+    void shouldFetchLastExchangeRate() {
         // fetch fresh
         final BigDecimal fresh = subject.getExchangeRateLast(BTC.getCode(), EUR.getCode());
         assertNotNull(fresh);
@@ -67,40 +64,40 @@ public class BitpandaProRateSourceTest {
     }
 
     @Test
-    public void shouldCalculateReasonableBuyAndSellPricesForOneBitcoin() {
+    void shouldCalculateReasonableBuyAndSellPricesForOneBitcoin() {
         final BigDecimal buy = subject.calculateBuyPrice(BTC.getCode(), EUR.getCode(), BigDecimal.ONE);
         assertNotNull(buy);
-        assertTrue("calculated non-positive buy price", buy.compareTo(BigDecimal.ZERO) > 0);
+        assertTrue(buy.compareTo(BigDecimal.ZERO) > 0, "calculated non-positive buy price");
 
         final BigDecimal sell = subject.calculateSellPrice(BTC.getCode(), EUR.getCode(), BigDecimal.ONE);
         assertNotNull(sell);
-        assertTrue("calculated non-positive sell price", sell.compareTo(BigDecimal.ZERO) > 0);
+        assertTrue(sell.compareTo(BigDecimal.ZERO) > 0, "calculated non-positive sell price");
 
-        assertTrue("buy price is smaller than sell", buy.compareTo(sell) >= 0);
+        assertTrue(buy.compareTo(sell) >= 0, "buy price is smaller than sell");
     }
 
     @Test
-    public void shouldCalculateReasonableBuyAndSellRatesForBitcoin() {
+    void shouldCalculateReasonableBuyAndSellRatesForBitcoin() {
         final BigDecimal buy = subject.getExchangeRateForBuy(BTC.getCode(), EUR.getCode());
         assertNotNull(buy);
-        assertTrue("calculated non-positive buy price", buy.compareTo(BigDecimal.ZERO) > 0);
+        assertTrue(buy.compareTo(BigDecimal.ZERO) > 0, "calculated non-positive buy price");
 
         final BigDecimal sell = subject.getExchangeRateForSell(BTC.getCode(), EUR.getCode());
         assertNotNull(sell);
-        assertTrue("calculated non-positive sell price", sell.compareTo(BigDecimal.ZERO) > 0);
+        assertTrue(sell.compareTo(BigDecimal.ZERO) > 0, "calculated non-positive sell price");
 
-        assertTrue("buy price is smaller than sell", buy.compareTo(sell) >= 0);
+        assertTrue(buy.compareTo(sell) >= 0, "buy price is smaller than sell");
     }
 
     @Test
-    public void shouldSupportAllConfiguredPairs() {
-        assertNotNull("BTC/EUR", subject.getExchangeRateLast(BTC.getCode(), EUR.getCode()));
-        assertNotNull("ETH/EUR", subject.getExchangeRateLast(ETH.getCode(), EUR.getCode()));
-        assertNotNull("XRP/EUR", subject.getExchangeRateLast(XRP.getCode(), EUR.getCode()));
-        assertNotNull("BTC/CHF", subject.getExchangeRateLast(BTC.getCode(), CHF.getCode()));
-        assertNotNull("ETH/CHF", subject.getExchangeRateLast(ETH.getCode(), CHF.getCode()));
-        assertNotNull("XRP/CHF", subject.getExchangeRateLast(XRP.getCode(), CHF.getCode()));
-        assertNotNull("BTC/GBP", subject.getExchangeRateLast(BTC.getCode(), GBP.getCode()));
-        assertNotNull("DOGE/EUR", subject.getExchangeRateLast(DOGE.getCode(), EUR.getCode()));
+    void shouldSupportAllConfiguredPairs() {
+        assertNotNull(subject.getExchangeRateLast(BTC.getCode(), EUR.getCode()), "BTC/EUR");
+        assertNotNull(subject.getExchangeRateLast(ETH.getCode(), EUR.getCode()), "ETH/EUR");
+        assertNotNull(subject.getExchangeRateLast(XRP.getCode(), EUR.getCode()), "XRP/EUR");
+        assertNotNull(subject.getExchangeRateLast(BTC.getCode(), CHF.getCode()), "BTC/CHF");
+        assertNotNull(subject.getExchangeRateLast(ETH.getCode(), CHF.getCode()), "ETH/CHF");
+        assertNotNull(subject.getExchangeRateLast(XRP.getCode(), CHF.getCode()), "XRP/CHF");
+        assertNotNull(subject.getExchangeRateLast(BTC.getCode(), GBP.getCode()), "BTC/GBP");
+        assertNotNull(subject.getExchangeRateLast(DOGE.getCode(), EUR.getCode()), "DOGE/EUR");
     }
 }

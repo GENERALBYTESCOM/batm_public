@@ -12,22 +12,19 @@ import static com.generalbytes.batm.common.currencies.CryptoCurrency.XRP;
 import static com.generalbytes.batm.common.currencies.FiatCurrency.CHF;
 import static com.generalbytes.batm.common.currencies.FiatCurrency.EUR;
 import static com.generalbytes.batm.common.currencies.FiatCurrency.GBP;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
 import java.net.URI;
 import java.util.stream.Stream;
 
-import org.junit.Ignore;
-import org.junit.Test;
-
 import com.generalbytes.batm.server.extensions.IExchangeAdvanced;
 import com.generalbytes.batm.server.extensions.ITask;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
-@Ignore // requires online resources - for manual run only
-public class BitpandaProExchangeTest {
+@Disabled // requires online resources - for manual run only
+class BitpandaProExchangeTest {
     /** exchange sandbox */
     private static final URI API = URI.create("https://api.exchange.waskurzes.com");
     private static final String API_KEY = "YOUR.API.KEY";
@@ -35,58 +32,58 @@ public class BitpandaProExchangeTest {
     private final IExchangeAdvanced subject = new BitpandaProExchange(API, API_KEY, EUR.getCode());
 
     @Test
-    public void shouldFetchCryptoCurrencies() {
+    void shouldFetchCryptoCurrencies() {
         assertNotNull(subject.getCryptoCurrencies());
     }
 
     @Test
-    public void shouldFetchFiatCurrencies() {
+    void shouldFetchFiatCurrencies() {
         assertNotNull(subject.getFiatCurrencies());
     }
 
     @Test
-    public void shouldYieldConfiguredPreferredFiatCurrency() {
+    void shouldYieldConfiguredPreferredFiatCurrency() {
         assertEquals("EUR", subject.getPreferredFiatCurrency());
     }
 
     @Test
-    public void shouldFetchFiatBalances() {
+    void shouldFetchFiatBalances() {
         Stream.of(EUR, CHF, GBP).forEach(currency -> {
             final BigDecimal balance = subject.getFiatBalance(EUR.getCode());
-            assertNotNull("getFiatBalance(" + currency + ")", balance);
-            assertTrue("negative balance", balance.compareTo(BigDecimal.ZERO) >= 0);
+            assertNotNull(balance, "getFiatBalance(" + currency + ")");
+            assertTrue(balance.compareTo(BigDecimal.ZERO) >= 0, "negative balance");
         });
     }
 
     @Test
-    public void shouldFetchCryptoBalances() {
+    void shouldFetchCryptoBalances() {
         Stream.of(BTC, ETH, XRP, ADA, USDT, TRX, BCH, DOGE, LTC ).forEach(currency -> {
             final BigDecimal balance = subject.getCryptoBalance(currency.getCode());
-            assertNotNull("getCryptoBalance(" + currency + ")", balance);
-            assertTrue("negative balance", balance.compareTo(BigDecimal.ZERO) >= 0);
+            assertNotNull(balance, "getCryptoBalance(" + currency + ")");
+            assertTrue(balance.compareTo(BigDecimal.ZERO) >= 0, "negative balance");
         });
     }
 
     @Test
-    public void shouldGetBitcoinDepositAddress() {
+    void shouldGetBitcoinDepositAddress() {
         final String address = subject.getDepositAddress(BTC.getCode());
         assertNotNull(address);
     }
 
     @Test
-    public void shouldWithdrawBitcoin() {
+    void shouldWithdrawBitcoin() {
         final String transaction = subject.sendCoins("3FXtMi8gC2TUgzBoFnBxeRKWz1Gw8bSrbJ", BigDecimal.ONE, BTC.getCode(), "batm-test");
         assertNotNull(transaction);
     }
 
     @Test
-    public void shouldSellCoins() {
+    void shouldSellCoins() {
         final String orderId = subject.sellCoins(new BigDecimal("0.01"), BTC.getCode(), EUR.getCode(), "batm-sell-test");
         assertNotNull(orderId);
     }
 
     @Test
-    public void shouldSellCoinsAdvanced() throws InterruptedException {
+    void shouldSellCoinsAdvanced() throws InterruptedException {
         final ITask task = subject.createSellCoinsTask(new BigDecimal("0.02"), BTC.getCode(), EUR.getCode(), "batm-sell-advanced-test");
         task.onCreate();
         for (int i = 0; i < 10 && !task.isFinished(); i++) {
@@ -97,13 +94,13 @@ public class BitpandaProExchangeTest {
     }
 
     @Test
-    public void shouldPurchaseCoins() {
+    void shouldPurchaseCoins() {
         final String orderId = subject.purchaseCoins(new BigDecimal("0.01"), BTC.getCode(), EUR.getCode(), "batm-purchase-test");
         assertNotNull(orderId);
     }
 
     @Test
-    public void shouldPurchaseCoinsAdvanced() throws InterruptedException {
+    void shouldPurchaseCoinsAdvanced() throws InterruptedException {
         final ITask task = subject.createPurchaseCoinsTask(new BigDecimal("0.02"), BTC.getCode(), EUR.getCode(), "batm-purchase-advanced-test");
         task.onCreate();
         for (int i = 0; i < 10 && !task.isFinished(); i++) {

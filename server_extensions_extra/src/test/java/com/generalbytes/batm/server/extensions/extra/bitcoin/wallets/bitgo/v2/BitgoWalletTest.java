@@ -6,10 +6,9 @@ import com.generalbytes.batm.server.extensions.Converters;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.ICanSendMany;
 import org.assertj.core.api.Assertions;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import si.mazi.rescu.RestProxyFactory;
@@ -18,8 +17,10 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;
 
-public class BitgoWalletTest {
+
+class BitgoWalletTest {
 
     private static final Logger log = LoggerFactory.getLogger(BitgoWalletTest.class);
 
@@ -41,8 +42,8 @@ public class BitgoWalletTest {
         }
     }
 
-    @BeforeClass
-    public static void setup() {
+    @BeforeEach
+    void setUp() {
         setLoggerLevel("batm", "trace");
         setLoggerLevel("si.mazi.rescu","trace");
 
@@ -60,8 +61,8 @@ public class BitgoWalletTest {
     }
 
     @Test
-    @Ignore
-    public void getCryptAddressTest() {
+    @Disabled
+    void getCryptAddressTest() {
         String coin = CryptoCurrency.TBTC.getCode();
         String scheme = "https";
         String host = "test.bitgo.com";
@@ -72,13 +73,13 @@ public class BitgoWalletTest {
 
         final BitgoWallet remotewallet = new BitgoWallet(scheme, host, port, token, walletId, walletPassphrase, 2);
         final String address = remotewallet.getCryptoAddress(coin);
-        Assert.assertNotNull(address);
-        Assert.assertEquals("2N2WR6aVSEgq5ZLTED9vHvCWFdAMf6yhebd", address);
+        assertNotNull(address);
+        assertEquals("2N2WR6aVSEgq5ZLTED9vHvCWFdAMf6yhebd", address);
     }
 
     @Test
-    @Ignore
-    public void getCryptBalanceTest() {
+    @Disabled
+    void getCryptBalanceTest() {
         String coin = CryptoCurrency.TBTC.getCode();
         String scheme = "https";
         String host = "test.bitgo.com";
@@ -89,13 +90,13 @@ public class BitgoWalletTest {
 
         final BitgoWallet remotewallet = new BitgoWallet(scheme, host, port, token, walletId, walletPassphrase, 2);
         BigDecimal balance = remotewallet.getCryptoBalance(coin);
-        Assert.assertNotNull(balance);
+        assertNotNull(balance);
         log.info("balance = {}", balance);
     }
 
     @Test
-    @Ignore("Local instance of bitgo-express is required to run")
-    public void sendCoinsTest() {
+    @Disabled("Local instance of bitgo-express is required to run")
+    void sendCoinsTest() {
         String destinationAddress = "2N5q4MwNSUxbAtaidhRgkiDrbwVR4yCZDhi";
         String coin = CryptoCurrency.TBTC.getCode();
         Integer amountInt = 10000;
@@ -107,8 +108,8 @@ public class BitgoWalletTest {
     }
 
     @Test
-    @Ignore("Local instance of bitgo-express is required to run")
-    public void sendManyTest() {
+    @Disabled("Local instance of bitgo-express is required to run")
+    void sendManyTest() {
         String coin = CryptoCurrency.TBTC.getCode();
         Integer amountInt = 10000;
         BigDecimal amount = BigDecimal.valueOf(amountInt).divide(Converters.TBTC);
@@ -122,8 +123,8 @@ public class BitgoWalletTest {
     }
 
     @Test
-    @Ignore("Local instance of bitgo-express is required to run")
-    public void sendCoinsNumBlocksTest() {
+    @Disabled("Local instance of bitgo-express is required to run")
+    void sendCoinsNumBlocksTest() {
         String destinationAddress = "2N5q4MwNSUxbAtaidhRgkiDrbwVR4yCZDhi";
         String coin = CryptoCurrency.TBTC.getCode();
         Integer amountInt = 10000;
@@ -135,7 +136,7 @@ public class BitgoWalletTest {
     }
 
     @Test
-    public void convertBalance() {
+    void convertBalance() {
         Assertions.assertThat(wallet.toSatoshis(new BigDecimal("15.50581145"), CryptoCurrency.USDT.getCode())).isEqualTo("15505811");
         Assertions.assertThat(wallet.toSatoshis(new BigDecimal("15.50581145"), CryptoCurrency.USDTTRON.getCode())).isEqualTo("15505811");
 
@@ -151,10 +152,10 @@ public class BitgoWalletTest {
         Assertions.assertThat(wallet.fromSatoshis(CryptoCurrency.BTC.getCode(), new BigDecimal("1.000"))).isEqualByComparingTo("0.00000001");
         Assertions.assertThat(wallet.fromSatoshis(CryptoCurrency.BTC.getCode(), new BigDecimal("1.999"))).isEqualByComparingTo("0.00000001");
 
-        Exception exception = Assert.assertThrows(NullPointerException.class, () -> wallet.fromSatoshis("unknown", BigDecimal.ONE));
+        Exception exception = assertThrows(NullPointerException.class, () -> wallet.fromSatoshis("unknown", BigDecimal.ONE));
         Assertions.assertThat(exception.getMessage()).contains("not supported");
         for (String cryptoCurrency : wallet.getCryptoCurrencies()) {
-            Assert.assertEquals(BigDecimal.ONE, wallet.fromSatoshis(cryptoCurrency, new BigDecimal(wallet.toSatoshis(BigDecimal.ONE, cryptoCurrency))));
+            assertEquals(BigDecimal.ONE, wallet.fromSatoshis(cryptoCurrency, new BigDecimal(wallet.toSatoshis(BigDecimal.ONE, cryptoCurrency))));
         }
     }
 }

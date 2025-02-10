@@ -1,21 +1,18 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.binance;
 
 import com.generalbytes.batm.server.extensions.IExchangeAdvanced;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collection;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Fail.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@Ignore // requires online resources - for manual run only
-@RunWith(Parameterized.class)
-public class BinanceExchangeTest {
+@Disabled // requires online resources - for manual run only
+class BinanceExchangeTest {
 
     private final IExchangeAdvanced exchange;
 
@@ -24,7 +21,6 @@ public class BinanceExchangeTest {
         this.exchange = exchange;
     }
 
-    @Parameterized.Parameters
     public static Collection params() {
         return Arrays.asList(new Object[][]{
 //            {new BinanceUsExchange("", "", "USD")},
@@ -35,7 +31,7 @@ public class BinanceExchangeTest {
 
     // this tests getTradableAmount(). If amount sent to exchange had too many decimal places, it throwed "Filter failure: LOT_SIZE" message
     @Test
-    public void testLotSizeSell() {
+    void testLotSizeSell() {
         try {
             String result = exchange.sellCoins(new BigDecimal("9.14155797"), "BTC", "USD", "");
             fail("Expected exception not thrown");
@@ -45,7 +41,7 @@ public class BinanceExchangeTest {
     }
 
     @Test
-    public void testLotSizeBuy() {
+    void testLotSizeBuy() {
         try {
             String result = exchange.purchaseCoins(new BigDecimal("9.14155797"), "BTC", "USD", "");
             fail("Expected exception not thrown");
@@ -55,7 +51,7 @@ public class BinanceExchangeTest {
     }
 
     @Test
-    public void testInsufficientBalance() {
+    void testInsufficientBalance() {
         try {
             String result = exchange.sellCoins(new BigDecimal("10"), "BTC", "USD", "");
             fail("Expected exception not thrown");
@@ -66,7 +62,7 @@ public class BinanceExchangeTest {
 
 
     @Test
-    public void test() {
+    void test() {
 //        BinanceUsExchange rs = new BinanceUsExchange("USD");
 //        System.out.println(rs.getExchangeRateLast("BTC", "USD"));
 //        System.out.println(rs.getExchangeRateLast("LTC", "USD"));
