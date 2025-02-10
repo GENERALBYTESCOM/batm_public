@@ -1,15 +1,16 @@
 package com.generalbytes.batm.server.extensions.util;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class ExtensionParametersTest {
+
+class ExtensionParametersTest {
     @Test
-    public void test() {
+    void test() {
         testFromDelimited(null, null, 0);
 
         testFromDelimited("", "", 0);
@@ -51,7 +52,7 @@ public class ExtensionParametersTest {
     }
 
     @Test
-    public void getPrefix() {
+    void getPrefix() {
         assertEquals("A", ExtensionParameters.fromDelimited("A:b:c:").getPrefix());
         assertEquals("", ExtensionParameters.fromDelimited(":").getPrefix());
         assertEquals("", ExtensionParameters.fromDelimited("").getPrefix());
@@ -59,7 +60,7 @@ public class ExtensionParametersTest {
     }
 
     @Test
-    public void getParameters() {
+    void getParameters() {
         assertEquals(1, ExtensionParameters.fromDelimited("P:").getWithoutPrefix().size());
         assertEquals(0, ExtensionParameters.fromDelimited("P").getWithoutPrefix().size());
         assertEquals(0, ExtensionParameters.fromDelimited("").getWithoutPrefix().size());
@@ -75,7 +76,7 @@ public class ExtensionParametersTest {
     }
 
     @Test
-    public void getEnum() {
+    void getEnum() {
         assertEquals(Color.YELLOW, ExtensionParameters.fromDelimited("DOG:YELLOW:MEDIUM").get(1, Color.UNKNOWN));
         assertEquals(Color.UNKNOWN, ExtensionParameters.fromDelimited("DOG:GRAY:MEDIUM").get(1, Color.UNKNOWN));
         assertEquals(Color.UNKNOWN, ExtensionParameters.fromDelimited("DOG::MEDIUM").get(1, Color.UNKNOWN));
