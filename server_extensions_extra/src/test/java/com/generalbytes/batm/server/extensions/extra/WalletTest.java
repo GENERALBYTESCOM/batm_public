@@ -56,7 +56,7 @@ class WalletTest {
         String b = wallet.getCryptoAddress(cryptoCurrency);
         assertNotNull(b);
         System.out.println(b);
-        assertEquals(a, "getCryptoAddress must return the same address every time", b);
+        assertEquals(a, b, "getCryptoAddress must return the same address every time");
     }
 
     @ParameterizedTest
