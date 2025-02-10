@@ -26,6 +26,15 @@ dependencies {
     implementation("com.sun.mail:javax.mail:1.6.2")
     implementation("com.vdurmont:emoji-java:3.1.3") //for chat emojis
 
-    testImplementation("junit:junit:4.13.1")
+    // keeping junit 4 for compatibility, will be removed soon, use junit 5 instead
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.junit.vintage:junit-vintage-engine:5.11.4")
+
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.4")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.11.4")
     testImplementation("org.assertj:assertj-core:3.19.0")
+}
+
+test {
+    useJUnitPlatform()
 }
