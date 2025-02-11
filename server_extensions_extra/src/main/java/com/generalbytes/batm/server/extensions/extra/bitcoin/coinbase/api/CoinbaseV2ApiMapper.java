@@ -32,6 +32,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.Co
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbasePagination;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseSendCoinsRequest;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseTransaction;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseTransactionAmount;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseTransactionResponse;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseTransactionsResponse;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBAccount;
@@ -401,14 +402,25 @@ public final class CoinbaseV2ApiMapper {
         legacyTransaction.setId(transaction.getId());
         legacyTransaction.setType(transaction.getType());
         legacyTransaction.setStatus(transaction.getStatus());
-        legacyTransaction.setAmount(mapAmountToLegacyBalance(transaction.getAmount()));
-        legacyTransaction.setNative_amount(mapAmountToLegacyBalance(transaction.getNativeAmount()));
+        legacyTransaction.setAmount(mapTransactionAmountToLegacyBalance(transaction.getAmount()));
+        legacyTransaction.setNative_amount(mapTransactionAmountToLegacyBalance(transaction.getNativeAmount()));
         legacyTransaction.setDescription(transaction.getDescription());
         legacyTransaction.setCreated_at(transaction.getCreatedAt());
         legacyTransaction.setUpdated_at(transaction.getUpdatedAt());
         legacyTransaction.setResource(transaction.getResource());
         legacyTransaction.setResource_path(transaction.getResourcePath());
         return legacyTransaction;
+    }
+
+    private static CBBalance mapTransactionAmountToLegacyBalance(CoinbaseTransactionAmount transactionAmount) {
+        if (transactionAmount == null) {
+            return null;
+        }
+
+        CBBalance legacyBalance = new CBBalance();
+        legacyBalance.setCurrency(transactionAmount.getCurrency());
+        legacyBalance.setAmount(transactionAmount.getValue());
+        return legacyBalance;
     }
 
     /**

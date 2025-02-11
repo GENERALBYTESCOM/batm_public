@@ -35,7 +35,7 @@ public class CoinbaseTransaction {
      * - advanced_trade_fill, sell
      * - pro_deposit
      */
-    private CoinbaseAmount amount;
+    private CoinbaseTransactionAmount amount;
     /**
      * Amount in user's native currency.
      * Value is negative to indicate the debiting of funds for the following transaction type cases:
@@ -43,7 +43,7 @@ public class CoinbaseTransaction {
      * - pro_deposit
      */
     @JsonProperty("native_amount")
-    private CoinbaseAmount nativeAmount;
+    private CoinbaseTransactionAmount nativeAmount;
     /**
      * User defined description
      */
@@ -86,19 +86,19 @@ public class CoinbaseTransaction {
         this.status = status;
     }
 
-    public CoinbaseAmount getAmount() {
+    public CoinbaseTransactionAmount getAmount() {
         return amount;
     }
 
-    public void setAmount(CoinbaseAmount amount) {
+    public void setAmount(CoinbaseTransactionAmount amount) {
         this.amount = amount;
     }
 
-    public CoinbaseAmount getNativeAmount() {
+    public CoinbaseTransactionAmount getNativeAmount() {
         return nativeAmount;
     }
 
-    public void setNativeAmount(CoinbaseAmount nativeAmount) {
+    public void setNativeAmount(CoinbaseTransactionAmount nativeAmount) {
         this.nativeAmount = nativeAmount;
     }
 
