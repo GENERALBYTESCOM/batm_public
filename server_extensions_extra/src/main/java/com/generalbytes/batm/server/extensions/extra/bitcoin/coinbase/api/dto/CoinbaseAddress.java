@@ -12,29 +12,29 @@ public class CoinbaseAddress {
     /**
      * ID of the address.
      */
-    public String id;
+    private String id;
     /**
      * Address for any Coinbase supported asset.
      */
-    public String address;
+    private String address;
     /**
      * User defined label for the address.
      */
-    public String name;
+    private String name;
     @JsonProperty("created_at")
-    public String createdAt;
+    private String createdAt;
     @JsonProperty("updated_at")
-    public String updatedAt;
+    private String updatedAt;
     /**
      * Name of blockchain.
      */
-    public String network;
+    private String network;
     /**
      * Name of the resource. Constant "address" for address.
      */
-    public final String resource = "address";
+    private final String resource = "address";
     @JsonProperty("resource_path")
-    public String resourcePath;
+    private String resourcePath;
 
     public String getId() {
         return id;
