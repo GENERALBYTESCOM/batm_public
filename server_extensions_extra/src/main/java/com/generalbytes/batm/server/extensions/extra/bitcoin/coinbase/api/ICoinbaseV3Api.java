@@ -194,7 +194,6 @@ public interface ICoinbaseV3Api {
      * @throws CoinbaseApiException If the API call fails.
      * @see <a href="https://docs.cdp.coinbase.com/coinbase-app/docs/api-transactions#send-money">Coinbase Documentation</a>
      */
-    // TODO BATM-6210: Test with real funds
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/v2/accounts/{accountId}/transactions")
@@ -236,7 +235,6 @@ public interface ICoinbaseV3Api {
      * @throws CoinbaseApiException If the API call fails.
      * @see <a href="https://docs.cdp.coinbase.com/advanced-trade/reference/retailbrokerageapi_postorder">Coinbase Documentation</a>
      */
-    // TODO BATM-6210: Test with real funds
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/api/v3/brokerage/orders")
