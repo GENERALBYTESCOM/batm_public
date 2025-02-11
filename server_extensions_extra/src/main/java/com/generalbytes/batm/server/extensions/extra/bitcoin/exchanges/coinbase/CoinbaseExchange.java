@@ -371,12 +371,12 @@ public class CoinbaseExchange implements IRateSourceAdvanced, IExchangeAdvanced 
                     RateLimiter.waitForPossibleCall(getClass());
                     CBOrderResponse orderResponse = api.buyCoins(CB_VERSION, coinBaseTime, getAccountId(accountName, cryptoCurrency), orderRequest);
 
-                    if (orderResponse.errors == null) {
+                    if (orderResponse != null && orderResponse.errors == null && orderResponse.data != null) {
                         orderAId = orderResponse.data.id;
                         createTime = System.currentTimeMillis();
                         log.debug("PurchaseCoinsTask.onCreate - " + ("orderAId = " + orderAId));
                     } else {
-                        log.error("PurchaseCoinsTask.onCreate - " + orderResponse.getErrorMessages());
+                        log.error("PurchaseCoinsTask.onCreate - " + orderResponse == null ? "unknown error" : orderResponse.getErrorMessages());
                     }
                 }
             } catch (Exception e) {
@@ -474,12 +474,12 @@ public class CoinbaseExchange implements IRateSourceAdvanced, IExchangeAdvanced 
                     RateLimiter.waitForPossibleCall(getClass());
                     CBOrderResponse orderResponse = api.sellCoins(CB_VERSION, coinBaseTime, getAccountId(accountName, cryptoCurrency), orderRequest);
 
-                    if (orderResponse.errors == null) {
+                    if (orderResponse != null && orderResponse.errors == null && orderResponse.data != null) {
                         orderAId = orderResponse.data.id;
                         createTime = System.currentTimeMillis();
                         log.debug("SellCoinsTask.onCreate - " + ("orderAId = " + orderAId));
                     } else {
-                        log.error("SellCoinsTask.onCreate - " + orderResponse.getErrorMessages());
+                        log.error("SellCoinsTask.onCreate - " + "PurchaseCoinsTask.onCreate - " + orderResponse == null ? "unknown error" : orderResponse.getErrorMessages());
                     }
                 }
             } catch (Exception e) {
