@@ -34,7 +34,7 @@ import java.security.NoSuchAlgorithmException;
 /**
  * Factory for creating Coinbase API proxies.
  */
-public class CoinbaseApiFactory {
+public final class CoinbaseApiFactory {
 
     private static final Logger log = LoggerFactory.getLogger(CoinbaseApiFactory.class);
     /**
@@ -50,6 +50,10 @@ public class CoinbaseApiFactory {
      */
     static final String CB_VERSION = "2025-02-05";
     private static final String API_URL = "https://api.coinbase.com";
+
+    private CoinbaseApiFactory() {
+        throw new IllegalStateException("Utility class");
+    }
 
     /**
      * Creates a proxy instance for interacting with the Coinbase API.

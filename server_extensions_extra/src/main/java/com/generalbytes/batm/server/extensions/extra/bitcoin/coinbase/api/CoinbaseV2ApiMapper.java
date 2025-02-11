@@ -62,7 +62,11 @@ import java.util.stream.Collectors;
 /**
  * Mapper between new and legacy Coinbase V2 API DTOs.
  */
-public class CoinbaseV2ApiMapper {
+public final class CoinbaseV2ApiMapper {
+
+    private CoinbaseV2ApiMapper() {
+        throw new IllegalStateException("Utility class");
+    }
 
     /**
      * Map {@link CoinbaseApiException} to a legacy {@link CBResponse}.

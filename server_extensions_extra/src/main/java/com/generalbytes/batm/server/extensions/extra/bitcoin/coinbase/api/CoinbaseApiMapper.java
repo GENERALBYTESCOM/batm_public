@@ -62,7 +62,11 @@ import java.util.UUID;
 /**
  * Mapper between new and legacy Coinbase API DTOs.
  */
-public class CoinbaseApiMapper {
+public final class CoinbaseApiMapper {
+
+    private CoinbaseApiMapper() {
+        throw new IllegalStateException("Utility class");
+    }
 
     /**
      * Map {@link CoinbaseApiException} to a legacy {@link CBResponse}.
