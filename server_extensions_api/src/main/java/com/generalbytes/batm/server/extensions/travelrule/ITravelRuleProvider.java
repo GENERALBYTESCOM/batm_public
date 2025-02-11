@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2024 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2025 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -17,6 +17,8 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.travelrule;
 
+import java.util.List;
+
 /**
  * A Travel Rule Provider definition that makes it possible to connect to an external provider using its API.
  * Provider is responsible for implementing compliance checks and procedures necessary to ensure adherence to the Travel Rule regulations.
@@ -29,6 +31,69 @@ public interface ITravelRuleProvider {
      */
     String getName();
 
-    // TODO: implement methods
+    /**
+     * Get information about a crypto wallet.
+     *
+     * @param walletEvaluationRequest The wallet's context data.
+     * @return Information about the wallet.
+     */
+    ITravelRuleWalletInfo getWalletInfo(IIdentityWalletEvaluationRequest walletEvaluationRequest);
 
+    /**
+     * Get all available VASPs.
+     *
+     * @return List of all available VASPs.
+     * @throws TravelRuleProviderException In case of failure.
+     */
+    List<ITravelRuleVasp> getAllVasps();
+
+    /**
+     * Create a new transfer, sending a message to the Beneficiary VASP.
+     *
+     * @param outgoingTransferData The data to create a transfer from.
+     * @return {@link ITravelRuleTransferInfo} of the new transfer or null in case of failure.
+     */
+    ITravelRuleTransferInfo createTransfer(ITravelRuleTransferData outgoingTransferData);
+
+    /**
+     * Register a new listener for transfer status updates.
+     *
+     * <p>Whenever the status of a transfer, related to the given VASP, changes, the method
+     * {@link ITravelRuleTransferUpdateListener#onTransferStatusUpdate(ITravelRuleTransferStatusUpdateEvent)}
+     * on this listener will be called.</p>
+     *
+     * @param listener The listener.
+     * @return True if the listener was successfully registered, false otherwise.
+     */
+    boolean registerStatusUpdateListener(ITravelRuleTransferUpdateListener listener);
+
+    /**
+     * Unregister an existing listener for transfer status updates.
+     *
+     * @return True if the listener was successfully unregistered, false otherwise.
+     */
+    boolean unregisterStatusUpdateListener();
+
+    /**
+     * Update an existing transfer.
+     *
+     * @param request The request.
+     * @return The updated transfer info or null if the update fails.
+     */
+    ITravelRuleTransferInfo updateTransfer(ITravelRuleTransferUpdateRequest request);
+
+    /**
+     * Called when the provider configuration changes.
+     *
+     * This may be used to update the provider's state or credentials used to call the provider's API.
+     */
+    void notifyProviderConfigurationChanged();
+
+    /**
+     * Test whether the Travel Rule Provider is configured correctly.
+     * This test is called by the user from CAS.
+     *
+     * @return {@code True} if configuration is valid, otherwise {@code false}.
+     */
+    boolean testProviderConfiguration();
 }
