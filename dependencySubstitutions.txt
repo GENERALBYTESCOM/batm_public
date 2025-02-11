@@ -40,4 +40,4 @@ substitute module: 'com.fasterxml.jackson.datatype:jackson-datatype-guava', vers
 substitute module: 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8', versions: ['2.11.2'], toVersion: '2.12.0'
 substitute module: 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310', versions: ['2.11.2'], toVersion: '2.12.0'
 substitute module: 'junit:junit', versions: ['4.13.1'], toVersion: '4.13.2'
-
+substitute module: 'org.junit.jupiter:junit-jupiter-api', versions: ['5.9.1'], toVersion: '5.11.4'
