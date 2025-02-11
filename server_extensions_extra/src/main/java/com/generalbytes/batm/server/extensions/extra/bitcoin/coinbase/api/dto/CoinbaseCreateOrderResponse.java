@@ -32,6 +32,8 @@ public class CoinbaseCreateOrderResponse {
     private boolean success;
     @JsonProperty("success_response")
     private CoinbaseCreateOrderSuccessResponse successResponse;
+    @JsonProperty("error_response")
+    private CoinbaseCreateOrderErrorResponse errorResponse;
 
     /**
      * @return {@code true} if the order was created, {@code false} otherwise.
@@ -55,4 +57,11 @@ public class CoinbaseCreateOrderResponse {
         this.successResponse = successResponse;
     }
 
+    public CoinbaseCreateOrderErrorResponse getErrorResponse() {
+        return errorResponse;
+    }
+
+    public void setErrorResponse(CoinbaseCreateOrderErrorResponse errorResponse) {
+        this.errorResponse = errorResponse;
+    }
 }
