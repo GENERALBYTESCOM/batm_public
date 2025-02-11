@@ -58,6 +58,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -313,7 +314,13 @@ public final class CoinbaseV2ApiMapper {
         request.setTo(legacyRequest.getTo());
         request.setAmount(legacyRequest.getAmount());
         request.setCurrency(legacyRequest.getCurrency());
-        request.setIdem(legacyRequest.getIdem());
+        // Convert the legacy idempotency key (idem) from a string to a UUID.
+        //
+        // In the original CoinbaseWalletV2 implementation, the transaction's remoteId was used directly as the idempotency key.
+        // However, the new API requires this key to be in UUIDv4 format.
+        // To preserve idempotency, we convert the remoteId string into a UUID deterministically using a name-based UUID algorithm.
+        // This means that for the same legacy idem value, the generated UUID will always be the same.
+        request.setIdem(UUID.nameUUIDFromBytes(legacyRequest.getIdem().getBytes()).toString());
         request.setDescription(legacyRequest.getDescription());
         return request;
     }

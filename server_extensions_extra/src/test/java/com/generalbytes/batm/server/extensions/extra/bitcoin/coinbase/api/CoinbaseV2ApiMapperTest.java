@@ -38,6 +38,7 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -428,7 +429,7 @@ public class CoinbaseV2ApiMapperTest {
         assertEquals(legacySendRequest.getAmount(), request.getAmount());
         assertEquals(legacySendRequest.getCurrency(), request.getCurrency());
         assertEquals(legacySendRequest.getType(), request.getType());
-        assertEquals(legacySendRequest.getIdem(), request.getIdem());
+        assertEquals(UUID.nameUUIDFromBytes(legacySendRequest.getIdem().getBytes()).toString(), request.getIdem());
         assertEquals(legacySendRequest.getDescription(), request.getDescription());
     }
 
