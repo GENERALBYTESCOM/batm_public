@@ -2425,4 +2425,5 @@
             <param sensitive="false" name="Onfido region" help="'EU', 'US' or 'CA'. Default: 'EU'."/>
         </identityverificationprovider>
     </extension>
+    <extension class="com.generalbytes.batm.server.extensions.travelrule.notabene.NotabeneExtension" />
 </extensions>
