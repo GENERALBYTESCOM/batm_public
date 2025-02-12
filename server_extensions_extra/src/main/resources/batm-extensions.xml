@@ -418,8 +418,8 @@
             <help>fiatcurrency parameter is optional</help>
         </ratesource>
         <wallet prefix="coinbasewallet2" name="Coinbase.com Wallet" >
-            <param name="apikey" />
-            <param name="secretkey" />
+            <param name="privatekey" />
+            <param name="keyname" />
             <param name="accountname" />
             <cryptocurrency>ADA</cryptocurrency>
             <cryptocurrency>BAT</cryptocurrency>
@@ -435,8 +435,8 @@
             <help>accountname parameter is optional</help>
         </wallet>
         <wallet prefix="coinbasewallet2noforward" name="Coinbase.com Wallet (no forward)" >
-            <param name="apikey" />
-            <param name="secretkey" />
+            <param name="privatekey" />
+            <param name="keyname" />
             <param name="accountname" />
             <cryptocurrency>ADA</cryptocurrency>
             <cryptocurrency>BAT</cryptocurrency>
@@ -453,8 +453,8 @@
             <help>accountname parameter is optional. This variant of the wallet generates new addresses for each transaction and does not forward payments from temporary address</help>
         </wallet>
         <exchange prefix="coinbaseexchange" name="Coinbase.com Exchange">
-            <param name="apikey" />
-            <param name="secretkey" />
+            <param name="privatekey" />
+            <param name="keyname" />
             <param name="accountname" />
             <param name="fiatcurrency" />
             <param name="paymentmethod" />
