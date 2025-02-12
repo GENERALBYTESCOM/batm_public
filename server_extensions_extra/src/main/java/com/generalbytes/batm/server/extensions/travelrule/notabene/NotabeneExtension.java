@@ -33,7 +33,7 @@ public class NotabeneExtension extends AbstractExtension {
         log.info("Initializing Notabene extension");
         super.init(ctx);
         configuration = getConfiguration();
-        this.restServices = getServices();
+        restServices = getServices();
         log.info("Notabene extension initialized");
     }
 
