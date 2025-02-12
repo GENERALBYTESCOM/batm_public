@@ -32,8 +32,11 @@ import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.CoinbaseApiFactory;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.CoinbaseApiWrapper;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.CoinbaseApiWrapperCdp;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.CoinbaseApiWrapperLegacy;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.CoinbaseV2ApiWrapperCdp;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.CoinbaseV2ApiWrapperLegacy;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.ICoinbaseV3Api;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.binance.BinanceComExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.binance.BinanceUsExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitbuy.BitbuyExchange;
@@ -144,25 +147,19 @@ public class BitcoinExtension extends AbstractExtension {
             } else if ("coinbaseexchange".equalsIgnoreCase(prefix)) {
                 String apiKey = paramTokenizer.nextToken().trim();
                 String secretKey = paramTokenizer.nextToken().trim();
+                CoinbaseExchangeParameters parameters = getCoinbaseExchangeParameters(paramTokenizer);
 
-                String accountName = null;
-                String preferedFiatCurrency = null;
-                String paymentMethodName = null;
-
-                if(paramTokenizer.hasMoreTokens()) {
-                    accountName = paramTokenizer.nextToken().trim();
-                }
-
-                if(paramTokenizer.hasMoreTokens()) {
-                    preferedFiatCurrency = paramTokenizer.nextToken().toUpperCase().trim();
-                }
-
-                if(paramTokenizer.hasMoreTokens()) {
-                    paymentMethodName = paramTokenizer.nextToken().trim();
-                }
                 ICoinbaseAPI api = CoinbaseApiFactory.createCoinbaseApiLegacy();
                 CoinbaseApiWrapper apiWrapper = new CoinbaseApiWrapperLegacy(api, apiKey, secretKey);
-                return new CoinbaseExchange(apiWrapper, accountName, preferedFiatCurrency, paymentMethodName);
+                return new CoinbaseExchange(apiWrapper, parameters.accountName, parameters.preferredFiatCurrency, parameters.paymentMethodName);
+            } else if ("coinbaseexchange2".equalsIgnoreCase(prefix)) {
+                String privateKey = paramTokenizer.nextToken().trim();
+                String keyName = paramTokenizer.nextToken().trim();
+                CoinbaseExchangeParameters parameters = getCoinbaseExchangeParameters(paramTokenizer);
+
+                ICoinbaseV3Api api = CoinbaseApiFactory.createCoinbaseV3Api();
+                CoinbaseApiWrapperCdp apiWrapper = new CoinbaseApiWrapperCdp(api, privateKey, keyName);
+                return new CoinbaseExchange(apiWrapper, parameters.accountName, parameters.preferredFiatCurrency, parameters.paymentMethodName);
             } else if ("coinbasepro".equalsIgnoreCase(prefix)) {
                 String preferredFiatCurrency = FiatCurrency.USD.getCode();
                 String key = paramTokenizer.nextToken();
@@ -257,6 +254,38 @@ public class BitcoinExtension extends AbstractExtension {
             ExtensionsUtil.logExtensionParamsException("createExchange", getClass().getSimpleName(), paramString, e);
         }
         return null;
+    }
+
+    private CoinbaseExchangeParameters getCoinbaseExchangeParameters(StringTokenizer paramTokenizer) {
+        String accountName = null;
+        String preferredFiatCurrency = null;
+        String paymentMethodName = null;
+
+        if (paramTokenizer.hasMoreTokens()) {
+            accountName = paramTokenizer.nextToken().trim();
+        }
+
+        if (paramTokenizer.hasMoreTokens()) {
+            preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase().trim();
+        }
+
+        if (paramTokenizer.hasMoreTokens()) {
+            paymentMethodName = paramTokenizer.nextToken().trim();
+        }
+
+        return new CoinbaseExchangeParameters(accountName, preferredFiatCurrency, paymentMethodName);
+    }
+
+    private static class CoinbaseExchangeParameters {
+        private final String accountName;
+        private final String preferredFiatCurrency;
+        private final String paymentMethodName;
+
+        public CoinbaseExchangeParameters(String accountName, String preferredFiatCurrency, String paymentMethodName) {
+            this.accountName = accountName;
+            this.preferredFiatCurrency = preferredFiatCurrency;
+            this.paymentMethodName = paymentMethodName;
+        }
     }
 
     @Override
@@ -376,21 +405,25 @@ public class BitcoinExtension extends AbstractExtension {
 
                 return new BitgoWallet(scheme, host, port, token, walletId, walletPassphrase, numBlocks, feeRate, maxFeeRate);
 
-            } else if ("coinbasewallet2".equalsIgnoreCase(walletType)
-                || "coinbasewallet2noforward".equalsIgnoreCase(walletType)) {
+            } else if ("coinbasewallet2".equalsIgnoreCase(walletType) || "coinbasewallet2noforward".equalsIgnoreCase(walletType)) {
                 String apiKey = st.nextToken();
                 String secretKey = st.nextToken();
+                String accountName = getCoinbaseWalletAccountNameParameter(st);
 
-                String accountName = null;
-                if (st.hasMoreTokens()) {
-                    accountName = st.nextToken();
-                    if (accountName.trim().isEmpty()) {
-                        accountName = null;
-                    }
-                }
                 ICoinbaseV2API api = CoinbaseApiFactory.createCoinbaseV2ApiLegacy();
                 CoinbaseV2ApiWrapperLegacy apiWrapper = new CoinbaseV2ApiWrapperLegacy(api, apiKey, secretKey);
                 if ("coinbasewallet2noforward".equalsIgnoreCase(walletType)) {
+                    return new CoinbaseWalletV2WithUniqueAddresses(apiWrapper, accountName);
+                }
+                return new CoinbaseWalletV2(apiWrapper, accountName);
+            } else if ("coinbasewallet3".equalsIgnoreCase(walletType) || "coinbasewallet3noforward".equalsIgnoreCase(walletType)) {
+                String privateKey = st.nextToken();
+                String keyName = st.nextToken();
+                String accountName = getCoinbaseWalletAccountNameParameter(st);
+
+                ICoinbaseV3Api api = CoinbaseApiFactory.createCoinbaseV3Api();
+                CoinbaseV2ApiWrapperCdp apiWrapper = new CoinbaseV2ApiWrapperCdp(api, privateKey, keyName);
+                if ("coinbasewallet3noforward".equalsIgnoreCase(walletType)) {
                     return new CoinbaseWalletV2WithUniqueAddresses(apiWrapper, accountName);
                 }
                 return new CoinbaseWalletV2(apiWrapper, accountName);
@@ -464,6 +497,16 @@ public class BitcoinExtension extends AbstractExtension {
         }
         } catch (Exception e) {
             ExtensionsUtil.logExtensionParamsException("createWallet", getClass().getSimpleName(), walletLogin, e);
+        }
+        return null;
+    }
+
+    private String getCoinbaseWalletAccountNameParameter(StringTokenizer stringTokenizer) {
+        if (stringTokenizer.hasMoreTokens()) {
+            String accountName = stringTokenizer.nextToken();
+            if (!accountName.trim().isEmpty()) {
+                return accountName;
+            }
         }
         return null;
     }

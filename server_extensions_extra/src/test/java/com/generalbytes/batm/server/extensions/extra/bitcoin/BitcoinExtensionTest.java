@@ -5,8 +5,11 @@ import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.TestExtensionContext;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.CoinbaseApiFactory;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.CoinbaseApiWrapperCdp;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.CoinbaseApiWrapperLegacy;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.CoinbaseV2ApiWrapperCdp;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.CoinbaseV2ApiWrapperLegacy;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.ICoinbaseV3Api;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.CoinbaseExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.ICoinbaseAPI;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.BitgoWallet;
@@ -353,26 +356,57 @@ public class BitcoinExtensionTest {
         }
     }
 
-    private String getCoinbaseParams(String prefix,
-                                     String apiKey,
-                                     String secretKey,
-                                     String accountName,
-                                     String preferredFiatCurrency,
-                                     String paymentMethodName) {
-        return Stream.of(prefix, apiKey, secretKey, accountName, preferredFiatCurrency, paymentMethodName)
-            .filter(Objects::nonNull)
-            .collect(Collectors.joining(":"));
+    @Test
+    public void testCreateExchange_validCdpCoinbase() {
+        // accountName, preferredFiatCurrency and paymentMethodName are all optional
+        doTestCreateExchange_validCdpCoinbase(null, null, null);
+        doTestCreateExchange_validCdpCoinbase("accountName", null, null);
+        doTestCreateExchange_validCdpCoinbase("accountName", "CZK", null);
+        doTestCreateExchange_validCdpCoinbase("accountName", "CZK", "paymentMethodName");
+    }
+
+    private void doTestCreateExchange_validCdpCoinbase(String accountName, String preferredFiatCurrency, String paymentMethodName) {
+        String prefix = "coinbaseexchange2";
+        String privateKey = "privateKey";
+        String keyName = "keyName";
+        String paramString = getCoinbaseParams(prefix, privateKey, keyName, accountName, preferredFiatCurrency, paymentMethodName);
+
+        BitcoinExtension bitcoinExtension = new BitcoinExtension();
+        bitcoinExtension.init(new TestExtensionContext());
+
+        try (MockedStatic<CoinbaseApiFactory> mockedApiFactory = mockStatic(CoinbaseApiFactory.class)) {
+            mockedApiFactory.when(CoinbaseApiFactory::createCoinbaseV3Api).thenReturn(mock(ICoinbaseV3Api.class));
+
+            IExchange exchange = bitcoinExtension.createExchange(paramString);
+
+            assertNotNull(exchange);
+            assertTrue(exchange instanceof CoinbaseExchange);
+            CoinbaseExchange coinbaseExchange = (CoinbaseExchange) exchange;
+            assertEquals(accountName, coinbaseExchange.getAccountName());
+            assertEquals(preferredFiatCurrency, coinbaseExchange.getPreferedFiatCurrency());
+            assertEquals(paymentMethodName, coinbaseExchange.getPaymentMethodName());
+            assertTrue(coinbaseExchange.getApi() instanceof CoinbaseApiWrapperCdp);
+            mockedApiFactory.verify(CoinbaseApiFactory::createCoinbaseV3Api);
+        }
     }
 
     @Test
     public void testCreateExchange_invalidLegacyCoinbase() {
         // Missing mandatory parameter: secretKey
-        doTestCreateExchange_invalidLegacyCoinbase("coinbaseexchange:apiKey");
+        doTestCreateExchange_invalidCoinbase("coinbaseexchange:apiKey");
         // Missing mandatory parameters: apiKey, secretKey
-        doTestCreateExchange_invalidLegacyCoinbase("coinbaseexchange");
+        doTestCreateExchange_invalidCoinbase("coinbaseexchange");
     }
 
-    private void doTestCreateExchange_invalidLegacyCoinbase(String paramString) {
+    @Test
+    public void testCreateExchange_invalidCdpCoinbase() {
+        // Missing mandatory parameter: secretKey
+        doTestCreateExchange_invalidCoinbase("coinbaseexchange2:apiKey");
+        // Missing mandatory parameters: apiKey, secretKey
+        doTestCreateExchange_invalidCoinbase("coinbaseexchange2");
+    }
+
+    private void doTestCreateExchange_invalidCoinbase(String paramString) {
         BitcoinExtension bitcoinExtension = new BitcoinExtension();
         bitcoinExtension.init(new TestExtensionContext());
 
@@ -400,7 +434,7 @@ public class BitcoinExtensionTest {
                                                         String accountName) {
         String apiKey = "apiKey";
         String secretKey = "secretKey";
-        String paramString = getCoinbaseParams(prefix, apiKey, secretKey, accountName, null, null);
+        String paramString = getCoinbaseParams(prefix, apiKey, secretKey, accountName);
 
         BitcoinExtension bitcoinExtension = new BitcoinExtension();
         bitcoinExtension.init(new TestExtensionContext());
@@ -420,14 +454,68 @@ public class BitcoinExtensionTest {
     }
 
     @Test
-    public void testCreateWallet_invalidLegacyCoinbase() {
-        // Missing mandatory parameter: secretKey
-        doTestCreateWallet_invalidLegacyCoinbase("coinbasewallet2:apiKey");
-        // Missing mandatory parameters: apiKey, secretKey
-        doTestCreateWallet_invalidLegacyCoinbase("coinbasewallet2");
+    public void testCreateWallet_validCdpCoinbase() {
+        // accountName is optional
+        doTestCreateWallet_validCdpCoinbase("coinbasewallet3", CoinbaseWalletV2.class, null, null);
+        doTestCreateWallet_validCdpCoinbase("coinbasewallet3", CoinbaseWalletV2.class, null, "");
+        doTestCreateWallet_validCdpCoinbase("coinbasewallet3", CoinbaseWalletV2.class, null, "   ");
+        doTestCreateWallet_validCdpCoinbase("coinbasewallet3", CoinbaseWalletV2.class, "accountName", "accountName");
+        doTestCreateWallet_validCdpCoinbase("coinbasewallet3noforward", CoinbaseWalletV2WithUniqueAddresses.class, null, null);
+        doTestCreateWallet_validCdpCoinbase("coinbasewallet3noforward", CoinbaseWalletV2WithUniqueAddresses.class, null, "");
+        doTestCreateWallet_validCdpCoinbase("coinbasewallet3noforward", CoinbaseWalletV2WithUniqueAddresses.class, null, "   ");
+        doTestCreateWallet_validCdpCoinbase("coinbasewallet3noforward", CoinbaseWalletV2WithUniqueAddresses.class, "accountName", "accountName");
     }
 
-    private void doTestCreateWallet_invalidLegacyCoinbase(String paramString) {
+    private void doTestCreateWallet_validCdpCoinbase(String prefix,
+                                                     Class<?> walletClass,
+                                                     String expectedAccountName,
+                                                     String accountName) {
+        String privateKey = "privateKey";
+        String keyName = "keyName";
+        String paramString = getCoinbaseParams(prefix, privateKey, keyName, accountName);
+
+        BitcoinExtension bitcoinExtension = new BitcoinExtension();
+        bitcoinExtension.init(new TestExtensionContext());
+
+        try (MockedStatic<CoinbaseApiFactory> mockedApiFactory = mockStatic(CoinbaseApiFactory.class)) {
+            mockedApiFactory.when(CoinbaseApiFactory::createCoinbaseV3Api).thenReturn(mock(ICoinbaseV3Api.class));
+
+            IWallet wallet = bitcoinExtension.createWallet(paramString, null);
+
+            assertNotNull(wallet);
+            assertTrue(walletClass.isAssignableFrom(walletClass));
+            CoinbaseWalletV2 coinbaseWallet = (CoinbaseWalletV2) wallet;
+            assertEquals(expectedAccountName, coinbaseWallet.getAccountName());
+            assertTrue(coinbaseWallet.getApi() instanceof CoinbaseV2ApiWrapperCdp);
+            mockedApiFactory.verify(CoinbaseApiFactory::createCoinbaseV3Api);
+        }
+    }
+
+    @Test
+    public void testCreateWallet_invalidLegacyCoinbase() {
+        // Missing mandatory parameter: secretKey
+        doTestCreateWallet_invalidCoinbase("coinbasewallet2:apiKey");
+        // Missing mandatory parameters: apiKey, secretKey
+        doTestCreateWallet_invalidCoinbase("coinbasewallet2");
+        // Missing mandatory parameter: secretKey
+        doTestCreateWallet_invalidCoinbase("coinbasewallet2noforward:apiKey");
+        // Missing mandatory parameters: apiKey, secretKey
+        doTestCreateWallet_invalidCoinbase("coinbasewallet2noforward");
+    }
+
+    @Test
+    public void testCreateWallet_invalidCdpCoinbase() {
+        // Missing mandatory parameter: secretKey
+        doTestCreateWallet_invalidCoinbase("coinbasewallet3:apiKey");
+        // Missing mandatory parameters: apiKey, secretKey
+        doTestCreateWallet_invalidCoinbase("coinbasewallet3");
+        // Missing mandatory parameter: secretKey
+        doTestCreateWallet_invalidCoinbase("coinbasewallet3noforward:apiKey");
+        // Missing mandatory parameters: apiKey, secretKey
+        doTestCreateWallet_invalidCoinbase("coinbasewallet3noforward");
+    }
+
+    private void doTestCreateWallet_invalidCoinbase(String paramString) {
         BitcoinExtension bitcoinExtension = new BitcoinExtension();
         bitcoinExtension.init(new TestExtensionContext());
 
@@ -460,4 +548,18 @@ public class BitcoinExtensionTest {
         }
     }
 
+    private String getCoinbaseParams(String prefix,
+                                     String apiKey,
+                                     String secretKey,
+                                     String accountName,
+                                     String preferredFiatCurrency,
+                                     String paymentMethodName) {
+        return Stream.of(prefix, apiKey, secretKey, accountName, preferredFiatCurrency, paymentMethodName)
+            .filter(Objects::nonNull)
+            .collect(Collectors.joining(":"));
+    }
+
+    private String getCoinbaseParams(String prefix, String apiKey, String secretKey, String accountName) {
+        return getCoinbaseParams(prefix, apiKey, secretKey, accountName, null, null);
+    }
 }
