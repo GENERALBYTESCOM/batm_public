@@ -81,6 +81,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
         FIAT_CURRENCIES.add(FiatCurrency.GBP.getCode());
         FIAT_CURRENCIES.add(FiatCurrency.JPY.getCode());
         FIAT_CURRENCIES.add(CryptoCurrency.USDT.getCode());
+        FIAT_CURRENCIES.add(CryptoCurrency.XLM.getCode());
     }
 
     /**
