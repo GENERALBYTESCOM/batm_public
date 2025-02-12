@@ -15,19 +15,30 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.dto;
+package com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class CBOrderRequest {
+/**
+ * Holds information about the pagination of a response.
+ */
+public class CoinbasePagination {
 
-    public String amount;
-    public String total;
-    public String currency;
-    public String payment_method;
-    public boolean agree_btc_amount_varies;
-    public boolean commit;
-    public boolean quote;
-    @JsonIgnore
-    public String fiatCurrency;
+    @JsonProperty("next_uri")
+    private String nextUri;
+
+    /**
+     * Get the URI of the next entity, after the last one in this response.
+     * This can be an accountId, addressId, transactionId or an identifier
+     * of any other type of entity that was returned in this response.
+     *
+     * @return URI of the next entity.
+     */
+    public String getNextUri() {
+        return nextUri;
+    }
+
+    public void setNextUri(String nextUri) {
+        this.nextUri = nextUri;
+    }
 }

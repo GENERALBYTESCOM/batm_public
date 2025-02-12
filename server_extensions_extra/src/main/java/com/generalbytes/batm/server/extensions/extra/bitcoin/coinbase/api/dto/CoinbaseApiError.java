@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2020 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2025 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -15,13 +15,17 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto;
+package com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.CoinbaseApiException;
 
 /**
- * Created by b00lean on 23.7.17.
+ * Represents an error or a warning that can be part of {@link CoinbaseApiException}.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class CoinbaseApiError {
 
-public class CBWarning {
     private String id;
     private String message;
     private String url;
@@ -52,7 +56,7 @@ public class CBWarning {
 
     @Override
     public String toString() {
-        return "CBWarning{" +
+        return "CoinbaseApiError{" +
             "id='" + id + '\'' +
             ", message='" + message + '\'' +
             ", url='" + url + '\'' +

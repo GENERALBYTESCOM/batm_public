@@ -15,19 +15,34 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.dto;
+package com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class CBOrderRequest {
+import java.util.List;
 
-    public String amount;
-    public String total;
-    public String currency;
-    public String payment_method;
-    public boolean agree_btc_amount_varies;
-    public boolean commit;
-    public boolean quote;
-    @JsonIgnore
-    public String fiatCurrency;
+/**
+ * Paginated response with multiple Coinbase accounts.
+ */
+public class CoinbaseAccountsResponse {
+
+    private CoinbasePagination pagination;
+    @JsonProperty("data")
+    private List<CoinbaseAccount> accounts;
+
+    public CoinbasePagination getPagination() {
+        return pagination;
+    }
+
+    public void setPagination(CoinbasePagination pagination) {
+        this.pagination = pagination;
+    }
+
+    public List<CoinbaseAccount> getAccounts() {
+        return accounts;
+    }
+
+    public void setAccounts(List<CoinbaseAccount> accounts) {
+        this.accounts = accounts;
+    }
 }

@@ -15,19 +15,25 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.dto;
+package com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class CBOrderRequest {
+/**
+ * The configuration of the order (e.g., the order type, size, etc.).
+ */
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class CoinbaseOrderConfiguration {
 
-    public String amount;
-    public String total;
-    public String currency;
-    public String payment_method;
-    public boolean agree_btc_amount_varies;
-    public boolean commit;
-    public boolean quote;
-    @JsonIgnore
-    public String fiatCurrency;
+    @JsonProperty("market_market_ioc")
+    private CoinbaseMarketOrderConfiguration marketOrderConfiguration;
+
+    public CoinbaseMarketOrderConfiguration getMarketOrderConfiguration() {
+        return marketOrderConfiguration;
+    }
+
+    public void setMarketOrderConfiguration(CoinbaseMarketOrderConfiguration marketOrderConfiguration) {
+        this.marketOrderConfiguration = marketOrderConfiguration;
+    }
 }

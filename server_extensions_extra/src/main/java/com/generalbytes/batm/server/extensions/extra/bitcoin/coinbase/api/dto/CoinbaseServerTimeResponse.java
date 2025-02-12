@@ -15,19 +15,29 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.dto;
+package com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class CBOrderRequest {
+/**
+ * Response with the current time of a Coinbase API server.
+ */
+public class CoinbaseServerTimeResponse {
 
-    public String amount;
-    public String total;
-    public String currency;
-    public String payment_method;
-    public boolean agree_btc_amount_varies;
-    public boolean commit;
-    public boolean quote;
-    @JsonIgnore
-    public String fiatCurrency;
+    @JsonProperty("data")
+    private CoinbaseServerTime time;
+
+    /**
+     * @return The time of the Coinbase API server.
+     */
+    public CoinbaseServerTime getTime() {
+        return time;
+    }
+
+    /**
+     * @param time The time of the Coinbase API server.
+     */
+    public void setTime(CoinbaseServerTime time) {
+        this.time = time;
+    }
 }

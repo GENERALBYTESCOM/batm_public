@@ -15,19 +15,25 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.dto;
+package com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class CBOrderRequest {
+/**
+ * Response object holding a Coinbase Transaction.
+ */
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class CoinbaseTransactionResponse {
 
-    public String amount;
-    public String total;
-    public String currency;
-    public String payment_method;
-    public boolean agree_btc_amount_varies;
-    public boolean commit;
-    public boolean quote;
-    @JsonIgnore
-    public String fiatCurrency;
+    @JsonProperty("data")
+    private CoinbaseTransaction transaction;
+
+    public CoinbaseTransaction getTransaction() {
+        return transaction;
+    }
+
+    public void setTransaction(CoinbaseTransaction transaction) {
+        this.transaction = transaction;
+    }
 }

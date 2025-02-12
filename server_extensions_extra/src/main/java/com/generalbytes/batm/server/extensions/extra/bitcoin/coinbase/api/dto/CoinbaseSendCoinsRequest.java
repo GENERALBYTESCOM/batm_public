@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2020 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2025 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -15,51 +15,48 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto;
+package com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
- * Created by b00lean on 1.8.17.
+ * Request to send coins.
+ *
+ * @see <a href="https://docs.cdp.coinbase.com/coinbase-app/docs/api-transactions#send-money">Coinbase Documentation</a>
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class CoinbaseSendCoinsRequest {
 
-public class CBSendRequest {
-    private String type = "send";
+    /**
+     * Always "send". (required)
+     */
+    private final String type = "send";
+    /**
+     * A blockchain address, or an email of the recipient. (required)
+     */
     private String to;
+    /**
+     * Amount to be sent. (required)
+     */
     private String amount;
+    /**
+     * Currency of the amount. (required)
+     */
     private String currency;
+    /**
+     * Notes to be included in the email to the recipient. (optional)
+     */
     private String description;
+    /**
+     * [Recommended] A UUIDv4 token to ensure idempotence. (optional)
+     * If a previous transaction with the same idem parameter exists for this sender,
+     * that previous transaction is returned, and a new one is not created.
+     * Max length is 100 characters. Must be a valid UUID and lowercased.
+     */
     private String idem;
-
-    // Optional - Whether this send is to another financial institution or exchange.
-    // Required if this send is to an address and is valued at over USD$3000.
-    @JsonProperty("to_financial_institution")
-    private boolean toFinancialInstitution = false;
-
-    // XRP "destination tag"
-    @JsonProperty("destination_tag")
-    private String destinationTag;
-
-
-    public CBSendRequest() {
-    }
-
-    public CBSendRequest(String type, String to, String amount, String currency, String description, String idem, String destinationTag) {
-        this.type = type;
-        this.to = to;
-        this.amount = amount;
-        this.currency = currency;
-        this.description = description;
-        this.idem = idem;
-        this.destinationTag = destinationTag;
-    }
 
     public String getType() {
         return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public String getTo() {
@@ -86,19 +83,19 @@ public class CBSendRequest {
         this.currency = currency;
     }
 
-    public String getIdem() {
-        return idem;
-    }
-
-    public void setIdem(String idem) {
-        this.idem = idem;
-    }
-
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getIdem() {
+        return idem;
+    }
+
+    public void setIdem(String idem) {
+        this.idem = idem;
     }
 }

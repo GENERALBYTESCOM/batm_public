@@ -19,6 +19,7 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v
 
 import com.generalbytes.batm.server.extensions.IGeneratesNewDepositCryptoAddress;
 import com.generalbytes.batm.server.extensions.IQueryableWallet;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.CoinbaseV2ApiWrapper;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBAddress;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBBalance;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBCreateAddressRequest;
@@ -36,8 +37,8 @@ import java.util.stream.Collectors;
 public class CoinbaseWalletV2WithUniqueAddresses extends CoinbaseWalletV2 implements IGeneratesNewDepositCryptoAddress, IQueryableWallet {
     private static final Logger log = LoggerFactory.getLogger(CoinbaseWalletV2WithUniqueAddresses.class);
 
-    public CoinbaseWalletV2WithUniqueAddresses(String apiKey, String apiSecret, String accountName) {
-        super(apiKey, apiSecret, accountName);
+    public CoinbaseWalletV2WithUniqueAddresses(CoinbaseV2ApiWrapper api, String accountName) {
+        super(api, accountName);
     }
 
     @Override
@@ -48,7 +49,7 @@ public class CoinbaseWalletV2WithUniqueAddresses extends CoinbaseWalletV2 implem
         }
         initIfNeeded(cryptoCurrency);
         long timeStamp = getTimestamp();
-        CBCreateAddressResponse addressesResponse = api.createAddress(apiKey, API_VERSION, CBDigest.createInstance(apiSecret, timeStamp), timeStamp, accountIds.get(cryptoCurrency), new CBCreateAddressRequest(label));
+        CBCreateAddressResponse addressesResponse = api.createAddress(API_VERSION, timeStamp, accountIds.get(cryptoCurrency), new CBCreateAddressRequest(label));
         if (addressesResponse != null && addressesResponse.getData() != null) {
             CBAddress address = addressesResponse.getData();
             String network = getNetworkName(cryptoCurrency);
@@ -118,18 +119,16 @@ public class CoinbaseWalletV2WithUniqueAddresses extends CoinbaseWalletV2 implem
     private List<CBTransaction> getTransactions(String addressId, String cryptoCurrency) {
         return paginate(startingAfter -> {
             long timeStamp = getTimestamp();
-            CBDigest digest = CBDigest.createInstance(apiSecret, timeStamp);
             String accountId = accountIds.get(cryptoCurrency);
-            return api.getAddressTransactions(apiKey, API_VERSION, digest, timeStamp, accountId, addressId, 100, startingAfter);
+            return api.getAddressTransactions(API_VERSION, timeStamp, accountId, addressId, 100, startingAfter);
         });
     }
 
     private List<CBAddress> getAddresses(String cryptoCurrency) {
         return paginate(startingAfter -> {
             long timeStamp = getTimestamp();
-            CBDigest digest = CBDigest.createInstance(apiSecret, timeStamp);
             String accountId = accountIds.get(cryptoCurrency);
-            return api.getAddresses(apiKey, API_VERSION, digest, timeStamp, accountId, 100, startingAfter);
+            return api.getAddresses(API_VERSION, timeStamp, accountId, 100, startingAfter);
         });
     }
 }

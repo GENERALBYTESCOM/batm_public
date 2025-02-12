@@ -15,19 +15,23 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.dto;
+package com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class CBOrderRequest {
+/**
+ * Response with exchange rates between a fiat currency and all available cryptocurrencies.
+ */
+public class CoinbaseExchangeRatesResponse {
 
-    public String amount;
-    public String total;
-    public String currency;
-    public String payment_method;
-    public boolean agree_btc_amount_varies;
-    public boolean commit;
-    public boolean quote;
-    @JsonIgnore
-    public String fiatCurrency;
+    @JsonProperty("data")
+    private CoinbaseExchangeRates exchangeRates;
+
+    public CoinbaseExchangeRates getExchangeRates() {
+        return exchangeRates;
+    }
+
+    public void setExchangeRates(CoinbaseExchangeRates exchangeRates) {
+        this.exchangeRates = exchangeRates;
+    }
 }

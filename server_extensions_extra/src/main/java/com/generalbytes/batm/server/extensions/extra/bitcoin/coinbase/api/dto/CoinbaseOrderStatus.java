@@ -15,19 +15,19 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.dto;
+package com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-public class CBOrderRequest {
-
-    public String amount;
-    public String total;
-    public String currency;
-    public String payment_method;
-    public boolean agree_btc_amount_varies;
-    public boolean commit;
-    public boolean quote;
-    @JsonIgnore
-    public String fiatCurrency;
+/**
+ * All possible statuses of Orders at Coinbase.
+ */
+public enum CoinbaseOrderStatus {
+    PENDING,
+    OPEN,
+    FILLED,
+    CANCELLED,
+    EXPIRED,
+    FAILED,
+    UNKNOWN_ORDER_STATUS,
+    QUEUED,
+    CANCEL_QUEUED
 }
