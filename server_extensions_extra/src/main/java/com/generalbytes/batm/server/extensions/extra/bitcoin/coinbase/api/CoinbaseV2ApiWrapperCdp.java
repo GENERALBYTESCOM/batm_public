@@ -37,9 +37,12 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBSendRequest;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBSendResponse;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBTransaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CoinbaseV2ApiWrapperCdp implements CoinbaseV2ApiWrapper {
 
+    private static final Logger log = LoggerFactory.getLogger(CoinbaseV2ApiWrapperCdp.class);
     private final ICoinbaseV3Api api;
     private final String privateKey;
     private final String keyName;
@@ -56,6 +59,7 @@ public class CoinbaseV2ApiWrapperCdp implements CoinbaseV2ApiWrapper {
             CoinbaseExchangeRatesResponse response = api.getExchangeRates(fiatCurrency);
             return CoinbaseV2ApiMapper.mapExchangeRatesResponseToLegacyResponse(response);
         } catch (CoinbaseApiException e) {
+            log.error("Failed to get exchange rates for fiat currency {} from Coinbase: {}", fiatCurrency, e.getMessage());
             return CoinbaseV2ApiMapper.mapExceptionToLegacyResponse(e, new CBExchangeRatesResponse());
         }
     }
@@ -68,6 +72,7 @@ public class CoinbaseV2ApiWrapperCdp implements CoinbaseV2ApiWrapper {
             CoinbaseAccountsResponse response = api.getAccounts(authorizationDigest, limit, startingAfterAccountId);
             return CoinbaseV2ApiMapper.mapAccountsResponseToLegacyResponse(response);
         } catch (CoinbaseApiException e) {
+            log.error("Failed to get accounts from Coinbase: {}", e.getMessage());
             return CoinbaseV2ApiMapper.mapExceptionToLegacyResponse(e, new CBPaginatedResponse<>());
         }
     }
@@ -80,6 +85,7 @@ public class CoinbaseV2ApiWrapperCdp implements CoinbaseV2ApiWrapper {
             CoinbaseAddressesResponse response = api.getAddresses(authorizationDigest, accountId);
             return CoinbaseV2ApiMapper.mapAddressesResponseToLegacyResponse(response);
         } catch (CoinbaseApiException e) {
+            log.error("Failed to get addresses of account from Coinbase: {}", e.getMessage());
             return CoinbaseV2ApiMapper.mapExceptionToLegacyResponse(e, new CBAddressesResponse());
         }
     }
@@ -92,6 +98,7 @@ public class CoinbaseV2ApiWrapperCdp implements CoinbaseV2ApiWrapper {
             CoinbaseAccountResponse response = api.getAccount(authorizationDigest, accountId);
             return CoinbaseV2ApiMapper.mapAccountResponseToLegacyResponse(response);
         } catch (CoinbaseApiException e) {
+            log.error("Failed to get account from Coinbase: {}", e.getMessage());
             return CoinbaseV2ApiMapper.mapExceptionToLegacyResponse(e, new CBAccountResponse());
         }
     }
@@ -105,6 +112,7 @@ public class CoinbaseV2ApiWrapperCdp implements CoinbaseV2ApiWrapper {
             CoinbaseTransactionResponse response = api.sendCoins(authorizationDigest, accountId, request);
             return CoinbaseV2ApiMapper.mapTransactionResponseToLegacySendResponse(response);
         } catch (CoinbaseApiException e) {
+            log.error("Failed to send coins via Coinbase: {}", e.getMessage());
             return CoinbaseV2ApiMapper.mapExceptionToLegacyResponse(e, new CBSendResponse());
         }
     }
@@ -121,6 +129,7 @@ public class CoinbaseV2ApiWrapperCdp implements CoinbaseV2ApiWrapper {
             CoinbaseCreateAddressResponse response = api.createAddress(authorizationDigest, accountId, request);
             return CoinbaseV2ApiMapper.mapCreateAddressResponseToLegacyResponse(response);
         } catch (CoinbaseApiException e) {
+            log.error("Failed to create a new address at Coinbase: {}", e.getMessage());
             return CoinbaseV2ApiMapper.mapExceptionToLegacyResponse(e, new CBCreateAddressResponse());
         }
     }
@@ -139,6 +148,7 @@ public class CoinbaseV2ApiWrapperCdp implements CoinbaseV2ApiWrapper {
                     startingAfterTransactionId);
             return CoinbaseV2ApiMapper.mapTransactionsResponseToLegacyPaginatedResponse(response);
         } catch (CoinbaseApiException e) {
+            log.error("Failed to get transactions via Coinbase: {}", e.getMessage());
             return CoinbaseV2ApiMapper.mapExceptionToLegacyResponse(e, new CBPaginatedResponse<>());
         }
     }
@@ -155,6 +165,7 @@ public class CoinbaseV2ApiWrapperCdp implements CoinbaseV2ApiWrapper {
             CoinbaseAddressesResponse response = api.getAddresses(authorizationDigest, accountId, limit, startingAfterAddressId);
             return CoinbaseV2ApiMapper.mapAddressesResponseToLegacyPaginatedResponse(response);
         } catch (CoinbaseApiException e) {
+            log.error("Failed to get addresses of account via Coinbase: {}", e.getMessage());
             return CoinbaseV2ApiMapper.mapExceptionToLegacyResponse(e, new CBPaginatedResponse<>());
         }
     }
