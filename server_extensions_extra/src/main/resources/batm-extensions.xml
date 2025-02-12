@@ -417,7 +417,24 @@
             <cryptocurrency>XRP</cryptocurrency>
             <help>fiatcurrency parameter is optional</help>
         </ratesource>
-        <wallet prefix="coinbasewallet2" name="Coinbase.com Wallet" >
+        <wallet prefix="coinbasewallet2" name="Coinbase.com Wallet [Deprecated]" >
+            <param name="apikey" />
+            <param name="secretkey" />
+            <param name="accountname" />
+            <cryptocurrency>ADA</cryptocurrency>
+            <cryptocurrency>BAT</cryptocurrency>
+            <cryptocurrency buyonly="true">BCH</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>DASH</cryptocurrency>
+            <cryptocurrency buyonly="true">ETC</cryptocurrency>
+            <cryptocurrency buyonly="true">ETH</cryptocurrency>
+            <cryptocurrency buyonly="true">USDT</cryptocurrency>
+            <cryptocurrency buyonly="true">USDC</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>XRP</cryptocurrency>
+            <help>accountname parameter is optional</help>
+        </wallet>
+        <wallet prefix="coinbasewallet3" name="Coinbase.com Wallet" >
             <param name="privatekey" />
             <param name="keyname" />
             <param name="accountname" />
@@ -434,7 +451,25 @@
             <cryptocurrency>XRP</cryptocurrency>
             <help>accountname parameter is optional</help>
         </wallet>
-        <wallet prefix="coinbasewallet2noforward" name="Coinbase.com Wallet (no forward)" >
+        <wallet prefix="coinbasewallet2noforward" name="Coinbase.com Wallet (no forward) [Deprecated]" >
+            <param name="apikey" />
+            <param name="secretkey" />
+            <param name="accountname" />
+            <cryptocurrency>ADA</cryptocurrency>
+            <cryptocurrency>BAT</cryptocurrency>
+            <cryptocurrency buyonly="true">BCH</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>DAI</cryptocurrency>
+            <cryptocurrency>BIZZ</cryptocurrency>
+            <cryptocurrency>ETC</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>USDT</cryptocurrency>
+            <cryptocurrency>USDC</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>XRP</cryptocurrency>
+            <help>accountname parameter is optional. This variant of the wallet generates new addresses for each transaction and does not forward payments from temporary address</help>
+        </wallet>
+        <wallet prefix="coinbasewallet3noforward" name="Coinbase.com Wallet (no forward)" >
             <param name="privatekey" />
             <param name="keyname" />
             <param name="accountname" />
@@ -452,7 +487,22 @@
             <cryptocurrency>XRP</cryptocurrency>
             <help>accountname parameter is optional. This variant of the wallet generates new addresses for each transaction and does not forward payments from temporary address</help>
         </wallet>
-        <exchange prefix="coinbaseexchange" name="Coinbase.com Exchange">
+        <exchange prefix="coinbaseexchange" name="Coinbase.com Exchange [Deprecated]">
+            <param name="apikey" />
+            <param name="secretkey" />
+            <param name="accountname" />
+            <param name="fiatcurrency" />
+            <param name="paymentmethod" />
+            <cryptocurrency>ADA</cryptocurrency>
+            <cryptocurrency>BCH</cryptocurrency>
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency buyonly="true">ETC</cryptocurrency>
+            <cryptocurrency buyonly="true">ETH</cryptocurrency>
+            <cryptocurrency>LTC</cryptocurrency>
+            <cryptocurrency>BAT</cryptocurrency>
+            <help>fiatcurrency,paymentmethod are optional</help>
+        </exchange>
+        <exchange prefix="coinbaseexchange2" name="Coinbase.com Exchange">
             <param name="privatekey" />
             <param name="keyname" />
             <param name="accountname" />
