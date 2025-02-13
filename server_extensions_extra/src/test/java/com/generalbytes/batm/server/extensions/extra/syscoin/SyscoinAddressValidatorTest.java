@@ -1,14 +1,15 @@
 package com.generalbytes.batm.server.extensions.extra.syscoin;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class SyscoinAddressValidatorTest {
+class SyscoinAddressValidatorTest {
     private final SyscoinAddressValidator validator = new SyscoinAddressValidator();
 
     @Test
-    public void isAddressValid() {
+    void isAddressValid() {
         assertTrue(validator.isAddressValid("SSt4EYRJGeQv6vtQy3BgH2NbyFpHPZL27P"));
         assertTrue(validator.isAddressValid("SWu38cLXzEdxwTCiCKLsmUEMu6nh9ext57"));
         assertFalse(validator.isAddressValid("SSt4EYRJGeQv6xxxxxxxxxxxxxxxxxxxxx"));

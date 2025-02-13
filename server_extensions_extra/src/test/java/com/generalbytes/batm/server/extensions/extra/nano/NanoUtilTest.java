@@ -1,25 +1,25 @@
 package com.generalbytes.batm.server.extensions.extra.nano;
 
 import com.generalbytes.batm.server.extensions.extra.nano.util.NanoUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * @author Karl Oczadly
  */
-public class NanoUtilTest {
+class NanoUtilTest {
 
     static final NanoUtil UTIL = NanoUtil.NANO;
     static final String ACCOUNT = "nano_34qjpc8t1u6wnb584pc4iwsukwa8jhrobpx4oea5gbaitnqafm6qsgoacpiz";
 
 
     @Test
-    public void testParseAddress() {
+    void testParseAddress() {
         assertEquals(ACCOUNT, UTIL.parseAddress( // Standard nano address
                 "nano_34qjpc8t1u6wnb584pc4iwsukwa8jhrobpx4oea5gbaitnqafm6qsgoacpiz"));
         assertEquals(ACCOUNT, UTIL.parseAddress( // Standard xrb address
@@ -31,7 +31,7 @@ public class NanoUtilTest {
     }
 
     @Test
-    public void testAmountToRaw() {
+    void testAmountToRaw() {
         assertEquals(new BigInteger("1000000000000000000000000000000"),
                 UTIL.amountToRaw(BigDecimal.ONE));
         assertEquals(new BigInteger("8029000000000000000000000000000001"),
@@ -43,7 +43,7 @@ public class NanoUtilTest {
     }
 
     @Test
-    public void testAmountFromRaw() {
+    void testAmountFromRaw() {
         assertEquals(0, BigDecimal.ONE.compareTo(
                 UTIL.amountFromRaw(new BigInteger("1000000000000000000000000000000"))));
         assertEquals(0, new BigDecimal("8029.000000000000000000000000000001").compareTo(
@@ -55,7 +55,7 @@ public class NanoUtilTest {
     }
 
     @Test
-    public void testInvalidValues() {
+    void testInvalidValues() {
         try {
             UTIL.validateAmount(new BigDecimal("-1"));
             fail();

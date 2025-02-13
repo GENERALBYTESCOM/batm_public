@@ -1,16 +1,16 @@
 package com.generalbytes.batm.server.extensions;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class FixPriceRateSourceTest {
+class FixPriceRateSourceTest {
 
     @Test
-    public void testRateIsValid() {
+    void testRateIsValid() {
         doFixRateTest(new BigDecimal("10000000000"), false);
         doFixRateTest(new BigDecimal("9999999999.99999999991"), false);
         doFixRateTest(new BigDecimal("1000000000.123456789"), true);

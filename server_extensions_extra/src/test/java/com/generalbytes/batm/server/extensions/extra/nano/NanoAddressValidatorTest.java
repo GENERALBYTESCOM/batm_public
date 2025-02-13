@@ -2,21 +2,22 @@ package com.generalbytes.batm.server.extensions.extra.nano;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.extra.nano.util.NanoUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Karl Oczadly
  */
-public class NanoAddressValidatorTest {
+class NanoAddressValidatorTest {
 
     private static final NanoAddressValidator VALIDATOR = new NanoAddressValidator(
             new NanoExtensionContext(CryptoCurrency.NANO, null, NanoUtil.NANO));
 
 
     @Test
-    public void testValidAddresses() {
+    void testValidAddresses() {
         assertTrue(VALIDATOR.isAddressValid("nano:nano_396sch48s3jmzq1bk31pxxpz64rn7joj38emj4ueypkb9p9mzrym34obze6c"));
         assertTrue(VALIDATOR.isAddressValid("nano_396sch48s3jmzq1bk31pxxpz64rn7joj38emj4ueypkb9p9mzrym34obze6c"));
         assertTrue(VALIDATOR.isAddressValid("nano_34qjpc8t1u6wnb584pc4iwsukwa8jhrobpx4oea5gbaitnqafm6qsgoacpiz"));
@@ -25,7 +26,7 @@ public class NanoAddressValidatorTest {
     }
 
     @Test
-    public void testInvalidAddresses() {
+    void testInvalidAddresses() {
         assertFalse(VALIDATOR.isAddressValid("nano_396sch48s3jmzq1bk312xxpz64rn7joj38emj4ueypkb9p9mzrym34obze6c"));
         assertFalse(VALIDATOR.isAddressValid("ban:ban_396sch48s3jmzq1bk31pxxpz64rn7joj38emj4ueypkb9p9mzrym34obze6c"));
         assertFalse(VALIDATOR.isAddressValid("ban_396sch48s3jmzq1bk31pxxpz64rn7joj38emj4ueypkb9p9mzrym34obze6c"));

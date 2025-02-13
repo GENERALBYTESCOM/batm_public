@@ -17,8 +17,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.CoinbaseWalletV2;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.CoinbaseWalletV2WithUniqueAddresses;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.ICoinbaseV2API;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,19 +27,20 @@ import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 
-public class BitcoinExtensionTest {
+class BitcoinExtensionTest {
 
     private static final Logger log = LoggerFactory.getLogger(BitcoinExtensionTest.class);
 
     @Test
-    public void testCreateFromExtension() {
+    void testCreateFromExtension() {
         testUrl("http://localhost:3080/", "bitgo:http://localhost:3080:tokentoken:wallet_address:wallet_passphrase");
         testUrl("http://localhost:3080/", "bitgo:localhost:3080:tokentoken:wallet_address:wallet_passphrase");
         testUrl("http://localhost/", "bitgo:http://localhost:tokentoken:wallet_address:wallet_passphrase");
@@ -53,12 +53,12 @@ public class BitcoinExtensionTest {
         final BitcoinExtension bitcoinExtension = new BitcoinExtension();
         bitcoinExtension.init(new TestExtensionContext());
         final IWallet bitgowallet = bitcoinExtension.createWallet(walletLogin, null);
-        Assert.assertTrue(bitgowallet instanceof BitgoWallet);
-        Assert.assertEquals(expected, ((BitgoWallet)bitgowallet).getUrl());
+        assertInstanceOf(BitgoWallet.class, bitgowallet);
+        assertEquals(expected, ((BitgoWallet)bitgowallet).getUrl());
     }
 
     @Test
-    public void testCreateWalletBitGoFees() {
+    void testCreateWalletBitGoFees() {
         // Both fee rate and max fee rate are set -> parse fee rate and max fee rate individually
         doTestCreateWalletBitGoFees(createBitGoWalletUrl(1000, 2000), 1000, 2000);
         // Max fee rate is lower than fee rate -> use fee rate as max fee rate
@@ -84,15 +84,15 @@ public class BitcoinExtensionTest {
         final BitcoinExtension bitcoinExtension = new BitcoinExtension();
         bitcoinExtension.init(new TestExtensionContext());
         final IWallet wallet = bitcoinExtension.createWallet(url, null);
-        Assert.assertTrue(wallet instanceof BitgoWallet);
+        assertInstanceOf(BitgoWallet.class, wallet);
         final BitgoWallet bitgoWallet = (BitgoWallet) wallet;
-        Assert.assertNotNull(bitgoWallet);
-        Assert.assertEquals(expectedFeeRate, bitgoWallet.getFeeRate());
-        Assert.assertEquals(expectedMaxFeeRate, bitgoWallet.getMaxFeeRate());
+        assertNotNull(bitgoWallet);
+        assertEquals(expectedFeeRate, bitgoWallet.getFeeRate());
+        assertEquals(expectedMaxFeeRate, bitgoWallet.getMaxFeeRate());
     }
 
     @Test
-    public void bitgoFullTokenTest() {
+    void bitgoFullTokenTest() {
         String wallet = "bitgo:http://localhost:3080:v2x8d5e9e46379dc328b2039a400a12b04ea986689b38107fd84cd339bc89e3fb21:5b20e3a9266bbe80095757489d84a6bb:Vranec8586";
         StringTokenizer st = new StringTokenizer(wallet,":");
         String walletType = st.nextToken();
@@ -123,24 +123,24 @@ public class BitcoinExtensionTest {
 
         log.info("wallet = {}, protocol = {}, host = {}, port = {}, fullHost = {}, token = {}, address = {}, passphrase = {}, next = {}", walletType, protocol, host, port, fullHost, token, walletAddress, walletPassphrase, next);
 
-        Assert.assertEquals("http", protocol);
-        Assert.assertEquals("//localhost", host);
-        Assert.assertEquals("http://localhost", fullHost);
-        Assert.assertEquals("3080", port);
+        assertEquals("http", protocol);
+        assertEquals("//localhost", host);
+        assertEquals("http://localhost", fullHost);
+        assertEquals("3080", port);
 
         final BitcoinExtension bitcoinExtension = new BitcoinExtension();
         bitcoinExtension.init(new TestExtensionContext());
         final IWallet bitgowallet = bitcoinExtension.createWallet(wallet, null);
-        Assert.assertTrue(bitgowallet instanceof BitgoWallet);
+        assertTrue(bitgowallet instanceof BitgoWallet);
         final BitgoWallet bitgoWallet = (BitgoWallet)bitgowallet;
-        Assert.assertNotNull(bitgoWallet);
-        Assert.assertEquals("http://localhost:3080/", bitgoWallet.getUrl());
-        Assert.assertEquals("5b20e3a9266bbe80095757489d84a6bb", bitgoWallet.getWalletId());
+        assertNotNull(bitgoWallet);
+        assertEquals("http://localhost:3080/", bitgoWallet.getUrl());
+        assertEquals("5b20e3a9266bbe80095757489d84a6bb", bitgoWallet.getWalletId());
         log.info("wallet = " + bitgoWallet);
     }
 
     @Test
-    public void bitgoNoPortTokenTest() {
+    void bitgoNoPortTokenTest() {
         String wallet = "bitgo:http://localhost:v2x8d5e9e46379dc328b2039a400a12b04ea986689b38107fd84cd339bc89e3fb21:5b20e3a9266bbe80095757489d84a6bb:Vranec8586";
         StringTokenizer st = new StringTokenizer(wallet,":");
         String walletType = st.nextToken();
@@ -171,24 +171,24 @@ public class BitcoinExtensionTest {
 
         log.info("wallet = {}, protocol = {}, host = {}, port = {}, fullHost = {}, token = {}, address = {}, passphrase = {}, next = {}", walletType, protocol, host, port, fullHost, token, walletAddress, walletPassphrase, next);
 
-        Assert.assertEquals("http", protocol);
-        Assert.assertEquals("//localhost", host);
-        Assert.assertEquals("http://localhost", fullHost);
-        Assert.assertEquals("", port);
+        assertEquals("http", protocol);
+        assertEquals("//localhost", host);
+        assertEquals("http://localhost", fullHost);
+        assertEquals("", port);
 
         final BitcoinExtension bitcoinExtension = new BitcoinExtension();
         bitcoinExtension.init(new TestExtensionContext());
         final IWallet bitgowallet = bitcoinExtension.createWallet(wallet, null);
-        Assert.assertTrue(bitgowallet instanceof BitgoWallet);
+        assertTrue(bitgowallet instanceof BitgoWallet);
         final BitgoWallet bitgoWallet = (BitgoWallet)bitgowallet;
-        Assert.assertNotNull(bitgoWallet);
-        Assert.assertEquals("http://localhost/", bitgoWallet.getUrl());
-        Assert.assertEquals("5b20e3a9266bbe80095757489d84a6bb", bitgoWallet.getWalletId());
+        assertNotNull(bitgoWallet);
+        assertEquals("http://localhost/", bitgoWallet.getUrl());
+        assertEquals("5b20e3a9266bbe80095757489d84a6bb", bitgoWallet.getWalletId());
         log.info("wallet = " + bitgoWallet);
     }
 
     @Test
-    public void bitgoHttpsTokenTest() {
+    void bitgoHttpsTokenTest() {
         String wallet = "bitgo:https://localhost:3080:v2x8d5e9e46379dc328b2039a400a12b04ea986689b38107fd84cd339bc89e3fb21:5b20e3a9266bbe80095757489d84a6bb:Vranec8586";
         StringTokenizer st = new StringTokenizer(wallet,":");
         String walletType = st.nextToken();
@@ -219,24 +219,24 @@ public class BitcoinExtensionTest {
 
         log.info("wallet = {}, protocol = {}, host = {}, port = {}, fullHost = {}, token = {}, address = {}, passphrase = {}, next = {}", walletType, protocol, host, port, fullHost, token, walletAddress, walletPassphrase, next);
 
-        Assert.assertEquals("https", protocol);
-        Assert.assertEquals("//localhost", host);
-        Assert.assertEquals("https://localhost", fullHost);
-        Assert.assertEquals("3080", port);
+        assertEquals("https", protocol);
+        assertEquals("//localhost", host);
+        assertEquals("https://localhost", fullHost);
+        assertEquals("3080", port);
 
         final BitcoinExtension bitcoinExtension = new BitcoinExtension();
         bitcoinExtension.init(new TestExtensionContext());
         final IWallet bitgowallet = bitcoinExtension.createWallet(wallet, null);
-        Assert.assertTrue(bitgowallet instanceof BitgoWallet);
+        assertTrue(bitgowallet instanceof BitgoWallet);
         final BitgoWallet bitgoWallet = (BitgoWallet)bitgowallet;
-        Assert.assertNotNull(bitgoWallet);
-        Assert.assertEquals("https://localhost:3080/", bitgoWallet.getUrl());
-        Assert.assertEquals("5b20e3a9266bbe80095757489d84a6bb", bitgoWallet.getWalletId());
+        assertNotNull(bitgoWallet);
+        assertEquals("https://localhost:3080/", bitgoWallet.getUrl());
+        assertEquals("5b20e3a9266bbe80095757489d84a6bb", bitgoWallet.getWalletId());
         log.info("wallet = " + bitgoWallet);
     }
 
     @Test
-    public void bitgoNoProtocolTokenTest() {
+    void bitgoNoProtocolTokenTest() {
         String wallet = "bitgo:localhost:3080:v2x8d5e9e46379dc328b2039a400a12b04ea986689b38107fd84cd339bc89e3fb21:5b20e3a9266bbe80095757489d84a6bb:Vranec8586";
         StringTokenizer st = new StringTokenizer(wallet,":");
         String walletType = st.nextToken();
@@ -267,63 +267,63 @@ public class BitcoinExtensionTest {
 
         log.info("wallet = {}, protocol = {}, host = {}, port = {}, fullHost = {}, token = {}, address = {}, passphrase = {}, next = {}", walletType, protocol, host, port, fullHost, token, walletAddress, walletPassphrase, next);
 
-        Assert.assertEquals("", protocol);
-        Assert.assertEquals("localhost", host);
-        Assert.assertEquals("localhost", fullHost);
-        Assert.assertEquals("3080", port);
+        assertEquals("", protocol);
+        assertEquals("localhost", host);
+        assertEquals("localhost", fullHost);
+        assertEquals("3080", port);
 
         final BitcoinExtension bitcoinExtension = new BitcoinExtension();
         bitcoinExtension.init(new TestExtensionContext());
         final IWallet bitgowallet = bitcoinExtension.createWallet(wallet, null);
-        Assert.assertTrue(bitgowallet instanceof BitgoWallet);
+        assertTrue(bitgowallet instanceof BitgoWallet);
         final BitgoWallet bitgoWallet = (BitgoWallet)bitgowallet;
-        Assert.assertNotNull(bitgoWallet);
-        Assert.assertEquals("http://localhost:3080/", bitgoWallet.getUrl());
-        Assert.assertEquals("5b20e3a9266bbe80095757489d84a6bb", bitgoWallet.getWalletId());
+        assertNotNull(bitgoWallet);
+        assertEquals("http://localhost:3080/", bitgoWallet.getUrl());
+        assertEquals("5b20e3a9266bbe80095757489d84a6bb", bitgoWallet.getWalletId());
         log.info("wallet = " + bitgoWallet);
     }
 
     @Test
-    public void bitgoWalletTest() {
+    void bitgoWalletTest() {
         String address = "bitgo:http://localhost:3080:v2x8d5e9e46379dc328b2039a400a12b04ea986689b38107fd84cd339bc89e3fb21:5b20e3a9266bbe80095757489d84a6bb:Vranec8586";
         final BitcoinExtension bitcoinExtension = new BitcoinExtension();
         bitcoinExtension.init(new TestExtensionContext());
         final IWallet wallet = bitcoinExtension.createWallet(address, null);
-        Assert.assertTrue(wallet instanceof BitgoWallet);
+        assertTrue(wallet instanceof BitgoWallet);
         final BitgoWallet bitgoWallet = (BitgoWallet)wallet;
-        Assert.assertNotNull(bitgoWallet);
-        Assert.assertNotNull(bitgoWallet);
-        Assert.assertEquals("http://localhost:3080/", bitgoWallet.getUrl());
-        Assert.assertEquals("5b20e3a9266bbe80095757489d84a6bb", bitgoWallet.getWalletId());
+        assertNotNull(bitgoWallet);
+        assertNotNull(bitgoWallet);
+        assertEquals("http://localhost:3080/", bitgoWallet.getUrl());
+        assertEquals("5b20e3a9266bbe80095757489d84a6bb", bitgoWallet.getWalletId());
         log.info("wallet = " + bitgoWallet);
     }
 
     @Test
-    public void bitgoErrorTest() {
+    void bitgoErrorTest() {
         String body = "{\"error\":\"invalid address for network\",\"name\":\"Invalid\",\"requestId\":\"cjjectv6y2zlgill815ppvp4g\",\"message\":\"invalid address for network\"}";
         int index1 = body.indexOf("error") + 8;
         int index2 = body.indexOf(",") - 1;
         String value = body.substring(index1, index2);
-        Assert.assertNotNull(value);
-        Assert.assertEquals("invalid address for network", value);
+        assertNotNull(value);
+        assertEquals("invalid address for network", value);
 
         body = "{\"error\":\"sub-dust-threshold amount for LWcx7VHK3hKDV5KaiE2EQLPpGt9GEVwzdM: 10000\",\"name\":\"Invalid\",\"requestId\":\"cjjebbtly2ew1gmldyr9h2dnk\",\"message\":\"sub-dust-threshold amount for LWcx7VHK3hKDV5KaiE2EQLPpGt9GEVwzdM: 10000\"}";
         index1 = body.indexOf("error") + 8;
         index2 = body.indexOf(",") - 1;
         value = body.substring(index1, index2);
-        Assert.assertNotNull(value);
-        Assert.assertEquals("sub-dust-threshold amount for LWcx7VHK3hKDV5KaiE2EQLPpGt9GEVwzdM: 10000", value);
+        assertNotNull(value);
+        assertEquals("sub-dust-threshold amount for LWcx7VHK3hKDV5KaiE2EQLPpGt9GEVwzdM: 10000", value);
 
         body = "{\"error\":\"needs unlock\",\"needsOTP\":true,\"needsUnlock\":true,\"name\":\"Response\",\"requestId\":\"cjjebd0lq2ke0g7l73czlu75j\",\"message\":\"needs unlock\"}";
         index1 = body.indexOf("error") + 8;
         index2 = body.indexOf(",") - 1;
         value = body.substring(index1, index2);
-        Assert.assertNotNull(value);
-        Assert.assertEquals("needs unlock", value);
+        assertNotNull(value);
+        assertEquals("needs unlock", value);
     }
 
     @Test
-    public void testCreateExchange_validLegacyCoinbase() {
+    void testCreateExchange_validLegacyCoinbase() {
         // accountName, preferredFiatCurrency and paymentMethodName are all optional
         doTestCreateExchange_validLegacyCoinbase(null, null, null);
         doTestCreateExchange_validLegacyCoinbase("accountName", null, null);
@@ -357,7 +357,7 @@ public class BitcoinExtensionTest {
     }
 
     @Test
-    public void testCreateExchange_validCdpCoinbase() {
+    void testCreateExchange_validCdpCoinbase() {
         // accountName, preferredFiatCurrency and paymentMethodName are all optional
         doTestCreateExchange_validCdpCoinbase(null, null, null);
         doTestCreateExchange_validCdpCoinbase("accountName", null, null);
@@ -391,7 +391,7 @@ public class BitcoinExtensionTest {
     }
 
     @Test
-    public void testCreateExchange_invalidLegacyCoinbase() {
+    void testCreateExchange_invalidLegacyCoinbase() {
         // Missing mandatory parameter: secretKey
         doTestCreateExchange_invalidCoinbase("coinbaseexchange:apiKey");
         // Missing mandatory parameters: apiKey, secretKey
@@ -399,7 +399,7 @@ public class BitcoinExtensionTest {
     }
 
     @Test
-    public void testCreateExchange_invalidCdpCoinbase() {
+    void testCreateExchange_invalidCdpCoinbase() {
         // Missing mandatory parameter: secretKey
         doTestCreateExchange_invalidCoinbase("coinbaseexchange2:apiKey");
         // Missing mandatory parameters: apiKey, secretKey
@@ -416,7 +416,7 @@ public class BitcoinExtensionTest {
     }
 
     @Test
-    public void testCreateWallet_validLegacyCoinbase() {
+    void testCreateWallet_validLegacyCoinbase() {
         // accountName is optional
         doTestCreateWallet_validLegacyCoinbase("coinbasewallet2", CoinbaseWalletV2.class, null, null);
         doTestCreateWallet_validLegacyCoinbase("coinbasewallet2", CoinbaseWalletV2.class, null, "");
@@ -448,13 +448,13 @@ public class BitcoinExtensionTest {
             assertTrue(walletClass.isAssignableFrom(walletClass));
             CoinbaseWalletV2 coinbaseWallet = (CoinbaseWalletV2) wallet;
             assertEquals(expectedAccountName, coinbaseWallet.getAccountName());
-            assertTrue(coinbaseWallet.getApi() instanceof CoinbaseV2ApiWrapperLegacy);
+            assertInstanceOf(CoinbaseV2ApiWrapperLegacy.class, coinbaseWallet.getApi());
             mockedApiFactory.verify(CoinbaseApiFactory::createCoinbaseV2ApiLegacy);
         }
     }
 
     @Test
-    public void testCreateWallet_validCdpCoinbase() {
+    void testCreateWallet_validCdpCoinbase() {
         // accountName is optional
         doTestCreateWallet_validCdpCoinbase("coinbasewallet3", CoinbaseWalletV2.class, null, null);
         doTestCreateWallet_validCdpCoinbase("coinbasewallet3", CoinbaseWalletV2.class, null, "");
@@ -486,13 +486,13 @@ public class BitcoinExtensionTest {
             assertTrue(walletClass.isAssignableFrom(walletClass));
             CoinbaseWalletV2 coinbaseWallet = (CoinbaseWalletV2) wallet;
             assertEquals(expectedAccountName, coinbaseWallet.getAccountName());
-            assertTrue(coinbaseWallet.getApi() instanceof CoinbaseV2ApiWrapperCdp);
+            assertInstanceOf(CoinbaseV2ApiWrapperCdp.class, coinbaseWallet.getApi());
             mockedApiFactory.verify(CoinbaseApiFactory::createCoinbaseV3Api);
         }
     }
 
     @Test
-    public void testCreateWallet_invalidLegacyCoinbase() {
+    void testCreateWallet_invalidLegacyCoinbase() {
         // Missing mandatory parameter: secretKey
         doTestCreateWallet_invalidCoinbase("coinbasewallet2:apiKey");
         // Missing mandatory parameters: apiKey, secretKey
@@ -504,7 +504,7 @@ public class BitcoinExtensionTest {
     }
 
     @Test
-    public void testCreateWallet_invalidCdpCoinbase() {
+    void testCreateWallet_invalidCdpCoinbase() {
         // Missing mandatory parameter: secretKey
         doTestCreateWallet_invalidCoinbase("coinbasewallet3:apiKey");
         // Missing mandatory parameters: apiKey, secretKey
@@ -525,7 +525,7 @@ public class BitcoinExtensionTest {
     }
 
     @Test
-    public void testCreateRateSource_validLegacyCoinbase() {
+    void testCreateRateSource_validLegacyCoinbase() {
         doTestCreateRateSource_validLegacyCoinbase("USD", "coinbasers");
         doTestCreateRateSource_validLegacyCoinbase("CZK", "coinbasers:CZK");
     }
@@ -540,10 +540,10 @@ public class BitcoinExtensionTest {
             IRateSource rateSource = bitcoinExtension.createRateSource(paramString);
 
             assertNotNull(rateSource);
-            assertTrue(rateSource instanceof CoinbaseV2RateSource);
+            assertInstanceOf(CoinbaseV2RateSource.class, rateSource);
             CoinbaseV2RateSource coinbaseRateSource = (CoinbaseV2RateSource) rateSource;
             assertEquals(expectedFiatCurrency, coinbaseRateSource.getPreferredFiatCurrency());
-            assertTrue(coinbaseRateSource.getApi() instanceof CoinbaseV2ApiWrapperLegacy);
+            assertInstanceOf(CoinbaseV2ApiWrapperLegacy.class, coinbaseRateSource.getApi());
             mockedApiFactory.verify(CoinbaseApiFactory::createCoinbaseV2ApiLegacy);
         }
     }

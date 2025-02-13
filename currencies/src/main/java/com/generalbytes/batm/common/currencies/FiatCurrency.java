@@ -38,6 +38,7 @@ public enum FiatCurrency {
     BAM("Bosnia and Herzegovina convertible mark"),
     BGN("Bulgarian lev"),
     BHD("Bahraini dinar"),
+    BOB("Bolivian boliviano"),
     BRL("Brazilian real"),
     BSD("Bahamian Dollar"),
     CAD("Canadian dollar"),

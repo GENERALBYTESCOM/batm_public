@@ -20,25 +20,22 @@ package com.generalbytes.batm.server.extensions.extra;
 import com.generalbytes.batm.server.extensions.IExchange;
 import com.generalbytes.batm.server.extensions.IExchangeAdvanced;
 import com.generalbytes.batm.server.extensions.ITask;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collection;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 // All tests @Ignore'd here because they depend on external resources
 // To be run manually, not as a part of the build
-@Ignore
-@RunWith(Parameterized.class)
-public class ExchangeTest {
+@Disabled
+class ExchangeTest {
     private final String cryptoCurrency;
     private final IExchange exchange;
 
-    @Parameterized.Parameters
     public static Collection getTestData() {
         return Arrays.asList(new Object[][]{
 //            {"LTC", new BinanceComExchange("", "", "EUR")},
@@ -53,14 +50,14 @@ public class ExchangeTest {
     }
 
     @Test
-    public void testPurchase() {
+    void testPurchase() {
         String purchaseId = exchange.purchaseCoins(BigDecimal.TEN, cryptoCurrency,"USD", "test");
         System.out.println(purchaseId);
-        Assert.assertNotNull(purchaseId);
+        assertNotNull(purchaseId);
     }
 
     @Test
-    public void testPurchaseAdvanced() {
+    void testPurchaseAdvanced() {
         if (exchange instanceof IExchangeAdvanced) {
             ITask tt = ((IExchangeAdvanced) exchange).createPurchaseCoinsTask(new BigDecimal("0.00000001"), cryptoCurrency, exchange.getPreferredFiatCurrency(), "test");
             tt.onCreate();
@@ -69,11 +66,11 @@ public class ExchangeTest {
             }
             String purchaseId = tt.getResult() == null ? null : tt.getResult().toString();
             System.out.println(purchaseId);
-            Assert.assertNotNull(purchaseId);
+            assertNotNull(purchaseId);
         }
     }
     @Test
-    public void testSellAdvanced() {
+    void testSellAdvanced() {
         if (exchange instanceof IExchangeAdvanced) {
             ITask tt = ((IExchangeAdvanced) exchange).createSellCoinsTask(new BigDecimal("0.00000001"), cryptoCurrency, exchange.getPreferredFiatCurrency(), "test");
             tt.onCreate();
@@ -82,34 +79,34 @@ public class ExchangeTest {
             }
             String purchaseId = tt.getResult() == null ? null : tt.getResult().toString();
             System.out.println(purchaseId);
-            Assert.assertNotNull(purchaseId);
+            assertNotNull(purchaseId);
         }
     }
     @Test
-    public void testGetCryptoBalance() {
+    void testGetCryptoBalance() {
         BigDecimal cryptoBalance = exchange.getCryptoBalance(cryptoCurrency);
         System.out.println(cryptoBalance);
-        Assert.assertNotNull(cryptoBalance);
+        assertNotNull(cryptoBalance);
     }
     @Test
-    public void testGetFiatBalance() {
+    void testGetFiatBalance() {
         BigDecimal fiatBalance = exchange.getFiatBalance(exchange.getPreferredFiatCurrency());
         System.out.println(fiatBalance);
-        Assert.assertNotNull(fiatBalance);
+        assertNotNull(fiatBalance);
     }
 
     @Test
-    public void testGetDepositAddress() {
+    void testGetDepositAddress() {
         String depositAddress = exchange.getDepositAddress(cryptoCurrency);
         System.out.println(depositAddress);
-        Assert.assertNotNull(depositAddress);
+        assertNotNull(depositAddress);
     }
 
     @Test
-    public void testSendCoins() {
+    void testSendCoins() {
         String res = exchange.sendCoins(exchange.getDepositAddress(cryptoCurrency), exchange.getCryptoBalance(cryptoCurrency), cryptoCurrency, "test");
         System.out.println(res);
-        Assert.assertNotNull(res);
+        assertNotNull(res);
     }
 
 }

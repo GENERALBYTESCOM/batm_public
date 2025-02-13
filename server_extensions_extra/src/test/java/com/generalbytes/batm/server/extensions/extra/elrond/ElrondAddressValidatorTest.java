@@ -1,15 +1,15 @@
 package com.generalbytes.batm.server.extensions.extra.elrond;
 
+import org.junit.jupiter.api.Test;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ElrondAddressValidatorTest {
+class ElrondAddressValidatorTest {
     @Test
-    public void addressValidTest() {
+    void addressValidTest() {
         ElrondAddressValidator lav = new ElrondAddressValidator();
         String address = "erd1kvwvfpn3ncvt5dn8e0rnm8s7qv0u4yz3sl7dqcwuc0vq8533mevqnvvawh";
         boolean isValid = lav.isAddressValid(address);
-        Assert.assertTrue(isValid);
+        assertTrue(isValid);
     }
 }
