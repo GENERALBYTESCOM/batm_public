@@ -27,10 +27,11 @@ import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 
@@ -52,7 +53,7 @@ class BitcoinExtensionTest {
         final BitcoinExtension bitcoinExtension = new BitcoinExtension();
         bitcoinExtension.init(new TestExtensionContext());
         final IWallet bitgowallet = bitcoinExtension.createWallet(walletLogin, null);
-        assertTrue(bitgowallet instanceof BitgoWallet);
+        assertInstanceOf(BitgoWallet.class, bitgowallet);
         assertEquals(expected, ((BitgoWallet)bitgowallet).getUrl());
     }
 
@@ -83,7 +84,7 @@ class BitcoinExtensionTest {
         final BitcoinExtension bitcoinExtension = new BitcoinExtension();
         bitcoinExtension.init(new TestExtensionContext());
         final IWallet wallet = bitcoinExtension.createWallet(url, null);
-        assertTrue(wallet instanceof BitgoWallet);
+        assertInstanceOf(BitgoWallet.class, wallet);
         final BitgoWallet bitgoWallet = (BitgoWallet) wallet;
         assertNotNull(bitgoWallet);
         assertEquals(expectedFeeRate, bitgoWallet.getFeeRate());
@@ -447,7 +448,7 @@ class BitcoinExtensionTest {
             assertTrue(walletClass.isAssignableFrom(walletClass));
             CoinbaseWalletV2 coinbaseWallet = (CoinbaseWalletV2) wallet;
             assertEquals(expectedAccountName, coinbaseWallet.getAccountName());
-            assertTrue(coinbaseWallet.getApi() instanceof CoinbaseV2ApiWrapperLegacy);
+            assertInstanceOf(CoinbaseV2ApiWrapperLegacy.class, coinbaseWallet.getApi());
             mockedApiFactory.verify(CoinbaseApiFactory::createCoinbaseV2ApiLegacy);
         }
     }
@@ -485,7 +486,7 @@ class BitcoinExtensionTest {
             assertTrue(walletClass.isAssignableFrom(walletClass));
             CoinbaseWalletV2 coinbaseWallet = (CoinbaseWalletV2) wallet;
             assertEquals(expectedAccountName, coinbaseWallet.getAccountName());
-            assertTrue(coinbaseWallet.getApi() instanceof CoinbaseV2ApiWrapperCdp);
+            assertInstanceOf(CoinbaseV2ApiWrapperCdp.class, coinbaseWallet.getApi());
             mockedApiFactory.verify(CoinbaseApiFactory::createCoinbaseV3Api);
         }
     }
@@ -539,10 +540,10 @@ class BitcoinExtensionTest {
             IRateSource rateSource = bitcoinExtension.createRateSource(paramString);
 
             assertNotNull(rateSource);
-            assertTrue(rateSource instanceof CoinbaseV2RateSource);
+            assertInstanceOf(CoinbaseV2RateSource.class, rateSource);
             CoinbaseV2RateSource coinbaseRateSource = (CoinbaseV2RateSource) rateSource;
             assertEquals(expectedFiatCurrency, coinbaseRateSource.getPreferredFiatCurrency());
-            assertTrue(coinbaseRateSource.getApi() instanceof CoinbaseV2ApiWrapperLegacy);
+            assertInstanceOf(CoinbaseV2ApiWrapperLegacy.class, coinbaseRateSource.getApi());
             mockedApiFactory.verify(CoinbaseApiFactory::createCoinbaseV2ApiLegacy);
         }
     }
