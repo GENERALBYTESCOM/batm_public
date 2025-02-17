@@ -74,9 +74,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.ICoinbaseV2API;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryptx.v2.CryptXWallet;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryptx.v2.CryptXWithUniqueAddresses;
-import com.generalbytes.batm.server.extensions.extra.ethereum.UsdcDefinition;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
-import com.google.common.collect.ImmutableSet;
 
 import java.math.BigDecimal;
 import java.net.InetSocketAddress;
@@ -693,7 +691,6 @@ public class BitcoinExtension extends AbstractExtension {
         result.add(CryptoCurrency.EGLD.getCode());
         result.add(CryptoCurrency.USDTTRON.getCode());
         result.add(CryptoCurrency.BNB.getCode());
-        result.add(CryptoCurrency.USDC.getCode());
         return result;
     }
 
@@ -709,6 +706,6 @@ public class BitcoinExtension extends AbstractExtension {
 
     @Override
     public Set<ICryptoCurrencyDefinition> getCryptoCurrencyDefinitions() {
-        return ImmutableSet.of(new UsdcDefinition());
+        return null;
     }
 }
