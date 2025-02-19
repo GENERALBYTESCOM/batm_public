@@ -345,4 +345,11 @@ public interface ITransactionDetails {
      * @return Public ID of terminal location.
      */
     String getLocationPublicId();
+
+    /**
+     * Identity state at the time of the transaction.
+     * Returns <code>null</code> if identity wasn't available.
+     * @return int value representing identity state. See {@link IIdentityBase#getState()}
+     */
+    Integer getIdentityState();
 }
