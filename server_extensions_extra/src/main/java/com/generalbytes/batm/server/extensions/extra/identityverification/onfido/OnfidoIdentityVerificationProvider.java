@@ -5,7 +5,6 @@ import com.generalbytes.batm.server.extensions.aml.verification.CreateApplicantR
 import com.generalbytes.batm.server.extensions.aml.verification.IIdentityVerificationProvider;
 import com.generalbytes.batm.server.extensions.aml.verification.IdentityCheckWebhookException;
 import com.generalbytes.batm.server.extensions.extra.identityverification.onfido.verificationsite.VerificationSiteClient;
-import com.google.common.base.Strings;
 import com.onfido.Onfido;
 import com.onfido.exceptions.OnfidoException;
 import com.onfido.models.Applicant;
@@ -30,40 +29,35 @@ public class OnfidoIdentityVerificationProvider implements IIdentityVerification
     private final OnfidoWebhookProcessor webhookProcessor;
     private final String gbApiKey;
     private final IExtensionContext ctx;
+    private final OnfidoConfigurationService configurationService;
 
-    public OnfidoIdentityVerificationProvider(String onfidoApiKey, String verificationSiteUrl, OnfidoRegion region, String gbApiKey, IExtensionContext ctx) {
-        this(
-            buildOnfido(onfidoApiKey, region),
-            verificationSiteUrl,
-            gbApiKey,
-            ctx);
+    public OnfidoIdentityVerificationProvider(String onfidoApiKey,
+                                              String verificationSiteUrl,
+                                              OnfidoRegion region,
+                                              String gbApiKey,
+                                              IExtensionContext ctx) {
+        if (verificationSiteUrl == null) {
+            throw new IllegalArgumentException("verificationSiteUrl must be configured!");
+        }
+
+        this.ctx = ctx;
+        this.verificationSiteUrl = verificationSiteUrl;
+        this.gbApiKey = gbApiKey;
+        onfido = buildOnfido(onfidoApiKey, region);
+        referrer = getReferrer(verificationSiteUrl);
+        configurationService = new OnfidoConfigurationService(ctx);
+        webhookProcessor = new OnfidoWebhookProcessor(onfido, configurationService.getOnfidoCallbackUrl());
     }
 
     private static Onfido buildOnfido(String apiKey, OnfidoRegion region) {
         Objects.requireNonNull(apiKey, "onfido api key cannot be null");
         Onfido.Builder builder = Onfido.builder().apiToken(apiKey);
         Objects.requireNonNull(region, "region cannot be null");
-        switch (region) {
-            case US:
-                return builder.regionUS().build();
-            case CA:
-                return builder.regionCA().build();
-            case EU:
-            default:
-                return builder.regionEU().build();
-        }
-    }
-
-    public OnfidoIdentityVerificationProvider(Onfido onfido, String verificationSiteUrl, String gbApiKey, IExtensionContext ctx) {
-        if (verificationSiteUrl == null) {
-            throw new IllegalArgumentException("verificationSiteUrl must be configured!");
-        }
-        this.ctx = ctx;
-        this.onfido = onfido;
-        this.referrer = getReferrer(verificationSiteUrl);
-        this.verificationSiteUrl = verificationSiteUrl;
-        this.gbApiKey = gbApiKey;
-        this.webhookProcessor = new OnfidoWebhookProcessor(onfido, getMasterServerProxyAddress());
+        return switch (region) {
+            case US -> builder.regionUS().build();
+            case CA -> builder.regionCA().build();
+            default -> builder.regionEU().build();
+        };
     }
 
     @Override
@@ -87,30 +81,10 @@ public class OnfidoIdentityVerificationProvider implements IIdentityVerification
     }
 
     private VerificationSiteClient createVerificationSiteClient() {
-        String callbackUrl = getMasterServerApiAddress();
+        String callbackUrl = configurationService.getVerificationSiteCallbackUrl();
         // After the documents are submitted, the verification website will call this url (with added path and applicant ID)
         log.info("Creating new verification-site client for url {} with callbackUrl {}(/serverapi/apiv1/identity-check/submit/<applicantId>)", this.verificationSiteUrl, callbackUrl);
         return new VerificationSiteClient(this.verificationSiteUrl, callbackUrl);
-    }
-
-    private String getMasterServerApiAddress() {
-        return "https://" + getHostname() + ":" + 7743;
-    }
-
-    /**
-     * @return this server address with hostname form /batm/config/hostname,
-     * port number and path set to the one used by nginx proxy installed with {@code batm-manage install-reverse-proxy}.
-     */
-    private String getMasterServerProxyAddress() {
-        return "https://" + getHostname() + ":" + 8743 + "/server";
-    }
-
-    private String getHostname() {
-        String hostname = Strings.nullToEmpty(ctx.getConfigFileContent("hostname")).trim();
-        if (hostname.isEmpty()) {
-            throw new RuntimeException("Hostname not configured in /batm/config");
-        }
-        return hostname;
     }
 
     private String getVerificationUrl(String customerLanguage, String applicantId) {
@@ -120,8 +94,6 @@ public class OnfidoIdentityVerificationProvider implements IIdentityVerification
         }
         return verificationUrl;
     }
-
-
 
     /**
      * Called by the verification website after all documents and data are uploaded by the user.
@@ -159,7 +131,7 @@ public class OnfidoIdentityVerificationProvider implements IIdentityVerification
             URL url = new URL(verificationSiteUrl);
             return url.getProtocol() + "://" + url.getHost() + "/*";
         } catch (MalformedURLException e) {
-            log.error("Error parsing url " + verificationSiteUrl);
+            log.error("Error parsing url {}", verificationSiteUrl);
             return verificationSiteUrl + "*";
         }
     }
