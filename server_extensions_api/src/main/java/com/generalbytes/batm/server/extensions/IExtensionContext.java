@@ -847,24 +847,24 @@ public interface IExtensionContext {
     String getConfigFileContent(final String fileNameInConfigDirectory);
 
     /**
-     * Load key store from config directory (typically "/batm/config").
+     * Load key store from config directory.
      *
      * @param keyStoreType Type of key store, for example: "PKCS12".
-     * @param fileName     Name of file in config directory including extension.
+     * @param filePath     File path relative to the config directory (typically "/batm/config"). The file must contain an extension.
      * @param passphrase   Passphrase for access to key store. Can be {code null} if passphrase is not used.
      * @return Key store object or {@code null} if error was occurred.
      */
-    default KeyStore loadKeyStoreFromConfigDirectory(String keyStoreType, String fileName, String passphrase) {
+    default KeyStore loadKeyStoreFromConfigDirectory(String keyStoreType, String filePath, String passphrase) {
         return null;
     }
 
     /**
-     * Load X.509 certificate from config directory (typically "/batm/config").
+     * Load X.509 certificate from config directory.
      *
-     * @param fileName Name of file in config directory including extension.
+     * @param filePath File path relative to the config directory (typically "/batm/config"). The file must contain an extension.
      * @return X.509 certificate or {@code null} if error was occurred.
      */
-    default X509Certificate loadX509CertificateFromConfigDirectory(String fileName) {
+    default X509Certificate loadX509CertificateFromConfigDirectory(String filePath) {
         return null;
     }
 
