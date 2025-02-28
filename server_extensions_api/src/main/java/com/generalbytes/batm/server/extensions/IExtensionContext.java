@@ -36,6 +36,9 @@ import com.generalbytes.batm.server.extensions.watchlist.WatchListResult;
 import java.io.File;
 import java.math.BigDecimal;
 import java.net.InetSocketAddress;
+import java.nio.file.Path;
+import java.security.KeyStore;
+import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -843,6 +846,28 @@ public interface IExtensionContext {
      * from the server config directory, e.g. do not use any user provided values as the filename parameter etc.
      */
     String getConfigFileContent(final String fileNameInConfigDirectory);
+
+    /**
+     * Load key store from config directory.
+     *
+     * @param keyStoreType Type of key store, for example: "PKCS12".
+     * @param filePath     File path relative to the config directory (typically "/batm/config"). The file must contain an extension.
+     * @param passphrase   Passphrase for access to key store. Can be {code null} if passphrase is not used.
+     * @return Key store object or {@code null} if error was occurred.
+     */
+    default KeyStore loadKeyStoreFromConfigDirectory(String keyStoreType, Path filePath, String passphrase) {
+        return null;
+    }
+
+    /**
+     * Load X.509 certificate from config directory.
+     *
+     * @param filePath File path relative to the config directory (typically "/batm/config"). The file must contain an extension.
+     * @return X.509 certificate or {@code null} if error was occurred.
+     */
+    default X509Certificate loadX509CertificateFromConfigDirectory(Path filePath) {
+        return null;
+    }
 
     /**
      * @return true if the extension is running on global server.
