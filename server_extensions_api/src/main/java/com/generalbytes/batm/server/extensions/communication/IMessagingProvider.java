@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2020 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2025 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -15,23 +15,28 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-
 package com.generalbytes.batm.server.extensions.communication;
 
+import java.util.Locale;
+
 /**
- * Provider for sending sms.
- * For alternative provider (e.g. WhatsApp) implement {@link IMessagingProvider} instead
+ * Alternative messaging provider (e.g., WhatsApp), extending {@link ICommunicationProvider}
+ * for compatibility with GSM SMS-based communication.
  */
-public interface ICommunicationProvider {
+public interface IMessagingProvider extends ICommunicationProvider {
 
     /**
-     * Name of the sms provider.
+     * Gets the localized call-to-action (CTA) button text.
+     *
+     * @param locale the locale for the text
+     * @return the CTA button text (e.g., "Use WhatsApp instead")
      */
-    String getName();
+    String getCtaButtonText(Locale locale);
 
     /**
-     * Send the sms.
+     * Gets the resource path of the CTA button icon.
+     *
+     * @return the icon path (e.g., "/Icons/whatsapp.png")
      */
-    ISmsResponse sendSms(String credentials, String phoneNumber, String messageText);
-
+    String getCtaButtonIconPath();
 }
