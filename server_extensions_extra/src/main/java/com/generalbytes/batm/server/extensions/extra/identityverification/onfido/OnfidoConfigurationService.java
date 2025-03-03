@@ -2,11 +2,9 @@ package com.generalbytes.batm.server.extensions.extra.identityverification.onfid
 
 import com.generalbytes.batm.server.extensions.IExtensionContext;
 import com.google.common.base.Strings;
-import lombok.AllArgsConstructor;
 
 import java.util.function.Supplier;
 
-@AllArgsConstructor
 public class OnfidoConfigurationService {
 
     /**
@@ -15,6 +13,10 @@ public class OnfidoConfigurationService {
     private static final String ONFIDO_CONFIG_FILE = "onfido";
 
     private final IExtensionContext ctx;
+
+    public OnfidoConfigurationService(IExtensionContext ctx) {
+        this.ctx = ctx;
+    }
 
     /**
      * Get callback URL for verification site webhook.

@@ -1,24 +1,25 @@
 package com.generalbytes.batm.server.extensions.extra.identityverification.onfido;
 
 import com.generalbytes.batm.server.extensions.IExtensionContext;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.Before;
+import org.junit.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
-class OnfidoConfigurationServiceTest {
-    @Mock
+public class OnfidoConfigurationServiceTest {
     private IExtensionContext ctx;
-    @InjectMocks
     private OnfidoConfigurationService configurationService;
 
+    @Before
+    public void setUp() {
+        ctx = mock(IExtensionContext.class);
+        configurationService = new OnfidoConfigurationService(ctx);
+    }
+
     @Test
-    void testGetVerificationSiteCallbackUrl_fromConfig() {
+    public void testGetVerificationSiteCallbackUrl_fromConfig() {
         String configuredUrl = "https://my.server.com:1234/verification";
         when(ctx.getConfigProperty("onfido", "webhook.verificationSite", null)).thenReturn(configuredUrl);
         String verificationSiteCallbackUrl = configurationService.getVerificationSiteCallbackUrl();
@@ -26,7 +27,7 @@ class OnfidoConfigurationServiceTest {
     }
 
     @Test
-    void testGetVerificationSiteCallbackUrl_defaultValue() {
+    public void testGetVerificationSiteCallbackUrl_defaultValue() {
         when(ctx.getConfigProperty("onfido", "webhook.verificationSite", null)).thenReturn(null);
         when(ctx.getConfigFileContent("hostname")).thenReturn("default.server.com");
         String verificationSiteCallbackUrl = configurationService.getVerificationSiteCallbackUrl();
@@ -34,7 +35,7 @@ class OnfidoConfigurationServiceTest {
     }
 
     @Test
-    void testGetOnfidoCallbackUrl_fromConfig() {
+    public void testGetOnfidoCallbackUrl_fromConfig() {
         String configuredUrl = "https://my.server.com:1234/onfido";
         when(ctx.getConfigProperty("onfido", "webhook.onfido", null)).thenReturn(configuredUrl);
         String onfidoCallbackUrl = configurationService.getOnfidoCallbackUrl();
@@ -42,7 +43,7 @@ class OnfidoConfigurationServiceTest {
     }
 
     @Test
-    void testGetOnfidoCallbackUrl_defaultValue() {
+    public void testGetOnfidoCallbackUrl_defaultValue() {
         when(ctx.getConfigProperty("onfido", "webhook.onfido", null)).thenReturn(null);
         when(ctx.getConfigFileContent("hostname")).thenReturn("default.server.com");
         String onfidoCallbackUrl = configurationService.getOnfidoCallbackUrl();
@@ -50,7 +51,7 @@ class OnfidoConfigurationServiceTest {
     }
 
     @Test
-    void testHostnameNotConfigured() {
+    public void testHostnameNotConfigured() {
         when(ctx.getConfigFileContent("hostname")).thenReturn(null);
         try {
             configurationService.getVerificationSiteCallbackUrl();
