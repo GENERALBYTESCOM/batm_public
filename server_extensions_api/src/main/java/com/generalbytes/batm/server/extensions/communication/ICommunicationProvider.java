@@ -19,14 +19,21 @@
 package com.generalbytes.batm.server.extensions.communication;
 
 /**
- * Provider for sending sms.
+ * Provider for sending text messages.
  */
 public interface ICommunicationProvider {
 
     /**
-     * Name of the sms provider.
+     * Name of the messaging provider. Internally used as an identifier within the system.
      */
     String getName();
+
+    /**
+     * Public name of the provider (e.g. SMS, WhatsApp). This name shown in the UI (e.g. on terminals).
+     */
+    default String getPublicName() {
+        return "SMS";
+    }
 
     /**
      * Send the sms.
