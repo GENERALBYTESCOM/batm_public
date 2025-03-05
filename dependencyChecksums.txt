@@ -131,7 +131,6 @@ verifyModule 'org.knowm.xchange:xchange-binance:5.0.12:e75bea60daec08ae45b312eff
 verifyModule 'org.knowm.xchange:xchange-bitfinex:5.0.10:21129825f39c8399f4a2c25380c56ca4b939760af44531261295de213287823d'
 verifyModule 'org.knowm.xchange:xchange-bitstamp:5.0.13:fa31554de4feee3859d472b2b4595c4525e7ab0cc808e8c46e203a654448fe63'
 verifyModule 'org.knowm.xchange:xchange-bittrex:5.0.10:f9d3c8f4301c1b17e74d7e7430e34703b8f4ff183f48f9e7cb363581cf56986c'
-verifyModule 'org.knowm.xchange:xchange-coinbasepro:5.0.10:9b08863d34fa8fcd55bfeac4a6248f108ab4fc08262762f393665696316a3380'
 verifyModule 'org.knowm.xchange:xchange-coingi:5.0.10:7cc8f38653c56c50f08376c6e545689a304df3d4a6dd15df248a1607e5fa4db3'
 verifyModule 'org.knowm.xchange:xchange-core:5.0.10:f4e95cc652efb58ea2840cfc87f00a835e9658c81aa45bcbf4b5175c891105ba'
 verifyModule 'org.knowm.xchange:xchange-dvchain:5.0.10:d64ccf69f3756f0ba150dc61ff163601acd93a0f0a95893920cca60bc62ca99d'
