@@ -33,6 +33,8 @@ class NotabeneProviderFactoryTest {
     @Test
     void testGetProvider() {
         ITravelRuleProviderCredentials credentials = createCredentials("vaspDid");
+        when(credentials.getClientId()).thenReturn("clientId");
+        when(credentials.getClientSecret()).thenReturn("clientSecret");
 
         ITravelRuleProvider provider = notabeneProviderFactory.getProvider(credentials);
         assertNotNull(provider);
