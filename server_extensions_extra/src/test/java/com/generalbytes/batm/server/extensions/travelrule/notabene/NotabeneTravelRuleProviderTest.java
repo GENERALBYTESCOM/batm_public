@@ -359,6 +359,7 @@ class NotabeneTravelRuleProviderTest {
 
     private static Stream<Arguments> provideDifferentCredentials() {
         return Stream.of(
+            Arguments.arguments(null, null),
             Arguments.arguments("clientId", null),
             Arguments.arguments("clientId", "differentClientSecret"),
             Arguments.arguments(null, "clientSecret"),
