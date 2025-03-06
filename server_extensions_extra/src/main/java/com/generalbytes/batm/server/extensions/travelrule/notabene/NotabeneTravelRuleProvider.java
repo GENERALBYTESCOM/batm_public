@@ -43,7 +43,7 @@ public class NotabeneTravelRuleProvider implements ITravelRuleProvider {
 
     public static final String NAME = "Notabene Travel Rule Provider";
 
-    private final ITravelRuleProviderCredentials credentials;
+    private ITravelRuleProviderCredentials credentials;
     private final NotabeneConfiguration configuration;
     private final NotabeneAuthService notabeneAuthService;
     private final NotabeneService notabeneService;
@@ -134,7 +134,7 @@ public class NotabeneTravelRuleProvider implements ITravelRuleProvider {
 
     @Override
     public void notifyProviderConfigurationChanged() {
-        notabeneAuthService.removeAccessToken(credentials);
+        // Handled by the NotabeneProviderFactory and #updateCredentials
     }
 
     @Override
@@ -142,6 +142,30 @@ public class NotabeneTravelRuleProvider implements ITravelRuleProvider {
         log.info("A configuration test was requested for {}, clientId: {}", NAME, credentials.getClientId());
 
         return notabeneService.testProviderCredentials(credentials);
+    }
+
+    /**
+     * Updates the current credentials if they differ from the provided ones.
+     *
+     * <p>If the new credentials are identical to the current credentials, no action is taken.
+     * Otherwise, the method invalidates the existing access token, and then sets the new credentials.</p>
+     *
+     * @param credentials The new credentials
+     */
+    void updateCredentials(ITravelRuleProviderCredentials credentials) {
+        if (credentialsMatch(credentials, this.credentials)) {
+            return;
+        }
+        log.debug("Notabene Travel Rule Provider credentials changed for VASP {}.", credentials.getVaspDid());
+        // Invalidate the current access token using the old credentials
+        notabeneAuthService.removeAccessToken(this.credentials);
+        // Start using the new credentials
+        this.credentials = credentials;
+    }
+
+    private boolean credentialsMatch(ITravelRuleProviderCredentials credentials1, ITravelRuleProviderCredentials credentials2) {
+        return credentials1.getClientId().equals(credentials2.getClientId())
+            && credentials1.getClientSecret().equals(credentials2.getClientSecret());
     }
 
     private NotabeneTransferUpdateRequest mapToNotabeneUpdateRequest(ITravelRuleTransferUpdateRequest request) {

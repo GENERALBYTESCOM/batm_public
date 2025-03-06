@@ -47,6 +47,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.clearInvocations;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockConstruction;
 import static org.mockito.Mockito.never;
@@ -332,12 +333,6 @@ class NotabeneTravelRuleProviderTest {
     }
 
     @Test
-    void testNotifyProviderConfigurationChanged() {
-        provider.notifyProviderConfigurationChanged();
-        verify(notabeneAuthService).removeAccessToken(credentials);
-    }
-
-    @Test
     void testProviderConfiguration_valid() {
         when(notabeneService.testProviderCredentials(credentials)).thenReturn(true);
 
@@ -353,6 +348,37 @@ class NotabeneTravelRuleProviderTest {
         boolean validationResult = provider.testProviderConfiguration();
 
         assertFalse(validationResult);
+    }
+
+    @Test
+    void testUpdateCredentials_unchanged() {
+        provider.updateCredentials(credentials);
+
+        verify(notabeneAuthService, never()).removeAccessToken(any());
+    }
+
+    private static Stream<Arguments> provideDifferentCredentials() {
+        return Stream.of(
+            Arguments.arguments("clientId", "differentClientSecret"),
+            Arguments.arguments("differentClientId", "clientSecret"),
+            Arguments.arguments("differentClientId", "differentClientSecret")
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideDifferentCredentials")
+    void testUpdateCredentials_changed(String clientId, String clientSecret) {
+        ITravelRuleProviderCredentials newCredentials = new TestTravelRuleProviderCredentials(clientId, clientSecret, "vaspDid");
+
+        provider.updateCredentials(newCredentials);
+
+        verify(notabeneAuthService).removeAccessToken(credentials);
+        clearInvocations(notabeneAuthService);
+
+        // Calling again to make sure the new credentials are now used
+        provider.updateCredentials(newCredentials);
+
+        verify(notabeneAuthService, never()).removeAccessToken(any());
     }
 
     private MockedConstruction<NotabeneTransferStatusUpdateListener> mockNotabeneListenerConstruction(
@@ -561,21 +587,33 @@ class NotabeneTravelRuleProviderTest {
     }
 
     private static ITravelRuleProviderCredentials createITravelRuleProviderCredentials() {
-        return new ITravelRuleProviderCredentials() {
-            @Override
-            public String getClientId() {
-                return "clientId";
-            }
+        return new TestTravelRuleProviderCredentials("clientId", "clientSecret", "vaspDid");
+    }
 
-            @Override
-            public String getClientSecret() {
-                return "clientSecret";
-            }
+    private static class TestTravelRuleProviderCredentials implements ITravelRuleProviderCredentials {
+        private final String clientId;
+        private final String clientSecret;
+        private final String vaspDid;
 
-            @Override
-            public String getVaspDid() {
-                return "vaspDid";
-            }
-        };
+        public TestTravelRuleProviderCredentials(String clientId, String clientSecret, String vaspDid) {
+            this.clientId = clientId;
+            this.clientSecret = clientSecret;
+            this.vaspDid = vaspDid;
+        }
+
+        @Override
+        public String getClientId() {
+            return clientId;
+        }
+
+        @Override
+        public String getClientSecret() {
+            return clientSecret;
+        }
+
+        @Override
+        public String getVaspDid() {
+            return vaspDid;
+        }
     }
 }
