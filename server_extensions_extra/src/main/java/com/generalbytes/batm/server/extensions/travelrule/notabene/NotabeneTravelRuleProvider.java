@@ -33,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Travel Rule provider for Notabene.
@@ -164,8 +165,8 @@ public class NotabeneTravelRuleProvider implements ITravelRuleProvider {
     }
 
     private boolean credentialsMatch(ITravelRuleProviderCredentials credentials1, ITravelRuleProviderCredentials credentials2) {
-        return credentials1.getClientId().equals(credentials2.getClientId())
-            && credentials1.getClientSecret().equals(credentials2.getClientSecret());
+        return Objects.equals(credentials1.getClientId(), credentials2.getClientId())
+            && Objects.equals(credentials1.getClientSecret(), credentials2.getClientSecret());
     }
 
     private NotabeneTransferUpdateRequest mapToNotabeneUpdateRequest(ITravelRuleTransferUpdateRequest request) {
