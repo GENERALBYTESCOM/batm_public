@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedConstruction;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -13,6 +14,8 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockConstruction;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -30,6 +33,8 @@ class NotabeneProviderFactoryTest {
     @Test
     void testGetProvider() {
         ITravelRuleProviderCredentials credentials = createCredentials("vaspDid");
+        when(credentials.getClientId()).thenReturn("clientId");
+        when(credentials.getClientSecret()).thenReturn("clientSecret");
 
         ITravelRuleProvider provider = notabeneProviderFactory.getProvider(credentials);
         assertNotNull(provider);
@@ -37,6 +42,23 @@ class NotabeneProviderFactoryTest {
 
         ITravelRuleProvider repeatedCall = notabeneProviderFactory.getProvider(credentials);
         assertEquals(provider, repeatedCall);
+    }
+
+    @Test
+    void testGetProvider_differentCredentials() {
+        MockedConstruction<NotabeneTravelRuleProvider> notabeneProviderMockedConstruction = mockConstruction(NotabeneTravelRuleProvider.class);
+        try (notabeneProviderMockedConstruction) {
+            ITravelRuleProviderCredentials credentials1 = createCredentials("vaspDid");
+
+            ITravelRuleProvider provider = notabeneProviderFactory.getProvider(credentials1);
+            NotabeneTravelRuleProvider providerMock = notabeneProviderMockedConstruction.constructed().get(0);
+            assertEquals(providerMock, provider);
+
+            ITravelRuleProviderCredentials credentials2 = createCredentials("vaspDid");
+            ITravelRuleProvider repeatedCall = notabeneProviderFactory.getProvider(credentials2);
+            assertEquals(providerMock, repeatedCall);
+            verify(providerMock).updateCredentials(credentials2);
+        }
     }
 
     @Test
