@@ -17,7 +17,7 @@ public class NotabeneProviderFactory implements ITravelRuleProviderFactory {
     /**
      * Already initialized travel rule providers. VASP DID is used as a key to avoid multiple initializations based on same settings.
      */
-    private final Map<String, ITravelRuleProvider> travelRuleProviders = new HashMap<>();
+    private final Map<String, NotabeneTravelRuleProvider> travelRuleProviders = new HashMap<>();
 
     public NotabeneProviderFactory(NotabeneConfiguration configuration) {
         this.configuration = configuration;
@@ -42,7 +42,11 @@ public class NotabeneProviderFactory implements ITravelRuleProviderFactory {
             return initializeProvider(credentials);
         }
         if (travelRuleProviders.containsKey(vaspDid)) {
-            return travelRuleProviders.get(vaspDid);
+            NotabeneTravelRuleProvider travelRuleProvider = travelRuleProviders.get(vaspDid);
+            // Update the credentials in case they have changed.
+            // If we didn't do this, the provider would be stuck with the credentials it got at initialization.
+            travelRuleProvider.updateCredentials(credentials);
+            return travelRuleProvider;
         }
         NotabeneTravelRuleProvider notabeneTravelRuleProvider = initializeProvider(credentials);
         travelRuleProviders.put(vaspDid, notabeneTravelRuleProvider);
