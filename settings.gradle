@@ -5,3 +5,6 @@ include ':currencies'
 include ':batm_ssh_tunnel'
 include ':operators_sample_website'
 
+dependencyResolutionManagement {
+    repositoriesMode = RepositoriesMode.PREFER_PROJECT
+}
