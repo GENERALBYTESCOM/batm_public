@@ -40,6 +40,22 @@ public interface ITravelRuleProvider {
     ITravelRuleWalletInfo getWalletInfo(IIdentityWalletEvaluationRequest walletEvaluationRequest);
 
     /**
+     * Forces wallet verification by the provider if the customer has manually declared the wallet as CUSTODIAL for a specific VASP.
+     *
+     * <p>If {@code true}, {@link #getWalletInfo} will be called before {@link #createTransfer}
+     * if the wallet is CUSTODIAL and the customer has declared VASP manually on the terminal.
+     * Even though it is {@code true} and the wallet will be successfully evaluated locally (the wallet was added by an operator in CAS
+     * or the wallet was already verified in the past) or using {@link IWalletTypeEvaluationProvider} as CUSTODIAL,
+     * {@link #getWalletInfo} will NOT be called and {@link #createTransfer} will be called directly.</p>
+     *
+     * <p>If {@code false} and the customer has manually declared a VASP on the terminal,
+     * {@link #getWalletInfo} is skipped and {@link #createTransfer} is called directly.</p>
+     */
+    default boolean verifyCustomerDeclaredCustodialWallet() {
+        return false;
+    }
+
+    /**
      * Get all available VASPs.
      *
      * @return List of all available VASPs.
