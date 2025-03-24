@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2024 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2025 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -44,6 +44,9 @@ public interface IIdentityWalletEvaluationRequest {
     /**
      * Get the crypto address of the wallet.
      *
+     * <p>If the cryptocurrency supports the destination tag / memo, for example Ripple (XRP),
+     * then the address is in the format "{@code address:destination_tag}".</p>
+     *
      * @return The crypto address of the wallet.
      */
     String getCryptoAddress();
@@ -54,5 +57,13 @@ public interface IIdentityWalletEvaluationRequest {
      * @return The cryptocurrency of the wallet.
      */
     String getCryptocurrency();
+
+    /**
+     * Get data about the beneficiary's VASP.
+     * Used for providers that do not support VASP searches based on crypto address.
+     *
+     * @return Object representing the beneficiary's VASP.
+     */
+    ITravelRuleVasp getBeneficiaryVasp();
 
 }
