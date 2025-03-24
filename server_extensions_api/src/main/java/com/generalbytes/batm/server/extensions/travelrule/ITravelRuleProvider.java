@@ -40,10 +40,13 @@ public interface ITravelRuleProvider {
     ITravelRuleWalletInfo getWalletInfo(IIdentityWalletEvaluationRequest walletEvaluationRequest);
 
     /**
-     * Flag specifying whether {@link #getWalletInfo} should always be called
-     * before {@link #createTransfer} for a CUSTODIAL wallet declared by customer on terminal.
-     * If the wallet is evaluated locally or using {@link IWalletTypeEvaluationProvider} as CUSTODIAL,
-     * {@link #getWalletInfo} will not be called and {@link #createTransfer} will be called directly.
+     * If {@code true}, {@link #getWalletInfo} will be called before {@link #createTransfer}
+     * if the wallet is CUSTODIAL and the customer has declared VASP manually on the terminal.
+     * Even though it is {@code true} and the wallet will be evaluated locally or using {@link IWalletTypeEvaluationProvider}
+     * as CUSTODIAL, {@link #getWalletInfo} will NOT be called and {@link #createTransfer} will be called directly.
+     *
+     * If {@code false} and the customer has manually declared a VASP on the terminal,
+     * {@link #getWalletInfo} is skipped and {@link #createTransfer} is called directly.
      */
     default boolean isWalletInfoCallRequiredBeforeCreateTransfer() {
         return false;
