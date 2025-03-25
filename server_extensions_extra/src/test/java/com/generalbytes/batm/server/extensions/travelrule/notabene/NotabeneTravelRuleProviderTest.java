@@ -566,6 +566,16 @@ class NotabeneTravelRuleProviderTest {
             public String getCryptocurrency() {
                 return "cryptocurrency";
             }
+
+            @Override
+            public String getDidOfVaspHostingCustodialWallet() {
+                return "hostingVaspDid";
+            }
+
+            @Override
+            public Long getTravelRuleProviderId() {
+                return 21L;
+            }
         };
     }
 
