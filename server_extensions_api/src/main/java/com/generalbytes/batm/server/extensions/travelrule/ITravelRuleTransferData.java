@@ -79,6 +79,9 @@ public interface ITravelRuleTransferData {
      * Get the destination crypto address.
      *
      * <p>This address specifies where the asset is being sent.</p>
+     *
+     * <p>If the cryptocurrency supports the destination tag / memo, for example Ripple (XRP),
+     * then the address is in the format "{@code address:destination_tag}".</p>
      */
     String getDestinationAddress();
 
