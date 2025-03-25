@@ -157,4 +157,11 @@ public interface IIdentityBase {
      * @return {@link IOrganization}
      */
     IOrganization getOrganization();
+
+    /**
+     * Returns last used phone number if it's known.
+     *
+     * @return phone number
+     */
+    String getLatestPhoneNumber();
 }
