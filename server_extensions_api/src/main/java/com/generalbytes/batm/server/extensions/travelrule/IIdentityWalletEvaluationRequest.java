@@ -59,18 +59,20 @@ public interface IIdentityWalletEvaluationRequest {
     String getCryptocurrency();
 
     /**
-     * Get the DID of the counterparty VASP with which the wallet is to be verified.
+     * Get the DID of the VASP that should be verified as the owner of the wallet (crypto address).
      * The VASP DID is available only if the user manually declares the CUSTODIAL wallet and selects a VASP on the terminal.
      * This is used for providers that do not support VASP searches based on crypto address.
      *
      * @return VASP DID.
      */
-    String getCounterpartyVaspDid();
+    String getDidOfVaspHostingCustodialWallet();
 
     /**
-     * Get ID of provider with which the counterparty VASP is registered.
+     * Get ID of provider with which the VASP hosting the custodial wallet is registered.
      *
      * @return ID of Travel Rule provider.
+     *
+     * @see #getDidOfVaspHostingCustodialWallet()
      */
     Long getTravelRuleProviderId();
 

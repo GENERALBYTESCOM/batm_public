@@ -568,8 +568,8 @@ class NotabeneTravelRuleProviderTest {
             }
 
             @Override
-            public String getCounterpartyVaspDid() {
-                return "counterpartyVaspDid";
+            public String getDidOfVaspHostingCustodialWallet() {
+                return "hostingVaspDid";
             }
 
             @Override
