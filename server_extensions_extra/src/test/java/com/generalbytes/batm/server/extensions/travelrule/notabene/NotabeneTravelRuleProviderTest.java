@@ -568,18 +568,13 @@ class NotabeneTravelRuleProviderTest {
             }
 
             @Override
-            public ITravelRuleVasp getBeneficiaryVasp() {
-                return new ITravelRuleVasp() {
-                    @Override
-                    public String getDid() {
-                        return "beneficiaryVaspDid";
-                    }
+            public String getCounterpartyVaspDid() {
+                return "counterpartyVaspDid";
+            }
 
-                    @Override
-                    public String getName() {
-                        return "beneficiaryVaspName";
-                    }
-                };
+            @Override
+            public Long getTravelRuleProviderId() {
+                return 21L;
             }
         };
     }
