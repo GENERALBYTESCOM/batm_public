@@ -18,14 +18,13 @@
 package com.generalbytes.batm.server.extensions.travelrule;
 
 /**
- * Represents a listener for transfer status updates.
+ * Represents a listener for transfer events.
  *
- * <p>This listener can be registered to a Travel Rule Provider to receive updates on transfer statuses.</p>
+ * <p>This listener can be registered to a Travel Rule Provider to receive all transfer-related events.</p>
  *
- * @see ITravelRuleProvider#registerStatusUpdateListener(ITravelRuleTransferUpdateListener)
+ * @see ITravelRuleProvider#registerTransferListener(ITravelRuleTransferListener)
  */
-@FunctionalInterface
-public interface ITravelRuleTransferUpdateListener {
+public interface ITravelRuleTransferListener {
 
     /**
      * Call this method whenever a transfer changes status to one that can be represented with {@link TravelRuleProviderTransferStatus}.

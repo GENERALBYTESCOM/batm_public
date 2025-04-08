@@ -1,7 +1,7 @@
 package com.generalbytes.batm.server.extensions.travelrule.notabene;
 
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferStatusUpdateEvent;
-import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferUpdateListener;
+import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferListener;
 import com.generalbytes.batm.server.extensions.travelrule.TravelRuleProviderTransferStatus;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferInfo;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferStatus;
@@ -9,21 +9,21 @@ import lombok.EqualsAndHashCode;
 
 /**
  * This listener is responsible for mapping transfer status updates received from Notabene and sending them to a designated
- * {@link ITravelRuleTransferUpdateListener} for further processing on server side.
+ * {@link ITravelRuleTransferListener} for further processing on server side.
  */
 @EqualsAndHashCode
 public class NotabeneTransferStatusUpdateListener implements NotabeneTransferUpdateListener {
 
-    private final ITravelRuleTransferUpdateListener transferUpdateHandler;
+    private final ITravelRuleTransferListener transferHandler;
 
-    public NotabeneTransferStatusUpdateListener(ITravelRuleTransferUpdateListener transferUpdateHandler) {
-        this.transferUpdateHandler = transferUpdateHandler;
+    public NotabeneTransferStatusUpdateListener(ITravelRuleTransferListener transferHandler) {
+        this.transferHandler = transferHandler;
     }
 
     @Override
     public void onTransferUpdate(NotabeneTransferInfo updatedTransferInfo) {
         ITravelRuleTransferStatusUpdateEvent event = mapToTransferStatusUpdateEvent(updatedTransferInfo);
-        transferUpdateHandler.onTransferStatusUpdate(event);
+        transferHandler.onTransferStatusUpdate(event);
     }
 
     private ITravelRuleTransferStatusUpdateEvent mapToTransferStatusUpdateEvent(NotabeneTransferInfo updatedTransferInfo) {
