@@ -43,7 +43,7 @@ public interface ITravelRuleTransferListener {
      * <p>The server provides an implementation for this interface and further processing
      * of incoming transfers depends on calling this method.</p>
      *
-     * @param event Event containing data about of incoming transfer.
+     * @param event Event containing data about the incoming transfer.
      * @return An object containing data with the results of evaluating an incoming transfer.
      * @throws IllegalArgumentException If some parameters in event are invalid.
      */

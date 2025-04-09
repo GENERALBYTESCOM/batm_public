@@ -1,10 +1,10 @@
 package com.generalbytes.batm.server.extensions.travelrule;
 
 /**
- * This event is responsible for holding information about a incoming transfer.
+ * This event is responsible for holding information about an incoming transfer.
  *
  * <p>This is passed to {@link ITravelRuleTransferListener#onIncomingTransferReceived(ITravelRuleIncomingTransferEvent)}
- * whenever a incoming transfer received.</p>
+ * whenever an incoming transfer received.</p>
  */
 public interface ITravelRuleIncomingTransferEvent {
 
