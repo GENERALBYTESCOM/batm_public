@@ -78,6 +78,10 @@ public interface ITravelRuleProvider {
      * {@link ITravelRuleTransferListener#onTransferStatusUpdate(ITravelRuleTransferStatusUpdateEvent)}
      * on this listener must be called.</p>
      *
+     * <p>When receiving an incoming transfer, the method
+     * {@link ITravelRuleTransferListener#onIncomingTransferReceived(ITravelRuleIncomingTransferEvent)}
+     * on this listener must be called.</p>
+     *
      * @param listener The listener.
      * @return True if the listener was successfully registered, false otherwise.
      */
