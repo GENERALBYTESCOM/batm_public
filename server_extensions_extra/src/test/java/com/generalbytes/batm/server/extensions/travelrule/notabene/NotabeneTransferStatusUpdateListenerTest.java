@@ -1,6 +1,6 @@
 package com.generalbytes.batm.server.extensions.travelrule.notabene;
 
-import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferUpdateListener;
+import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferListener;
 import com.generalbytes.batm.server.extensions.travelrule.TravelRuleProviderTransferStatus;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferInfo;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferStatus;
@@ -24,7 +24,7 @@ import static org.mockito.Mockito.verify;
 class NotabeneTransferStatusUpdateListenerTest {
 
     @Mock
-    private ITravelRuleTransferUpdateListener travelRuleTransferUpdateListener;
+    private ITravelRuleTransferListener travelRuleTransferListener;
 
     @InjectMocks
     private NotabeneTransferStatusUpdateListener listener;
@@ -56,7 +56,7 @@ class NotabeneTransferStatusUpdateListenerTest {
 
         listener.onTransferUpdate(updatedTransferInfo);
 
-        verify(travelRuleTransferUpdateListener, times(1)).onTransferStatusUpdate(argThat(event -> {
+        verify(travelRuleTransferListener, times(1)).onTransferStatusUpdate(argThat(event -> {
             assertEquals(transferId, event.getTransferPublicId());
             assertEquals(expectedTransferStatus, event.getNewTransferStatus());
             return true;

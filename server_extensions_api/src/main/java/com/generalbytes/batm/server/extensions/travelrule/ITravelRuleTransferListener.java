@@ -18,14 +18,13 @@
 package com.generalbytes.batm.server.extensions.travelrule;
 
 /**
- * Represents a listener for transfer status updates.
+ * Represents a listener for transfer events.
  *
- * <p>This listener can be registered to a Travel Rule Provider to receive updates on transfer statuses.</p>
+ * <p>This listener can be registered to a Travel Rule Provider to receive all transfer-related events.</p>
  *
- * @see ITravelRuleProvider#registerStatusUpdateListener(ITravelRuleTransferUpdateListener)
+ * @see ITravelRuleProvider#registerTransferListener(ITravelRuleTransferListener)
  */
-@FunctionalInterface
-public interface ITravelRuleTransferUpdateListener {
+public interface ITravelRuleTransferListener {
 
     /**
      * Call this method whenever a transfer changes status to one that can be represented with {@link TravelRuleProviderTransferStatus}.
@@ -37,5 +36,17 @@ public interface ITravelRuleTransferUpdateListener {
      * @throws IllegalArgumentException If transferPublicId or newTransferStatus in the event is null or invalid.
      */
     void onTransferStatusUpdate(ITravelRuleTransferStatusUpdateEvent event);
+
+    /**
+     * Call this method when you receive a new incoming transfer from the provider.
+     *
+     * <p>The server provides an implementation for this interface and further processing
+     * of incoming transfers depends on calling this method.</p>
+     *
+     * @param event Event containing data about the incoming transfer.
+     * @return An object containing data with the results of evaluating an incoming transfer.
+     * @throws IllegalArgumentException If some parameters in event are invalid.
+     */
+    ITravelRuleIncomingTransferResult onIncomingTransferReceived(ITravelRuleIncomingTransferEvent event);
 
 }
