@@ -7,7 +7,7 @@ import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleNaturalPers
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProviderCredentials;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferData;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferInfo;
-import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferUpdateListener;
+import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferListener;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferUpdateRequest;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleVasp;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleWalletInfo;
@@ -261,11 +261,11 @@ class NotabeneTravelRuleProviderTest {
 
     @Test
     void testRegisterListener_valid() {
-        ITravelRuleTransferUpdateListener listener = mock(ITravelRuleTransferUpdateListener.class);
+        ITravelRuleTransferListener listener = mock(ITravelRuleTransferListener.class);
         when(notabeneService.registerWebhook(any())).thenReturn(true);
 
         try (MockedConstruction<NotabeneTransferStatusUpdateListener> listenerMockedConstruction = mockNotabeneListenerConstruction(listener)) {
-            provider.registerStatusUpdateListener(listener);
+            provider.registerTransferListener(listener);
 
             assertEquals(1, listenerMockedConstruction.constructed().size());
             NotabeneTransferStatusUpdateListener notabeneListener = listenerMockedConstruction.constructed().get(0);
@@ -275,11 +275,11 @@ class NotabeneTravelRuleProviderTest {
 
     @Test
     void testRegisterListener_fail() {
-        ITravelRuleTransferUpdateListener listener = mock(ITravelRuleTransferUpdateListener.class);
+        ITravelRuleTransferListener listener = mock(ITravelRuleTransferListener.class);
         when(notabeneService.registerWebhook(any())).thenReturn(false);
 
         try (MockedConstruction<NotabeneTransferStatusUpdateListener> listenerMockedConstruction = mockNotabeneListenerConstruction(listener)) {
-            provider.registerStatusUpdateListener(listener);
+            provider.registerTransferListener(listener);
 
             assertEquals(0, listenerMockedConstruction.constructed().size());
             verify(notabeneTransferPublisher, never()).registerListener(any(), any());
@@ -288,7 +288,7 @@ class NotabeneTravelRuleProviderTest {
 
     @Test
     void testUnregisterListener_valid() {
-        provider.unregisterStatusUpdateListener();
+        provider.unregisterTransferListener();
 
         verify(notabeneTransferPublisher, times(1)).unregisterListener("vaspDid");
     }
@@ -385,9 +385,9 @@ class NotabeneTravelRuleProviderTest {
     }
 
     private MockedConstruction<NotabeneTransferStatusUpdateListener> mockNotabeneListenerConstruction(
-        ITravelRuleTransferUpdateListener listener) {
+        ITravelRuleTransferListener listener) {
         return mockConstruction(NotabeneTransferStatusUpdateListener.class, (mock, context) -> {
-            assertInstanceOf(ITravelRuleTransferUpdateListener.class, context.arguments().get(0));
+            assertInstanceOf(ITravelRuleTransferListener.class, context.arguments().get(0));
             assertEquals(listener, context.arguments().get(0));
         });
     }

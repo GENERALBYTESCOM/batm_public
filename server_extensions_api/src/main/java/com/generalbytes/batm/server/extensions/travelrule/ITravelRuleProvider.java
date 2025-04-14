@@ -72,23 +72,27 @@ public interface ITravelRuleProvider {
     ITravelRuleTransferInfo createTransfer(ITravelRuleTransferData outgoingTransferData);
 
     /**
-     * Register a new listener for transfer status updates.
+     * Register a new listener for transfer events.
      *
      * <p>Whenever the status of a transfer, related to the given VASP, changes, the method
-     * {@link ITravelRuleTransferUpdateListener#onTransferStatusUpdate(ITravelRuleTransferStatusUpdateEvent)}
-     * on this listener will be called.</p>
+     * {@link ITravelRuleTransferListener#onTransferStatusUpdate(ITravelRuleTransferStatusUpdateEvent)}
+     * on this listener must be called.</p>
+     *
+     * <p>When receiving an incoming transfer, the method
+     * {@link ITravelRuleTransferListener#onIncomingTransferReceived(ITravelRuleIncomingTransferEvent)}
+     * on this listener must be called.</p>
      *
      * @param listener The listener.
      * @return True if the listener was successfully registered, false otherwise.
      */
-    boolean registerStatusUpdateListener(ITravelRuleTransferUpdateListener listener);
+    boolean registerTransferListener(ITravelRuleTransferListener listener);
 
     /**
-     * Unregister an existing listener for transfer status updates.
+     * Unregister an existing listener for transfer events.
      *
      * @return True if the listener was successfully unregistered, false otherwise.
      */
-    boolean unregisterStatusUpdateListener();
+    boolean unregisterTransferListener();
 
     /**
      * Update an existing transfer.

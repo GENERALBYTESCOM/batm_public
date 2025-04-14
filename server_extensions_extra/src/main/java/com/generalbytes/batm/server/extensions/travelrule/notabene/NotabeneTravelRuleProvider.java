@@ -7,7 +7,7 @@ import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProvider;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProviderCredentials;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferData;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferInfo;
-import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferUpdateListener;
+import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferListener;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferUpdateRequest;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleVasp;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleWalletInfo;
@@ -107,7 +107,7 @@ public class NotabeneTravelRuleProvider implements ITravelRuleProvider {
     }
 
     @Override
-    public boolean registerStatusUpdateListener(ITravelRuleTransferUpdateListener listener) {
+    public boolean registerTransferListener(ITravelRuleTransferListener listener) {
         if (notabeneService.registerWebhook(credentials)) {
             NotabeneTransferUpdateListener notabeneListener = new NotabeneTransferStatusUpdateListener(listener);
             notabeneTransferPublisher.registerListener(credentials.getVaspDid(), notabeneListener);
@@ -117,7 +117,7 @@ public class NotabeneTravelRuleProvider implements ITravelRuleProvider {
     }
 
     @Override
-    public boolean unregisterStatusUpdateListener() {
+    public boolean unregisterTransferListener() {
         notabeneTransferPublisher.unregisterListener(credentials.getVaspDid());
         return true;
     }
