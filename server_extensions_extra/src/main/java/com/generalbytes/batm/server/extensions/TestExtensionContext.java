@@ -512,4 +512,9 @@ public class TestExtensionContext implements IExtensionContext {
     public ReceiptData getReceiptData(ReceiptTransferMethod receiptTransferMethod, ITransactionDetails transactionDetails, String template) {
         return null;
     }
+
+    @Override
+    public ITransactionDetails addTransactionHash(String transactionRemoteId, String transactionHash) {
+        return null;
+    }
 }
