@@ -933,4 +933,18 @@ public interface IExtensionContext {
      */
     default List<IVaspIdentification> getVasps(long travelRuleProviderId) { return new ArrayList<>(); }
 
+    /**
+     * Adds a blockchain transaction hash to the transaction identified by the given remote transaction ID.
+     *
+     * <p>A single business-level transaction may correspond to multiple underlying blockchain transactions.
+     * This method allows additional hashes to be associated with the same transaction record.</p>
+     *
+     * @param transactionRemoteId the remote transaction ID identifying the transaction to update
+     * @param transactionHash     the blockchain transaction hash to add
+     * @return the updated transaction details after the hash is added
+     * @throws IllegalArgumentException if the remote id or hash is null or blank
+     * @throws UpdateException          if the transaction does not exist, or the update fails
+     */
+    ITransactionDetails addTransactionHash(String transactionRemoteId, String transactionHash) throws UpdateException;
+
 }
