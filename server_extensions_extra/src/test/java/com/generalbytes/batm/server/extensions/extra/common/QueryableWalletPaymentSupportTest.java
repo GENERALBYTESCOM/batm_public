@@ -7,8 +7,11 @@ import com.generalbytes.batm.server.extensions.extra.ethereum.UsdtPaymentSupport
 import com.generalbytes.batm.server.extensions.payment.PaymentRequest;
 import com.generalbytes.batm.server.extensions.payment.ReceivedAmount;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -68,6 +71,28 @@ class QueryableWalletPaymentSupportTest {
     @Test
     void overNotInToleranceWithOverageAllowed() {
         test("1", "0.1", true, "1.15", PaymentRequest.STATE_SEEN_IN_BLOCK_CHAIN);
+    }
+
+    private static Object[][] provideTestPollTransactionHashes() {
+        return new Object[][]{
+            {List.of("transactionHash1", "transactionHash2"), "transactionHash1 transactionHash2"},
+            {List.of("transactionHash1"), "transactionHash1"},
+            {List.of(), null},
+            {null, null}
+        };
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideTestPollTransactionHashes")
+    void testPoll_transactionHashes(List<String> transactionHashes, String expectedTransactionHash) {
+        PaymentRequest request = getPaymentRequest("1", "0.2", false);
+        received = new ReceivedAmount(BigDecimal.ONE, 0);
+        received.setTransactionHashes(transactionHashes);
+
+        paymentSupport.poll(request);
+
+        assertEquals(PaymentRequest.STATE_SEEN_TRANSACTION, request.getState());
+        assertEquals(expectedTransactionHash, request.getIncomingTransactionHash());
     }
 
     private void test(String requestedAmount, String tolerance, boolean overageAllowed, String received, int expectedState) {
