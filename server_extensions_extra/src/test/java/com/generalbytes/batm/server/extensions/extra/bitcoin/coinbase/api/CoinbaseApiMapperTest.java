@@ -11,6 +11,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.Co
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseCreateOrderSuccessResponse;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseCurrency;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseMarketOrderConfiguration;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseNetwork;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseOrder;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseOrderResponse;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseOrderSide;
@@ -261,6 +262,27 @@ public class CoinbaseApiMapperTest {
 
     @Test
     public void testMapSendCoinsResponseToLegacyResponse() {
+        CoinbaseNetwork coinbaseNetwork = new CoinbaseNetwork();
+        coinbaseNetwork.setHash("hash");
+
+        CoinbaseTransaction transaction = new CoinbaseTransaction();
+        transaction.setId("id");
+        transaction.setNetwork(coinbaseNetwork);
+
+        CoinbaseTransactionResponse response = new CoinbaseTransactionResponse();
+        response.setTransaction(transaction);
+
+        CBSendCoinsResponse legacyResponse = CoinbaseApiMapper.mapSendCoinsResponseToLegacyResponse(response);
+
+        assertNotNull(legacyResponse);
+        assertNotNull(legacyResponse.data);
+        assertEquals(transaction.getId(), legacyResponse.data.id);
+        assertNotNull(legacyResponse.data.network);
+        assertEquals(coinbaseNetwork.getHash(), legacyResponse.data.network.hash);
+    }
+
+    @Test
+    public void testMapSendCoinsResponseToLegacyResponse_nullNetwork() {
         CoinbaseTransaction transaction = new CoinbaseTransaction();
         transaction.setId("id");
 
@@ -272,6 +294,7 @@ public class CoinbaseApiMapperTest {
         assertNotNull(legacyResponse);
         assertNotNull(legacyResponse.data);
         assertEquals(transaction.getId(), legacyResponse.data.id);
+        assertNull(legacyResponse.data.network);
     }
 
     @Test

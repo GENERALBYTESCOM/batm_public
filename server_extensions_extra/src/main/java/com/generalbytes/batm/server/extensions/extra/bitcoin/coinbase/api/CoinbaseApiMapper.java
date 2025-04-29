@@ -27,6 +27,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.Co
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseCreateOrderResponse;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseCurrency;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseMarketOrderConfiguration;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseNetwork;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseOrderConfiguration;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseOrderResponse;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseOrderSide;
@@ -236,7 +237,18 @@ public final class CoinbaseApiMapper {
 
         CBTransaction legacyTransaction = new CBTransaction();
         legacyTransaction.id = transaction.getId();
+        legacyTransaction.network = mapTransactionNetworkToLegacyNetwork(transaction.getNetwork());
         return legacyTransaction;
+    }
+
+    private static CBTransaction.CBNetwork mapTransactionNetworkToLegacyNetwork(CoinbaseNetwork network) {
+        if (network == null) {
+            return null;
+        }
+
+        CBTransaction.CBNetwork legacyNetwork = new CBTransaction.CBNetwork();
+        legacyNetwork.hash = network.getHash();
+        return legacyNetwork;
     }
 
     /**
@@ -356,21 +368,11 @@ public final class CoinbaseApiMapper {
         if (status == null) {
             return null;
         }
-        switch (status) {
-            case QUEUED:
-            case PENDING:
-            case OPEN:
-                return "created";
-            case FILLED:
-                return "completed";
-            case EXPIRED:
-            case FAILED:
-            case UNKNOWN_ORDER_STATUS:
-            case CANCEL_QUEUED:
-            case CANCELLED:
-                return "cancelled";
-        }
-        return null;
+        return switch (status) {
+            case QUEUED, PENDING, OPEN -> "created";
+            case FILLED -> "completed";
+            case EXPIRED, FAILED, UNKNOWN_ORDER_STATUS, CANCEL_QUEUED, CANCELLED -> "cancelled";
+        };
     }
 
     /**
