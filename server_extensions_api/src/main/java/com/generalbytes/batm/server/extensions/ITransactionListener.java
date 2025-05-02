@@ -17,6 +17,10 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions;
 
+import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleIncomingTransferData;
+import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferData;
+import com.generalbytes.batm.server.extensions.travelrule.TravelRuleProviderTransferStatus;
+
 import java.util.Map;
 
 public interface ITransactionListener {
@@ -185,6 +189,22 @@ public interface ITransactionListener {
      */
     default IDepositRequest overrideDepositRequest(IDepositRequest request) {
         return request;
+    }
+
+    /**
+     * Called when an incoming transfer from the Travel Rule provider is received and processed.
+     * It is used to automatically evaluate the status of the transfer.
+     *
+     * @param storedTransferData   Transfer data which is already stored on the server.
+     * @param incomingTransferData Newly received data from Travel Rule provider.
+     * @return The new status to which the transfer is to be transitioned.
+     *         If {@link TravelRuleProviderTransferStatus#IN_PROGRESS} is returned,
+     *         the status will be further evaluated according to the internal mechanism on the server.
+     */
+    default TravelRuleProviderTransferStatus evaluateTravelRuleIncomingTransfer(ITravelRuleTransferData storedTransferData,
+                                                                                ITravelRuleIncomingTransferData incomingTransferData
+    ) {
+        return TravelRuleProviderTransferStatus.IN_PROGRESS;
     }
 
 }
