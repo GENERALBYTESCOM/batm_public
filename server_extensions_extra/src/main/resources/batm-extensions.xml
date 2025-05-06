@@ -320,6 +320,14 @@
                 <param name="fiatcurrency" />
                 <cryptocurrency>BTC</cryptocurrency>
             </ratesource>
+            <ratesource prefix="okx" name="OKX Exchange" >
+                <param name="fiatcurrency" />
+                <cryptocurrency>BTC</cryptocurrency>
+                <cryptocurrency>DOGE</cryptocurrency>
+                <cryptocurrency>ETH</cryptocurrency>
+                <cryptocurrency>LTC</cryptocurrency>
+                <cryptocurrency>USDT</cryptocurrency>
+            </ratesource>
             <exchange prefix="bitflyer" name="BitFlyer.jp Exchange">
                 <param name="fiatcurrency" />
                 <param name="key" />
@@ -1635,6 +1643,17 @@
             <param name="price" />
             <param name="fiatcurrency" />
             <cryptocurrency>DEX</cryptocurrency>
+        </exchange>
+        <exchange prefix="okx" name="OKX Exchange">
+            <param name="apikey" />
+            <param name="secretkey" />
+            <param name="passphrase" />
+            <param name="fiatcurrency" />
+            <cryptocurrency buyonly="true">BTC</cryptocurrency>
+            <cryptocurrency buyonly="true">DOGE</cryptocurrency>
+            <cryptocurrency buyonly="true">ETH</cryptocurrency>
+            <cryptocurrency buyonly="true">LTC</cryptocurrency>
+            <cryptocurrency buyonly="true">USDT</cryptocurrency>
         </exchange>
         <cryptologo cryptocurrency="DEX" file="dex.png"/>
     </extension>
