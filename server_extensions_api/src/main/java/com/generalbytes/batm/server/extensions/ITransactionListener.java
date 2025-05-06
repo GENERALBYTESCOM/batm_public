@@ -17,6 +17,11 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions;
 
+import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleIncomingTransferData;
+import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferData;
+import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferListener;
+import com.generalbytes.batm.server.extensions.travelrule.TravelRuleProviderTransferStatus;
+
 import java.util.Map;
 
 public interface ITransactionListener {
@@ -185,6 +190,30 @@ public interface ITransactionListener {
      */
     default IDepositRequest overrideDepositRequest(IDepositRequest request) {
         return request;
+    }
+
+    /**
+     * This method can be used to approve/reject an incoming transfer.
+     *
+     * <p>Called when an incoming transfer is received using {@link ITravelRuleTransferListener#onIncomingTransferReceived}
+     * from the Travel Rule provider.</p>
+     *
+     * <p>Called before the internal evaluation of the transfer on the server and the result returned from this method
+     * always takes precedence. If you want to use the server's internal evaluation mechanism,
+     * return {@link TravelRuleProviderTransferStatus#IN_PROGRESS}.</p>
+     *
+     * <p>When calling this method, it is guaranteed that the transfer can be set to both APPROVED and REJECTED status.</p>
+     *
+     * @param storedTransferData   Transfer data which is already stored on the server.
+     * @param incomingTransferData Newly received data from Travel Rule provider.
+     * @return The new status to which the transfer is to be transitioned.
+     *         If {@link TravelRuleProviderTransferStatus#IN_PROGRESS} is returned,
+     *         the status will be further evaluated according to the internal mechanism on the server.
+     */
+    default TravelRuleProviderTransferStatus evaluateTravelRuleIncomingTransfer(ITravelRuleTransferData storedTransferData,
+                                                                                ITravelRuleIncomingTransferData incomingTransferData
+    ) {
+        return TravelRuleProviderTransferStatus.IN_PROGRESS;
     }
 
 }
