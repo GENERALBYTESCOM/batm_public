@@ -52,6 +52,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinzix.C
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.dvchain.DVChainExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.enigma.EnigmaExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.hitbtc.HitbtcExchange;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.okx.OkxExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.poloniex.PoloniexExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillmandigital.StillmanDigitalExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.bitcoinpay.BitcoinPayPP;
@@ -236,6 +237,15 @@ public class BitcoinExtension extends AbstractExtension {
                 String apiSecret = paramTokenizer.nextToken();
                 boolean useSandbox = paramTokenizer.hasMoreTokens() && paramTokenizer.nextToken().equals("sandbox");
                 return new StillmanDigitalExchange(apiKey, apiSecret, useSandbox);
+            } else if ("okx".equalsIgnoreCase(prefix)) {
+                String preferredFiatCurrency = FiatCurrency.USD.getCode();
+                String apiKey = paramTokenizer.nextToken();
+                String secretKey = paramTokenizer.nextToken();
+                String passphrase = paramTokenizer.nextToken();
+                if (paramTokenizer.hasMoreTokens()) {
+                    preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase();
+                }
+                return new OkxExchange(preferredFiatCurrency, apiKey, secretKey, passphrase);
             }
         }
         } catch (Exception e) {
@@ -657,6 +667,12 @@ public class BitcoinExtension extends AbstractExtension {
                 String apiSecret = st.nextToken();
                 boolean useSandbox = st.hasMoreTokens() && st.nextToken().equals("sandbox");
                 return new StillmanDigitalExchange(apiKey, apiSecret, useSandbox);
+            } else if ("okx".equalsIgnoreCase(rsType)) {
+                String preferredFiatCurrency = FiatCurrency.USD.getCode();
+                if (st.hasMoreTokens()) {
+                    preferredFiatCurrency = st.nextToken().toUpperCase();
+                }
+                return new OkxExchange(preferredFiatCurrency);
             }
         }
         } catch (Exception e) {
