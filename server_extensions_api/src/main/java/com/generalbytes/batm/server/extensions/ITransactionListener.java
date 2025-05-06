@@ -200,6 +200,8 @@ public interface ITransactionListener {
      * @return The new status to which the transfer is to be transitioned.
      *         If {@link TravelRuleProviderTransferStatus#IN_PROGRESS} is returned,
      *         the status will be further evaluated according to the internal mechanism on the server.
+     *         If {@link TravelRuleProviderTransferStatus#APPROVED} or {@link TravelRuleProviderTransferStatus#REJECTED} is returned,
+     *         it is further validated whether it is possible to set the transfer to such a status.
      */
     default TravelRuleProviderTransferStatus evaluateTravelRuleIncomingTransfer(ITravelRuleTransferData storedTransferData,
                                                                                 ITravelRuleIncomingTransferData incomingTransferData
