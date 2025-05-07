@@ -51,7 +51,8 @@ public class NanoRpcClient {
                 blocks.add(new Block(
                     block.get("type").asText(),
                     block.get("account").asText(),
-                    new BigInteger(block.get("amount").asText())
+                    new BigInteger(block.get("amount").asText()),
+                    getHash(block)
                 ));
             }
             return blocks;
@@ -61,6 +62,14 @@ public class NanoRpcClient {
             }
             throw e;
         }
+    }
+
+    private String getHash(ObjectNode blockNode) {
+        JsonNode hashNode = blockNode.get("hash");
+        if (hashNode == null || hashNode.isNull()) {
+            return null;
+        }
+        return hashNode.asText();
     }
 
     /** Returns true if the account has at least 1 block. */

@@ -5,6 +5,7 @@ import com.generalbytes.batm.server.extensions.extra.nano.rpc.NanoRpcClient;
 import com.generalbytes.batm.server.extensions.extra.nano.rpc.NanoWsClient;
 import com.generalbytes.batm.server.extensions.extra.nano.rpc.RpcException;
 import com.generalbytes.batm.server.extensions.extra.nano.rpc.dto.AccountBalance;
+import com.generalbytes.batm.server.extensions.extra.nano.rpc.dto.Block;
 import com.generalbytes.batm.server.extensions.extra.nano.util.NanoUtil;
 import com.generalbytes.batm.server.extensions.payment.ReceivedAmount;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,9 +19,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -65,6 +68,27 @@ class NanoNodeWalletTest {
     }
 
     @ParameterizedTest
+    @ValueSource(classes = {IOException.class, RpcException.class})
+    void testGetReceivedAmount_exceptionOnTransactionHistory(Class<? extends Exception> exceptionType) throws IOException, RpcException {
+        AccountBalance accountBalance = new AccountBalance(BigInteger.TEN, BigInteger.TEN, BigInteger.TEN);
+
+        when(nanoRpcClient.getBalance(TEST_ADDRESS)).thenReturn(accountBalance);
+        when(nanoExtensionContext.getUtil()).thenReturn(nanoUtil);
+        when(nanoUtil.parseAddress(TEST_ADDRESS)).thenReturn(TEST_ADDRESS);
+        when(nanoUtil.amountFromRaw(any(BigInteger.class))).thenAnswer(invocation -> {
+            BigInteger rawAmount = invocation.getArgument(0);
+            return new BigDecimal(rawAmount);
+        });
+        when(nanoRpcClient.getTransactionHistory(TEST_ADDRESS)).thenThrow(exceptionType);
+
+        ReceivedAmount receivedAmount = nanoNodeWallet.getReceivedAmount(TEST_ADDRESS, TEST_CRYPTOCURRENCY);
+
+        assertEquals(BigDecimal.TEN, receivedAmount.getTotalAmountReceived());
+        assertEquals(Integer.MAX_VALUE, receivedAmount.getConfirmations());
+        assertTrue(receivedAmount.getTransactionHashes().isEmpty());
+    }
+
+    @ParameterizedTest
     @CsvSource({
             // expected amount, confirmed balance, unconfirmed balance, pending balance, expected confirmations
             // Zero confirmed balance
@@ -90,12 +114,22 @@ class NanoNodeWalletTest {
             BigInteger rawAmount = invocation.getArgument(0);
             return new BigDecimal(rawAmount);
         });
+        when(nanoRpcClient.getTransactionHistory(TEST_ADDRESS)).thenReturn(List.of(
+                new Block("receive", TEST_ADDRESS, BigInteger.TEN, "testHash1"),
+                new Block("send", TEST_ADDRESS, BigInteger.TEN, "testHash2"), // invalid transaction type
+                new Block("receive", TEST_ADDRESS, BigInteger.TEN, "testHash3"),
+                new Block("receive", TEST_ADDRESS, BigInteger.TEN, ""), // invalid hash
+                new Block("receive", TEST_ADDRESS, BigInteger.TEN, "  "), // invalid hash
+                new Block("receive", TEST_ADDRESS, BigInteger.TEN, null) // invalid hash
+        ));
 
         ReceivedAmount receivedAmount = nanoNodeWallet.getReceivedAmount(TEST_ADDRESS, TEST_CRYPTOCURRENCY);
 
         assertEquals(expectedAmount, receivedAmount.getTotalAmountReceived());
         assertEquals(expectedConfirmations, receivedAmount.getConfirmations());
-        assertNull(receivedAmount.getTransactionHashes());
+        assertEquals(2, receivedAmount.getTransactionHashes().size());
+        assertEquals("testHash1", receivedAmount.getTransactionHashes().get(0));
+        assertEquals("testHash3", receivedAmount.getTransactionHashes().get(1));
     }
 
 }

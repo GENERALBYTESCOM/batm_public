@@ -8,6 +8,7 @@ import com.generalbytes.batm.server.extensions.extra.nano.rpc.NanoRpcClient;
 import com.generalbytes.batm.server.extensions.extra.nano.rpc.NanoWsClient;
 import com.generalbytes.batm.server.extensions.extra.nano.rpc.RpcException;
 import com.generalbytes.batm.server.extensions.extra.nano.rpc.dto.AccountBalance;
+import com.generalbytes.batm.server.extensions.extra.nano.rpc.dto.Block;
 import com.generalbytes.batm.server.extensions.payment.ReceivedAmount;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,7 @@ import java.math.BigInteger;
 import java.net.URI;
 import java.net.URL;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.UUID;
@@ -32,10 +34,11 @@ public class NanoNodeWallet implements INanoRpcWallet, IGeneratesNewDepositCrypt
     private final NanoExtensionContext context;
     private final NanoRpcClient rpcClient;
     private final NanoWsClient wsClient;
-    private final String walletId, hotWalletAccount;
+    private final String walletId;
+    private final String hotWalletAccount;
 
     public NanoNodeWallet(NanoExtensionContext context, NanoRpcClient rpcClient, NanoWsClient wsClient,
-                           String walletId, String hotWalletAccount) {
+                          String walletId, String hotWalletAccount) {
         this.context = context;
         this.rpcClient = rpcClient;
         this.wsClient = wsClient;
@@ -108,14 +111,39 @@ public class NanoNodeWallet implements INanoRpcWallet, IGeneratesNewDepositCrypt
              *       issues are resolved, and would speed up deposit confirmation times.
              */
             AccountBalance balance = rpcClient.getBalance(address);
-            if (balance.confBalance().compareTo(BigInteger.ZERO) > 0)
-                return new ReceivedAmount(context.getUtil().amountFromRaw(balance.confBalance()), Integer.MAX_VALUE);
-            // No balance; return unconfirmed and pending blocks with confirmation 0
-            BigInteger unconfTotal = balance.unconfBalance().add(balance.unconfPending());
-            return new ReceivedAmount(context.getUtil().amountFromRaw(unconfTotal), 0);
+
+            ReceivedAmount receivedAmount;
+            if (balance.confBalance().compareTo(BigInteger.ZERO) > 0) {
+                receivedAmount = new ReceivedAmount(
+                    context.getUtil().amountFromRaw(balance.confBalance()),
+                    Integer.MAX_VALUE
+                );
+            } else {
+                BigInteger unconfirmedTotal = balance.unconfBalance().add(balance.unconfPending());
+                receivedAmount = new ReceivedAmount(
+                    context.getUtil().amountFromRaw(unconfirmedTotal),
+                    0
+                );
+            }
+
+            receivedAmount.setTransactionHashes(getHashesOfReceivedTransactions(address));
+            return receivedAmount;
         } catch (RpcException | IOException e) {
             log.error("Couldn't retrieve balance for account {}.", address, e);
             return null;
+        }
+    }
+
+    private List<String> getHashesOfReceivedTransactions(String address) throws IOException, RpcException {
+        try {
+            return rpcClient.getTransactionHistory(address).stream()
+                .filter(block -> Block.TYPE_RECEIVE.equalsIgnoreCase(block.type()))
+                .map(Block::hash)
+                .filter(hash -> hash != null && !hash.isBlank())
+                .toList();
+        } catch (IOException | RpcException e) {
+            log.warn("Couldn't retrieve transaction history for account {}.", address, e);
+            return Collections.emptyList();
         }
     }
 

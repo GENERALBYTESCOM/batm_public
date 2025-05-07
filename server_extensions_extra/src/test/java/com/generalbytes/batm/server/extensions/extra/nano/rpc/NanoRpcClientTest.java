@@ -99,9 +99,11 @@ class NanoRpcClientTest {
     }
 
     @Test
-    void testGetTransactionHistory() throws IOException, RpcException {
+    void testGetTransactionHistory_invalidHash() throws IOException, RpcException {
         mockResponse("{\"history\": [" +
-                "{\"type\": \"receive\", \"account\": \"testAccount1\", \"amount\": \"1000\"}," +
+                // Hash is null
+                "{\"type\": \"receive\", \"account\": \"testAccount1\", \"amount\": \"1000\", \"hash\": null}," +
+                // Hash is missing
                 "{\"type\": \"send\", \"account\": \"testAccount2\", \"amount\": \"2000\"}" +
                 "]}");
 
@@ -110,15 +112,33 @@ class NanoRpcClientTest {
         assertNotNull(transactionHistory);
         assertEquals(2, transactionHistory.size());
         Block block1 = transactionHistory.get(0);
-        assertBlock(block1, "receive", "testAccount1", "1000");
+        assertBlock(block1, "receive", "testAccount1", "1000", null);
         Block block2 = transactionHistory.get(1);
-        assertBlock(block2, "send", "testAccount2", "2000");
+        assertBlock(block2, "send", "testAccount2", "2000", null);
     }
 
-    private void assertBlock(Block block, String receive, String account, String number) {
+    @Test
+    void testGetTransactionHistory() throws IOException, RpcException {
+        mockResponse("{\"history\": [" +
+                "{\"type\": \"receive\", \"account\": \"testAccount1\", \"amount\": \"1000\", \"hash\": \"testHash1\"}," +
+                "{\"type\": \"send\", \"account\": \"testAccount2\", \"amount\": \"2000\", \"hash\": \"testHash2\"}" +
+                "]}");
+
+        List<Block> transactionHistory = nanoRpcClient.getTransactionHistory(TEST_ADDRESS);
+
+        assertNotNull(transactionHistory);
+        assertEquals(2, transactionHistory.size());
+        Block block1 = transactionHistory.get(0);
+        assertBlock(block1, "receive", "testAccount1", "1000", "testHash1");
+        Block block2 = transactionHistory.get(1);
+        assertBlock(block2, "send", "testAccount2", "2000", "testHash2");
+    }
+
+    private void assertBlock(Block block, String receive, String account, String number, String hash) {
         assertEquals(receive, block.type());
         assertEquals(account, block.account());
         assertEquals(number, block.amount().toString());
+        assertEquals(hash, block.hash());
     }
 
     private void mockResponse(String responseBodyJson) throws IOException {
