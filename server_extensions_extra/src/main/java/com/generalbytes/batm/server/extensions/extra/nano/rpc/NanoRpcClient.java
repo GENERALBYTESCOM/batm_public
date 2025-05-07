@@ -185,7 +185,7 @@ public class NanoRpcClient {
         public final String type, account;
         public final BigInteger amount;
 
-        private Block(String type, String account, BigInteger amount) {
+        public Block(String type, String account, BigInteger amount) {
             this.type = type;
             this.account = account;
             this.amount = amount;
