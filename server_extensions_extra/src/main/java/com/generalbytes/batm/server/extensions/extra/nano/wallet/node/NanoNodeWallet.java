@@ -60,8 +60,7 @@ public class NanoNodeWallet implements INanoRpcWallet, IGeneratesNewDepositCrypt
         try {
             BigInteger balance = rpcClient.getBalance(depositAddress).unconfBalance();
             if (!balance.equals(BigInteger.ZERO)) {
-                String hash = rpcClient.sendFromWallet(walletId, depositAddress, destination,
-                    balance, UUID.randomUUID().toString());
+                String hash = rpcClient.sendFromWallet(walletId, depositAddress, destination, balance, UUID.randomUUID().toString());
                 log.info("Sent {} to {}, hash: {}", balance, destination, hash);
                 return balance;
             }
@@ -186,8 +185,7 @@ public class NanoNodeWallet implements INanoRpcWallet, IGeneratesNewDepositCrypt
         BigInteger amountRaw = context.getUtil().amountToRaw(amount);
         log.info("Sending {} Nano from hot wallet to {}...", amount, destinationAddress);
         try {
-            String hash = rpcClient.sendFromWallet(walletId, hotWalletAccount, destinationAddress,
-                    amountRaw, description);
+            String hash = rpcClient.sendFromWallet(walletId, hotWalletAccount, destinationAddress, amountRaw, description);
             log.info("Sent {} Nano from hot wallet to {}, hash = {}", amount, destinationAddress, hash);
             return hash;
         } catch (RpcException | IOException e) {
@@ -229,12 +227,12 @@ public class NanoNodeWallet implements INanoRpcWallet, IGeneratesNewDepositCrypt
         }
 
         log.info("Using nano_node wallet: RPC: {}, WS: {}, Wallet ID: {}, Hot-wallet: {}",
-                rpcUrl, wsUri != null ? wsUri : "[not used]", walletId, walletAccount);
+            rpcUrl, wsUri != null ? wsUri : "[not used]", walletId, walletAccount);
 
         return new NanoNodeWallet(context,
-                new NanoRpcClient(rpcUrl),
-                wsUri != null ? new NanoWsClient(wsUri) : null,
-                walletId, walletAccount);
+            new NanoRpcClient(rpcUrl),
+            wsUri != null ? new NanoWsClient(wsUri) : null,
+            walletId, walletAccount);
     }
 
 }
