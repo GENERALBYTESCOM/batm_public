@@ -1,5 +1,6 @@
 package com.generalbytes.batm.server.extensions.extra.nano.rpc;
 
+import com.generalbytes.batm.server.extensions.extra.nano.rpc.dto.Block;
 import okhttp3.Call;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -61,7 +62,7 @@ class NanoRpcClientTest {
     void testGetTransactionHistory_responseNotObject() throws IOException {
         mockResponse("[]");
 
-        NanoRpcClient.RpcException exception = assertThrows(NanoRpcClient.RpcException.class,
+        RpcException exception = assertThrows(RpcException.class,
                 () -> nanoRpcClient.getTransactionHistory(TEST_ADDRESS));
 
         assertEquals("Response is not a JSON object.", exception.getMessage());
@@ -71,53 +72,53 @@ class NanoRpcClientTest {
     void testGetTransactionHistory_responseHasError() throws IOException {
         mockResponse("{\"error\": \"Test Error\"}");
 
-        NanoRpcClient.RpcException exception = assertThrows(NanoRpcClient.RpcException.class,
+        RpcException exception = assertThrows(RpcException.class,
                 () -> nanoRpcClient.getTransactionHistory(TEST_ADDRESS));
 
         assertEquals("Test Error", exception.getMessage());
     }
 
     @Test
-    void testGetTransactionHistory_responseHasError_accountNotFound() throws IOException, NanoRpcClient.RpcException {
+    void testGetTransactionHistory_responseHasError_accountNotFound() throws IOException, RpcException {
         mockResponse("{\"error\": \"Account not found\"}");
 
-        List<NanoRpcClient.Block> transactionHistory = nanoRpcClient.getTransactionHistory(TEST_ADDRESS);
+        List<Block> transactionHistory = nanoRpcClient.getTransactionHistory(TEST_ADDRESS);
 
         assertNotNull(transactionHistory);
         assertEquals(0, transactionHistory.size());
     }
 
     @Test
-    void testGetTransactionHistory_emptyHistory() throws IOException, NanoRpcClient.RpcException {
+    void testGetTransactionHistory_emptyHistory() throws IOException, RpcException {
         mockResponse("{\"history\": []}");
 
-        List<NanoRpcClient.Block> transactionHistory = nanoRpcClient.getTransactionHistory(TEST_ADDRESS);
+        List<Block> transactionHistory = nanoRpcClient.getTransactionHistory(TEST_ADDRESS);
 
         assertNotNull(transactionHistory);
         assertEquals(0, transactionHistory.size());
     }
 
     @Test
-    void testGetTransactionHistory() throws IOException, NanoRpcClient.RpcException {
+    void testGetTransactionHistory() throws IOException, RpcException {
         mockResponse("{\"history\": [" +
                 "{\"type\": \"receive\", \"account\": \"testAccount1\", \"amount\": \"1000\"}," +
                 "{\"type\": \"send\", \"account\": \"testAccount2\", \"amount\": \"2000\"}" +
                 "]}");
 
-        List<NanoRpcClient.Block> transactionHistory = nanoRpcClient.getTransactionHistory(TEST_ADDRESS);
+        List<Block> transactionHistory = nanoRpcClient.getTransactionHistory(TEST_ADDRESS);
 
         assertNotNull(transactionHistory);
         assertEquals(2, transactionHistory.size());
-        NanoRpcClient.Block block1 = transactionHistory.get(0);
+        Block block1 = transactionHistory.get(0);
         assertBlock(block1, "receive", "testAccount1", "1000");
-        NanoRpcClient.Block block2 = transactionHistory.get(1);
+        Block block2 = transactionHistory.get(1);
         assertBlock(block2, "send", "testAccount2", "2000");
     }
 
-    private void assertBlock(NanoRpcClient.Block block, String receive, String account, String number) {
-        assertEquals(receive, block.type);
-        assertEquals(account, block.account);
-        assertEquals(number, block.amount.toString());
+    private void assertBlock(Block block, String receive, String account, String number) {
+        assertEquals(receive, block.type());
+        assertEquals(account, block.account());
+        assertEquals(number, block.amount().toString());
     }
 
     private void mockResponse(String responseBodyJson) throws IOException {

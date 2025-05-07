@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.generalbytes.batm.server.extensions.extra.nano.rpc.dto.AccountBalance;
+import com.generalbytes.batm.server.extensions.extra.nano.rpc.dto.Block;
 import okhttp3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -161,34 +163,6 @@ public class NanoRpcClient {
                 .build());
         try (Response response = call.execute()){
             return response.body().string();
-        }
-    }
-
-
-    public static class RpcException extends Exception {
-        public RpcException(String message) {
-            super(message);
-        }
-    }
-
-    public static class AccountBalance {
-        public final BigInteger confBalance, unconfBalance, unconfPending;
-
-        public AccountBalance(BigInteger confBalance, BigInteger unconfBalance, BigInteger unconfPending) {
-            this.confBalance = confBalance;
-            this.unconfBalance = unconfBalance;
-            this.unconfPending = unconfPending;
-        }
-    }
-
-    public static class Block {
-        public final String type, account;
-        public final BigInteger amount;
-
-        public Block(String type, String account, BigInteger amount) {
-            this.type = type;
-            this.account = account;
-            this.amount = amount;
         }
     }
 

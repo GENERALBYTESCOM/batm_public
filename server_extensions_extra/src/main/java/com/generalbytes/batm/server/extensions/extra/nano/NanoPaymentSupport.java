@@ -2,8 +2,9 @@ package com.generalbytes.batm.server.extensions.extra.nano;
 
 import com.generalbytes.batm.server.extensions.IQueryableWallet;
 import com.generalbytes.batm.server.extensions.extra.common.PollingPaymentSupport;
-import com.generalbytes.batm.server.extensions.extra.nano.rpc.NanoRpcClient;
 import com.generalbytes.batm.server.extensions.extra.nano.rpc.NanoWsClient;
+import com.generalbytes.batm.server.extensions.extra.nano.rpc.RpcException;
+import com.generalbytes.batm.server.extensions.extra.nano.rpc.dto.Block;
 import com.generalbytes.batm.server.extensions.extra.nano.wallet.node.INanoRpcWallet;
 import com.generalbytes.batm.server.extensions.payment.*;
 import org.slf4j.Logger;
@@ -234,11 +235,11 @@ public class NanoPaymentSupport extends PollingPaymentSupport {
                 // Find suitable refund account
                 String refundAddr = request.getTimeoutRefundAddress();
                 if (refundAddr == null) {
-                    List<NanoRpcClient.Block> blocks =
+                    List<Block> blocks =
                         context.wallet.getRpcClient().getTransactionHistory(request.getAddress());
-                    for (NanoRpcClient.Block block : blocks) {
-                        if (block.type.equals("receive")) {
-                            refundAddr = block.account;
+                    for (Block block : blocks) {
+                        if (block.type().equals("receive")) {
+                            refundAddr = block.account();
                         }
                     }
                 }
@@ -256,7 +257,7 @@ public class NanoPaymentSupport extends PollingPaymentSupport {
                 } else {
                     log.warn("Couldn't process refund as no refund account was found.");
                 }
-            } catch (IOException | NanoRpcClient.RpcException e) {
+            } catch (IOException | RpcException e) {
                 log.error("Failed to process refund transaction", e);
             }
         }

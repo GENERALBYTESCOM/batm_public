@@ -3,6 +3,8 @@ package com.generalbytes.batm.server.extensions.extra.nano.wallet.node;
 import com.generalbytes.batm.server.extensions.extra.nano.NanoExtensionContext;
 import com.generalbytes.batm.server.extensions.extra.nano.rpc.NanoRpcClient;
 import com.generalbytes.batm.server.extensions.extra.nano.rpc.NanoWsClient;
+import com.generalbytes.batm.server.extensions.extra.nano.rpc.RpcException;
+import com.generalbytes.batm.server.extensions.extra.nano.rpc.dto.AccountBalance;
 import com.generalbytes.batm.server.extensions.extra.nano.util.NanoUtil;
 import com.generalbytes.batm.server.extensions.payment.ReceivedAmount;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,8 +53,8 @@ class NanoNodeWalletTest {
     }
 
     @ParameterizedTest
-    @ValueSource(classes = {IOException.class, NanoRpcClient.RpcException.class})
-    void testGetReceivedAmount_exception(Class<? extends Exception> exceptionType) throws IOException, NanoRpcClient.RpcException {
+    @ValueSource(classes = {IOException.class, RpcException.class})
+    void testGetReceivedAmount_exception(Class<? extends Exception> exceptionType) throws IOException, RpcException {
         when(nanoRpcClient.getBalance(TEST_ADDRESS)).thenThrow(exceptionType);
         when(nanoExtensionContext.getUtil()).thenReturn(nanoUtil);
         when(nanoUtil.parseAddress(TEST_ADDRESS)).thenReturn(TEST_ADDRESS);
@@ -78,8 +80,8 @@ class NanoNodeWalletTest {
                                BigInteger confirmedBalance,
                                BigInteger unconfirmedBalance,
                                BigInteger pendingBalance,
-                               int expectedConfirmations) throws IOException, NanoRpcClient.RpcException {
-        NanoRpcClient.AccountBalance accountBalance = new NanoRpcClient.AccountBalance(confirmedBalance, unconfirmedBalance, pendingBalance);
+                               int expectedConfirmations) throws IOException, RpcException {
+        AccountBalance accountBalance = new AccountBalance(confirmedBalance, unconfirmedBalance, pendingBalance);
 
         when(nanoRpcClient.getBalance(TEST_ADDRESS)).thenReturn(accountBalance);
         when(nanoExtensionContext.getUtil()).thenReturn(nanoUtil);

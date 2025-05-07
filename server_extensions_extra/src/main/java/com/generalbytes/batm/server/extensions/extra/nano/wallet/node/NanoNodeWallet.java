@@ -6,6 +6,8 @@ import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.nano.NanoExtensionContext;
 import com.generalbytes.batm.server.extensions.extra.nano.rpc.NanoRpcClient;
 import com.generalbytes.batm.server.extensions.extra.nano.rpc.NanoWsClient;
+import com.generalbytes.batm.server.extensions.extra.nano.rpc.RpcException;
+import com.generalbytes.batm.server.extensions.extra.nano.rpc.dto.AccountBalance;
 import com.generalbytes.batm.server.extensions.payment.ReceivedAmount;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,14 +57,14 @@ public class NanoNodeWallet implements INanoRpcWallet, IGeneratesNewDepositCrypt
     @Override
     public BigInteger sendAllFromWallet(String depositAddress, String destination) {
         try {
-            BigInteger balance = rpcClient.getBalance(depositAddress).unconfBalance;
+            BigInteger balance = rpcClient.getBalance(depositAddress).unconfBalance();
             if (!balance.equals(BigInteger.ZERO)) {
                 String hash = rpcClient.sendFromWallet(walletId, depositAddress, destination,
                     balance, UUID.randomUUID().toString());
                 log.info("Sent {} to {}, hash: {}", balance, destination, hash);
                 return balance;
             }
-        } catch (IOException | NanoRpcClient.RpcException e) {
+        } catch (IOException | RpcException e) {
             log.error("Couldn't send deposit wallet funds.", e);
         }
         return BigInteger.ZERO;
@@ -91,7 +93,7 @@ public class NanoNodeWallet implements INanoRpcWallet, IGeneratesNewDepositCrypt
             }
             log.error("Couldn't find an unused deposit address.");
             return null;
-        } catch (NanoRpcClient.RpcException | IOException e) {
+        } catch (RpcException | IOException e) {
             log.error("Couldn't create new deposit address.", e);
             return null;
         }
@@ -105,13 +107,13 @@ public class NanoNodeWallet implements INanoRpcWallet, IGeneratesNewDepositCrypt
              * TODO: Only including pocketed balance for now. This could be changed in the future if fork resolution
              *       issues are resolved, and would speed up deposit confirmation times.
              */
-            NanoRpcClient.AccountBalance balance = rpcClient.getBalance(address);
-            if (balance.confBalance.compareTo(BigInteger.ZERO) > 0)
-                return new ReceivedAmount(context.getUtil().amountFromRaw(balance.confBalance), Integer.MAX_VALUE);
+            AccountBalance balance = rpcClient.getBalance(address);
+            if (balance.confBalance().compareTo(BigInteger.ZERO) > 0)
+                return new ReceivedAmount(context.getUtil().amountFromRaw(balance.confBalance()), Integer.MAX_VALUE);
             // No balance; return unconfirmed and pending blocks with confirmation 0
-            BigInteger unconfTotal = balance.unconfBalance.add(balance.unconfPending);
+            BigInteger unconfTotal = balance.unconfBalance().add(balance.unconfPending());
             return new ReceivedAmount(context.getUtil().amountFromRaw(unconfTotal), 0);
-        } catch (NanoRpcClient.RpcException | IOException e) {
+        } catch (RpcException | IOException e) {
             log.error("Couldn't retrieve balance for account {}.", address, e);
             return null;
         }
@@ -140,8 +142,8 @@ public class NanoNodeWallet implements INanoRpcWallet, IGeneratesNewDepositCrypt
     public BigDecimal getCryptoBalance(String cryptoCurrency) {
         try {
             return context.getUtil().amountFromRaw(
-                    rpcClient.getBalance(hotWalletAccount).confBalance);
-        } catch (NanoRpcClient.RpcException | IOException e) {
+                rpcClient.getBalance(hotWalletAccount).confBalance());
+        } catch (RpcException | IOException e) {
             log.error("Couldn't retrieve balance of account {}.", hotWalletAccount, e);
             return null;
         }
@@ -162,7 +164,7 @@ public class NanoNodeWallet implements INanoRpcWallet, IGeneratesNewDepositCrypt
                     amountRaw, description);
             log.info("Sent {} Nano from hot wallet to {}, hash = {}", amount, destinationAddress, hash);
             return hash;
-        } catch (NanoRpcClient.RpcException | IOException e) {
+        } catch (RpcException | IOException e) {
             log.error("Failed to send {} Nano from hot wallet {}.", amount, hotWalletAccount, e);
             return null;
         }
