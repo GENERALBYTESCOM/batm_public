@@ -17,6 +17,7 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions;
 
+import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferData;
 import com.generalbytes.batm.server.extensions.watchlist.WatchListScanIdentityMatchesData;
 
 import java.math.BigDecimal;
@@ -344,4 +345,12 @@ public interface INotificationListener {
      * @param toCurrency Destination currency in the exchange pair.
      */
     default void exchangePairNotAvailable(String fromCurrency, String toCurrency) {}
+
+    /**
+     * Notification triggered in case an incoming travel rule transfer cannot be automatically resolved and manual intervention is required.
+     *
+     * @param transactionRemoteId Remote ID of transaction related with incoming travel rule transfer.
+     * @param transferData        Transfer data.
+     */
+    default void travelRuleIncomingTransferEvaluation(String transactionRemoteId, ITravelRuleTransferData transferData) {}
 }
