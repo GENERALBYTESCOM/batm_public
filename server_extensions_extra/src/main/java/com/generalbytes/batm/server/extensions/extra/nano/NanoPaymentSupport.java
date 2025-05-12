@@ -139,12 +139,11 @@ public class NanoPaymentSupport extends PollingPaymentSupport {
                     log.debug("Polling (from ws notification: {}) {}", wsNotification, request);
 
                     // Fetch total amount
-                    IQueryableWallet wallet = (IQueryableWallet)request.getWallet();
-                    ReceivedAmount received = wallet.getReceivedAmount(request.getAddress(),
-                            request.getCryptoCurrency());
+                    IQueryableWallet wallet = (IQueryableWallet) request.getWallet();
+                    ReceivedAmount received = wallet.getReceivedAmount(request.getAddress(), request.getCryptoCurrency());
 
                     // Update request state
-                    updateRequestState(request, received.getTotalAmountReceived(), received.getConfirmations());
+                    updateRequestState(request, received);
                 } catch (Exception e) {
                     log.error("Couldn't poll payment with RPC.", e);
                 } finally {
@@ -190,7 +189,9 @@ public class NanoPaymentSupport extends PollingPaymentSupport {
     }
 
     /** Updates the current state of the payment request (if applicable) */
-    private void updateRequestState(PaymentRequest request, BigDecimal totalReceived, int confirmations) {
+    private void updateRequestState(PaymentRequest request, ReceivedAmount receivedAmount) {
+        BigDecimal totalReceived = receivedAmount.getTotalAmountReceived();
+        int confirmations = receivedAmount.getConfirmations();
         int initialState = request.getState();
         if (request.getTxValue().compareTo(totalReceived) != 0 || confirmations >= 1) {
             log.debug("Updating request state, total received: {} with {} confs", totalReceived, confirmations);
@@ -198,8 +199,10 @@ public class NanoPaymentSupport extends PollingPaymentSupport {
             PaymentRequestContext context = requests.get(request);
             if (!request.wasAlreadyRefunded() && totalReceived.compareTo(BigDecimal.ZERO) >= 0) {
                 // Change state if new
-                if (request.getState() == PaymentRequest.STATE_NEW)
+                if (request.getState() == PaymentRequest.STATE_NEW) {
+                    request.setIncomingTransactionHash(getTransactionHashesAsString(receivedAmount));
                     setState(request, PaymentRequest.STATE_SEEN_TRANSACTION);
+                }
 
                 if (confirmations > 0 && request.getState() == PaymentRequest.STATE_SEEN_TRANSACTION
                     && totalReceived.compareTo(request.getAmount()) >= 0) {
@@ -226,6 +229,14 @@ public class NanoPaymentSupport extends PollingPaymentSupport {
                 }
             }
         }
+    }
+
+    private String getTransactionHashesAsString(ReceivedAmount receivedAmount) {
+        List<String> transactionHashes = receivedAmount.getTransactionHashes();
+        if (transactionHashes != null && !transactionHashes.isEmpty()) {
+            return String.join(" ", transactionHashes);
+        }
+        return null;
     }
 
     private void processRefund(PaymentRequest request, PaymentRequestContext context) {
