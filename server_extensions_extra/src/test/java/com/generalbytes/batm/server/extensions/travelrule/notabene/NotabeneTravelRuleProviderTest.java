@@ -65,6 +65,8 @@ class NotabeneTravelRuleProviderTest {
     @Mock
     private NotabeneService notabeneService;
     @Mock
+    private NotabeneIncomingTransferService notabeneIncomingTransferService;
+    @Mock
     private NotabeneTransferPublisher notabeneTransferPublisher;
 
     private ITravelRuleProviderCredentials credentials;
@@ -73,7 +75,9 @@ class NotabeneTravelRuleProviderTest {
     @BeforeEach
     void setUp() {
         credentials = createITravelRuleProviderCredentials();
-        provider = new NotabeneTravelRuleProvider(credentials, configuration, notabeneAuthService, notabeneService, notabeneTransferPublisher);
+        provider = new NotabeneTravelRuleProvider(
+            credentials, configuration, notabeneAuthService, notabeneService, notabeneIncomingTransferService, notabeneTransferPublisher
+        );
     }
 
     @Test
@@ -389,6 +393,8 @@ class NotabeneTravelRuleProviderTest {
         return mockConstruction(NotabeneTransferStatusUpdateListener.class, (mock, context) -> {
             assertInstanceOf(ITravelRuleTransferListener.class, context.arguments().get(0));
             assertEquals(listener, context.arguments().get(0));
+            assertEquals(notabeneIncomingTransferService, context.arguments().get(1));
+            assertEquals(credentials, context.arguments().get(2));
         });
     }
 
