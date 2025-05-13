@@ -129,7 +129,7 @@ public interface NotabeneApi {
      * Rejects a transfer indicating that the blockchain address is not owned by the beneficiary VASP.
      * Rejecting sets the transfer status to {@link NotabeneTransferStatus#REJECTED}..
      *
-     * @param transferId Identifier of the transfer to confirm.
+     * @param transferId Identifier of the transfer to reject.
      * @return The response.
      * @see <a href="https://devx.notabene.id/reference/txreject-1">Notabene Documentation</a>
      */

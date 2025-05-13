@@ -14,11 +14,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class NotabeneIncomingTransferServiceTest {
@@ -51,10 +54,14 @@ class NotabeneIncomingTransferServiceTest {
         NotabeneTransferInfo transferInfo = createTransferInfo(NotabeneTransferStatus.SENT);
         transferInfo.setTransactionBlockchainInfo(blockchainInfo);
 
+        NotabeneTransferInfo serviceResponse = mock(NotabeneTransferInfo.class);
+        when(notabeneService.rejectTransfer(credentials, transferInfo.getId())).thenReturn(serviceResponse);
+
         NotabeneTransferInfo processed = incomingTransferService.processIncomingTransfer(credentials, transferInfo);
 
-        assertNull(processed);
+        assertEquals(serviceResponse, processed);
         verify(notabeneService).rejectTransfer(credentials, transferInfo.getId());
+        verify(notabeneService, never()).confirmTransfer(any(), any());
     }
 
     @Test
@@ -66,10 +73,14 @@ class NotabeneIncomingTransferServiceTest {
         blockchainInfo.setDestination("address");
         transferInfo.setTransactionBlockchainInfo(blockchainInfo);
 
+        NotabeneTransferInfo serviceResponse = mock(NotabeneTransferInfo.class);
+        when(notabeneService.confirmTransfer(credentials, transferInfo.getId())).thenReturn(serviceResponse);
+
         NotabeneTransferInfo processed = incomingTransferService.processIncomingTransfer(credentials, transferInfo);
 
-        assertNull(processed);
+        assertEquals(serviceResponse, processed);
         verify(notabeneService).confirmTransfer(credentials, transferInfo.getId());
+        verify(notabeneService, never()).rejectTransfer(any(), any());
     }
 
     private NotabeneTransferInfo createTransferInfo(NotabeneTransferStatus status) {
