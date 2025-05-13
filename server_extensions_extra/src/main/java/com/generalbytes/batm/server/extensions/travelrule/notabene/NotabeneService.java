@@ -81,6 +81,38 @@ public class NotabeneService {
     }
 
     /**
+     * Confirm an existing transfer.
+     *
+     * @param providerCredentials The {@link ITravelRuleProviderCredentials} to confirm the transfer for.
+     * @param transferId          Identifier of the transfer to confirm.
+     * @return The confirmed {@link NotabeneTransferInfo} or null if the confirmation fails.
+     */
+    public NotabeneTransferInfo confirmTransfer(ITravelRuleProviderCredentials providerCredentials, String transferId) {
+        try {
+            return api.confirmTransfer(providerCredentials, transferId);
+        } catch (Exception e) {
+            log.warn("Failed to confirm transfer at Notabene: {}", getExceptionMessage(e));
+            return null;
+        }
+    }
+
+    /**
+     * Reject an existing transfer.
+     *
+     * @param providerCredentials The {@link ITravelRuleProviderCredentials} to reject the transfer for.
+     * @param transferId          Identifier of the transfer to reject.
+     * @return The rejected {@link NotabeneTransferInfo} or null if the rejection fails.
+     */
+    public NotabeneTransferInfo rejectTransfer(ITravelRuleProviderCredentials providerCredentials, String transferId) {
+        try {
+            return api.rejectTransfer(providerCredentials, transferId);
+        } catch (Exception e) {
+            log.warn("Failed to reject transfer at Notabene: {}", getExceptionMessage(e));
+            return null;
+        }
+    }
+
+    /**
      * Update an existing transfer.
      *
      * @param providerCredentials The {@link ITravelRuleProviderCredentials} to update the transfer for.

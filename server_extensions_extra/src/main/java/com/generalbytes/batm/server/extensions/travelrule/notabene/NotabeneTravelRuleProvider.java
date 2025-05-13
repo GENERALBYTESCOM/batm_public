@@ -48,6 +48,7 @@ public class NotabeneTravelRuleProvider implements ITravelRuleProvider {
     private final NotabeneConfiguration configuration;
     private final NotabeneAuthService notabeneAuthService;
     private final NotabeneService notabeneService;
+    private final NotabeneIncomingTransferService notabeneIncomingTransferService;
     private final NotabeneTransferPublisher notabeneTransferPublisher;
 
     @Override
@@ -109,7 +110,8 @@ public class NotabeneTravelRuleProvider implements ITravelRuleProvider {
     @Override
     public boolean registerTransferListener(ITravelRuleTransferListener listener) {
         if (notabeneService.registerWebhook(credentials)) {
-            NotabeneTransferUpdateListener notabeneListener = new NotabeneTransferStatusUpdateListener(listener);
+            NotabeneTransferUpdateListener notabeneListener
+                = new NotabeneTransferStatusUpdateListener(listener, notabeneIncomingTransferService, credentials);
             notabeneTransferPublisher.registerListener(credentials.getVaspDid(), notabeneListener);
             return true;
         }

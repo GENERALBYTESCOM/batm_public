@@ -141,6 +141,26 @@ class NotabeneApiWrapperTest {
             authorization -> verify(api).approveTransfer(authorization, "transferId"));
     }
 
+    @Test
+    void testConfirmTransfer() {
+        NotabeneTransferInfo response = mock(NotabeneTransferInfo.class);
+        ITravelRuleProviderCredentials providerCredentials = mock(ITravelRuleProviderCredentials.class);
+
+        testApiWrapperMethod(providerCredentials, response,
+            () -> apiWrapper.confirmTransfer(providerCredentials, "transferId"),
+            authorization -> verify(api).confirmTransfer(authorization, "transferId"));
+    }
+
+    @Test
+    void testRejectTransfer() {
+        NotabeneTransferInfo response = mock(NotabeneTransferInfo.class);
+        ITravelRuleProviderCredentials providerCredentials = mock(ITravelRuleProviderCredentials.class);
+
+        testApiWrapperMethod(providerCredentials, response,
+            () -> apiWrapper.rejectTransfer(providerCredentials, "transferId"),
+            authorization -> verify(api).rejectTransfer(authorization, "transferId"));
+    }
+
     @ParameterizedTest
     @ValueSource(booleans = {true, false})
     void testRegisterWebhook(boolean shouldThrowJsonParseException) throws JsonParseException {

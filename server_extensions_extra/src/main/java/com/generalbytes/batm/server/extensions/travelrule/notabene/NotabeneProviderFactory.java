@@ -10,6 +10,7 @@ import java.util.Map;
 public class NotabeneProviderFactory implements ITravelRuleProviderFactory {
 
     private final NotabeneService notabeneService;
+    private final NotabeneIncomingTransferService notabeneIncomingTransferService;
     private final NotabeneTransferPublisher notabeneTransferPublisher;
     private final NotabeneAuthService notabeneAuthService;
     private final NotabeneConfiguration configuration;
@@ -28,6 +29,7 @@ public class NotabeneProviderFactory implements ITravelRuleProviderFactory {
         NotabeneApiService notabeneApiService = new NotabeneApiService(notabeneAuthService);
         NotabeneApiWrapper notabeneApiWrapper = new NotabeneApiWrapper(notabeneApiFactory, notabeneApiService);
         notabeneService = new NotabeneService(notabeneApiWrapper, configuration);
+        notabeneIncomingTransferService = new NotabeneIncomingTransferService(notabeneService);
     }
 
     @Override
@@ -55,6 +57,11 @@ public class NotabeneProviderFactory implements ITravelRuleProviderFactory {
     }
 
     private NotabeneTravelRuleProvider initializeProvider(ITravelRuleProviderCredentials credentials) {
-        return new NotabeneTravelRuleProvider(credentials, configuration, notabeneAuthService, notabeneService, notabeneTransferPublisher);
+        return new NotabeneTravelRuleProvider(credentials,
+            configuration,
+            notabeneAuthService,
+            notabeneService,
+            notabeneIncomingTransferService,
+            notabeneTransferPublisher);
     }
 }
