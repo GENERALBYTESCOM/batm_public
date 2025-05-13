@@ -81,6 +81,20 @@ public class NotabeneApiWrapper {
     }
 
     /**
+     * @see NotabeneApi#confirmTransfer(String, String)
+     */
+    public NotabeneTransferInfo confirmTransfer(ITravelRuleProviderCredentials providerCredentials, String transferId) {
+        return apiService.callApi(providerCredentials, authorization -> api.confirmTransfer(authorization, transferId));
+    }
+
+    /**
+     * @see NotabeneApi#rejectTransfer(String, String)
+     */
+    public NotabeneTransferInfo rejectTransfer(ITravelRuleProviderCredentials providerCredentials, String transferId) {
+        return apiService.callApi(providerCredentials, authorization -> api.rejectTransfer(authorization, transferId));
+    }
+
+    /**
      * @see NotabeneApi#registerWebhook(String, NotabeneRegisterWebhookRequest);
      */
     public void registerWebhook(ITravelRuleProviderCredentials providerCredentials, NotabeneRegisterWebhookRequest request) {

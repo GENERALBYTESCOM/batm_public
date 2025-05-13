@@ -113,6 +113,32 @@ public interface NotabeneApi {
                                          @QueryParam("id") String transferId) throws NotabeneApiException;
 
     /**
+     * Confirms that the blockchain address of the transfer belongs to the beneficiary VASP.
+     * Confirming sets the status of a transfer to {@link NotabeneTransferStatus#ACK}.
+     *
+     * @param transferId Identifier of the transfer to confirm.
+     * @return The response.
+     * @see <a href="https://devx.notabene.id/reference/txconfirm-1">Notabene Documentation</a>
+     */
+    @POST
+    @Path("/tx/confirm")
+    NotabeneTransferInfo confirmTransfer(@HeaderParam(AUTHORIZATION_HEADER_NAME) String authorization,
+                                         @QueryParam("id") String transferId) throws NotabeneApiException;
+
+    /**
+     * Rejects a transfer indicating that the blockchain address is not owned by the beneficiary VASP.
+     * Rejecting sets the transfer status to {@link NotabeneTransferStatus#REJECTED}..
+     *
+     * @param transferId Identifier of the transfer to confirm.
+     * @return The response.
+     * @see <a href="https://devx.notabene.id/reference/txreject-1">Notabene Documentation</a>
+     */
+    @POST
+    @Path("/tx/reject")
+    NotabeneTransferInfo rejectTransfer(@HeaderParam(AUTHORIZATION_HEADER_NAME) String authorization,
+                                        @QueryParam("id") String transferId) throws NotabeneApiException;
+
+    /**
      * Get the ownership information about a customer blockchain address.
      *
      * @param address The blockchain address.
