@@ -8,11 +8,15 @@ import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferLis
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferStatusUpdateEvent;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleVasp;
 import com.generalbytes.batm.server.extensions.travelrule.TravelRuleProviderTransferStatus;
+import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneNameIdentifier;
+import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneNameIdentifierType;
+import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransactionBlockchainInfo;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferInfo;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferStatus;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -87,7 +91,7 @@ public class NotabeneTransferStatusUpdateListener implements NotabeneTransferUpd
     }
 
     private ITravelRuleIncomingTransferEvent mapToIncomingTransferEvent(NotabeneTransferInfo transferInfo) {
-        //TODO: BATM-7383 collect PII via txInfo
+        ITravelRuleNaturalPersonName personName = getPersonName(transferInfo.getId());
         return new ITravelRuleIncomingTransferEvent() {
             @Override
             public ITravelRuleProviderIdentification getTravelRuleProvider() {
@@ -95,25 +99,83 @@ public class NotabeneTransferStatusUpdateListener implements NotabeneTransferUpd
             }
 
             @Override
+            public String getId() {
+                return transferInfo.getId();
+            }
+
+            @Override
             public ITravelRuleVasp getOriginatorVasp() {
-                return null;
+                return mapOriginatorVasp(transferInfo);
             }
 
             @Override
             public ITravelRuleNaturalPersonName getOriginatorName() {
-                return null;
+                return personName;
             }
 
             @Override
             public String getDestinationAddress() {
-                return null;
+                return mapDestinationAddress(transferInfo);
             }
 
             @Override
             public String getRawData() {
-                return transferInfo.toString();
+                return mapRawData(transferInfo, personName);
             }
         };
     }
 
+    private ITravelRuleNaturalPersonName getPersonName(String transferId) {
+        Optional<NotabeneNameIdentifier> beneficiaryIdentifier = incomingTransferService.getBeneficiaryIdentifier(credentials, transferId);
+
+        return beneficiaryIdentifier.map(notabeneNameIdentifier -> new ITravelRuleNaturalPersonName() {
+            @Override
+            public String getPrimaryName() {
+                return notabeneNameIdentifier.getPrimaryIdentifier();
+            }
+
+            @Override
+            public String getSecondaryName() {
+                return notabeneNameIdentifier.getSecondaryIdentifier();
+            }
+
+            @Override
+            public String getNameType() {
+                NotabeneNameIdentifierType nameIdentifierType = notabeneNameIdentifier.getNameIdentifierType();
+                return nameIdentifierType != null ? nameIdentifierType.name() : null;
+            }
+        }).orElse(null);
+    }
+
+    private ITravelRuleVasp mapOriginatorVasp(NotabeneTransferInfo transferInfo) {
+        return new ITravelRuleVasp() {
+            @Override
+            public String getDid() {
+                return transferInfo.getOriginatorVaspDid();
+            }
+
+            @Override
+            public String getName() {
+                return null;
+            }
+        };
+    }
+
+    private String mapDestinationAddress(NotabeneTransferInfo transferInfo) {
+        return Optional.ofNullable(transferInfo.getTransactionBlockchainInfo())
+            .map(NotabeneTransactionBlockchainInfo::getDestination)
+            .orElse(null);
+    }
+
+    private String mapRawData(NotabeneTransferInfo transferInfo, ITravelRuleNaturalPersonName personName) {
+        StringBuilder result = new StringBuilder(transferInfo.toString());
+        if (personName != null) {
+            result.append(", PersonName(")
+                .append("primaryName=").append(personName.getPrimaryName()).append(", ")
+                .append("secondaryName=").append(personName.getSecondaryName()).append(", ")
+                .append("nameType=").append(personName.getNameType())
+                .append(")");
+        }
+        return result.toString();
+    }
 }

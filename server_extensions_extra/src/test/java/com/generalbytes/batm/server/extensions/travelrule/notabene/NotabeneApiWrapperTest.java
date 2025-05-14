@@ -12,6 +12,7 @@ import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneL
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneRegisterWebhookRequest;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferCreateRequest;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferInfo;
+import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferInfoWithIvms;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferUpdateRequest;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneUnregisterWebhookRequest;
 import org.junit.jupiter.api.BeforeEach;
@@ -159,6 +160,16 @@ class NotabeneApiWrapperTest {
         testApiWrapperMethod(providerCredentials, response,
             () -> apiWrapper.rejectTransfer(providerCredentials, "transferId"),
             authorization -> verify(api).rejectTransfer(authorization, "transferId"));
+    }
+
+    @Test
+    void testGetTransferInfo() {
+        NotabeneTransferInfoWithIvms response = mock(NotabeneTransferInfoWithIvms.class);
+        ITravelRuleProviderCredentials providerCredentials = mock(ITravelRuleProviderCredentials.class);
+
+        testApiWrapperMethod(providerCredentials, response,
+            () -> apiWrapper.getTransferInfo(providerCredentials, "transferId"),
+            authorization -> verify(api).getTransferInfo(authorization, "transferId"));
     }
 
     @ParameterizedTest

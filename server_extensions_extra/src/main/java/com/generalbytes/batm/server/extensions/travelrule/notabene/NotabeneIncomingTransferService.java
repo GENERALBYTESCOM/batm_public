@@ -1,11 +1,22 @@
 package com.generalbytes.batm.server.extensions.travelrule.notabene;
 
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProviderCredentials;
+import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneBeneficiary;
+import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneIvms;
+import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneNameIdentifier;
+import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneNaturalPerson;
+import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabenePerson;
+import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabenePersonName;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransactionBlockchainInfo;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferInfo;
+import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferInfoWithIvms;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferStatus;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 
 @Slf4j
 @AllArgsConstructor
@@ -60,6 +71,32 @@ public class NotabeneIncomingTransferService {
             log.debug("Transfer {} has been sent to an unknown beneficiary address -> rejecting", transferInfo.getId());
             return notabeneService.rejectTransfer(credentials, transferInfo.getId());
         }
+    }
+
+    /**
+     * Retrieves the beneficiary name identifier for a transfer based on the provided credentials and transfer ID.
+     *
+     * @param credentials the credentials required to authenticate with the travel rule provider
+     * @param transferId  the unique identifier of the transfer to retrieve the beneficiary identifier for
+     * @return the name identifier of the beneficiary, or {@code null} if not available or an error occurs
+     */
+    public Optional<NotabeneNameIdentifier> getBeneficiaryIdentifier(ITravelRuleProviderCredentials credentials,
+                                                                     String transferId) {
+        NotabeneTransferInfoWithIvms transferInfo = notabeneService.getTransferInfo(credentials, transferId);
+        return Optional.ofNullable(transferInfo)
+            .map(NotabeneTransferInfoWithIvms::getIvms101)
+            .map(NotabeneIvms::getBeneficiary)
+            .map(NotabeneBeneficiary::getBeneficiaryPersons)
+            .map(getFirstElementFromList())
+            .map(NotabenePerson::getNaturalPerson)
+            .map(NotabeneNaturalPerson::getName)
+            .map(getFirstElementFromList())
+            .map(NotabenePersonName::getNameIdentifier)
+            .map(getFirstElementFromList());
+    }
+
+    private <T> Function<List<T>, T> getFirstElementFromList() {
+        return list -> !list.isEmpty() ? list.get(0) : null;
     }
 
 }

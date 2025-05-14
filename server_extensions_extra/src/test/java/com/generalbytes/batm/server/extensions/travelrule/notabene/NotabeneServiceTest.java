@@ -12,6 +12,7 @@ import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneL
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneRegisterWebhookRequest;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferCreateRequest;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferInfo;
+import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferInfoWithIvms;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferUpdateRequest;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneUnregisterWebhookRequest;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneVaspInfoSimple;
@@ -286,6 +287,33 @@ class NotabeneServiceTest {
 
         assertNull(result);
         verify(notabeneApiWrapper).rejectTransfer(providerCredentials, "transferId");
+        verifyNoInteractions(providerCredentials);
+    }
+
+    @Test
+    void testGetTransferInfo_valid() {
+        ITravelRuleProviderCredentials providerCredentials = mock(ITravelRuleProviderCredentials.class);
+        NotabeneTransferInfoWithIvms response = mock(NotabeneTransferInfoWithIvms.class);
+
+        when(notabeneApiWrapper.getTransferInfo(any(), any())).thenReturn(response);
+
+        NotabeneTransferInfo result = service.getTransferInfo(providerCredentials, "transferId");
+
+        assertEquals(response, result);
+        verify(notabeneApiWrapper).getTransferInfo(providerCredentials, "transferId");
+        verifyNoInteractions(providerCredentials);
+    }
+
+    @Test
+    void testGetTransferInfo_exception() {
+        ITravelRuleProviderCredentials providerCredentials = mock(ITravelRuleProviderCredentials.class);
+
+        when(notabeneApiWrapper.getTransferInfo(any(), any())).thenThrow(new RuntimeException("Test Exception"));
+
+        NotabeneTransferInfo result = service.getTransferInfo(providerCredentials, "transferId");
+
+        assertNull(result);
+        verify(notabeneApiWrapper).getTransferInfo(providerCredentials, "transferId");
         verifyNoInteractions(providerCredentials);
     }
 

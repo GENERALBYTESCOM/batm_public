@@ -17,6 +17,13 @@ public interface ITravelRuleIncomingTransferEvent {
     ITravelRuleProviderIdentification getTravelRuleProvider();
 
     /**
+     * Unique identifier of the incoming transfer. (mandatory)
+     *
+     * @return Unique identifier of the transfer.
+     */
+    String getId();
+
+    /**
      * Information about the originator VASP that requires transfer verification. (mandatory)
      *
      * @return {@link ITravelRuleVasp} containing data about originator VASP.
