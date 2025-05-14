@@ -5,6 +5,7 @@ import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneB
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneIvms;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneNameIdentifier;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneNaturalPerson;
+import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneOriginator;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabenePerson;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabenePersonName;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransactionBlockchainInfo;
@@ -24,6 +25,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -102,7 +104,7 @@ class NotabeneIncomingTransferServiceTest {
 
 
     @Test
-    void testGetBeneficiaryIdentifier() {
+    void testGetPersonIdentifiers() {
         NotabeneNameIdentifier expectedIdentifier = new NotabeneNameIdentifier();
         NotabeneTransferInfoWithIvms transferInfo = createTransferInfoWithIvmsWithPersonName(List.of(expectedIdentifier));
 
@@ -110,11 +112,16 @@ class NotabeneIncomingTransferServiceTest {
         String transferId = UUID.randomUUID().toString();
         when(notabeneService.getTransferInfo(credentials, transferId)).thenReturn(transferInfo);
 
-        Optional<NotabeneNameIdentifier> result = incomingTransferService.getBeneficiaryIdentifier(credentials, transferId);
+        NotabeneIncomingTransferService.PersonNameIdentifiers personIdentifiers = incomingTransferService.getPersonIdentifiers(credentials, transferId);
+        assertNotNull(personIdentifiers);
 
-        assertTrue(result.isPresent());
-        NotabeneNameIdentifier resulIdentifier = result.get();
-        assertEquals(expectedIdentifier, resulIdentifier);
+        assertTrue(personIdentifiers.beneficiaryIdentifier().isPresent());
+        NotabeneNameIdentifier beneficiaryIdentifier = personIdentifiers.beneficiaryIdentifier().get();
+        assertEquals(expectedIdentifier, beneficiaryIdentifier);
+
+        assertTrue(personIdentifiers.originatorIdentifier().isPresent());
+        NotabeneNameIdentifier originatorIdentifier = personIdentifiers.originatorIdentifier().get();
+        assertEquals(expectedIdentifier, originatorIdentifier);
 
         verify(notabeneService).getTransferInfo(credentials, transferId);
     }
@@ -123,9 +130,9 @@ class NotabeneIncomingTransferServiceTest {
         return new Object[][]{
             {null},
             {new NotabeneTransferInfoWithIvms()},
-            {createTransferInfoWithIvms(null)},
-            {createTransferInfoWithIvms(new NotabeneBeneficiary())},
-            {createTransferInfoWithIvms(createNotabeneBeneficiary(List.of()))},
+            {createTransferInfoWithIvms(null, null)},
+            {createTransferInfoWithIvms(new NotabeneBeneficiary(), new NotabeneOriginator())},
+            {createTransferInfoWithIvms(createNotabeneBeneficiary(List.of()), createNotabeneOriginator(List.of()))},
             {createTransferInfoWithIvmsWithNaturalPerson(null)},
             {createTransferInfoWithIvmsWithNaturalPerson(new NotabeneNaturalPerson())},
             {createTransferInfoWithIvmsWithNaturalPerson(createNotabeneNaturalPerson(List.of()))},
@@ -135,21 +142,22 @@ class NotabeneIncomingTransferServiceTest {
 
     @ParameterizedTest
     @MethodSource("testBeneficiaryIdentifierNullSource")
-    void getBeneficiaryIdentifier_nullScenarios(NotabeneTransferInfoWithIvms transferInfo) {
+    void testGetPersonIdentifiers_nullScenarios(NotabeneTransferInfoWithIvms transferInfo) {
         ITravelRuleProviderCredentials credentials = mock(ITravelRuleProviderCredentials.class);
         String transferId = UUID.randomUUID().toString();
         when(notabeneService.getTransferInfo(credentials, transferId)).thenReturn(transferInfo);
 
-        Optional<NotabeneNameIdentifier> result = incomingTransferService.getBeneficiaryIdentifier(credentials, transferId);
+        NotabeneIncomingTransferService.PersonNameIdentifiers personIdentifiers = incomingTransferService.getPersonIdentifiers(credentials, transferId);
 
-        assertEquals(Optional.empty(), result);
+        assertEquals(Optional.empty(), personIdentifiers.beneficiaryIdentifier());
         verify(notabeneService).getTransferInfo(credentials, transferId);
     }
 
-    private static NotabeneTransferInfoWithIvms createTransferInfoWithIvms(NotabeneBeneficiary beneficiary) {
+    private static NotabeneTransferInfoWithIvms createTransferInfoWithIvms(NotabeneBeneficiary beneficiary, NotabeneOriginator originator) {
         NotabeneTransferInfoWithIvms transfer = new NotabeneTransferInfoWithIvms();
         NotabeneIvms ivms = new NotabeneIvms();
         ivms.setBeneficiary(beneficiary);
+        ivms.setOriginator(originator);
         transfer.setIvms101(ivms);
         return transfer;
     }
@@ -158,7 +166,8 @@ class NotabeneIncomingTransferServiceTest {
         NotabenePerson person = new NotabenePerson();
         person.setNaturalPerson(naturalPerson);
         NotabeneBeneficiary beneficiary = createNotabeneBeneficiary(List.of(person));
-        return createTransferInfoWithIvms(beneficiary);
+        NotabeneOriginator originator = createNotabeneOriginator(List.of(person));
+        return createTransferInfoWithIvms(beneficiary, originator);
     }
 
     private static NotabeneTransferInfoWithIvms createTransferInfoWithIvmsWithPersonName(List<NotabeneNameIdentifier> identifiers) {
@@ -172,6 +181,12 @@ class NotabeneIncomingTransferServiceTest {
         NotabeneBeneficiary beneficiary = new NotabeneBeneficiary();
         beneficiary.setBeneficiaryPersons(persons);
         return beneficiary;
+    }
+
+    private static NotabeneOriginator createNotabeneOriginator(List<NotabenePerson> persons) {
+        NotabeneOriginator originator = new NotabeneOriginator();
+        originator.setOriginatorPersons(persons);
+        return originator;
     }
 
     private static NotabeneNaturalPerson createNotabeneNaturalPerson(List<NotabenePersonName> personNames) {

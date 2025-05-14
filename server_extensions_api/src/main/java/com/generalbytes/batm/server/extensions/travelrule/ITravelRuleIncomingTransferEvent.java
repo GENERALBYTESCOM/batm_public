@@ -26,7 +26,7 @@ public interface ITravelRuleIncomingTransferEvent {
     /**
      * Information about the originator VASP that requires transfer verification. (mandatory)
      *
-     * @return {@link ITravelRuleVasp} containing data about originator VASP.
+     * @return {@link ITravelRuleVasp} containing DID of originator VASP, name is not set will return {@code null}
      */
     ITravelRuleVasp getOriginatorVasp();
 
@@ -36,6 +36,13 @@ public interface ITravelRuleIncomingTransferEvent {
      * @return {@link ITravelRuleNaturalPersonName} containing name data about originator.
      */
     ITravelRuleNaturalPersonName getOriginatorName();
+
+    /**
+     * Name data about the beneficiary. (mandatory)
+     *
+     * @return {@link ITravelRuleNaturalPersonName} containing name data about originator.
+     */
+    ITravelRuleNaturalPersonName getBeneficiaryName();
 
     /**
      * Crypto address to verify if it belongs to the beneficiary VASP. (mandatory)

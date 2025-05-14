@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 
 /**
  * This listener is responsible for mapping transfer status updates received from Notabene and sending them to a designated
@@ -91,7 +92,7 @@ public class NotabeneTransferStatusUpdateListener implements NotabeneTransferUpd
     }
 
     private ITravelRuleIncomingTransferEvent mapToIncomingTransferEvent(NotabeneTransferInfo transferInfo) {
-        ITravelRuleNaturalPersonName personName = getPersonName(transferInfo.getId());
+        PersonNames personNames = getPersonNames(transferInfo.getId());
         return new ITravelRuleIncomingTransferEvent() {
             @Override
             public ITravelRuleProviderIdentification getTravelRuleProvider() {
@@ -110,7 +111,12 @@ public class NotabeneTransferStatusUpdateListener implements NotabeneTransferUpd
 
             @Override
             public ITravelRuleNaturalPersonName getOriginatorName() {
-                return personName;
+                return personNames.originatorName();
+            }
+
+            @Override
+            public ITravelRuleNaturalPersonName getBeneficiaryName() {
+                return personNames.beneficiaryName();
             }
 
             @Override
@@ -120,15 +126,22 @@ public class NotabeneTransferStatusUpdateListener implements NotabeneTransferUpd
 
             @Override
             public String getRawData() {
-                return mapRawData(transferInfo, personName);
+                return mapRawData(transferInfo, personNames);
             }
         };
     }
 
-    private ITravelRuleNaturalPersonName getPersonName(String transferId) {
-        Optional<NotabeneNameIdentifier> beneficiaryIdentifier = incomingTransferService.getBeneficiaryIdentifier(credentials, transferId);
+    private PersonNames getPersonNames(String transferId) {
+        NotabeneIncomingTransferService.PersonNameIdentifiers personIdentifiers
+            = incomingTransferService.getPersonIdentifiers(credentials, transferId);
 
-        return beneficiaryIdentifier.map(notabeneNameIdentifier -> new ITravelRuleNaturalPersonName() {
+        ITravelRuleNaturalPersonName originatorName = personIdentifiers.originatorIdentifier().map(mapIdentifierToName()).orElse(null);
+        ITravelRuleNaturalPersonName beneficiaryName = personIdentifiers.beneficiaryIdentifier().map(mapIdentifierToName()).orElse(null);
+        return new PersonNames(originatorName, beneficiaryName);
+    }
+
+    private Function<NotabeneNameIdentifier, ITravelRuleNaturalPersonName> mapIdentifierToName() {
+        return notabeneNameIdentifier -> new ITravelRuleNaturalPersonName() {
             @Override
             public String getPrimaryName() {
                 return notabeneNameIdentifier.getPrimaryIdentifier();
@@ -144,7 +157,7 @@ public class NotabeneTransferStatusUpdateListener implements NotabeneTransferUpd
                 NotabeneNameIdentifierType nameIdentifierType = notabeneNameIdentifier.getNameIdentifierType();
                 return nameIdentifierType != null ? nameIdentifierType.name() : null;
             }
-        }).orElse(null);
+        };
     }
 
     private ITravelRuleVasp mapOriginatorVasp(NotabeneTransferInfo transferInfo) {
@@ -167,15 +180,26 @@ public class NotabeneTransferStatusUpdateListener implements NotabeneTransferUpd
             .orElse(null);
     }
 
-    private String mapRawData(NotabeneTransferInfo transferInfo, ITravelRuleNaturalPersonName personName) {
-        StringBuilder result = new StringBuilder(transferInfo.toString());
+    private String mapRawData(NotabeneTransferInfo transferInfo, PersonNames personNames) {
+        StringBuilder rawDataContent = new StringBuilder(transferInfo.toString());
+        appendName(rawDataContent, personNames.originatorName(), ", OriginatorName(");
+        appendName(rawDataContent, personNames.beneficiaryName(), ", BeneficiaryName(");
+        return rawDataContent.toString();
+    }
+
+    private static void appendName(StringBuilder rawDataContent,
+                                   ITravelRuleNaturalPersonName personName,
+                                   String nameIdentifier) {
         if (personName != null) {
-            result.append(", PersonName(")
+            rawDataContent.append(nameIdentifier)
                 .append("primaryName=").append(personName.getPrimaryName()).append(", ")
                 .append("secondaryName=").append(personName.getSecondaryName()).append(", ")
                 .append("nameType=").append(personName.getNameType())
                 .append(")");
         }
-        return result.toString();
+    }
+
+    private record PersonNames(ITravelRuleNaturalPersonName originatorName,
+                               ITravelRuleNaturalPersonName beneficiaryName) {
     }
 }

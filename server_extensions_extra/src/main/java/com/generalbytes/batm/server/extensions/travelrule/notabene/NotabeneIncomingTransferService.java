@@ -5,6 +5,7 @@ import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneB
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneIvms;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneNameIdentifier;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneNaturalPerson;
+import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneOriginator;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabenePerson;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabenePersonName;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransactionBlockchainInfo;
@@ -74,19 +75,35 @@ public class NotabeneIncomingTransferService {
     }
 
     /**
-     * Retrieves the beneficiary name identifier for a transfer based on the provided credentials and transfer ID.
+     * Retrieves the originator and beneficiary name identifiers for a transfer based on the provided credentials and transfer ID.
      *
      * @param credentials the credentials required to authenticate with the travel rule provider
      * @param transferId  the unique identifier of the transfer to retrieve the beneficiary identifier for
-     * @return the name identifier of the beneficiary, or {@code null} if not available or an error occurs
+     * @return wrapper containing name identifiers of the beneficiary and originator
      */
-    public Optional<NotabeneNameIdentifier> getBeneficiaryIdentifier(ITravelRuleProviderCredentials credentials,
-                                                                     String transferId) {
+    public PersonNameIdentifiers getPersonIdentifiers(ITravelRuleProviderCredentials credentials,
+                                                      String transferId) {
         NotabeneTransferInfoWithIvms transferInfo = notabeneService.getTransferInfo(credentials, transferId);
+        Optional<NotabeneNameIdentifier> beneficiaryIdentifier = getBeneficiaryNameIdentifier(transferInfo);
+        Optional<NotabeneNameIdentifier> originatorIdentifier = getOriginatorNameIdentifier(transferInfo);
+        return new PersonNameIdentifiers(originatorIdentifier, beneficiaryIdentifier);
+    }
+
+    private Optional<NotabeneNameIdentifier> getBeneficiaryNameIdentifier(NotabeneTransferInfoWithIvms transferInfo) {
+        return getNameIdentifier(transferInfo, NotabeneIvms::getBeneficiary, NotabeneBeneficiary::getBeneficiaryPersons);
+    }
+
+    private Optional<NotabeneNameIdentifier> getOriginatorNameIdentifier(NotabeneTransferInfoWithIvms transferInfo) {
+        return getNameIdentifier(transferInfo, NotabeneIvms::getOriginator, NotabeneOriginator::getOriginatorPersons);
+    }
+
+    private <T> Optional<NotabeneNameIdentifier> getNameIdentifier(NotabeneTransferInfoWithIvms transferInfo,
+                                                                   Function<NotabeneIvms, T> getCounterParty,
+                                                                   Function<T, List<NotabenePerson>> getCounterPartyPersons) {
         return Optional.ofNullable(transferInfo)
             .map(NotabeneTransferInfoWithIvms::getIvms101)
-            .map(NotabeneIvms::getBeneficiary)
-            .map(NotabeneBeneficiary::getBeneficiaryPersons)
+            .map(getCounterParty)
+            .map(getCounterPartyPersons)
             .map(getFirstElementFromList())
             .map(NotabenePerson::getNaturalPerson)
             .map(NotabeneNaturalPerson::getName)
@@ -97,6 +114,11 @@ public class NotabeneIncomingTransferService {
 
     private <T> Function<List<T>, T> getFirstElementFromList() {
         return list -> !list.isEmpty() ? list.get(0) : null;
+    }
+
+    public record PersonNameIdentifiers(Optional<NotabeneNameIdentifier> originatorIdentifier,
+                                        Optional<NotabeneNameIdentifier> beneficiaryIdentifier
+    ) {
     }
 
 }

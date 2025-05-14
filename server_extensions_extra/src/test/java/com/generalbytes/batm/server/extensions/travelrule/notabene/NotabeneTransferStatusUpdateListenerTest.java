@@ -88,8 +88,12 @@ class NotabeneTransferStatusUpdateListenerTest {
         NotabeneTransferInfo processedInfo = createNotabeneTransferInfo(NotabeneTransferStatus.ACK);
 
         when(incomingTransferService.processIncomingTransfer(credentials, transferInfo)).thenReturn(processedInfo);
-        when(incomingTransferService.getBeneficiaryIdentifier(credentials, processedInfo.getId()))
-            .thenReturn(Optional.of(createNameIdentifier()));
+
+        NotabeneIncomingTransferService.PersonNameIdentifiers personNameIdentifiers
+            = new NotabeneIncomingTransferService.PersonNameIdentifiers(
+            Optional.of(createNameIdentifier("originator")), Optional.of(createNameIdentifier("beneficiary"))
+        );
+        when(incomingTransferService.getPersonIdentifiers(credentials, processedInfo.getId())).thenReturn(personNameIdentifiers);
 
         listener.onTransferUpdate(transferInfo);
 
@@ -103,15 +107,23 @@ class NotabeneTransferStatusUpdateListenerTest {
         assertEquals("originatorVaspDid", event.getOriginatorVasp().getDid());
         assertEquals("destinationAddress", event.getDestinationAddress());
         assertNull(event.getOriginatorVasp().getName());
-        assertEquals("primaryIdentifier", event.getOriginatorName().getPrimaryName());
-        assertEquals("secondaryIdentifier", event.getOriginatorName().getSecondaryName());
+
+        assertEquals("originatorPrimaryIdentifier", event.getOriginatorName().getPrimaryName());
+        assertEquals("originatorSecondaryIdentifier", event.getOriginatorName().getSecondaryName());
         assertEquals("LEGL", event.getOriginatorName().getNameType());
+
+        assertEquals("beneficiaryPrimaryIdentifier", event.getBeneficiaryName().getPrimaryName());
+        assertEquals("beneficiarySecondaryIdentifier", event.getBeneficiaryName().getSecondaryName());
+        assertEquals("LEGL", event.getBeneficiaryName().getNameType());
+
         assertEquals("NotabeneTransferInfo(id=someTransferId, transactionRef=someTransactionRef, status=ACK, " +
             "transactionType=TRAVELRULE, transactionAsset=BTC, transactionAmount=100000, chargedQuantity=100, " +
             "originatorDid=originatorDid, beneficiaryDid=beneficiaryDid, originatorVaspDid=originatorVaspDid, " +
             "beneficiaryVaspDid=beneficiaryVaspDid, transactionBlockchainInfo=NotabeneTransactionBlockchainInfo(" +
-            "txHash=transactionHash, origin=origin, destination=destinationAddress)), PersonName(primaryName=primaryIdentifier, " +
-            "secondaryName=secondaryIdentifier, nameType=LEGL)", event.getRawData());
+            "txHash=transactionHash, origin=origin, destination=destinationAddress)), " +
+            "OriginatorName(primaryName=originatorPrimaryIdentifier, secondaryName=originatorSecondaryIdentifier, nameType=LEGL), " +
+            "BeneficiaryName(primaryName=beneficiaryPrimaryIdentifier, secondaryName=beneficiarySecondaryIdentifier, nameType=LEGL)",
+            event.getRawData());
     }
 
     @ParameterizedTest
@@ -169,10 +181,10 @@ class NotabeneTransferStatusUpdateListenerTest {
         return transferInfo;
     }
 
-    private NotabeneNameIdentifier createNameIdentifier() {
+    private NotabeneNameIdentifier createNameIdentifier(String prefix) {
         NotabeneNameIdentifier identifier = new NotabeneNameIdentifier();
-        identifier.setPrimaryIdentifier("primaryIdentifier");
-        identifier.setSecondaryIdentifier("secondaryIdentifier");
+        identifier.setPrimaryIdentifier(prefix + "PrimaryIdentifier");
+        identifier.setSecondaryIdentifier(prefix + "SecondaryIdentifier");
         identifier.setNameIdentifierType(NotabeneNameIdentifierType.LEGL);
         return identifier;
     }
