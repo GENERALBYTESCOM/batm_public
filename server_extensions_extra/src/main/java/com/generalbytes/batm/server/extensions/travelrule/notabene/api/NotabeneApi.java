@@ -8,6 +8,7 @@ import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneL
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneRegisterWebhookRequest;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferCreateRequest;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferInfo;
+import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferInfoWithIvms;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferStatus;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferUpdateRequest;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneUnregisterWebhookRequest;
@@ -137,6 +138,18 @@ public interface NotabeneApi {
     @Path("/tx/reject")
     NotabeneTransferInfo rejectTransfer(@HeaderParam(AUTHORIZATION_HEADER_NAME) String authorization,
                                         @QueryParam("id") String transferId) throws NotabeneApiException;
+
+    /**
+     * Gets the detail of a transfer that has been created based on the passed transfer ID.
+     *
+     * @param transferId Identifier of the transfer to confirm.
+     * @return The response.
+     * @see <a href="https://devx.notabene.id/reference/txinfo-1">Notabene Documentation</a>
+     */
+    @GET
+    @Path("/tx/info")
+    NotabeneTransferInfoWithIvms getTransferInfo(@HeaderParam(AUTHORIZATION_HEADER_NAME) String authorization,
+                                                 @QueryParam("id") String transferId) throws NotabeneApiException;
 
     /**
      * Get the ownership information about a customer blockchain address.
