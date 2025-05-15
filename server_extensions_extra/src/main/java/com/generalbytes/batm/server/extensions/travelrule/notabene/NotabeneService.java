@@ -11,6 +11,7 @@ import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneL
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneRegisterWebhookRequest;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferCreateRequest;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferInfo;
+import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferInfoWithIvms;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferUpdateRequest;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneUnregisterWebhookRequest;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneVaspInfoSimple;
@@ -108,6 +109,23 @@ public class NotabeneService {
             return api.rejectTransfer(providerCredentials, transferId);
         } catch (Exception e) {
             log.warn("Failed to reject transfer at Notabene: {}", getExceptionMessage(e));
+            return null;
+        }
+    }
+
+    /**
+     * Retrieves detailed information about a transfer from Notabene including PII.
+     *
+     * @param providerCredentials The credentials used to authenticate and identify the travel rule provider.
+     * @param transferId The unique identifier of the transfer to retrieve information for.
+     * @return A {@link NotabeneTransferInfoWithIvms} object containing transfer details,
+     * or {@code null} if the operation fails.
+     */
+    public NotabeneTransferInfoWithIvms getTransferInfo(ITravelRuleProviderCredentials providerCredentials, String transferId) {
+        try {
+            return api.getTransferInfo(providerCredentials, transferId);
+        } catch (Exception e) {
+            log.warn("Failed to get transfer info from Notabene: {}", getExceptionMessage(e));
             return null;
         }
     }
