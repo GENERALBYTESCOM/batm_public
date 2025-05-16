@@ -95,13 +95,13 @@ public class NotabeneTransferStatusUpdateListener implements NotabeneTransferUpd
         PersonNames personNames = getPersonNames(transferInfo.getId());
         return new ITravelRuleIncomingTransferEvent() {
             @Override
-            public ITravelRuleProviderIdentification getTravelRuleProvider() {
-                return null;
+            public String getId() {
+                return transferInfo.getId();
             }
 
             @Override
-            public String getId() {
-                return transferInfo.getId();
+            public String getBeneficiaryVaspDid() {
+                return credentials.getVaspDid();
             }
 
             @Override

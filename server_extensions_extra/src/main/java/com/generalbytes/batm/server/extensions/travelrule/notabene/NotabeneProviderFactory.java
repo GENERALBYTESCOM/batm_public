@@ -3,6 +3,7 @@ package com.generalbytes.batm.server.extensions.travelrule.notabene;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProvider;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProviderCredentials;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProviderFactory;
+import com.generalbytes.batm.server.extensions.travelrule.TravelRuleExtensionContext;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +21,7 @@ public class NotabeneProviderFactory implements ITravelRuleProviderFactory {
      */
     private final Map<String, NotabeneTravelRuleProvider> travelRuleProviders = new HashMap<>();
 
-    public NotabeneProviderFactory(NotabeneConfiguration configuration) {
+    public NotabeneProviderFactory(NotabeneConfiguration configuration, TravelRuleExtensionContext extensionContext) {
         this.configuration = configuration;
         notabeneTransferPublisher = NotabeneTransferPublisher.getInstance();
 
@@ -29,7 +30,7 @@ public class NotabeneProviderFactory implements ITravelRuleProviderFactory {
         NotabeneApiService notabeneApiService = new NotabeneApiService(notabeneAuthService);
         NotabeneApiWrapper notabeneApiWrapper = new NotabeneApiWrapper(notabeneApiFactory, notabeneApiService);
         notabeneService = new NotabeneService(notabeneApiWrapper, configuration);
-        notabeneIncomingTransferService = new NotabeneIncomingTransferService(notabeneService);
+        notabeneIncomingTransferService = new NotabeneIncomingTransferService(notabeneService, extensionContext);
     }
 
     @Override

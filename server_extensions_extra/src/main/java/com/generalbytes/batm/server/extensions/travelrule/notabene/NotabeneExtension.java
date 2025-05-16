@@ -4,6 +4,7 @@ import com.generalbytes.batm.server.extensions.AbstractExtension;
 import com.generalbytes.batm.server.extensions.IExtensionContext;
 import com.generalbytes.batm.server.extensions.IRestService;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProviderFactory;
+import com.generalbytes.batm.server.extensions.travelrule.TravelRuleExtensionContext;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashSet;
@@ -22,6 +23,7 @@ public class NotabeneExtension extends AbstractExtension {
 
     private Set<IRestService> restServices = null;
     private NotabeneConfiguration configuration = null;
+    private TravelRuleExtensionContext extensionContext = null;
 
     @Override
     public String getName() {
@@ -32,6 +34,7 @@ public class NotabeneExtension extends AbstractExtension {
     public void init(IExtensionContext ctx) {
         log.info("Initializing Notabene extension");
         super.init(ctx);
+        extensionContext = new TravelRuleExtensionContext(ctx);
         configuration = getConfiguration();
         restServices = getServices();
         log.info("Notabene extension initialized");
@@ -42,7 +45,7 @@ public class NotabeneExtension extends AbstractExtension {
         if (configuration == null) {
             throw new IllegalStateException("Extension not initialized yet");
         }
-        return Set.of(new NotabeneProviderFactory(configuration));
+        return Set.of(new NotabeneProviderFactory(configuration, extensionContext));
     }
 
     @Override
