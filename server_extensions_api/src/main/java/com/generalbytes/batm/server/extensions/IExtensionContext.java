@@ -29,6 +29,7 @@ import com.generalbytes.batm.server.extensions.exceptions.CashbackException;
 import com.generalbytes.batm.server.extensions.exceptions.SellException;
 import com.generalbytes.batm.server.extensions.exceptions.UpdateException;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProviderIdentification;
+import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferData;
 import com.generalbytes.batm.server.extensions.travelrule.IVaspIdentification;
 import com.generalbytes.batm.server.extensions.watchlist.WatchListQuery;
 import com.generalbytes.batm.server.extensions.watchlist.WatchListResult;
@@ -947,4 +948,13 @@ public interface IExtensionContext {
      */
     ITransactionDetails addTransactionHash(String transactionRemoteId, String transactionHash) throws UpdateException;
 
+    /**
+     * Finds and returns travel rule transfer data associated with the given address.
+     *
+     * @param address the address to search for associated travel rule transfer data
+     * @return the travel rule transfer data associated with the given address, or {@code null} if no data is found
+     */
+    default ITravelRuleTransferData findTravelRuleTransferByAddress(String address) {
+        return null;
+    }
 }

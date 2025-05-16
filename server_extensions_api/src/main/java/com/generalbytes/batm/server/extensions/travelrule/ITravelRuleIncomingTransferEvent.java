@@ -9,19 +9,18 @@ package com.generalbytes.batm.server.extensions.travelrule;
 public interface ITravelRuleIncomingTransferEvent {
 
     /**
-     * Data about the provider with which the VASP is registered. (mandatory)
-     *
-     * @return {@link ITravelRuleProviderIdentification} containing data about Travel Rule provider.
-     * @see #getOriginatorVasp()
-     */
-    ITravelRuleProviderIdentification getTravelRuleProvider();
-
-    /**
      * Unique identifier of the incoming transfer. (mandatory)
      *
      * @return Unique identifier of the transfer.
      */
     String getId();
+
+    /**
+     * Retrieves the DID of the VASP for which the incoming transfer is intended.
+     *
+     * @return The DID of the beneficiary VASP.
+     */
+    String getBeneficiaryVaspDid();
 
     /**
      * Information about the originator VASP that requires transfer verification. (mandatory)

@@ -1,6 +1,8 @@
 package com.generalbytes.batm.server.extensions.travelrule.notabene;
 
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProviderCredentials;
+import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferData;
+import com.generalbytes.batm.server.extensions.travelrule.TravelRuleExtensionContext;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneBeneficiary;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneIvms;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneNameIdentifier;
@@ -39,6 +41,8 @@ import static org.mockito.Mockito.when;
 class NotabeneIncomingTransferServiceTest {
     @Mock
     private NotabeneService notabeneService;
+    @Mock
+    private TravelRuleExtensionContext extensionContext;
     @InjectMocks
     private NotabeneIncomingTransferService incomingTransferService;
 
@@ -60,7 +64,7 @@ class NotabeneIncomingTransferServiceTest {
 
     @ParameterizedTest
     @MethodSource("testUnknownAddressSource")
-    void processIncomingTransfer_sent_unknownAddress(NotabeneTransactionBlockchainInfo blockchainInfo) {
+    void processIncomingTransfer_sent_unknownAddress_invalidInputs(NotabeneTransactionBlockchainInfo blockchainInfo) {
         ITravelRuleProviderCredentials credentials = mock(ITravelRuleProviderCredentials.class);
 
         NotabeneTransferInfo transferInfo = createTransferInfo(NotabeneTransferStatus.SENT);
@@ -77,7 +81,7 @@ class NotabeneIncomingTransferServiceTest {
     }
 
     @Test
-    void processIncomingTransfer_sent_knownAddress() {
+    void processIncomingTransfer_sent_unknownAddress_notFound() {
         ITravelRuleProviderCredentials credentials = mock(ITravelRuleProviderCredentials.class);
 
         NotabeneTransferInfo transferInfo = createTransferInfo(NotabeneTransferStatus.SENT);
@@ -86,7 +90,53 @@ class NotabeneIncomingTransferServiceTest {
         transferInfo.setTransactionBlockchainInfo(blockchainInfo);
 
         NotabeneTransferInfo serviceResponse = mock(NotabeneTransferInfo.class);
+        when(notabeneService.rejectTransfer(credentials, transferInfo.getId())).thenReturn(serviceResponse);
+
+        NotabeneTransferInfo processed = incomingTransferService.processIncomingTransfer(credentials, transferInfo);
+
+        assertEquals(serviceResponse, processed);
+        verify(notabeneService).rejectTransfer(credentials, transferInfo.getId());
+        verify(notabeneService, never()).confirmTransfer(any(), any());
+    }
+
+    @Test
+    void processIncomingTransfer_sent_unknownAddress_differentAsset() {
+        ITravelRuleProviderCredentials credentials = mock(ITravelRuleProviderCredentials.class);
+
+        String address = "address";
+        NotabeneTransferInfo transferInfo = createTransferInfo(NotabeneTransferStatus.SENT);
+        NotabeneTransactionBlockchainInfo blockchainInfo = new NotabeneTransactionBlockchainInfo();
+        blockchainInfo.setDestination(address);
+        transferInfo.setTransactionBlockchainInfo(blockchainInfo);
+
+        NotabeneTransferInfo serviceResponse = mock(NotabeneTransferInfo.class);
+        when(notabeneService.rejectTransfer(credentials, transferInfo.getId())).thenReturn(serviceResponse);
+        ITravelRuleTransferData transferData = mock(ITravelRuleTransferData.class);
+        when(transferData.getTransactionAsset()).thenReturn("USDT");
+        when(extensionContext.findTravelRuleTransferByAddress(address)).thenReturn(transferData);
+
+        NotabeneTransferInfo processed = incomingTransferService.processIncomingTransfer(credentials, transferInfo);
+
+        assertEquals(serviceResponse, processed);
+        verify(notabeneService).rejectTransfer(credentials, transferInfo.getId());
+        verify(notabeneService, never()).confirmTransfer(any(), any());
+    }
+
+    @Test
+    void processIncomingTransfer_sent_knownAddress() {
+        ITravelRuleProviderCredentials credentials = mock(ITravelRuleProviderCredentials.class);
+
+        String address = "address";
+        NotabeneTransferInfo transferInfo = createTransferInfo(NotabeneTransferStatus.SENT);
+        NotabeneTransactionBlockchainInfo blockchainInfo = new NotabeneTransactionBlockchainInfo();
+        blockchainInfo.setDestination(address);
+        transferInfo.setTransactionBlockchainInfo(blockchainInfo);
+
+        NotabeneTransferInfo serviceResponse = mock(NotabeneTransferInfo.class);
         when(notabeneService.confirmTransfer(credentials, transferInfo.getId())).thenReturn(serviceResponse);
+        ITravelRuleTransferData transferData = mock(ITravelRuleTransferData.class);
+        when(transferData.getTransactionAsset()).thenReturn("ETH");
+        when(extensionContext.findTravelRuleTransferByAddress(address)).thenReturn(transferData);
 
         NotabeneTransferInfo processed = incomingTransferService.processIncomingTransfer(credentials, transferInfo);
 
@@ -99,6 +149,7 @@ class NotabeneIncomingTransferServiceTest {
         NotabeneTransferInfo transferInfo = new NotabeneTransferInfo();
         transferInfo.setId(UUID.randomUUID().toString());
         transferInfo.setStatus(status);
+        transferInfo.setTransactionAsset("eth");
         return transferInfo;
     }
 

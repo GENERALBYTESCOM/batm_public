@@ -104,6 +104,7 @@ class NotabeneTransferStatusUpdateListenerTest {
         ITravelRuleIncomingTransferEvent event = eventCaptor.getValue();
         assertNotNull(event);
         assertEquals(processedInfo.getId(), event.getId());
+        assertEquals("beneficiaryVaspDid", event.getBeneficiaryVaspDid());
         assertEquals("originatorVaspDid", event.getOriginatorVasp().getDid());
         assertEquals("destinationAddress", event.getDestinationAddress());
         assertNull(event.getOriginatorVasp().getName());
