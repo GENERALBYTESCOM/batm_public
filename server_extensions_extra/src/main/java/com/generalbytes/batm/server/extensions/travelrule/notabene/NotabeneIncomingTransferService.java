@@ -1,6 +1,8 @@
 package com.generalbytes.batm.server.extensions.travelrule.notabene;
 
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProviderCredentials;
+import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferData;
+import com.generalbytes.batm.server.extensions.travelrule.TravelRuleExtensionContext;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneBeneficiary;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneIvms;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneNameIdentifier;
@@ -24,6 +26,7 @@ import java.util.function.Function;
 public class NotabeneIncomingTransferService {
 
     private final NotabeneService notabeneService;
+    private final TravelRuleExtensionContext extensionContext;
 
     /**
      * Processes an incoming transfer by verifying its status and performing appropriate actions to handle it.
@@ -59,8 +62,11 @@ public class NotabeneIncomingTransferService {
         if (destinationAddress == null) {
             return false;
         }
-        //TODO: BATM-7383 call extensions to validate address
-        return true;
+        ITravelRuleTransferData transferData = extensionContext.findTravelRuleTransferByAddress(destinationAddress);
+        if (transferData == null) {
+            return false;
+        }
+        return transferInfo.getTransactionAsset().equalsIgnoreCase(transferData.getTransactionAsset());
     }
 
     private NotabeneTransferInfo handleSentTransfer(ITravelRuleProviderCredentials credentials,

@@ -47,6 +47,6 @@ public interface ITravelRuleTransferListener {
      * @return An object containing data with the results of evaluating an incoming transfer.
      * @throws IllegalArgumentException If some parameters in event are invalid.
      */
-    ITravelRuleIncomingTransferResult onIncomingTransferReceived(ITravelRuleIncomingTransferEvent event);
+    void onIncomingTransferReceived(ITravelRuleIncomingTransferEvent event);
 
 }
