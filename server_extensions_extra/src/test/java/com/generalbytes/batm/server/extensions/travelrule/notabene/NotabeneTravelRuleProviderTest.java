@@ -8,9 +8,11 @@ import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProviderCre
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferData;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferInfo;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferListener;
+import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferResolvedEvent;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferUpdateRequest;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleVasp;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleWalletInfo;
+import com.generalbytes.batm.server.extensions.travelrule.TravelRuleProviderTransferStatus;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneAddressOwnershipInfoRequest;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneAddressOwnershipInfoResponse;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneBeneficiary;
@@ -27,6 +29,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
@@ -53,6 +56,7 @@ import static org.mockito.Mockito.mockConstruction;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -388,6 +392,93 @@ class NotabeneTravelRuleProviderTest {
         verify(notabeneAuthService, never()).removeAccessToken(any());
     }
 
+    @Test
+    void testOnTransferResolved_accepted() {
+        TestTravelRuleTransferResolvedEvent event = new TestTravelRuleTransferResolvedEvent(
+            "publicId", "externalId", TravelRuleProviderTransferStatus.APPROVED
+        );
+
+        NotabeneTransferInfo response = createNotabeneTransferInfo(NotabeneTransferStatus.ACCEPTED);
+        when(notabeneService.acceptTransfer(credentials, "externalId")).thenReturn(response);
+
+        boolean result = provider.onTransferResolved(event);
+        assertTrue(result);
+    }
+
+    @Test
+    void testOnTransferResolved_acceptedNullResponse() {
+        TestTravelRuleTransferResolvedEvent event = new TestTravelRuleTransferResolvedEvent(
+            "publicId", "externalId", TravelRuleProviderTransferStatus.APPROVED
+        );
+
+        when(notabeneService.acceptTransfer(credentials, "externalId")).thenReturn(null);
+
+        boolean result = provider.onTransferResolved(event);
+        assertFalse(result);
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = NotabeneTransferStatus.class, names = {"ACCEPTED"}, mode = EnumSource.Mode.EXCLUDE)
+    void testOnTransferResolved_acceptedInvalidState(NotabeneTransferStatus responseStatus) {
+        TestTravelRuleTransferResolvedEvent event = new TestTravelRuleTransferResolvedEvent(
+            "publicId", "externalId", TravelRuleProviderTransferStatus.APPROVED
+        );
+        NotabeneTransferInfo response = createNotabeneTransferInfo(responseStatus);
+        when(notabeneService.acceptTransfer(credentials, "externalId")).thenReturn(response);
+
+        boolean result = provider.onTransferResolved(event);
+        assertFalse(result);
+    }
+
+    @Test
+    void testOnTransferResolved_declined() {
+        TestTravelRuleTransferResolvedEvent event = new TestTravelRuleTransferResolvedEvent(
+            "publicId", "externalId", TravelRuleProviderTransferStatus.REJECTED
+        );
+
+        NotabeneTransferInfo response = createNotabeneTransferInfo(NotabeneTransferStatus.DECLINED);
+        when(notabeneService.declineTransfer(credentials, "externalId")).thenReturn(response);
+
+        boolean result = provider.onTransferResolved(event);
+        assertTrue(result);
+    }
+
+    @Test
+    void testOnTransferResolved_declinedNullResponse() {
+        TestTravelRuleTransferResolvedEvent event = new TestTravelRuleTransferResolvedEvent(
+            "publicId", "externalId", TravelRuleProviderTransferStatus.REJECTED
+        );
+
+        when(notabeneService.declineTransfer(credentials, "externalId")).thenReturn(null);
+
+        boolean result = provider.onTransferResolved(event);
+        assertFalse(result);
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = NotabeneTransferStatus.class, names = {"DECLINED"}, mode = EnumSource.Mode.EXCLUDE)
+    void testOnTransferResolved_declineddInvalidState(NotabeneTransferStatus responseStatus) {
+        TestTravelRuleTransferResolvedEvent event = new TestTravelRuleTransferResolvedEvent(
+            "publicId", "externalId", TravelRuleProviderTransferStatus.REJECTED
+        );
+        NotabeneTransferInfo response = createNotabeneTransferInfo(responseStatus);
+        when(notabeneService.declineTransfer(credentials, "externalId")).thenReturn(response);
+
+        boolean result = provider.onTransferResolved(event);
+        assertFalse(result);
+    }
+
+    @Test
+    void testOnTransferResolved_unsupportedInProgress() {
+        TestTravelRuleTransferResolvedEvent event = new TestTravelRuleTransferResolvedEvent(
+            "publicId", "externalId", TravelRuleProviderTransferStatus.IN_PROGRESS
+        );
+
+        boolean result = provider.onTransferResolved(event);
+        assertFalse(result);
+        verifyNoInteractions(notabeneService);
+    }
+
     private MockedConstruction<NotabeneTransferStatusUpdateListener> mockNotabeneListenerConstruction(
         ITravelRuleTransferListener listener) {
         return mockConstruction(NotabeneTransferStatusUpdateListener.class, (mock, context) -> {
@@ -633,6 +724,35 @@ class NotabeneTravelRuleProviderTest {
         @Override
         public String getVaspDid() {
             return vaspDid;
+        }
+    }
+
+    private static class TestTravelRuleTransferResolvedEvent implements ITravelRuleTransferResolvedEvent {
+        private final String publicId;
+        private final String externalId;
+        private final TravelRuleProviderTransferStatus status;
+
+        private TestTravelRuleTransferResolvedEvent(String publicId,
+                                                    String externalId,
+                                                    TravelRuleProviderTransferStatus status) {
+            this.publicId = publicId;
+            this.externalId = externalId;
+            this.status = status;
+        }
+
+        @Override
+        public String getTransferPublicId() {
+            return publicId;
+        }
+
+        @Override
+        public String getTransferExternalId() {
+            return externalId;
+        }
+
+        @Override
+        public TravelRuleProviderTransferStatus getResolvedStatus() {
+            return status;
         }
     }
 }

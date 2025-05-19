@@ -114,6 +114,38 @@ public class NotabeneService {
     }
 
     /**
+     * Accept an existing transfer.
+     *
+     * @param providerCredentials The {@link ITravelRuleProviderCredentials} to accept the transfer for.
+     * @param transferId          Identifier of the transfer to accept.
+     * @return The accepted {@link NotabeneTransferInfo} or null if the acceptation fails.
+     */
+    public NotabeneTransferInfo acceptTransfer(ITravelRuleProviderCredentials providerCredentials, String transferId) {
+        try {
+            return api.acceptTransfer(providerCredentials, transferId);
+        } catch (Exception e) {
+            log.warn("Failed to accept transfer at Notabene: {}", getExceptionMessage(e));
+            return null;
+        }
+    }
+
+    /**
+     * Decline an existing transfer.
+     *
+     * @param providerCredentials The {@link ITravelRuleProviderCredentials} to decline the transfer for.
+     * @param transferId          Identifier of the transfer to decline.
+     * @return The declined {@link NotabeneTransferInfo} or null if the declination fails.
+     */
+    public NotabeneTransferInfo declineTransfer(ITravelRuleProviderCredentials providerCredentials, String transferId) {
+        try {
+            return api.declineTransfer(providerCredentials, transferId);
+        } catch (Exception e) {
+            log.warn("Failed to decline transfer at Notabene: {}", getExceptionMessage(e));
+            return null;
+        }
+    }
+
+    /**
      * Retrieves detailed information about a transfer from Notabene including PII.
      *
      * @param providerCredentials The credentials used to authenticate and identify the travel rule provider.
