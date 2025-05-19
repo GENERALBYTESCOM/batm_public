@@ -163,6 +163,26 @@ class NotabeneApiWrapperTest {
     }
 
     @Test
+    void testAcceptTransfer() {
+        NotabeneTransferInfo response = mock(NotabeneTransferInfo.class);
+        ITravelRuleProviderCredentials providerCredentials = mock(ITravelRuleProviderCredentials.class);
+
+        testApiWrapperMethod(providerCredentials, response,
+            () -> apiWrapper.acceptTransfer(providerCredentials, "transferId"),
+            authorization -> verify(api).acceptTransfer(authorization, "transferId"));
+    }
+
+    @Test
+    void testDeclineTransfer() {
+        NotabeneTransferInfo response = mock(NotabeneTransferInfo.class);
+        ITravelRuleProviderCredentials providerCredentials = mock(ITravelRuleProviderCredentials.class);
+
+        testApiWrapperMethod(providerCredentials, response,
+            () -> apiWrapper.declineTransfer(providerCredentials, "transferId"),
+            authorization -> verify(api).declineTransfer(authorization, "transferId"));
+    }
+
+    @Test
     void testGetTransferInfo() {
         NotabeneTransferInfoWithIvms response = mock(NotabeneTransferInfoWithIvms.class);
         ITravelRuleProviderCredentials providerCredentials = mock(ITravelRuleProviderCredentials.class);

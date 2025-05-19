@@ -96,6 +96,20 @@ public class NotabeneApiWrapper {
     }
 
     /**
+     * @see NotabeneApi#acceptTransfer(String, String)
+     */
+    public NotabeneTransferInfo acceptTransfer(ITravelRuleProviderCredentials providerCredentials, String transferId) {
+        return apiService.callApi(providerCredentials, authorization -> api.acceptTransfer(authorization, transferId));
+    }
+
+    /**
+     * @see NotabeneApi#declineTransfer(String, String)
+     */
+    public NotabeneTransferInfo declineTransfer(ITravelRuleProviderCredentials providerCredentials, String transferId) {
+        return apiService.callApi(providerCredentials, authorization -> api.declineTransfer(authorization, transferId));
+    }
+
+    /**
      * @see NotabeneApi#getTransferInfo(String, String)
      */
     public NotabeneTransferInfoWithIvms getTransferInfo(ITravelRuleProviderCredentials providerCredentials, String transferId) {

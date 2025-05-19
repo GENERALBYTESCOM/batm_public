@@ -116,4 +116,14 @@ public interface ITravelRuleProvider {
      * @return {@code True} if configuration is valid, otherwise {@code false}.
      */
     boolean testProviderConfiguration();
+
+    /**
+     * Called when a transfer has been resolved to inform the counterparty that the transfer has either been
+     * approved or rejected. This method will be called for incoming travel rule transfers received via
+     * {@link ITravelRuleTransferListener#onIncomingTransferReceived}.
+     *
+     * @param event {@link ITravelRuleTransferResolvedEvent}
+     * @return True, if the resolution was successfully processed, false otherwise.
+     */
+    boolean onTransferResolved(ITravelRuleTransferResolvedEvent event);
 }
