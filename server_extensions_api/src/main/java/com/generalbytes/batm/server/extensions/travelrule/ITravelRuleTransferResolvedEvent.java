@@ -26,8 +26,8 @@ public interface ITravelRuleTransferResolvedEvent {
      * @return The status of the resolved transfer. Possible values are:
      * <ul>
      * <li>{@code APPROVED} - The transfer has been approved, ready to receive funds.</li>
-     * <li>{@code REJECTED} - The transfer has been rejected, don't send funds</li>
-     * <li>{@code IN_PROGRESS} - won't be used, only APPROVED/REJECTED values are allowed</li>
+     * <li>{@code REJECTED} - The transfer has been rejected, don't send funds.</li>
+     * <li>{@code IN_PROGRESS} - Won't be used, only APPROVED/REJECTED values are allowed.</li>
      * </ul>
      */
     TravelRuleProviderTransferStatus getResolvedStatus();
