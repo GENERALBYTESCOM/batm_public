@@ -8,9 +8,11 @@ import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProviderCre
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferData;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferInfo;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferListener;
+import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferResolvedEvent;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferUpdateRequest;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleVasp;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleWalletInfo;
+import com.generalbytes.batm.server.extensions.travelrule.TravelRuleProviderTransferStatus;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneAddressOwnershipInfoRequest;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneAddressOwnershipInfoResponse;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneBeneficiary;
@@ -145,6 +147,34 @@ public class NotabeneTravelRuleProvider implements ITravelRuleProvider {
         log.info("A configuration test was requested for {}, clientId: {}", NAME, credentials.getClientId());
 
         return notabeneService.testProviderCredentials(credentials);
+    }
+
+    @Override
+    public boolean onTransferResolved(ITravelRuleTransferResolvedEvent event) {
+        TravelRuleProviderTransferStatus status = event.getResolvedStatus();
+        if (status == TravelRuleProviderTransferStatus.APPROVED) {
+            NotabeneTransferInfo response = notabeneService.acceptTransfer(credentials, event.getTransferExternalId());
+            return changeStatusAtProvider(response, event, NotabeneTransferStatus.ACCEPTED);
+        }
+        if (status == TravelRuleProviderTransferStatus.REJECTED) {
+            NotabeneTransferInfo response = notabeneService.declineTransfer(credentials, event.getTransferExternalId());
+            return changeStatusAtProvider(response, event, NotabeneTransferStatus.DECLINED);
+        }
+        return false;
+    }
+
+    private boolean changeStatusAtProvider(NotabeneTransferInfo response,
+                                           ITravelRuleTransferResolvedEvent event,
+                                           NotabeneTransferStatus expectedStatus) {
+        if (response != null && response.getStatus() == expectedStatus) {
+            log.info("Transfer {} was {} at Notabene, externalId: {}",
+                event.getTransferPublicId(), expectedStatus.name().toLowerCase(), event.getTransferExternalId());
+            return true;
+        } else {
+            log.info("Transfer {} was not {} at Notabene, externalId: {}",
+                event.getTransferPublicId(), expectedStatus.name().toLowerCase(), event.getTransferExternalId());
+        }
+        return false;
     }
 
     /**

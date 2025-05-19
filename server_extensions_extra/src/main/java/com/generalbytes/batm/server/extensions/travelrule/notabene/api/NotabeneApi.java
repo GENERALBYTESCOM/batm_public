@@ -128,7 +128,7 @@ public interface NotabeneApi {
 
     /**
      * Rejects a transfer indicating that the blockchain address is not owned by the beneficiary VASP.
-     * Rejecting sets the transfer status to {@link NotabeneTransferStatus#REJECTED}..
+     * Rejecting sets the transfer status to {@link NotabeneTransferStatus#REJECTED}.
      *
      * @param transferId Identifier of the transfer to reject.
      * @return The response.
@@ -138,6 +138,30 @@ public interface NotabeneApi {
     @Path("/tx/reject")
     NotabeneTransferInfo rejectTransfer(@HeaderParam(AUTHORIZATION_HEADER_NAME) String authorization,
                                         @QueryParam("id") String transferId) throws NotabeneApiException;
+
+    /**
+     * Accepts a transfer setting the status to {@link NotabeneTransferStatus#ACCEPTED}.
+     *
+     * @param transferId Identifier of the transfer to accept.
+     * @return The response.
+     * @see <a href="https://devx.notabene.id/reference/txaccept-1">Notabene Documentation</a>
+     */
+    @POST
+    @Path("/tx/accept")
+    NotabeneTransferInfo acceptTransfer(@HeaderParam(AUTHORIZATION_HEADER_NAME) String authorization,
+                                        @QueryParam("id") String transferId) throws NotabeneApiException;
+
+    /**
+     * Declines a transfer setting the status to {@link NotabeneTransferStatus#DECLINED}.
+     *
+     * @param transferId Identifier of the transfer to decline.
+     * @return The response.
+     * @see <a href="https://devx.notabene.id/reference/txdecline-1">Notabene Documentation</a>
+     */
+    @POST
+    @Path("/tx/decline")
+    NotabeneTransferInfo declineTransfer(@HeaderParam(AUTHORIZATION_HEADER_NAME) String authorization,
+                                         @QueryParam("id") String transferId) throws NotabeneApiException;
 
     /**
      * Gets the detail of a transfer that has been created based on the passed transfer ID.
