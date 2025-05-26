@@ -112,7 +112,6 @@
                 <cryptocurrency>ETH</cryptocurrency>
                 <cryptocurrency>TRX</cryptocurrency>
                 <cryptocurrency>USDT</cryptocurrency>
-                <cryptocurrency>USDC</cryptocurrency>
                 <cryptocurrency>USDTTRON</cryptocurrency>
                 <help>
                     *host: https://api.walletpro.cryptal.com/ (required) -
