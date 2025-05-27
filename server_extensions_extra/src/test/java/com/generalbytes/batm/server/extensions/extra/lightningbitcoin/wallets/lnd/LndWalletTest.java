@@ -4,6 +4,7 @@ import com.generalbytes.batm.server.coinutil.CoinUnit;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.lnd.dto.ErrorResponseException;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.lnd.dto.Invoice;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.lnd.dto.PaymentRequest;
+import com.generalbytes.batm.server.extensions.payment.ReceivedAmount;
 import com.generalbytes.batm.server.extensions.util.net.HexStringCertTrustManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -89,13 +90,11 @@ class LndWalletTest {
     }
 
     @Test
-    void testGetReceivedAmount_unsupportedCryptocurrency() {
-        String unsupportedCryptoCurrency = "unsupportedCryptoCurrency"; // Anything other than LBTC
+    void testGetReceivedAmount_deprecated() {
+        UnsupportedOperationException exception = assertThrows(UnsupportedOperationException.class,
+            () -> wallet.getReceivedAmount("address", "LBTC"));
 
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-            () -> wallet.getReceivedAmount("address", unsupportedCryptoCurrency));
-
-        assertEquals("unsupportedCryptoCurrency not supported", exception.getMessage());
+        assertEquals("This method is deprecated and should not be used.", exception.getMessage());
     }
 
     @Test
@@ -109,9 +108,12 @@ class LndWalletTest {
         when(api.decodePaymentRequest(address)).thenReturn(paymentRequest);
         when(api.getInvoice("hash")).thenReturn(invoice);
 
-        BigDecimal result = wallet.getReceivedAmount(address, "LBTC");
+        ReceivedAmount result = wallet.getReceivedAmount(address);
 
-        assertEquals(BigDecimal.ZERO, result);
+        assertNotNull(result);
+        assertEquals(BigDecimal.ZERO, result.getTotalAmountReceived());
+        assertEquals(0, result.getConfirmations());
+        assertNull(result.getTransactionHashes());
     }
 
     @Test
@@ -129,10 +131,38 @@ class LndWalletTest {
         try (MockedStatic<CoinUnit> mockedCoinUnit = mockStatic(CoinUnit.class)) {
             mockedCoinUnit.when(() -> CoinUnit.mSatToBitcoin(anyLong())).thenReturn(new BigDecimal("0.001"));
 
-            BigDecimal result = wallet.getReceivedAmount(address, "LBTC");
+            ReceivedAmount result = wallet.getReceivedAmount(address);
 
-            assertEquals(new BigDecimal("0.001"), result);
+            assertNotNull(result);
+            assertEquals(new BigDecimal("0.001"), result.getTotalAmountReceived());
+            assertEquals(Integer.MAX_VALUE, result.getConfirmations());
+            assertNull(result.getTransactionHashes());
             mockedCoinUnit.verify(() -> CoinUnit.mSatToBitcoin(1000L));
+        }
+    }
+
+    @Test
+    void testGetReceivedAmount_transactionHash() throws IOException {
+        String address = "address";
+        PaymentRequest paymentRequest = new PaymentRequest();
+        paymentRequest.payment_hash = "hash";
+        Invoice invoice = new Invoice();
+        invoice.settled = true;
+        invoice.amt_paid_msat = "1000";
+        invoice.r_hash = "transactionHash";
+
+        when(api.decodePaymentRequest(address)).thenReturn(paymentRequest);
+        when(api.getInvoice("hash")).thenReturn(invoice);
+
+        try (MockedStatic<CoinUnit> mockedCoinUnit = mockStatic(CoinUnit.class)) {
+            mockedCoinUnit.when(() -> CoinUnit.mSatToBitcoin(anyLong())).thenReturn(new BigDecimal("0.001"));
+
+            ReceivedAmount result = wallet.getReceivedAmount(address);
+
+            assertNotNull(result);
+            assertNotNull(result.getTransactionHashes());
+            assertEquals(1, result.getTransactionHashes().size());
+            assertEquals(invoice.r_hash, result.getTransactionHashes().get(0));
         }
     }
 
@@ -152,7 +182,7 @@ class LndWalletTest {
 
         when(api.decodePaymentRequest(address)).thenThrow(exception);
 
-        BigDecimal result = wallet.getReceivedAmount("address", "LBTC");
+        ReceivedAmount result = wallet.getReceivedAmount("address");
 
         assertNull(result);
     }
