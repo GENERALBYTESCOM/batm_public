@@ -1,6 +1,7 @@
 package com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.walletofsatoshi;
 
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.walletofsatoshi.dto.Payment;
+import com.generalbytes.batm.server.extensions.payment.ReceivedAmount;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,6 +19,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
@@ -41,22 +43,23 @@ class WalletOfSatoshiWalletTest {
     }
 
     @Test
-    void testGetReceivedAmount_unsupportedCryptocurrency() {
-        String unsupportedCryptoCurrency = "unsupportedCryptoCurrency"; // Anything other than LBTC
+    void testGetReceivedAmount_deprecated() {
+        UnsupportedOperationException exception = assertThrows(UnsupportedOperationException.class,
+                () -> wallet.getReceivedAmount("address", "LBTC"));
 
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> wallet.getReceivedAmount("address", unsupportedCryptoCurrency));
-
-        assertEquals("unsupportedCryptoCurrency not supported", exception.getMessage());
+        assertEquals("This method is deprecated and should not be used.", exception.getMessage());
     }
 
     @Test
     void testGetReceivedAmount_noPayments() throws IOException {
         when(api.getPayments(null, null)).thenReturn(Collections.emptyList());
 
-        BigDecimal result = wallet.getReceivedAmount("address", "LBTC");
+        ReceivedAmount result = wallet.getReceivedAmount("address");
 
-        assertEquals(BigDecimal.ZERO, result);
+        assertNotNull(result);
+        assertEquals(BigDecimal.ZERO, result.getTotalAmountReceived());
+        assertEquals(0, result.getConfirmations());
+        assertNull(result.getTransactionHashes());
     }
 
     @Test
@@ -70,9 +73,12 @@ class WalletOfSatoshiWalletTest {
                 createPayment("differentAddress", "invalidType", BigDecimal.ZERO)
         ));
 
-        BigDecimal result = wallet.getReceivedAmount("address", "LBTC");
+        ReceivedAmount result = wallet.getReceivedAmount("address");
 
-        assertEquals(BigDecimal.ZERO, result);
+        assertNotNull(result);
+        assertEquals(BigDecimal.ZERO, result.getTotalAmountReceived());
+        assertEquals(0, result.getConfirmations());
+        assertNull(result.getTransactionHashes());
     }
 
     @Test
@@ -84,9 +90,29 @@ class WalletOfSatoshiWalletTest {
                 createPayment("address", "invalidType", BigDecimal.ONE)
         ));
 
-        BigDecimal result = wallet.getReceivedAmount("address", "LBTC");
+        ReceivedAmount result = wallet.getReceivedAmount("address");
 
-        assertEquals(BigDecimal.TEN, result);
+        assertNotNull(result);
+        assertEquals(BigDecimal.TEN, result.getTotalAmountReceived());
+        assertEquals(Integer.MAX_VALUE, result.getConfirmations());
+        assertNull(result.getTransactionHashes());
+    }
+
+    @Test
+    void testGetReceivedAmount_paymentHash() throws IOException {
+        Payment payment = createPayment("address", "CREDIT", BigDecimal.TEN);
+        payment.transactionId = "paymentHash";
+
+        when(api.getPayments(null, null)).thenReturn(List.of(payment));
+
+        ReceivedAmount result = wallet.getReceivedAmount("address");
+
+        assertNotNull(result);
+        assertEquals(BigDecimal.TEN, result.getTotalAmountReceived());
+        assertEquals(Integer.MAX_VALUE, result.getConfirmations());
+        assertNotNull(result.getTransactionHashes());
+        assertEquals(1, result.getTransactionHashes().size());
+        assertEquals(payment.transactionId, result.getTransactionHashes().get(0));
     }
 
     @ParameterizedTest
@@ -103,7 +129,7 @@ class WalletOfSatoshiWalletTest {
 
         when(api.getPayments(null, null)).thenThrow(exception);
 
-        BigDecimal result = wallet.getReceivedAmount("address", "LBTC");
+        ReceivedAmount result = wallet.getReceivedAmount("address");
 
         assertNull(result);
     }

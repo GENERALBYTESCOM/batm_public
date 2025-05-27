@@ -3,6 +3,8 @@ package com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.w
 import java.math.BigDecimal;
 
 public class Payment {
+    public static final String TYPE_CREDIT = "CREDIT";
+
     public String id;
     public String time;
     public String type;
@@ -14,6 +16,9 @@ public class Payment {
     public String address;
     public String fees;
     public String currency;
+    /**
+     * For lightning payments, this is the payment hash.
+     */
     public String transactionId;
     public String description;
     public String paymentGroupId;
