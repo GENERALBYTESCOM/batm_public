@@ -3,6 +3,7 @@ package com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.e
 import com.generalbytes.batm.server.coinutil.CoinUnit;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.dto.ErrorResponseException;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.dto.ReceivedInfo;
+import com.generalbytes.batm.server.extensions.payment.ReceivedAmount;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -69,13 +70,11 @@ class EclairWalletTest {
     }
 
     @Test
-    void testGetReceivedAmount_unsupportedCryptocurrency() {
-        String unsupportedCryptoCurrency = "unsupportedCryptoCurrency"; // Anything other than LBTC
+    void testGetReceivedAmount_deprecated() {
+        UnsupportedOperationException exception = assertThrows(UnsupportedOperationException.class,
+            () -> wallet.getReceivedAmount("address", "LBTC"));
 
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-            () -> wallet.getReceivedAmount("address", unsupportedCryptoCurrency));
-
-        assertEquals("unsupportedCryptoCurrency not supported", exception.getMessage());
+        assertEquals("This method is deprecated and should not be used.", exception.getMessage());
     }
 
     @ParameterizedTest
@@ -88,9 +87,12 @@ class EclairWalletTest {
 
         when(api.getReceivedInfoByInvoice(address)).thenReturn(receivedInfo);
 
-        BigDecimal result = wallet.getReceivedAmount(address, "LBTC");
+        ReceivedAmount result = wallet.getReceivedAmount(address);
 
-        assertEquals(BigDecimal.ZERO, result);
+        assertNotNull(result);
+        assertEquals(BigDecimal.ZERO, result.getTotalAmountReceived());
+        assertEquals(0, result.getConfirmations());
+        assertNull(result.getTransactionHashes());
     }
 
     @Test
@@ -107,9 +109,35 @@ class EclairWalletTest {
         try (MockedStatic<CoinUnit> mockedCoinUnit = mockStatic(CoinUnit.class)) {
             mockedCoinUnit.when(() -> CoinUnit.mSatToBitcoin(amount)).thenReturn(BigDecimal.TEN);
 
-            BigDecimal result = wallet.getReceivedAmount(address, "LBTC");
+            ReceivedAmount result = wallet.getReceivedAmount(address);
 
-            assertEquals(BigDecimal.TEN, result);
+            assertNotNull(result);
+            assertEquals(BigDecimal.TEN, result.getTotalAmountReceived());
+            assertEquals(Integer.MAX_VALUE, result.getConfirmations());
+            assertNull(result.getTransactionHashes());
+        }
+    }
+
+    @Test
+    void testGetReceivedAmount_transactionHash() throws IOException {
+        String address = "address";
+        long amount = 1000L;
+        ReceivedInfo receivedInfo = new ReceivedInfo();
+        receivedInfo.status = new ReceivedInfo.Status();
+        receivedInfo.status.type = ReceivedInfo.Status.Type.received;
+        receivedInfo.status.amount = amount;
+        receivedInfo.paymentHash = "transactionHash";
+
+        when(api.getReceivedInfoByInvoice(address)).thenReturn(receivedInfo);
+
+        try (MockedStatic<CoinUnit> mockedCoinUnit = mockStatic(CoinUnit.class)) {
+            mockedCoinUnit.when(() -> CoinUnit.mSatToBitcoin(amount)).thenReturn(BigDecimal.TEN);
+
+            ReceivedAmount result = wallet.getReceivedAmount(address);
+
+            assertNotNull(result);
+            assertNotNull(result.getTransactionHashes());
+            assertEquals(1, result.getTransactionHashes().size());
         }
     }
 
@@ -128,7 +156,7 @@ class EclairWalletTest {
 
         when(api.getReceivedInfoByInvoice(address)).thenThrow(exception);
 
-        BigDecimal result = wallet.getReceivedAmount(address, "LBTC");
+        ReceivedAmount result = wallet.getReceivedAmount(address);
 
         assertNull(result);
     }
@@ -141,9 +169,12 @@ class EclairWalletTest {
 
         when(api.getReceivedInfoByInvoice(address)).thenThrow(exception);
 
-        BigDecimal result = wallet.getReceivedAmount(address, "LBTC");
+        ReceivedAmount result = wallet.getReceivedAmount(address);
 
-        assertEquals(BigDecimal.ZERO, result);
+        assertNotNull(result);
+        assertEquals(BigDecimal.ZERO, result.getTotalAmountReceived());
+        assertEquals(0, result.getConfirmations());
+        assertNull(result.getTransactionHashes());
     }
 
     @Test
@@ -154,7 +185,7 @@ class EclairWalletTest {
 
         when(api.getReceivedInfoByInvoice(address)).thenThrow(exception);
 
-        BigDecimal result = wallet.getReceivedAmount(address, "LBTC");
+        ReceivedAmount result = wallet.getReceivedAmount(address);
 
         assertNull(result);
     }
