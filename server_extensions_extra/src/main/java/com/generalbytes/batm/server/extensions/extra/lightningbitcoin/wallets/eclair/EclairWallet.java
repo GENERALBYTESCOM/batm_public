@@ -26,6 +26,7 @@ import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.ec
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.eclair.dto.SentInfo;
 import com.generalbytes.batm.server.extensions.ThrowingSupplier;
 import com.generalbytes.batm.server.coinutil.CoinUnit;
+import com.generalbytes.batm.server.extensions.payment.ReceivedAmount;
 import okhttp3.HttpUrl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -137,36 +138,38 @@ public class EclairWallet extends AbstractLightningWallet {
 
             return CoinUnit.mSatToBitcoin(channels.stream()
                 .mapToLong(ILightningChannel::getBalanceMsat)
-                .max().orElse(0l));
+                .max().orElse(0L));
         });
     }
 
-    /**
-     * @return paymentHash
-     */
+    @Override
     public BigDecimal getReceivedAmount(String destinationAddress, String cryptoCurrency) {
-        return callChecked(cryptoCurrency, () -> {
+        throw new UnsupportedOperationException("This method is deprecated and should not be used.");
+    }
+
+    @Override
+    public ReceivedAmount getReceivedAmount(String destinationAddress) {
+        return callChecked(() -> {
             try {
                 return getReceivedAmount(api.getReceivedInfoByInvoice(destinationAddress));
             } catch (ErrorResponseException e) {
                 if (e.error.equals("Not found")) {
-                    return BigDecimal.ZERO;
+                    return ReceivedAmount.ZERO;
                 }
                 throw e;
             }
         });
     }
 
-    private BigDecimal getReceivedAmount(ReceivedInfo receivedInfo) {
-        switch (receivedInfo.status.type) {
-            case received:
-                return CoinUnit.mSatToBitcoin(receivedInfo.status.amount);
-            case pending:
-            case expired:
-                return BigDecimal.ZERO;
-            default:
-                throw new IllegalArgumentException("Unsupported ReceivedInfo.Status.Type");
+    private ReceivedAmount getReceivedAmount(ReceivedInfo receivedInfo) {
+        ReceivedAmount receivedAmount = switch (receivedInfo.status.type) {
+            case received -> new ReceivedAmount(CoinUnit.mSatToBitcoin(receivedInfo.status.amount), Integer.MAX_VALUE);
+            case pending, expired -> new ReceivedAmount(BigDecimal.ZERO, 0);
+        };
+        if (receivedInfo.paymentHash != null) {
+            receivedAmount.setTransactionHashes(Collections.singletonList(receivedInfo.paymentHash));
         }
+        return receivedAmount;
     }
 
     @Override
@@ -174,6 +177,7 @@ public class EclairWallet extends AbstractLightningWallet {
         return callChecked(() -> api.getInfo().nodeId);
     }
 
+    @Override
     protected <T> T callChecked(ThrowingSupplier<T> supplier) {
         return callChecked(supplier, 3);
     }
