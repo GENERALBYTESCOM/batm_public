@@ -180,6 +180,39 @@ class ElectronCashSlpWalletTest {
         assertNull(receivedAmount.getTransactionHashes());
     }
 
+    @Test
+    void testGetReceivedAmount_transactionHashes() throws IOException {
+        GetAddressUnspentElectrumResponse unspentResponse = new GetAddressUnspentElectrumResponse();
+        GetAddressUnspentElectrumResponse.GetAddressUnspentResult result = createGetAddressUnspentResult(546L);
+        unspentResponse.result = List.of(result);
+
+        IncomingTransactionsSlpdbResponse incomingResponse = new IncomingTransactionsSlpdbResponse();
+        incomingResponse.c = List.of(
+            createTransactionResult(BigDecimal.ONE, 10, "txHash1"),
+            createTransactionResult(BigDecimal.TEN, 20, null)
+        );
+        incomingResponse.u = List.of(
+            createTransactionResult(BigDecimal.ONE, null, null),
+            createTransactionResult(BigDecimal.TEN, null, "txHash2")
+        );
+
+        StatusSlpdbResponse statusResponse = new StatusSlpdbResponse();
+        statusResponse.s = List.of(createStatusResult());
+
+        when(api.getAddressUnspent(any())).thenReturn(unspentResponse);
+        when(slpdbApi.getIncoimngTransactions(any())).thenReturn(incomingResponse);
+        when(slpdbApi.getStatus(any())).thenReturn(statusResponse);
+
+        ReceivedAmount receivedAmount = wallet.getReceivedAmount(ADDRESS, CRYPTOCURRENCY);
+
+        assertEquals(BigDecimal.valueOf(22), receivedAmount.getTotalAmountReceived());
+        assertEquals(31, receivedAmount.getConfirmations());
+        assertNotNull(receivedAmount.getTransactionHashes());
+        assertEquals(2, receivedAmount.getTransactionHashes().size());
+        assertEquals("txHash1", receivedAmount.getTransactionHashes().get(0));
+        assertEquals("txHash2", receivedAmount.getTransactionHashes().get(1));
+    }
+
     @ParameterizedTest
     @ValueSource(classes = {
         HttpStatusIOException.class,
@@ -207,16 +240,20 @@ class ElectronCashSlpWalletTest {
     }
 
     private static IncomingTransactionsSlpdbResponse.TransactionResult createUnconfirmedTransactionResult(BigDecimal amount) {
-        IncomingTransactionsSlpdbResponse.TransactionResult transactionResult = new IncomingTransactionsSlpdbResponse.TransactionResult();
-        transactionResult.amount = amount;
-        transactionResult.height = null; // unconfirmed
-        return transactionResult;
+        return createTransactionResult(amount, null, null);
     }
 
     private static IncomingTransactionsSlpdbResponse.TransactionResult createConfirmedTransactionResult(BigDecimal amount, int height) {
+        return createTransactionResult(amount, height, null);
+    }
+
+    private static IncomingTransactionsSlpdbResponse.TransactionResult createTransactionResult(BigDecimal amount,
+                                                                                               Integer height,
+                                                                                               String hash) {
         IncomingTransactionsSlpdbResponse.TransactionResult transactionResult = new IncomingTransactionsSlpdbResponse.TransactionResult();
         transactionResult.amount = amount;
         transactionResult.height = height;
+        transactionResult.tx = hash;
         return transactionResult;
     }
 

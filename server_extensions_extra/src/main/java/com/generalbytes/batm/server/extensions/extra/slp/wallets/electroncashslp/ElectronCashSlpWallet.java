@@ -58,6 +58,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -140,7 +141,26 @@ public class ElectronCashSlpWallet extends SlpWallet implements IWallet, IGenera
         }
         String slpAddress = new BitcoinCashAddress(address).getSimpleledger(true);
         IncomingTransactionsSlpdbResponse resp = getSlpdbApi().getIncoimngTransactions(new IncomingTransactionsSlpdbRequest(SlpToken.valueOf(cryptoCurrency).getTokenId(), slpAddress));
-        BigDecimal totalAmount = resp.getAllTransactions().stream().map(t -> t.amount).reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        List<IncomingTransactionsSlpdbResponse.TransactionResult> allTransactions = resp.getAllTransactions();
+        BigDecimal totalAmount = allTransactions.stream().map(t -> t.amount).reduce(BigDecimal.ZERO, BigDecimal::add);
+        List<String> transactionHashes = getTransactionHashes(allTransactions);
+
+        ReceivedAmount receivedAmount = createReceivedAmount(resp, totalAmount);
+        if (!transactionHashes.isEmpty()) {
+            receivedAmount.setTransactionHashes(transactionHashes);
+        }
+        return receivedAmount;
+    }
+
+    private List<String> getTransactionHashes(List<IncomingTransactionsSlpdbResponse.TransactionResult> allTransactions) {
+        return allTransactions.stream()
+            .map(t -> t.tx)
+            .filter(Objects::nonNull)
+            .toList();
+    }
+
+    private ReceivedAmount createReceivedAmount(IncomingTransactionsSlpdbResponse resp, BigDecimal totalAmount) {
         if (resp.c.isEmpty()) { // no confirmed transactions
             return new ReceivedAmount(totalAmount, 0);
         }
@@ -182,6 +202,7 @@ public class ElectronCashSlpWallet extends SlpWallet implements IWallet, IGenera
         return res;
     }
 
+    @Override
     protected <T> T callCheckedCustom(ThrowingSupplier<T> supplier) throws Exception {
         try {
             return supplier.get();
