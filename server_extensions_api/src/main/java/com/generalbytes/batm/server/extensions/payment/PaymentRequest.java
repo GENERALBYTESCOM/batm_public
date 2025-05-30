@@ -81,16 +81,24 @@ public class PaymentRequest {
 
     private BigDecimal txValue;
     /**
-     * For forwarding transaction this is the transaction
-     * from the user who is selling the coins to the temporary server-generated address.
-     * For non-forwarding transaction this is the (only) transaction
-     * from user who is selling the coins to the final destination address.
+     * The hash(es) of on-chain transaction(s) initiated by the customer to sell coins.
+     * <p>
+     * <strong>Forwarding transactions</strong>: this field contains the hash(es) of the transaction(s)
+     * transferring coins from the customer to a temporary, server-generated address.
+     * If there are multiple hashes, they are separated by a single space.
+     * <p>
+     * <strong>Non-forwarding transactions</strong>: this field contains the single hash of the
+     * transaction transferring coins directly from the user to the final destination address.
      */
     private String incomingTransactionHash;
     /**
-     * For forwarding transaction this is the transaction
-     * going from the temporary server-generated address to the final destination address.
-     * For non-forwarding transactions this is null.
+     * The hash(es) of on-chain transaction(s) transferring coins from the temporary, server-generated address
+     * to the final destination in forwarding flows.
+     * <p>
+     * <strong>Forwarding transactions</strong>: this field contains the hash of the transaction
+     * moving coins from the temporary address to the final destination address.
+     * <p>
+     * <strong>Non-forwarding transactions</strong>: this field is always null.
      */
     private String outgoingTransactionHash;
     private String timeoutRefundAddress;

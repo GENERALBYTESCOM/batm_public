@@ -352,4 +352,17 @@ public interface ITransactionDetails {
      * @return int value representing identity state. See {@link IIdentityBase#getState()}
      */
     Integer getIdentityState();
+
+    /**
+     * Retrieves the blockchain transaction hashes associated with this transaction.
+     *
+     * <p>If the business-level transaction was executed across multiple on‑chain transactions,
+     * this method will return all corresponding hashes in a list.</p>
+     *
+     * <p>When multiple business-level transactions are batched together
+     * (for example, via an output queue), they may share the same hash.</p>
+     *
+     * @return a list of one or more blockchain transaction hashes, empty list if there are none
+     */
+    List<String> getTransactionHashes();
 }

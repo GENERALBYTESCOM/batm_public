@@ -8,6 +8,7 @@ import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneL
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneRegisterWebhookRequest;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferCreateRequest;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferInfo;
+import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferInfoWithIvms;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferStatus;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferUpdateRequest;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneUnregisterWebhookRequest;
@@ -111,6 +112,68 @@ public interface NotabeneApi {
     @Path("/tx/approve")
     NotabeneTransferInfo approveTransfer(@HeaderParam(AUTHORIZATION_HEADER_NAME) String authorization,
                                          @QueryParam("id") String transferId) throws NotabeneApiException;
+
+    /**
+     * Confirms that the blockchain address of the transfer belongs to the beneficiary VASP.
+     * Confirming sets the status of a transfer to {@link NotabeneTransferStatus#ACK}.
+     *
+     * @param transferId Identifier of the transfer to confirm.
+     * @return The response.
+     * @see <a href="https://devx.notabene.id/reference/txconfirm-1">Notabene Documentation</a>
+     */
+    @POST
+    @Path("/tx/confirm")
+    NotabeneTransferInfo confirmTransfer(@HeaderParam(AUTHORIZATION_HEADER_NAME) String authorization,
+                                         @QueryParam("id") String transferId) throws NotabeneApiException;
+
+    /**
+     * Rejects a transfer indicating that the blockchain address is not owned by the beneficiary VASP.
+     * Rejecting sets the transfer status to {@link NotabeneTransferStatus#REJECTED}.
+     *
+     * @param transferId Identifier of the transfer to reject.
+     * @return The response.
+     * @see <a href="https://devx.notabene.id/reference/txreject-1">Notabene Documentation</a>
+     */
+    @POST
+    @Path("/tx/reject")
+    NotabeneTransferInfo rejectTransfer(@HeaderParam(AUTHORIZATION_HEADER_NAME) String authorization,
+                                        @QueryParam("id") String transferId) throws NotabeneApiException;
+
+    /**
+     * Accepts a transfer setting the status to {@link NotabeneTransferStatus#ACCEPTED}.
+     *
+     * @param transferId Identifier of the transfer to accept.
+     * @return The response.
+     * @see <a href="https://devx.notabene.id/reference/txaccept-1">Notabene Documentation</a>
+     */
+    @POST
+    @Path("/tx/accept")
+    NotabeneTransferInfo acceptTransfer(@HeaderParam(AUTHORIZATION_HEADER_NAME) String authorization,
+                                        @QueryParam("id") String transferId) throws NotabeneApiException;
+
+    /**
+     * Declines a transfer setting the status to {@link NotabeneTransferStatus#DECLINED}.
+     *
+     * @param transferId Identifier of the transfer to decline.
+     * @return The response.
+     * @see <a href="https://devx.notabene.id/reference/txdecline-1">Notabene Documentation</a>
+     */
+    @POST
+    @Path("/tx/decline")
+    NotabeneTransferInfo declineTransfer(@HeaderParam(AUTHORIZATION_HEADER_NAME) String authorization,
+                                         @QueryParam("id") String transferId) throws NotabeneApiException;
+
+    /**
+     * Gets the detail of a transfer that has been created based on the passed transfer ID.
+     *
+     * @param transferId Identifier of the transfer to confirm.
+     * @return The response.
+     * @see <a href="https://devx.notabene.id/reference/txinfo-1">Notabene Documentation</a>
+     */
+    @GET
+    @Path("/tx/info")
+    NotabeneTransferInfoWithIvms getTransferInfo(@HeaderParam(AUTHORIZATION_HEADER_NAME) String authorization,
+                                                 @QueryParam("id") String transferId) throws NotabeneApiException;
 
     /**
      * Get the ownership information about a customer blockchain address.

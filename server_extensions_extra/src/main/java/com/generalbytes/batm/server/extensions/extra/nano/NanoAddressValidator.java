@@ -18,22 +18,14 @@
 package com.generalbytes.batm.server.extensions.extra.nano;
 
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
-import com.generalbytes.batm.server.extensions.extra.nano.rpc.NanoRpcClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
 
 public class NanoAddressValidator implements ICryptoAddressValidator {
-
-    private static final Logger log = LoggerFactory.getLogger(NanoAddressValidator.class);
 
     private final NanoExtensionContext context;
 
     public NanoAddressValidator(NanoExtensionContext context) {
         this.context = context;
     }
-
 
     @Override
     public boolean isAddressValid(String address) {

@@ -12,6 +12,7 @@ import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneL
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneRegisterWebhookRequest;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferCreateRequest;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferInfo;
+import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferInfoWithIvms;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferUpdateRequest;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneUnregisterWebhookRequest;
 import org.junit.jupiter.api.BeforeEach;
@@ -139,6 +140,56 @@ class NotabeneApiWrapperTest {
         testApiWrapperMethod(providerCredentials, response,
             () -> apiWrapper.approveTransfer(providerCredentials, "transferId"),
             authorization -> verify(api).approveTransfer(authorization, "transferId"));
+    }
+
+    @Test
+    void testConfirmTransfer() {
+        NotabeneTransferInfo response = mock(NotabeneTransferInfo.class);
+        ITravelRuleProviderCredentials providerCredentials = mock(ITravelRuleProviderCredentials.class);
+
+        testApiWrapperMethod(providerCredentials, response,
+            () -> apiWrapper.confirmTransfer(providerCredentials, "transferId"),
+            authorization -> verify(api).confirmTransfer(authorization, "transferId"));
+    }
+
+    @Test
+    void testRejectTransfer() {
+        NotabeneTransferInfo response = mock(NotabeneTransferInfo.class);
+        ITravelRuleProviderCredentials providerCredentials = mock(ITravelRuleProviderCredentials.class);
+
+        testApiWrapperMethod(providerCredentials, response,
+            () -> apiWrapper.rejectTransfer(providerCredentials, "transferId"),
+            authorization -> verify(api).rejectTransfer(authorization, "transferId"));
+    }
+
+    @Test
+    void testAcceptTransfer() {
+        NotabeneTransferInfo response = mock(NotabeneTransferInfo.class);
+        ITravelRuleProviderCredentials providerCredentials = mock(ITravelRuleProviderCredentials.class);
+
+        testApiWrapperMethod(providerCredentials, response,
+            () -> apiWrapper.acceptTransfer(providerCredentials, "transferId"),
+            authorization -> verify(api).acceptTransfer(authorization, "transferId"));
+    }
+
+    @Test
+    void testDeclineTransfer() {
+        NotabeneTransferInfo response = mock(NotabeneTransferInfo.class);
+        ITravelRuleProviderCredentials providerCredentials = mock(ITravelRuleProviderCredentials.class);
+
+        testApiWrapperMethod(providerCredentials, response,
+            () -> apiWrapper.declineTransfer(providerCredentials, "transferId"),
+            authorization -> verify(api).declineTransfer(authorization, "transferId"));
+    }
+
+    @Test
+    void testGetTransferInfo() {
+        NotabeneTransferInfoWithIvms response = mock(NotabeneTransferInfoWithIvms.class);
+        ITravelRuleProviderCredentials providerCredentials = mock(ITravelRuleProviderCredentials.class);
+
+        testApiWrapperMethod(providerCredentials, response,
+            () -> apiWrapper.getTransferInfo(providerCredentials, "transferId"),
+            authorization -> verify(api).getTransferInfo(authorization, "transferId"));
     }
 
     @ParameterizedTest

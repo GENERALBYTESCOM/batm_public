@@ -47,7 +47,7 @@ public abstract class QueryableWalletPaymentSupport extends PollingPaymentSuppor
             if (request.getState() == PaymentRequest.STATE_NEW) {
                 log.info("Received: {}, amounts matches. {}", totalReceived, request);
                 request.setTxValue(totalReceived);
-                request.setIncomingTransactionHash(getLastTransactionHash(receivedAmount));
+                request.setIncomingTransactionHash(getTransactionHashesAsString(receivedAmount));
                 setState(request, PaymentRequest.STATE_SEEN_TRANSACTION);
             }
 
@@ -65,10 +65,10 @@ public abstract class QueryableWalletPaymentSupport extends PollingPaymentSuppor
         }
     }
 
-    private String getLastTransactionHash(ReceivedAmount receivedAmount) {
+    private String getTransactionHashesAsString(ReceivedAmount receivedAmount) {
         List<String> transactionHashes = receivedAmount.getTransactionHashes();
         if (transactionHashes != null && !transactionHashes.isEmpty()) {
-            return transactionHashes.get(transactionHashes.size() - 1);
+            return String.join(" ", transactionHashes);
         }
         return null;
     }

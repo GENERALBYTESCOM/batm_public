@@ -2,16 +2,16 @@ package com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets;
 
 import com.generalbytes.batm.server.extensions.ILightningChannel;
 import com.generalbytes.batm.server.extensions.ThrowingSupplier;
-import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.lnd.LndWallet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.generalbytes.batm.server.extensions.payment.ReceivedAmount;
+import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
+@Slf4j
 public class DemoLightningWallet extends AbstractLightningWallet {
-    private static final Logger log = LoggerFactory.getLogger(LndWallet.class);
     private final boolean simulateFailure;
 
     public DemoLightningWallet(boolean simulateFailure) {
@@ -20,7 +20,17 @@ public class DemoLightningWallet extends AbstractLightningWallet {
 
     @Override
     public BigDecimal getReceivedAmount(String invoice, String cryptoCurrency) {
-        return simulateFailure ? null : BigDecimal.ONE;
+        throw new UnsupportedOperationException("This method is deprecated and should not be used.");
+    }
+
+    @Override
+    public ReceivedAmount getReceivedAmount(String invoice) {
+        if (simulateFailure) {
+            return null;
+        }
+        ReceivedAmount receivedAmount = new ReceivedAmount(BigDecimal.ONE, Integer.MAX_VALUE);
+        receivedAmount.setTransactionHashes(List.of(UUID.randomUUID().toString()));
+        return receivedAmount;
     }
 
     @Override
@@ -59,7 +69,7 @@ public class DemoLightningWallet extends AbstractLightningWallet {
 
     @Override
     protected <T> T callChecked(ThrowingSupplier<T> supplier) {
-           try {
+        try {
             return supplier.get();
         } catch (Exception e) {
             log.error("", e);

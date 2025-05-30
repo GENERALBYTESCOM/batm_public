@@ -6,9 +6,11 @@ import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.nano.NanoExtensionContext;
 import com.generalbytes.batm.server.extensions.extra.nano.rpc.NanoRpcClient;
 import com.generalbytes.batm.server.extensions.extra.nano.rpc.NanoWsClient;
+import com.generalbytes.batm.server.extensions.extra.nano.rpc.RpcException;
+import com.generalbytes.batm.server.extensions.extra.nano.rpc.dto.AccountBalance;
+import com.generalbytes.batm.server.extensions.extra.nano.rpc.dto.Block;
 import com.generalbytes.batm.server.extensions.payment.ReceivedAmount;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -16,6 +18,7 @@ import java.math.BigInteger;
 import java.net.URI;
 import java.net.URL;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.UUID;
@@ -23,17 +26,17 @@ import java.util.UUID;
 /**
  * @author Karl Oczadly
  */
+@Slf4j
 public class NanoNodeWallet implements INanoRpcWallet, IGeneratesNewDepositCryptoAddress, IWallet, IQueryableWallet {
-
-    private static final Logger log = LoggerFactory.getLogger(NanoNodeWallet.class);
 
     private final NanoExtensionContext context;
     private final NanoRpcClient rpcClient;
     private final NanoWsClient wsClient;
-    private final String walletId, hotWalletAccount;
+    private final String walletId;
+    private final String hotWalletAccount;
 
     public NanoNodeWallet(NanoExtensionContext context, NanoRpcClient rpcClient, NanoWsClient wsClient,
-                           String walletId, String hotWalletAccount) {
+                          String walletId, String hotWalletAccount) {
         this.context = context;
         this.rpcClient = rpcClient;
         this.wsClient = wsClient;
@@ -55,14 +58,13 @@ public class NanoNodeWallet implements INanoRpcWallet, IGeneratesNewDepositCrypt
     @Override
     public BigInteger sendAllFromWallet(String depositAddress, String destination) {
         try {
-            BigInteger balance = rpcClient.getBalance(depositAddress).unconfBalance;
+            BigInteger balance = rpcClient.getBalance(depositAddress).unconfBalance();
             if (!balance.equals(BigInteger.ZERO)) {
-                String hash = rpcClient.sendFromWallet(walletId, depositAddress, destination,
-                    balance, UUID.randomUUID().toString());
+                String hash = rpcClient.sendFromWallet(walletId, depositAddress, destination, balance, UUID.randomUUID().toString());
                 log.info("Sent {} to {}, hash: {}", balance, destination, hash);
                 return balance;
             }
-        } catch (IOException | NanoRpcClient.RpcException e) {
+        } catch (IOException | RpcException e) {
             log.error("Couldn't send deposit wallet funds.", e);
         }
         return BigInteger.ZERO;
@@ -91,7 +93,7 @@ public class NanoNodeWallet implements INanoRpcWallet, IGeneratesNewDepositCrypt
             }
             log.error("Couldn't find an unused deposit address.");
             return null;
-        } catch (NanoRpcClient.RpcException | IOException e) {
+        } catch (RpcException | IOException e) {
             log.error("Couldn't create new deposit address.", e);
             return null;
         }
@@ -105,15 +107,40 @@ public class NanoNodeWallet implements INanoRpcWallet, IGeneratesNewDepositCrypt
              * TODO: Only including pocketed balance for now. This could be changed in the future if fork resolution
              *       issues are resolved, and would speed up deposit confirmation times.
              */
-            NanoRpcClient.AccountBalance balance = rpcClient.getBalance(address);
-            if (balance.confBalance.compareTo(BigInteger.ZERO) > 0)
-                return new ReceivedAmount(context.getUtil().amountFromRaw(balance.confBalance), Integer.MAX_VALUE);
-            // No balance; return unconfirmed and pending blocks with confirmation 0
-            BigInteger unconfTotal = balance.unconfBalance.add(balance.unconfPending);
-            return new ReceivedAmount(context.getUtil().amountFromRaw(unconfTotal), 0);
-        } catch (NanoRpcClient.RpcException | IOException e) {
+            AccountBalance balance = rpcClient.getBalance(address);
+
+            ReceivedAmount receivedAmount;
+            if (balance.confBalance().compareTo(BigInteger.ZERO) > 0) {
+                receivedAmount = new ReceivedAmount(
+                    context.getUtil().amountFromRaw(balance.confBalance()),
+                    Integer.MAX_VALUE
+                );
+            } else {
+                BigInteger unconfirmedTotal = balance.unconfBalance().add(balance.unconfPending());
+                receivedAmount = new ReceivedAmount(
+                    context.getUtil().amountFromRaw(unconfirmedTotal),
+                    0
+                );
+            }
+
+            receivedAmount.setTransactionHashes(getHashesOfReceivedTransactions(address));
+            return receivedAmount;
+        } catch (RpcException | IOException e) {
             log.error("Couldn't retrieve balance for account {}.", address, e);
             return null;
+        }
+    }
+
+    private List<String> getHashesOfReceivedTransactions(String address) throws IOException, RpcException {
+        try {
+            return rpcClient.getTransactionHistory(address).stream()
+                .filter(block -> Block.TYPE_RECEIVE.equalsIgnoreCase(block.type()))
+                .map(Block::hash)
+                .filter(hash -> hash != null && !hash.isBlank())
+                .toList();
+        } catch (IOException | RpcException e) {
+            log.warn("Couldn't retrieve transaction history for account {}.", address, e);
+            return Collections.emptyList();
         }
     }
 
@@ -140,8 +167,8 @@ public class NanoNodeWallet implements INanoRpcWallet, IGeneratesNewDepositCrypt
     public BigDecimal getCryptoBalance(String cryptoCurrency) {
         try {
             return context.getUtil().amountFromRaw(
-                    rpcClient.getBalance(hotWalletAccount).confBalance);
-        } catch (NanoRpcClient.RpcException | IOException e) {
+                rpcClient.getBalance(hotWalletAccount).confBalance());
+        } catch (RpcException | IOException e) {
             log.error("Couldn't retrieve balance of account {}.", hotWalletAccount, e);
             return null;
         }
@@ -158,11 +185,10 @@ public class NanoNodeWallet implements INanoRpcWallet, IGeneratesNewDepositCrypt
         BigInteger amountRaw = context.getUtil().amountToRaw(amount);
         log.info("Sending {} Nano from hot wallet to {}...", amount, destinationAddress);
         try {
-            String hash = rpcClient.sendFromWallet(walletId, hotWalletAccount, destinationAddress,
-                    amountRaw, description);
+            String hash = rpcClient.sendFromWallet(walletId, hotWalletAccount, destinationAddress, amountRaw, description);
             log.info("Sent {} Nano from hot wallet to {}, hash = {}", amount, destinationAddress, hash);
             return hash;
-        } catch (NanoRpcClient.RpcException | IOException e) {
+        } catch (RpcException | IOException e) {
             log.error("Failed to send {} Nano from hot wallet {}.", amount, hotWalletAccount, e);
             return null;
         }
@@ -201,12 +227,12 @@ public class NanoNodeWallet implements INanoRpcWallet, IGeneratesNewDepositCrypt
         }
 
         log.info("Using nano_node wallet: RPC: {}, WS: {}, Wallet ID: {}, Hot-wallet: {}",
-                rpcUrl, wsUri != null ? wsUri : "[not used]", walletId, walletAccount);
+            rpcUrl, wsUri != null ? wsUri : "[not used]", walletId, walletAccount);
 
         return new NanoNodeWallet(context,
-                new NanoRpcClient(rpcUrl),
-                wsUri != null ? new NanoWsClient(wsUri) : null,
-                walletId, walletAccount);
+            new NanoRpcClient(rpcUrl),
+            wsUri != null ? new NanoWsClient(wsUri) : null,
+            walletId, walletAccount);
     }
 
 }
