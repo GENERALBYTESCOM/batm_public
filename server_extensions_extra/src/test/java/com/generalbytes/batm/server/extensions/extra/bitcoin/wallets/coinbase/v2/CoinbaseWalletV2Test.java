@@ -69,17 +69,26 @@ class CoinbaseWalletV2Test {
         assertEquals("address1", result.get(0).getId());
     }
 
-    @Test
-    void testPaginate() {
+    private static Object[][] provideNextUriOrEndingBefore() {
+        return new Object[][]{
+                // nextUri, endingBefore
+                {null, "address3"},
+                {"address3", null}
+        };
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideNextUriOrEndingBefore")
+    void testPaginate(String nextUri, String endingBefore) {
         List<CBAddress> result = wallet.paginate(startingAfter -> {
             if (startingAfter == null) {
-                return createPaginatedResponse(createPagination("address3"), List.of(
+                return createPaginatedResponse(createPagination(nextUri, endingBefore), List.of(
                         createAddress("address1"),
                         createAddress("address2"),
                         createAddress("address3")
                 ));
             } else if ("address3".equals(startingAfter)) {
-                return createPaginatedResponse(createPagination(null), List.of(
+                return createPaginatedResponse(createPagination(null, null), List.of(
                         createAddress("address4"),
                         createAddress("address5")
                 ));
@@ -103,9 +112,10 @@ class CoinbaseWalletV2Test {
         return response;
     }
 
-    private CBPagination createPagination(String nextUri) {
+    private CBPagination createPagination(String nextUri, String endingBefore) {
         CBPagination pagination = new CBPagination();
         pagination.setNext_uri(nextUri);
+        pagination.setEnding_before(endingBefore);
         return pagination;
     }
 
