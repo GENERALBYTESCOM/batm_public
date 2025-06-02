@@ -43,6 +43,7 @@ import org.slf4j.LoggerFactory;
 public class CoinbaseV2ApiWrapperCdp implements CoinbaseV2ApiWrapper {
 
     private static final Logger log = LoggerFactory.getLogger(CoinbaseV2ApiWrapperCdp.class);
+    private static final String ORDER_DESC = "desc";
     private final ICoinbaseV3Api api;
     private final String privateKey;
     private final String keyName;
@@ -162,7 +163,7 @@ public class CoinbaseV2ApiWrapperCdp implements CoinbaseV2ApiWrapper {
         validateCredentials();
         CoinbaseCdpDigest authorizationDigest = new CoinbaseCdpDigest(privateKey, keyName);
         try {
-            CoinbaseAddressesResponse response = api.getAddresses(authorizationDigest, accountId, limit, startingAfterAddressId);
+            CoinbaseAddressesResponse response = api.getAddresses(authorizationDigest, accountId, limit, startingAfterAddressId, ORDER_DESC);
             return CoinbaseV2ApiMapper.mapAddressesResponseToLegacyPaginatedResponse(response);
         } catch (CoinbaseApiException e) {
             log.error("Failed to get addresses of account via Coinbase: {}", e.getMessage());

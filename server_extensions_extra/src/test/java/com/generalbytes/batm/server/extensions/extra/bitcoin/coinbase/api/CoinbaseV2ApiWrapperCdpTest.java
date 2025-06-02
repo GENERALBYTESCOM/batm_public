@@ -316,12 +316,12 @@ public class CoinbaseV2ApiWrapperCdpTest {
 
         try (MockedStatic<CoinbaseV2ApiMapper> mockedMapper = mockStatic(CoinbaseV2ApiMapper.class)) {
             mockedMapper.when(() -> CoinbaseV2ApiMapper.mapAddressesResponseToLegacyPaginatedResponse(any())).thenReturn(expectedResponse);
-            when(api.getAddresses(any(), anyString(), any(), any())).thenReturn(apiResponse);
+            when(api.getAddresses(any(), anyString(), any(), any(), any())).thenReturn(apiResponse);
 
             CBPaginatedResponse<CBAddress> response = apiWrapper.getAddresses(API_VERSION, 1000, "accountId", 100, "addressId");
 
             assertEquals(expectedResponse, response);
-            verify(api).getAddresses(any(CoinbaseCdpDigest.class), eq("accountId"), eq(100), eq("addressId"));
+            verify(api).getAddresses(any(CoinbaseCdpDigest.class), eq("accountId"), eq(100), eq("addressId"), eq("desc"));
             mockedMapper.verify(() -> CoinbaseV2ApiMapper.mapAddressesResponseToLegacyPaginatedResponse(apiResponse));
         }
     }
@@ -333,12 +333,12 @@ public class CoinbaseV2ApiWrapperCdpTest {
 
         try (MockedStatic<CoinbaseV2ApiMapper> mockedMapper = mockStatic(CoinbaseV2ApiMapper.class)) {
             mockedMapper.when(() -> CoinbaseV2ApiMapper.mapExceptionToLegacyResponse(any(), any())).thenReturn(expectedResponse);
-            when(api.getAddresses(any(), anyString(), any(), any())).thenThrow(exception);
+            when(api.getAddresses(any(), anyString(), any(), any(), any())).thenThrow(exception);
 
             CBPaginatedResponse<CBAddress> response = apiWrapper.getAddresses(API_VERSION, 1000, "accountId", 100, "addressId");
 
             assertEquals(expectedResponse, response);
-            verify(api).getAddresses(any(CoinbaseCdpDigest.class), eq("accountId"), eq(100), eq("addressId"));
+            verify(api).getAddresses(any(CoinbaseCdpDigest.class), eq("accountId"), eq(100), eq("addressId"), eq("desc"));
             mockedMapper.verify(() -> CoinbaseV2ApiMapper.mapExceptionToLegacyResponse(eq(exception), any(CBPaginatedResponse.class)));
         }
     }
