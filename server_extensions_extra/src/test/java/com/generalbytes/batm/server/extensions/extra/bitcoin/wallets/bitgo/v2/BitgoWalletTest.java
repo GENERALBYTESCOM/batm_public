@@ -2,22 +2,38 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.LoggerContext;
-import com.generalbytes.batm.server.extensions.Converters;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.server.extensions.Converters;
 import com.generalbytes.batm.server.extensions.ICanSendMany;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.BitGoCoinRequest;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.BitGoSendManyRequest;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.ArgumentCaptor;
+import org.mockito.MockedStatic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import si.mazi.rescu.RestProxyFactory;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.verify;
 
 
 class BitgoWalletTest {
@@ -158,4 +174,77 @@ class BitgoWalletTest {
             assertEquals(BigDecimal.ONE, wallet.fromSatoshis(cryptoCurrency, new BigDecimal(wallet.toSatoshis(BigDecimal.ONE, cryptoCurrency))));
         }
     }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"USDC", "USDT"})
+    void testSendCoins_requestWithType(String cryptocurrency) throws IOException {
+        IBitgoAPI api = mock(IBitgoAPI.class);
+
+        try (MockedStatic<RestProxyFactory> mockedRestProxyFactory = mockStatic(RestProxyFactory.class)) {
+            mockedRestProxyFactory.when(() -> RestProxyFactory.createProxy(eq(IBitgoAPI.class), anyString(), any())).thenReturn(api);
+
+            BitgoWallet bitgoWallet = new BitgoWallet("http", "host", 1234, "token", "walletId", "walletPassphrase", 2);
+            bitgoWallet.sendCoins("destinationAddress", BigDecimal.ONE, cryptocurrency, "description");
+
+            ArgumentCaptor<BitGoCoinRequest> requestCaptor = ArgumentCaptor.forClass(BitGoCoinRequest.class);
+            verify(api).sendCoins(eq(cryptocurrency.toLowerCase()), eq("walletId"), requestCaptor.capture());
+            BitGoCoinRequest request = requestCaptor.getValue();
+            assertEquals("transfer", request.getType());
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"BCH", "BTC", "ETH", "LTC", "XRP"})
+    void testSendCoins_requestWithoutType(String cryptocurrency) throws IOException {
+        IBitgoAPI api = mock(IBitgoAPI.class);
+
+        try (MockedStatic<RestProxyFactory> mockedRestProxyFactory = mockStatic(RestProxyFactory.class)) {
+            mockedRestProxyFactory.when(() -> RestProxyFactory.createProxy(eq(IBitgoAPI.class), anyString(), any())).thenReturn(api);
+
+            BitgoWallet bitgoWallet = new BitgoWallet("http", "host", 1234, "token", "walletId", "walletPassphrase", 2);
+            bitgoWallet.sendCoins("destinationAddress", BigDecimal.ONE, cryptocurrency, "description");
+
+            ArgumentCaptor<BitGoCoinRequest> requestCaptor = ArgumentCaptor.forClass(BitGoCoinRequest.class);
+            verify(api).sendCoins(eq(cryptocurrency.toLowerCase()), eq("walletId"), requestCaptor.capture());
+            BitGoCoinRequest request = requestCaptor.getValue();
+            assertNull(request.getType());
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"USDC", "USDT"})
+    void testSendMany_requestWithType(String cryptocurrency) throws IOException {
+        IBitgoAPI api = mock(IBitgoAPI.class);
+
+        try (MockedStatic<RestProxyFactory> mockedRestProxyFactory = mockStatic(RestProxyFactory.class)) {
+            mockedRestProxyFactory.when(() -> RestProxyFactory.createProxy(eq(IBitgoAPI.class), anyString(), any())).thenReturn(api);
+
+            BitgoWallet bitgoWallet = new BitgoWallet("http", "host", 1234, "token", "walletId", "walletPassphrase", 2);
+            bitgoWallet.sendMany(List.of(), cryptocurrency, "description");
+
+            ArgumentCaptor<BitGoSendManyRequest> requestCaptor = ArgumentCaptor.forClass(BitGoSendManyRequest.class);
+            verify(api).sendMany(eq(cryptocurrency.toLowerCase()), eq("walletId"), requestCaptor.capture());
+            BitGoSendManyRequest request = requestCaptor.getValue();
+            assertEquals("transfer", request.type);
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"BCH", "BTC", "ETH", "LTC", "XRP"})
+    void testSendMany_requestWithoutType(String cryptocurrency) throws IOException {
+        IBitgoAPI api = mock(IBitgoAPI.class);
+
+        try (MockedStatic<RestProxyFactory> mockedRestProxyFactory = mockStatic(RestProxyFactory.class)) {
+            mockedRestProxyFactory.when(() -> RestProxyFactory.createProxy(eq(IBitgoAPI.class), anyString(), any())).thenReturn(api);
+
+            BitgoWallet bitgoWallet = new BitgoWallet("http", "host", 1234, "token", "walletId", "walletPassphrase", 2);
+            bitgoWallet.sendMany(List.of(), cryptocurrency, "description");
+
+            ArgumentCaptor<BitGoSendManyRequest> requestCaptor = ArgumentCaptor.forClass(BitGoSendManyRequest.class);
+            verify(api).sendMany(eq(cryptocurrency.toLowerCase()), eq("walletId"), requestCaptor.capture());
+            BitGoSendManyRequest request = requestCaptor.getValue();
+            assertNull(request.type);
+        }
+    }
+
 }
