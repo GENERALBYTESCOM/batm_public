@@ -26,6 +26,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBAddressesResponse;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBPaginatedItem;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBPaginatedResponse;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBPagination;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBSendRequest;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBSendResponse;
 import com.google.common.collect.ImmutableMap;
@@ -247,9 +248,11 @@ public class CoinbaseWalletV2 implements IWallet {
             }
 
             startingAfter = null;
-            if (response.getData() != null && response.getData().size() > 0) {
+            if (response.getData() != null && !response.getData().isEmpty()) {
                 items.addAll(response.getData());
-                if (response.getPagination() != null && response.getPagination().getNext_uri() != null) {
+
+                CBPagination pagination = response.getPagination();
+                if (pagination != null && (pagination.getNext_uri() != null || pagination.getEnding_before() != null)) {
                     startingAfter = items.getLast().getId();
                 }
             }
@@ -264,16 +267,4 @@ public class CoinbaseWalletV2 implements IWallet {
     public String getAccountName() {
         return accountName;
     }
-
-//    public static void main(String[] args) {
-//        ServerUtil.setLoggerLevel("si.mazi.rescu","trace");
-//        String cryptoCurrency = CryptoCurrency.BTC.getCode();
-//        CoinbaseWalletV2 w = new CoinbaseWalletV2("LGcOlxy5UNGXGcKp","8bTu2aKO9VsRHNaK7fvf6Y5dyb87GaoV",null);
-//        String cryptoAddress = w.getCryptoAddress(cryptoCurrency);
-//        log.info("cryptoAddress = " + cryptoAddress);
-//        BigDecimal cryptoBalance = w.getCryptoBalance(cryptoCurrency);
-//        log.info("cryptoBalance = " + cryptoBalance);
-//        String result = w.sendCoins("1Nqip1Qc6EP88jwNrVwFy2CiXAuzPhdPgG", new BigDecimal("0.0005"), cryptoCurrency, "RXIDS");
-//        log.info("result = " + result);
-//    }
 }

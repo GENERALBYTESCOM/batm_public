@@ -18,27 +18,24 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Holds information about the pagination of a response.
  */
+@Getter
+@Setter
 public class CoinbasePagination {
 
-    @JsonProperty("next_uri")
-    private String nextUri;
-
     /**
-     * Get the URI of the next entity, after the last one in this response.
+     * The URI of the next entity, after the last one in this response.
      * This can be an accountId, addressId, transactionId or an identifier
      * of any other type of entity that was returned in this response.
-     *
-     * @return URI of the next entity.
      */
-    public String getNextUri() {
-        return nextUri;
-    }
+    @JsonProperty("next_uri")
+    private String nextUri;
+    @JsonProperty("ending_before")
+    private String endingBefore;
 
-    public void setNextUri(String nextUri) {
-        this.nextUri = nextUri;
-    }
 }
