@@ -217,6 +217,7 @@ public final class CoinbaseV2ApiMapper {
 
         CBPagination legacyPagination = new CBPagination();
         legacyPagination.setNext_uri(pagination.getNextUri());
+        legacyPagination.setEnding_before(pagination.getEndingBefore());
         return legacyPagination;
     }
 

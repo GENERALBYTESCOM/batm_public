@@ -164,6 +164,7 @@ public class CoinbaseV2ApiMapperTest {
 
         CoinbasePagination pagination = new CoinbasePagination();
         pagination.setNextUri("next_uri");
+        pagination.setEndingBefore("ending_before");
 
         CoinbaseAccountsResponse response = new CoinbaseAccountsResponse();
         response.setPagination(pagination);
@@ -174,6 +175,7 @@ public class CoinbaseV2ApiMapperTest {
         assertNotNull(legacyResponse);
         assertNotNull(legacyResponse.getPagination());
         assertEquals(pagination.getNextUri(), legacyResponse.getPagination().getNext_uri());
+        assertEquals(pagination.getEndingBefore(), legacyResponse.getPagination().getEnding_before());
         assertNotNull(legacyResponse.getData());
         assertEquals(1, legacyResponse.getData().size());
         assertEquals(account.getId(), legacyResponse.getData().get(0).getId());
@@ -265,6 +267,7 @@ public class CoinbaseV2ApiMapperTest {
 
         CoinbasePagination pagination = new CoinbasePagination();
         pagination.setNextUri("next_uri");
+        pagination.setEndingBefore("ending_before");
 
         CoinbaseAddressesResponse response = new CoinbaseAddressesResponse();
         response.setAddresses(Collections.singletonList(address));
@@ -275,6 +278,7 @@ public class CoinbaseV2ApiMapperTest {
         assertNotNull(legacyResponse);
         assertNotNull(legacyResponse.getPagination());
         assertEquals(pagination.getNextUri(), legacyResponse.getPagination().getNext_uri());
+        assertEquals(pagination.getEndingBefore(), legacyResponse.getPagination().getEnding_before());
         assertNotNull(legacyResponse.getData());
         assertEquals(1, legacyResponse.getData().size());
         assertEquals(address.getId(), legacyResponse.getData().get(0).getId());
@@ -549,6 +553,7 @@ public class CoinbaseV2ApiMapperTest {
 
         CoinbasePagination pagination = new CoinbasePagination();
         pagination.setNextUri("next_uri");
+        pagination.setEndingBefore("ending_before");
 
         CoinbaseTransactionsResponse response = new CoinbaseTransactionsResponse();
         response.setPagination(pagination);
@@ -559,6 +564,7 @@ public class CoinbaseV2ApiMapperTest {
         assertNotNull(legacyResponse);
         assertNotNull(legacyResponse.getPagination());
         assertEquals(pagination.getNextUri(), legacyResponse.getPagination().getNext_uri());
+        assertEquals(pagination.getEndingBefore(), legacyResponse.getPagination().getEnding_before());
         assertNotNull(legacyResponse.getData());
         assertEquals(1, legacyResponse.getData().size());
         CBTransaction legacyTransaction = legacyResponse.getData().get(0);
@@ -658,6 +664,7 @@ public class CoinbaseV2ApiMapperTest {
 
         CoinbasePagination pagination = new CoinbasePagination();
         pagination.setNextUri("next_uri");
+        pagination.setEndingBefore("ending_before");
 
         CoinbaseAddressesResponse response = new CoinbaseAddressesResponse();
         response.setPagination(pagination);
@@ -668,6 +675,7 @@ public class CoinbaseV2ApiMapperTest {
         assertNotNull(legacyResponse);
         assertNotNull(legacyResponse.getPagination());
         assertEquals(pagination.getNextUri(), legacyResponse.getPagination().getNext_uri());
+        assertEquals(pagination.getEndingBefore(), legacyResponse.getPagination().getEnding_before());
         assertNotNull(legacyResponse.getData());
         assertEquals(1, legacyResponse.getData().size());
         assertEquals(address.getId(), legacyResponse.getData().get(0).getId());

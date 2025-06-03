@@ -139,6 +139,7 @@ public interface ICoinbaseV3Api {
      * @param accountId     ID of the account.
      * @param limit         The maximum number of records.
      * @param startingAfter ID of the address to start from (not included in response).
+     * @param order         Order of the addresses by age. ("desc" or "asc")
      * @return The addresses.
      * @throws CoinbaseApiException If the API call fails.
      * @see <a href="https://docs.cdp.coinbase.com/coinbase-app/docs/api-addresses#list-addresses">Coinbase Documentation</a>
@@ -148,7 +149,8 @@ public interface ICoinbaseV3Api {
     CoinbaseAddressesResponse getAddresses(@HeaderParam(HEADER_AUTHORIZATION) ParamsDigest authorization,
                                            @PathParam("accountId") String accountId,
                                            @QueryParam("limit") Integer limit,
-                                           @QueryParam("starting_after") String startingAfter) throws CoinbaseApiException;
+                                           @QueryParam("starting_after") String startingAfter,
+                                           @QueryParam("order") String order) throws CoinbaseApiException;
 
     /**
      * Lists addresses for an account.

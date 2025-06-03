@@ -176,7 +176,7 @@ public class BitgoWallet implements IWallet, ICanSendMany {
     }
 
     private BitGoSendManyRequest createBitGoSendManyRequest(List<BitGoRecipient> recipients, String cryptoCurrency, String description) {
-        if (CryptoCurrency.USDC.getCode().equalsIgnoreCase(cryptoCurrency)) {
+        if (needsTypeInSendRequest(cryptoCurrency)) {
             return new BitGoSendManyRequest(recipients, this.walletPassphrase, description, this.numBlocks, "transfer");
         }
 
@@ -188,7 +188,7 @@ public class BitgoWallet implements IWallet, ICanSendMany {
                                                     String cryptoCurrency,
                                                     String description
     ) {
-        if (CryptoCurrency.USDC.getCode().equalsIgnoreCase(cryptoCurrency)) {
+        if (needsTypeInSendRequest(cryptoCurrency)) {
             return new BitGoCoinRequest(
                 destinationAddress,
                 toSatoshis(amount, cryptoCurrency),
@@ -210,6 +210,11 @@ public class BitgoWallet implements IWallet, ICanSendMany {
             this.feeRate,
             this.maxFeeRate
         );
+    }
+
+    private boolean needsTypeInSendRequest(String cryptoCurrency) {
+        return CryptoCurrency.USDC.getCode().equalsIgnoreCase(cryptoCurrency)
+                || CryptoCurrency.USDT.getCode().equalsIgnoreCase(cryptoCurrency);
     }
 
     protected String toSatoshis(BigDecimal amount, String cryptoCurrency) {
