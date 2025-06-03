@@ -19,13 +19,20 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Represents a Transaction at Coinbase.
  */
+@Getter
+@Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CoinbaseTransaction {
 
+    /**
+     * ID of the transaction.
+     */
     private String id;
     private String type;
     private String status;
@@ -58,83 +65,9 @@ public class CoinbaseTransaction {
     private final String resource = "transaction";
     @JsonProperty("resource_path")
     private String resourcePath;
-
     /**
-     * @return ID of the transaction.
+     * Info about crypto networks including on-chain transaction hashes. Only available for certain types of transactions.
      */
-    public String getId() {
-        return id;
-    }
+    private CoinbaseNetwork network;
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public CoinbaseTransactionAmount getAmount() {
-        return amount;
-    }
-
-    public void setAmount(CoinbaseTransactionAmount amount) {
-        this.amount = amount;
-    }
-
-    public CoinbaseTransactionAmount getNativeAmount() {
-        return nativeAmount;
-    }
-
-    public void setNativeAmount(CoinbaseTransactionAmount nativeAmount) {
-        this.nativeAmount = nativeAmount;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public String getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(String updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public String getResource() {
-        return resource;
-    }
-
-    public String getResourcePath() {
-        return resourcePath;
-    }
-
-    public void setResourcePath(String resourcePath) {
-        this.resourcePath = resourcePath;
-    }
 }

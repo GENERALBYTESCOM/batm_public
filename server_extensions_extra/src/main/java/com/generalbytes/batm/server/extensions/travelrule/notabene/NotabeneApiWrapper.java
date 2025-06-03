@@ -11,6 +11,7 @@ import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneL
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneRegisterWebhookRequest;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferCreateRequest;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferInfo;
+import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferInfoWithIvms;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferUpdateRequest;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneUnregisterWebhookRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -78,6 +79,41 @@ public class NotabeneApiWrapper {
      */
     public NotabeneTransferInfo approveTransfer(ITravelRuleProviderCredentials providerCredentials, String transferId) {
         return apiService.callApi(providerCredentials, authorization -> api.approveTransfer(authorization, transferId));
+    }
+
+    /**
+     * @see NotabeneApi#confirmTransfer(String, String)
+     */
+    public NotabeneTransferInfo confirmTransfer(ITravelRuleProviderCredentials providerCredentials, String transferId) {
+        return apiService.callApi(providerCredentials, authorization -> api.confirmTransfer(authorization, transferId));
+    }
+
+    /**
+     * @see NotabeneApi#rejectTransfer(String, String)
+     */
+    public NotabeneTransferInfo rejectTransfer(ITravelRuleProviderCredentials providerCredentials, String transferId) {
+        return apiService.callApi(providerCredentials, authorization -> api.rejectTransfer(authorization, transferId));
+    }
+
+    /**
+     * @see NotabeneApi#acceptTransfer(String, String)
+     */
+    public NotabeneTransferInfo acceptTransfer(ITravelRuleProviderCredentials providerCredentials, String transferId) {
+        return apiService.callApi(providerCredentials, authorization -> api.acceptTransfer(authorization, transferId));
+    }
+
+    /**
+     * @see NotabeneApi#declineTransfer(String, String)
+     */
+    public NotabeneTransferInfo declineTransfer(ITravelRuleProviderCredentials providerCredentials, String transferId) {
+        return apiService.callApi(providerCredentials, authorization -> api.declineTransfer(authorization, transferId));
+    }
+
+    /**
+     * @see NotabeneApi#getTransferInfo(String, String)
+     */
+    public NotabeneTransferInfoWithIvms getTransferInfo(ITravelRuleProviderCredentials providerCredentials, String transferId) {
+        return apiService.callApi(providerCredentials, authorization -> api.getTransferInfo(authorization, transferId));
     }
 
     /**

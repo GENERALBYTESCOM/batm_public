@@ -29,6 +29,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.Co
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseCurrency;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseExchangeRates;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseExchangeRatesResponse;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseNetwork;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbasePagination;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseSendCoinsRequest;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseTransaction;
@@ -46,6 +47,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBError;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBExchangeRates;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBExchangeRatesResponse;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBNetwork;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBPaginatedResponse;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBPagination;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBResponse;
@@ -59,7 +61,6 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * Mapper between new and legacy Coinbase V2 API DTOs.
@@ -96,7 +97,7 @@ public final class CoinbaseV2ApiMapper {
 
         return Arrays.stream(errors)
             .map(CoinbaseV2ApiMapper::mapCoinbaseApiErrorToLegacyError)
-            .collect(Collectors.toList());
+            .toList();
     }
 
     private static List<CBWarning> mapCoinbaseApiWarningsToLegacyWarnings(CoinbaseApiError[] warnings) {
@@ -106,7 +107,7 @@ public final class CoinbaseV2ApiMapper {
 
         return Arrays.stream(warnings)
             .map(CoinbaseV2ApiMapper::mapCoinbaseApiWarningToLegacyWarning)
-            .collect(Collectors.toList());
+            .toList();
 
     }
 
@@ -168,7 +169,7 @@ public final class CoinbaseV2ApiMapper {
         if (response.getAccounts() != null) {
             legacyResponse.setData(response.getAccounts().stream()
                 .map(CoinbaseV2ApiMapper::mapAccountToLegacyAccount)
-                .collect(Collectors.toList()));
+                .toList());
         }
         return legacyResponse;
     }
@@ -236,7 +237,7 @@ public final class CoinbaseV2ApiMapper {
         if (response.getAddresses() != null) {
             legacyResponse.setData(response.getAddresses().stream()
                 .map(CoinbaseV2ApiMapper::mapAddressToLegacyAddress)
-                .collect(Collectors.toList()));
+                .toList());
         }
         return legacyResponse;
     }
@@ -400,7 +401,7 @@ public final class CoinbaseV2ApiMapper {
         if (response.getTransactions() != null) {
             legacyResponse.setData(response.getTransactions().stream()
                 .map(CoinbaseV2ApiMapper::mapTransactionToLegacyTransaction)
-                .collect(Collectors.toList()));
+                .toList());
         }
         return legacyResponse;
     }
@@ -417,7 +418,18 @@ public final class CoinbaseV2ApiMapper {
         legacyTransaction.setUpdated_at(transaction.getUpdatedAt());
         legacyTransaction.setResource(transaction.getResource());
         legacyTransaction.setResource_path(transaction.getResourcePath());
+        legacyTransaction.setNetwork(mapTransactionNetworkToLegacyNetwork(transaction.getNetwork()));
         return legacyTransaction;
+    }
+
+    private static CBNetwork mapTransactionNetworkToLegacyNetwork(CoinbaseNetwork network) {
+        if (network == null) {
+            return null;
+        }
+
+        CBNetwork legacyNetwork = new CBNetwork();
+        legacyNetwork.setHash(network.getHash());
+        return legacyNetwork;
     }
 
     private static CBBalance mapTransactionAmountToLegacyBalance(CoinbaseTransactionAmount transactionAmount) {
@@ -447,7 +459,7 @@ public final class CoinbaseV2ApiMapper {
         if (response.getAddresses() != null) {
             legacyResponse.setData(response.getAddresses().stream()
                 .map(CoinbaseV2ApiMapper::mapAddressToLegacyAddress)
-                .collect(Collectors.toList()));
+                .toList());
         }
         return legacyResponse;
     }

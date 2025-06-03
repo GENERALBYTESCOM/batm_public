@@ -12,6 +12,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.Co
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseCurrency;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseExchangeRates;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseExchangeRatesResponse;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseNetwork;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbasePagination;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseSendCoinsRequest;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.dto.CoinbaseTransaction;
@@ -535,6 +536,9 @@ public class CoinbaseV2ApiMapperTest {
         nativeAmount.setCurrency("native_currency");
         nativeAmount.setValue(BigDecimal.valueOf(100));
 
+        CoinbaseNetwork coinbaseNetwork = new CoinbaseNetwork();
+        coinbaseNetwork.setHash("hash");
+
         CoinbaseTransaction transaction = new CoinbaseTransaction();
         transaction.setId("id");
         transaction.setType("type");
@@ -545,6 +549,7 @@ public class CoinbaseV2ApiMapperTest {
         transaction.setCreatedAt("created_at");
         transaction.setUpdatedAt("updated_at");
         transaction.setResourcePath("resource_path");
+        transaction.setNetwork(coinbaseNetwork);
 
         CoinbasePagination pagination = new CoinbasePagination();
         pagination.setNextUri("next_uri");
@@ -562,20 +567,23 @@ public class CoinbaseV2ApiMapperTest {
         assertEquals(pagination.getEndingBefore(), legacyResponse.getPagination().getEnding_before());
         assertNotNull(legacyResponse.getData());
         assertEquals(1, legacyResponse.getData().size());
-        assertEquals(transaction.getId(), legacyResponse.getData().get(0).getId());
-        assertEquals(transaction.getType(), legacyResponse.getData().get(0).getType());
-        assertEquals(transaction.getStatus(), legacyResponse.getData().get(0).getStatus());
-        assertEquals(transaction.getDescription(), legacyResponse.getData().get(0).getDescription());
-        assertNotNull(legacyResponse.getData().get(0).getAmount());
-        assertEquals(amount.getValue(), legacyResponse.getData().get(0).getAmount().getAmount());
-        assertEquals(amount.getCurrency(), legacyResponse.getData().get(0).getAmount().getCurrency());
-        assertNotNull(legacyResponse.getData().get(0).getNative_amount());
-        assertEquals(nativeAmount.getValue(), legacyResponse.getData().get(0).getNative_amount().getAmount());
-        assertEquals(nativeAmount.getCurrency(), legacyResponse.getData().get(0).getNative_amount().getCurrency());
-        assertEquals(transaction.getCreatedAt(), legacyResponse.getData().get(0).getCreated_at());
-        assertEquals(transaction.getUpdatedAt(), legacyResponse.getData().get(0).getUpdated_at());
-        assertEquals(transaction.getResource(), legacyResponse.getData().get(0).getResource());
-        assertEquals(transaction.getResourcePath(), legacyResponse.getData().get(0).getResource_path());
+        CBTransaction legacyTransaction = legacyResponse.getData().get(0);
+        assertEquals(transaction.getId(), legacyTransaction.getId());
+        assertEquals(transaction.getType(), legacyTransaction.getType());
+        assertEquals(transaction.getStatus(), legacyTransaction.getStatus());
+        assertEquals(transaction.getDescription(), legacyTransaction.getDescription());
+        assertNotNull(legacyTransaction.getAmount());
+        assertEquals(amount.getValue(), legacyTransaction.getAmount().getAmount());
+        assertEquals(amount.getCurrency(), legacyTransaction.getAmount().getCurrency());
+        assertNotNull(legacyTransaction.getNative_amount());
+        assertEquals(nativeAmount.getValue(), legacyTransaction.getNative_amount().getAmount());
+        assertEquals(nativeAmount.getCurrency(), legacyTransaction.getNative_amount().getCurrency());
+        assertEquals(transaction.getCreatedAt(), legacyTransaction.getCreated_at());
+        assertEquals(transaction.getUpdatedAt(), legacyTransaction.getUpdated_at());
+        assertEquals(transaction.getResource(), legacyTransaction.getResource());
+        assertEquals(transaction.getResourcePath(), legacyTransaction.getResource_path());
+        assertNotNull(legacyTransaction.getNetwork());
+        assertEquals(coinbaseNetwork.getHash(), legacyTransaction.getNetwork().getHash());
     }
 
     @Test
@@ -590,6 +598,7 @@ public class CoinbaseV2ApiMapperTest {
         transaction.setCreatedAt("created_at");
         transaction.setUpdatedAt("updated_at");
         transaction.setResourcePath("resource_path");
+        transaction.setNetwork(null);
 
         CoinbaseTransactionsResponse response = new CoinbaseTransactionsResponse();
         response.setPagination(null);
@@ -600,16 +609,18 @@ public class CoinbaseV2ApiMapperTest {
         assertNull(legacyResponse.getPagination());
         assertNotNull(legacyResponse.getData());
         assertEquals(1, legacyResponse.getData().size());
-        assertEquals(transaction.getId(), legacyResponse.getData().get(0).getId());
-        assertEquals(transaction.getType(), legacyResponse.getData().get(0).getType());
-        assertEquals(transaction.getStatus(), legacyResponse.getData().get(0).getStatus());
-        assertEquals(transaction.getDescription(), legacyResponse.getData().get(0).getDescription());
-        assertNull(legacyResponse.getData().get(0).getAmount());
-        assertNull(legacyResponse.getData().get(0).getNative_amount());
-        assertEquals(transaction.getCreatedAt(), legacyResponse.getData().get(0).getCreated_at());
-        assertEquals(transaction.getUpdatedAt(), legacyResponse.getData().get(0).getUpdated_at());
-        assertEquals(transaction.getResource(), legacyResponse.getData().get(0).getResource());
-        assertEquals(transaction.getResourcePath(), legacyResponse.getData().get(0).getResource_path());
+        CBTransaction legacyTransaction = legacyResponse.getData().get(0);
+        assertEquals(transaction.getId(), legacyTransaction.getId());
+        assertEquals(transaction.getType(), legacyTransaction.getType());
+        assertEquals(transaction.getStatus(), legacyTransaction.getStatus());
+        assertEquals(transaction.getDescription(), legacyTransaction.getDescription());
+        assertNull(legacyTransaction.getAmount());
+        assertNull(legacyTransaction.getNative_amount());
+        assertEquals(transaction.getCreatedAt(), legacyTransaction.getCreated_at());
+        assertEquals(transaction.getUpdatedAt(), legacyTransaction.getUpdated_at());
+        assertEquals(transaction.getResource(), legacyTransaction.getResource());
+        assertEquals(transaction.getResourcePath(), legacyTransaction.getResource_path());
+        assertNull(legacyTransaction.getNetwork());
     }
 
     @Test

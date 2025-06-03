@@ -55,6 +55,7 @@ dependencies {
     implementation("org.knowm.xchange:xchange-coingi:$xchangeVersion")
     implementation("org.knowm.xchange:xchange-enigma:$xchangeVersion")
     implementation("org.knowm.xchange:xchange-poloniex:$xchangeVersion")
+    implementation("org.knowm.xchange:xchange-okex:5.0.14")
     implementation("org.web3j:core:4.9.0")
     implementation("org.web3j:crypto:4.9.0")
     implementation("org.web3j:utils:4.9.0")

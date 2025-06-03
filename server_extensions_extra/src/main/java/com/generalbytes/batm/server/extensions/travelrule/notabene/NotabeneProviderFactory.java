@@ -3,6 +3,7 @@ package com.generalbytes.batm.server.extensions.travelrule.notabene;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProvider;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProviderCredentials;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProviderFactory;
+import com.generalbytes.batm.server.extensions.travelrule.TravelRuleExtensionContext;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,6 +11,7 @@ import java.util.Map;
 public class NotabeneProviderFactory implements ITravelRuleProviderFactory {
 
     private final NotabeneService notabeneService;
+    private final NotabeneIncomingTransferService notabeneIncomingTransferService;
     private final NotabeneTransferPublisher notabeneTransferPublisher;
     private final NotabeneAuthService notabeneAuthService;
     private final NotabeneConfiguration configuration;
@@ -19,7 +21,7 @@ public class NotabeneProviderFactory implements ITravelRuleProviderFactory {
      */
     private final Map<String, NotabeneTravelRuleProvider> travelRuleProviders = new HashMap<>();
 
-    public NotabeneProviderFactory(NotabeneConfiguration configuration) {
+    public NotabeneProviderFactory(NotabeneConfiguration configuration, TravelRuleExtensionContext extensionContext) {
         this.configuration = configuration;
         notabeneTransferPublisher = NotabeneTransferPublisher.getInstance();
 
@@ -28,6 +30,7 @@ public class NotabeneProviderFactory implements ITravelRuleProviderFactory {
         NotabeneApiService notabeneApiService = new NotabeneApiService(notabeneAuthService);
         NotabeneApiWrapper notabeneApiWrapper = new NotabeneApiWrapper(notabeneApiFactory, notabeneApiService);
         notabeneService = new NotabeneService(notabeneApiWrapper, configuration);
+        notabeneIncomingTransferService = new NotabeneIncomingTransferService(notabeneService, extensionContext);
     }
 
     @Override
@@ -55,6 +58,11 @@ public class NotabeneProviderFactory implements ITravelRuleProviderFactory {
     }
 
     private NotabeneTravelRuleProvider initializeProvider(ITravelRuleProviderCredentials credentials) {
-        return new NotabeneTravelRuleProvider(credentials, configuration, notabeneAuthService, notabeneService, notabeneTransferPublisher);
+        return new NotabeneTravelRuleProvider(credentials,
+            configuration,
+            notabeneAuthService,
+            notabeneService,
+            notabeneIncomingTransferService,
+            notabeneTransferPublisher);
     }
 }

@@ -24,6 +24,7 @@ import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.Ab
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.walletofsatoshi.dto.InvoiceRequest;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.walletofsatoshi.dto.Payment;
 import com.generalbytes.batm.server.extensions.extra.lightningbitcoin.wallets.walletofsatoshi.dto.PaymentRequest;
+import com.generalbytes.batm.server.extensions.payment.ReceivedAmount;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import si.mazi.rescu.HttpStatusIOException;
@@ -105,16 +106,25 @@ public class WalletOfSatoshiWallet extends AbstractLightningWallet {
         return null;
     }
 
-
     @Override
     public BigDecimal getReceivedAmount(String destinationAddress, String cryptoCurrency) {
-        return callChecked(cryptoCurrency, () ->
-            api.getPayments(null, null).stream() // gets just 100 last payments
-                .filter(payment -> destinationAddress.equals(payment.address))
-                .filter(payment -> "CREDIT".equals(payment.type))
-                .findFirst()
-                .map(payment -> payment.amount)
-                .orElse(BigDecimal.ZERO)
+        throw new UnsupportedOperationException("This method is deprecated and should not be used.");
+    }
+
+    @Override
+    public ReceivedAmount getReceivedAmount(String invoice) {
+        return callChecked(() -> api.getPayments(null, null).stream() // gets just 100 last payments
+            .filter(payment -> invoice.equals(payment.address))
+            .filter(payment -> Payment.TYPE_CREDIT.equals(payment.type))
+            .findFirst()
+            .map(payment -> {
+                ReceivedAmount receivedAmount = new ReceivedAmount(payment.amount, Integer.MAX_VALUE);
+                if (payment.transactionId != null) {
+                    receivedAmount.setTransactionHashes(Collections.singletonList(payment.transactionId));
+                }
+                return receivedAmount;
+            })
+            .orElse(ReceivedAmount.ZERO)
         );
     }
 

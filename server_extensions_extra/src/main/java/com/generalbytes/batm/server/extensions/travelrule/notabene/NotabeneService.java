@@ -11,6 +11,7 @@ import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneL
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneRegisterWebhookRequest;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferCreateRequest;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferInfo;
+import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferInfoWithIvms;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneTransferUpdateRequest;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneUnregisterWebhookRequest;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneVaspInfoSimple;
@@ -76,6 +77,87 @@ public class NotabeneService {
             return api.approveTransfer(providerCredentials, transferId);
         } catch (Exception e) {
             log.warn("Failed to approve transfer at Notabene: {}", getExceptionMessage(e));
+            return null;
+        }
+    }
+
+    /**
+     * Confirm an existing transfer.
+     *
+     * @param providerCredentials The {@link ITravelRuleProviderCredentials} to confirm the transfer for.
+     * @param transferId          Identifier of the transfer to confirm.
+     * @return The confirmed {@link NotabeneTransferInfo} or null if the confirmation fails.
+     */
+    public NotabeneTransferInfo confirmTransfer(ITravelRuleProviderCredentials providerCredentials, String transferId) {
+        try {
+            return api.confirmTransfer(providerCredentials, transferId);
+        } catch (Exception e) {
+            log.warn("Failed to confirm transfer at Notabene: {}", getExceptionMessage(e));
+            return null;
+        }
+    }
+
+    /**
+     * Reject an existing transfer.
+     *
+     * @param providerCredentials The {@link ITravelRuleProviderCredentials} to reject the transfer for.
+     * @param transferId          Identifier of the transfer to reject.
+     * @return The rejected {@link NotabeneTransferInfo} or null if the rejection fails.
+     */
+    public NotabeneTransferInfo rejectTransfer(ITravelRuleProviderCredentials providerCredentials, String transferId) {
+        try {
+            return api.rejectTransfer(providerCredentials, transferId);
+        } catch (Exception e) {
+            log.warn("Failed to reject transfer at Notabene: {}", getExceptionMessage(e));
+            return null;
+        }
+    }
+
+    /**
+     * Accept an existing transfer.
+     *
+     * @param providerCredentials The {@link ITravelRuleProviderCredentials} to accept the transfer for.
+     * @param transferId          Identifier of the transfer to accept.
+     * @return The accepted {@link NotabeneTransferInfo} or null if the acceptation fails.
+     */
+    public NotabeneTransferInfo acceptTransfer(ITravelRuleProviderCredentials providerCredentials, String transferId) {
+        try {
+            return api.acceptTransfer(providerCredentials, transferId);
+        } catch (Exception e) {
+            log.warn("Failed to accept transfer at Notabene: {}", getExceptionMessage(e));
+            return null;
+        }
+    }
+
+    /**
+     * Decline an existing transfer.
+     *
+     * @param providerCredentials The {@link ITravelRuleProviderCredentials} to decline the transfer for.
+     * @param transferId          Identifier of the transfer to decline.
+     * @return The declined {@link NotabeneTransferInfo} or null if the declination fails.
+     */
+    public NotabeneTransferInfo declineTransfer(ITravelRuleProviderCredentials providerCredentials, String transferId) {
+        try {
+            return api.declineTransfer(providerCredentials, transferId);
+        } catch (Exception e) {
+            log.warn("Failed to decline transfer at Notabene: {}", getExceptionMessage(e));
+            return null;
+        }
+    }
+
+    /**
+     * Retrieves detailed information about a transfer from Notabene including PII.
+     *
+     * @param providerCredentials The credentials used to authenticate and identify the travel rule provider.
+     * @param transferId The unique identifier of the transfer to retrieve information for.
+     * @return A {@link NotabeneTransferInfoWithIvms} object containing transfer details,
+     * or {@code null} if the operation fails.
+     */
+    public NotabeneTransferInfoWithIvms getTransferInfo(ITravelRuleProviderCredentials providerCredentials, String transferId) {
+        try {
+            return api.getTransferInfo(providerCredentials, transferId);
+        } catch (Exception e) {
+            log.warn("Failed to get transfer info from Notabene: {}", getExceptionMessage(e));
             return null;
         }
     }

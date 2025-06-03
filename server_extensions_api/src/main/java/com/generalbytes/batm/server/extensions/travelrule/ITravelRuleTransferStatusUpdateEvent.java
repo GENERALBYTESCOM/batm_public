@@ -20,7 +20,8 @@ package com.generalbytes.batm.server.extensions.travelrule;
 /**
  * This event is responsible for holding information about a transfer status change.
  *
- * <p>This is passed to {@link ITravelRuleTransferUpdateListener} whenever a transfer changes status.</p>
+ * <p>This is passed to {@link ITravelRuleTransferListener#onTransferStatusUpdate(ITravelRuleTransferStatusUpdateEvent)}
+ * whenever a transfer changes status.</p>
  */
 public interface ITravelRuleTransferStatusUpdateEvent {
 

@@ -7,10 +7,12 @@ import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProvider;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProviderCredentials;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferData;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferInfo;
-import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferUpdateListener;
+import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferListener;
+import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferResolvedEvent;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferUpdateRequest;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleVasp;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleWalletInfo;
+import com.generalbytes.batm.server.extensions.travelrule.TravelRuleProviderTransferStatus;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneAddressOwnershipInfoRequest;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneAddressOwnershipInfoResponse;
 import com.generalbytes.batm.server.extensions.travelrule.notabene.dto.NotabeneBeneficiary;
@@ -48,6 +50,7 @@ public class NotabeneTravelRuleProvider implements ITravelRuleProvider {
     private final NotabeneConfiguration configuration;
     private final NotabeneAuthService notabeneAuthService;
     private final NotabeneService notabeneService;
+    private final NotabeneIncomingTransferService notabeneIncomingTransferService;
     private final NotabeneTransferPublisher notabeneTransferPublisher;
 
     @Override
@@ -107,9 +110,10 @@ public class NotabeneTravelRuleProvider implements ITravelRuleProvider {
     }
 
     @Override
-    public boolean registerStatusUpdateListener(ITravelRuleTransferUpdateListener listener) {
+    public boolean registerTransferListener(ITravelRuleTransferListener listener) {
         if (notabeneService.registerWebhook(credentials)) {
-            NotabeneTransferUpdateListener notabeneListener = new NotabeneTransferStatusUpdateListener(listener);
+            NotabeneTransferUpdateListener notabeneListener
+                = new NotabeneTransferStatusUpdateListener(listener, notabeneIncomingTransferService, credentials);
             notabeneTransferPublisher.registerListener(credentials.getVaspDid(), notabeneListener);
             return true;
         }
@@ -117,7 +121,7 @@ public class NotabeneTravelRuleProvider implements ITravelRuleProvider {
     }
 
     @Override
-    public boolean unregisterStatusUpdateListener() {
+    public boolean unregisterTransferListener() {
         notabeneTransferPublisher.unregisterListener(credentials.getVaspDid());
         return true;
     }
@@ -143,6 +147,34 @@ public class NotabeneTravelRuleProvider implements ITravelRuleProvider {
         log.info("A configuration test was requested for {}, clientId: {}", NAME, credentials.getClientId());
 
         return notabeneService.testProviderCredentials(credentials);
+    }
+
+    @Override
+    public boolean onTransferResolved(ITravelRuleTransferResolvedEvent event) {
+        TravelRuleProviderTransferStatus status = event.getResolvedStatus();
+        if (status == TravelRuleProviderTransferStatus.APPROVED) {
+            NotabeneTransferInfo response = notabeneService.acceptTransfer(credentials, event.getTransferExternalId());
+            return changeStatusAtProvider(response, event, NotabeneTransferStatus.ACCEPTED);
+        }
+        if (status == TravelRuleProviderTransferStatus.REJECTED) {
+            NotabeneTransferInfo response = notabeneService.declineTransfer(credentials, event.getTransferExternalId());
+            return changeStatusAtProvider(response, event, NotabeneTransferStatus.DECLINED);
+        }
+        return false;
+    }
+
+    private boolean changeStatusAtProvider(NotabeneTransferInfo response,
+                                           ITravelRuleTransferResolvedEvent event,
+                                           NotabeneTransferStatus expectedStatus) {
+        if (response != null && response.getStatus() == expectedStatus) {
+            log.info("Transfer {} was {} at Notabene, externalId: {}",
+                event.getTransferPublicId(), expectedStatus.name().toLowerCase(), event.getTransferExternalId());
+            return true;
+        } else {
+            log.info("Transfer {} was not {} at Notabene, externalId: {}",
+                event.getTransferPublicId(), expectedStatus.name().toLowerCase(), event.getTransferExternalId());
+        }
+        return false;
     }
 
     /**

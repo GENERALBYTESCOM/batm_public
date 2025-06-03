@@ -23,8 +23,10 @@ import com.generalbytes.batm.server.extensions.extra.common.PollingPaymentSuppor
 import com.generalbytes.batm.server.extensions.payment.IPaymentRequestSpecification;
 import com.generalbytes.batm.server.extensions.payment.IPaymentSupport;
 import com.generalbytes.batm.server.extensions.payment.PaymentRequest;
+import com.generalbytes.batm.server.extensions.payment.ReceivedAmount;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class LightningBitcoinPaymentSupport extends PollingPaymentSupport implements IPaymentSupport {
@@ -37,16 +39,23 @@ public class LightningBitcoinPaymentSupport extends PollingPaymentSupport implem
         return super.createPaymentRequest(spec);
     }
 
+    @Override
     public void poll(PaymentRequest request) {
         try {
             if (request.getState() == PaymentRequest.STATE_SEEN_IN_BLOCK_CHAIN) {
                 return;
             }
 
-            BigDecimal receivedAmount = ((ILightningWallet) request.getWallet()).getReceivedAmount(request.getAddress(), request.getCryptoCurrency());
-            if (receivedAmount != null && receivedAmount.compareTo(BigDecimal.ZERO) > 0) {
-                log.info("Received: {}, Requested: {}, {}", receivedAmount, request.getAmount(), request);
-                if (request.getAmount().compareTo(receivedAmount) != 0 && request.getState() != PaymentRequest.STATE_TRANSACTION_INVALID) {
+            ILightningWallet lightningWallet = (ILightningWallet) request.getWallet();
+            ReceivedAmount receivedAmount = lightningWallet.getReceivedAmount(request.getAddress());
+            if (receivedAmount == null) {
+                return;
+            }
+
+            BigDecimal totalAmountReceived = receivedAmount.getTotalAmountReceived();
+            if (totalAmountReceived.compareTo(BigDecimal.ZERO) > 0) {
+                log.info("Received: {}, Requested: {}, {}", totalAmountReceived, request.getAmount(), request);
+                if (request.getAmount().compareTo(totalAmountReceived) != 0 && request.getState() != PaymentRequest.STATE_TRANSACTION_INVALID) {
                     // This should not happen, receiving node should not accept a payment when amount does not match the invoice.
                     log.info("Received amount does not match the requested amount");
                     setState(request, PaymentRequest.STATE_TRANSACTION_INVALID);
@@ -54,15 +63,23 @@ public class LightningBitcoinPaymentSupport extends PollingPaymentSupport implem
                 }
 
                 log.info("Amounts matches");
-                request.setTxValue(receivedAmount);
+                request.setTxValue(totalAmountReceived);
+                request.setIncomingTransactionHash(getTransactionHashesAsString(receivedAmount));
                 setState(request, PaymentRequest.STATE_SEEN_TRANSACTION); // go through both states so the listener can react to both of them
                 setState(request, PaymentRequest.STATE_SEEN_IN_BLOCK_CHAIN);
                 updateNumberOfConfirmations(request, 999);
             }
-
-        } catch (Throwable t) {
-            log.error("", t);
+        } catch (Exception e) {
+            log.error("Failed to poll payment request: {}", request, e);
         }
+    }
+
+    private String getTransactionHashesAsString(ReceivedAmount receivedAmount) {
+        List<String> transactionHashes = receivedAmount.getTransactionHashes();
+        if (transactionHashes != null && !transactionHashes.isEmpty()) {
+            return String.join(" ", transactionHashes);
+        }
+        return null;
     }
 
     @Override
@@ -70,10 +87,12 @@ public class LightningBitcoinPaymentSupport extends PollingPaymentSupport implem
         return CryptoCurrency.LBTC.getCode();
     }
 
+    @Override
     protected long getPollingPeriodMillis() {
         return TimeUnit.SECONDS.toMillis(1);
     }
 
+    @Override
     protected long getPollingInitialDelayMillis() {
         return TimeUnit.SECONDS.toMillis(3);
     }

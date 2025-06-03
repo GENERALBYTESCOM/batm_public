@@ -40,6 +40,22 @@ public interface ITravelRuleProvider {
     ITravelRuleWalletInfo getWalletInfo(IIdentityWalletEvaluationRequest walletEvaluationRequest);
 
     /**
+     * Forces wallet verification by the provider if the customer has manually declared the wallet as CUSTODIAL for a specific VASP.
+     *
+     * <p>If {@code true}, {@link #getWalletInfo} will be called before {@link #createTransfer}
+     * if the wallet is CUSTODIAL and the customer has declared VASP manually on the terminal.
+     * Even though it is {@code true} and the wallet will be successfully evaluated locally (the wallet was added by an operator in CAS
+     * or the wallet was already verified in the past) or using {@link IWalletTypeEvaluationProvider} as CUSTODIAL,
+     * {@link #getWalletInfo} will NOT be called and {@link #createTransfer} will be called directly.</p>
+     *
+     * <p>If {@code false} and the customer has manually declared a VASP on the terminal,
+     * {@link #getWalletInfo} is skipped and {@link #createTransfer} is called directly.</p>
+     */
+    default boolean verifyCustomerDeclaredCustodialWallet() {
+        return false;
+    }
+
+    /**
      * Get all available VASPs.
      *
      * @return List of all available VASPs.
@@ -56,23 +72,27 @@ public interface ITravelRuleProvider {
     ITravelRuleTransferInfo createTransfer(ITravelRuleTransferData outgoingTransferData);
 
     /**
-     * Register a new listener for transfer status updates.
+     * Register a new listener for transfer events.
      *
      * <p>Whenever the status of a transfer, related to the given VASP, changes, the method
-     * {@link ITravelRuleTransferUpdateListener#onTransferStatusUpdate(ITravelRuleTransferStatusUpdateEvent)}
-     * on this listener will be called.</p>
+     * {@link ITravelRuleTransferListener#onTransferStatusUpdate(ITravelRuleTransferStatusUpdateEvent)}
+     * on this listener must be called.</p>
+     *
+     * <p>When receiving an incoming transfer, the method
+     * {@link ITravelRuleTransferListener#onIncomingTransferReceived(ITravelRuleIncomingTransferEvent)}
+     * on this listener must be called.</p>
      *
      * @param listener The listener.
      * @return True if the listener was successfully registered, false otherwise.
      */
-    boolean registerStatusUpdateListener(ITravelRuleTransferUpdateListener listener);
+    boolean registerTransferListener(ITravelRuleTransferListener listener);
 
     /**
-     * Unregister an existing listener for transfer status updates.
+     * Unregister an existing listener for transfer events.
      *
      * @return True if the listener was successfully unregistered, false otherwise.
      */
-    boolean unregisterStatusUpdateListener();
+    boolean unregisterTransferListener();
 
     /**
      * Update an existing transfer.
@@ -96,4 +116,14 @@ public interface ITravelRuleProvider {
      * @return {@code True} if configuration is valid, otherwise {@code false}.
      */
     boolean testProviderConfiguration();
+
+    /**
+     * Called when a transfer has been resolved to inform the counterparty that the transfer has either been
+     * approved or rejected. This method will be called for incoming travel rule transfers received via
+     * {@link ITravelRuleTransferListener#onIncomingTransferReceived}.
+     *
+     * @param event {@link ITravelRuleTransferResolvedEvent}
+     * @return True, if the resolution was successfully processed, false otherwise.
+     */
+    boolean onTransferResolved(ITravelRuleTransferResolvedEvent event);
 }
