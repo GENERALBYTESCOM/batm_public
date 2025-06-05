@@ -31,9 +31,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-
 
 public class ERC20Wallet implements IWallet{
     private final String contractAddress;
@@ -150,13 +147,9 @@ public class ERC20Wallet implements IWallet{
             BigInteger tokens = convertFromBigDecimal(amount);
             TransactionReceipt receipt = getContract(destinationAddress, tokens)
                 .transfer(destinationAddress, tokens)
-                .sendAsync()
-                .get(10, TimeUnit.SECONDS);
+                .send();
             log.debug("ERC20 receipt: {}", receipt);
             return receipt.getTransactionHash();
-        } catch (TimeoutException e) {
-            // TODO use WalletSendExecutor
-            return "info_in_future"; // the response is really slow, this can happen but the transaction can succeed anyway
         } catch (Exception e) {
             log.error("Error sending coins.", e);
         }
