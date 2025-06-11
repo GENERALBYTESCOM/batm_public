@@ -28,7 +28,7 @@ artifacts {
 }
 
 ext {
-    xchangeVersion = '5.0.10'
+    xchangeVersion = '5.0.14'
 }
 
 dependencies {
@@ -47,15 +47,15 @@ dependencies {
     implementation("com.google.zxing:core:3.5.1")
     implementation("org.knowm.xchange:xchange-core:$xchangeVersion")
     implementation("org.knowm.xchange:xchange-bitfinex:$xchangeVersion")
-    implementation("org.knowm.xchange:xchange-binance:5.0.12")
+    implementation("org.knowm.xchange:xchange-binance:$xchangeVersion")
     implementation("org.knowm.xchange:xchange-bittrex:$xchangeVersion")
-    implementation("org.knowm.xchange:xchange-bitstamp:5.0.13")
+    implementation("org.knowm.xchange:xchange-bitstamp:$xchangeVersion")
     implementation("org.knowm.xchange:xchange-hitbtc:$xchangeVersion")
     implementation("org.knowm.xchange:xchange-dvchain:$xchangeVersion")
     implementation("org.knowm.xchange:xchange-coingi:$xchangeVersion")
     implementation("org.knowm.xchange:xchange-enigma:$xchangeVersion")
     implementation("org.knowm.xchange:xchange-poloniex:$xchangeVersion")
-    implementation("org.knowm.xchange:xchange-okex:5.0.14")
+    implementation("org.knowm.xchange:xchange-okex:$xchangeVersion")
     implementation("org.web3j:core:4.9.0")
     implementation("org.web3j:crypto:4.9.0")
     implementation("org.web3j:utils:4.9.0")
