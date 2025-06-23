@@ -72,7 +72,7 @@ public class NotabeneExtension extends AbstractExtension {
         notabeneConfiguration.setApiUrl(getNotabeneApiUrl());
         notabeneConfiguration.setAuthApiUrl(getNotabeneAuthApiUrl());
         notabeneConfiguration.setAutomaticApprovalOfOutgoingTransfersEnabled(isNotabeneAutomaticApprovalOfOutgoingTransfersEnabled());
-        notabeneConfiguration.setMasterExtensionsUrl(getServerUrl());
+        notabeneConfiguration.setMasterExtensionsUrl(getMasterExtensionUrl());
         log.info("Using Notabene configuration: {}", notabeneConfiguration);
         return notabeneConfiguration;
     }
@@ -99,8 +99,12 @@ public class NotabeneExtension extends AbstractExtension {
         return ctx.getConfigProperty(NOTABENE_CONFIG_FILE, key, defaultValue);
     }
 
-    private String getServerUrl() {
-        String masterHost = ctx.getConfigProperty("network", "master_bind_ip", null);
-        return String.format("https://%s:7743/extensions", masterHost);
+    private String getMasterExtensionUrl() {
+        String masterExtensionsUrl = getConfiguredProperty("masterExtensionsUrl", null);
+        if (masterExtensionsUrl == null) {
+            String masterHost = ctx.getConfigProperty("network", "master_bind_ip", null);
+            masterExtensionsUrl = String.format("https://%s:7743/extensions", masterHost);
+        }
+        return masterExtensionsUrl;
     }
 }
