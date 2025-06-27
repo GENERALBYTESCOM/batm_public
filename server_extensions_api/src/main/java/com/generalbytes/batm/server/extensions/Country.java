@@ -17,16 +17,19 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions;
 
+import lombok.Getter;
+
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Country identifiers.
- *
+ * <p>
  * Usage e.g.:
- *      Country.US.getCountryName()
- *      Country.valueOf("US").getCountryName()
+ * Country.US.getCountryName()
+ * Country.valueOf("US").getCountryName()
  */
+@Getter
 public enum Country {
 
     AF("AF", "AFG", "Afghanistan"),
@@ -42,7 +45,7 @@ public enum Country {
     AR("AR", "ARG", "Argentina"),
     AM("AM", "ARM", "Armenia"),
     AW("AW", "ABW", "Aruba"),
-    AU("AU", "AUS", "Australia"),
+    AU("AU", "AUS", "Australia", CountryAustralia.values()),
     AT("AT", "AUT", "Austria"),
     AZ("AZ", "AZE", "Azerbaijan"),
     BS("BS", "BHS", "Bahamas"),
@@ -69,7 +72,7 @@ public enum Country {
     CV("CV", "CPV", "Cabo Verde"),
     KH("KH", "KHM", "Cambodia"),
     CM("CM", "CMR", "Cameroon"),
-    CA("CA", "CAN", "Canada"),
+    CA("CA", "CAN", "Canada", CountryCanada.values()),
     KY("KY", "CYM", "Cayman Islands"),
     CF("CF", "CAF", "Central African Republic"),
     TD("TD", "TCD", "Chad"),
@@ -128,7 +131,7 @@ public enum Country {
     HM("HM", "HMD", "Heard Island and McDonald Islands"),
     VA("VA", "VAT", "Holy See"),
     HN("HN", "HND", "Honduras"),
-    HK("HK", "HKG", "Hong Kong"),
+    HK("HK", "HKG", "Hong Kong", CountryHongKong.values()),
     HU("HU", "HUN", "Hungary"),
     IS("IS", "ISL", "Iceland"),
     IN("IN", "IND", "India"),
@@ -138,7 +141,7 @@ public enum Country {
     IE("IE", "IRL", "Ireland"),
     IM("IM", "IMN", "Isle of Man"),
     IL("IL", "ISR", "Israel"),
-    IT("IT", "ITA", "Italy"),
+    IT("IT", "ITA", "Italy", CountryItaly.values()),
     JM("JM", "JAM", "Jamaica"),
     JP("JP", "JPN", "Japan"),
     JE("JE", "JEY", "Jersey"),
@@ -189,7 +192,7 @@ public enum Country {
     NP("NP", "NPL", "Nepal"),
     NL("NL", "NLD", "Netherlands"),
     NC("NC", "NCL", "New Caledonia"),
-    NZ("NZ", "NZL", "New Zealand"),
+    NZ("NZ", "NZL", "New Zealand", CountryNewZealand.values()),
     NI("NI", "NIC", "Nicaragua"),
     NE("NE", "NER", "Niger"),
     NG("NG", "NGA", "Nigeria"),
@@ -266,7 +269,7 @@ public enum Country {
     UA("UA", "UKR", "Ukraine"),
     AE("AE", "ARE", "United Arab Emirates"),
     GB("GB", "GBR", "United Kingdom of Great Britain and Northern Ireland"),
-    US("US", "USA", "United States of America"),
+    US("US", "USA", "United States of America", CountryUnitedStates.values()),
     UM("UM", "UMI", "United States Minor Outlying Islands"),
     UY("UY", "URY", "Uruguay"),
     UZ("UZ", "UZB", "Uzbekistan"),
@@ -281,48 +284,55 @@ public enum Country {
     ZM("ZM", "ZMB", "Zambia"),
     ZW("ZW", "ZWE", "Zimbabwe");
 
-    private final String iso2;
-
-    private final String iso3;
-
-    private final String countryName;
-
-    /**
-     * Private constructor.
-     */
-    Country(String iso2, String iso3, String countryName) {
-        this.iso2 = iso2;
-        this.iso3 = iso3;
-        this.countryName = countryName;
-    }
-
     /**
      * ISO 3166-1 alpha-2 code of the country (2 letters).
      */
-    public String getIso2() {
-        return iso2;
-    }
+    private final String iso2;
 
     /**
      * ISO 3166-1 alpha-3 code of the country (3 letters).
      */
-    public String getIso3() {
-        return iso3;
-    }
+    private final String iso3;
 
     /**
      * English short country name officially used by the ISO 3166 Maintenance Agency (ISO 3166/MA).
      */
-    public String getCountryName() {
-        return countryName;
+    private final String countryName;
+
+    /**
+     * Retrieves the list of regions associated with the country.
+     * <p>
+     * Returns an array of {@code CountryRegion} instances representing the regions of the country
+     * or {@code null} if country doesn't support regions
+     */
+    private final CountryRegion[] regions;
+
+    Country(String iso2, String iso3, String countryName, CountryRegion[] regions) {
+        this.iso2 = iso2;
+        this.iso3 = iso3;
+        this.countryName = countryName;
+        this.regions = regions;
     }
 
-    private final static Map<String, Country> values;
+    Country(String iso2, String iso3, String countryName) {
+        this.iso2 = iso2;
+        this.iso3 = iso3;
+        this.countryName = countryName;
+        this.regions = null;
+    }
+
+    private static final Map<String, Country> values;
+    private static final Map<String, Country> iso2toCountry;
+    private static final Map<String, Country> iso3toCountry;
 
     static {
         values = new HashMap<>();
+        iso2toCountry = new HashMap<>();
+        iso3toCountry = new HashMap<>();
         for (Country country : Country.values()) {
             values.put(country.name(), country);
+            iso2toCountry.put(country.getIso2(), country);
+            iso3toCountry.put(country.getIso3(), country);
         }
     }
 
@@ -335,4 +345,34 @@ public enum Country {
     public static Country value(String name) {
         return values.get(name);
     }
+
+    /**
+     * Retrieves a {@link Country} instance corresponding to the given ISO-2 country code.
+     *
+     * @param iso2 the two-letter ISO country code used to look up the corresponding country
+     * @return the {@link Country} instance associated with the given ISO-2 code, or null if no matching country is found
+     */
+    public static Country getByIso2(String iso2) {
+        return iso2toCountry.get(iso2);
+    }
+
+    /**
+     * Retrieves a {@code Country} instance corresponding to the given ISO-3 country code.
+     *
+     * @param iso3 the three-letter ISO country code used to look up the corresponding country
+     * @return the {@code Country} instance associated with the given ISO-3 code, or null if no matching country is found
+     */
+    public static Country getByIso3(String iso3) {
+        return iso3toCountry.get(iso3);
+    }
+
+    /**
+     * Determines whether the country has associated regions.
+     *
+     * @return true if the country has regions (non-null and non-empty), false otherwise
+     */
+    public boolean hasRegions() {
+        return this.regions != null && this.regions.length > 0;
+    }
+
 }
