@@ -17,6 +17,9 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 /**
  * Canada province identifiers.
  *
@@ -24,7 +27,9 @@ package com.generalbytes.batm.server.extensions;
  *      CountryCanada.QC.getProvinceName()
  *      CountryCanada.valueOf("QC").getProvinceName()
  */
-public enum CountryCanada {
+@Getter
+@AllArgsConstructor
+public enum CountryCanada implements CountryRegion {
 
     AB("AB","Alberta"),
     BC("BC","British Columbia"),
@@ -41,28 +46,6 @@ public enum CountryCanada {
     YT("YT","Yukon");
 
     private final String iso;
-
     private final String provinceName;
 
-    /**
-     * Private constructor.
-     */
-    CountryCanada(String iso, String provinceName) {
-        this.iso = iso;
-        this.provinceName = provinceName;
-    }
-
-    /**
-     * ISO 3166-2 code of the province (2 digits).
-     */
-    public String getIso() {
-        return iso;
-    }
-
-    /**
-     * English province/territory name officially used by the ISO 3166 Maintenance Agency (ISO 3166/MA).
-     */
-    public String getProvinceName() {
-        return provinceName;
-    }
 }

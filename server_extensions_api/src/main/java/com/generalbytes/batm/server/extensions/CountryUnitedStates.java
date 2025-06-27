@@ -17,6 +17,9 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 /**
  * United States province identifiers.
  *
@@ -24,7 +27,9 @@ package com.generalbytes.batm.server.extensions;
  *      CountryUnitedStates.WA.getProvinceName()
  *      CountryUnitedStates.valueOf("WA").getProvinceName()
  */
-public enum CountryUnitedStates {
+@Getter
+@AllArgsConstructor
+public enum CountryUnitedStates implements CountryRegion {
 
     AL("AL","Alabama"),
     AK("AK","Alaska"),
@@ -85,28 +90,6 @@ public enum CountryUnitedStates {
     VI("VI","Virgin Islands, U.S.");
 
     private final String iso;
-
     private final String provinceName;
 
-    /**
-     * Private constructor.
-     */
-    CountryUnitedStates(String iso, String provinceName) {
-        this.iso = iso;
-        this.provinceName = provinceName;
-    }
-
-    /**
-     * ISO 3166-2 code of the province (2 digits).
-     */
-    public String getIso() {
-        return iso;
-    }
-
-    /**
-     * English state/district/area name officially used by the ISO 3166 Maintenance Agency (ISO 3166/MA).
-     */
-    public String getProvinceName() {
-        return provinceName;
-    }
 }

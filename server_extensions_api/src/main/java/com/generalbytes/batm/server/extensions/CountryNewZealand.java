@@ -1,5 +1,8 @@
 package com.generalbytes.batm.server.extensions;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 /**
  * New Zealand regions identifiers.
  * <p>
@@ -7,7 +10,9 @@ package com.generalbytes.batm.server.extensions;
  * CountryNewZealand.NTL.getProvinceName()
  * CountryNewZealand.valueOf("NTL").getProvinceName()
  */
-public enum CountryNewZealand {
+@Getter
+@AllArgsConstructor
+public enum CountryNewZealand implements CountryRegion {
 
     NTL("NTL", "Northland"),
     AUK("AUK", "Auckland"),
@@ -27,28 +32,6 @@ public enum CountryNewZealand {
     STL("STL", "Southland");
 
     private final String iso;
-
     private final String provinceName;
 
-    /**
-     * Private constructor.
-     */
-    CountryNewZealand(String iso, String provinceName) {
-        this.iso = iso;
-        this.provinceName = provinceName;
-    }
-
-    /**
-     * ISO 3166-2 code of the province (2 digits).
-     */
-    public String getIso() {
-        return iso;
-    }
-
-    /**
-     * English province/region name officially used by the ISO 3166 Maintenance Agency (ISO 3166/MA).
-     */
-    public String getProvinceName() {
-        return provinceName;
-    }
 }
