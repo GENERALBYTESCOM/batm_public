@@ -76,7 +76,7 @@ public class NotabeneTransferPublisher {
             return;
         }
 
-        log.debug("Publishing update event of transfer {} for VASP {} ({}).", transferInfo.getTransactionRef(), vaspDid, vaspRole);
+        log.debug("Publishing update event {} of transfer {} for VASP {} ({}).", transferInfo.getId(), transferInfo.getTransactionRef(), vaspDid, vaspRole);
         listener.onTransferUpdate(transferInfo);
     }
 
