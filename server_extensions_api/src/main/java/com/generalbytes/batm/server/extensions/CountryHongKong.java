@@ -1,6 +1,9 @@
 
 package com.generalbytes.batm.server.extensions;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 /**
  * Australia district identifiers.
  * <p>
@@ -8,7 +11,9 @@ package com.generalbytes.batm.server.extensions;
  * CountryHongKong.HCW.getProvinceName()
  * CountryHongKong.valueOf("HCW").getProvinceName()
  */
-public enum CountryHongKong {
+@Getter
+@AllArgsConstructor
+public enum CountryHongKong implements CountryRegion {
     HCW("HCW", "Central and Western Hong Kong Island"),
     HEA("HEA", "Eastern Hong Kong Island"),
     HSO("HSO", "Southern Hong Kong Island"),
@@ -29,28 +34,6 @@ public enum CountryHongKong {
     NYL("NYL", "Yuen Long New Territories");
 
     private final String iso;
-
     private final String provinceName;
 
-    /**
-     * Private constructor.
-     */
-    CountryHongKong(String iso, String provinceName) {
-        this.iso = iso;
-        this.provinceName = provinceName;
-    }
-
-    /**
-     * ISO 3166-2 code of the province (2 digits).
-     */
-    public String getIso() {
-        return iso;
-    }
-
-    /**
-     * English province/territory name officially used by the ISO 3166 Maintenance Agency (ISO 3166/MA).
-     */
-    public String getProvinceName() {
-        return provinceName;
-    }
 }
