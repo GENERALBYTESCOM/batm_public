@@ -2425,5 +2425,14 @@
             <param sensitive="false" name="Onfido region" help="'EU', 'US' or 'CA'. Default: 'EU'."/>
         </identityverificationprovider>
     </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.SumSubExtension">
+        <identityverificationprovider prefix="gbsumsub" name="Sum &amp; Substance by GB and LC" help="">
+            <param sensitive="false" name="Token" help=""/>
+            <param sensitive="true" name="Secret Key" help=""/>
+            <param sensitive="true" name="Webhook Secret Key" help="The secret key of the webhook created for the BATM server"/>
+            <param sensitive="false" name="Applicant Level Name" help="Starting verification level. See more at https://docs.sumsub.com/docs/verification-levels"/>
+            <param sensitive="false" name="Applicant Link Expiry Time in Seconds" help="If not set, default is 7 days"/>
+        </identityverificationprovider>
+    </extension>
     <extension class="com.generalbytes.batm.server.extensions.travelrule.notabene.NotabeneExtension" />
 </extensions>
