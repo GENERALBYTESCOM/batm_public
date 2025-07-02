@@ -13,6 +13,11 @@ public class ApplicantCheckResult {
 
     private CheckResult result;
 
+    /**
+     * Can contain additional details for the decision result.
+     */
+    private String resultReason;
+
     private String firstName;
 
     private String lastName;
@@ -70,6 +75,14 @@ public class ApplicantCheckResult {
 
     public void setResult(CheckResult result) {
         this.result = result;
+    }
+
+    public String getResultReason() {
+        return resultReason;
+    }
+
+    public void setResultReason(String resultReason) {
+        this.resultReason = resultReason;
     }
 
     public String getFirstName() {

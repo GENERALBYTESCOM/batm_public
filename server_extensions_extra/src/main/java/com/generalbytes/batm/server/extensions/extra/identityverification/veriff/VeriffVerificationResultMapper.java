@@ -44,6 +44,10 @@ public class VeriffVerificationResultMapper {
         result.setCheckId(decisionRequest.getApplicantId());
         result.setIdentityApplicantId(decisionRequest.getApplicantId());
         result.setResult(mapCheckResult(verification.status));
+        if (verification.status == Verification.Status.declined ||
+            verification.status == Verification.Status.resubmission_requested) {
+            result.setResultReason(mapVerificationFailureReasonCode(verification.reasonCode));
+        }
 
         result.setFirstName(verification.person.firstName);
         result.setLastName(verification.person.lastName);
@@ -167,5 +171,37 @@ public class VeriffVerificationResultMapper {
             return null;
         }
     }
-}
 
+    /**
+     * Maps Veriff reason codes to human-readable descriptions.
+     * Based on the <a href="https://devdocs.veriff.com/v1/docs/verification-session-decision-codes-table">Veriff documentation</a>
+     */
+    private static String mapVerificationFailureReasonCode(Integer reasonCode) {
+        if (reasonCode == null) {
+            return null;
+        }
+
+        String reasonDescription = switch (reasonCode) {
+            // Declined codes
+            case 102 -> "Suspected document tampering";
+            case 103 -> "Person showing the document does not appear to match document photo";
+            case 105 -> "Suspicious behaviour";
+            case 106 -> "Known fraud";
+            case 108 -> "Velocity/abuse duplicated end-user";
+            case 109 -> "Velocity/abuse duplicated device";
+            case 110 -> "Velocity/abuse duplicated ID";
+            case 112 -> "Restricted IP location";
+            case 113 -> "Suspicious behaviour - Identity Farming";
+
+            // Resubmission requested codes
+            case 201 -> "Video and/or photos missing";
+            case 204 -> "Poor image quality";
+            case 205 -> "Document damaged";
+            case 206 -> "Document type not supported";
+            case 207 -> "Document expired";
+
+            default -> "Unknown reason";
+        };
+        return "Veriff - " + reasonDescription;
+    }
+}
