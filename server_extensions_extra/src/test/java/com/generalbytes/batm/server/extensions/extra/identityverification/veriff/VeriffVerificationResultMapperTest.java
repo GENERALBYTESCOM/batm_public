@@ -4,15 +4,21 @@ import com.generalbytes.batm.server.extensions.aml.verification.ApplicantCheckRe
 import com.generalbytes.batm.server.extensions.aml.verification.CheckResult;
 import com.generalbytes.batm.server.extensions.aml.verification.DocumentType;
 import com.generalbytes.batm.server.extensions.extra.identityverification.veriff.api.webhook.VerificationDecisionWebhookRequest;
+import com.generalbytes.batm.server.extensions.extra.identityverification.veriff.api.webhook.VerificationDecisionWebhookRequest.Verification;
 import com.generalbytes.batm.server.extensions.extra.identityverification.veriff.api.webhook.VerificationDecisionWebhookRequest.Verification.Person;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Collections;
 import java.util.Date;
+import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class VeriffVerificationResultMapperTest {
     private static final VeriffVerificationResultMapper mapper = new VeriffVerificationResultMapper();
@@ -50,6 +56,40 @@ class VeriffVerificationResultMapperTest {
         assertEquals("10 Downing Street", mapStreetAddress("gb", "Downing Street", "10"));
         assertEquals("4360 Lone Wolf Ranch Road", mapStreetAddress("us", "Lone Wolf Ranch Road", "4360"));
         assertEquals("streetname housenumber", mapStreetAddress(null, "streetname", "housenumber"));
+    }
+
+    private static Stream<Object[]> reasonCodeTestData() {
+        return Stream.of(
+            new Object[]{Verification.Status.approved, null, null},
+            new Object[]{Verification.Status.resubmission_requested, null, null},
+            new Object[]{Verification.Status.declined, null, null},
+            new Object[]{Verification.Status.declined, 102, "Veriff - Suspected document tampering"},
+            new Object[]{Verification.Status.declined, 103, "Veriff - Person showing the document does not appear to match document photo"},
+            new Object[]{Verification.Status.declined, 105, "Veriff - Suspicious behaviour"},
+            new Object[]{Verification.Status.declined, 106, "Veriff - Known fraud"},
+            new Object[]{Verification.Status.declined, 108, "Veriff - Velocity/abuse duplicated end-user"},
+            new Object[]{Verification.Status.declined, 109, "Veriff - Velocity/abuse duplicated device"},
+            new Object[]{Verification.Status.declined, 110, "Veriff - Velocity/abuse duplicated ID"},
+            new Object[]{Verification.Status.declined, 112, "Veriff - Restricted IP location"},
+            new Object[]{Verification.Status.declined, 113, "Veriff - Suspicious behaviour - Identity Farming"},
+            new Object[]{Verification.Status.resubmission_requested, 201, "Veriff - Video and/or photos missing"},
+            new Object[]{Verification.Status.resubmission_requested, 204, "Veriff - Poor image quality"},
+            new Object[]{Verification.Status.resubmission_requested, 205, "Veriff - Document damaged"},
+            new Object[]{Verification.Status.resubmission_requested, 206, "Veriff - Document type not supported"},
+            new Object[]{Verification.Status.resubmission_requested, 207, "Veriff - Document expired"},
+            new Object[]{Verification.Status.resubmission_requested, 999, "Veriff - Unknown reason"},
+            new Object[]{Verification.Status.declined, 999, "Veriff - Unknown reason"}
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("reasonCodeTestData")
+    void testReasonCodeMapping(Verification.Status status, Integer reasonCode, String expectedReason) {
+        VerificationDecisionWebhookRequest request = createRequest();
+        request.verification.status = status;
+        request.verification.reasonCode = reasonCode;
+        ApplicantCheckResult result = mapper.mapResult(request);
+        assertEquals(expectedReason, result.getResultReason());
     }
 
     private String mapStreetAddress(String country, String street, String houseNumber) {
