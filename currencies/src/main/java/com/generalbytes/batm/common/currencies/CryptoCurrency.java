@@ -98,6 +98,7 @@ public enum CryptoCurrency {
     REP("Augur"),
     SHIB("Shiba Inu"),
     SMART("SmartCash"),
+    SOL("Solana"),
     SPICE("Spice"),
     START("Startcoin"),
     SUM("Sumcoin"),
@@ -135,7 +136,7 @@ public enum CryptoCurrency {
     TXRP("test XRP"),
     ;
 
-    private static Map<String, CryptoCurrency> cryptoCurrenciesUpperCase = new HashMap<>();
+    private static final Map<String, CryptoCurrency> cryptoCurrenciesUpperCase = new HashMap<>();
     private static Map<String, CryptoCurrency> cryptoCurrencies = new LinkedHashMap<>();
 
     static {
