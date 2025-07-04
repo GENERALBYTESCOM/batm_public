@@ -2435,4 +2435,19 @@
         </identityverificationprovider>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.travelrule.notabene.NotabeneExtension" />
+    <extension class="com.generalbytes.batm.server.extensions.extra.solana.SolanaExtension" >
+        <wallet prefix="soldemo" name="Solana Demo Wallet">
+            <param name="fiat_currency" />
+            <param name="wallet_address" />
+            <cryptocurrency>SOL</cryptocurrency>
+        </wallet>
+        <ratesource prefix="solfix" name ="Fix Price" >
+            <param name="price" />
+            <param name="fiat_currency" />
+            <cryptocurrency>SOL</cryptocurrency>
+            <help>USD is default fiat currency.</help>
+        </ratesource>
+        <cryptologo cryptocurrency="SOL" file="sol.png"/>
+        <cryptologo cryptocurrency="SOL" file="sol.svg"/>
+    </extension>
 </extensions>
