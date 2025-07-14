@@ -351,7 +351,7 @@ public class CoinbaseExchange implements IRateSourceAdvanced, IExchangeAdvanced 
                         log.debug("PurchaseCoinsTask.onCreate - orderAId = {}", orderAId);
                     } else {
                         log.error(
-                            "PurchaseCoinsTask.onCreate - " + orderResponse == null ? "unknown error" : orderResponse.getErrorMessages()
+                            "PurchaseCoinsTask.onCreate - {}", orderResponse == null ? "unknown error" : orderResponse.getErrorMessages()
                         );
                     }
                 }
@@ -476,7 +476,8 @@ public class CoinbaseExchange implements IRateSourceAdvanced, IExchangeAdvanced 
                         createTime = System.currentTimeMillis();
                         log.debug("SellCoinsTask.onCreate - orderAId = {}", orderAId);
                     } else {
-                        log.error("SellCoinsTask.onCreate - " + "PurchaseCoinsTask.onCreate - " + orderResponse == null ? "unknown error" : orderResponse.getErrorMessages());
+                        log.error("SellCoinsTask.onCreate - PurchaseCoinsTask.onCreate - {}",
+                            orderResponse == null ? "unknown error" : orderResponse.getErrorMessages());
                     }
                 }
             } catch (Exception e) {
