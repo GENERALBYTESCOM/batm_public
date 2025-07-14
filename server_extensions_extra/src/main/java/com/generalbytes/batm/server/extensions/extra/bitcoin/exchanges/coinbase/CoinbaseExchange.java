@@ -83,6 +83,7 @@ public class CoinbaseExchange implements IRateSourceAdvanced, IExchangeAdvanced 
         CRYPTO_CURRENCIES.add(CryptoCurrency.ETH.getCode());
         CRYPTO_CURRENCIES.add(CryptoCurrency.LTC.getCode());
         CRYPTO_CURRENCIES.add(CryptoCurrency.XRP.getCode());
+        CRYPTO_CURRENCIES.add(CryptoCurrency.SOL.getCode());
     }
 
     public CoinbaseExchange(CoinbaseApiWrapper api, String accountName, String preferredFiatCurrency, String paymentMethodName) {
