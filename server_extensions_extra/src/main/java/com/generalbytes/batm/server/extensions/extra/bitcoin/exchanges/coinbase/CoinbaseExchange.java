@@ -668,10 +668,6 @@ public class CoinbaseExchange implements IRateSourceAdvanced, IExchangeAdvanced 
         return accountName;
     }
 
-    public String getPreferedFiatCurrency() {
-        return preferredFiatCurrency;
-    }
-
     public String getPaymentMethodName() {
         return paymentMethodName;
     }
