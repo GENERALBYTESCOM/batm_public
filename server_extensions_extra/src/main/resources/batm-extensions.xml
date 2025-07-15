@@ -424,6 +424,7 @@
             <cryptocurrency>DAI</cryptocurrency>
             <cryptocurrency>BIZZ</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
+            <cryptocurrency>SOL</cryptocurrency>
             <help>fiatcurrency parameter is optional</help>
         </ratesource>
         <wallet prefix="coinbasewallet2" name="Coinbase.com Wallet [Deprecated]" >
@@ -458,6 +459,7 @@
             <cryptocurrency buyonly="true">USDC</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
+            <cryptocurrency>SOL</cryptocurrency>
             <help>accountname parameter is optional</help>
         </wallet>
         <wallet prefix="coinbasewallet2noforward" name="Coinbase.com Wallet (no forward) [Deprecated]" >
@@ -494,6 +496,7 @@
             <cryptocurrency>USDC</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
+            <cryptocurrency>SOL</cryptocurrency>
             <help>accountname parameter is optional. This variant of the wallet generates new addresses for each transaction and does not forward payments from temporary address</help>
         </wallet>
         <exchange prefix="coinbaseexchange" name="Coinbase.com Exchange [Deprecated]">
@@ -524,6 +527,7 @@
             <cryptocurrency buyonly="true">ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>BAT</cryptocurrency>
+            <cryptocurrency>SOL</cryptocurrency>
             <help>fiatcurrency,paymentmethod are optional</help>
         </exchange>
         <exchange prefix="poloniex" name="Poloniex">
