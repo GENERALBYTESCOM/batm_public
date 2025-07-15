@@ -332,7 +332,7 @@ public class CoinbaseExchange implements IRateSourceAdvanced, IExchangeAdvanced 
                     log.error("Payment method for currency {} and name='{}' is not available.", fiatCurrency, paymentMethodName);
                 } else {
                     CBOrderRequest orderRequest = new CBOrderRequest();
-                    orderRequest.total = amount.toPlainString();
+                    orderRequest.total = getValidAmount();
                     orderRequest.currency = cryptoCurrency;
                     orderRequest.agree_btc_amount_varies = true;
                     orderRequest.commit = true;
@@ -360,6 +360,14 @@ public class CoinbaseExchange implements IRateSourceAdvanced, IExchangeAdvanced 
                 log.error("PurchaseCoinsTask.onCreate", e);
             }
             return (orderAId != null);
+        }
+
+        private String getValidAmount() {
+            if (CryptoCurrency.SOL.getCode().equalsIgnoreCase(cryptoCurrency)) {
+                return amount.setScale(3, RoundingMode.FLOOR).toPlainString();
+            }
+
+            return amount.toPlainString();
         }
 
         @Override
