@@ -325,8 +325,8 @@ class BitcoinExtensionTest {
     @Test
     void testCreateExchange_validLegacyCoinbase() {
         // accountName, preferredFiatCurrency and paymentMethodName are all optional
-        doTestCreateExchange_validLegacyCoinbase(null, null, null);
-        doTestCreateExchange_validLegacyCoinbase("accountName", null, null);
+        doTestCreateExchange_validLegacyCoinbase("USD", "USD", null);
+        doTestCreateExchange_validLegacyCoinbase("accountName", "USD", null);
         doTestCreateExchange_validLegacyCoinbase("accountName", "CZK", null);
         doTestCreateExchange_validLegacyCoinbase("accountName", "CZK", "paymentMethodName");
     }
@@ -349,7 +349,7 @@ class BitcoinExtensionTest {
             assertTrue(exchange instanceof CoinbaseExchange);
             CoinbaseExchange coinbaseExchange = (CoinbaseExchange) exchange;
             assertEquals(accountName, coinbaseExchange.getAccountName());
-            assertEquals(preferredFiatCurrency, coinbaseExchange.getPreferedFiatCurrency());
+            assertEquals(preferredFiatCurrency, coinbaseExchange.getPreferredFiatCurrency());
             assertEquals(paymentMethodName, coinbaseExchange.getPaymentMethodName());
             assertTrue(coinbaseExchange.getApi() instanceof CoinbaseApiWrapperLegacy);
             mockedApiFactory.verify(CoinbaseApiFactory::createCoinbaseApiLegacy);
@@ -359,8 +359,8 @@ class BitcoinExtensionTest {
     @Test
     void testCreateExchange_validCdpCoinbase() {
         // accountName, preferredFiatCurrency and paymentMethodName are all optional
-        doTestCreateExchange_validCdpCoinbase(null, null, null);
-        doTestCreateExchange_validCdpCoinbase("accountName", null, null);
+        doTestCreateExchange_validCdpCoinbase("USD", "USD", null);
+        doTestCreateExchange_validCdpCoinbase("accountName", "USD", null);
         doTestCreateExchange_validCdpCoinbase("accountName", "CZK", null);
         doTestCreateExchange_validCdpCoinbase("accountName", "CZK", "paymentMethodName");
     }
@@ -383,7 +383,7 @@ class BitcoinExtensionTest {
             assertTrue(exchange instanceof CoinbaseExchange);
             CoinbaseExchange coinbaseExchange = (CoinbaseExchange) exchange;
             assertEquals(accountName, coinbaseExchange.getAccountName());
-            assertEquals(preferredFiatCurrency, coinbaseExchange.getPreferedFiatCurrency());
+            assertEquals(preferredFiatCurrency, coinbaseExchange.getPreferredFiatCurrency());
             assertEquals(paymentMethodName, coinbaseExchange.getPaymentMethodName());
             assertTrue(coinbaseExchange.getApi() instanceof CoinbaseApiWrapperCdp);
             mockedApiFactory.verify(CoinbaseApiFactory::createCoinbaseV3Api);
