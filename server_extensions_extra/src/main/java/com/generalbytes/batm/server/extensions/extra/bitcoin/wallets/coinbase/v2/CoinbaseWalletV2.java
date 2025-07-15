@@ -62,6 +62,7 @@ public class CoinbaseWalletV2 implements IWallet {
         .put(CryptoCurrency.BCH.getCode(), "bitcoincash")
         .put(CryptoCurrency.DASH.getCode(), "dash")
         .put(CryptoCurrency.XRP.getCode(), "ripple")
+        .put(CryptoCurrency.SOL.getCode(), "solana")
         .build();
 
     protected static final String API_VERSION = "2016-07-23";
