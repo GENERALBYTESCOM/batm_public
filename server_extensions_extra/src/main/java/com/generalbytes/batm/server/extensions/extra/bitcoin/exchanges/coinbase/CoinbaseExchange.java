@@ -83,6 +83,7 @@ public class CoinbaseExchange implements IRateSourceAdvanced, IExchangeAdvanced 
         CRYPTO_CURRENCIES.add(CryptoCurrency.ETH.getCode());
         CRYPTO_CURRENCIES.add(CryptoCurrency.LTC.getCode());
         CRYPTO_CURRENCIES.add(CryptoCurrency.XRP.getCode());
+        CRYPTO_CURRENCIES.add(CryptoCurrency.SOL.getCode());
     }
 
     public CoinbaseExchange(CoinbaseApiWrapper api, String accountName, String preferredFiatCurrency, String paymentMethodName) {
@@ -331,7 +332,7 @@ public class CoinbaseExchange implements IRateSourceAdvanced, IExchangeAdvanced 
                     log.error("Payment method for currency {} and name='{}' is not available.", fiatCurrency, paymentMethodName);
                 } else {
                     CBOrderRequest orderRequest = new CBOrderRequest();
-                    orderRequest.total = amount.toPlainString();
+                    orderRequest.total = getValidAmount();
                     orderRequest.currency = cryptoCurrency;
                     orderRequest.agree_btc_amount_varies = true;
                     orderRequest.commit = true;
@@ -359,6 +360,14 @@ public class CoinbaseExchange implements IRateSourceAdvanced, IExchangeAdvanced 
                 log.error("PurchaseCoinsTask.onCreate", e);
             }
             return (orderAId != null);
+        }
+
+        private String getValidAmount() {
+            if (CryptoCurrency.SOL.getCode().equalsIgnoreCase(cryptoCurrency)) {
+                return amount.setScale(3, RoundingMode.FLOOR).toPlainString();
+            }
+
+            return amount.toPlainString();
         }
 
         @Override
