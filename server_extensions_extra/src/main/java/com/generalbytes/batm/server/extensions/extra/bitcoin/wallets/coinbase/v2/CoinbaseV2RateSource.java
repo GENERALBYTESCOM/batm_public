@@ -62,6 +62,7 @@ public class CoinbaseV2RateSource implements IRateSource {
         result.add(CryptoCurrency.DAI.getCode());
         result.add(CryptoCurrency.BIZZ.getCode());
         result.add(CryptoCurrency.XRP.getCode());
+        result.add(CryptoCurrency.SOL.getCode());
         return result;
     }
 
