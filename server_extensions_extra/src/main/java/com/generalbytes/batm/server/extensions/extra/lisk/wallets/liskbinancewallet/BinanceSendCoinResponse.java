@@ -17,22 +17,12 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.lisk.wallets.liskbinancewallet;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class BinanceSendCoinResponse {
     private Boolean success;
     private String msg;
-    public Boolean getSuccess() {
-        return success;
-    }
-
-    public void setSuccess(Boolean success) {
-        this.success = success;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
 }

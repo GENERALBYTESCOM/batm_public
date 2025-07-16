@@ -27,6 +27,7 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -36,15 +37,14 @@ public class BinanceWallet implements IWallet {
 
     private static final Logger log = LoggerFactory.getLogger("batm.master.BinanceWallet");
 
-    private String address;
-    private String binanceApiKey;
-    private String binanceApiSecret;
+    private final String address;
+    private final String binanceApiKey;
+    private final String binanceApiSecret;
     private final String cryptoCurrency;
 
-    private BinanceWalletAPI apiBinance;
+    private final BinanceWalletAPI apiBinance;
 
-    public BinanceWallet(String address, String binanceApiKey, String binanceApiSecret,String cryptoCurrency) {
-
+    public BinanceWallet(String address, String binanceApiKey, String binanceApiSecret, String cryptoCurrency) {
         this.address = address;
         this.binanceApiKey = binanceApiKey;
         this.binanceApiSecret = binanceApiSecret;
@@ -60,7 +60,7 @@ public class BinanceWallet implements IWallet {
 
     @Override
     public Set<String> getCryptoCurrencies() {
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         result.add(this.cryptoCurrency);
         return result;
     }
@@ -68,37 +68,32 @@ public class BinanceWallet implements IWallet {
     @Override
     public String getCryptoAddress(String cryptoCurrency) {
         if (!getCryptoCurrencies().contains(cryptoCurrency)) {
-            log.error("Cryptocurrency " + cryptoCurrency + " not supported.");
+            log.error("Cryptocurrency {} not supported.", cryptoCurrency);
             return null;
         }
-        if (address != null) {
-            return address;
-        }
 
-        return null;
+        return address;
     }
 
     @Override
     public BigDecimal getCryptoBalance(String cryptoCurrency) {
         if (!getCryptoCurrencies().contains(cryptoCurrency)) {
-            log.error("Cryptocurrency " + cryptoCurrency + " not supported.");
+            log.error("Cryptocurrency {} not supported.", cryptoCurrency);
             return null;
         }
         try {
-
-            String query = "";
             String timeStamp = String.valueOf(new Date().getTime());
-            query = "recvWindow=" + 5000 + "&timestamp=" + timeStamp;
+            String query = String.format("recvWindow=%d&timestamp=%s", 5000, timeStamp);
 
             String signing = sign(query, binanceApiSecret);
 
             final BinanceResponse accountInfo = apiBinance.getCryptoBalance(this.binanceApiKey, String.valueOf(5000), timeStamp, signing);
 
             if (accountInfo != null) {
-                List<BinanceAssetData> balances = (List<BinanceAssetData>) accountInfo.getBalance();
-                if(balances != null && !balances.isEmpty()) {
+                List<BinanceAssetData> balances = accountInfo.getBalances();
+                if (balances != null && !balances.isEmpty()) {
                     for (BinanceAssetData assetData : balances) {
-                        final String asset = (String) assetData.getAsset();
+                        final String asset = assetData.getAsset();
                         BigDecimal value = assetData.getFree();
                         if (asset.equals(cryptoCurrency)) {
                             return value;
@@ -117,14 +112,16 @@ public class BinanceWallet implements IWallet {
     @Override
     public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
         try {
-            String query = "";
             String timeStamp = String.valueOf(new Date().getTime());
-            query = "asset=" + cryptoCurrency + "&address=" + destinationAddress + "&amount=" + amount + "&name=" + "123" + "&recvWindow=" + 5000 + "&timestamp=" + timeStamp;
-
+            String query = String.format("asset=%s&address=%s&amount=%s&name=%s&recvWindow=%d&timestamp=%s",
+                cryptoCurrency, destinationAddress, amount, "123", 5000, timeStamp
+            );
             String signing = sign(query, binanceApiSecret);
-            BinanceSendCoinResponse response = apiBinance.sendCryptoCurrency(this.binanceApiKey, cryptoCurrency, destinationAddress, String.valueOf(amount), "123", String.valueOf(5000), timeStamp, signing);
+            BinanceSendCoinResponse response = apiBinance.sendCryptoCurrency(
+                this.binanceApiKey, cryptoCurrency, destinationAddress, String.valueOf(amount), "123", String.valueOf(5000), timeStamp, signing
+            );
 
-            if (response != null && response.getMsg() != null && response.getSuccess()) {
+            if (response != null && response.getMsg() != null && Boolean.TRUE.equals(response.getSuccess())) {
                 return response.getMsg();
             }
         } catch (HttpStatusIOException e) {
@@ -136,19 +133,17 @@ public class BinanceWallet implements IWallet {
     }
 
     public static String sign(String message, String secret) {
-
-        String digest = null;
         try {
             SecretKeySpec key = new SecretKeySpec(secret.getBytes(), "HmacSHA256");
             Mac mac = Mac.getInstance("HmacSHA256");
             mac.init(key);
 
-            byte[] bytes = mac.doFinal(message.getBytes("ASCII"));
+            byte[] bytes = mac.doFinal(message.getBytes(StandardCharsets.US_ASCII));
 
-            StringBuffer hash = new StringBuffer();
+            StringBuilder hash = new StringBuilder();
 
-            for (int i=0; i<bytes.length; i++) {
-                String hex = Integer.toHexString(0xFF &  bytes[i]);
+            for (byte b : bytes) {
+                String hex = Integer.toHexString(0xFF & b);
                 if (hex.length() == 1) {
                     hash.append('0');
                 }
