@@ -17,27 +17,14 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.lisk.wallets.liskbinancewallet;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 
+@Getter
+@Setter
 public class BinanceResponse {
     private List<BinanceAssetData> balances;
     private int makerCommission;
-
-    public List<BinanceAssetData> getBalance() {
-        return balances;
-    }
-
-    public void setBalances(List<BinanceAssetData> balances) {
-
-        this.balances = balances;
-    }
-
-    public int getMakerCommission() {
-    	return makerCommission;
-    }
-
-    public void setMakerCommission(int makerCommission) {
-    	this.makerCommission = makerCommission;
-    }
-
 }
