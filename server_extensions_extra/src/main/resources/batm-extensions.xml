@@ -766,7 +766,9 @@
             <cryptocurrency>XZC</cryptocurrency>
         </exchange>
         <ratesource prefix="binancecom" name="Binance.com">
-            <param name="fiatcurrency" />
+            <param name="apikey"/>
+            <param name="secretkey"/>
+            <param name="fiatcurrency"/>
             <cryptocurrency>BAT</cryptocurrency>
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BNB</cryptocurrency>
