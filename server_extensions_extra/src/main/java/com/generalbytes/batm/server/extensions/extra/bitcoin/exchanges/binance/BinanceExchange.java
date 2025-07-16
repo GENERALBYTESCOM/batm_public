@@ -19,6 +19,8 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.binance;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.XChangeExchange;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.knowm.xchange.ExchangeSpecification;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.account.AccountInfo;
@@ -31,11 +33,11 @@ import java.util.stream.Collectors;
 
 public abstract class BinanceExchange extends XChangeExchange {
 
-    public BinanceExchange(String preferredFiatCurrency, String sslUri) {
+    protected BinanceExchange(String preferredFiatCurrency, String sslUri) {
         super(getDefaultSpecification(sslUri), preferredFiatCurrency);
     }
 
-    public BinanceExchange(String key, String secret, String preferredFiatCurrency, String sslUri) {
+    protected BinanceExchange(String key, String secret, String preferredFiatCurrency, String sslUri) {
         super(getSpecification(key, secret, sslUri), preferredFiatCurrency);
     }
 
@@ -116,25 +118,14 @@ public abstract class BinanceExchange extends XChangeExchange {
             .orElse(null);
     }
 
+    @AllArgsConstructor
+    @Getter
     protected static class SupportedCryptoCurrency {
         private final String cryptoCurrency;
         private final BigDecimal withdrawalMinStep;
 
         public SupportedCryptoCurrency(String cryptoCurrency) {
             this(cryptoCurrency, new BigDecimal("0.00000001"));
-        }
-
-        public SupportedCryptoCurrency(String cryptoCurrency, BigDecimal withdrawalMinStep) {
-            this.cryptoCurrency = cryptoCurrency;
-            this.withdrawalMinStep = withdrawalMinStep;
-        }
-
-        public String getCryptoCurrency() {
-            return cryptoCurrency;
-        }
-
-        public BigDecimal getWithdrawalMinStep() {
-            return withdrawalMinStep;
         }
     }
 }

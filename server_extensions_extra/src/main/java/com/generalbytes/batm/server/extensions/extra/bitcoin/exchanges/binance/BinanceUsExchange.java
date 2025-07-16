@@ -60,11 +60,11 @@ public class BinanceUsExchange extends BinanceExchange {
 
     @Override
     public Set<String> getFiatCurrencies() {
-       return SUPPORTED_FIATS;
+        return SUPPORTED_FIATS;
     }
 
     @Override
     public Set<SupportedCryptoCurrency> getSupportedCryptoCurrencies() {
-       return SUPPORTED_CRYPTOS;
+        return SUPPORTED_CRYPTOS;
     }
 }
