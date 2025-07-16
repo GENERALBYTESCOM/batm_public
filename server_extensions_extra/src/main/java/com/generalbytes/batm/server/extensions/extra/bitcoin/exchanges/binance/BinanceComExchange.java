@@ -66,10 +66,6 @@ public class BinanceComExchange extends BinanceExchange {
         SUPPORTED_CRYPTOS.add(new SupportedCryptoCurrency(CryptoCurrency.XZC.getCode()));
     }
 
-    public BinanceComExchange(String preferredFiatCurrency) {
-        super(preferredFiatCurrency, SSL_URI);
-    }
-
     public BinanceComExchange(String key, String secret, String preferredFiatCurrency) {
         super(key, secret, preferredFiatCurrency, SSL_URI);
     }

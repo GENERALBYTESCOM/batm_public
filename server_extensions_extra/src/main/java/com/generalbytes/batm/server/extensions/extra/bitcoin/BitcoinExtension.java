@@ -634,10 +634,12 @@ public class BitcoinExtension extends AbstractExtension {
                 return new SatangProRateSource(preferredFiatCurrency);
             } else if ("binancecom".equalsIgnoreCase(rsType)) {
                 String preferredFiatCurrency = FiatCurrency.EUR.getCode();
+                String apikey = st.nextToken();
+                String secretKey = st.nextToken();
                 if (st.hasMoreTokens()) {
                     preferredFiatCurrency = st.nextToken().toUpperCase();
                 }
-                return new BinanceComExchange(preferredFiatCurrency);
+                return new BinanceComExchange(apikey, secretKey, preferredFiatCurrency);
             } else if ("binanceus".equalsIgnoreCase(rsType)) {
                 String preferredFiatCurrency = FiatCurrency.USD.getCode();
                 if (st.hasMoreTokens()) {
