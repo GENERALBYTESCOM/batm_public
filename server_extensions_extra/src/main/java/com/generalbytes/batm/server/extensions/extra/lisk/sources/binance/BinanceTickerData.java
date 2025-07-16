@@ -17,16 +17,13 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.lisk.sources.binance;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.math.BigDecimal;
 
+@Getter
+@Setter
 public class BinanceTickerData {
     private BigDecimal price;
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
 }

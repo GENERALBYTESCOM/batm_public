@@ -17,25 +17,14 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.lisk.wallets.liskbinancewallet;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.math.BigDecimal;
 
+@Getter
+@Setter
 public class BinanceAssetData {
     private String asset;
     private BigDecimal free;
-
-    public String getAsset() {
-        return asset;
-    }
-
-    public void setAsset(String asset) {
-        this.asset = asset;
-    }
-
-    public BigDecimal getFree() {
-        return free;
-    }
-
-    public void setFree(BigDecimal free) {
-        this.free = free;
-    }
 }

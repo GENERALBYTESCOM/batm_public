@@ -19,6 +19,7 @@ package com.generalbytes.batm.server.extensions.extra.lisk.sources.binance;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+
 @Path("/api/v3")
 @Produces(MediaType.APPLICATION_JSON)
 public interface BinanceAPI {
