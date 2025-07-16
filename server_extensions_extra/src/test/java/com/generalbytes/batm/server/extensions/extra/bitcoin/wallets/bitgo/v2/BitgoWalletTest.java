@@ -35,7 +35,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.verify;
 
-
 class BitgoWalletTest {
 
     private static final Logger log = LoggerFactory.getLogger(BitgoWalletTest.class);
@@ -61,7 +60,7 @@ class BitgoWalletTest {
     @BeforeEach
     void setUp() {
         setLoggerLevel("batm", "trace");
-        setLoggerLevel("si.mazi.rescu","trace");
+        setLoggerLevel("si.mazi.rescu", "trace");
 
         RestProxyFactory.createProxy(IBitgoAPI.class, "http://localhost:3080/");
 
@@ -115,7 +114,7 @@ class BitgoWalletTest {
     void sendCoinsTest() {
         String destinationAddress = "2N5q4MwNSUxbAtaidhRgkiDrbwVR4yCZDhi";
         String coin = CryptoCurrency.TBTC.getCode();
-        Integer amountInt = 10000;
+        int amountInt = 10000;
         BigDecimal amount = BigDecimal.valueOf(amountInt).divide(Converters.TBTC);
         String description = null;
 
@@ -127,7 +126,7 @@ class BitgoWalletTest {
     @Disabled("Local instance of bitgo-express is required to run")
     void sendManyTest() {
         String coin = CryptoCurrency.TBTC.getCode();
-        Integer amountInt = 10000;
+        int amountInt = 10000;
         BigDecimal amount = BigDecimal.valueOf(amountInt).divide(Converters.TBTC);
         String description = null;
 
@@ -143,7 +142,7 @@ class BitgoWalletTest {
     void sendCoinsNumBlocksTest() {
         String destinationAddress = "2N5q4MwNSUxbAtaidhRgkiDrbwVR4yCZDhi";
         String coin = CryptoCurrency.TBTC.getCode();
-        Integer amountInt = 10000;
+        int amountInt = 10000;
         BigDecimal amount = BigDecimal.valueOf(amountInt).divide(Converters.TBTC);
         String description = "CAS: uses the numBlocks API parameter";
 
@@ -225,7 +224,7 @@ class BitgoWalletTest {
             ArgumentCaptor<BitGoSendManyRequest> requestCaptor = ArgumentCaptor.forClass(BitGoSendManyRequest.class);
             verify(api).sendMany(eq(cryptocurrency.toLowerCase()), eq("walletId"), requestCaptor.capture());
             BitGoSendManyRequest request = requestCaptor.getValue();
-            assertEquals("transfer", request.type);
+            assertEquals("transfer", request.getType());
         }
     }
 
@@ -243,7 +242,7 @@ class BitgoWalletTest {
             ArgumentCaptor<BitGoSendManyRequest> requestCaptor = ArgumentCaptor.forClass(BitGoSendManyRequest.class);
             verify(api).sendMany(eq(cryptocurrency.toLowerCase()), eq("walletId"), requestCaptor.capture());
             BitGoSendManyRequest request = requestCaptor.getValue();
-            assertNull(request.type);
+            assertNull(request.getType());
         }
     }
 
