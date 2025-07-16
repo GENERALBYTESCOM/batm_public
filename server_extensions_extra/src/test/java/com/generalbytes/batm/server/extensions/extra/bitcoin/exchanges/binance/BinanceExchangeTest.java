@@ -5,8 +5,6 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.Collection;
 
 import static org.assertj.core.api.Fail.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,14 +17,6 @@ class BinanceExchangeTest {
     // gets params from @Parameterized.Parameters annotated class
     public BinanceExchangeTest(IExchangeAdvanced exchange) {
         this.exchange = exchange;
-    }
-
-    public static Collection params() {
-        return Arrays.asList(new Object[][]{
-//            {new BinanceUsExchange("", "", "USD")},
-//            {new BinanceComExchange("", "", "USD")},
-//            {new BinanceJerseyExchange("", "", "EUR")},
-        });
     }
 
     // this tests getTradableAmount(). If amount sent to exchange had too many decimal places, it throwed "Filter failure: LOT_SIZE" message
