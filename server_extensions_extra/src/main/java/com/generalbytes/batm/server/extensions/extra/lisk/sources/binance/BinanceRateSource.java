@@ -29,19 +29,19 @@ import java.util.*;
 
 public class BinanceRateSource implements IRateSource {
 
-    private BinanceAPI api;
-    private final String coinmarketcapApiKey;
+    private final BinanceAPI api;
+    private final String coinMarketCapApiKey;
     private String preferredFiatCurrency = FiatCurrency.USD.getCode();
 
-    public BinanceRateSource(String preferedFiatCurrency, String coinmarketcapApiKey) {
-        this.coinmarketcapApiKey = coinmarketcapApiKey;
+    public BinanceRateSource(String preferredFiatCurrency, String coinMarketCapApiKey) {
+        this.coinMarketCapApiKey = coinMarketCapApiKey;
         api = RestProxyFactory.createProxy(BinanceAPI.class, "https://api.binance.com");
 
-        if (FiatCurrency.USD.getCode().equalsIgnoreCase(preferedFiatCurrency)) {
+        if (FiatCurrency.USD.getCode().equalsIgnoreCase(preferredFiatCurrency)) {
             this.preferredFiatCurrency = FiatCurrency.USD.getCode();
         }
 
-        if (FiatCurrency.HKD.getCode().equalsIgnoreCase(preferedFiatCurrency)) {
+        if (FiatCurrency.HKD.getCode().equalsIgnoreCase(preferredFiatCurrency)) {
             this.preferredFiatCurrency = FiatCurrency.HKD.getCode();
         }
     }
@@ -80,9 +80,9 @@ public class BinanceRateSource implements IRateSource {
             BinanceTickerData selectedCryptoInBtc = api.getTicker(cryptoCurrency + "BTC");
             priceInBtc = selectedCryptoInBtc.getPrice();
         }
-        CoinmarketcapRateSource coinMarketCapSource = new CoinmarketcapRateSource(coinmarketcapApiKey, fiatCurrency);
+        CoinmarketcapRateSource coinMarketCapSource = new CoinmarketcapRateSource(coinMarketCapApiKey, fiatCurrency);
         BigDecimal lastUsdtFiat = coinMarketCapSource.getExchangeRateLast("USDT", fiatCurrency);
-        if (lastUsdtFiat != null && btcUsdt.getPrice() != null && priceInBtc != null ) {
+        if (lastUsdtFiat != null && btcUsdt.getPrice() != null && priceInBtc != null) {
             BigDecimal lastBtcPriceInUsdt = btcUsdt.getPrice();
             BigDecimal lastSelectedCryptoPriceInUsdt = priceInBtc.multiply(lastBtcPriceInUsdt);
             return lastSelectedCryptoPriceInUsdt.multiply(lastUsdtFiat);
