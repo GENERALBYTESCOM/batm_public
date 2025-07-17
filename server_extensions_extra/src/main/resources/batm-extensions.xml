@@ -764,6 +764,7 @@
             <cryptocurrency>XMR</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
             <cryptocurrency>XZC</cryptocurrency>
+            <cryptocurrency>SOL</cryptocurrency>
         </exchange>
         <ratesource prefix="binancecom" name="Binance.com">
             <param name="apikey"/>
@@ -792,6 +793,7 @@
             <cryptocurrency>XMR</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
             <cryptocurrency>XZC</cryptocurrency>
+            <cryptocurrency>SOL</cryptocurrency>
         </ratesource>
         <exchange prefix="binanceus" name="Binance US">
             <param name="apikey"/>
