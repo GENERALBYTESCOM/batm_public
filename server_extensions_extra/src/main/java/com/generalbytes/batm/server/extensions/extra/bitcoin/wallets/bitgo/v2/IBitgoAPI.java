@@ -42,12 +42,16 @@ public interface IBitgoAPI {
     @POST
     @Path("/{coin}/wallet/{id}/sendmany")
     @Consumes(MediaType.APPLICATION_JSON)
-    Map<String, Object> sendMany(@PathParam("coin") String coin, @PathParam("id") String id, BitGoSendManyRequest request) throws IOException, ErrorResponseException;
+    Map<String, Object> sendMany(@PathParam("coin") String coin,
+                                 @PathParam("id") String id,
+                                 BitGoSendManyRequest request) throws IOException, ErrorResponseException;
 
     @POST
     @Path("/{coin}/wallet/{id}/sendcoins")
     @Consumes(MediaType.APPLICATION_JSON)
-    Map<String, Object> sendCoins(@PathParam("coin") String coin, @PathParam("id") String id, BitGoCoinRequest request) throws IOException, ErrorResponseException;
+    Map<String, Object> sendCoins(@PathParam("coin") String coin,
+                                  @PathParam("id") String id,
+                                  BitGoCoinRequest request) throws IOException, ErrorResponseException;
 
     @GET
     @Path("/{coin}/wallet/balances")
@@ -59,7 +63,8 @@ public interface IBitgoAPI {
 
     @GET
     @Path("/{coin}/wallet/{id}")
-    Map<String, Object> getWalletById(@PathParam("coin") String coin, @PathParam("id") String id) throws IOException, ErrorResponseException;
+    Map<String, Object> getWalletById(@PathParam("coin") String coin,
+                                      @PathParam("id") String id) throws IOException, ErrorResponseException;
 
     @GET
     @Path("/{coin}/wallet/{walletId}/transfer")
@@ -71,10 +76,14 @@ public interface IBitgoAPI {
 
     @GET
     @Path("/{coin}/wallet/{walletId}/address/{addressOrId}")
-    BitGoAddressResponse getAddress(@PathParam("coin") String coin, @PathParam("walletId") String walletId, @PathParam("addressOrId") String addressOrId) throws IOException, ErrorResponseException;
+    BitGoAddressResponse getAddress(@PathParam("coin") String coin,
+                                    @PathParam("walletId") String walletId,
+                                    @PathParam("addressOrId") String addressOrId) throws IOException, ErrorResponseException;
 
     @POST
     @Path("/{coin}/wallet/{id}/address")
     @Consumes(MediaType.APPLICATION_JSON)
-    BitGoAddressResponse createAddress(@PathParam("coin") String coin, @PathParam("id") String id, BitGoCreateAddressRequest request) throws IOException, ErrorResponseException;
+    BitGoAddressResponse createAddress(@PathParam("coin") String coin,
+                                       @PathParam("id") String id,
+                                       BitGoCreateAddressRequest request) throws IOException, ErrorResponseException;
 }

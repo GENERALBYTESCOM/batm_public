@@ -18,9 +18,11 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
 
 import java.math.BigDecimal;
 
+@Getter
 public class BitGoAddressResponse {
     private String id;
     private String address;
@@ -30,52 +32,18 @@ public class BitGoAddressResponse {
     private String label;
     private Balance balance;
 
-    public String getId() {
-        return id;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public Integer getIndex() {
-        return index;
-    }
-
-    public String getCoin() {
-        return coin;
-    }
-
-    public String getWallet() {
-        return wallet;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public Balance getBalance() {
-        return balance;
-    }
-
+    @Getter
     public static class Balance {
+        /**
+         * confirmed balance in the smallest unit (e.g. satoshi)
+         */
         @JsonProperty("confirmedBalanceString")
         private BigDecimal confirmedBalance;
+
+        /**
+         * balance in the smallest unit (e.g. satoshi)
+         */
         @JsonProperty("balanceString")
         private BigDecimal balance;
-
-        /**
-         * @return confirmed balance in the smallest unit (e.g. satoshi)
-         */
-        public BigDecimal getConfirmedBalance() {
-            return confirmedBalance;
-        }
-
-        /**
-         * @return balance in the smallest unit (e.g. satoshi)
-         */
-        public BigDecimal getBalance() {
-            return balance;
-        }
     }
 }
