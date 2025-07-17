@@ -71,7 +71,8 @@ public class BitgoWallet implements IWallet, ICanSendMany {
         Map.entry(CryptoCurrency.USDTTRON.getCode(), "trx:usdt"),
         Map.entry(CryptoCurrency.XRP.getCode(), "xrp"),
         Map.entry(CryptoCurrency.TBTC.getCode(), "tbtc"),
-        Map.entry(CryptoCurrency.USDC.getCode(), "usdc")
+        Map.entry(CryptoCurrency.USDC.getCode(), "usdc"),
+        Map.entry(CryptoCurrency.SOL.getCode(), "sol")
     );
 
     private static final Map<String, Integer> decimals = Map.ofEntries(
@@ -85,7 +86,8 @@ public class BitgoWallet implements IWallet, ICanSendMany {
         Map.entry(CryptoCurrency.TBTC.getCode(), pow10Exp(Converters.TBTC)),
         Map.entry(CryptoCurrency.TLTC.getCode(), pow10Exp(Converters.TLTC)),
         Map.entry(CryptoCurrency.TBCH.getCode(), pow10Exp(Converters.TBCH)),
-        Map.entry(CryptoCurrency.USDC.getCode(), pow10Exp(Converters.USDC))
+        Map.entry(CryptoCurrency.USDC.getCode(), pow10Exp(Converters.USDC)),
+        Map.entry(CryptoCurrency.SOL.getCode(), pow10Exp(Converters.SOL))
     );
 
     private static int pow10Exp(BigDecimal val) {
@@ -221,7 +223,8 @@ public class BitgoWallet implements IWallet, ICanSendMany {
 
     private boolean needsTypeInSendRequest(String cryptoCurrency) {
         return CryptoCurrency.USDC.getCode().equalsIgnoreCase(cryptoCurrency)
-                || CryptoCurrency.USDT.getCode().equalsIgnoreCase(cryptoCurrency);
+                || CryptoCurrency.USDT.getCode().equalsIgnoreCase(cryptoCurrency)
+                || CryptoCurrency.SOL.getCode().equalsIgnoreCase(cryptoCurrency);
     }
 
     protected String toSatoshis(BigDecimal amount, String cryptoCurrency) {
