@@ -765,7 +765,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
             return "DSH";
         }
         if (CryptoCurrency.BCH.getCode().equals(cryptoCurrency)) {
-            return "BAB";
+            return "BCHN";
         }
         if (CryptoCurrency.USDT.getCode().equals(cryptoCurrency)) {
             return "UST";
