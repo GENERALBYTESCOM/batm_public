@@ -18,8 +18,12 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Getter;
+import lombok.Setter;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Getter
+@Setter
 public class BitGoCoinRequest {
     private String address;
     private String amount;
@@ -29,7 +33,6 @@ public class BitGoCoinRequest {
     private Integer feeRate;
     private Integer maxFeeRate;
     private String type;
-
 
     public BitGoCoinRequest(String address, String amount, String walletPassphrase, String comment, Integer numBlocks) {
         this.address = address;
@@ -64,70 +67,6 @@ public class BitGoCoinRequest {
     ) {
         this(address, amount, walletPassphrase, comment, numBlocks, feeRate, maxFeeRate);
 
-        this.type = type;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getAmount() {
-        return amount;
-    }
-
-    public void setAmount(String amount) {
-        this.amount = amount;
-    }
-
-    public String getWalletPassphrase() {
-        return walletPassphrase;
-    }
-
-    public void setWalletPassphrase(String walletPassphrase) {
-        this.walletPassphrase = walletPassphrase;
-    }
-
-    public void setNumBlocks(Integer numBlocks){
-      this.numBlocks = numBlocks;
-    }
-
-    public Integer getNumBlocks() {
-      return numBlocks;
-    }
-
-    public String getComment() {
-      return comment;
-    }
-
-    public void setComment(String comment){
-      this.comment = comment;
-    }
-
-    public Integer getFeeRate() {
-        return feeRate;
-    }
-
-    public void setFeeRate(Integer feeRate) {
-        this.feeRate = feeRate;
-    }
-
-    public Integer getMaxFeeRate() {
-        return maxFeeRate;
-    }
-
-    public void setMaxFeeRate(Integer maxFeeRate) {
-        this.maxFeeRate = maxFeeRate;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
         this.type = type;
     }
 }
