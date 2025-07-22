@@ -110,6 +110,7 @@ public enum CryptoCurrency {
     TRX("Tron"),
     USDS("StableUSD"),
     USDC("USD Coin"), // ERC-20 (ethereum) based
+    USDCSOL("USD Coin (Solana)"), // SPL (Solana) based
     USDT("Tether"), // ERC-20 (ethereum) based
     USDTTRON("Tether USD TRON"), // TRC20 based USDT stablecoin issued by Tether on the TRON network
     VERUM("Verum Coin"),
