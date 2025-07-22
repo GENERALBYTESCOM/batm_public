@@ -18,55 +18,16 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Getter;
-import lombok.Setter;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Getter
-@Setter
-public class BitGoCoinRequest {
-    private String address;
-    private String amount;
-    private String walletPassphrase;
-    private Integer numBlocks;
-    private String comment;
-    private Integer feeRate;
-    private Integer maxFeeRate;
-    private String type;
+public record BitGoCoinRequest(String address,
+                               String amount,
+                               String walletPassphrase,
+                               Integer numBlocks,
+                               String comment,
+                               Integer feeRate,
+                               Integer maxFeeRate,
+                               String type
+) {
 
-    public BitGoCoinRequest(String address, String amount, String walletPassphrase, String comment, Integer numBlocks) {
-        this.address = address;
-        this.amount = amount;
-        this.walletPassphrase = walletPassphrase;
-        this.numBlocks = numBlocks;
-        this.comment = comment;
-    }
-
-    public BitGoCoinRequest(String address,
-                            String amount,
-                            String walletPassphrase,
-                            String comment,
-                            Integer numBlocks,
-                            Integer feeRate,
-                            Integer maxFeeRate
-    ) {
-        this(address, amount, walletPassphrase, comment, numBlocks);
-
-        this.feeRate = feeRate;
-        this.maxFeeRate = maxFeeRate;
-    }
-
-    public BitGoCoinRequest(String address,
-                            String amount,
-                            String walletPassphrase,
-                            String comment,
-                            Integer numBlocks,
-                            Integer feeRate,
-                            Integer maxFeeRate,
-                            String type
-    ) {
-        this(address, amount, walletPassphrase, comment, numBlocks, feeRate, maxFeeRate);
-
-        this.type = type;
-    }
 }
