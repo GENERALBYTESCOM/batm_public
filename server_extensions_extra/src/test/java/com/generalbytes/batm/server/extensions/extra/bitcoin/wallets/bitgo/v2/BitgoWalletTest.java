@@ -178,16 +178,17 @@ class BitgoWalletTest {
 
     private static Stream<Arguments> testSendCoinsAndSendMany_arguments() {
         return Stream.of(
-            arguments("BCH", "bch", "100000000", null),
-            arguments("BTC", "btc", "100000000", null),
-            arguments("ETH", "eth", "1000000000000000000", null),
-            arguments("LTC", "ltc", "100000000", null),
-            arguments("USDT", "usdt", "1000000", "transfer"),
-            arguments("USDTTRON", "trx:usdt", "1000000", null),
-            arguments("XRP", "xrp", "1000000", null),
-            arguments("TBTC", "tbtc", "100000000", null),
-            arguments("USDC", "usdc", "1000000", "transfer"),
-            arguments("SOL", "sol", "1000000000", "transfer")
+            arguments("BCH", "bch", "100000000", null, null),
+            arguments("BTC", "btc", "100000000", null, null),
+            arguments("ETH", "eth", "1000000000000000000", null, null),
+            arguments("LTC", "ltc", "100000000", null, null),
+            arguments("USDT", "usdt", "1000000", "transfer", null),
+            arguments("USDTTRON", "trx:usdt", "1000000", null, null),
+            arguments("XRP", "xrp", "1000000", null, null),
+            arguments("TBTC", "tbtc", "100000000", null, null),
+            arguments("USDC", "usdc", "1000000", "transfer", null),
+            arguments("SOL", "sol", "1000000000", "transfer", null),
+            arguments("USDCSOL", "sol:usdc", "1000000", "transfer", "sol:usdc")
         );
     }
 
@@ -196,7 +197,8 @@ class BitgoWalletTest {
     void testSendCoins(String cryptocurrency,
                        String expectedBitGoCryptocurrency,
                        String expectedAmount,
-                       String expectedType) throws IOException {
+                       String expectedType,
+                       String expectedTokenName) throws IOException {
         IBitgoAPI api = mock(IBitgoAPI.class);
 
         try (MockedStatic<RestProxyFactory> mockedRestProxyFactory = mockStatic(RestProxyFactory.class)) {
@@ -219,6 +221,7 @@ class BitgoWalletTest {
             assertEquals(3, request.feeRate());
             assertEquals(4, request.maxFeeRate());
             assertEquals(expectedType, request.type());
+            assertEquals(expectedTokenName, request.tokenName());
         }
     }
 
@@ -227,7 +230,8 @@ class BitgoWalletTest {
     void testSendMany(String cryptocurrency,
                       String expectedBitGoCryptocurrency,
                       String expectedAmount,
-                      String expectedType) throws IOException {
+                      String expectedType,
+                      String expectedTokenName) throws IOException {
         IBitgoAPI api = mock(IBitgoAPI.class);
 
         try (MockedStatic<RestProxyFactory> mockedRestProxyFactory = mockStatic(RestProxyFactory.class)) {
@@ -247,6 +251,7 @@ class BitgoWalletTest {
             BitGoSendManyRequest.BitGoRecipient recipient = request.recipients().get(0);
             assertEquals("destinationAddress", recipient.address());
             assertEquals(expectedAmount, recipient.amount());
+            assertEquals(expectedTokenName, recipient.tokenName());
             assertEquals("walletPassphrase", request.walletPassphrase());
             assertEquals(2, request.numBlocks());
             assertEquals("description", request.comment());

@@ -25,7 +25,7 @@ public record BitGoSendManyRequest(List<BitGoRecipient> recipients,
                                    String comment,
                                    String type
 ) {
-    public record BitGoRecipient(String address, String amount) {
+    public record BitGoRecipient(String address, String amount, String tokenName) {
 
     }
 }

@@ -44,7 +44,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Slf4j
 public class BitgoWallet implements IWallet, ICanSendMany {
@@ -62,6 +61,9 @@ public class BitgoWallet implements IWallet, ICanSendMany {
     @Getter
     protected Integer maxFeeRate;
 
+    /**
+     * @see <a href="https://developers.bitgo.com/coins">Supported BitGo cryptocurrencies and their mapping</a>
+     */
     protected static final Map<String, String> cryptoCurrencies = Map.ofEntries(
         Map.entry(CryptoCurrency.BCH.getCode(), "bch"),
         Map.entry(CryptoCurrency.BTC.getCode(), "btc"),
@@ -72,6 +74,7 @@ public class BitgoWallet implements IWallet, ICanSendMany {
         Map.entry(CryptoCurrency.XRP.getCode(), "xrp"),
         Map.entry(CryptoCurrency.TBTC.getCode(), "tbtc"),
         Map.entry(CryptoCurrency.USDC.getCode(), "usdc"),
+        Map.entry(CryptoCurrency.USDCSOL.getCode(), "sol:usdc"),
         Map.entry(CryptoCurrency.SOL.getCode(), "sol")
     );
 
@@ -87,6 +90,7 @@ public class BitgoWallet implements IWallet, ICanSendMany {
         Map.entry(CryptoCurrency.TLTC.getCode(), pow10Exp(Converters.TLTC)),
         Map.entry(CryptoCurrency.TBCH.getCode(), pow10Exp(Converters.TBCH)),
         Map.entry(CryptoCurrency.USDC.getCode(), pow10Exp(Converters.USDC)),
+        Map.entry(CryptoCurrency.USDCSOL.getCode(), pow10Exp(Converters.USDCSOL)),
         Map.entry(CryptoCurrency.SOL.getCode(), pow10Exp(Converters.SOL))
     );
 
@@ -182,8 +186,14 @@ public class BitgoWallet implements IWallet, ICanSendMany {
     }
 
     private BitGoSendManyRequest createBitGoSendManyRequest(Collection<Transfer> transfers, String cryptoCurrency, String description) {
+        String tokenName = getRequestTokenName(cryptoCurrency);
+
         List<BitGoRecipient> recipients = transfers.stream()
-            .map(transfer -> new BitGoRecipient(transfer.getDestinationAddress(), toSatoshis(transfer.getAmount(), cryptoCurrency)))
+            .map(transfer -> new BitGoRecipient(
+                transfer.getDestinationAddress(),
+                toSatoshis(transfer.getAmount(), cryptoCurrency),
+                tokenName
+            ))
             .toList();
 
         return new BitGoSendManyRequest(
@@ -208,7 +218,8 @@ public class BitgoWallet implements IWallet, ICanSendMany {
             description,
             this.feeRate,
             this.maxFeeRate,
-            getRequestType(cryptoCurrency)
+            getRequestType(cryptoCurrency),
+            getRequestTokenName(cryptoCurrency)
         );
     }
 
@@ -216,8 +227,17 @@ public class BitgoWallet implements IWallet, ICanSendMany {
         if (CryptoCurrency.USDC.getCode().equalsIgnoreCase(cryptoCurrency)
             || CryptoCurrency.USDT.getCode().equalsIgnoreCase(cryptoCurrency)
             || CryptoCurrency.SOL.getCode().equalsIgnoreCase(cryptoCurrency)
+            || CryptoCurrency.USDCSOL.getCode().equalsIgnoreCase(cryptoCurrency)
         ) {
             return "transfer";
+        }
+
+        return null;
+    }
+
+    private String getRequestTokenName(String cryptoCurrency) {
+        if (CryptoCurrency.USDCSOL.getCode().equalsIgnoreCase(cryptoCurrency)) {
+            return "sol:usdc";
         }
 
         return null;

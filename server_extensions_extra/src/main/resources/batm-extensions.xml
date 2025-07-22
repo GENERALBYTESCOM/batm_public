@@ -47,6 +47,7 @@
                 <cryptocurrency buyonly="true">USDT</cryptocurrency>
                 <cryptocurrency buyonly="true">USDC</cryptocurrency>
                 <cryptocurrency>SOL</cryptocurrency>
+                <cryptocurrency>USDCSOL</cryptocurrency>
                 <help>Host should start with http:// or https://. num_blocks is an integer greater than 2.</help>
             </wallet>
             <wallet prefix="bitgonoforward" name="BitGo Wallet (no forward)">
@@ -69,6 +70,7 @@
                 <cryptocurrency>USDTTRON</cryptocurrency>
                 <cryptocurrency>USDC</cryptocurrency>
                 <cryptocurrency>SOL</cryptocurrency>
+                <cryptocurrency>USDCSOL</cryptocurrency>
                 <help>This variant of the wallet generates new addresses for each sell transaction and does not forward payments from temporary address. Host should start with http:// or https://. num_blocks is an integer greater than 2.</help>
             </wallet>
             <wallet prefix="cryptx" name="CryptX Wallet System">
