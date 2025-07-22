@@ -146,10 +146,7 @@ public class BitgoWallet implements IWallet, ICanSendMany {
     @Override
     public String sendMany(Collection<Transfer> transfers, String cryptoCurrency, String description) {
         try {
-            List<BitGoRecipient> recipients = transfers.stream()
-                .map(transfer -> new BitGoRecipient(transfer.getDestinationAddress(), toSatoshis(transfer.getAmount(), cryptoCurrency)))
-                .collect(Collectors.toList());
-            final BitGoSendManyRequest request = createBitGoSendManyRequest(recipients, cryptoCurrency, description);
+            final BitGoSendManyRequest request = createBitGoSendManyRequest(transfers, cryptoCurrency, description);
             String bitgoCryptoCurrency = cryptoCurrencies.get(cryptoCurrency);
             return getResultTxId(api.sendMany(bitgoCryptoCurrency, this.walletId, request));
         } catch (HttpStatusIOException hse) {
@@ -184,12 +181,18 @@ public class BitgoWallet implements IWallet, ICanSendMany {
         return null;
     }
 
-    private BitGoSendManyRequest createBitGoSendManyRequest(List<BitGoRecipient> recipients, String cryptoCurrency, String description) {
-        if (needsTypeInSendRequest(cryptoCurrency)) {
-            return new BitGoSendManyRequest(recipients, this.walletPassphrase, description, this.numBlocks, "transfer");
-        }
+    private BitGoSendManyRequest createBitGoSendManyRequest(Collection<Transfer> transfers, String cryptoCurrency, String description) {
+        List<BitGoRecipient> recipients = transfers.stream()
+            .map(transfer -> new BitGoRecipient(transfer.getDestinationAddress(), toSatoshis(transfer.getAmount(), cryptoCurrency)))
+            .toList();
 
-        return new BitGoSendManyRequest(recipients, this.walletPassphrase, description, this.numBlocks);
+        return new BitGoSendManyRequest(
+            recipients,
+            this.walletPassphrase,
+            this.numBlocks,
+            description,
+            getRequestType(cryptoCurrency)
+        );
     }
 
     private BitGoCoinRequest createBitGoCoinRequest(String destinationAddress,
@@ -197,34 +200,27 @@ public class BitgoWallet implements IWallet, ICanSendMany {
                                                     String cryptoCurrency,
                                                     String description
     ) {
-        if (needsTypeInSendRequest(cryptoCurrency)) {
-            return new BitGoCoinRequest(
-                destinationAddress,
-                toSatoshis(amount, cryptoCurrency),
-                this.walletPassphrase,
-                description,
-                this.numBlocks,
-                this.feeRate,
-                this.maxFeeRate,
-                "transfer"
-            );
-        }
-
         return new BitGoCoinRequest(
             destinationAddress,
             toSatoshis(amount, cryptoCurrency),
             this.walletPassphrase,
-            description,
             this.numBlocks,
+            description,
             this.feeRate,
-            this.maxFeeRate
+            this.maxFeeRate,
+            getRequestType(cryptoCurrency)
         );
     }
 
-    private boolean needsTypeInSendRequest(String cryptoCurrency) {
-        return CryptoCurrency.USDC.getCode().equalsIgnoreCase(cryptoCurrency)
-                || CryptoCurrency.USDT.getCode().equalsIgnoreCase(cryptoCurrency)
-                || CryptoCurrency.SOL.getCode().equalsIgnoreCase(cryptoCurrency);
+    private String getRequestType(String cryptoCurrency) {
+        if (CryptoCurrency.USDC.getCode().equalsIgnoreCase(cryptoCurrency)
+            || CryptoCurrency.USDT.getCode().equalsIgnoreCase(cryptoCurrency)
+            || CryptoCurrency.SOL.getCode().equalsIgnoreCase(cryptoCurrency)
+        ) {
+            return "transfer";
+        }
+
+        return null;
     }
 
     protected String toSatoshis(BigDecimal amount, String cryptoCurrency) {

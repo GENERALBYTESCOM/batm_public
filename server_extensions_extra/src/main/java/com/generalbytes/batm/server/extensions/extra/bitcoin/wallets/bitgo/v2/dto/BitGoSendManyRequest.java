@@ -17,31 +17,14 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto;
 
-import lombok.Getter;
-
 import java.util.List;
 
-@Getter
-public class BitGoSendManyRequest {
-    private final List<BitGoRecipient> recipients;
-    private final String walletPassphrase;
-    private final Integer numBlocks;
-    private final String comment;
-    private String type;
-
-    public BitGoSendManyRequest(List<BitGoRecipient> recipients, String walletPassphrase, String comment, Integer numBlocks) {
-        this.recipients = recipients;
-        this.walletPassphrase = walletPassphrase;
-        this.numBlocks = numBlocks;
-        this.comment = comment;
-    }
-
-    public BitGoSendManyRequest(List<BitGoRecipient> recipients, String walletPassphrase, String comment, Integer numBlocks, String type) {
-        this(recipients, walletPassphrase, comment, numBlocks);
-
-        this.type = type;
-    }
-
+public record BitGoSendManyRequest(List<BitGoRecipient> recipients,
+                                   String walletPassphrase,
+                                   Integer numBlocks,
+                                   String comment,
+                                   String type
+) {
     public record BitGoRecipient(String address, String amount) {
 
     }
