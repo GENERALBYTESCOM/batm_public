@@ -22,6 +22,11 @@ import java.util.StringTokenizer;
  */
 public class SolanaExtension extends AbstractExtension {
 
+    private static final Set<String> SUPPORTED_CRYPTOCURRENCIES = Set.of(
+        CryptoCurrency.SOL.getCode(),
+        CryptoCurrency.USDCSOL.getCode()
+    );
+
     @Override
     public String getName() {
         return "BATM Solana extension";
@@ -29,7 +34,7 @@ public class SolanaExtension extends AbstractExtension {
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (CryptoCurrency.SOL.getCode().equalsIgnoreCase(cryptoCurrency)) {
+        if (cryptoCurrency != null && SUPPORTED_CRYPTOCURRENCIES.contains(cryptoCurrency.toUpperCase())) {
             return new SolanaAddressValidator();
         }
 
@@ -48,18 +53,24 @@ public class SolanaExtension extends AbstractExtension {
                 return null;
             }
 
-            String walletType = tokenizer.nextToken();
-            if ("soldemo".equalsIgnoreCase(walletType)) {
-                String fiatCurrency = tokenizer.nextToken();
-                String walletAddress = tokenizer.nextToken();
-
-                return new DummyExchangeAndWalletAndSource(fiatCurrency, CryptoCurrency.SOL.getCode(), walletAddress);
-            }
+            String walletType = tokenizer.nextToken().toLowerCase();
+            return switch (walletType) {
+                case "soldemo" -> createDemoWallet(tokenizer, CryptoCurrency.SOL);
+                case "usdcsoldemo" -> createDemoWallet(tokenizer, CryptoCurrency.USDCSOL);
+                default -> null;
+            };
         } catch (Exception e) {
             ExtensionsUtil.logExtensionParamsException("createWallet", getClass().getSimpleName(), walletLogin, e);
         }
 
         return null;
+    }
+
+    private DummyExchangeAndWalletAndSource createDemoWallet(StringTokenizer tokenizer, CryptoCurrency cryptoCurrency) {
+        String fiatCurrency = tokenizer.nextToken();
+        String walletAddress = tokenizer.nextToken();
+
+        return new DummyExchangeAndWalletAndSource(fiatCurrency, cryptoCurrency.getCode(), walletAddress);
     }
 
     @Override
@@ -75,7 +86,7 @@ public class SolanaExtension extends AbstractExtension {
             }
 
             String rateSourceType = tokenizer.nextToken();
-            if ("solfix".equalsIgnoreCase(rateSourceType)) {
+            if ("solfix".equalsIgnoreCase(rateSourceType) || "usdcsolfix".equalsIgnoreCase(rateSourceType)) {
                 BigDecimal rate = getRate(tokenizer);
                 String preferredFiatCurrency = getPreferredFiatCurrency(tokenizer);
 
@@ -90,7 +101,7 @@ public class SolanaExtension extends AbstractExtension {
 
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
-        return Set.of(CryptoCurrency.SOL.getCode());
+        return SUPPORTED_CRYPTOCURRENCIES;
     }
 
     private BigDecimal getRate(StringTokenizer tokenizer) {
