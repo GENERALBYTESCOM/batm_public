@@ -12,7 +12,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.MockedStatic;
 import org.slf4j.Logger;
@@ -23,11 +24,12 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -174,75 +176,81 @@ class BitgoWalletTest {
         }
     }
 
+    private static Stream<Arguments> testSendCoinsAndSendMany_arguments() {
+        return Stream.of(
+            arguments("BCH", "bch", "100000000", null),
+            arguments("BTC", "btc", "100000000", null),
+            arguments("ETH", "eth", "1000000000000000000", null),
+            arguments("LTC", "ltc", "100000000", null),
+            arguments("USDT", "usdt", "1000000", "transfer"),
+            arguments("USDTTRON", "trx:usdt", "1000000", null),
+            arguments("XRP", "xrp", "1000000", null),
+            arguments("TBTC", "tbtc", "100000000", null),
+            arguments("USDC", "usdc", "1000000", "transfer"),
+            arguments("SOL", "sol", "1000000000", "transfer")
+        );
+    }
+
     @ParameterizedTest
-    @ValueSource(strings = {"USDC", "USDT"})
-    void testSendCoins_requestWithType(String cryptocurrency) throws IOException {
+    @MethodSource("testSendCoinsAndSendMany_arguments")
+    void testSendCoins(String cryptocurrency,
+                       String expectedBitGoCryptocurrency,
+                       String expectedAmount,
+                       String expectedType) throws IOException {
         IBitgoAPI api = mock(IBitgoAPI.class);
 
         try (MockedStatic<RestProxyFactory> mockedRestProxyFactory = mockStatic(RestProxyFactory.class)) {
             mockedRestProxyFactory.when(() -> RestProxyFactory.createProxy(eq(IBitgoAPI.class), anyString(), any())).thenReturn(api);
 
-            BitgoWallet bitgoWallet = new BitgoWallet("http", "host", 1234, "token", "walletId", "walletPassphrase", 2);
+            BitgoWallet bitgoWallet = new BitgoWallet(
+                "http", "host", 1234, "token", "walletId", "walletPassphrase", 2, 3, 4
+            );
             bitgoWallet.sendCoins("destinationAddress", BigDecimal.ONE, cryptocurrency, "description");
 
             ArgumentCaptor<BitGoCoinRequest> requestCaptor = ArgumentCaptor.forClass(BitGoCoinRequest.class);
-            verify(api).sendCoins(eq(cryptocurrency.toLowerCase()), eq("walletId"), requestCaptor.capture());
+            verify(api).sendCoins(eq(expectedBitGoCryptocurrency), eq("walletId"), requestCaptor.capture());
+
             BitGoCoinRequest request = requestCaptor.getValue();
-            assertEquals("transfer", request.getType());
+            assertEquals("destinationAddress", request.address());
+            assertEquals(expectedAmount, request.amount());
+            assertEquals("walletPassphrase", request.walletPassphrase());
+            assertEquals(2, request.numBlocks());
+            assertEquals("description", request.comment());
+            assertEquals(3, request.feeRate());
+            assertEquals(4, request.maxFeeRate());
+            assertEquals(expectedType, request.type());
         }
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"BCH", "BTC", "ETH", "LTC", "XRP"})
-    void testSendCoins_requestWithoutType(String cryptocurrency) throws IOException {
+    @MethodSource("testSendCoinsAndSendMany_arguments")
+    void testSendMany(String cryptocurrency,
+                      String expectedBitGoCryptocurrency,
+                      String expectedAmount,
+                      String expectedType) throws IOException {
         IBitgoAPI api = mock(IBitgoAPI.class);
 
         try (MockedStatic<RestProxyFactory> mockedRestProxyFactory = mockStatic(RestProxyFactory.class)) {
             mockedRestProxyFactory.when(() -> RestProxyFactory.createProxy(eq(IBitgoAPI.class), anyString(), any())).thenReturn(api);
 
             BitgoWallet bitgoWallet = new BitgoWallet("http", "host", 1234, "token", "walletId", "walletPassphrase", 2);
-            bitgoWallet.sendCoins("destinationAddress", BigDecimal.ONE, cryptocurrency, "description");
+            List<ICanSendMany.Transfer> transfers = List.of(new ICanSendMany.Transfer("destinationAddress", BigDecimal.ONE));
 
-            ArgumentCaptor<BitGoCoinRequest> requestCaptor = ArgumentCaptor.forClass(BitGoCoinRequest.class);
-            verify(api).sendCoins(eq(cryptocurrency.toLowerCase()), eq("walletId"), requestCaptor.capture());
-            BitGoCoinRequest request = requestCaptor.getValue();
-            assertNull(request.getType());
-        }
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"USDC", "USDT"})
-    void testSendMany_requestWithType(String cryptocurrency) throws IOException {
-        IBitgoAPI api = mock(IBitgoAPI.class);
-
-        try (MockedStatic<RestProxyFactory> mockedRestProxyFactory = mockStatic(RestProxyFactory.class)) {
-            mockedRestProxyFactory.when(() -> RestProxyFactory.createProxy(eq(IBitgoAPI.class), anyString(), any())).thenReturn(api);
-
-            BitgoWallet bitgoWallet = new BitgoWallet("http", "host", 1234, "token", "walletId", "walletPassphrase", 2);
-            bitgoWallet.sendMany(List.of(), cryptocurrency, "description");
+            bitgoWallet.sendMany(transfers, cryptocurrency, "description");
 
             ArgumentCaptor<BitGoSendManyRequest> requestCaptor = ArgumentCaptor.forClass(BitGoSendManyRequest.class);
-            verify(api).sendMany(eq(cryptocurrency.toLowerCase()), eq("walletId"), requestCaptor.capture());
+            verify(api).sendMany(eq(expectedBitGoCryptocurrency), eq("walletId"), requestCaptor.capture());
+
             BitGoSendManyRequest request = requestCaptor.getValue();
-            assertEquals("transfer", request.getType());
-        }
-    }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"BCH", "BTC", "ETH", "LTC", "XRP"})
-    void testSendMany_requestWithoutType(String cryptocurrency) throws IOException {
-        IBitgoAPI api = mock(IBitgoAPI.class);
-
-        try (MockedStatic<RestProxyFactory> mockedRestProxyFactory = mockStatic(RestProxyFactory.class)) {
-            mockedRestProxyFactory.when(() -> RestProxyFactory.createProxy(eq(IBitgoAPI.class), anyString(), any())).thenReturn(api);
-
-            BitgoWallet bitgoWallet = new BitgoWallet("http", "host", 1234, "token", "walletId", "walletPassphrase", 2);
-            bitgoWallet.sendMany(List.of(), cryptocurrency, "description");
-
-            ArgumentCaptor<BitGoSendManyRequest> requestCaptor = ArgumentCaptor.forClass(BitGoSendManyRequest.class);
-            verify(api).sendMany(eq(cryptocurrency.toLowerCase()), eq("walletId"), requestCaptor.capture());
-            BitGoSendManyRequest request = requestCaptor.getValue();
-            assertNull(request.getType());
+            assertEquals(1, request.recipients().size());
+            BitGoSendManyRequest.BitGoRecipient recipient = request.recipients().get(0);
+            assertEquals("destinationAddress", recipient.address());
+            assertEquals(expectedAmount, recipient.amount());
+            assertEquals("walletPassphrase", request.walletPassphrase());
+            assertEquals(2, request.numBlocks());
+            assertEquals("description", request.comment());
+            assertEquals(expectedType, request.type());
         }
     }
 
