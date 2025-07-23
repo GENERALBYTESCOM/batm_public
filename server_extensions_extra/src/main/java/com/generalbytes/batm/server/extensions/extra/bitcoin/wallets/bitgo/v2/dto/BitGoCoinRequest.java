@@ -27,7 +27,8 @@ public record BitGoCoinRequest(String address,
                                String comment,
                                Integer feeRate,
                                Integer maxFeeRate,
-                               String type
+                               String type,
+                               String tokenName
 ) {
 
 }
