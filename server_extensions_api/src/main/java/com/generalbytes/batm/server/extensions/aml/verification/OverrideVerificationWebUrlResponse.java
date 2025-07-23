@@ -1,12 +1,20 @@
 package com.generalbytes.batm.server.extensions.aml.verification;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Response object for overriding verification URL.
  */
+@Getter
+@Setter
+@AllArgsConstructor
 public class OverrideVerificationWebUrlResponse {
 
     /**
      * The overridden verification URL (verification link).
+     * <b>It must not be null or blank.</b>
      */
     private String verificationWebUrl;
 
@@ -17,31 +25,8 @@ public class OverrideVerificationWebUrlResponse {
      */
     private boolean skipSendingSms = false;
 
-    public OverrideVerificationWebUrlResponse() {
-    }
-
     public OverrideVerificationWebUrlResponse(String verificationWebUrl) {
         this.verificationWebUrl = verificationWebUrl;
     }
 
-    public OverrideVerificationWebUrlResponse(String verificationWebUrl, boolean skipSendingSms) {
-        this.verificationWebUrl = verificationWebUrl;
-        this.skipSendingSms = skipSendingSms;
-    }
-
-    public String getVerificationWebUrl() {
-        return verificationWebUrl;
-    }
-
-    public void setVerificationWebUrl(String verificationWebUrl) {
-        this.verificationWebUrl = verificationWebUrl;
-    }
-
-    public boolean isSkipSendingSms() {
-        return skipSendingSms;
-    }
-
-    public void setSkipSendingSms(boolean skipSendingSms) {
-        this.skipSendingSms = skipSendingSms;
-    }
 }

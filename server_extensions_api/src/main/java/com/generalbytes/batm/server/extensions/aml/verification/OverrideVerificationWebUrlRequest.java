@@ -1,8 +1,15 @@
 package com.generalbytes.batm.server.extensions.aml.verification;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Request object for overriding verification web URL.
  */
+@Setter
+@Getter
+@AllArgsConstructor
 public class OverrideVerificationWebUrlRequest {
 
     /**
@@ -15,6 +22,7 @@ public class OverrideVerificationWebUrlRequest {
     /**
      * Represents the type of related transaction being performed.
      * The value is an integer where each number corresponds to a specific transaction type:
+     * <li>{@code null} if unknown (e.g., old invoked from old terminal)</li>
      * <li>{@link com.generalbytes.batm.server.extensions.ITransactionPreparation#TYPE_BUY_CRYPTO}</li>
      * <li>{@link com.generalbytes.batm.server.extensions.ITransactionPreparation#TYPE_SELL_CRYPTO}</li>
      * <li>{@link com.generalbytes.batm.server.extensions.ITransactionPreparation#TYPE_WITHDRAW_CASH}</li>
@@ -22,16 +30,17 @@ public class OverrideVerificationWebUrlRequest {
      * <li>{@link com.generalbytes.batm.server.extensions.ITransactionPreparation#TYPE_ORDER_CRYPTO}</li>
      * <li>{@link com.generalbytes.batm.server.extensions.ITransactionPreparation#TYPE_DEPOSIT_CASH}</li>
      */
-    private int transactionType;
+    private Integer transactionType;
 
     /**
      * Specifies the direction of the related transaction.
      * The value is an integer where each number corresponds to a specific direction:
+     * <li>{@code null} if unknown (e.g., old invoked from old terminal)</li>
      * <li>{@link com.generalbytes.batm.server.extensions.IExtensionContext#DIRECTION_NONE}</li>
      * <li>{@link com.generalbytes.batm.server.extensions.IExtensionContext#DIRECTION_BUY_CRYPTO}</li>
      * <li>{@link com.generalbytes.batm.server.extensions.IExtensionContext#DIRECTION_SELL_CRYPTO}</li>
      */
-    private int direction;
+    private Integer direction;
 
     /**
      * The identity public ID.
@@ -39,58 +48,8 @@ public class OverrideVerificationWebUrlRequest {
     private String identityPublicId;
 
     /**
-     * Terminal serial number. Not always available, might be null.
+     * Terminal serial number. Not always available, might be null in case it is not invoked by terminal (e.g., by an extension).
      */
     private String serialNumber;
 
-    public OverrideVerificationWebUrlRequest() {
-    }
-
-    public OverrideVerificationWebUrlRequest(String originalVerificationWebUrl, int transactionType, int direction, String identityPublicId, String serialNumber) {
-        this.originalVerificationWebUrl = originalVerificationWebUrl;
-        this.transactionType = transactionType;
-        this.direction = direction;
-        this.identityPublicId = identityPublicId;
-        this.serialNumber = serialNumber;
-    }
-
-    public String getOriginalVerificationWebUrl() {
-        return originalVerificationWebUrl;
-    }
-
-    public void setOriginalVerificationWebUrl(String originalVerificationWebUrl) {
-        this.originalVerificationWebUrl = originalVerificationWebUrl;
-    }
-
-    public int getTransactionType() {
-        return transactionType;
-    }
-
-    public void setTransactionType(int transactionType) {
-        this.transactionType = transactionType;
-    }
-
-    public int getDirection() {
-        return direction;
-    }
-
-    public void setDirection(int direction) {
-        this.direction = direction;
-    }
-
-    public String getIdentityPublicId() {
-        return identityPublicId;
-    }
-
-    public void setIdentityPublicId(String identityPublicId) {
-        this.identityPublicId = identityPublicId;
-    }
-
-    public String getSerialNumber() {
-        return serialNumber;
-    }
-
-    public void setSerialNumber(String serialNumber) {
-        this.serialNumber = serialNumber;
-    }
 }
