@@ -40,7 +40,6 @@ import java.math.RoundingMode;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -95,12 +94,12 @@ public class BitgoWallet implements IWallet, ICanSendMany {
         Map.entry(CryptoCurrency.SOL.getCode(), pow10Exp(Converters.SOL))
     );
 
-    private static final Set<String> CRYPTOCURRENCIES_SUPPORTED_TRANSFER_TYPE = new HashSet<>(Set.of(
+    private static final Set<String> CRYPTOCURRENCIES_TRANSFER_TYPE = Set.of(
         CryptoCurrency.USDC.getCode(),
         CryptoCurrency.USDT.getCode(),
         CryptoCurrency.SOL.getCode(),
         CryptoCurrency.USDCSOL.getCode()
-    ));
+    );
 
     private static int pow10Exp(BigDecimal val) {
         // return exp for val=10^exp
@@ -236,7 +235,7 @@ public class BitgoWallet implements IWallet, ICanSendMany {
     }
 
     private String getRequestType(String cryptoCurrency) {
-        if (CRYPTOCURRENCIES_SUPPORTED_TRANSFER_TYPE.contains(cryptoCurrency)) {
+        if (CRYPTOCURRENCIES_TRANSFER_TYPE.contains(cryptoCurrency)) {
             return "transfer";
         }
 
