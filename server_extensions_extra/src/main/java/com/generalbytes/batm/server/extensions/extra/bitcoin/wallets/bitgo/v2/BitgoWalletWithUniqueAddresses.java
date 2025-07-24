@@ -42,7 +42,8 @@ public class BitgoWalletWithUniqueAddresses extends BitgoWallet implements IGene
     private static final Map<String, String> newAddressCryptoCurrency = Map.ofEntries(
         Map.entry(CryptoCurrency.USDT.getCode(), "eth"),
         Map.entry(CryptoCurrency.USDTTRON.getCode(), "trx"),
-        Map.entry(CryptoCurrency.USDC.getCode(), "eth")
+        Map.entry(CryptoCurrency.USDC.getCode(), "eth"),
+        Map.entry(CryptoCurrency.USDCSOL.getCode(), "sol")
     );
 
     public BitgoWalletWithUniqueAddresses(String scheme,
