@@ -7,6 +7,7 @@ import com.generalbytes.batm.server.extensions.DummyExchangeAndWalletAndSource;
 import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
+import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.IWallet;
 import org.apache.commons.lang3.StringUtils;
@@ -25,6 +26,10 @@ public class SolanaExtension extends AbstractExtension {
     private static final Set<String> SUPPORTED_CRYPTOCURRENCIES = Set.of(
         CryptoCurrency.SOL.getCode(),
         CryptoCurrency.USDCSOL.getCode()
+    );
+
+    private static final Set<ICryptoCurrencyDefinition> CRYPTOCURRENCY_DEFINITIONS = Set.of(
+        new SolanaDefinition()
     );
 
     @Override
@@ -102,6 +107,11 @@ public class SolanaExtension extends AbstractExtension {
     @Override
     public Set<String> getSupportedCryptoCurrencies() {
         return SUPPORTED_CRYPTOCURRENCIES;
+    }
+
+    @Override
+    public Set<ICryptoCurrencyDefinition> getCryptoCurrencyDefinitions() {
+        return CRYPTOCURRENCY_DEFINITIONS;
     }
 
     private BigDecimal getRate(StringTokenizer tokenizer) {
