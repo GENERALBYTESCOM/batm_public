@@ -29,7 +29,8 @@ public class SolanaExtension extends AbstractExtension {
     );
 
     private static final Set<ICryptoCurrencyDefinition> CRYPTOCURRENCY_DEFINITIONS = Set.of(
-        new SolanaDefinition()
+        new SolanaDefinition(),
+        new UsdcSolanaDefinition()
     );
 
     @Override
