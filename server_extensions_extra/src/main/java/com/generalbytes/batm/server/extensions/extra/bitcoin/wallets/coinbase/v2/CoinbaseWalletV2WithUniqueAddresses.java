@@ -27,6 +27,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBNetwork;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBTransaction;
 import com.generalbytes.batm.server.extensions.payment.ReceivedAmount;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -115,7 +116,7 @@ public class CoinbaseWalletV2WithUniqueAddresses extends CoinbaseWalletV2 implem
         return getTransactions(addressId, cryptoCurrency).stream()
             .filter(t -> "send".equalsIgnoreCase(t.getType()))
             .filter(t -> isPending(t) || isCompleted(t))
-            .filter(t -> t.getAmount() != null && t.getAmount().getCurrency().equalsIgnoreCase(cryptoCurrency))
+            .filter(t -> t.getAmount() != null && StringUtils.equalsIgnoreCase(cryptoCurrency, t.getAmount().getCurrency()))
             .toList();
     }
 

@@ -190,6 +190,7 @@ class CoinbaseWalletV2WithUniqueAddressesTest {
             createTransaction("SeNd", "COMPLETED", createBalance(BigDecimal.ONE, "BTC"), null),
             // Wrong cryptocurrency
             createTransaction("sENd", "CoMPleTeD", createBalance(BigDecimal.ONE, "eTH"), null),
+            createTransaction("sENd", "CoMPleTeD", createBalance(BigDecimal.ONE, null), null),
             // Null amount
             createTransaction("send", "completed", null, null),
             // Invalid status
