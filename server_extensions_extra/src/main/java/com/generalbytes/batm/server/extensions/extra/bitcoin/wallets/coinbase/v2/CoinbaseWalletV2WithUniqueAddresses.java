@@ -104,7 +104,7 @@ public class CoinbaseWalletV2WithUniqueAddresses extends CoinbaseWalletV2 implem
         if (transactions.isEmpty()) {
             return 0;
         }
-        if (transactions.stream().allMatch(t -> "completed".equals(t.getStatus()))) {
+        if (transactions.stream().allMatch(this::isCompleted)) {
             log.trace("All transactions completed");
             return 999;
         }
@@ -113,10 +113,18 @@ public class CoinbaseWalletV2WithUniqueAddresses extends CoinbaseWalletV2 implem
 
     private List<CBTransaction> getReceivedTransactions(String addressId, String cryptoCurrency) {
         return getTransactions(addressId, cryptoCurrency).stream()
-            .filter(t -> "send".equals(t.getType()))
-            .filter(t -> "pending".equals(t.getStatus()) || "completed".equals(t.getStatus()))
-            .filter(t -> t.getAmount() != null && t.getAmount().getCurrency().equals(cryptoCurrency))
+            .filter(t -> "send".equalsIgnoreCase(t.getType()))
+            .filter(t -> isPending(t) || isCompleted(t))
+            .filter(t -> t.getAmount() != null && t.getAmount().getCurrency().equalsIgnoreCase(cryptoCurrency))
             .toList();
+    }
+
+    private boolean isPending(CBTransaction transaction) {
+        return "pending".equalsIgnoreCase(transaction.getStatus());
+    }
+
+    private boolean isCompleted(CBTransaction transaction) {
+        return "completed".equalsIgnoreCase(transaction.getStatus());
     }
 
     private String getAddressId(String address, String cryptoCurrency) {

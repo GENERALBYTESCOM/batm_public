@@ -14,10 +14,15 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class CoinbaseWalletV2Test {
@@ -103,6 +108,37 @@ class CoinbaseWalletV2Test {
         assertEquals("address3", result.get(2).getId());
         assertEquals("address4", result.get(3).getId());
         assertEquals("address5", result.get(4).getId());
+    }
+
+    private static Object[][] provideInvalidNextUriAndEndingBefore() {
+        return new Object[][]{
+                {null, null},
+                {"", null},
+                {"   ", null},
+                {null, ""},
+                {null, "   "},
+        };
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideInvalidNextUriAndEndingBefore")
+    void testPaginate_noNextItem(String nextUri, String endingBefore) {
+        Function<String, CBPaginatedResponse<CBAddress>> function = mock(Function.class);
+        CBPaginatedResponse<CBAddress> firstPaginatedResponse = createPaginatedResponse(createPagination(nextUri, endingBefore), List.of(
+                createAddress("address1"),
+                createAddress("address2"),
+                createAddress("address3")
+        ));
+        when(function.apply(null)).thenReturn(firstPaginatedResponse);
+
+        List<CBAddress> result = wallet.paginate(function);
+
+        assertEquals(3, result.size());
+        assertEquals("address1", result.get(0).getId());
+        assertEquals("address2", result.get(1).getId());
+        assertEquals("address3", result.get(2).getId());
+        verify(function).apply(null);
+        verifyNoMoreInteractions(function);
     }
 
     private CBPaginatedResponse<CBAddress> createPaginatedResponse(CBPagination pagination, List<CBAddress> addresses) {
