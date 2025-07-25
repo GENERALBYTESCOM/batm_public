@@ -30,6 +30,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBSendRequest;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBSendResponse;
 import com.google.common.collect.ImmutableMap;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -252,12 +253,16 @@ public class CoinbaseWalletV2 implements IWallet {
                 items.addAll(response.getData());
 
                 CBPagination pagination = response.getPagination();
-                if (pagination != null && (pagination.getNext_uri() != null || pagination.getEnding_before() != null)) {
+                if (pagination != null && hasNext(pagination)) {
                     startingAfter = items.getLast().getId();
                 }
             }
         } while (startingAfter != null);
         return items;
+    }
+
+    private boolean hasNext(CBPagination pagination) {
+        return StringUtils.isNotBlank(pagination.getNext_uri()) || StringUtils.isNotBlank(pagination.getEnding_before());
     }
 
     public CoinbaseV2ApiWrapper getApi() {

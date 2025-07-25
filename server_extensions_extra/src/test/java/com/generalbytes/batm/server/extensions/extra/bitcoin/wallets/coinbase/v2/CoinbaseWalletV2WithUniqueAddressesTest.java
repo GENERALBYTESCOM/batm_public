@@ -185,17 +185,18 @@ class CoinbaseWalletV2WithUniqueAddressesTest {
         CBPaginatedResponse<CBTransaction> transactionsResponse = new CBPaginatedResponse<>();
         transactionsResponse.setData(List.of(
             createTransaction("send", "completed", createBalance(BigDecimal.TEN, "BTC"), "hash1"),
-            createTransaction("send", "pending", createBalance(BigDecimal.ONE, "BTC"), "hash2"),
-            createTransaction("send", "completed", createBalance(BigDecimal.ONE, "BTC"), " "),
-            createTransaction("send", "completed", createBalance(BigDecimal.ONE, "BTC"), null),
+            createTransaction("SEND", "peNDing", createBalance(BigDecimal.ONE, "BTC"), "hash2"),
+            createTransaction("SEND", "comPLEted", createBalance(BigDecimal.ONE, "BtC"), " "),
+            createTransaction("SeNd", "COMPLETED", createBalance(BigDecimal.ONE, "BTC"), null),
             // Wrong cryptocurrency
-            createTransaction("send", "completed", createBalance(BigDecimal.ONE, "ETH"), null),
+            createTransaction("sENd", "CoMPleTeD", createBalance(BigDecimal.ONE, "eTH"), null),
+            createTransaction("sENd", "CoMPleTeD", createBalance(BigDecimal.ONE, null), null),
             // Null amount
             createTransaction("send", "completed", null, null),
             // Invalid status
             createTransaction("send", "failed", createBalance(BigDecimal.ONE, "BTC"), null),
             // Wrong type
-            createTransaction("buy", "completed", createBalance(BigDecimal.TEN, "BTC"), "hash3")
+            createTransaction("buy", "completed", createBalance(BigDecimal.TEN, "btc"), "hash3")
         ));
 
         when(apiWrapper.getAddresses(any(), anyLong(), any(), anyInt(), any())).thenReturn(addressesResponse);
@@ -221,7 +222,7 @@ class CoinbaseWalletV2WithUniqueAddressesTest {
         accountsResponse.setData(List.of(createAccount()));
         CBPaginatedResponse<CBTransaction> transactionsResponse = new CBPaginatedResponse<>();
         transactionsResponse.setData(List.of(
-            createTransaction("send", "completed", createBalance(BigDecimal.TEN, "BTC"), "hash1"),
+            createTransaction("send", "COMPLETED", createBalance(BigDecimal.TEN, "BTC"), "hash1"),
             createTransaction("send", "completed", createBalance(BigDecimal.ONE, "BTC"), null)
         ));
 
