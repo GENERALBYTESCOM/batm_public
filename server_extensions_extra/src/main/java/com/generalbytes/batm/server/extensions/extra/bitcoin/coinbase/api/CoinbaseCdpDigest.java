@@ -47,7 +47,7 @@ import java.util.Map;
  * This implementation takes a Private Key and a Key Name from Coinbase
  * and generates and signs a JWT which is then used to authorize requests.
  *
- * @see <a href="https://docs.cdp.coinbase.com/get-started/docs/jwt-authentication">Coinbase Documentation</a>
+ * @see <a href="https://docs.cdp.coinbase.com/coinbase-app/authentication-authorization/api-key-authentication">Coinbase Documentation</a>
  */
 public class CoinbaseCdpDigest implements ParamsDigest {
 

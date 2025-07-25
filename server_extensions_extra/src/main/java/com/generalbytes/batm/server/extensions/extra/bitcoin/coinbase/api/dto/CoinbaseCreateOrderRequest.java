@@ -23,7 +23,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Request to create an order.
  *
- * @see <a href="https://docs.cdp.coinbase.com/advanced-trade/reference/retailbrokerageapi_postorder">Coinbase Documentation</a>
+ * @see <a href="https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/create-order">Coinbase Documentation</a>
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CoinbaseCreateOrderRequest {

@@ -65,7 +65,7 @@ public interface ICoinbaseV3Api {
      * @param fiatCurrency Base currency (default: USD)
      * @return The exchange rates.
      * @throws CoinbaseApiException If the API call fails.
-     * @see <a href="https://docs.cdp.coinbase.com/coinbase-app/docs/api-exchange-rates">Coinbase Documentation</a>
+     * @see <a href="https://docs.cdp.coinbase.com/coinbase-app/track-apis/exchange-rates">Coinbase Documentation</a>
      */
     @GET
     @Path("/v2/exchange-rates")
@@ -80,7 +80,7 @@ public interface ICoinbaseV3Api {
      * @param priceType    Type of the price.
      * @return The price of the given cryptocurrency in the given fiat currency.
      * @throws CoinbaseApiException If the API call fails.
-     * @see <a href="https://docs.cdp.coinbase.com/coinbase-app/docs/api-prices">Coinbase Documentation</a>
+     * @see <a href="https://docs.cdp.coinbase.com/coinbase-app/track-apis/prices">Coinbase Documentation</a>
      */
     @GET
     @Path("/v2/prices/{currencyPair}/{priceType}")
@@ -95,7 +95,7 @@ public interface ICoinbaseV3Api {
      * @param accountId ID of the account.
      * @return The account.
      * @throws CoinbaseApiException If the API call fails.
-     * @see <a href="https://docs.cdp.coinbase.com/coinbase-app/docs/api-accounts#show-account">Coinbase Documentation</a>
+     * @see <a href="https://docs.cdp.coinbase.com/coinbase-app/track-apis/accounts#show-account">Coinbase Documentation</a>
      */
     @GET
     @Path("/api/v2/accounts/{accountId}")
@@ -109,7 +109,7 @@ public interface ICoinbaseV3Api {
      * @param startingAfter ID of the account to start from (not included in response). Can be null.
      * @return The list of accounts.
      * @throws CoinbaseApiException If the API call fails.
-     * @see <a href="https://docs.cdp.coinbase.com/coinbase-app/docs/api-accounts#list-accounts">Coinbase Documentation</a>
+     * @see <a href="https://docs.cdp.coinbase.com/coinbase-app/track-apis/accounts#list-accounts">Coinbase Documentation</a>
      */
     @GET
     @Path("/v2/accounts")
@@ -124,7 +124,7 @@ public interface ICoinbaseV3Api {
      * @param request   The request.
      * @return Information about the created address.
      * @throws CoinbaseApiException If the API call fails.
-     * @see <a href="https://docs.cdp.coinbase.com/coinbase-app/docs/api-addresses#create-address">Coinbase Documentation</a>
+     * @see <a href="https://docs.cdp.coinbase.com/coinbase-app/transfer-apis/onchain-addresses#create-address">Coinbase Documentation</a>
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -142,7 +142,7 @@ public interface ICoinbaseV3Api {
      * @param order         Order of the addresses by age. ("desc" or "asc")
      * @return The addresses.
      * @throws CoinbaseApiException If the API call fails.
-     * @see <a href="https://docs.cdp.coinbase.com/coinbase-app/docs/api-addresses#list-addresses">Coinbase Documentation</a>
+     * @see <a href="https://docs.cdp.coinbase.com/coinbase-app/transfer-apis/onchain-addresses#list-addresses">Coinbase Documentation</a>
      */
     @GET
     @Path("/v2/accounts/{accountId}/addresses")
@@ -158,7 +158,7 @@ public interface ICoinbaseV3Api {
      * @param accountId ID of the account.
      * @return The addresses.
      * @throws CoinbaseApiException If the API call fails.
-     * @see <a href="https://docs.cdp.coinbase.com/coinbase-app/docs/api-addresses#list-addresses">Coinbase Documentation</a>
+     * @see <a href="https://docs.cdp.coinbase.com/coinbase-app/transfer-apis/onchain-addresses#list-addresses">Coinbase Documentation</a>
      */
     @GET
     @Path("/v2/accounts/{accountId}/addresses")
@@ -176,7 +176,7 @@ public interface ICoinbaseV3Api {
      * @param startingAfter ID of the transaction to start from (not included in response).
      * @return The transactions.
      * @throws CoinbaseApiException If the API call fails.
-     * @see <a href="https://docs.cdp.coinbase.com/coinbase-app/docs/api-addresses#list-transactions">Coinbase Documentation</a>
+     * @see <a href="https://docs.cdp.coinbase.com/coinbase-app/transfer-apis/onchain-addresses#list-transactions">Coinbase Documentation</a>
      */
     @GET
     @Path("/v2/accounts/{accountId}/addresses/{addressId}/transactions")
@@ -194,7 +194,7 @@ public interface ICoinbaseV3Api {
      * @param request   The request.
      * @return Information about the created transaction.
      * @throws CoinbaseApiException If the API call fails.
-     * @see <a href="https://docs.cdp.coinbase.com/coinbase-app/docs/api-transactions#send-money">Coinbase Documentation</a>
+     * @see <a href="https://docs.cdp.coinbase.com/coinbase-app/transfer-apis/send-crypto">Coinbase Documentation</a>
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -210,7 +210,7 @@ public interface ICoinbaseV3Api {
      * @param transactionId ID of the transaction.
      * @return The transaction.
      * @throws CoinbaseApiException If the API call fails.
-     * @see <a href="https://docs.cdp.coinbase.com/coinbase-app/docs/api-transactions#show-transaction">Coinbase Documentation</a>
+     * @see <a href="https://docs.cdp.coinbase.com/coinbase-app/track-apis/transactions#show-transaction">Coinbase Documentation</a>
      */
     @GET
     @Path("/v2/accounts/{accountId}/transactions/{transactionId}")
@@ -223,7 +223,7 @@ public interface ICoinbaseV3Api {
      *
      * @return The payment methods.
      * @throws CoinbaseApiException If the API call fails.
-     * @see <a href="https://docs.cdp.coinbase.com/advanced-trade/reference/retailbrokerageapi_getpaymentmethods">Coinbase Documentation</a>
+     * @see <a href="https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/payment-methods/list-payment-methods">Coinbase Documentation</a>
      */
     @GET
     @Path("/api/v3/brokerage/payment_methods")
@@ -235,7 +235,7 @@ public interface ICoinbaseV3Api {
      * @param request The request.
      * @return Information about the new order.
      * @throws CoinbaseApiException If the API call fails.
-     * @see <a href="https://docs.cdp.coinbase.com/advanced-trade/reference/retailbrokerageapi_postorder">Coinbase Documentation</a>
+     * @see <a href="https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/create-order">Coinbase Documentation</a>
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -249,7 +249,7 @@ public interface ICoinbaseV3Api {
      * @param orderId ID of the order to get.
      * @return The order.
      * @throws CoinbaseApiException If the API call fails.
-     * @see <a href="https://docs.cdp.coinbase.com/advanced-trade/reference/retailbrokerageapi_gethistoricalorder">Coinbase Documentation</a>
+     * @see <a href="https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/get-order">Coinbase Documentation</a>
      */
     @GET
     @Path("/api/v3/brokerage/orders/historical/{orderId}")
@@ -263,7 +263,7 @@ public interface ICoinbaseV3Api {
      *
      * @return The Coinbase API server time.
      * @throws CoinbaseApiException If the API call fails.
-     * @see <a href="https://docs.cdp.coinbase.com/coinbase-app/docs/api-time#get-current-time">Coinbase Documentation</a>
+     * @see <a href="https://docs.cdp.coinbase.com/coinbase-app/track-apis/time">Coinbase Documentation</a>
      */
     @GET
     @Path("/v2/time")

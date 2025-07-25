@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 /**
  * Request to send coins.
  *
- * @see <a href="https://docs.cdp.coinbase.com/coinbase-app/docs/api-transactions#send-money">Coinbase Documentation</a>
+ * @see <a href="https://docs.cdp.coinbase.com/coinbase-app/transfer-apis/send-crypto">Coinbase Documentation</a>
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CoinbaseSendCoinsRequest {
