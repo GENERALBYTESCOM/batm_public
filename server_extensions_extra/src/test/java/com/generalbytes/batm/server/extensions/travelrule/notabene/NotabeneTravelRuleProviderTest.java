@@ -725,6 +725,16 @@ class NotabeneTravelRuleProviderTest {
         public String getVaspDid() {
             return vaspDid;
         }
+
+        @Override
+        public String publicKey() {
+            return null;
+        }
+
+        @Override
+        public String privateKey() {
+            return null;
+        }
     }
 
     private static class TestTravelRuleTransferResolvedEvent implements ITravelRuleTransferResolvedEvent {

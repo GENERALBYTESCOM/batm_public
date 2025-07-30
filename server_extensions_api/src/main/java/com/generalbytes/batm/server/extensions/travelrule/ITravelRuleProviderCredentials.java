@@ -20,4 +20,14 @@ public interface ITravelRuleProviderCredentials {
      * Value depends on the context and may differ when different travel rule settings are used.
      */
     String getVaspDid();
+
+    /**
+     * Configured public key that can be used, for example, by a counterparty when encrypting/decrypting payload.
+     */
+    String publicKey();
+
+    /**
+     * Configured private key that may be needed, for example, when encrypting/decrypting payload.
+     */
+    String privateKey();
 }
