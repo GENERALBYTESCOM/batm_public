@@ -1650,6 +1650,11 @@
             <param name="walletAddress" />
             <cryptocurrency>XRP</cryptocurrency>
         </wallet>
+        <exchange prefix="xrpdemo" name="Ripple Demo Exchange">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
+            <cryptocurrency>XRP</cryptocurrency>
+        </exchange>
         <ratesource prefix="xrpfix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>XRP</cryptocurrency>
