@@ -293,12 +293,12 @@ class NotabeneAuthServiceTest {
             }
 
             @Override
-            public String publicKey() {
+            public String getPublicKey() {
                 return null;
             }
 
             @Override
-            public String privateKey() {
+            public String getPrivateKey() {
                 return null;
             }
         };

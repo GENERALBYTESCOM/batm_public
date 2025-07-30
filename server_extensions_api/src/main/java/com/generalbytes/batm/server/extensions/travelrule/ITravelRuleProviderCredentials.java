@@ -24,10 +24,10 @@ public interface ITravelRuleProviderCredentials {
     /**
      * Configured public key that can be used, for example, by a counterparty when encrypting/decrypting payload.
      */
-    String publicKey();
+    String getPublicKey();
 
     /**
      * Configured private key that may be needed, for example, when encrypting/decrypting payload.
      */
-    String privateKey();
+    String getPrivateKey();
 }
