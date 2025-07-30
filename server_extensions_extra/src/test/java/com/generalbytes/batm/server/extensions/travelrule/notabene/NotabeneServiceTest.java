@@ -477,6 +477,16 @@ class NotabeneServiceTest {
             public String getVaspDid() {
                 return "vaspDid";
             }
+
+            @Override
+            public String getPublicKey() {
+                return null;
+            }
+
+            @Override
+            public String getPrivateKey() {
+                return null;
+            }
         };
     }
 
