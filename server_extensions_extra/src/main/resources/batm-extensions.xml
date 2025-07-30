@@ -2265,6 +2265,16 @@
         </wallet>
         <cryptologo cryptocurrency="USDC" file="usdc.png"/>
         <cryptologo cryptocurrency="USDC" file="usdc.svg"/>
+        <wallet prefix="usdcdemo" name="USDC Demo Wallet">
+            <param name="fiatCurrency"/>
+            <param name="walletAddress"/>
+            <cryptocurrency>USDC</cryptocurrency>
+        </wallet>
+        <exchange prefix="usdcdemo" name="USDC Demo Exchange">
+            <param name="fiatCurrency"/>
+            <param name="walletAddress"/>
+            <cryptocurrency>USDC</cryptocurrency>
+        </exchange>
         <!-- ADD your ERC20 tokens here. And don't forget to add cryptologos. -->
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.nuls.NulsExtension" >
