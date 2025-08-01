@@ -19,26 +19,26 @@ package com.generalbytes.batm.server.extensions.extra.tron;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.AbstractExtension;
-import com.generalbytes.batm.server.extensions.DummyExchangeAndWalletAndSource;
 import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
+import com.generalbytes.batm.server.extensions.IExchange;
 import com.generalbytes.batm.server.extensions.IWallet;
+import com.generalbytes.batm.server.extensions.util.DummyWalletAndExchangeAndSourceFactory;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
 public class TronExtension extends AbstractExtension {
 
-    private static final Collection<String> supportedCryptoCurrencies = Collections.unmodifiableSet(new HashSet<String>() {{
-        add(CryptoCurrency.TRX.getCode());
-        add(CryptoCurrency.USDTTRON.getCode());
-    }});
-
+    private static final Collection<String> supportedCryptoCurrencies = Set.of(
+        CryptoCurrency.TRX.getCode(),
+        CryptoCurrency.USDTTRON.getCode()
+    );
     private static final Set<ICryptoCurrencyDefinition> cryptoCurrencyDefinitions = Collections.singleton(new UsdttronDefinition());
+    private static final DummyWalletAndExchangeAndSourceFactory dummyFactory = new DummyWalletAndExchangeAndSourceFactory();
 
     @Override
     public String getName() {
@@ -64,14 +64,7 @@ public class TronExtension extends AbstractExtension {
                     int feeLimitTrx = st.hasMoreTokens() ? Integer.parseInt(st.nextToken()) : 30;
                     return new TRC20Wallet(tronProApiKey, hexPrivateKey, tokenSymbol, tokenDecimalPlaces, contractAddress, feeLimitTrx);
                 } else if ("usdttrondemo".equalsIgnoreCase(walletType)) {
-                    String fiatCurrency = st.nextToken();
-                    String walletAddress = "";
-                    if (st.hasMoreTokens()) {
-                        walletAddress = st.nextToken();
-                    }
-                    if (fiatCurrency != null && walletAddress != null) {
-                        return new DummyExchangeAndWalletAndSource(fiatCurrency, CryptoCurrency.USDTTRON.getCode(), walletAddress);
-                    }
+                    return dummyFactory.createDummyWithFiatCurrencyAndAddress(st, CryptoCurrency.USDTTRON);
                 }
             } catch (Exception e) {
                 ExtensionsUtil.logExtensionParamsException("createWallet", getClass().getSimpleName(), walletLogin, e);
@@ -80,6 +73,24 @@ public class TronExtension extends AbstractExtension {
         return null;
     }
 
+    @Override
+    public IExchange createExchange(String exchangeLogin) {
+        if (exchangeLogin == null || exchangeLogin.isBlank()) {
+            return null;
+        }
+
+        try {
+            StringTokenizer st = new StringTokenizer(exchangeLogin, ":");
+            String exchangeType = st.nextToken();
+
+            if ("usdttrondemo".equalsIgnoreCase(exchangeType)) {
+                return dummyFactory.createDummyWithFiatCurrencyAndAddress(st, CryptoCurrency.USDTTRON);
+            }
+        } catch (Exception e) {
+            ExtensionsUtil.logExtensionParamsException("createExtension", getClass().getSimpleName(), exchangeLogin, e);
+        }
+        return null;
+    }
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
