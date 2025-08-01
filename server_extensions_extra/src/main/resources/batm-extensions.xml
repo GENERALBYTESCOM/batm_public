@@ -2280,6 +2280,16 @@
             <param name="walletAddress"/>
             <cryptocurrency>USDC</cryptocurrency>
         </exchange>
+        <wallet prefix="usdtdemo" name="USDT Demo Wallet">
+            <param name="fiatCurrency"/>
+            <param name="walletAddress"/>
+            <cryptocurrency>USDT</cryptocurrency>
+        </wallet>
+        <exchange prefix="usdtdemo" name="USDT Demo Exchange">
+            <param name="fiatCurrency"/>
+            <param name="walletAddress"/>
+            <cryptocurrency>USDT</cryptocurrency>
+        </exchange>
         <!-- ADD your ERC20 tokens here. And don't forget to add cryptologos. -->
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.nuls.NulsExtension" >
