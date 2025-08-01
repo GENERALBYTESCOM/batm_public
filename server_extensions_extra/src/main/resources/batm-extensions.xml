@@ -1002,6 +1002,11 @@
         </ratesource>
         <cryptologo cryptocurrency="DOGE" file="doge.png"/>
         <cryptologo cryptocurrency="DOGE" file="doge.svg"/>
+        <exchange prefix="dogedemo" name="Dogecoin Demo Exchange">
+            <param name="fiatCurrency" />
+            <param name="exchangeAddress" />
+            <cryptocurrency>DOGE</cryptocurrency>
+        </exchange>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.newyorkcoin.NewyorkcoinExtension" >
         <wallet prefix="newyorkcoind" name="Newyorkcoind">
