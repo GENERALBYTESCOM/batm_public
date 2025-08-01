@@ -5,7 +5,6 @@ import com.generalbytes.batm.server.extensions.DummyExchangeAndWalletAndSource;
 import com.generalbytes.batm.server.extensions.IExchange;
 import com.generalbytes.batm.server.extensions.IWallet;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -41,6 +40,13 @@ class EthereumExtensionTest {
                 "usdcdemo::address",
                 "usdcdemo:CZK:",
                 "usdcdemo:CZK",
+                // Invalid USDT demo parameters
+                "usdtdemo",
+                "usdtdemo:",
+                "usdtdemo::",
+                "usdtdemo::address",
+                "usdtdemo:CZK:",
+                "usdtdemo:CZK",
                 // Unknown wallet
                 "unknown:CZK:address",
         };
@@ -52,14 +58,22 @@ class EthereumExtensionTest {
         assertNull(extension.createWallet(invalidLogin, null));
     }
 
-    @Test
-    void testCreateWallet_demo() {
-        IWallet wallet = extension.createWallet("usdcdemo:CZK:address", null);
+    private static Object[][] provideDemoLogin() {
+        return new Object[][]{
+                {"usdcdemo:CZK:address", CryptoCurrency.USDC},
+                {"usdtdemo:CZK:address", CryptoCurrency.USDT},
+        };
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideDemoLogin")
+    void testCreateWallet_demo(String login, CryptoCurrency expectedCryptocurrency) {
+        IWallet wallet = extension.createWallet(login, null);
 
         assertInstanceOf(DummyExchangeAndWalletAndSource.class, wallet);
         DummyExchangeAndWalletAndSource dummyWallet = (DummyExchangeAndWalletAndSource) wallet;
-        assertEquals("address", dummyWallet.getCryptoAddress(CryptoCurrency.USDC.getCode()));
-        assertEquals(Set.of(CryptoCurrency.USDC.getCode()), dummyWallet.getCryptoCurrencies());
+        assertEquals("address", dummyWallet.getCryptoAddress(expectedCryptocurrency.getCode()));
+        assertEquals(Set.of(expectedCryptocurrency.getCode()), dummyWallet.getCryptoCurrencies());
         assertEquals(Set.of("CZK"), dummyWallet.getFiatCurrencies());
     }
 
@@ -69,14 +83,15 @@ class EthereumExtensionTest {
         assertNull(extension.createExchange(invalidLogin));
     }
 
-    @Test
-    void testCreateExchange_demo() {
-        IExchange exchange = extension.createExchange("usdcdemo:CZK:address");
+    @ParameterizedTest
+    @MethodSource("provideDemoLogin")
+    void testCreateExchange_demo(String login, CryptoCurrency expectedCryptocurrency) {
+        IExchange exchange = extension.createExchange(login);
 
         assertInstanceOf(DummyExchangeAndWalletAndSource.class, exchange);
         DummyExchangeAndWalletAndSource dummyExchange = (DummyExchangeAndWalletAndSource) exchange;
-        assertEquals("address", dummyExchange.getCryptoAddress(CryptoCurrency.USDC.getCode()));
-        assertEquals(Set.of(CryptoCurrency.USDC.getCode()), dummyExchange.getCryptoCurrencies());
+        assertEquals("address", dummyExchange.getCryptoAddress(expectedCryptocurrency.getCode()));
+        assertEquals(Set.of(expectedCryptocurrency.getCode()), dummyExchange.getCryptoCurrencies());
         assertEquals(Set.of("CZK"), dummyExchange.getFiatCurrencies());
     }
 }

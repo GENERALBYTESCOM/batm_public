@@ -121,6 +121,8 @@ public class EthereumExtension extends AbstractExtension {
                     }
                 } else if (walletType.equalsIgnoreCase("usdcdemo")) {
                     return dummyFactory.createDummyWithFiatCurrencyAndAddress(st, CryptoCurrency.USDC);
+                } else if (walletType.equalsIgnoreCase("usdtdemo")) {
+                    return dummyFactory.createDummyWithFiatCurrencyAndAddress(st, CryptoCurrency.USDT);
                 }
             } catch (Exception e) {
                 ExtensionsUtil.logExtensionParamsException("createWallet", getClass().getSimpleName(), walletLogin, e);
@@ -141,6 +143,8 @@ public class EthereumExtension extends AbstractExtension {
 
             if ("usdcdemo".equalsIgnoreCase(exchangeType)) {
                 return dummyFactory.createDummyWithFiatCurrencyAndAddress(st, CryptoCurrency.USDC);
+            } else if ("usdtdemo".equalsIgnoreCase(exchangeType)) {
+                return dummyFactory.createDummyWithFiatCurrencyAndAddress(st, CryptoCurrency.USDT);
             }
         } catch (Exception e) {
             ExtensionsUtil.logExtensionParamsException("createExtension", getClass().getSimpleName(), exchangeLogin, e);
