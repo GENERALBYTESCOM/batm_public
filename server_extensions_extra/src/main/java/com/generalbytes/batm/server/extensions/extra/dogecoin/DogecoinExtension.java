@@ -20,15 +20,16 @@ package com.generalbytes.batm.server.extensions.extra.dogecoin;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.AbstractExtension;
-import com.generalbytes.batm.server.extensions.DummyExchangeAndWalletAndSource;
 import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
+import com.generalbytes.batm.server.extensions.IExchange;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.BlockIOWallet;
 import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.blockio.BlockIOWalletWithUniqueAddresses;
 import com.generalbytes.batm.server.extensions.extra.dogecoin.wallets.dogecoind.DogecoindRPCWallet;
+import com.generalbytes.batm.server.extensions.util.DummyWalletAndExchangeAndSourceFactory;
 
 import java.math.BigDecimal;
 import java.net.InetSocketAddress;
@@ -37,6 +38,8 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 public class DogecoinExtension extends AbstractExtension {
+
+    private static final DummyWalletAndExchangeAndSourceFactory dummyFactory = new DummyWalletAndExchangeAndSourceFactory();
 
     @Override
     public String getName() {
@@ -97,22 +100,31 @@ public class DogecoinExtension extends AbstractExtension {
                         String rpcURL = protocol +"://" + username +":" + password + "@" + hostname +":" + port;
                         return new DogecoindRPCWallet(rpcURL,accountName);
                     }
-                }
-                if ("dogedemo".equalsIgnoreCase(walletType)) {
-
-                    String fiatCurrency = st.nextToken();
-                    String walletAddress = "";
-                    if (st.hasMoreTokens()) {
-                        walletAddress = st.nextToken();
-                    }
-
-                    if (fiatCurrency != null && walletAddress != null) {
-                        return new DummyExchangeAndWalletAndSource(fiatCurrency, CryptoCurrency.DOGE.getCode(), walletAddress);
-                    }
+                } else if ("dogedemo".equalsIgnoreCase(walletType)) {
+                    return dummyFactory.createDummyWithFiatCurrencyAndAddress(st, CryptoCurrency.DOGE);
                 }
             }
         } catch (Exception e) {
             ExtensionsUtil.logExtensionParamsException("createWallet", getClass().getSimpleName(), walletLogin, e);
+        }
+        return null;
+    }
+
+    @Override
+    public IExchange createExchange(String exchangeLogin) {
+        if (exchangeLogin == null || exchangeLogin.isBlank()) {
+            return null;
+        }
+
+        try {
+            StringTokenizer st = new StringTokenizer(exchangeLogin, ":");
+            String exchangeType = st.nextToken();
+
+            if ("dogedemo".equalsIgnoreCase(exchangeType)) {
+                return dummyFactory.createDummyWithFiatCurrencyAndAddress(st, CryptoCurrency.DOGE);
+            }
+        } catch (Exception e) {
+            ExtensionsUtil.logExtensionParamsException("createExtension", getClass().getSimpleName(), exchangeLogin, e);
         }
         return null;
     }
