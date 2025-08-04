@@ -7,4 +7,16 @@ public interface IIdentityVerificationProvider {
      * @param identityPublicId Some providers use this in the webhook, or it is just displayed on the provider's dashboard
      */
     CreateApplicantResponse createApplicant(String customerLanguage, String identityPublicId);
+
+    /**
+     * Overrides the verification web URL for a specific verification process.
+     * The purpose of this method is to enable modification of the verification web URL if necessary.
+     * It is expected to fall back to the original URL obtained from {@link #createApplicant(String, String)} for backwards compatibility.
+     *
+     * @param overrideRequest the request object containing the original verification web URL and additional details needed to process the override.
+     * @return an {@code OverrideVerificationWebUrlResponse} object containing the overridden verification web URL, which defaults to the original URL provided in the request.
+     */
+    default OverrideVerificationWebUrlResponse overrideVerificationWebUrl(OverrideVerificationWebUrlRequest overrideRequest) {
+        return new OverrideVerificationWebUrlResponse(overrideRequest.getOriginalVerificationWebUrl());
+    }
 }
