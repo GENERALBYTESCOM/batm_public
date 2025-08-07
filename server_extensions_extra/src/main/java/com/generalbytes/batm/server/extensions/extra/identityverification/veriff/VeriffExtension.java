@@ -21,6 +21,8 @@ import com.generalbytes.batm.server.extensions.AbstractExtension;
 import com.generalbytes.batm.server.extensions.IExtensionContext;
 import com.generalbytes.batm.server.extensions.IRestService;
 import com.generalbytes.batm.server.extensions.aml.verification.IIdentityVerificationProvider;
+import com.generalbytes.batm.server.extensions.extra.identityverification.veriff.api.IVeriffApi;
+import com.generalbytes.batm.server.extensions.extra.identityverification.veriff.api.VeriffDigest;
 import com.generalbytes.batm.server.extensions.util.ExtensionParameters;
 
 import java.util.HashSet;
@@ -70,7 +72,13 @@ public class VeriffExtension extends AbstractExtension {
         if ("veriff".equals(params.getPrefix())) {
             String publicKey = params.get(1);
             String privateKey = params.get(2);
-            return new VeriffIdentityVerificationProvider(publicKey, privateKey);
+            String biometricPublicKey = params.get(3);
+            String biometricPrivateKey = params.get(4);
+            if (biometricPublicKey != null && biometricPrivateKey != null) {
+                return createProviderWithBiometricAuth(publicKey, privateKey, biometricPublicKey, biometricPrivateKey);
+            } else {
+                return new VeriffIdentityVerificationProvider(publicKey, privateKey);
+            }
 
         } else if ("gbcloud_local".equals(params.getPrefix())) {
             // internal provider, not available from the extensions XML, could not be configured to be used directly.
@@ -79,5 +87,19 @@ public class VeriffExtension extends AbstractExtension {
         }
 
         return null;
+    }
+
+    private VeriffIdentityVerificationProvider createProviderWithBiometricAuth(String publicKey,
+                                                                               String privateKey,
+                                                                               String biometricPublicKey,
+                                                                               String biometricPrivateKey) {
+        VeriffDigest veriffDigest = new VeriffDigest(privateKey);
+        IVeriffApi api = IVeriffApi.create(publicKey, veriffDigest);
+        VeriffWebhookProcessor veriffWebhookProcessor = new VeriffWebhookProcessor(publicKey, veriffDigest, api);
+        VeriffDigest biometricVeriffDigest = new VeriffDigest(biometricPrivateKey);
+        IVeriffApi biometricApi = IVeriffApi.create(biometricPublicKey, biometricVeriffDigest);
+        VeriffBiometricAuthenticator biometricAuthenticator = new VeriffBiometricAuthenticator(biometricApi);
+
+        return new VeriffIdentityVerificationProvider(api, veriffWebhookProcessor, biometricAuthenticator);
     }
 }
