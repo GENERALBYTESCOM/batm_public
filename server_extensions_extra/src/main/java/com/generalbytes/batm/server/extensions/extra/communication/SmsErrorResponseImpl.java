@@ -1,4 +1,4 @@
-package com.generalbytes.batm.server.extensions.examples.communication;
+package com.generalbytes.batm.server.extensions.extra.communication;
 
 import com.generalbytes.batm.server.extensions.communication.ISmsErrorResponse;
 
@@ -10,11 +10,6 @@ public class SmsErrorResponseImpl implements ISmsErrorResponse {
     public SmsErrorResponseImpl(String errorMessage) {
         this.errorMessage = errorMessage;
         this.blacklisted = false;
-    }
-
-    public SmsErrorResponseImpl(String errorMessage, boolean blacklisted) {
-        this.errorMessage = errorMessage;
-        this.blacklisted = blacklisted;
     }
 
     @Override

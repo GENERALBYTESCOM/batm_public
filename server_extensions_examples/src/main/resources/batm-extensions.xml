@@ -10,7 +10,6 @@
     <extension autoload="false" class="com.generalbytes.batm.server.extensions.examples.location.LocationExampleExtension" />
     <extension autoload="false" class="com.generalbytes.batm.server.extensions.examples.identity.ExternalIdentityExampleExtension" />
     <extension autoload="false" class="com.generalbytes.batm.server.extensions.examples.rest.RESTExampleExtension" />
-    <extension autoload="false" class="com.generalbytes.batm.server.extensions.examples.communication.ExternalCommunicationExampleExtension" />
     <extension autoload="false" class="com.generalbytes.batm.server.extensions.examples.activeterminals.ActiveTerminalsExtension" />
 
 

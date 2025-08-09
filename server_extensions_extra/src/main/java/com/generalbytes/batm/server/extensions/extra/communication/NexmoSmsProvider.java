@@ -1,4 +1,4 @@
-package com.generalbytes.batm.server.extensions.examples.communication;
+package com.generalbytes.batm.server.extensions.extra.communication;
 
 import com.generalbytes.batm.server.extensions.communication.ICommunicationProvider;
 import com.generalbytes.batm.server.extensions.communication.ISmsResponse;
@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class NexmoSmsProvider implements ICommunicationProvider {
-    private static final Logger log = LoggerFactory.getLogger("batm.server.extensions.extra.examples.communication.NexmoSmsProvider");
+    private static final Logger log = LoggerFactory.getLogger("batm.server.extensions.extra.communication.NexmoSmsProvider");
 
     @Override
     public String getName() {
@@ -39,9 +39,13 @@ public class NexmoSmsProvider implements ICommunicationProvider {
             if (response != null && response.getMessageCount() > 0) {
                 SmsSubmissionResponseMessage responseMessage = response.getMessages().get(0);
 
+                //noinspection ResultOfMethodCallIgnored
                 responseMessage.getId();
+                //noinspection ResultOfMethodCallIgnored
                 responseMessage.getMessagePrice();
+                //noinspection ResultOfMethodCallIgnored
                 responseMessage.getStatus();
+                //noinspection ResultOfMethodCallIgnored
                 responseMessage.getErrorText();
 
                 if (MessageStatus.OK == responseMessage.getStatus()) {
