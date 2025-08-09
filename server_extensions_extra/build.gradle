@@ -98,6 +98,7 @@ dependencies {
     implementation("com.google.protobuf:protobuf-java:3.13.0")
     implementation("com.onfido:onfido-api-java:2.3.1")
     implementation("org.apache.commons:commons-lang3:3.13.0")
+    implementation("com.nexmo:client:5.5.0")       // sms provider
 
     // keeping junit 4 for compatibility, will be removed soon, use junit 5 instead
     testImplementation("junit:junit:4.13.2")

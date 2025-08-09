@@ -1,27 +1,22 @@
-package com.generalbytes.batm.server.extensions.examples.communication;
+package com.generalbytes.batm.server.extensions.extra.communication;
 
 import com.generalbytes.batm.server.extensions.AbstractExtension;
 import com.generalbytes.batm.server.extensions.communication.ICommunicationProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.Set;
 
-// uncomment in batm-extensions.xml
-public class ExternalCommunicationExampleExtension extends AbstractExtension {
-    Logger log = LoggerFactory.getLogger(ExternalCommunicationExampleExtension.class);
-
+public class ExternalCommunicationExtension extends AbstractExtension {
     @Override
     public String getName() {
-        return "External CommunicationExtension (example)";
+        return "External CommunicationExtension";
     }
 
     @Override
     public Set<ICommunicationProvider> getCommunicationProviders() {
         Set<ICommunicationProvider> providers = new HashSet<>();
         providers.add(new NexmoSmsProvider());
-
+        providers.add(new SMSBranaCZProvider());
         return providers;
     }
 }

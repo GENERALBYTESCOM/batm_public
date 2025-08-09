@@ -1,4 +1,4 @@
-package com.generalbytes.batm.server.extensions.examples.communication;
+package com.generalbytes.batm.server.extensions.extra.communication;
 
 import com.generalbytes.batm.server.extensions.communication.ISmsErrorResponse;
 import com.generalbytes.batm.server.extensions.communication.ISmsResponse;
