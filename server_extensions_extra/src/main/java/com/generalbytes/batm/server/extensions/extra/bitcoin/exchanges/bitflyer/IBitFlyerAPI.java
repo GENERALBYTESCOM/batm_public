@@ -20,8 +20,8 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitflyer
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitflyer.dto.*;
 import si.mazi.rescu.ParamsDigest;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 
 @Path("/v1")
 @Produces(MediaType.APPLICATION_JSON)

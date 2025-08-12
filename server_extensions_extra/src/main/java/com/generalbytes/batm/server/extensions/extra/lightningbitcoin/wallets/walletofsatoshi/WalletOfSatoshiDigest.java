@@ -6,7 +6,7 @@ import si.mazi.rescu.RestInvocation;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import javax.ws.rs.HeaderParam;
+import jakarta.ws.rs.HeaderParam;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;

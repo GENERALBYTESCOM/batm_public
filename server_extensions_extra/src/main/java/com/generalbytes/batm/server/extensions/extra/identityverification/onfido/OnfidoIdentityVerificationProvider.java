@@ -13,7 +13,7 @@ import com.onfido.models.SdkToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Objects;

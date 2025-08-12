@@ -25,7 +25,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.SSLContext;
-import javax.ws.rs.HeaderParam;
+import jakarta.ws.rs.HeaderParam;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

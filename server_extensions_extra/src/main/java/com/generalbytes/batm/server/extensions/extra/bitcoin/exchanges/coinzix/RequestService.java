@@ -3,8 +3,8 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinzix;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinzix.dto.requests.*;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinzix.dto.responses.*;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 import java.io.IOException;
 
 @Path("/v1")

@@ -17,11 +17,11 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.ilcoin.sources.nomics;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
@@ -31,7 +31,7 @@ import java.util.List;
 public interface INomicsAPI {
     @GET
     @Path("/currencies/ticker")
-    List<NomicsTickerResponse> getTicker(@QueryParam("key") String key, 
-                                         @QueryParam("ids") String ids, 
+    List<NomicsTickerResponse> getTicker(@QueryParam("key") String key,
+                                         @QueryParam("ids") String ids,
                                          @QueryParam("convert") String convert) throws IOException;
 }
