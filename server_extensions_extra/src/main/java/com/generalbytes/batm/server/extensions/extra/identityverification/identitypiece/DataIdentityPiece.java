@@ -2,13 +2,16 @@ package com.generalbytes.batm.server.extensions.extra.identityverification.ident
 
 import com.generalbytes.batm.server.extensions.IIdentityPiece;
 import com.generalbytes.batm.server.extensions.IPerson;
+import com.generalbytes.batm.server.extensions.IdScanDocumentType;
 
 import java.util.Date;
+import java.util.UUID;
 
 public abstract class DataIdentityPiece implements IIdentityPiece {
 
     private final String mime;
     private final byte[] data;
+    private UUID correlationId;
 
     protected DataIdentityPiece(String mime, byte[] data) {
         this.data = data;
@@ -121,6 +124,11 @@ public abstract class DataIdentityPiece implements IIdentityPiece {
         return null;
     }
 
+    @Override
+    public IdScanDocumentType getIdScanDocumentType() {
+        return null;
+    }
+
 
     @Override
     public String getMimeType() {
@@ -130,5 +138,14 @@ public abstract class DataIdentityPiece implements IIdentityPiece {
     @Override
     public byte[] getData() {
         return data;
+    }
+
+    @Override
+    public UUID getCorrelationId() {
+        return correlationId;
+    }
+
+    public void setCorrelationId(UUID correlationId) {
+        this.correlationId = correlationId;
     }
 }
