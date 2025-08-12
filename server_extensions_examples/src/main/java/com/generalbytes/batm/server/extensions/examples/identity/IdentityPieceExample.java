@@ -19,8 +19,10 @@ package com.generalbytes.batm.server.extensions.examples.identity;
 
 import com.generalbytes.batm.server.extensions.IIdentityPiece;
 import com.generalbytes.batm.server.extensions.IPerson;
+import com.generalbytes.batm.server.extensions.IdScanDocumentType;
 
 import java.util.Date;
+import java.util.UUID;
 
 class IdentityPieceExample implements IIdentityPiece {
 
@@ -44,6 +46,8 @@ class IdentityPieceExample implements IIdentityPiece {
     private final Date dateOfBirth;
     private final String occupation;
     private final String ssn;
+    private UUID correlationId;
+    private IdScanDocumentType idScanDocumentType;
 
     IdentityPieceExample(int type, String phoneNumber, String emailAddress, String firstName, String lastName, String idCardNumber, Integer documentType, Date documentValidTo,
                          String contactZIP, String contactCountry, String contactCountryIso2, String contactProvince, String contactCity, String contactAddress, Date dateOfBirth, String occupation, String ssn,
@@ -213,7 +217,26 @@ class IdentityPieceExample implements IIdentityPiece {
         return occupation;
     }
 
+    @Override
     public String getSSN() {
         return ssn;
+    }
+
+    @Override
+    public UUID getCorrelationId() {
+        return correlationId;
+    }
+
+    public void setCorrelationId(UUID correlationId) {
+        this.correlationId = correlationId;
+    }
+
+    @Override
+    public IdScanDocumentType getIdScanDocumentType() {
+        return idScanDocumentType;
+    }
+
+    public void setIdScanDocumentType(IdScanDocumentType idScanDocumentType) {
+        this.idScanDocumentType = idScanDocumentType;
     }
 }
