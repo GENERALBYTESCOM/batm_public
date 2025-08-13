@@ -19,8 +19,8 @@
 package com.generalbytes.batm.server.extensions.extra.tokencoin.wallets.tokencoind;
 
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.math.BigDecimal;
 

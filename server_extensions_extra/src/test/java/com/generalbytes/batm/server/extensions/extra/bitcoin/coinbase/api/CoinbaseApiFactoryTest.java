@@ -13,7 +13,7 @@ import si.mazi.rescu.RestProxyFactory;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
-import javax.ws.rs.HeaderParam;
+import jakarta.ws.rs.HeaderParam;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 

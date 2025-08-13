@@ -18,8 +18,8 @@
 package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitcore;
 
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 import java.io.IOException;
 
 @Produces(MediaType.APPLICATION_JSON)

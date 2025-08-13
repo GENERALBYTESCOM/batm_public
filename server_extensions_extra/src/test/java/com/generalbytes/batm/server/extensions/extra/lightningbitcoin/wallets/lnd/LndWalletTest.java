@@ -23,7 +23,7 @@ import si.mazi.rescu.Params;
 import si.mazi.rescu.RestProxyFactory;
 
 import javax.net.ssl.SSLSocketFactory;
-import javax.ws.rs.HeaderParam;
+import jakarta.ws.rs.HeaderParam;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.ConnectException;

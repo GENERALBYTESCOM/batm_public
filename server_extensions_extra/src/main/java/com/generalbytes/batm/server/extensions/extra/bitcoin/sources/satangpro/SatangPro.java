@@ -21,8 +21,8 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.sources.satangpro;
 
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.satangpro.dto.SatangProRateInfo;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.util.Map;
 

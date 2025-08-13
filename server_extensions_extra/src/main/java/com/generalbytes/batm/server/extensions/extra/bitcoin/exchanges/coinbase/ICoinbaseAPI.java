@@ -30,8 +30,8 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.dto.CBTransactionResponse;
 import si.mazi.rescu.ParamsDigest;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 import java.io.IOException;
 
 @Path("/v2")
