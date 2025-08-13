@@ -18,8 +18,8 @@
 
 package com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.bitcoinpay;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 import java.io.IOException;
 
 @Path("/api/v3")

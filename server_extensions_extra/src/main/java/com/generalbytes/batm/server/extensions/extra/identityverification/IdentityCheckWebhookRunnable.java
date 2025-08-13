@@ -4,7 +4,7 @@ import com.generalbytes.batm.server.extensions.aml.verification.IdentityCheckWeb
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 
 /**
  * A utility to run a lambda and return an OK {@link Response} in case of no exception,

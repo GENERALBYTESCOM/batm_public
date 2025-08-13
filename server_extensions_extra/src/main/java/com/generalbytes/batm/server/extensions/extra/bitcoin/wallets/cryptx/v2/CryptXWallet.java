@@ -14,7 +14,7 @@ import si.mazi.rescu.ClientConfig;
 import si.mazi.rescu.HttpStatusIOException;
 import si.mazi.rescu.RestProxyFactory;
 
-import javax.ws.rs.HeaderParam;
+import jakarta.ws.rs.HeaderParam;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;

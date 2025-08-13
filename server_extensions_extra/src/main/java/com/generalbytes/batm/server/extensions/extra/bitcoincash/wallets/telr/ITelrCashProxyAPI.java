@@ -17,8 +17,8 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.bitcoincash.wallets.telr;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 import java.io.IOException;
 
 // https://api.telr.io/v1
