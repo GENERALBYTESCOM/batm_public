@@ -21,8 +21,8 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.sources.bitkub;
 
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.bitkub.dto.BitKubRateInfo;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 import java.util.Map;
 
 @Produces(MediaType.APPLICATION_JSON)
