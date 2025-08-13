@@ -3,11 +3,11 @@ package com.generalbytes.batm.server.extensions.extra.identityverification.onfid
 import com.generalbytes.batm.server.extensions.extra.identityverification.onfido.verificationsite.dto.RegisterApplicantRequest;
 import com.generalbytes.batm.server.extensions.extra.identityverification.onfido.verificationsite.dto.ServerAPIResponse;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 
 @Path("/verification")
 public interface VerificationSiteAPI {

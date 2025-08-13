@@ -21,7 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import si.mazi.rescu.HttpStatusIOException;
 import si.mazi.rescu.InvocationResult;
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;

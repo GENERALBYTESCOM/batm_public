@@ -23,8 +23,8 @@ import com.generalbytes.batm.server.extensions.extra.nxt.wallets.mynxt.dto.Mynxt
 import com.generalbytes.batm.server.extensions.extra.nxt.wallets.mynxt.dto.MynxtSendResponse;
 import com.generalbytes.batm.server.extensions.extra.nxt.wallets.mynxt.dto.SendResponse;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 import java.math.BigDecimal;
 
 @Path("/api/0.1")

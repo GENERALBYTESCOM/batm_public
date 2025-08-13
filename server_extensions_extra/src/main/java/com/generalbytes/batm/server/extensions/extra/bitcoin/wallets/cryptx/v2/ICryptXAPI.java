@@ -2,8 +2,8 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryptx.v2;
 
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryptx.v2.dto.*;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.util.Map;
 
