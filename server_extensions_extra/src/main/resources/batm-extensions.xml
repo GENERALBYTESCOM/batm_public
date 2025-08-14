@@ -2435,4 +2435,5 @@
         </identityverificationprovider>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.travelrule.notabene.NotabeneExtension" />
+    <extension class="com.generalbytes.batm.server.extensions.extra.communication.ExternalCommunicationExtension" />
 </extensions>
