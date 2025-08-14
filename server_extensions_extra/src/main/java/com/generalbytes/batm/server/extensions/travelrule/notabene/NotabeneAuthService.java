@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
 
 /**
  * This service is responsible for managing the access token for Notabene API.
@@ -32,24 +31,16 @@ public class NotabeneAuthService {
 
     public void removeAccessToken(ITravelRuleProviderCredentials providerCredentials) {
         String clientId = providerCredentials.getClientId();
-        synchronized (tokenRequests) {
-            log.debug("Clearing access token for clientId: {}", clientId);
-            CompletableFuture<?> future = tokenRequests.get(clientId);
-            if (future != null && !future.isDone()) {
-                try {
-                    future.join();
-                } catch (Exception e) {
-                    log.trace("An error occurred while waiting for the token request to complete. Does not affect the token removal.", e);
-                }
-            }
-            String accessToken = accessTokens.remove(clientId);
-            tokenRequests.remove(clientId);
+        CompletableFuture<String> pendingRequest = tokenRequests.remove(clientId);
+        if (pendingRequest != null) {
+            pendingRequest.cancel(true);
+        }
 
-            if (accessToken != null) {
-                log.debug("Removed access token for clientId: {}", clientId);
-            } else {
-                log.debug("No access token found for clientId: {}", clientId);
-            }
+        String accessToken = accessTokens.remove(clientId);
+        if (accessToken != null) {
+            log.debug("Removed Notabene access token for clientId: {}", clientId);
+        } else {
+            log.debug("No Notabene access token found for clientId: {}", clientId);
         }
     }
 
@@ -68,8 +59,14 @@ public class NotabeneAuthService {
             throw new IllegalArgumentException("providerCredentials cannot be null");
         }
 
-        if (tokenRequests.containsKey(providerCredentials.getClientId())) {
-            tokenRequests.get(providerCredentials.getClientId()).join();
+        CompletableFuture<String> tokenRequest = tokenRequests.get(providerCredentials.getClientId());
+        if (tokenRequest != null) {
+            try {
+                tokenRequest.join();
+            } catch (Exception e) {
+                log.debug("An error occurred while waiting for the Notabene token request to complete.", e);
+                return null; // The background token refresh failed. Return null as no valid token is available.
+            }
         }
 
         return accessTokens.get(providerCredentials.getClientId());
@@ -87,30 +84,36 @@ public class NotabeneAuthService {
             throw new IllegalArgumentException("providerCredentials cannot be null");
         }
 
-        tokenRequests.computeIfAbsent(providerCredentials.getClientId(), getAccessTokenAsync(providerCredentials))
-            .whenComplete((result, throwable) -> handleCompletedCall(providerCredentials, throwable));
+        tokenRequests.computeIfAbsent(
+            providerCredentials.getClientId(),
+            clientId -> {
+                CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> getAccessTokenInternal(providerCredentials));
+                future.whenComplete((accessToken, throwable) -> {
+                    if (accessToken == null || throwable != null) {
+                        logRefreshAccessTokenFailure(throwable);
+                        accessTokens.remove(clientId);
+                    }
+
+                    tokenRequests.remove(clientId);
+                });
+                return future;
+            }
+        );
     }
 
-    private Function<String, CompletableFuture<String>> getAccessTokenAsync(ITravelRuleProviderCredentials providerCredentials) {
-        return clientId -> CompletableFuture.supplyAsync(() -> getAccessToken(providerCredentials, clientId));
+    private void logRefreshAccessTokenFailure(Throwable throwable) {
+        String reason = throwable == null ? "refresh failure" : throwable.getMessage();
+        log.error("Notabene - failed to refresh access token: {}", reason);
     }
 
-    private String getAccessToken(ITravelRuleProviderCredentials providerCredentials, String clientId) {
+    private String getAccessTokenInternal(ITravelRuleProviderCredentials providerCredentials) {
         NotabeneGenerateAccessTokenRequest request = createNotabeneGenerateAccessTokenRequest(providerCredentials);
         NotabeneGenerateAccessTokenResponse response = callGetAccessTokenApi(request);
         if (response == null) {
             return null;
         }
-        accessTokens.put(clientId, response.getAccessToken());
+        accessTokens.put(providerCredentials.getClientId(), response.getAccessToken());
         return response.getAccessToken();
-    }
-
-    private void handleCompletedCall(ITravelRuleProviderCredentials providerCredentials, Throwable throwable) {
-        if (throwable != null) {
-            log.error("Failed to refresh access token: {}", throwable.getMessage());
-        } else {
-            tokenRequests.remove(providerCredentials.getClientId());
-        }
     }
 
     private NotabeneGenerateAccessTokenResponse callGetAccessTokenApi(NotabeneGenerateAccessTokenRequest request) {
