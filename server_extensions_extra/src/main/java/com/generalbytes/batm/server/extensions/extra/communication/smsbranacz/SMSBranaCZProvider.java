@@ -37,7 +37,7 @@ public class SMSBranaCZProvider implements ICommunicationProvider {
 
     @Override
     public String getPublicName() {
-        return "SMSBrana.CZ";
+        return "SMSBrana.cz";
     }
 
     @Override

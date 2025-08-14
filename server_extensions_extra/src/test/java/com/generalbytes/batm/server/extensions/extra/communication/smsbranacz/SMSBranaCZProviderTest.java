@@ -36,7 +36,7 @@ class SMSBranaCZProviderTest {
 
     @Test
     void testGerPublicName() {
-        assertEquals("SMSBrana.CZ", provider.getPublicName());
+        assertEquals("SMSBrana.cz", provider.getPublicName());
     }
 
     @Test

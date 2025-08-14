@@ -18,7 +18,7 @@ class ExternalCommunicationExtensionTest {
     @Test
     void testGetName() {
         ExternalCommunicationExtension extension = new ExternalCommunicationExtension();
-        assertEquals("External CommunicationExtension", extension.getName());
+        assertEquals("External Communication Extension", extension.getName());
     }
 
     @Test

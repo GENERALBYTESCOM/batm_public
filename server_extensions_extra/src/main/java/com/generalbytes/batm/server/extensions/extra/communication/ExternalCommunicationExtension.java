@@ -12,7 +12,7 @@ import java.util.Set;
 public class ExternalCommunicationExtension extends AbstractExtension {
     @Override
     public String getName() {
-        return "External CommunicationExtension";
+        return "External Communication Extension";
     }
 
     @Override
