@@ -4,6 +4,7 @@ import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProvider;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProviderCredentials;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProviderFactory;
 import com.generalbytes.batm.server.extensions.travelrule.TravelRuleExtensionContext;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,7 +42,7 @@ public class NotabeneProviderFactory implements ITravelRuleProviderFactory {
     @Override
     public synchronized ITravelRuleProvider getProvider(ITravelRuleProviderCredentials credentials) {
         String vaspDid = credentials.getVaspDid();
-        if (vaspDid == null) {
+        if (StringUtils.isBlank(vaspDid)) {
             return initializeProvider(credentials);
         }
         if (travelRuleProviders.containsKey(vaspDid)) {
