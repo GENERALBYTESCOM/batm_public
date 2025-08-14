@@ -15,7 +15,7 @@ import java.math.BigDecimal;
  */
 @Slf4j
 @UtilityClass
-public class SMSBranaCzResponseMapper {
+public class SmsBranaCzResponseMapper {
 
     public static ISmsResponse mapErrorResponse(String errorMessage) {
         return new SmsResponse(null, ISmsResponse.ResponseStatus.ERROR, null, errorMessage);
@@ -32,7 +32,7 @@ public class SMSBranaCzResponseMapper {
      * <sms_id>377351</sms_id>
      * </result>
      */
-    public static ISmsResponse mapXmlResponse(SMSBranaCZXmlResponse xmlResponse) {
+    public static ISmsResponse mapXmlResponse(SmsBranaCzXmlResponse xmlResponse) {
         Integer errorCode = xmlResponse.getErr();
         if (isErrorResponse(errorCode)) {
             String errorMessage = getErrorMessage(errorCode);
@@ -55,7 +55,7 @@ public class SMSBranaCzResponseMapper {
         return errorCode != null && errorCode != 0;
     }
 
-    private static BigDecimal getPrice(SMSBranaCZXmlResponse xmlResponse) {
+    private static BigDecimal getPrice(SmsBranaCzXmlResponse xmlResponse) {
         String priceStr = xmlResponse.getPrice();
         if (StringUtils.isNotBlank(priceStr)) {
             try {

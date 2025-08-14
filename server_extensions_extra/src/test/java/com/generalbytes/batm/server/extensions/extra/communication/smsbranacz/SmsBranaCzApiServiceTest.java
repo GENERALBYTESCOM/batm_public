@@ -12,11 +12,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class SMSBranaCZApiServiceTest {
+class SmsBranaCzApiServiceTest {
     @Mock
-    private ISMSBranaCZAPI api;
+    private ISmsBranaCzAPI api;
     @InjectMocks
-    private SMSBranaCZApiService service;
+    private SmsBranaCzApiService service;
 
     @Test
     void testSendSms() throws IOException {
@@ -27,7 +27,7 @@ class SMSBranaCZApiServiceTest {
         assertEquals("someResponse", someMessage);
     }
 
-    private SMSBranaCZApiCredentials createCredentials() {
-        return new SMSBranaCZApiCredentials("login", "salt", "time", "auth");
+    private SmsBranaCzApiCredentials createCredentials() {
+        return new SmsBranaCzApiCredentials("login", "salt", "time", "auth");
     }
 }

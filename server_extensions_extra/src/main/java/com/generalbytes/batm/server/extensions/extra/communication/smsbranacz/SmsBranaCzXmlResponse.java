@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @ToString
 @XmlRootElement(name = "result")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class SMSBranaCZXmlResponse {
+public class SmsBranaCzXmlResponse {
 
     @XmlElement(name = "err")
     private Integer err;

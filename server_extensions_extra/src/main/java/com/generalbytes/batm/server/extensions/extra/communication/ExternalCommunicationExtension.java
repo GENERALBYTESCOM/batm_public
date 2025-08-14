@@ -2,7 +2,7 @@ package com.generalbytes.batm.server.extensions.extra.communication;
 
 import com.generalbytes.batm.server.extensions.AbstractExtension;
 import com.generalbytes.batm.server.extensions.communication.ICommunicationProvider;
-import com.generalbytes.batm.server.extensions.extra.communication.smsbranacz.SMSBranaCZFactory;
+import com.generalbytes.batm.server.extensions.extra.communication.smsbranacz.SmsBranaCzFactory;
 
 import java.util.Set;
 
@@ -17,6 +17,6 @@ public class ExternalCommunicationExtension extends AbstractExtension {
 
     @Override
     public Set<ICommunicationProvider> getCommunicationProviders() {
-        return Set.of(SMSBranaCZFactory.createProvider());
+        return Set.of(SmsBranaCzFactory.createProvider());
     }
 }

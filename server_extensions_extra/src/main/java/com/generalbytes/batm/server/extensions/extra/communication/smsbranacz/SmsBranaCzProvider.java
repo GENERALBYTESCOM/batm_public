@@ -26,9 +26,9 @@ import java.io.StringReader;
  */
 @Slf4j
 @AllArgsConstructor
-public class SMSBranaCZProvider implements ICommunicationProvider {
-    private final SMSBranaCZApiService apiService;
-    private final SMSBranaCZCredentialsService credentialsService;
+public class SmsBranaCzProvider implements ICommunicationProvider {
+    private final SmsBranaCzApiService apiService;
+    private final SmsBranaCzCredentialsService credentialsService;
 
     @Override
     public String getName() {
@@ -43,40 +43,40 @@ public class SMSBranaCZProvider implements ICommunicationProvider {
     @Override
     public ISmsResponse sendSms(String credentials, String phoneNumber, String messageText) {
         try {
-            SMSBranaCZApiCredentials apiCredentials = credentialsService.getCredentials(credentials);
+            SmsBranaCzApiCredentials apiCredentials = credentialsService.getCredentials(credentials);
             String rawResponse = apiService.sendSms(apiCredentials, phoneNumber, messageText);
 
             if (rawResponse != null) {
-                SMSBranaCZXmlResponse xmlResponse = unmarshallRawResponse(rawResponse);
+                SmsBranaCzXmlResponse xmlResponse = unmarshallRawResponse(rawResponse);
                 logStatistics(xmlResponse);
-                return SMSBranaCzResponseMapper.mapXmlResponse(xmlResponse);
+                return SmsBranaCzResponseMapper.mapXmlResponse(xmlResponse);
             } else {
                 log.error("Received null response from SMSBrana API");
-                return SMSBranaCzResponseMapper.mapErrorResponse("No response from SMS service");
+                return SmsBranaCzResponseMapper.mapErrorResponse("No response from SMS service");
             }
-        } catch (SMSBranaCZValidationException e) {
-            return SMSBranaCzResponseMapper.mapErrorResponse("Invalid credentials format");
+        } catch (SmsBranaCzValidationException e) {
+            return SmsBranaCzResponseMapper.mapErrorResponse("Invalid credentials format");
         } catch (HttpStatusIOException e) {
             log.error("HTTP error while sending SMS via SMSBrana: {}", e.getHttpStatusCode(), e);
-            return SMSBranaCzResponseMapper.mapErrorResponse("HTTP error: " + e.getHttpStatusCode());
+            return SmsBranaCzResponseMapper.mapErrorResponse("HTTP error: " + e.getHttpStatusCode());
         } catch (IOException e) {
             log.error("IO error while sending SMS via SMSBrana", e);
-            return SMSBranaCzResponseMapper.mapErrorResponse("Connection error: " + e.getMessage());
+            return SmsBranaCzResponseMapper.mapErrorResponse("Connection error: " + e.getMessage());
         } catch (Exception e) {
             log.error("Unexpected error while sending SMS via SMSBrana", e);
-            return SMSBranaCzResponseMapper.mapErrorResponse("Unexpected error: " + e.getMessage());
+            return SmsBranaCzResponseMapper.mapErrorResponse("Unexpected error: " + e.getMessage());
         }
     }
 
-    private SMSBranaCZXmlResponse unmarshallRawResponse(String rawResponse) throws JAXBException {
-        JAXBContext jaxbContext = JAXBContext.newInstance(SMSBranaCZXmlResponse.class);
+    private SmsBranaCzXmlResponse unmarshallRawResponse(String rawResponse) throws JAXBException {
+        JAXBContext jaxbContext = JAXBContext.newInstance(SmsBranaCzXmlResponse.class);
         Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 
         StringReader reader = new StringReader(rawResponse);
-        return (SMSBranaCZXmlResponse) unmarshaller.unmarshal(reader);
+        return (SmsBranaCzXmlResponse) unmarshaller.unmarshal(reader);
     }
 
-    private void logStatistics(SMSBranaCZXmlResponse xmlResponse) {
+    private void logStatistics(SmsBranaCzXmlResponse xmlResponse) {
         log.debug("Remaining credit: {}, SMS count: {}", xmlResponse.getCredit(), xmlResponse.getSmsCount());
     }
 

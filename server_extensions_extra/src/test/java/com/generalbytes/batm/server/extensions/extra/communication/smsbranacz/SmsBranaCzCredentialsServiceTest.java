@@ -13,14 +13,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mockStatic;
 
-class SMSBranaCZCredentialsServiceTest {
+class SmsBranaCzCredentialsServiceTest {
 
-    private final SMSBranaCZCredentialsService service = new SMSBranaCZCredentialsService();
+    private final SmsBranaCzCredentialsService service = new SmsBranaCzCredentialsService();
 
     @ParameterizedTest
     @ValueSource(strings = {"", "justOneEntry", "two;entries"})
     void testGetCredentials_invalidCredentials(String credentials) {
-        SMSBranaCZValidationException exception = assertThrows(SMSBranaCZValidationException.class,
+        SmsBranaCzValidationException exception = assertThrows(SmsBranaCzValidationException.class,
             () -> service.getCredentials(credentials));
 
         assertEquals("Invalid credentials format", exception.getMessage());
@@ -37,7 +37,7 @@ class SMSBranaCZCredentialsServiceTest {
             uuidMock.when(UUID::randomUUID).thenReturn(uuid);
             localDateTimeMock.when(() -> LocalDateTime.now(zone)).thenReturn(now);
 
-            SMSBranaCZApiCredentials credentials = service.getCredentials("myLogin:somePassword");
+            SmsBranaCzApiCredentials credentials = service.getCredentials("myLogin:somePassword");
 
             assertEquals("myLogin", credentials.login());
             assertEquals("28b1943a-98c5-4ecb-a81b-4849c5b3dedd", credentials.salt());

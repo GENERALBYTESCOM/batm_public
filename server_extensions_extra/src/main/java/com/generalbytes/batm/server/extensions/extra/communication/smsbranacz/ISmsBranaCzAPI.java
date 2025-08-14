@@ -21,7 +21,7 @@ import java.io.IOException;
  */
 @Produces(MediaType.TEXT_PLAIN)
 @Path("/http.php")
-public interface ISMSBranaCZAPI {
+public interface ISmsBranaCzAPI {
 
     /**
      * Send SMS using SMSBrána.cz API with secure authentication

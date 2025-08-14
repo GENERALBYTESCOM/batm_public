@@ -8,11 +8,11 @@ import java.io.IOException;
  * Service for interacting with the SMSBrána.cz API to send SMS messages. Utilizes the {@code ISMSBranaCZAPI} for API communication.
  */
 @AllArgsConstructor
-public class SMSBranaCZApiService {
+public class SmsBranaCzApiService {
 
     private static final String SEND_SMS_ACTION = "send_sms";
     private static final String DATA_CODE_ALLOWED_CHARS_WITH_DIACRITICS = "ucs2";
-    private final ISMSBranaCZAPI api;
+    private final ISmsBranaCzAPI api;
 
     /**
      * Sends an SMS message via the SMSBrána.cz API using the provided credentials.
@@ -23,7 +23,7 @@ public class SMSBranaCZApiService {
      * @return the response from the SMSBrána.cz API in XML format
      * @throws IOException if an I/O error occurs during the communication with the API
      */
-    public String sendSms(SMSBranaCZApiCredentials apiCredentials, String phoneNumber, String message) throws IOException {
+    public String sendSms(SmsBranaCzApiCredentials apiCredentials, String phoneNumber, String message) throws IOException {
         return api.sendSms(
                 apiCredentials.login(),
                 apiCredentials.time(),

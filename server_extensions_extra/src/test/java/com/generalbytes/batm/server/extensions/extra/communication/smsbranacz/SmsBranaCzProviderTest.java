@@ -21,13 +21,13 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class SMSBranaCZProviderTest {
+class SmsBranaCzProviderTest {
     @Mock
-    private SMSBranaCZApiService apiService;
+    private SmsBranaCzApiService apiService;
     @Mock
-    private SMSBranaCZCredentialsService credentialsService;
+    private SmsBranaCzCredentialsService credentialsService;
     @InjectMocks
-    private SMSBranaCZProvider provider;
+    private SmsBranaCzProvider provider;
 
     @Test
     void testGetName() {
@@ -41,7 +41,7 @@ class SMSBranaCZProviderTest {
 
     @Test
     void testSendSms_invalidCredentials() {
-        when(credentialsService.getCredentials("credentials")).thenThrow(new SMSBranaCZValidationException("Invalid credentials format"));
+        when(credentialsService.getCredentials("credentials")).thenThrow(new SmsBranaCzValidationException("Invalid credentials format"));
 
         ISmsResponse response = provider.sendSms("credentials", null, null);
 
@@ -51,7 +51,7 @@ class SMSBranaCZProviderTest {
 
     @Test
     void testSendSms_success() throws IOException {
-        SMSBranaCZApiCredentials apiCredentials = new SMSBranaCZApiCredentials("login", "salt", "time", "auth");
+        SmsBranaCzApiCredentials apiCredentials = new SmsBranaCzApiCredentials("login", "salt", "time", "auth");
         when(credentialsService.getCredentials("login:password")).thenReturn(apiCredentials);
         when(apiService.sendSms(apiCredentials, "+420123456789", "test abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.:;%/_-+ěščřžýáíé")).thenReturn(createXmlResponse());
 
@@ -65,7 +65,7 @@ class SMSBranaCZProviderTest {
 
     @Test
     void testSendSms_nullResponse() throws IOException {
-        when(credentialsService.getCredentials("login:password")).thenReturn(new SMSBranaCZApiCredentials("login", "salt", "time", "auth"));
+        when(credentialsService.getCredentials("login:password")).thenReturn(new SmsBranaCzApiCredentials("login", "salt", "time", "auth"));
         when(apiService.sendSms(any(), any(), any())).thenReturn(null);
 
         ISmsResponse response = provider.sendSms("login:password", "+420123456789", "test message");
@@ -75,7 +75,7 @@ class SMSBranaCZProviderTest {
 
     @Test
     void testSendSms_httpError() throws IOException {
-        when(credentialsService.getCredentials("login:password")).thenReturn(new SMSBranaCZApiCredentials("login", "salt", "time", "auth"));
+        when(credentialsService.getCredentials("login:password")).thenReturn(new SmsBranaCzApiCredentials("login", "salt", "time", "auth"));
         HttpStatusIOException httpStatusIOException = createHttpStatusIOException();
         when(apiService.sendSms(any(), anyString(), anyString())).thenThrow(httpStatusIOException);
 
@@ -85,7 +85,7 @@ class SMSBranaCZProviderTest {
 
     @Test
     void testSendSms_ioException() throws IOException {
-        when(credentialsService.getCredentials("login:password")).thenReturn(new SMSBranaCZApiCredentials("login", "salt", "time", "auth"));
+        when(credentialsService.getCredentials("login:password")).thenReturn(new SmsBranaCzApiCredentials("login", "salt", "time", "auth"));
         IOException ioException = createIOException();
         when(apiService.sendSms(any(), anyString(), anyString())).thenThrow(ioException);
 

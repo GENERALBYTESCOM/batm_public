@@ -11,20 +11,20 @@ import java.util.UUID;
 
 /**
  * Service responsible for managing and validating credentials used to interact with the SMSBrána.cz API.
- * This class processes raw credentials and converts them into an {@link SMSBranaCZApiCredentials} object containing
+ * This class processes raw credentials and converts them into an {@link SmsBranaCzApiCredentials} object containing
  * authentication details required by the API.
  * Credentials format: "login:password"
  * - login: SMS Connect username from SMSbrána.cz portal
  * - password: SMS Connect password from SMSbrána.cz portal
  */
 @Slf4j
-public class SMSBranaCZCredentialsService {
+public class SmsBranaCzCredentialsService {
 
-    public SMSBranaCZApiCredentials getCredentials(String credentials) {
+    public SmsBranaCzApiCredentials getCredentials(String credentials) {
         String[] tokens = credentials.split(":");
         if (tokens.length != 2) {
             log.error("Invalid credentials format. Expected format: 'login:password'");
-            throw new SMSBranaCZValidationException("Invalid credentials format");
+            throw new SmsBranaCzValidationException("Invalid credentials format");
         }
 
         String login = tokens[0];
@@ -34,7 +34,7 @@ public class SMSBranaCZCredentialsService {
         String salt = UUID.randomUUID().toString();
         String auth = generateMD5Hash(password + time + salt);
 
-        return new SMSBranaCZApiCredentials(login, salt, time, auth);
+        return new SmsBranaCzApiCredentials(login, salt, time, auth);
     }
 
     private String generateMD5Hash(String input) {
@@ -47,7 +47,7 @@ public class SMSBranaCZCredentialsService {
             }
             return sb.toString();
         } catch (NoSuchAlgorithmException e) {
-            throw new SMSBranaCZValidationException("MD5 algorithm not available");
+            throw new SmsBranaCzValidationException("MD5 algorithm not available");
         }
     }
 }

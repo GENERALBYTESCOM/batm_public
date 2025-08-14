@@ -7,14 +7,14 @@ import si.mazi.rescu.RestProxyFactory;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mockStatic;
 
-class SMSBranaCZFactoryTest {
+class SmsBranaCzFactoryTest {
     @Test
     void testCreateProvider_withCorrectParameters() {
         try (MockedStatic<RestProxyFactory> factoryMock = mockStatic(RestProxyFactory.class)) {
-            SMSBranaCZProvider provider = SMSBranaCZFactory.createProvider();
+            SmsBranaCzProvider provider = SmsBranaCzFactory.createProvider();
             assertNotNull(provider);
 
-            factoryMock.verify(() -> RestProxyFactory.createProxy(ISMSBranaCZAPI.class, "https://api.smsbrana.cz/smsconnect"));
+            factoryMock.verify(() -> RestProxyFactory.createProxy(ISmsBranaCzAPI.class, "https://api.smsbrana.cz/smsconnect"));
         }
     }
 

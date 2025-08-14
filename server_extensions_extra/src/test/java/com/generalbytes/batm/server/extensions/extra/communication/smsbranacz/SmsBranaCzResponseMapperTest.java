@@ -15,11 +15,11 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-class SMSBranaCzResponseMapperTest {
+class SmsBranaCzResponseMapperTest {
 
     @Test
     void testMapErrorResponse() {
-        ISmsResponse response = SMSBranaCzResponseMapper.mapErrorResponse("some error message");
+        ISmsResponse response = SmsBranaCzResponseMapper.mapErrorResponse("some error message");
 
         assertNull(response.getSid());
         assertEquals(ISmsResponse.ResponseStatus.ERROR, response.getStatus());
@@ -32,7 +32,7 @@ class SMSBranaCzResponseMapperTest {
 
     @Test
     void testMapXmlResponse_success() {
-        ISmsResponse response = SMSBranaCzResponseMapper.mapXmlResponse(createSMSBranaCZXmlResponse());
+        ISmsResponse response = SmsBranaCzResponseMapper.mapXmlResponse(createSMSBranaCZXmlResponse());
         assertEquals("7777", response.getSid());
         assertEquals(ISmsResponse.ResponseStatus.OK, response.getStatus());
         assertEquals(0, new BigDecimal("1.23").compareTo(response.getPrice()));
@@ -43,9 +43,9 @@ class SMSBranaCzResponseMapperTest {
     @NullAndEmptySource
     @ValueSource(strings = {"123 Kc", "n/a"})
     void testMapXmlResponse_successUnknownPrice(String price) {
-        SMSBranaCZXmlResponse xmlResponse = createSMSBranaCZXmlResponse();
+        SmsBranaCzXmlResponse xmlResponse = createSMSBranaCZXmlResponse();
         xmlResponse.setPrice(price);
-        ISmsResponse response = SMSBranaCzResponseMapper.mapXmlResponse(xmlResponse);
+        ISmsResponse response = SmsBranaCzResponseMapper.mapXmlResponse(xmlResponse);
         assertEquals("7777", response.getSid());
         assertEquals(ISmsResponse.ResponseStatus.OK, response.getStatus());
         assertNull(response.getPrice());
@@ -74,7 +74,7 @@ class SMSBranaCzResponseMapperTest {
     @ParameterizedTest
     @MethodSource("testErrorXmlResponseSource")
     void testMapXmlResponse_error(Integer errorCode, String expectedErrorMessage) {
-        ISmsResponse response = SMSBranaCzResponseMapper.mapXmlResponse(createErrorSMSBranaCZXmlResponse(errorCode));
+        ISmsResponse response = SmsBranaCzResponseMapper.mapXmlResponse(createErrorSMSBranaCZXmlResponse(errorCode));
         assertNull(response.getSid());
         assertNull(response.getPrice());
         assertEquals(ISmsResponse.ResponseStatus.ERROR, response.getStatus());
@@ -85,11 +85,11 @@ class SMSBranaCzResponseMapperTest {
 
     @Test
     void testMapXmlResponse_missingSmsId() {
-        SMSBranaCZXmlResponse xmlResponse = createSMSBranaCZXmlResponse();
+        SmsBranaCzXmlResponse xmlResponse = createSMSBranaCZXmlResponse();
         xmlResponse.setSmsId(null);
         xmlResponse.setErr(null); // handle a case when API returns no error code but also null SMS ID
 
-        ISmsResponse response = SMSBranaCzResponseMapper.mapXmlResponse(xmlResponse);
+        ISmsResponse response = SmsBranaCzResponseMapper.mapXmlResponse(xmlResponse);
 
         assertNull(response.getSid());
         assertNull(response.getPrice());
@@ -100,14 +100,14 @@ class SMSBranaCzResponseMapperTest {
     }
 
 
-    private SMSBranaCZXmlResponse createErrorSMSBranaCZXmlResponse(Integer errorCode) {
-        SMSBranaCZXmlResponse response = new SMSBranaCZXmlResponse();
+    private SmsBranaCzXmlResponse createErrorSMSBranaCZXmlResponse(Integer errorCode) {
+        SmsBranaCzXmlResponse response = new SmsBranaCzXmlResponse();
         response.setErr(errorCode);
         return response;
     }
 
-    private SMSBranaCZXmlResponse createSMSBranaCZXmlResponse() {
-        SMSBranaCZXmlResponse response = new SMSBranaCZXmlResponse();
+    private SmsBranaCzXmlResponse createSMSBranaCZXmlResponse() {
+        SmsBranaCzXmlResponse response = new SmsBranaCzXmlResponse();
         response.setErr(0);
         response.setSmsId(7777L);
         response.setPrice("1.23");

@@ -1,8 +1,8 @@
 package com.generalbytes.batm.server.extensions.extra.communication;
 
 import com.generalbytes.batm.server.extensions.communication.ICommunicationProvider;
-import com.generalbytes.batm.server.extensions.extra.communication.smsbranacz.SMSBranaCZFactory;
-import com.generalbytes.batm.server.extensions.extra.communication.smsbranacz.SMSBranaCZProvider;
+import com.generalbytes.batm.server.extensions.extra.communication.smsbranacz.SmsBranaCzFactory;
+import com.generalbytes.batm.server.extensions.extra.communication.smsbranacz.SmsBranaCzProvider;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 
@@ -23,19 +23,19 @@ class ExternalCommunicationExtensionTest {
 
     @Test
     void testGetCommunicationProviders() {
-        SMSBranaCZProvider provider = mock(SMSBranaCZProvider.class);
+        SmsBranaCzProvider provider = mock(SmsBranaCzProvider.class);
 
         ExternalCommunicationExtension extension = new ExternalCommunicationExtension();
 
-        try (MockedStatic<SMSBranaCZFactory> factoryMock = mockStatic(SMSBranaCZFactory.class)) {
-            factoryMock.when(SMSBranaCZFactory::createProvider).thenReturn(provider);
+        try (MockedStatic<SmsBranaCzFactory> factoryMock = mockStatic(SmsBranaCzFactory.class)) {
+            factoryMock.when(SmsBranaCzFactory::createProvider).thenReturn(provider);
 
             Set<ICommunicationProvider> communicationProviders = extension.getCommunicationProviders();
             assertEquals(1, communicationProviders.size());
             ICommunicationProvider communicationProvider = communicationProviders.iterator().next();
-            assertInstanceOf(SMSBranaCZProvider.class, communicationProvider);
+            assertInstanceOf(SmsBranaCzProvider.class, communicationProvider);
 
-            factoryMock.verify(SMSBranaCZFactory::createProvider);
+            factoryMock.verify(SmsBranaCzFactory::createProvider);
         }
     }
 }
