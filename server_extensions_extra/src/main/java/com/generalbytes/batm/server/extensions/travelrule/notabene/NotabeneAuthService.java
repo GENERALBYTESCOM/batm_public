@@ -31,24 +31,16 @@ public class NotabeneAuthService {
 
     public void removeAccessToken(ITravelRuleProviderCredentials providerCredentials) {
         String clientId = providerCredentials.getClientId();
-        synchronized (tokenRequests) {
-            log.debug("Clearing access token for clientId: {}", clientId);
-            CompletableFuture<?> future = tokenRequests.get(clientId);
-            if (future != null && !future.isDone()) {
-                try {
-                    future.join();
-                } catch (Exception e) {
-                    log.trace("An error occurred while waiting for the token request to complete. Does not affect the token removal.", e);
-                }
-            }
-            String accessToken = accessTokens.remove(clientId);
-            tokenRequests.remove(clientId);
+        CompletableFuture<String> pendingRequest = tokenRequests.remove(clientId);
+        if (pendingRequest != null) {
+            pendingRequest.cancel(true);
+        }
 
-            if (accessToken != null) {
-                log.debug("Removed access token for clientId: {}", clientId);
-            } else {
-                log.debug("No access token found for clientId: {}", clientId);
-            }
+        String accessToken = accessTokens.remove(clientId);
+        if (accessToken != null) {
+            log.debug("Removed Notabene access token for clientId: {}", clientId);
+        } else {
+            log.debug("No Notabene access token found for clientId: {}", clientId);
         }
     }
 

@@ -232,14 +232,15 @@ class NotabeneAuthServiceTest {
     }
 
     @Test
-    void testRemoveAccessToken_accessTokenGetPending() throws HttpStatusIOException {
+    void testRemoveAccessToken_accessTokenPending() throws Exception {
         ITravelRuleProviderCredentials providerCredentials = createTravelRuleProviderIdentification();
 
-        when(authApi.generateAccessToken(any())).thenAnswer(invocation -> {
-            Thread.sleep(100); // Delay to simulate a time-consuming API call
+        when(authApi.generateAccessToken(any(NotabeneGenerateAccessTokenRequest.class))).thenAnswer(invocation -> {
+            Thread.sleep(500); // Delay to simulate a time-consuming API call
             return createAccessTokenResponse("accessToken1");
         });
         authService.refreshAccessToken(providerCredentials);
+        Thread.sleep(100); // Due to waiting for thread (future) to start, otherwise stubbing exception occurs sometime
 
         authService.removeAccessToken(providerCredentials);
 
