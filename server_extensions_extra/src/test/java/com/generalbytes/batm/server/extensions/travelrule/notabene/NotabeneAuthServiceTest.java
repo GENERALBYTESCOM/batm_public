@@ -15,12 +15,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import si.mazi.rescu.HttpStatusIOException;
 
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -28,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -154,25 +152,34 @@ class NotabeneAuthServiceTest {
     }
 
     @Test
-    void testRefreshAccessToken_concurrentExecution() throws InterruptedException, ExecutionException, HttpStatusIOException {
+    void testRefreshAccessToken_concurrentExecution() throws HttpStatusIOException {
         ITravelRuleProviderCredentials providerCredentials = createTravelRuleProviderIdentification();
-        NotabeneGenerateAccessTokenResponse mockResponse = createAccessTokenResponse("testToken");
-        when(authApi.generateAccessToken(any())).thenAnswer(invocation -> {
-            Thread.sleep(100); // Delay to simulate a time-consuming API call
-            return mockResponse;
+
+        when(authApi.generateAccessToken(any(NotabeneGenerateAccessTokenRequest.class))).thenAnswer(invocation -> {
+            Thread.sleep(100); // simulate network latency
+            return createAccessTokenResponse("testToken");
         });
-        ExecutorService executorService = Executors.newFixedThreadPool(5);
-        Callable<Void> task = () -> {
-            authService.refreshAccessToken(providerCredentials);
-            return null;
-        };
-        List<Future<Void>> futures = executorService.invokeAll(List.of(task, task, task, task, task));
-        for (Future<Void> future : futures) {
-            future.get();
+
+        int threadCount = 5;
+        CountDownLatch startGate = new CountDownLatch(1);
+        ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
+
+        for (int i = 0; i < threadCount; i++) {
+            executorService.submit(() -> {
+                try {
+                    startGate.await();
+                    authService.refreshAccessToken(providerCredentials);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            });
         }
-        // Calling #getAccessToken to wait for the refresh to be finished
+
+        startGate.countDown();
+
+        verify(authApi, timeout(1000).times(1))
+            .generateAccessToken(any(NotabeneGenerateAccessTokenRequest.class));
         assertEquals("testToken", authService.getAccessToken(providerCredentials));
-        verify(authApi, times(1)).generateAccessToken(any());
         executorService.shutdown();
     }
 
