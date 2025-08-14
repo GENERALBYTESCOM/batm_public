@@ -30,11 +30,12 @@ class SMSBranaCZCredentialsServiceTest {
     void testGetCredentials() {
         UUID uuid = UUID.fromString("28b1943a-98c5-4ecb-a81b-4849c5b3dedd");
         LocalDateTime now = LocalDateTime.of(2025, 8, 8, 16, 24, 32);
+        ZoneId zone = ZoneId.of("Europe/Prague");
 
         try (MockedStatic<UUID> uuidMock = mockStatic(UUID.class);
              MockedStatic<LocalDateTime> localDateTimeMock = mockStatic(LocalDateTime.class)) {
             uuidMock.when(UUID::randomUUID).thenReturn(uuid);
-            localDateTimeMock.when(() -> LocalDateTime.now(ZoneId.of("Europe/Prague"))).thenReturn(now);
+            localDateTimeMock.when(() -> LocalDateTime.now(zone)).thenReturn(now);
 
             SMSBranaCZApiCredentials credentials = service.getCredentials("myLogin:somePassword");
 
