@@ -68,8 +68,14 @@ public class NotabeneAuthService {
             throw new IllegalArgumentException("providerCredentials cannot be null");
         }
 
-        if (tokenRequests.containsKey(providerCredentials.getClientId())) {
-            tokenRequests.get(providerCredentials.getClientId()).join();
+        CompletableFuture<String> tokenRequest = tokenRequests.get(providerCredentials.getClientId());
+        if (tokenRequest != null) {
+            try {
+                tokenRequest.join();
+            } catch (Exception e) {
+                log.debug("An error occurred while waiting for the Notabene token request to complete.", e);
+                return null; // The background token refresh failed. Return null as no valid token is available.
+            }
         }
 
         return accessTokens.get(providerCredentials.getClientId());
