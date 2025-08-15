@@ -2482,6 +2482,7 @@
         </identityverificationprovider>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.travelrule.notabene.NotabeneExtension" />
+    <extension class="com.generalbytes.batm.server.extensions.travelrule.gtr.GtrExtension" />
     <extension class="com.generalbytes.batm.server.extensions.extra.communication.ExternalCommunicationExtension" />
     <extension class="com.generalbytes.batm.server.extensions.extra.solana.SolanaExtension" >
         <wallet prefix="soldemo" name="Solana Demo Wallet">

@@ -100,6 +100,9 @@ dependencies {
     implementation("com.onfido:onfido-api-java:2.3.1")
     implementation("org.apache.commons:commons-lang3:3.13.0")
 
+    implementation("com.goterl:lazysodium-java:5.1.4")
+    implementation("net.java.dev.jna:jna:5.12.1")
+
     // keeping junit 4 for compatibility, will be removed soon, use junit 5 instead
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.junit.vintage:junit-vintage-engine:5.11.4")
@@ -115,6 +118,8 @@ dependencies {
     testImplementation("org.mockito:mockito-core:4.11.0")
     testImplementation("org.mockito:mockito-inline:4.11.0")
     testImplementation("org.mockito:mockito-junit-jupiter:4.11.0")
+    testImplementation("org.awaitility:awaitility:4.0.3")
+    testImplementation("org.hamcrest:hamcrest:2.2")
 }
 
 test {
