@@ -37,7 +37,7 @@ class GtrWebhookRestServiceTest {
 
     @Test
     void testGetPrefixPath() {
-        assertEquals("com/generalbytes/batm/server/extensions/travelrule/gtr", service.getPrefixPath());
+        assertEquals("gtr", service.getPrefixPath());
     }
 
     @Test

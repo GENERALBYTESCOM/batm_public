@@ -55,9 +55,9 @@ class GtrConfigurationServiceTest {
 
     private void assertCommonValidGtrConfiguration(GtrConfiguration configuration, String clientCertificatePassphrase) {
         assertEquals("https://platform.globaltravelrule.com", configuration.getApiUrl());
-        assertEquals("/com/generalbytes/batm/server/extensions/travelrule/gtr/client_certificate.p12", configuration.getClientCertificatePath());
+        assertEquals("/gtr/client_certificate.p12", configuration.getClientCertificatePath());
         assertEquals(clientCertificatePassphrase, configuration.getClientCertificatePassphrase());
-        assertEquals("/com/generalbytes/batm/server/extensions/travelrule/gtr/gtr_server_trust_certificate.pem", configuration.getGtrServerTrustCertificatePath());
+        assertEquals("/gtr/gtr_server_trust_certificate.pem", configuration.getGtrServerTrustCertificatePath());
     }
 
     @ParameterizedTest
@@ -98,19 +98,19 @@ class GtrConfigurationServiceTest {
     @Test
     void testGetGtrConfiguration_invalid_clientCertificateExtension() {
         mockValidConfiguration();
-        mockKeyProperty("clientCertificatePath", "/com/generalbytes/batm/server/extensions/travelrule/gtr/client_certificate.abc");
+        mockKeyProperty("clientCertificatePath", "/gtr/client_certificate.abc");
 
         GtrConfiguration configuration = configurationService.getGtrConfiguration();
         assertNull(configuration);
         verify(extensionContext, times(1)).configFileExists(anyString());
-        verify(extensionContext, never()).configFileExists("/com/generalbytes/batm/server/extensions/travelrule/gtr/client_certificate.abc");
-        verify(extensionContext, times(1)).configFileExists("/com/generalbytes/batm/server/extensions/travelrule/gtr/gtr_server_trust_certificate.pem");
+        verify(extensionContext, never()).configFileExists("/gtr/client_certificate.abc");
+        verify(extensionContext, times(1)).configFileExists("/gtr/gtr_server_trust_certificate.pem");
     }
 
     @Test
     void testGetGtrConfiguration_invalid_clientCertificate() {
         mockValidConfiguration();
-        mockCertificate("/com/generalbytes/batm/server/extensions/travelrule/gtr/client_certificate.p12", false);
+        mockCertificate("/gtr/client_certificate.p12", false);
 
         GtrConfiguration configuration = configurationService.getGtrConfiguration();
         assertNull(configuration);
@@ -119,19 +119,19 @@ class GtrConfigurationServiceTest {
     @Test
     void testGetGtrConfiguration_invalid_gtrServerTrustCertificateExtension() {
         mockValidConfiguration();
-        mockKeyProperty("gtrServerTrustCertificatePath", "/com/generalbytes/batm/server/extensions/travelrule/gtr/gtr_server_trust_certificate.abc");
+        mockKeyProperty("gtrServerTrustCertificatePath", "/gtr/gtr_server_trust_certificate.abc");
 
         GtrConfiguration configuration = configurationService.getGtrConfiguration();
         assertNull(configuration);
         verify(extensionContext, times(1)).configFileExists(anyString());
-        verify(extensionContext, times(1)).configFileExists("/com/generalbytes/batm/server/extensions/travelrule/gtr/client_certificate.p12");
-        verify(extensionContext, never()).configFileExists("/com/generalbytes/batm/server/extensions/travelrule/gtr/gtr_server_trust_certificate.abc");
+        verify(extensionContext, times(1)).configFileExists("/gtr/client_certificate.p12");
+        verify(extensionContext, never()).configFileExists("/gtr/gtr_server_trust_certificate.abc");
     }
 
     @Test
     void testGetGtrConfiguration_invalid_gtrServerTrustCertificate() {
         mockValidConfiguration();
-        mockCertificate("/com/generalbytes/batm/server/extensions/travelrule/gtr/gtr_server_trust_certificate.pem", false);
+        mockCertificate("/gtr/gtr_server_trust_certificate.pem", false);
 
         GtrConfiguration configuration = configurationService.getGtrConfiguration();
         assertNull(configuration);
@@ -164,17 +164,17 @@ class GtrConfigurationServiceTest {
     private void mockValidConfiguration(String clientCertificatePassphrase) {
         mockApiUrl();
         mockKeyProperty("requestIdPrefix", "Prefix_123");
-        mockKeyProperty("clientCertificatePath", "/com/generalbytes/batm/server/extensions/travelrule/gtr/client_certificate.p12");
+        mockKeyProperty("clientCertificatePath", "/gtr/client_certificate.p12");
         mockKeyProperty("clientCertificatePassphrase", clientCertificatePassphrase);
-        mockKeyProperty("gtrServerTrustCertificatePath", "/com/generalbytes/batm/server/extensions/travelrule/gtr/gtr_server_trust_certificate.pem");
+        mockKeyProperty("gtrServerTrustCertificatePath", "/gtr/gtr_server_trust_certificate.pem");
         mockKeyProperty("accessTokenExpirationInMinutes", "20");
         mockKeyProperty("webhooksEnabled", "true");
-        mockCertificate("/com/generalbytes/batm/server/extensions/travelrule/gtr/client_certificate.p12", true);
-        mockCertificate("/com/generalbytes/batm/server/extensions/travelrule/gtr/gtr_server_trust_certificate.pem", true);
+        mockCertificate("/gtr/client_certificate.p12", true);
+        mockCertificate("/gtr/gtr_server_trust_certificate.pem", true);
     }
 
     private void mockApiUrl() {
-        when(extensionContext.getConfigProperty("com/generalbytes/batm/server/extensions/travelrule/gtr", "apiUrl", "https://platform.globaltravelrule.com"))
+        when(extensionContext.getConfigProperty("gtr", "apiUrl", "https://platform.globaltravelrule.com"))
                 .thenReturn("https://platform.globaltravelrule.com");
     }
 
@@ -183,7 +183,7 @@ class GtrConfigurationServiceTest {
     }
 
     private void mockKeyProperty(String key, String returnValue) {
-        when(extensionContext.getConfigProperty("com/generalbytes/batm/server/extensions/travelrule/gtr", key, null)).thenReturn(returnValue);
+        when(extensionContext.getConfigProperty("gtr", key, null)).thenReturn(returnValue);
     }
 
 }

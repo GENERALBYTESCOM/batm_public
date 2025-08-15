@@ -58,7 +58,7 @@ public class GtrWebhookRestService implements IRestService {
 
     @Override
     public String getPrefixPath() {
-        return "com/generalbytes/batm/server/extensions/travelrule/gtr";
+        return "gtr";
     }
 
     @Override

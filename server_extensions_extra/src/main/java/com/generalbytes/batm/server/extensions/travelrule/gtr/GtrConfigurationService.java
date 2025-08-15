@@ -21,7 +21,7 @@ public class GtrConfigurationService {
     /**
      * Configuration file for Global Travel Rule (GTR) provider implementation, in '/batm/config' directory.
      */
-    private static final String GTR_CONFIG_FILE_NAME = "com/generalbytes/batm/server/extensions/travelrule/gtr";
+    private static final String GTR_CONFIG_FILE_NAME = "gtr";
 
     /**
      * Get Global Travel Rule (GTR) configuration.
