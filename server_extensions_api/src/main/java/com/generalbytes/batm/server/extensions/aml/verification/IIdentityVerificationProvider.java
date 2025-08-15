@@ -19,4 +19,13 @@ public interface IIdentityVerificationProvider {
     default OverrideVerificationWebUrlResponse overrideVerificationWebUrl(OverrideVerificationWebUrlRequest overrideRequest) {
         return new OverrideVerificationWebUrlResponse(overrideRequest.getOriginalVerificationWebUrl());
     }
+
+    /**
+     * Performs biometric authentication for an existing identity.
+     * @param biometricAuthenticationRequest The request containing identity ID and an InputStream with the face photo data
+     * @return Result of the authentication process
+     */
+    default BiometricAuthenticationResponse verifyBiometric(BiometricAuthenticationRequest biometricAuthenticationRequest) {
+        return BiometricAuthenticationResponse.failure("Biometric authentication not supported by this provider");
+    }
 }

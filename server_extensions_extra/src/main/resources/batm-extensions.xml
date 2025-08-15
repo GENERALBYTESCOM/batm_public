@@ -2462,6 +2462,12 @@
         <identityverificationprovider prefix="veriff" name="Veriff" help="">
             <param sensitive="false" name="Public API key" help=""/>
             <param sensitive="true"  name="Private API Key" help=""/>
+            <param sensitive="false"
+                   name="Public API key for Biometric Authentication (Optional)"
+                   help="Public API key used for Biometric Authentication feature. See more at https://devdocs.veriff.com/docs/biometric-authentication"/>
+            <param sensitive="true"
+                   name="Private API Key for Biometric Authentication (Optional)"
+                   help="Private API key used for Biometric Authentication feature. See more at https://devdocs.veriff.com/docs/biometric-authentication"/>
         </identityverificationprovider>
     </extension>
 
