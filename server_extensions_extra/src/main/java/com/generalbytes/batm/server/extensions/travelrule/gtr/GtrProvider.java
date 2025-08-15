@@ -1,6 +1,5 @@
 package com.generalbytes.batm.server.extensions.travelrule.gtr;
 
-import com.generalbytes.batm.server.extensions.IExtensionContext;
 import com.generalbytes.batm.server.extensions.travelrule.CryptoWalletType;
 import com.generalbytes.batm.server.extensions.travelrule.IIdentityWalletEvaluationRequest;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProvider;
