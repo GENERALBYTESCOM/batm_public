@@ -13,7 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;
@@ -68,7 +68,7 @@ class GtrConfigurationServiceTest {
         mockKeyProperty("requestIdPrefix", requestIdPrefix);
 
         GtrConfiguration configuration = configurationService.getGtrConfiguration();
-        assertNull(configuration);
+        assertEquals(requestIdPrefix, configuration.getRequestIdPrefix());
     }
 
     @ParameterizedTest
@@ -79,7 +79,7 @@ class GtrConfigurationServiceTest {
         mockKeyProperty("clientCertificatePath", clientCertificatePath);
 
         GtrConfiguration configuration = configurationService.getGtrConfiguration();
-        assertNull(configuration);
+        assertEquals(clientCertificatePath, configuration.getClientCertificatePath());
         verify(extensionContext, never()).configFileExists(clientCertificatePath);
     }
 
@@ -91,7 +91,7 @@ class GtrConfigurationServiceTest {
         mockKeyProperty("gtrServerTrustCertificatePath", gtrServerTrustCertificatePath);
 
         GtrConfiguration configuration = configurationService.getGtrConfiguration();
-        assertNull(configuration);
+        assertEquals(gtrServerTrustCertificatePath, configuration.getGtrServerTrustCertificatePath());
         verify(extensionContext, never()).configFileExists(gtrServerTrustCertificatePath);
     }
 
@@ -101,7 +101,7 @@ class GtrConfigurationServiceTest {
         mockKeyProperty("clientCertificatePath", "/gtr/client_certificate.abc");
 
         GtrConfiguration configuration = configurationService.getGtrConfiguration();
-        assertNull(configuration);
+        assertEquals("/gtr/client_certificate.abc", configuration.getClientCertificatePath());
         verify(extensionContext, times(1)).configFileExists(anyString());
         verify(extensionContext, never()).configFileExists("/gtr/client_certificate.abc");
         verify(extensionContext, times(1)).configFileExists("/gtr/gtr_server_trust_certificate.pem");
@@ -113,7 +113,7 @@ class GtrConfigurationServiceTest {
         mockCertificate("/gtr/client_certificate.p12", false);
 
         GtrConfiguration configuration = configurationService.getGtrConfiguration();
-        assertNull(configuration);
+        assertNotNull(configuration);
     }
 
     @Test
@@ -122,7 +122,7 @@ class GtrConfigurationServiceTest {
         mockKeyProperty("gtrServerTrustCertificatePath", "/gtr/gtr_server_trust_certificate.abc");
 
         GtrConfiguration configuration = configurationService.getGtrConfiguration();
-        assertNull(configuration);
+        assertEquals("/gtr/gtr_server_trust_certificate.abc", configuration.getGtrServerTrustCertificatePath());
         verify(extensionContext, times(1)).configFileExists(anyString());
         verify(extensionContext, times(1)).configFileExists("/gtr/client_certificate.p12");
         verify(extensionContext, never()).configFileExists("/gtr/gtr_server_trust_certificate.abc");
@@ -134,7 +134,7 @@ class GtrConfigurationServiceTest {
         mockCertificate("/gtr/gtr_server_trust_certificate.pem", false);
 
         GtrConfiguration configuration = configurationService.getGtrConfiguration();
-        assertNull(configuration);
+        assertNotNull(configuration);
     }
 
     @ParameterizedTest
