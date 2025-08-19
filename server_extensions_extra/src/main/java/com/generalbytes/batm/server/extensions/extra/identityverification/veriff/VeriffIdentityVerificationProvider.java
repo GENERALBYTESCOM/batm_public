@@ -1,5 +1,7 @@
 package com.generalbytes.batm.server.extensions.extra.identityverification.veriff;
 
+import com.generalbytes.batm.server.extensions.aml.verification.BiometricAuthenticationRequest;
+import com.generalbytes.batm.server.extensions.aml.verification.BiometricAuthenticationResponse;
 import com.generalbytes.batm.server.extensions.aml.verification.CreateApplicantResponse;
 import com.generalbytes.batm.server.extensions.aml.verification.IIdentityVerificationProvider;
 import com.generalbytes.batm.server.extensions.aml.verification.IdentityCheckWebhookException;
@@ -7,18 +9,21 @@ import com.generalbytes.batm.server.extensions.extra.identityverification.veriff
 import com.generalbytes.batm.server.extensions.extra.identityverification.veriff.api.CreateIdentityVerificationSessionResponse;
 import com.generalbytes.batm.server.extensions.extra.identityverification.veriff.api.IVeriffApi;
 import com.generalbytes.batm.server.extensions.extra.identityverification.veriff.api.VeriffDigest;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import si.mazi.rescu.HttpStatusIOException;
 
 import java.util.Objects;
 
+@RequiredArgsConstructor
 public class VeriffIdentityVerificationProvider implements IIdentityVerificationProvider {
 
     private static final Logger log = LoggerFactory.getLogger("batm.master.VeriffIdentityVerificationProvider");
 
     private final IVeriffApi api;
     private final VeriffWebhookProcessor veriffWebhookProcessor;
+    private final VeriffBiometricAuthenticator biometricAuthenticator;
 
     public VeriffIdentityVerificationProvider(String publicKey, String privateKey) {
         Objects.requireNonNull(publicKey, "veriff public key cannot be null");
@@ -26,6 +31,7 @@ public class VeriffIdentityVerificationProvider implements IIdentityVerification
         VeriffDigest veriffDigest = new VeriffDigest(privateKey);
         api = IVeriffApi.create(publicKey, veriffDigest);
         veriffWebhookProcessor = new VeriffWebhookProcessor(publicKey, veriffDigest, api);
+        biometricAuthenticator = null;
     }
 
     /**
@@ -74,5 +80,16 @@ public class VeriffIdentityVerificationProvider implements IIdentityVerification
     public void processWebhookEvent(String rawPayload, String signature) throws IdentityCheckWebhookException {
         veriffWebhookProcessor.process(rawPayload, signature);
     }
-}
 
+    /**
+     * Performs biometric authentication for an existing identity, the result is obtained via polling the Veriff API.
+     * Delegates to the VeriffBiometricAuthenticator.
+     */
+    @Override
+    public BiometricAuthenticationResponse verifyBiometric(BiometricAuthenticationRequest biometricAuthenticationRequest) {
+        if (biometricAuthenticator == null) {
+            return BiometricAuthenticationResponse.failure("Biometric authentication is not configured");
+        }
+        return biometricAuthenticator.verifyBiometric(biometricAuthenticationRequest);
+    }
+}
