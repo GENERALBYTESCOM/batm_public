@@ -236,6 +236,7 @@
                 <cryptocurrency>HT</cryptocurrency>
                 <cryptocurrency>ZPAE</cryptocurrency>
                 <cryptocurrency>NANO</cryptocurrency>
+                <cryptocurrency>VERUM</cryptocurrency>
             </ratesource>
             <ratesource prefix="stream365" name ="365.stream" >
                 <cryptocurrency>HBX</cryptocurrency>
@@ -655,6 +656,7 @@
             <cryptocurrency>USDS</cryptocurrency>
             <cryptocurrency>USDT</cryptocurrency>
             <cryptocurrency>USDTTRON</cryptocurrency>
+            <cryptocurrency>VERUM</cryptocurrency>
             <cryptocurrency>VIA</cryptocurrency>
             <cryptocurrency>VOLTZ</cryptocurrency>
             <cryptocurrency>WDC</cryptocurrency>
@@ -724,6 +726,7 @@
             <cryptocurrency>TRX</cryptocurrency>
             <cryptocurrency>USDT</cryptocurrency>
             <cryptocurrency>USDTTRON</cryptocurrency>
+            <cryptocurrency>VERUM</cryptocurrency>
             <cryptocurrency>VIA</cryptocurrency>
             <cryptocurrency>VOLTZ</cryptocurrency>
             <cryptocurrency>WDC</cryptocurrency>
