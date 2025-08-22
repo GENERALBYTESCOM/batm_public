@@ -76,6 +76,11 @@ public class NotabeneTransferPublisher {
             return;
         }
 
+        if (transferInfo.getTransactionRef() == null) {
+            log.debug("Skipping transfer update event {} for VASP {} ({}) - missing transactionRef.", transferInfo.getId(), vaspDid, vaspRole);
+            return;
+        }
+
         log.debug("Publishing update event {} of transfer {} for VASP {} ({}).", transferInfo.getId(), transferInfo.getTransactionRef(), vaspDid, vaspRole);
         listener.onTransferUpdate(transferInfo);
     }

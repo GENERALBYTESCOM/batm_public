@@ -71,6 +71,19 @@ class NotabeneTransferPublisherTest {
     }
 
     @Test
+    void testPublishEvent_nullTransactionRef() {
+        NotabeneTransferUpdateListener listener = mock(NotabeneTransferUpdateListener.class);
+        NotabeneTransferInfo transferInfo = createTransferInfo("originatorDid", "beneficiaryDid");
+        transferInfo.setTransactionRef(null);
+
+        publisher.registerListener("beneficiaryDid", listener);
+
+        publisher.publishEvent(transferInfo);
+
+        verify(listener, never()).onTransferUpdate(transferInfo);
+    }
+
+    @Test
     void testPublishEvent_equalOriginatorAndBeneficiary() {
         NotabeneTransferUpdateListener listener = mock(NotabeneTransferUpdateListener.class);
         NotabeneTransferInfo transferInfo = createTransferInfo("did", "did");
@@ -132,6 +145,7 @@ class NotabeneTransferPublisherTest {
         NotabeneTransferInfo transferInfo = new NotabeneTransferInfo();
         transferInfo.setOriginatorVaspDid(originatorDid);
         transferInfo.setBeneficiaryVaspDid(beneficiaryDid);
+        transferInfo.setTransactionRef("transactionRef");
         return transferInfo;
     }
 
