@@ -196,4 +196,11 @@ public interface ITerminal {
      */
     Set<String> getTags();
 
+    /**
+     * Returns organization ID that this terminal belongs to.
+     *
+     * @return organization ID.
+     */
+    long getOrganizationId();
+
 }
