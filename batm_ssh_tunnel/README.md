@@ -5,12 +5,12 @@ Application is listening on port 22222 and is waiting for BATM server connection
 Using ssh tunnels is recomended when BATM server wants to communicate to bitcoind or similar node as it adds additional layer of encryption.
 
 
-## To Install (tested on ubuntu server 18.04):
+## To Install (tested on ubuntu server 24.04):
 
-0. Install Java 8 (used for compilation of client and running)
+0. Install Java 17 (used for compilation of client and running)
 ```
 apt update
-apt install openjdk-8-jdk-headless
+apt install openjdk-17-jdk-headless
 ```
 1. Clone this repository to download source code
 ```
