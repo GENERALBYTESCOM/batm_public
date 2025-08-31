@@ -63,8 +63,8 @@ Note for developers
 ==========
 
 Requirements:
-* Linux is required in order to run compilers and tests.
-* Java **1.8** (we recommend using https://sdkman.io/ for managing multiple JDK versions on your computer)
+* Linux is required in order to run compilers and tests. We recommend working on Ubuntu 24.04+
+* Java **17** (we recommend using https://sdkman.io/ for managing multiple JDK versions on your computer)
 * Gradle
 
 When you implement support for a new crypto-coin, please add it to **server_extensions_extra** - so that it may get into the default CAS distribution ready to be used by other operators.
