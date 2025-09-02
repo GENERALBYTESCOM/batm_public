@@ -85,7 +85,7 @@ public class GtrVerifyPiiWebhookHandler implements GtrWebhookHandler {
         CompletableFuture<TravelRuleProviderTransferStatus> future = messagesInProcess.get(event.getTransferExternalId());
         if (future == null) {
             log.warn("The GTR provider must be informed of the PII verification result immediately after receiving"
-                    + "the transfer (synchronously). The GTR provider cannot be informed subsequently.");
+                    + " the transfer (synchronously). The GTR provider cannot be informed subsequently.");
             return false;
         }
 

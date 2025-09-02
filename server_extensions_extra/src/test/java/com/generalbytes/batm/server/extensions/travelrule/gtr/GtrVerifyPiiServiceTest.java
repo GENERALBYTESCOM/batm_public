@@ -3,6 +3,7 @@ package com.generalbytes.batm.server.extensions.travelrule.gtr;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProviderCredentials;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferData;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleVasp;
+import com.generalbytes.batm.server.extensions.travelrule.TravelRuleExtensionContext;
 import com.generalbytes.batm.server.extensions.travelrule.TravelRuleProviderException;
 import com.generalbytes.batm.server.extensions.travelrule.gtr.dto.GtrCredentials;
 import com.generalbytes.batm.server.extensions.travelrule.gtr.dto.GtrPiiVerifyWebhookPayload;
@@ -21,6 +22,8 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -43,6 +46,8 @@ class GtrVerifyPiiServiceTest {
     private GtrTransferHandler transferHandler;
     @Mock
     private GtrProviderRegistry providerRegistry;
+    @Mock
+    private TravelRuleExtensionContext extensionContext;
     @InjectMocks
     private GtrVerifyPiiService verifyPiiService;
 
@@ -51,6 +56,8 @@ class GtrVerifyPiiServiceTest {
         try (MockedStatic<GtrVerifyPiiMapper> verifyPiiMapperMock = mockStatic(GtrVerifyPiiMapper.class)) {
             ITravelRuleTransferData data = mock(ITravelRuleTransferData.class);
             when(data.getBeneficiaryVasp()).thenReturn(mock(ITravelRuleVasp.class));
+            when(data.getTransactionAmount()).thenReturn(21L);
+            when(data.getTransactionAsset()).thenReturn("BTC");
 
             GtrCredentials credentials = createGtrCredentials("self_public_key", "self_private_key");
             GtrIvms101Payload ivms101Payload = mock(GtrIvms101Payload.class);
@@ -61,9 +68,11 @@ class GtrVerifyPiiServiceTest {
             when(objectMapper.serializeIvms101Payload(ivms101Payload)).thenReturn("json_as_string");
             when(curve25519Encryptor.encrypt("json_as_string", "target_vasp_public_key", "self_private_key"))
                     .thenReturn("encrypted_payload");
+            when(extensionContext.convertCryptoFromBaseUnit(21L, "BTC")).thenReturn(BigDecimal.valueOf(0.00000021));
             verifyPiiMapperMock.when(() -> GtrVerifyPiiMapper.toGtrVerifyPiiRequest(
-                            data, "request_id", "self_public_key", "target_vasp_public_key", "encrypted_payload")
-                    ).thenReturn(request);
+                data, "request_id", "self_public_key", "target_vasp_public_key",
+                    "encrypted_payload", BigDecimal.valueOf(0.00000021))
+            ).thenReturn(request);
             when(apiWrapper.verifyPii(credentials, request)).thenReturn(expectedResponse);
 
             GtrVerifyPiiResponse response = verifyPiiService.verifyPii(credentials, data, "request_id", "target_vasp_public_key");

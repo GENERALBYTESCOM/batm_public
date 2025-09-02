@@ -7,10 +7,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
 import java.nio.file.Path;
 import java.security.KeyStore;
 import java.security.cert.X509Certificate;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -85,6 +87,30 @@ class TravelRuleExtensionContextTest {
         String result = travelRuleExtensionContext.getConfigProperty(fileNameInConfigDirectory, key, defaultValue);
 
         assertSame(expectedResult, result);
+    }
+
+    @Test
+    void testConvertCryptoToBaseUnit() {
+        BigDecimal amount = BigDecimal.valueOf(21L);
+        String cryptocurrency = "BTC";
+
+        when(extensionContext.convertCryptoToBaseUnit(amount, cryptocurrency)).thenReturn(2_100_000_000L);
+
+        long result = travelRuleExtensionContext.convertCryptoToBaseUnit(amount, cryptocurrency);
+
+        assertEquals(2_100_000_000L, result);
+    }
+
+    @Test
+    void testConvertCryptoFromBaseUnit() {
+        long amount = 2_100_000_000L;
+        String cryptocurrency = "BTC";
+
+        when(extensionContext.convertCryptoFromBaseUnit(amount, cryptocurrency)).thenReturn(BigDecimal.valueOf(21L));
+
+        BigDecimal result = travelRuleExtensionContext.convertCryptoFromBaseUnit(amount, cryptocurrency);
+
+        assertEquals(BigDecimal.valueOf(21L), result);
     }
 
 }
