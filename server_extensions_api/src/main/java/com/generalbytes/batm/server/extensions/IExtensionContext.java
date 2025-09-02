@@ -977,7 +977,7 @@ public interface IExtensionContext {
      *
      * @param amount         Amount in base units to convert.
      * @param cryptocurrency Cryptocurrency code.
-     * @return Amount in standard unit.
+     * @return Amount in standard units.
      * @throws IllegalArgumentException for unsupported cryptocurrencies.
      */
     default BigDecimal convertCryptoFromBaseUnit(long amount, String cryptocurrency) {
