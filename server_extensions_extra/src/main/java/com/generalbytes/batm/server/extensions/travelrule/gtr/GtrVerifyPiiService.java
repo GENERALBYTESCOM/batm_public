@@ -1,6 +1,7 @@
 package com.generalbytes.batm.server.extensions.travelrule.gtr;
 
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferData;
+import com.generalbytes.batm.server.extensions.travelrule.TravelRuleExtensionContext;
 import com.generalbytes.batm.server.extensions.travelrule.TravelRuleProviderException;
 import com.generalbytes.batm.server.extensions.travelrule.gtr.dto.GtrCredentials;
 import com.generalbytes.batm.server.extensions.travelrule.gtr.dto.GtrPiiVerifyWebhookPayload;
@@ -15,6 +16,8 @@ import com.generalbytes.batm.server.extensions.travelrule.gtr.util.Curve25519Enc
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.math.BigDecimal;
+
 /**
  * Service for PII (Personally Identifiable Information) verification with GTR.
  */
@@ -27,6 +30,7 @@ public class GtrVerifyPiiService {
     private final GtrObjectMapper objectMapper;
     private final GtrTransferHandler transferHandler;
     private final GtrProviderRegistry gtrProviderRegistry;
+    private final TravelRuleExtensionContext extensionContext;
 
     /**
      * Verify PII (Personally Identifiable Information) using GTR.
@@ -46,9 +50,10 @@ public class GtrVerifyPiiService {
         String encryptedIvms101Payload = curve25519Encryptor.encrypt(
                 serializedIvms101Payload, targetVaspPublicKey, credentials.getCurvePrivateKey()
         );
+        BigDecimal cryptoAmount = getCryptoAmount(transferData);
 
         GtrVerifyPiiRequest request = GtrVerifyPiiMapper.toGtrVerifyPiiRequest(
-                transferData, requestId, credentials.getCurvePublicKey(), targetVaspPublicKey, encryptedIvms101Payload
+                transferData, requestId, credentials.getCurvePublicKey(), targetVaspPublicKey, encryptedIvms101Payload, cryptoAmount
         );
 
         GtrVerifyPiiResponse response = api.verifyPii(credentials, request);
@@ -56,6 +61,10 @@ public class GtrVerifyPiiService {
                 requestId, response.getTravelRuleId(), transferData.getBeneficiaryVasp().getDid());
 
         return response;
+    }
+
+    private BigDecimal getCryptoAmount(ITravelRuleTransferData transferData) {
+        return extensionContext.convertCryptoFromBaseUnit(transferData.getTransactionAmount(), transferData.getTransactionAsset());
     }
 
     /**

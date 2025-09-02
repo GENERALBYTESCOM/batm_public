@@ -21,6 +21,7 @@ import com.generalbytes.batm.server.extensions.travelrule.gtr.util.Curve25519Enc
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,13 +101,15 @@ public class GtrVerifyPiiMapper {
      * @param initiatorVaspPublicKey Public key of initiator VASP.
      * @param targetVaspPublicKey    Public key of target VASP.
      * @param encryptedPayload       Encrypted payload using {@link Curve25519Encryptor#encrypt(String, String, String)}.
+     * @param cryptoAmount           Crypto amount in standard units.
      * @return {@link GtrVerifyPiiRequest}
      */
     public static GtrVerifyPiiRequest toGtrVerifyPiiRequest(ITravelRuleTransferData transferData,
                                                             String requestId,
                                                             String initiatorVaspPublicKey,
                                                             String targetVaspPublicKey,
-                                                            String encryptedPayload
+                                                            String encryptedPayload,
+                                                            BigDecimal cryptoAmount
     ) {
         GtrVerifyPiiRequest request = new GtrVerifyPiiRequest();
         request.setRequestId(requestId);
@@ -116,8 +119,8 @@ public class GtrVerifyPiiMapper {
         request.setEncryptedPayload(encryptedPayload);
         request.setPiiSpecVersion("ivms101-2020");
         request.setSecretType(GtrApiConstants.SecretType.CURVE_25519);
-        request.setAmount(Long.toString(transferData.getTransactionAmount()));
-        request.setFiatPrice(transferData.getFiatAmount().toString());
+        request.setAmount(cryptoAmount.toPlainString());
+        request.setFiatPrice(transferData.getFiatAmount().toPlainString());
         request.setFiatName(transferData.getFiatCurrency());
         request.setLawThresholdEnabled(false);
         request.setExpectVerifyFields(List.of(
