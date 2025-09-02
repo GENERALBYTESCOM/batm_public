@@ -971,4 +971,30 @@ public interface IExtensionContext {
     default ITravelRuleTransferData findTravelRuleTransferByAddress(String address) {
         return null;
     }
+
+    /**
+     * Converts the given crypto amount from standard units to base units.
+     * For example: 1 BTC (standard units) = 100 000 000 sats (base units)
+     *
+     * @param amount         Amount in standard units to convert.
+     * @param cryptocurrency Cryptocurrency code.
+     * @return Amount in base units.
+     * @throws IllegalArgumentException for unsupported cryptocurrencies.
+     */
+    default long convertCryptoToBaseUnit(BigDecimal amount, String cryptocurrency) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    /**
+     * Converts the given crypto amount from base units to standard units.
+     * For example: 100 000 000 sats (base units) = 1 BTC (standard units)
+     *
+     * @param amount         Amount in base units to convert.
+     * @param cryptocurrency Cryptocurrency code.
+     * @return Amount in standard units.
+     * @throws IllegalArgumentException for unsupported cryptocurrencies.
+     */
+    default BigDecimal convertCryptoFromBaseUnit(long amount, String cryptocurrency) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
 }
