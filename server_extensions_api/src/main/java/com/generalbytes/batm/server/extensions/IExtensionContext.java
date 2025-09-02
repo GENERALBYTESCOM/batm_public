@@ -100,6 +100,20 @@ public interface IExtensionContext {
 
     void removeIdentityListener(IIdentityListener listener);
 
+    /**
+     * Registers a listener for receiving remote printer receipt data asynchronously.
+     * No response is expected; the listener should not block.
+     * @param listener the printer listener to register
+     */
+    default void addRemotePrinterReceiptListener(IRemotePrinterListener listener) {
+    }
+
+    /**
+     * Stops the remote printer listener from receiving receipt data.
+     * @param listener the printer listener to remove
+     */
+    default void removeRemotePrinterReceiptListener(IRemotePrinterListener listener) {
+    }
 
     /**
      * Finds and returns transaction by given remote or local transaction id
@@ -982,20 +996,5 @@ public interface IExtensionContext {
      */
     default BigDecimal convertCryptoFromBaseUnit(long amount, String cryptocurrency) {
         throw new UnsupportedOperationException("Not implemented");
-    }
-
-    /**
-     * Registers a listener for receiving remote printer receipt data asynchronously.
-     * No response is expected; the listener should not block.
-     * @param listener the printer listener to register
-     */
-    default void addRemotePrinterReceiptListener(IRemotePrinterListener listener) {
-    }
-
-    /**
-     * Stops the remote printer listener from receiving receipt data.
-     * @param listener the printer listener to remove
-     */
-    default void removeRemotePrinterReceiptListener(IRemotePrinterListener listener) {
     }
 }
