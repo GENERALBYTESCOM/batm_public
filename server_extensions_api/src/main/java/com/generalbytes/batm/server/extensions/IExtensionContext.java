@@ -983,4 +983,19 @@ public interface IExtensionContext {
     default BigDecimal convertCryptoFromBaseUnit(long amount, String cryptocurrency) {
         throw new UnsupportedOperationException("Not implemented");
     }
+
+    /**
+     * Registers a listener for receiving remote printer receipt data asynchronously.
+     * No response is expected; the listener should not block.
+     * @param listener the printer listener to register
+     */
+    default void addRemotePrinterReceiptListener(IRemotePrinterListener listener) {
+    }
+
+    /**
+     * Stops the remote printer listener from receiving receipt data.
+     * @param listener the printer listener to remove
+     */
+    default void removeRemotePrinterReceiptListener(IRemotePrinterListener listener) {
+    }
 }
