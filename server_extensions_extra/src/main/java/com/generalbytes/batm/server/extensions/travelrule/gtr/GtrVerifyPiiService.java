@@ -50,9 +50,7 @@ public class GtrVerifyPiiService {
         String encryptedIvms101Payload = curve25519Encryptor.encrypt(
                 serializedIvms101Payload, targetVaspPublicKey, credentials.getCurvePrivateKey()
         );
-        BigDecimal cryptoAmount = extensionContext.convertCryptoFromBaseUnit(
-            transferData.getTransactionAmount(), transferData.getTransactionAsset()
-        );
+        BigDecimal cryptoAmount = getCryptoAmount(transferData);
 
         GtrVerifyPiiRequest request = GtrVerifyPiiMapper.toGtrVerifyPiiRequest(
                 transferData, requestId, credentials.getCurvePublicKey(), targetVaspPublicKey, encryptedIvms101Payload, cryptoAmount
@@ -63,6 +61,10 @@ public class GtrVerifyPiiService {
                 requestId, response.getTravelRuleId(), transferData.getBeneficiaryVasp().getDid());
 
         return response;
+    }
+
+    private BigDecimal getCryptoAmount(ITravelRuleTransferData transferData) {
+        return extensionContext.convertCryptoFromBaseUnit(transferData.getTransactionAmount(), transferData.getTransactionAsset());
     }
 
     /**
