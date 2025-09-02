@@ -31,6 +31,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -101,6 +102,7 @@ class GtrVerifyPiiServiceTest {
         verifyPiiService.processVerifyPiiWebhookMessage(webhookMessage, payload);
 
         verify(transferHandler, times(1)).handleVerifyPiiWebhookMessage(payload, ivms101Payload, "raw_data");
+        verifyNoInteractions(extensionContext);
     }
 
     @Test
@@ -115,6 +117,7 @@ class GtrVerifyPiiServiceTest {
         );
 
         assertEquals("GTR provider with VASP DID 'invoke_vasp_code' not found", exception.getMessage());
+        verifyNoInteractions(extensionContext);
     }
 
     private GtrPiiVerifyWebhookPayload createGtrPiiVerifyWebhookPayload() {
