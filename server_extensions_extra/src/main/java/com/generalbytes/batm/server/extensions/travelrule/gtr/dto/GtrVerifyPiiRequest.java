@@ -52,7 +52,7 @@ public class GtrVerifyPiiRequest {
      */
     private int secretType;
     /**
-     * Crypto amount in base unit.
+     * Crypto amount in standard units.
      */
     private String amount;
     /**

@@ -4,6 +4,7 @@ package com.generalbytes.batm.server.extensions.travelrule;
 import com.generalbytes.batm.server.extensions.IExtensionContext;
 import lombok.AllArgsConstructor;
 
+import java.math.BigDecimal;
 import java.nio.file.Path;
 import java.security.KeyStore;
 import java.security.cert.X509Certificate;
@@ -34,6 +35,14 @@ public class TravelRuleExtensionContext {
 
     public String getConfigProperty(String fileNameInConfigDirectory, String key, String defaultValue) {
         return context.getConfigProperty(fileNameInConfigDirectory, key, defaultValue);
+    }
+
+    public long convertCryptoToBaseUnit(BigDecimal amount, String cryptocurrency) {
+        return context.convertCryptoToBaseUnit(amount, cryptocurrency);
+    }
+
+    public BigDecimal convertCryptoFromBaseUnit(long amount, String cryptocurrency) {
+        return context.convertCryptoFromBaseUnit(amount, cryptocurrency);
     }
 
 }

@@ -66,7 +66,6 @@ class GtrVerifyPiiMapperTest {
 
         ITravelRuleTransferData transferData = mock(ITravelRuleTransferData.class);
         when(transferData.getBeneficiaryVasp()).thenReturn(beneficiaryVasp);
-        when(transferData.getTransactionAmount()).thenReturn(21L);
         when(transferData.getFiatAmount()).thenReturn(BigDecimal.valueOf(5000));
         when(transferData.getFiatCurrency()).thenReturn("CZK");
 
@@ -75,7 +74,8 @@ class GtrVerifyPiiMapperTest {
                 "request_id",
                 "initiator_vasp_public_key",
                 "target_vasp_public_key",
-                "encrypted_payload"
+                "encrypted_payload",
+                BigDecimal.valueOf(21L)
         );
 
         assertEquals("request_id", request.getRequestId());

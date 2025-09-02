@@ -52,7 +52,7 @@ public class GtrProviderFactory implements ITravelRuleProviderFactory {
         gtrTransferHandler = new GtrTransferHandler();
         gtrProviderRegistry = new GtrProviderRegistry();
         GtrVerifyPiiService verifyPiiService = new GtrVerifyPiiService(
-                gtrApiWrapper, curve25519Encryptor, gtrObjectMapper, gtrTransferHandler, gtrProviderRegistry
+                gtrApiWrapper, curve25519Encryptor, gtrObjectMapper, gtrTransferHandler, gtrProviderRegistry, context
         );
         GtrValidator gtrValidator = new GtrValidator();
 
