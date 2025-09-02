@@ -968,7 +968,7 @@ public interface IExtensionContext {
      * @throws IllegalArgumentException for unsupported cryptocurrencies.
      */
     default long convertCryptoToBaseUnit(BigDecimal amount, String cryptocurrency) {
-        throw new UnsupportedOperationException("Not implemented, this method must be overridden.");
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     /**
@@ -981,6 +981,6 @@ public interface IExtensionContext {
      * @throws IllegalArgumentException for unsupported cryptocurrencies.
      */
     default BigDecimal convertCryptoFromBaseUnit(long amount, String cryptocurrency) {
-        throw new UnsupportedOperationException("Not implemented, this method must be overridden.");
+        throw new UnsupportedOperationException("Not implemented");
     }
 }
