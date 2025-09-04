@@ -8,7 +8,7 @@ import com.generalbytes.batm.server.extensions.aml.verification.IdentityCheckWeb
 import com.generalbytes.batm.server.extensions.extra.identityverification.veriff.api.webhook.VerificationDecisionWebhookRequest;
 import com.generalbytes.batm.server.extensions.extra.identityverification.veriff.api.webhook.VerificationEventWebhookRequest;
 
-import jakarta.ws.rs.core.Response.Status;
+import javax.ws.rs.core.Response.Status;
 import java.util.Map;
 
 public class VeriffWebhookParser {

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.generalbytes.batm.server.extensions.aml.verification.IdentityCheckWebhookException;
 import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.CustomObjectMapperFactory;
 
-import jakarta.ws.rs.core.Response.Status;
+import javax.ws.rs.core.Response.Status;
 
 /**
  * The SumSubWebhookParser class is responsible for parsing webhook payloads related to SumSub identity verification.
