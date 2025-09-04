@@ -1,6 +1,5 @@
 // generated at 2021-05-26T11:51:06
 // shared substitutions (project ':currencies')
-substitute module: 'com.fasterxml.jackson.core:jackson-databind', versions: ['2.7.4', '2.9.6', '2.9.9', '2.10.0', '2.11.2', '2.12.0'], toVersion: '2.14.2'
 substitute module: 'com.fasterxml.jackson.core:jackson-core', versions: ['2.7.4', '2.11.2', '2.12.0'], toVersion: '2.14.2'
 substitute module: 'com.fasterxml.jackson.core:jackson-databind', versions: ['2.7.4', '2.9.6', '2.9.9', '2.10.0', '2.11.2', '2.12.0'], toVersion: '2.14.2'
 substitute module: 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider', versions: ['2.8.5'], toVersion: '2.14.2'
@@ -26,6 +25,8 @@ substitute module: 'io.netty:netty-handler-proxy', versions: ['4.1.8.Final'], to
 substitute module: 'io.netty:netty-resolver', versions: ['4.1.8.Final'], toVersion: '4.1.48.Final'
 substitute module: 'io.netty:netty-transport', versions: ['4.1.8.Final'], toVersion: '4.1.48.Final'
 substitute module: 'net.java.dev.jna:jna', versions: ['5.9.0'], toVersion: '5.12.1'
+substitute module: 'javax.ws.rs:javax.ws.rs-api', versions: ['2.0.1'], toVersion: '2.1'
+substitute module: 'javax.annotation:javax.annotation-api', versions: ['1.2'], toVersion: '1.3.2'
 substitute module: 'org.apache.commons:commons-lang3', versions: ['3.5', '3.13.0'], toVersion: '3.14.0'
 substitute module: 'org.bouncycastle:bcprov-jdk15on', versions: ['1.60', '1.66', '1.68'], toVersion: '1.63'
 substitute module: 'org.hamcrest:hamcrest', versions: ['2.1'], toVersion: '2.2'

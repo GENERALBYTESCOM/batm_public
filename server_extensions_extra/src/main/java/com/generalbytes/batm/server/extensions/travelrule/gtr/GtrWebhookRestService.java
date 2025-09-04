@@ -7,11 +7,11 @@ import com.generalbytes.batm.server.extensions.travelrule.gtr.dto.GtrWebhookMess
 import com.generalbytes.batm.server.extensions.travelrule.gtr.handler.GtrWebhookHandler;
 import lombok.extern.slf4j.Slf4j;
 
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 /**
  * Servlet responsible for handling incoming webhook messages from Global Travel Rule.
