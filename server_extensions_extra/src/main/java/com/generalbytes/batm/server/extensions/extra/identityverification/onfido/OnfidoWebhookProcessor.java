@@ -18,7 +18,7 @@ import com.onfido.webhooks.WebhookEventVerifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.ws.rs.core.Response.Status;
+import javax.ws.rs.core.Response.Status;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;

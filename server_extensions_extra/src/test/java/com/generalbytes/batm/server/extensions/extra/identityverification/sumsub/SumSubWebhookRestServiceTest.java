@@ -12,7 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import jakarta.ws.rs.core.Response;
+import javax.ws.rs.core.Response;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.doThrow;

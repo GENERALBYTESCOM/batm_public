@@ -16,7 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import si.mazi.rescu.HttpStatusIOException;
 
-import jakarta.ws.rs.core.Response.Status;
+import javax.ws.rs.core.Response.Status;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.ArrayList;
