@@ -25,11 +25,16 @@ public class LiquidBitcoinDefinition extends CryptoCurrencyDefinition{
     private IPaymentSupport paymentSupport = new LiquidBitcoinPaymentSupport();
 
     public LiquidBitcoinDefinition() {
-        super(CryptoCurrency.SUM.getCode(), "Sumcoin", "sumcoin","https://github.com/sumcoinlabs/sumcoin");
+        super(CryptoCurrency.L_BTC.getCode(), "Liquid Network Bitcoin", "liquidnetwork","https://liquid.net/");
     }
 
     @Override
     public IPaymentSupport getPaymentSupport() {
         return paymentSupport;
+    }
+
+    @Override
+    public String getRateSourceSymbol() {
+        return CryptoCurrency.BTC.getCode();
     }
 }
