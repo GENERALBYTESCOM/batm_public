@@ -29,6 +29,7 @@ import java.net.InetSocketAddress;
 import java.util.*;
 
 public class LiquidBitcoinExtension extends AbstractExtension {
+    private static final ICryptoCurrencyDefinition DEFINITION = new LiquidBitcoinDefinition();
 
     @Override
     public String getName() {
@@ -115,4 +116,13 @@ public class LiquidBitcoinExtension extends AbstractExtension {
         result.add(CryptoCurrency.L_BTC.getCode());
         return result;
     }
+
+
+    @Override
+    public Set<ICryptoCurrencyDefinition> getCryptoCurrencyDefinitions() {
+        Set<ICryptoCurrencyDefinition> result = new HashSet<>();
+        result.add(DEFINITION);
+        return result;
+    }
+
 }
