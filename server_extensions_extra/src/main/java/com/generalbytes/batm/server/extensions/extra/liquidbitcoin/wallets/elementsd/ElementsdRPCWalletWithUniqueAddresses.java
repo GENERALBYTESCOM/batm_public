@@ -17,10 +17,29 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.liquidbitcoin.wallets.elementsd;
 
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.IGeneratesNewDepositCryptoAddress;
+import com.generalbytes.batm.server.extensions.extra.common.RPCClient;
+import com.generalbytes.batm.server.extensions.extra.common.RPCWallet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class ElementsdRPCWalletWithUniqueAddresses extends ElementsdRPCWallet implements IGeneratesNewDepositCryptoAddress {
-    public ElementsdRPCWalletWithUniqueAddresses(String rpcURL) {
-        super(rpcURL, ""); // label is used only for reusing the same address
+import java.net.MalformedURLException;
+
+public class ElementsdRPCWalletWithUniqueAddresses extends RPCWallet implements IGeneratesNewDepositCryptoAddress {
+    private static final Logger log = LoggerFactory.getLogger(ElementsdRPCWalletWithUniqueAddresses.class);
+
+    public ElementsdRPCWalletWithUniqueAddresses(String rpcURL, String walletName) {
+        super(rpcURL, walletName, CryptoCurrency.L_BTC.getCode());
+    }
+
+    @Override
+    public RPCClient createClient(String cryptoCurrency, String rpcURL) {
+        try {
+            return new ElementsdRPCClient(cryptoCurrency, rpcURL,"bitcoin");
+        } catch (MalformedURLException e) {
+            log.error("Error", e);
+        }
+        return null;
     }
 }

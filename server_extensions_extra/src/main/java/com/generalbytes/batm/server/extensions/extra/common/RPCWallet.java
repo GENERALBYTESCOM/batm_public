@@ -18,6 +18,7 @@
 package com.generalbytes.batm.server.extensions.extra.common;
 
 import com.generalbytes.batm.server.extensions.ICanSendMany;
+import lombok.Getter;
 import wf.bitcoin.javabitcoindrpcclient.BitcoinRPCException;
 import com.generalbytes.batm.server.extensions.IWallet;
 
@@ -36,8 +37,8 @@ import java.util.stream.Collectors;
 public class RPCWallet implements IWallet, IRPCWallet, ICanSendMany {
     private static final Logger log = LoggerFactory.getLogger(RPCWallet.class);
     private String cryptoCurrency;
-
     private String label;
+    @Getter
     private RPCClient client;
 
 
@@ -173,7 +174,7 @@ public class RPCWallet implements IWallet, IRPCWallet, ICanSendMany {
         }
     }
 
-    private static RPCClient createClient(String cryptoCurrency, String rpcURL) {
+    public RPCClient createClient(String cryptoCurrency, String rpcURL) {
         try {
             return new RPCClient(cryptoCurrency, rpcURL);
         } catch (MalformedURLException e) {
@@ -182,7 +183,4 @@ public class RPCWallet implements IWallet, IRPCWallet, ICanSendMany {
         return null;
     }
 
-    public RPCClient getClient() {
-        return client;
-    }
 }

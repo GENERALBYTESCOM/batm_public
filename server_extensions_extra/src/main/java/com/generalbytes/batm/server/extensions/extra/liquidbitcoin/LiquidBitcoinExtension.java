@@ -22,14 +22,13 @@ import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.ExtensionsUtil;
-import com.generalbytes.batm.server.extensions.extra.liquidbitcoin.wallets.elementsd.ElementsdRPCWallet;
 import com.generalbytes.batm.server.extensions.extra.liquidbitcoin.wallets.elementsd.ElementsdRPCWalletWithUniqueAddresses;
 
 import java.math.BigDecimal;
 import java.net.InetSocketAddress;
 import java.util.*;
 
-public class LiquidBitcoinExtension extends AbstractExtension{
+public class LiquidBitcoinExtension extends AbstractExtension {
 
     @Override
     public String getName() {
@@ -39,37 +38,35 @@ public class LiquidBitcoinExtension extends AbstractExtension{
     @Override
     public IWallet createWallet(String walletLogin, String tunnelPassword) {
         try {
-        if (walletLogin !=null && !walletLogin.trim().isEmpty()) {
-            StringTokenizer st = new StringTokenizer(walletLogin,":");
-            String walletType = st.nextToken();
+            if (walletLogin != null && !walletLogin.trim().isEmpty()) {
+                StringTokenizer st = new StringTokenizer(walletLogin, ":");
+                String walletType = st.nextToken();
 
-            if ("elementsd".equalsIgnoreCase(walletType)
-                || "elementsdnoforward".equalsIgnoreCase(walletType)) {
-                //"elementsd:protocol:user:password:ip:port:walletName"
+                if ("elementsdbtcnoforward".equalsIgnoreCase(walletType)) {
+                    //"elementsdbtcnoforward:protocol:user:password:ip:port:walletname"
 
-                String protocol = st.nextToken();
-                String username = st.nextToken();
-                String password = st.nextToken();
-                String hostname = st.nextToken();
-                int port = Integer.parseInt(st.nextToken());
-                String walletName = "";
-                if (st.hasMoreTokens()) {
-                    walletName = st.nextToken();
-                }
-
-                InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(walletLogin, tunnelPassword, InetSocketAddress.createUnresolved(hostname, port));
-                hostname = tunnelAddress.getHostString();
-                port = tunnelAddress.getPort();
-
-                if (protocol != null && username != null && password != null && hostname !=null && walletName != null) {
-                    String rpcURL = protocol +"://" + username +":" + password + "@" + hostname +":" + port;
-                    if ("elementsdnoforward".equalsIgnoreCase(walletType)) {
-                        return new ElementsdRPCWalletWithUniqueAddresses(rpcURL);
+                    String protocol = st.nextToken();
+                    String username = st.nextToken();
+                    String password = st.nextToken();
+                    String hostname = st.nextToken();
+                    int port = Integer.parseInt(st.nextToken());
+                    String walletName = "";
+                    if (st.hasMoreTokens()) {
+                        walletName = st.nextToken();
                     }
-                    return new ElementsdRPCWallet(rpcURL, walletName);
+
+                    if (ctx != null) {
+                        InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(walletLogin, tunnelPassword, InetSocketAddress.createUnresolved(hostname, port));
+                        hostname = tunnelAddress.getHostString();
+                        port = tunnelAddress.getPort();
+                    }
+
+                    if (protocol != null && username != null && password != null && hostname != null && walletName != null) {
+                        String rpcURL = protocol + "://" + username + ":" + password + "@" + hostname + ":" + port;
+                        return new ElementsdRPCWalletWithUniqueAddresses(rpcURL, walletName);
+                    }
                 }
             }
-        }
         } catch (Exception e) {
             ExtensionsUtil.logExtensionParamsException("createWallet", getClass().getSimpleName(), walletLogin, e);
         }

@@ -1143,18 +1143,7 @@
         <cryptologo cryptocurrency="LBTC" file="lbtc.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.liquidbitcoin.LiquidBitcoinExtension" >
-        <wallet prefix="elementsd" name="Liquid Core - liquidd" >
-            <tunnel supported="true"/>
-            <sendtomany supported="true"/>
-            <param name="protocol" />
-            <param name="user" />
-            <param name="password" />
-            <param name="host" />
-            <param name="port" />
-            <param name="wallet" />
-            <cryptocurrency>L_BTC</cryptocurrency>
-        </wallet>
-        <wallet prefix="elementsdnoforward" name="Liquid Core - liquidd (no forward)" >
+        <wallet prefix="elementsdbtcnoforward" name="Liquid Network Bitcoin - Elements Core" >
             <tunnel supported="true"/>
             <sendtomany supported="true"/>
             <param name="protocol" />

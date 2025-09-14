@@ -30,13 +30,26 @@ public class LiquidBitcoinAddressValidator implements ICryptoAddressValidator {
 
     @Override
     public boolean isAddressValid(String address) {
+        /*
+
+Prefix Example	Confidential?	Encoding	Address Type	Network
+V…	                ✅ Yes	    Base58	Confidential (P2PKH/P2SH with blinding key)	Mainnet
+CT…	                ✅ Yes	    Bech32	Confidential SegWit	Mainnet
+lq1…                ❌ No        Bech32  Unconfidential SegWit (like Bitcoin bc1…) Mainnet
+H…	                ❌ No	    Base58	Unconfidential P2PKH (like Bitcoin 1…)	Mainnet
+X…	                ❌ No	    Base58	Unconfidential P2SH (like Bitcoin 3…)	Mainnet
+Q…	                ❌ No	    Bech32	Unconfidential SegWit (like Bitcoin bc1…)	Mainnet
+
+tlq…	            ✅ Yes	    Bech32	Confidential SegWit	Testnet
+ERT… / tex…         ❌ No	    Bech32	Unconfidential SegWit	Testnet / Regtest
+CTE… / ERT…	        ✅ Yes	    Base58	Confidential	Testnet / Regtest
+
+         */
         if (address == null || address.trim().isEmpty()) {
             return false;
         }
 
-        // Liquid Network uses bech32 addresses with "lq1" prefix for mainnet
-        // and "tlq1" prefix for testnet
-        if (address.toLowerCase().startsWith("lq1") || address.toLowerCase().startsWith("tlq1")) {
+        if (address.toLowerCase().startsWith("lq1") || address.toLowerCase().startsWith("ct") || address.toLowerCase().startsWith("q") ) {
             try {
                 Bech32.decode(address);
                 return true;
@@ -45,11 +58,8 @@ public class LiquidBitcoinAddressValidator implements ICryptoAddressValidator {
                 return false;
             }
         }
-        
-        // Also support legacy Liquid addresses that start with specific prefixes
-        // Liquid mainnet P2SH addresses start with "H" or "Q"
-        // Liquid mainnet P2PKH addresses start with "X"
-        if (address.startsWith("H") || address.startsWith("Q") || address.startsWith("X")) {
+
+        if (address.startsWith("H") || address.startsWith("X") || address.startsWith("V")) {
             try {
                 Base58.decodeToBigInteger(address);
                 Base58.decodeChecked(address);
@@ -59,7 +69,7 @@ public class LiquidBitcoinAddressValidator implements ICryptoAddressValidator {
                 return false;
             }
         }
-        
+
         return false;
     }
 

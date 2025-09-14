@@ -8,6 +8,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitcoind.BA
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitcoind.BATMBitcoindRPCWalletWithUniqueAddresses;
 import com.generalbytes.batm.server.extensions.extra.bitcoincash.BitcoinCashRPCWallet;
 import com.generalbytes.batm.server.extensions.extra.bitcoincash.BitcoinCashUniqueAddressRPCWallet;
+import com.generalbytes.batm.server.extensions.extra.liquidbitcoin.wallets.elementsd.ElementsdRPCWalletWithUniqueAddresses;
 import com.generalbytes.batm.server.extensions.extra.litecoin.wallets.litecoind.LitecoindRPCWallet;
 import com.generalbytes.batm.server.extensions.extra.litecoin.wallets.litecoind.LitecoindUniqueAddressRPCWallet;
 import com.generalbytes.batm.server.extensions.payment.ReceivedAmount;
@@ -37,6 +38,9 @@ class WalletTest {
             {CryptoCurrency.BTC, new BATMBitcoindRPCWallet("http://user:b999524f11318c0c86d5b51b3beffbc02b@localhost:8332", "")},
             {CryptoCurrency.BTC, new BATMBitcoindRPCWallet("http://user:b999524f11318c0c86d5b51b3beffbc02b@localhost:8332", "BATMTEST")},
             {CryptoCurrency.BTC, new BATMBitcoindRPCWalletWithUniqueAddresses("http://user:b999524f11318c0c86d5b51b3beffbc02b@localhost:8332")},
+
+            {CryptoCurrency.L_BTC, new ElementsdRPCWalletWithUniqueAddresses("http://user:pass@localhost:8332","main")},
+
         };
     }
 
