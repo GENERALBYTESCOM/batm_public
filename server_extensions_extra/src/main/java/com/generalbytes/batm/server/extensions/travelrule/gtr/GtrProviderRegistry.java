@@ -2,8 +2,8 @@ package com.generalbytes.batm.server.extensions.travelrule.gtr;
 
 import lombok.AllArgsConstructor;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Register of created GTR provider instances for various VASP DIDs based on Travel Rule Settings.
@@ -17,7 +17,7 @@ public class GtrProviderRegistry {
     /**
      * Already initialized GTR providers. VASP DID is used as a key to avoid multiple initializations based on same settings.
      */
-    private final Map<String, GtrProvider> initializedGtrProviders = new HashMap<>();
+    private final Map<String, GtrProvider> initializedGtrProviders = new ConcurrentHashMap<>();
 
     /**
      * Returns an already initialized GTR provider according to the specified VASP DID.
