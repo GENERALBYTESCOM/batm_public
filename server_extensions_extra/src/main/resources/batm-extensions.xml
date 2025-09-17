@@ -1152,11 +1152,11 @@
             <param name="host" />
             <param name="port" />
             <param name="wallet" />
-            <cryptocurrency>L_BTC</cryptocurrency>
+            <cryptocurrency>L-BTC</cryptocurrency>
             <help>This variant of the wallet generates new addresses for each transaction and does not forward payments from temporary address</help>
         </wallet>
-        <cryptologo cryptocurrency="L_BTC" file="l_btc.png"/>
-        <cryptologo cryptocurrency="L_BTC" file="l_btc.svg"/>
+        <cryptologo cryptocurrency="L-BTC" file="l_btc.png"/>
+        <cryptologo cryptocurrency="L-BTC" file="l_btc.svg"/>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.bitbay.BitbayCoinExtension" >
         <wallet prefix="bitbayd" name="bitbayd">
