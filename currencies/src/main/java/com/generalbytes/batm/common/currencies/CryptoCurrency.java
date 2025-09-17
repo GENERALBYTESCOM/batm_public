@@ -78,7 +78,7 @@ public enum CryptoCurrency {
     JOB("Jobchain"),
     LMY("Lunch Money"),
     LBTC("Lightning Network Bitcoin"),
-    L_BTC("Liquid Network Bitcoin"),
+    L_BTC("L-BTC", "Liquid Network Bitcoin"),
     LEO("LEOcoin"),
     LINDA("Linda"),
     LSK("Lisk"),
