@@ -1142,6 +1142,27 @@
         <cryptologo cryptocurrency="LBTC" file="lbtc.png"/>
         <cryptologo cryptocurrency="LBTC" file="lbtc.svg"/>
     </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.liquidbitcoin.LiquidBitcoinExtension" >
+        <wallet prefix="elementsdbtcnoforward" name="Liquid Network Bitcoin - Elements Core" >
+            <tunnel supported="true"/>
+            <sendtomany supported="true"/>
+            <param name="protocol" />
+            <param name="user" />
+            <param name="password" />
+            <param name="host" />
+            <param name="port" />
+            <param name="wallet" />
+            <cryptocurrency>L_BTC</cryptocurrency>
+            <help>This variant of the wallet generates new addresses for each transaction and does not forward payments from temporary address</help>
+        </wallet>
+        <ratesource prefix="l_btcfix" name ="Fix Price" >
+            <param name="price" />
+            <cryptocurrency>L_BTC</cryptocurrency>
+            <help>USD is default fiat currency.</help>
+        </ratesource>
+        <cryptologo cryptocurrency="L_BTC" file="l_btc.png"/>
+        <cryptologo cryptocurrency="L_BTC" file="l_btc.svg"/>
+    </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.bitbay.BitbayCoinExtension" >
         <wallet prefix="bitbayd" name="bitbayd">
             <param name="protocol" />
