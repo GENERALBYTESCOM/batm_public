@@ -28,8 +28,12 @@ import com.generalbytes.batm.server.extensions.IRateSourceAdvanced;
 import com.generalbytes.batm.server.extensions.ITask;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.XChangeExchange;
 import org.knowm.xchange.Exchange;
-import org.knowm.xchange.ExchangeFactory;
 import org.knowm.xchange.ExchangeSpecification;
+import org.knowm.xchange.bitfinex.BitfinexErrorAdapter;
+import org.knowm.xchange.bitfinex.dto.BitfinexException;
+import org.knowm.xchange.bitfinex.service.BitfinexAccountService;
+import org.knowm.xchange.bitfinex.v1.dto.account.BitfinexDepositAddressRequest;
+import org.knowm.xchange.bitfinex.v1.dto.account.BitfinexDepositAddressResponse;
 import org.knowm.xchange.currency.Currency;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.Order;
@@ -103,13 +107,64 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
         this(null, null, preferredFiatCurrency);
     }
 
+    private static class BitcoinCashFixBitfinexExchange extends org.knowm.xchange.bitfinex.BitfinexExchange {
+
+        @Override
+        protected void initServices() {
+            super.initServices();
+
+            this.accountService = new BitfinexAccountService(this, getResilienceRegistries()) {
+
+                @Override
+                public String withdrawFunds(Currency currency, BigDecimal amount, String address) throws IOException {
+                    if (!currency.getCurrencyCode().equalsIgnoreCase("BCH")) {
+                        return super.withdrawFunds(currency, amount, address);
+                    }
+
+                    try {
+                        return withdraw("bchn", "exchange", amount, address);
+                    } catch (BitfinexException e) {
+                        throw BitfinexErrorAdapter.adapt(e);
+                    }
+                }
+
+                @Override
+                public String requestDepositAddress(Currency currency, String... arguments) throws IOException {
+                    try {
+                        final BitfinexDepositAddressResponse response = requestDepositAddressRaw(currency.getCurrencyCode());
+                        return response.getAddress();
+                    } catch (BitfinexException e) {
+                        throw BitfinexErrorAdapter.adapt(e);
+                    }
+                }
+
+                @Override
+                public BitfinexDepositAddressResponse requestDepositAddressRaw(String currency) throws IOException {
+                    if (!currency.equalsIgnoreCase("BCH")) {
+                        return super.requestDepositAddressRaw(currency);
+                    }
+
+                    return bitfinex.requestDeposit(
+                        apiKey,
+                        payloadCreator,
+                        signatureCreator,
+                        new BitfinexDepositAddressRequest(
+                            String.valueOf(exchange.getNonceFactory().createValue()),
+                            "bchn",
+                            "exchange",
+                            0));
+                }
+            };
+        }
+    }
+
     private synchronized Exchange getExchange() {
         if (this.exchange == null) {
-            ExchangeSpecification bfxSpec = new org.knowm.xchange.bitfinex.BitfinexExchange().getDefaultExchangeSpecification();
+            this.exchange = new BitcoinCashFixBitfinexExchange();
+            ExchangeSpecification bfxSpec = exchange.getDefaultExchangeSpecification();
             bfxSpec.setApiKey(this.apiKey);
             bfxSpec.setSecretKey(this.apiSecret);
             bfxSpec.setShouldLoadRemoteMetaData(false);
-            this.exchange = ExchangeFactory.INSTANCE.createExchange(bfxSpec);
             exchange.applySpecification(bfxSpec);
         }
         return this.exchange;
@@ -222,7 +277,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
         AccountService accountService = getExchange().getAccountService();
         try {
             RateLimiter.waitForPossibleCall(getClass());
-            String result = accountService.withdrawFunds(Currency.getInstance(getExchangeSpecificSymbol(cryptoCurrency)), amount, destinationAddress);
+            String result = accountService.withdrawFunds(Currency.getInstance(cryptoCurrency), amount, destinationAddress);
             log.debug("Bitfinex exchange (withdrawFunds) result: {}", result);
             return result;
         } catch (IOException | TimeoutException e) {
