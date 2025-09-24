@@ -973,6 +973,16 @@ public interface IExtensionContext {
     }
 
     /**
+     * Finds and returns travel rule transfer data by public ID of the transfer.
+     *
+     * @param transferPublicId Unique identifier of the transfer, generated on the server side.
+     * @return The travel rule transfer data, or {@code null} if no data is found for transfer public ID.
+     */
+    default ITravelRuleTransferData findTravelRuleTransferByPublicId(String transferPublicId) {
+        return null;
+    }
+
+    /**
      * Converts the given crypto amount from standard units to base units.
      * For example: 1 BTC (standard units) = 100 000 000 sats (base units)
      *
