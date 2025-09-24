@@ -1,9 +1,11 @@
 package com.generalbytes.batm.server.extensions.extra.liquidbitcoin;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
 import com.generalbytes.batm.server.extensions.IExtensionContext;
+import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.ITunnelManager;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.liquidbitcoin.wallets.elementsd.ElementsdRPCWalletWithUniqueAddresses;
@@ -12,15 +14,19 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.MockedConstruction;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.InetSocketAddress;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -132,6 +138,34 @@ class LiquidBitcoinExtensionTest {
             assertEquals(wallet, mockedConstruction.constructed().get(0));
             verify(tunnelManager).connectIfNeeded(walletLogin, "tunnelPassword", InetSocketAddress.createUnresolved("hostname1", 1234));
         }
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    void testcreateRateSource_loginNotSet(String sourceLogin) {
+        assertNull(extension.createRateSource(sourceLogin));
+    }
+
+    @Test
+    void testcreateRateSource_unknownType() {
+        assertNull(extension.createRateSource("someLoginValue"));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"l_btcfix", "l_btcfix:notNumber"})
+    void testcreateRateSource_invalidRate(String sourceLogin) {
+        IRateSource rateSource = extension.createRateSource(sourceLogin);
+        assertNotNull(rateSource);
+        BigDecimal exchangeRateLast = rateSource.getExchangeRateLast(CryptoCurrency.L_BTC.getCode(), FiatCurrency.USD.getCode());
+        assertEquals(0, BigDecimal.ZERO.compareTo(exchangeRateLast));
+    }
+
+    @Test
+    void testcreateRateSource() {
+        IRateSource rateSource = extension.createRateSource("l_btcfix:50:EUR");
+        assertNotNull(rateSource);
+        BigDecimal exchangeRateLast = rateSource.getExchangeRateLast(CryptoCurrency.L_BTC.getCode(), FiatCurrency.EUR.getCode());
+        assertEquals(0, BigDecimal.valueOf(50L).compareTo(exchangeRateLast));
     }
 
     private static MockedConstruction<ElementsdRPCWalletWithUniqueAddresses> mockWalletConstruction(String expectedRpcUrl,

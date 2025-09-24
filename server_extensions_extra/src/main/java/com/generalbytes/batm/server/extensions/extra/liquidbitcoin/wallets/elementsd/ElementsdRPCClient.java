@@ -8,7 +8,7 @@ import java.net.MalformedURLException;
 import java.util.Map;
 
 public class ElementsdRPCClient extends RPCClient {
-    private String assetName;
+    private final String assetName;
     public ElementsdRPCClient(String cryptoCurrency, String rpcUrl, String assetName) throws MalformedURLException {
         super(cryptoCurrency, rpcUrl);
         this.assetName = assetName;
@@ -20,10 +20,10 @@ public class ElementsdRPCClient extends RPCClient {
         if (result == null) {
             return null;
         }
-        if (result instanceof BigDecimal) {
-            return (BigDecimal) result;
-        }else if (result instanceof Map) {
-            return ((Map<String, BigDecimal>) result).get(assetName);
+        if (result instanceof BigDecimal balance) {
+            return balance;
+        } else if (result instanceof Map<?, ?> assets) {
+            return (BigDecimal) assets.get(assetName);
         }
         return null;
     }
