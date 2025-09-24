@@ -71,13 +71,15 @@ public class LiquidBitcoinPaymentSupport extends AbstractRPCPaymentSupport {
     public BigDecimal calculateTxFee(int numberOfInputs, int numberOfOutputs, RPCClient client) {
         final int transactionSize = calculateTransactionSize(numberOfInputs, numberOfOutputs);
         try {
-            BigDecimal estimate = new BigDecimal(client.getEstimateFee(2));
-            if (BigDecimal.ZERO.compareTo(estimate) == 0 || estimate.compareTo(new BigDecimal("-1")) == 0 ) {
+            BigDecimal estimate = BigDecimal.valueOf(client.getEstimateFee(2));
+            if (BigDecimal.ZERO.compareTo(estimate) == 0 || estimate.compareTo(new BigDecimal("-1")) == 0) {
                 return getMinimumNetworkFee(client);
             }
-            return estimate.divide(new BigDecimal("1000"), RoundingMode.UP).multiply(new BigDecimal(transactionSize));
+            BigDecimal feePerKb = estimate.divide(new BigDecimal("1000"), 3, RoundingMode.HALF_UP);
+            BigDecimal roundedFeePerKb = feePerKb.setScale(0, RoundingMode.UP);
+            return roundedFeePerKb.multiply(new BigDecimal(transactionSize));
         } catch (Exception e) {
-            log.error("", e);
+            log.error("Unexpected error at calculateTxFee for liquid bitcoin", e);
             return getMinimumNetworkFee(client);
         }
     }
