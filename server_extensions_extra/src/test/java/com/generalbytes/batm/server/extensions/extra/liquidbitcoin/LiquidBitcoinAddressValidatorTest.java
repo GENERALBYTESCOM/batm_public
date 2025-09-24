@@ -68,7 +68,19 @@ class LiquidBitcoinAddressValidatorTest {
     @MethodSource("provideBech32Addresses")
     void testIsAddressValid_invalidBech32Address(String address) {
         try (MockedStatic<Bech32> mockedBech32 = mockStatic(Bech32.class)) {
-            mockedBech32.when(() -> Bech32.decode(address)).thenThrow(new AddressFormatException("Text Exception"));
+            mockedBech32.when(() -> Bech32.decode(address)).thenThrow(new AddressFormatException("Text Exception - address"));
+
+            assertFalse(validator.isAddressValid(address));
+
+            mockedBech32.verify(() -> Bech32.decode(address));
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideBech32Addresses")
+    void testIsAddressValid_unexpectedExceptionBech32(String address) {
+        try (MockedStatic<Bech32> mockedBech32 = mockStatic(Bech32.class)) {
+            mockedBech32.when(() -> Bech32.decode(address)).thenThrow(new RuntimeException("Text Exception"));
 
             assertFalse(validator.isAddressValid(address));
 
@@ -99,7 +111,8 @@ class LiquidBitcoinAddressValidatorTest {
     @MethodSource("provideBase58Addresses")
     void testIsAddressValid_invalidBase58Address_decodeToBigInteger(String address) {
         try (MockedStatic<Base58> mockedBase58 = mockStatic(Base58.class)) {
-            mockedBase58.when(() -> Base58.decodeToBigInteger(address)).thenThrow(new AddressFormatException("Text Exception"));
+            mockedBase58.when(() -> Base58.decodeToBigInteger(address))
+                .thenThrow(new AddressFormatException("Text Exception - decodeToBigInteger"));
 
             assertFalse(validator.isAddressValid(address));
 
@@ -112,7 +125,20 @@ class LiquidBitcoinAddressValidatorTest {
     @MethodSource("provideBase58Addresses")
     void testIsAddressValid_invalidBase58Address_decodeChecked(String address) {
         try (MockedStatic<Base58> mockedBase58 = mockStatic(Base58.class)) {
-            mockedBase58.when(() -> Base58.decodeChecked(address)).thenThrow(new AddressFormatException("Text Exception"));
+            mockedBase58.when(() -> Base58.decodeChecked(address)).thenThrow(new AddressFormatException("Text Exception - decodeChecked"));
+
+            assertFalse(validator.isAddressValid(address));
+
+            mockedBase58.verify(() -> Base58.decodeToBigInteger(address));
+            mockedBase58.verify(() -> Base58.decodeChecked(address));
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideBase58Addresses")
+    void testIsAddressValid_unexpectedExceptionBase58(String address) {
+        try (MockedStatic<Base58> mockedBase58 = mockStatic(Base58.class)) {
+            mockedBase58.when(() -> Base58.decodeChecked(address)).thenThrow(new RuntimeException("Text Exception"));
 
             assertFalse(validator.isAddressValid(address));
 

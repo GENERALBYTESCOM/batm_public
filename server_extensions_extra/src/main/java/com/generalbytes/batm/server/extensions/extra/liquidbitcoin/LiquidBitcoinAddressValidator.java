@@ -21,12 +21,10 @@ import com.generalbytes.batm.server.coinutil.AddressFormatException;
 import com.generalbytes.batm.server.coinutil.Base58;
 import com.generalbytes.batm.server.coinutil.Bech32;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class LiquidBitcoinAddressValidator implements ICryptoAddressValidator {
-
-    private static final Logger log = LoggerFactory.getLogger(LiquidBitcoinAddressValidator.class);
 
     @Override
     public boolean isAddressValid(String address) {
@@ -45,16 +43,19 @@ ERT… / tex…         ❌ No	    Bech32	Unconfidential SegWit	Testnet / Regtes
 CTE… / ERT…	        ✅ Yes	    Base58	Confidential	Testnet / Regtest
 
          */
-        if (address == null || address.trim().isEmpty()) {
+        if (address == null || address.isBlank()) {
             return false;
         }
 
-        if (address.toLowerCase().startsWith("lq1") || address.toLowerCase().startsWith("ct") || address.toLowerCase().startsWith("q") ) {
+        if (address.toLowerCase().startsWith("lq1") || address.toLowerCase().startsWith("ct") || address.toLowerCase().startsWith("q")) {
             try {
                 Bech32.decode(address);
                 return true;
+            } catch (AddressFormatException e) {
+                log.debug("Liquid address [{}}] is not recognized: {}.", address, e.getMessage());
+                return false;
             } catch (Exception e) {
-                log.debug("Liquid address [" + address + "] is not recognized.", e);
+                log.warn("Liquid address [{}] is not recognized.", address, e);
                 return false;
             }
         }
@@ -65,7 +66,10 @@ CTE… / ERT…	        ✅ Yes	    Base58	Confidential	Testnet / Regtest
                 Base58.decodeChecked(address);
                 return true;
             } catch (AddressFormatException e) {
-                log.debug("Liquid legacy address [" + address + "] is not recognized.", e);
+                log.debug("Liquid legacy address [{}}] is not recognized: {}.", address, e.getMessage());
+                return false;
+            } catch (Exception e) {
+                log.warn("Liquid legacy address [{}] is not recognized.", address, e);
                 return false;
             }
         }
