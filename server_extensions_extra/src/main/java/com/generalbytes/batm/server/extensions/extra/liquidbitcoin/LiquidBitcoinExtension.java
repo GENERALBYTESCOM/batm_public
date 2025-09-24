@@ -110,15 +110,15 @@ public class LiquidBitcoinExtension extends AbstractExtension {
         return null;
     }
 
-    private static String getPreferredFiatCurrency(StringTokenizer st) {
-        String preferedFiatCurrency = FiatCurrency.USD.getCode();
+    private String getPreferredFiatCurrency(StringTokenizer st) {
+        String preferredFiatCurrency = FiatCurrency.USD.getCode();
         if (st.hasMoreTokens()) {
-            preferedFiatCurrency = st.nextToken().toUpperCase();
+            preferredFiatCurrency = st.nextToken().toUpperCase();
         }
-        return preferedFiatCurrency;
+        return preferredFiatCurrency;
     }
 
-    private static BigDecimal getRate(StringTokenizer st) {
+    private BigDecimal getRate(StringTokenizer st) {
         BigDecimal rate = BigDecimal.ZERO;
         if (st.hasMoreTokens()) {
             try {

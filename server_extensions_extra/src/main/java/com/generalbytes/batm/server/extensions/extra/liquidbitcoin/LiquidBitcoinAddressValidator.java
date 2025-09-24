@@ -52,7 +52,7 @@ CTE… / ERT…	        ✅ Yes	    Base58	Confidential	Testnet / Regtest
                 Bech32.decode(address);
                 return true;
             } catch (AddressFormatException e) {
-                log.debug("Liquid address [{}}] is not recognized: {}.", address, e.getMessage());
+                log.debug("Liquid address [{}] is not recognized: {}.", address, e.getMessage());
                 return false;
             } catch (Exception e) {
                 log.warn("Liquid address [{}] is not recognized.", address, e);

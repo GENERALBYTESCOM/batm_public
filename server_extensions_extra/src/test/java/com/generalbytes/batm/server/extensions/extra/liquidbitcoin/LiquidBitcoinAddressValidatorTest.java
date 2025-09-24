@@ -68,7 +68,7 @@ class LiquidBitcoinAddressValidatorTest {
     @MethodSource("provideBech32Addresses")
     void testIsAddressValid_invalidBech32Address(String address) {
         try (MockedStatic<Bech32> mockedBech32 = mockStatic(Bech32.class)) {
-            mockedBech32.when(() -> Bech32.decode(address)).thenThrow(new AddressFormatException("Text Exception - address"));
+            mockedBech32.when(() -> Bech32.decode(address)).thenThrow(new AddressFormatException("Test Exception - address"));
 
             assertFalse(validator.isAddressValid(address));
 
@@ -80,7 +80,7 @@ class LiquidBitcoinAddressValidatorTest {
     @MethodSource("provideBech32Addresses")
     void testIsAddressValid_unexpectedExceptionBech32(String address) {
         try (MockedStatic<Bech32> mockedBech32 = mockStatic(Bech32.class)) {
-            mockedBech32.when(() -> Bech32.decode(address)).thenThrow(new RuntimeException("Text Exception"));
+            mockedBech32.when(() -> Bech32.decode(address)).thenThrow(new RuntimeException("Test Exception"));
 
             assertFalse(validator.isAddressValid(address));
 
@@ -112,7 +112,7 @@ class LiquidBitcoinAddressValidatorTest {
     void testIsAddressValid_invalidBase58Address_decodeToBigInteger(String address) {
         try (MockedStatic<Base58> mockedBase58 = mockStatic(Base58.class)) {
             mockedBase58.when(() -> Base58.decodeToBigInteger(address))
-                .thenThrow(new AddressFormatException("Text Exception - decodeToBigInteger"));
+                .thenThrow(new AddressFormatException("Test Exception - decodeToBigInteger"));
 
             assertFalse(validator.isAddressValid(address));
 
@@ -125,7 +125,7 @@ class LiquidBitcoinAddressValidatorTest {
     @MethodSource("provideBase58Addresses")
     void testIsAddressValid_invalidBase58Address_decodeChecked(String address) {
         try (MockedStatic<Base58> mockedBase58 = mockStatic(Base58.class)) {
-            mockedBase58.when(() -> Base58.decodeChecked(address)).thenThrow(new AddressFormatException("Text Exception - decodeChecked"));
+            mockedBase58.when(() -> Base58.decodeChecked(address)).thenThrow(new AddressFormatException("Test Exception - decodeChecked"));
 
             assertFalse(validator.isAddressValid(address));
 
@@ -138,7 +138,7 @@ class LiquidBitcoinAddressValidatorTest {
     @MethodSource("provideBase58Addresses")
     void testIsAddressValid_unexpectedExceptionBase58(String address) {
         try (MockedStatic<Base58> mockedBase58 = mockStatic(Base58.class)) {
-            mockedBase58.when(() -> Base58.decodeChecked(address)).thenThrow(new RuntimeException("Text Exception"));
+            mockedBase58.when(() -> Base58.decodeChecked(address)).thenThrow(new RuntimeException("Test Exception"));
 
             assertFalse(validator.isAddressValid(address));
 
