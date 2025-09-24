@@ -27,4 +27,23 @@ public class ElementsdRPCClient extends RPCClient {
         }
         return null;
     }
+
+    @Override
+    public BigDecimal getReceivedByAddress(String address) throws GenericRpcException {
+        return getReceivedByAddress(address,0);
+    }
+
+    @Override
+    public BigDecimal getReceivedByAddress(String address, int minConf) throws GenericRpcException {
+        Object result = query("getreceivedbyaddress", address, minConf);
+        if (result == null) {
+            return null;
+        }
+        if (result instanceof BigDecimal) {
+            return (BigDecimal) result;
+        }else if (result instanceof Map) {
+            return ((Map<String, BigDecimal>) result).get(assetName);
+        }
+        return null;
+    }
 }
