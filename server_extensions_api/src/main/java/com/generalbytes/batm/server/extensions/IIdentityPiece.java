@@ -18,6 +18,7 @@
 package com.generalbytes.batm.server.extensions;
 
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * Detailed information about some {@link IIdentity}.
@@ -218,4 +219,35 @@ public interface IIdentityPiece {
      */
     String getSSN();
 
+    /**
+     * Get the correlation ID associated with this identity piece.
+     *
+     * <p>The correlation ID is used to link multiple related identity pieces together.
+     * For example, the front and back sides of an ID card can share the same correlation ID to indicate that they
+     * belong to the same document.</p>
+     *
+     * @return The correlation ID, or {@code null}.
+     * @see #getIdScanDocumentType()
+     */
+    UUID getCorrelationId();
+
+    /**
+     * Get the type of document image. Used with {@link #TYPE_ID_SCAN}.
+     *
+     * <p>Indicates which part of an identification document the image represents, such as the front or back of an ID card,
+     * or the front or back of an additional supporting document.</p>
+     *
+     * <p>When multiple document sides or parts are submitted together
+     * (e.g., {@link IdScanDocumentType#ID_CARD_FRONT} and {@link IdScanDocumentType#ID_CARD_BACK}),
+     * each related identity piece must share the same {@link #getCorrelationId()} to indicate they belong to the same set.</p>
+     *
+     * <p>If this type is provided along with all required related types, and they are linked by the same correlation ID,
+     * the system can recognize them as already collected during AML/KYC authentication.
+     * This enables use of the "The Instruction is Not Always Required" feature on applicable AML/KYC instructions.</p>
+     *
+     * @return The document image type, or {@code null} if unknown.
+     * @see IdScanDocumentType
+     * @see #getCorrelationId()
+     */
+    IdScanDocumentType getIdScanDocumentType();
 }
