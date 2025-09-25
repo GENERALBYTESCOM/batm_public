@@ -31,7 +31,6 @@ import java.net.MalformedURLException;
 
 public class ElementsdRPCWalletWithUniqueAddresses extends RPCWallet implements IGeneratesNewDepositCryptoAddress, IQueryableWallet {
     private static final Logger log = LoggerFactory.getLogger(ElementsdRPCWalletWithUniqueAddresses.class);
-    private ElementsdRPCClient client;
     private static final String ASSET_NAME = "bitcoin";
     public ElementsdRPCWalletWithUniqueAddresses(String rpcURL, String walletName) {
         super(rpcURL, walletName, CryptoCurrency.L_BTC.getCode());
@@ -40,31 +39,31 @@ public class ElementsdRPCWalletWithUniqueAddresses extends RPCWallet implements 
     @Override
     public RPCClient createClient(String cryptoCurrency, String rpcURL) {
         try {
-            client = new ElementsdRPCClient(cryptoCurrency, rpcURL, ASSET_NAME);
-            return client;
+            return new ElementsdRPCClient(cryptoCurrency, rpcURL, ASSET_NAME);
         } catch (MalformedURLException e) {
             log.error("Error", e);
         }
         return null;
     }
 
+    /**
+     * This method returns amount that has at least 5 confirmations.
+     * If there is no such amount it will return amount that has at least 4 confirmations. Then 3,2,1 and 0.
+     * Note that Liquid Network is designed to have only one reorg. So 2 confirmations is considered safe.
+     *
+     * @param address
+     * @param cryptoCurrency
+     * @return
+     */
     @Override
     public ReceivedAmount getReceivedAmount(String address, String cryptoCurrency) {
         if (!cryptoCurrency.equals(CryptoCurrency.L_BTC.getCode())) {
-            return null;
+            return ReceivedAmount.ZERO;
         }
-        if (client == null) {
-            log.error("Cannot return getReceivedAmount since client is null.");
-        }
-
-        //Report the amount with highest level of confirmation.
-        // In liquid network has only one block reorg. 2 confirmations are sufficient.
-        // When transaction has two confirmation it is regarded as safe.
-        // In this implementation we will detect maximum 5 confirmations.
-
 
         for (int confirmationsToTest=5; confirmationsToTest>=0; confirmationsToTest--) {
-            BigDecimal confirmedBalance = client.getReceivedByAddress(address, confirmationsToTest);
+            RPCClient client = this.getClient();
+            BigDecimal confirmedBalance =  client.getReceivedByAddress(address, confirmationsToTest);
             if (confirmedBalance == null) {
                 return ReceivedAmount.ZERO;
             }

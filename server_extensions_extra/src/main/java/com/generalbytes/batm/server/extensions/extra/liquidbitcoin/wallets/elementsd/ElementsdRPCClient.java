@@ -16,16 +16,7 @@ public class ElementsdRPCClient extends RPCClient {
 
     @Override
     public BigDecimal getBalance() throws GenericRpcException {
-        Object result = query("getbalance");
-        if (result == null) {
-            return null;
-        }
-        if (result instanceof BigDecimal balance) {
-            return balance;
-        } else if (result instanceof Map<?, ?> assets) {
-            return (BigDecimal) assets.get(assetName);
-        }
-        return null;
+        return getAssetBalance(query("getbalance"));
     }
 
     @Override
@@ -35,14 +26,17 @@ public class ElementsdRPCClient extends RPCClient {
 
     @Override
     public BigDecimal getReceivedByAddress(String address, int minConf) throws GenericRpcException {
-        Object result = query("getreceivedbyaddress", address, minConf);
-        if (result == null) {
+        return getAssetBalance(query("getreceivedbyaddress", address, minConf));
+    }
+
+    private BigDecimal getAssetBalance(Object balance) {
+        if (balance == null) {
             return null;
         }
-        if (result instanceof BigDecimal) {
-            return (BigDecimal) result;
-        }else if (result instanceof Map) {
-            return ((Map<String, BigDecimal>) result).get(assetName);
+        if (balance instanceof BigDecimal) {
+            return (BigDecimal) balance;
+        } else if (balance instanceof Map<?, ?> assets) {
+            return (BigDecimal) assets.get(assetName);
         }
         return null;
     }
