@@ -61,13 +61,14 @@ public class ElementsdRPCWalletWithUniqueAddressesTest {
     public void getReceivedAmount_amountWithTwoConfirmations() {
         when(client.getReceivedByAddress(eq(ADDRESS_WITH_MORE_TXS), anyInt())).thenReturn(BigDecimal.ZERO);
         lenient().when(client.getReceivedByAddress(ADDRESS_WITH_MORE_TXS, 1)).thenReturn(BigDecimal.TEN);
-        when(client.getReceivedByAddress(ADDRESS_WITH_MORE_TXS, 2)).thenReturn(BigDecimal.ONE);
+        lenient().when(client.getReceivedByAddress(ADDRESS_WITH_MORE_TXS, 2)).thenReturn(BigDecimal.ONE);
 
         ReceivedAmount receivedAmount = wallet.getReceivedAmount(ADDRESS_WITH_MORE_TXS, CryptoCurrency.L_BTC.getCode());
         assertEquals(BigDecimal.ONE, receivedAmount.getTotalAmountReceived());
         assertEquals(2, receivedAmount.getConfirmations());
         assertNull(receivedAmount.getTransactionHashes());
     }
+
     @Test
     public void getReceivedAmount_amountWithOneConfirmations() {
         when(client.getReceivedByAddress(eq(ADDRESS_WITH_COINS), anyInt())).thenReturn(BigDecimal.ZERO);
