@@ -25,27 +25,15 @@ public class ElementsdRPCWalletWithUniqueAddressesTest {
     private static final String ADDRESS_WITH_COINS = "lq1qqwch6wp99rxvqzjqahtkzkgtqpp4ujs3p2qqn4r5rexah80jxutq9aflw5qveu7mctht5h2p39j8z6jnfhfqsn5xy9exg3rz6";
     private static final String ADDRESS_WITH_MORE_TXS = "ex1q0u30psmd0v7r5y3l5znvpn9w57sneczjms7m7z";
 
-    @Mock
     private ElementsdRPCWalletWithUniqueAddresses wallet;
     @Mock
     private RPCClient client;
 
-    //    public void setUp() {
-//        System.out.println("SETTTING UP!");
-//        String rpcURL = "http://username:password@hostname:1111";
-//        wallet = new ElementsdRPCWalletWithUniqueAddresses(rpcURL, "walletName");
-//        client = wallet.getClient();
-//    }
     @BeforeEach
     void setUp() {
         wallet = new ElementsdRPCWalletWithUniqueAddresses("url", "walletName") {
             @Override
             public RPCClient createClient(String cryptoCurrency, String rpcURL) {
-                return client;
-            }
-
-            @Override
-            public RPCClient getClient() {
                 return client;
             }
         };
