@@ -1,6 +1,7 @@
 plugins {
     id("shared-publish-conventions")
     id("distribution")
+    id("java-library")
 }
 
 group = projectGroup
@@ -20,6 +21,7 @@ distributions {
 }
 
 dependencies {
+    api project(":country")
     implementation project(":currencies")
 
     implementation("org.slf4j:slf4j-api:1.7.28")

@@ -32,6 +32,7 @@ ext {
 }
 
 dependencies {
+    implementation project(":country")
     implementation project(":server_extensions_api")
     implementation project(":currencies")
 
