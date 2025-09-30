@@ -25,10 +25,12 @@ class DeterministicUuidV4GeneratorTest {
     @ParameterizedTest
     @MethodSource("testCreateDeterministicUuidV4_arguments")
     void testCreateDeterministicUuidV4(String input, String expectedUuidV4) {
-        UUID uuidV4 = DeterministicUuidV4Generator.createDeterministicUuidV4(input.getBytes());
+        UUID uuidV4First = DeterministicUuidV4Generator.createDeterministicUuidV4(input.getBytes());
+        UUID uuidV4Second = DeterministicUuidV4Generator.createDeterministicUuidV4(input.getBytes());
 
-        assertEquals(expectedUuidV4, uuidV4.toString());
-        assertEquals(4, uuidV4.version());
+        assertEquals(expectedUuidV4, uuidV4First.toString());
+        assertEquals(4, uuidV4First.version());
+        assertEquals(uuidV4First, uuidV4Second);
     }
 
 }
