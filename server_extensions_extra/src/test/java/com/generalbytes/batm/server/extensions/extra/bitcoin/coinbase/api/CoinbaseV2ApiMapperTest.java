@@ -433,7 +433,7 @@ public class CoinbaseV2ApiMapperTest {
         assertEquals(legacySendRequest.getAmount(), request.getAmount());
         assertEquals(legacySendRequest.getCurrency(), request.getCurrency());
         assertEquals(legacySendRequest.getType(), request.getType());
-        assertEquals("7adab921-d7f8-3971-993c-3c3e936c67e5", request.getIdem());
+        assertEquals("b43aae10-2b19-4a96-b0ee-f83f7a7a8004", request.getIdem());
         assertEquals(legacySendRequest.getDescription(), request.getDescription());
     }
 
