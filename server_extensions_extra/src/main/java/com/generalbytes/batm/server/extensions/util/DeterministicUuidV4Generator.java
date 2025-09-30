@@ -17,7 +17,24 @@ public class DeterministicUuidV4Generator {
     private static final String DIGEST_ALGORITHM = "SHA-256";
 
     /**
-     * Creates a deterministic UUIDv4 based on the input value.
+     * Creates a deterministic UUID version 4 (UUIDv4) based on the given input bytes.
+     * <p>
+     * The UUID is generated deterministically by hashing the input with SHA-256, taking
+     * the first 16 bytes of the hash, and setting the version and variant bits according
+     * to the UUIDv4 standard.
+     * </p>
+     * <p>
+     * This ensures that the same input always produces the same UUID, while the resulting
+     * UUID still conforms to the UUIDv4 specification:
+     * <ul>
+     *   <li>Version 4 is set in bits 12-15 of the MSB (most significant bits).</li>
+     *   <li>Variant is set to the IETF variant using bits 6 and 7 of the LSB (least significant bits).</li>
+     * </ul>
+     * </p>
+     * <p>
+     * See the official UUIDv4 specification for details:
+     * <a href="https://www.rfc-editor.org/rfc/rfc9562.html#name-uuid-version-4">RFC 9562, UUID Version 4</a>.
+     * </p>
      *
      * @param input Input as byte array.
      * @return Deterministic UUIDv4.
@@ -29,18 +46,18 @@ public class DeterministicUuidV4Generator {
 
             ByteBuffer bb = ByteBuffer.wrap(hash, 0, 16);
 
-            long msb = bb.getLong();
-            long lsb = bb.getLong();
+            long mostSigBits = bb.getLong();
+            long leastSigBits = bb.getLong();
 
             // set version 4
-            msb &= 0xFFFFFFFFFFFF0FFFL;
-            msb |= 0x0000000000004000L;
+            mostSigBits &= 0xFFFFFFFFFFFF0FFFL;
+            mostSigBits |= 0x0000000000004000L;
 
             // set IETF standard
-            lsb &= 0x3FFFFFFFFFFFFFFFL;
-            lsb |= 0x8000000000000000L;
+            leastSigBits &= 0x3FFFFFFFFFFFFFFFL;
+            leastSigBits |= 0x8000000000000000L;
 
-            return new UUID(msb, lsb);
+            return new UUID(mostSigBits, leastSigBits);
         } catch (NoSuchAlgorithmException e) {
             throw new IllegalStateException("Digest algorithm " + DIGEST_ALGORITHM + " not found for creating deterministic UUIDv4");
         }
