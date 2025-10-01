@@ -57,10 +57,10 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBTransaction;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CBWarning;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.dto.CbAccountV2;
+import com.generalbytes.batm.server.extensions.util.DeterministicUuidV4Generator;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Mapper between new and legacy Coinbase V2 API DTOs.
@@ -322,7 +322,7 @@ public final class CoinbaseV2ApiMapper {
         // However, the new API requires this key to be in UUIDv4 format.
         // To preserve idempotency, we convert the remoteId string into a UUID deterministically using a name-based UUID algorithm.
         // This means that for the same legacy idem value, the generated UUID will always be the same.
-        request.setIdem(UUID.nameUUIDFromBytes(legacyRequest.getIdem().getBytes()).toString());
+        request.setIdem(DeterministicUuidV4Generator.createDeterministicUuidV4(legacyRequest.getIdem().getBytes()).toString());
         request.setDescription(legacyRequest.getDescription());
         return request;
     }
