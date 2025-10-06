@@ -8,6 +8,7 @@ import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
+import com.generalbytes.batm.server.extensions.IPaperWalletGenerator;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.IWallet;
 import org.apache.commons.lang3.StringUtils;
@@ -40,8 +41,17 @@ public class SolanaExtension extends AbstractExtension {
 
     @Override
     public ICryptoAddressValidator createAddressValidator(String cryptoCurrency) {
-        if (cryptoCurrency != null && SUPPORTED_CRYPTOCURRENCIES.contains(cryptoCurrency.toUpperCase())) {
+        if (isCryptocurrencySupported(cryptoCurrency)) {
             return new SolanaAddressValidator();
+        }
+
+        return null;
+    }
+
+    @Override
+    public IPaperWalletGenerator createPaperWalletGenerator(String cryptocurrency) {
+        if (isCryptocurrencySupported(cryptocurrency)) {
+            return new SolanaWalletGenerator(ctx);
         }
 
         return null;
@@ -113,6 +123,10 @@ public class SolanaExtension extends AbstractExtension {
     @Override
     public Set<ICryptoCurrencyDefinition> getCryptoCurrencyDefinitions() {
         return CRYPTOCURRENCY_DEFINITIONS;
+    }
+
+    private boolean isCryptocurrencySupported(String cryptocurrency) {
+        return cryptocurrency != null && SUPPORTED_CRYPTOCURRENCIES.contains(cryptocurrency.toUpperCase());
     }
 
     private BigDecimal getRate(StringTokenizer tokenizer) {
