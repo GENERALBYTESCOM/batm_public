@@ -308,7 +308,7 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
             try {
                 tx = getClient(request.getWallet()).getTransaction(transactionId);
             } catch (BitcoinRPCException e) {
-                log.error("newTransactionSeen - failed to get transaction {} - RCP client failure", transactionId, e);
+                log.error("newTransactionSeen - failed to get transaction {} - RPC client failure", transactionId, e);
             } catch (Exception e) {
                 log.error("newTransactionSeen - failed to get transaction {} - unexpected failure", transactionId, e);
             }
@@ -541,7 +541,7 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
             registerPaymentRequest(paymentRequest);
             return paymentRequest;
         } catch (BitcoinRPCException e) {
-            log.error("createPaymentRequest - RCP client failure, {}: {}", spec.getCryptoCurrency(), spec.getDescription(), e);
+            log.error("createPaymentRequest - RPC client failure, {}: {}", spec.getCryptoCurrency(), spec.getDescription(), e);
         } catch (Exception e) {
             log.error("createPaymentRequest - unexpected error, {}: {}", spec.getCryptoCurrency(), spec.getDescription(), e);
         }
