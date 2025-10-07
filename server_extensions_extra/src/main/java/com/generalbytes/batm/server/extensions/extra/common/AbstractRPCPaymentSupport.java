@@ -253,6 +253,7 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
 
         @Override
         public void numberOfConfirmationsChanged(String cryptoCurrency, String transactionHash, int numberOfConfirmations) {
+            log.trace("numberOfConfirmationsChanged for {}: {}, confirmations: {}", cryptoCurrency, transactionHash, numberOfConfirmations);
             if (incomingTransactions.size() > 0 && request.getState() != PaymentRequest.STATE_REMOVED) {
                 if (!seenInBlockChain) {
 
@@ -301,12 +302,15 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
 
         @Override
         public void newTransactionSeen(String cryptoCurrency, String address, String transactionId, int confirmations) {
+            log.debug("New transaction seen for {}: {}, transaction ID: {}, confirmations: {}", cryptoCurrency, address, transactionId, confirmations);
             boolean performRefund = false;
             BitcoindRpcClient.Transaction tx = null;
             try {
                 tx = getClient(request.getWallet()).getTransaction(transactionId);
             } catch (BitcoinRPCException e) {
-                log.error("", e);
+                log.error("newTransactionSeen - failed to get transaction {} - RPC client failure", transactionId, e);
+            } catch (Exception e) {
+                log.error("newTransactionSeen - failed to get transaction {} - unexpected failure", transactionId, e);
             }
 
             try {
@@ -314,6 +318,14 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
                 if (request.getState() == PaymentRequest.STATE_NEW || request.getState() == PaymentRequest.STATE_SEEN_TRANSACTION || request.getState() == PaymentRequest.STATE_TRANSACTION_TIMED_OUT) {
                     BigDecimal totalCoinsReceived = BigDecimal.ZERO;
                     boolean addressMatched = false;
+                    if (tx == null) {
+                        log.error("Failed to get raw transaction info - tx null, txId: {}", transactionId);
+                        return;
+                    }
+                    if (tx.raw() == null) {
+                        log.error("Failed to get raw transaction info - tx raw null, txId: {}", transactionId);
+                        return;
+                    }
                     List<BitcoindRpcClient.RawTransaction.Out> outputs = tx.raw().vOut();
                     for (BitcoindRpcClient.RawTransaction.Out output : outputs) {
                         String receivingAddress = RPCClient.cleanAddressFromPossiblePrefix(output.scriptPubKey().addresses().get(0));
@@ -325,7 +337,7 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
                             }
                         }
                     }
-
+                    log.debug("newTransactionSeen - Received to {}, total coins {} {}", request.getAddress(),  totalCoinsReceived, request.getCryptoCurrency());
                     if (addressMatched) {
                         if (request.getState() == PaymentRequest.STATE_TRANSACTION_TIMED_OUT || request.getValidTill() < System.currentTimeMillis()) {
                             log_warn("PaymentTransactionListener.onTransaction - Transaction ignored, it came too late.");
@@ -431,7 +443,9 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
                     }
                 }
             } catch (BitcoinRPCException e) {
-                log.error("", e);
+                log.error("Processing transaction {} - unexpected BitcoinRPCException", transactionId, e);
+            } catch (Exception e) {
+                log.error("Processing transaction {} - unexpected error", transactionId, e);
             } finally {
                 if (performRefund) {
                     if (!performForward) {
@@ -527,14 +541,16 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
             registerPaymentRequest(paymentRequest);
             return paymentRequest;
         } catch (BitcoinRPCException e) {
-            log.error("", e);
+            log.error("createPaymentRequest - RPC client failure, {}: {}", spec.getCryptoCurrency(), spec.getDescription(), e);
+        } catch (Exception e) {
+            log.error("createPaymentRequest - unexpected error, {}: {}", spec.getCryptoCurrency(), spec.getDescription(), e);
         }
         return null;
     }
 
     @Override
     public void registerPaymentRequest(PaymentRequest request) {
-
+        log.trace("Registering payment request for {}, description {}, address: {}", request.getCryptoCurrency(), request.getDescription(),  request.getAddress());
         PaymentTracker paymentTracker = new PaymentTracker(!request.isNonForwarding(), request);
         requests.put(request, paymentTracker);
         startWatchingAddress(getClient(request.getWallet()), request.getCryptoCurrency(), request.getAddress(), paymentTracker);

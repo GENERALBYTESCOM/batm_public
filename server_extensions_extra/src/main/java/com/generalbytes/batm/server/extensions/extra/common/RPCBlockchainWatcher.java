@@ -190,9 +190,12 @@ public class RPCBlockchainWatcher implements IBlockchainWatcher{
                 Thread.sleep(WATCH_PERIOD_MILLIS);
             }
         } catch (InterruptedException e) {
-            log.error("Error", e);
+            log.error("Error - interrupted RPCBlockchainWatcher", e);
+            Thread.currentThread().interrupt();
         } catch (BitcoinRPCException e) {
-            log.error("Error", e);
+            log.error("Error - RPC client failure", e);
+        } catch (Exception e) {
+            log.error("Error - unexpected", e);
         }
     }
 
