@@ -4,6 +4,7 @@ import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.DummyExchangeAndWalletAndSource;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
+import com.generalbytes.batm.server.extensions.IPaperWalletGenerator;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.IWallet;
 import org.junit.jupiter.api.Test;
@@ -48,6 +49,22 @@ class SolanaExtensionTest {
         ICryptoAddressValidator validator = solanaExtension.createAddressValidator(cryptocurrency.code);
 
         assertNull(validator);
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = CryptoCurrency.class, mode = EnumSource.Mode.INCLUDE, names = {"SOL", "USDCSOL"})
+    void testCreatePaperWalletGenerator(CryptoCurrency cryptocurrency) {
+        IPaperWalletGenerator paperWalletGenerator = solanaExtension.createPaperWalletGenerator(cryptocurrency.code);
+
+        assertInstanceOf(SolanaWalletGenerator.class, paperWalletGenerator);
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = CryptoCurrency.class, mode = EnumSource.Mode.EXCLUDE, names = {"SOL", "USDCSOL"})
+    void testCreatePaperWalletGenerator_unsupported(CryptoCurrency cryptocurrency) {
+        IPaperWalletGenerator paperWalletGenerator = solanaExtension.createPaperWalletGenerator(cryptocurrency.code);
+
+        assertNull(paperWalletGenerator);
     }
 
     private static Stream<Arguments> testCreateWallet_dummyWallet_arguments() {
