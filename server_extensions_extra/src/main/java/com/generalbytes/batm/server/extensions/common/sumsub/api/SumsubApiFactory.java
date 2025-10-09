@@ -35,7 +35,7 @@ public class SumsubApiFactory {
      * @param timestampDigest an instance of SumSubTimestampProvider to provide a timestamp for the requests
      * @return a configured instance of ISumSubApi ready for sending requests to the SumSub API
      */
-    static ISumSubApi create(String token, SumsubSignatureDigest signatureDigest, SumsubTimestampProvider timestampDigest) {
+    public ISumSubApi createSumsubIdentityVerificationApi(String token, SumsubSignatureDigest signatureDigest, SumsubTimestampProvider timestampDigest) {
         ClientConfig config = new ClientConfig();
         config.addDefaultParam(HeaderParam.class, HEADER_APP_TOKEN, token);
         config.addDefaultParam(HeaderParam.class, HEADER_APP_TS, timestampDigest);
