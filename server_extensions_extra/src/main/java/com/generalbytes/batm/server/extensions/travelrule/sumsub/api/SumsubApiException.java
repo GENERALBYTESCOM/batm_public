@@ -1,4 +1,4 @@
-package com.generalbytes.batm.server.extensions.travelrule.sumsub.common.api;
+package com.generalbytes.batm.server.extensions.travelrule.sumsub.api;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

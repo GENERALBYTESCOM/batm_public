@@ -15,7 +15,7 @@ import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.dto.updatet
 import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.dto.updatetransactionhash.SumsubUpdateTransactionHashResponse;
 import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.dto.walletownershipconfirmation.SumsubConfirmWalletOwnershipRequest;
 import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.mapper.SumsubTravelRuleApiMapper;
-import com.generalbytes.batm.server.extensions.travelrule.sumsub.common.api.SumsubApiException;
+import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.SumsubApiException;
 import com.generalbytes.batm.server.extensions.travelrule.sumsub.common.api.vo.SumsubApiError;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
