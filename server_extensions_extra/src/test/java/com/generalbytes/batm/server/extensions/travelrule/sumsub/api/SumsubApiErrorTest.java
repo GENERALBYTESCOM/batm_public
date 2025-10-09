@@ -1,4 +1,4 @@
-package com.generalbytes.batm.server.extensions.travelrule.sumsub.common.api.vo;
+package com.generalbytes.batm.server.extensions.travelrule.sumsub.api;
 
 import org.junit.jupiter.api.Test;
 

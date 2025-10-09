@@ -2,7 +2,6 @@ package com.generalbytes.batm.server.extensions.travelrule.sumsub.api;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.generalbytes.batm.server.extensions.travelrule.sumsub.common.api.vo.SumsubApiError;
 
 /**
  * Custom exception thrown when a Sumsub API call fails.
