@@ -1,5 +1,6 @@
 package com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api;
 
+import com.generalbytes.batm.server.extensions.common.sumsub.api.CustomObjectMapperFactory;
 import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.digest.SumSubSignatureDigest;
 import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.digest.SumSubTimestampProvider;
 import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.vo.ApplicantIdResponse;
