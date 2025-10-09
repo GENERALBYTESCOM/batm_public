@@ -1,8 +1,8 @@
 package com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.digest;
 
 import com.generalbytes.batm.server.coinutil.Hex;
+import com.generalbytes.batm.server.extensions.common.sumsub.SumsubException;
 import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.ISumSubApi;
-import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.exception.SumSubException;
 import si.mazi.rescu.ParamsDigest;
 import si.mazi.rescu.RestInvocation;
 
@@ -33,16 +33,16 @@ public class SumSubSignatureDigest implements ParamsDigest {
      * with the SumSub API.
      *
      * @param secret the secret key used for initializing the HMAC instance.
-     * @throws SumSubException if configuration is not valid
+     * @throws SumsubException if configuration is not valid
      */
     public SumSubSignatureDigest(String secret) {
         try {
             this.mac = Mac.getInstance(ALGORITHM);
             this.mac.init(new SecretKeySpec(secret.getBytes(CHARSET), ALGORITHM));
         } catch (InvalidKeyException e) {
-            throw new SumSubException("Failed to initialize SumSubSignatureDigest, is the private key configured properly?", e);
+            throw new SumsubException("Failed to initialize SumSubSignatureDigest, is the private key configured properly?", e);
         } catch (NoSuchAlgorithmException e) {
-            throw new SumSubException(e);
+            throw new SumsubException(e);
         }
     }
 

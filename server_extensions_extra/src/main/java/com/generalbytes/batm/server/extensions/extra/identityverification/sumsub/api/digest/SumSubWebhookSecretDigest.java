@@ -1,7 +1,7 @@
 package com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.digest;
 
 import com.generalbytes.batm.server.coinutil.Hex;
-import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.exception.SumSubException;
+import com.generalbytes.batm.server.extensions.common.sumsub.SumsubException;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -40,7 +40,7 @@ public class SumSubWebhookSecretDigest {
      *
      * @param secret the secret key used to initialize the HMAC instance
      * @param algKey the key to identify the hashing algorithm to be used (e.g., HMAC_SHA256_HEX)
-     * @throws SumSubException if the initialization of the cryptographic components fails due to an invalid key or unsupported algorithm
+     * @throws SumsubException if the initialization of the cryptographic components fails due to an invalid key or unsupported algorithm
      */
     public SumSubWebhookSecretDigest(String secret, String algKey) {
         try {
@@ -48,9 +48,9 @@ public class SumSubWebhookSecretDigest {
             this.mac = Mac.getInstance(alg);
             this.mac.init(new SecretKeySpec(secret.getBytes(CHARSET), alg));
         } catch (InvalidKeyException e) {
-            throw new SumSubException("Failed to initialize SumSubSignatureDigest, is the private key configured properly?", e);
+            throw new SumsubException("Failed to initialize SumSubSignatureDigest, is the private key configured properly?", e);
         } catch (NoSuchAlgorithmException e) {
-            throw new SumSubException(e);
+            throw new SumsubException(e);
         }
     }
 
