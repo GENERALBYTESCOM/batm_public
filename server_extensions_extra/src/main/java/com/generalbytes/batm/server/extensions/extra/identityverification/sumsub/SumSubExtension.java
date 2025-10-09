@@ -4,9 +4,9 @@ import com.generalbytes.batm.server.extensions.AbstractExtension;
 import com.generalbytes.batm.server.extensions.IExtensionContext;
 import com.generalbytes.batm.server.extensions.IRestService;
 import com.generalbytes.batm.server.extensions.aml.verification.IIdentityVerificationProvider;
+import com.generalbytes.batm.server.extensions.common.sumsub.api.digest.SumsubSignatureDigest;
 import com.generalbytes.batm.server.extensions.util.ExtensionParameters;
 import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.ISumSubApi;
-import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.digest.SumSubSignatureDigest;
 import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.digest.SumSubTimestampProvider;
 import lombok.extern.slf4j.Slf4j;
 
@@ -95,7 +95,7 @@ public class SumSubExtension extends AbstractExtension {
                                                                   String webhookSecret,
                                                                   String levelName,
                                                                   int linkExpiryInSeconds) {
-        SumSubSignatureDigest signatureDigest = new SumSubSignatureDigest(secret);
+        SumsubSignatureDigest signatureDigest = new SumsubSignatureDigest(secret);
         ISumSubApi api = createApi(token, signatureDigest);
         SumSubApiService apiService = createSumSubApiService(api, levelName, linkExpiryInSeconds);
         SumSubWebhookProcessor webhookProcessor = createWebhookProcessor(webhookSecret, apiService);
@@ -106,7 +106,7 @@ public class SumSubExtension extends AbstractExtension {
         return new SumSubApiService(api, levelName, linkExpiryInSeconds);
     }
 
-    private ISumSubApi createApi(String token, SumSubSignatureDigest signatureDigest) {
+    private ISumSubApi createApi(String token, SumsubSignatureDigest signatureDigest) {
         return ISumSubApi.create(token, signatureDigest, new SumSubTimestampProvider());
     }
 

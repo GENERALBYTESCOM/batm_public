@@ -1,7 +1,7 @@
 package com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api;
 
 import com.generalbytes.batm.server.extensions.common.sumsub.api.CustomObjectMapperFactory;
-import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.digest.SumSubSignatureDigest;
+import com.generalbytes.batm.server.extensions.common.sumsub.api.digest.SumsubSignatureDigest;
 import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.digest.SumSubTimestampProvider;
 import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.vo.ApplicantIdResponse;
 import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.vo.ApplicantInfoResponse;
@@ -49,7 +49,7 @@ public interface ISumSubApi {
      * @param timestampDigest an instance of SumSubTimestampProvider to provide a timestamp for the requests
      * @return a configured instance of ISumSubApi ready for sending requests to the SumSub API
      */
-    static ISumSubApi create(String token, SumSubSignatureDigest signatureDigest, SumSubTimestampProvider timestampDigest) {
+    static ISumSubApi create(String token, SumsubSignatureDigest signatureDigest, SumSubTimestampProvider timestampDigest) {
         ClientConfig config = new ClientConfig();
         config.addDefaultParam(HeaderParam.class, HEADER_APP_TOKEN, token);
         config.addDefaultParam(HeaderParam.class, HEADER_APP_TS, timestampDigest);
