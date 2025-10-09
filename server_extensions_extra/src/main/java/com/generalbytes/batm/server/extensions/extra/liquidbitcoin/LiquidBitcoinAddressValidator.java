@@ -20,6 +20,7 @@ package com.generalbytes.batm.server.extensions.extra.liquidbitcoin;
 import com.generalbytes.batm.server.coinutil.AddressFormatException;
 import com.generalbytes.batm.server.coinutil.Base58;
 import com.generalbytes.batm.server.coinutil.Bech32;
+import com.generalbytes.batm.server.coinutil.Blech32;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import lombok.extern.slf4j.Slf4j;
 
@@ -47,7 +48,7 @@ CTE… / ERT…	        ✅ Yes	    Base58	Confidential	Testnet / Regtest
             return false;
         }
 
-        if (address.toLowerCase().startsWith("lq1") || address.toLowerCase().startsWith("ct") || address.toLowerCase().startsWith("q")) {
+        if (address.toLowerCase().startsWith("ct") || address.toLowerCase().startsWith("q")) {
             try {
                 Bech32.decode(address);
                 return true;
@@ -56,6 +57,19 @@ CTE… / ERT…	        ✅ Yes	    Base58	Confidential	Testnet / Regtest
                 return false;
             } catch (Exception e) {
                 log.warn("Liquid address [{}] is not recognized.", address, e);
+                return false;
+            }
+        }
+
+        if (address.toLowerCase().startsWith("lq1")) {
+            try {
+                Blech32.decode(address);
+                return true;
+            } catch (AddressFormatException e) {
+                log.debug("Liquid blech32 address [{}] is not recognized: {}.", address, e.getMessage());
+                return false;
+            } catch (Exception e) {
+                log.warn("Liquid blech32 address [{}] is not recognized.", address, e);
                 return false;
             }
         }
