@@ -1,10 +1,10 @@
 package com.generalbytes.batm.server.extensions.travelrule.sumsub;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.generalbytes.batm.server.extensions.IExtensionContext;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProvider;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProviderCredentials;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProviderFactory;
+import com.generalbytes.batm.server.extensions.travelrule.TravelRuleExtensionContext;
 import com.generalbytes.batm.server.extensions.travelrule.sumsub.common.api.SumsubApiFactory;
 import com.generalbytes.batm.server.extensions.travelrule.sumsub.webhooks.SumsubTransferHandler;
 import com.generalbytes.batm.server.extensions.travelrule.sumsub.webhooks.SumsubWebhookValidator;
@@ -22,7 +22,7 @@ public class SumsubProviderFactory implements ITravelRuleProviderFactory {
     /**
      * Constructor.
      */
-    public SumsubProviderFactory(IExtensionContext extensionContext) {
+    public SumsubProviderFactory(TravelRuleExtensionContext extensionContext) {
         SumsubApiFactory apiFactory = new SumsubApiFactory();
         apiService = new SumsubApiService(apiFactory);
         SumsubValidator validator = new SumsubValidator();

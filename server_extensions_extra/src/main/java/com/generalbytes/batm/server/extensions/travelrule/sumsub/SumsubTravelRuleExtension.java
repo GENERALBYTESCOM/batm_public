@@ -4,6 +4,7 @@ import com.generalbytes.batm.server.extensions.AbstractExtension;
 import com.generalbytes.batm.server.extensions.IExtensionContext;
 import com.generalbytes.batm.server.extensions.IRestService;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProviderFactory;
+import com.generalbytes.batm.server.extensions.travelrule.TravelRuleExtensionContext;
 import com.generalbytes.batm.server.extensions.travelrule.sumsub.webhooks.SumsubWebhookRestService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,14 +17,13 @@ import java.util.Set;
 public class SumsubTravelRuleExtension extends AbstractExtension {
 
     private SumsubConfiguration configuration;
-    // TODO BATM-7594: after moving to batm_public replace with TravelRuleExtensionContext
-    private IExtensionContext extensionContext;
+    private TravelRuleExtensionContext extensionContext;
 
     @Override
     public void init(IExtensionContext ctx) {
         log.info("Initializing Sumsub Travel Rule extension");
         super.init(ctx);
-        extensionContext = ctx;
+        extensionContext = new TravelRuleExtensionContext(ctx);
 
         SumsubConfigurationService configurationService = new SumsubConfigurationService(extensionContext);
         configuration = configurationService.getSumsubConfiguration();

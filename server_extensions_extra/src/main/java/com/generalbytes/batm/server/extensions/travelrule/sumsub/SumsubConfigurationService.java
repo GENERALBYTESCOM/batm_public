@@ -1,6 +1,6 @@
 package com.generalbytes.batm.server.extensions.travelrule.sumsub;
 
-import com.generalbytes.batm.server.extensions.IExtensionContext;
+import com.generalbytes.batm.server.extensions.travelrule.TravelRuleExtensionContext;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,7 +16,7 @@ public class SumsubConfigurationService {
      */
     private static final String SUMSUB_CONFIG_FILE_NAME = "sumsub";
 
-    private final IExtensionContext extensionContext;
+    private final TravelRuleExtensionContext extensionContext;
 
     /**
      * Sumsub configuration.

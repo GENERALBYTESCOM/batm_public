@@ -1,10 +1,10 @@
 package com.generalbytes.batm.server.extensions.travelrule.sumsub;
 
-import com.generalbytes.batm.server.extensions.IExtensionContext;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProviderCredentials;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferData;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferResolvedEvent;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferUpdateRequest;
+import com.generalbytes.batm.server.extensions.travelrule.TravelRuleExtensionContext;
 import com.generalbytes.batm.server.extensions.travelrule.TravelRuleProviderException;
 import com.generalbytes.batm.server.extensions.travelrule.TravelRuleProviderTransferStatus;
 import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.dto.SumsubVaspListResponse;
@@ -29,7 +29,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class SumsubService {
 
-    private final IExtensionContext extensionContext;
+    private final TravelRuleExtensionContext extensionContext;
     private final SumsubApiService apiService;
     private final SumsubValidator validator;
 

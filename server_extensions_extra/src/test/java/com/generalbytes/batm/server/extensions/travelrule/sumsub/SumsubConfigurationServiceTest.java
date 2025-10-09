@@ -1,6 +1,6 @@
 package com.generalbytes.batm.server.extensions.travelrule.sumsub;
 
-import com.generalbytes.batm.server.extensions.IExtensionContext;
+import com.generalbytes.batm.server.extensions.travelrule.TravelRuleExtensionContext;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 class SumsubConfigurationServiceTest {
 
     @Mock
-    private IExtensionContext extensionContext;
+    private TravelRuleExtensionContext extensionContext;
     @InjectMocks
     private SumsubConfigurationService configurationService;
 

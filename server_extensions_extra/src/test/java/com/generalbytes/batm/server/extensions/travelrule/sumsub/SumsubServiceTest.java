@@ -1,10 +1,10 @@
 package com.generalbytes.batm.server.extensions.travelrule.sumsub;
 
-import com.generalbytes.batm.server.extensions.IExtensionContext;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProviderCredentials;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferData;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferResolvedEvent;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferUpdateRequest;
+import com.generalbytes.batm.server.extensions.travelrule.TravelRuleExtensionContext;
 import com.generalbytes.batm.server.extensions.travelrule.TravelRuleProviderException;
 import com.generalbytes.batm.server.extensions.travelrule.TravelRuleProviderTransferStatus;
 import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.dto.SumsubVaspListResponse;
@@ -54,7 +54,7 @@ import static org.mockito.Mockito.when;
 class SumsubServiceTest {
 
     @Mock
-    private IExtensionContext extensionContext;
+    private TravelRuleExtensionContext extensionContext;
     @Mock
     private SumsubApiService apiService;
     @Mock
