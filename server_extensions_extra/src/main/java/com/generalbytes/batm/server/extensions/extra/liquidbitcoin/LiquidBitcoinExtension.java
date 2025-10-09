@@ -23,6 +23,7 @@ import com.generalbytes.batm.server.extensions.AbstractExtension;
 import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
+import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.liquidbitcoin.wallets.elementsd.ElementsdRPCWalletWithUniqueAddresses;
@@ -36,6 +37,7 @@ import java.util.StringTokenizer;
 
 @Slf4j
 public class LiquidBitcoinExtension extends AbstractExtension {
+    private static final ICryptoCurrencyDefinition DEFINITION = new LiquidBitcoinDefinition();
 
     @Override
     public String getName() {
@@ -132,6 +134,13 @@ public class LiquidBitcoinExtension extends AbstractExtension {
     public Set<String> getSupportedCryptoCurrencies() {
         Set<String> result = new HashSet<>();
         result.add(CryptoCurrency.L_BTC.getCode());
+        return result;
+    }
+
+    @Override
+    public Set<ICryptoCurrencyDefinition> getCryptoCurrencyDefinitions() {
+        Set<ICryptoCurrencyDefinition> result = new HashSet<>();
+        result.add(DEFINITION);
         return result;
     }
 
