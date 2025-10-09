@@ -1152,7 +1152,7 @@
             <param name="host" />
             <param name="port" />
             <param name="wallet" />
-            <cryptocurrency>L-BTC</cryptocurrency>
+            <cryptocurrency buyonly="true">L-BTC</cryptocurrency>
             <help>This variant of the wallet generates new addresses for each transaction and does not forward payments from temporary address</help>
         </wallet>
         <cryptologo cryptocurrency="L-BTC" file="l_btc.png"/>
