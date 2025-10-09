@@ -98,8 +98,7 @@ public class SumSubExtension extends AbstractExtension {
                                                                   String webhookSecret,
                                                                   String levelName,
                                                                   int linkExpiryInSeconds) {
-        SumsubSignatureDigest signatureDigest = new SumsubSignatureDigest(secret);
-        ISumSubApi api = createApi(token, signatureDigest);
+        ISumSubApi api = createApi(token, secret);
         SumSubApiService apiService = createSumSubApiService(api, levelName, linkExpiryInSeconds);
         SumSubWebhookProcessor webhookProcessor = createWebhookProcessor(webhookSecret, apiService);
         return new SumSubIdentityVerificationProvider(apiService, webhookProcessor);
@@ -109,8 +108,8 @@ public class SumSubExtension extends AbstractExtension {
         return new SumSubApiService(api, levelName, linkExpiryInSeconds);
     }
 
-    private ISumSubApi createApi(String token, SumsubSignatureDigest signatureDigest) {
-        return apiFactory.createSumsubIdentityVerificationApi(token, signatureDigest, new SumsubTimestampProvider());
+    private ISumSubApi createApi(String token, String secret) {
+        return apiFactory.createSumsubIdentityVerificationApi(token, secret);
     }
 
     private SumSubWebhookProcessor createWebhookProcessor(String webhookSecret, SumSubApiService apiService) {
