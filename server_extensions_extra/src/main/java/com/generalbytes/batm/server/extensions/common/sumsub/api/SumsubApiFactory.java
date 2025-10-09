@@ -9,11 +9,6 @@ import si.mazi.rescu.ClientConfig;
 import si.mazi.rescu.RestProxyFactory;
 import si.mazi.rescu.clients.HttpConnectionType;
 
-// TODO BATM-7594:
-//  after the Sumsub TR implementation is completed and then moved to batm_public,
-//  the 'com.generalbytes.batm.server.extensions.travelrule.sumsub.common' package must be unified
-//  with the 'com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api' package
-
 /**
  * Factory for creating Sumsub API proxies.
  */
@@ -26,23 +21,17 @@ public class SumsubApiFactory {
     public static final String HEADER_APP_TS = "X-App-Access-Ts";
 
     /**
-     * Creates an instance of the ISumSubApi interface for interacting with the SumSub API. This method
-     * configures the necessary headers and settings required for API communication, including the
-     * authentication token, timestamp provider, and signature digest.
+     * Creates an instance of the ISumSubApi interface for interacting with the Sumsub API.
+     * This method configures the necessary headers and settings required for API communication,
+     * including the authentication token, timestamp provider and signature digest.
      *
-     * @param token  the API token used for authenticating requests to the SumSub API
-     * @param secret the secret key used for authenticating requests to the Sumsub API
-     * @return a configured instance of ISumSubApi ready for sending requests to the SumSub API
+     * @param token  The API token used for authenticating requests to the Sumsub API.
+     * @param secret The secret key used for authenticating requests to the Sumsub API.
+     * @return A configured instance of ISumSubApi ready for sending requests to the Sumsub API.
      */
     public ISumSubApi createSumsubIdentityVerificationApi(String token, String secret) {
-        SumsubTimestampProvider timestampDigest = new SumsubTimestampProvider();
-        SumsubSignatureDigest signatureDigest = new SumsubSignatureDigest(secret);
+        ClientConfig config = createCommonClientConfig(token, secret);
 
-        ClientConfig config = new ClientConfig();
-        config.addDefaultParam(HeaderParam.class, HEADER_APP_TOKEN, token);
-        config.addDefaultParam(HeaderParam.class, HEADER_APP_TS, timestampDigest);
-        config.addDefaultParam(HeaderParam.class, HEADER_APP_SIG, signatureDigest);
-        config.setJacksonObjectMapperFactory(new CustomObjectMapperFactory());
         return RestProxyFactory.createProxy(ISumSubApi.class, BASE_URL, config);
     }
 
@@ -56,16 +45,24 @@ public class SumsubApiFactory {
      * @return A configured instance of SumsubTravelRuleApi ready for sending requests to the Sumsub API.
      */
     public SumsubTravelRuleApi createSumsubTravelRuleApi(String token, String secret) {
+        ClientConfig config = createCommonClientConfig(token, secret);
+        config.setConnectionType(HttpConnectionType.apache);
+
+        return RestProxyFactory.createProxy(SumsubTravelRuleApi.class, BASE_URL, config);
+    }
+
+    private ClientConfig createCommonClientConfig(String token, String secret) {
         SumsubTimestampProvider timestampDigest = new SumsubTimestampProvider();
         SumsubSignatureDigest signatureDigest = new SumsubSignatureDigest(secret);
+        CustomObjectMapperFactory objectMapperFactory = new CustomObjectMapperFactory();
 
         ClientConfig config = new ClientConfig();
         config.addDefaultParam(HeaderParam.class, HEADER_APP_TOKEN, token);
         config.addDefaultParam(HeaderParam.class, HEADER_APP_TS, timestampDigest);
         config.addDefaultParam(HeaderParam.class, HEADER_APP_SIG, signatureDigest);
-        config.setJacksonObjectMapperFactory(new CustomObjectMapperFactory());
-        config.setConnectionType(HttpConnectionType.apache);
-        return RestProxyFactory.createProxy(SumsubTravelRuleApi.class, BASE_URL, config);
+        config.setJacksonObjectMapperFactory(objectMapperFactory);
+
+        return config;
     }
 
 }
