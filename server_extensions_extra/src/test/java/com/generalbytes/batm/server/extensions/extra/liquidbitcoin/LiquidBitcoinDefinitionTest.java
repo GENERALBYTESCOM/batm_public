@@ -4,7 +4,7 @@ import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class LiquidBitcoinDefinitionTest {
 
@@ -17,6 +17,8 @@ class LiquidBitcoinDefinitionTest {
         assertEquals("Liquid Network Bitcoin", definition.getName());
         assertEquals("liquidnetwork", definition.getProtocol());
         assertEquals("https://liquid.net/", definition.getAuthorWebsiteURL());
-        assertInstanceOf(LiquidBitcoinPaymentSupport.class, definition.getPaymentSupport());
+        assertNull(definition.getPaymentSupport());
+        // uncomment assertion below when SELL is supported
+        //assertInstanceOf(LiquidBitcoinPaymentSupport.class, definition.getPaymentSupport());
     }
 }

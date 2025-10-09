@@ -57,7 +57,7 @@ class LiquidBitcoinExtensionTest {
         assertEquals(CryptoCurrency.L_BTC.getCode(), cryptoCurrencies.iterator().next());
     }
 
-    @Test @Disabled // enable when sell is supported
+    @Test
     void testGetCryptoCurrencyDefinitions() {
         Set<ICryptoCurrencyDefinition> cryptoCurrencyDefinitions = extension.getCryptoCurrencyDefinitions();
         assertEquals(1, cryptoCurrencyDefinitions.size());

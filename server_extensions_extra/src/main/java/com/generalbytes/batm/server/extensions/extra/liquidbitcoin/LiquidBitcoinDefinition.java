@@ -30,7 +30,7 @@ public class LiquidBitcoinDefinition extends CryptoCurrencyDefinition{
 
     @Override
     public IPaymentSupport getPaymentSupport() {
-        return paymentSupport;
+        return null; // Temporarily disable SELL, until implemented
     }
 
     @Override
