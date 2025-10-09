@@ -1,5 +1,6 @@
-package com.generalbytes.batm.server.extensions.travelrule.sumsub.common;
+package com.generalbytes.batm.server.extensions.common.sumsub.api;
 
+import com.generalbytes.batm.server.extensions.common.sumsub.SumsubException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

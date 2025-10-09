@@ -1,4 +1,4 @@
-package com.generalbytes.batm.server.extensions.travelrule.sumsub.common;
+package com.generalbytes.batm.server.extensions.common.sumsub;
 
 /**
  * A custom exception class that extends {@code RuntimeException}.

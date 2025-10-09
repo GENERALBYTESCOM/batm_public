@@ -1,8 +1,8 @@
-package com.generalbytes.batm.server.extensions.travelrule.sumsub.common.api.digest;
+package com.generalbytes.batm.server.extensions.common.sumsub.api.digest;
 
 import com.generalbytes.batm.server.coinutil.Hex;
-import com.generalbytes.batm.server.extensions.travelrule.sumsub.common.api.SumsubApiFactory;
-import com.generalbytes.batm.server.extensions.travelrule.sumsub.common.SumsubException;
+import com.generalbytes.batm.server.extensions.common.sumsub.api.SumsubApiFactory;
+import com.generalbytes.batm.server.extensions.common.sumsub.SumsubException;
 import si.mazi.rescu.ParamsDigest;
 import si.mazi.rescu.RestInvocation;
 

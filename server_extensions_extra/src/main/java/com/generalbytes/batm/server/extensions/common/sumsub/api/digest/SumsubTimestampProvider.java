@@ -1,4 +1,4 @@
-package com.generalbytes.batm.server.extensions.travelrule.sumsub.common.api.digest;
+package com.generalbytes.batm.server.extensions.common.sumsub.api.digest;
 
 import si.mazi.rescu.ParamsDigest;
 import si.mazi.rescu.RestInvocation;

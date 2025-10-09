@@ -9,7 +9,7 @@ import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.dto.transac
 import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.dto.updatetransactionhash.SumsubUpdateTransactionHashRequest;
 import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.dto.updatetransactionhash.SumsubUpdateTransactionHashResponse;
 import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.dto.walletownershipconfirmation.SumsubConfirmWalletOwnershipRequest;
-import com.generalbytes.batm.server.extensions.travelrule.sumsub.common.api.SumsubApiFactory;
+import com.generalbytes.batm.server.extensions.common.sumsub.api.SumsubApiFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

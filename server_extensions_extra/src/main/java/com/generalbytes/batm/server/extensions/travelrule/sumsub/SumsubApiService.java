@@ -9,7 +9,7 @@ import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.dto.transac
 import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.dto.updatetransactionhash.SumsubUpdateTransactionHashRequest;
 import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.dto.updatetransactionhash.SumsubUpdateTransactionHashResponse;
 import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.dto.walletownershipconfirmation.SumsubConfirmWalletOwnershipRequest;
-import com.generalbytes.batm.server.extensions.travelrule.sumsub.common.api.SumsubApiFactory;
+import com.generalbytes.batm.server.extensions.common.sumsub.api.SumsubApiFactory;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

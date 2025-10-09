@@ -5,7 +5,7 @@ import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProvider;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProviderCredentials;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProviderFactory;
 import com.generalbytes.batm.server.extensions.travelrule.TravelRuleExtensionContext;
-import com.generalbytes.batm.server.extensions.travelrule.sumsub.common.api.SumsubApiFactory;
+import com.generalbytes.batm.server.extensions.common.sumsub.api.SumsubApiFactory;
 import com.generalbytes.batm.server.extensions.travelrule.sumsub.webhooks.SumsubTransferHandler;
 import com.generalbytes.batm.server.extensions.travelrule.sumsub.webhooks.SumsubWebhookValidator;
 import org.apache.commons.lang3.StringUtils;

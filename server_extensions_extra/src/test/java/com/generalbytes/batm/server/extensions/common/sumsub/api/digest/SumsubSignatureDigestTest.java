@@ -1,6 +1,6 @@
-package com.generalbytes.batm.server.extensions.travelrule.sumsub.common.api.digest;
+package com.generalbytes.batm.server.extensions.common.sumsub.api.digest;
 
-import com.generalbytes.batm.server.extensions.travelrule.sumsub.common.SumsubException;
+import com.generalbytes.batm.server.extensions.common.sumsub.SumsubException;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import si.mazi.rescu.RestInvocation;

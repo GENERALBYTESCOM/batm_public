@@ -1,8 +1,8 @@
-package com.generalbytes.batm.server.extensions.travelrule.sumsub.common.api;
+package com.generalbytes.batm.server.extensions.common.sumsub.api;
 
 import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.SumsubTravelRuleApi;
-import com.generalbytes.batm.server.extensions.travelrule.sumsub.common.api.digest.SumsubSignatureDigest;
-import com.generalbytes.batm.server.extensions.travelrule.sumsub.common.api.digest.SumsubTimestampProvider;
+import com.generalbytes.batm.server.extensions.common.sumsub.api.digest.SumsubSignatureDigest;
+import com.generalbytes.batm.server.extensions.common.sumsub.api.digest.SumsubTimestampProvider;
 import jakarta.ws.rs.HeaderParam;
 import si.mazi.rescu.ClientConfig;
 import si.mazi.rescu.RestProxyFactory;
