@@ -4,6 +4,7 @@ import com.generalbytes.batm.server.extensions.AbstractExtension;
 import com.generalbytes.batm.server.extensions.IExtensionContext;
 import com.generalbytes.batm.server.extensions.IRestService;
 import com.generalbytes.batm.server.extensions.aml.verification.IIdentityVerificationProvider;
+import com.generalbytes.batm.server.extensions.common.sumsub.api.SumsubApiFactory;
 import com.generalbytes.batm.server.extensions.common.sumsub.api.digest.SumsubSignatureDigest;
 import com.generalbytes.batm.server.extensions.common.sumsub.api.digest.SumsubTimestampProvider;
 import com.generalbytes.batm.server.extensions.util.ExtensionParameters;
@@ -26,6 +27,7 @@ public class SumSubExtension extends AbstractExtension {
     private Set<IRestService> restServices = null;
 
     private SumSubInstanceModule module;
+    private SumsubApiFactory apiFactory;
 
     @Override
     public String getName() {
@@ -39,6 +41,7 @@ public class SumSubExtension extends AbstractExtension {
         module.addService(IExtensionContext.class, ctx);
         module.addService(SumSubWebhookParser.class, new SumSubWebhookParser());
         this.restServices = getServices();
+        this.apiFactory = new SumsubApiFactory();
         log.info("SumSub extension initialized");
     }
 
@@ -107,7 +110,7 @@ public class SumSubExtension extends AbstractExtension {
     }
 
     private ISumSubApi createApi(String token, SumsubSignatureDigest signatureDigest) {
-        return ISumSubApi.create(token, signatureDigest, new SumsubTimestampProvider());
+        return apiFactory.createSumsubIdentityVerificationApi(token, signatureDigest, new SumsubTimestampProvider());
     }
 
     private SumSubWebhookProcessor createWebhookProcessor(String webhookSecret, SumSubApiService apiService) {

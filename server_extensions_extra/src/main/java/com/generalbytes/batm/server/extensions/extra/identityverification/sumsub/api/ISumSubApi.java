@@ -1,19 +1,13 @@
 package com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api;
 
-import com.generalbytes.batm.server.extensions.common.sumsub.api.CustomObjectMapperFactory;
-import com.generalbytes.batm.server.extensions.common.sumsub.api.digest.SumsubSignatureDigest;
-import com.generalbytes.batm.server.extensions.common.sumsub.api.digest.SumsubTimestampProvider;
 import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.vo.ApplicantIdResponse;
 import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.vo.ApplicantInfoResponse;
 import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.vo.CreateIdentityApplicantRequest;
 import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.vo.CreateIdentityVerificationSessionResponse;
 import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.vo.InspectionInfoResponse;
-import si.mazi.rescu.ClientConfig;
-import si.mazi.rescu.RestProxyFactory;
 
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
-import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
@@ -32,32 +26,6 @@ import java.io.IOException;
 @Path("/")
 @Produces(MediaType.APPLICATION_JSON)
 public interface ISumSubApi {
-
-    String BASE_URL = "https://api.sumsub.com";
-
-    String HEADER_APP_TOKEN = "X-App-Token";
-    String HEADER_APP_SIG = "X-App-Access-Sig";
-    String HEADER_APP_TS = "X-App-Access-Ts";
-
-    /**
-     * Creates an instance of the ISumSubApi interface for interacting with the SumSub API. This method
-     * configures the necessary headers and settings required for API communication, including the
-     * authentication token, timestamp provider, and signature digest.
-     *
-     * @param token           the API token used for authenticating requests to the SumSub API
-     * @param signatureDigest an instance of SumSubSignatureDigest used to generate secure HMAC-SHA256 signatures
-     * @param timestampDigest an instance of SumSubTimestampProvider to provide a timestamp for the requests
-     * @return a configured instance of ISumSubApi ready for sending requests to the SumSub API
-     */
-    static ISumSubApi create(String token, SumsubSignatureDigest signatureDigest, SumsubTimestampProvider timestampDigest) {
-        ClientConfig config = new ClientConfig();
-        config.addDefaultParam(HeaderParam.class, HEADER_APP_TOKEN, token);
-        config.addDefaultParam(HeaderParam.class, HEADER_APP_TS, timestampDigest);
-        config.addDefaultParam(HeaderParam.class, HEADER_APP_SIG, signatureDigest);
-        config.setJacksonObjectMapperFactory(new CustomObjectMapperFactory());
-        return RestProxyFactory.createProxy(ISumSubApi.class, BASE_URL, config);
-    }
-
     /**
      * Gets the applicant data by external ID.
      *
