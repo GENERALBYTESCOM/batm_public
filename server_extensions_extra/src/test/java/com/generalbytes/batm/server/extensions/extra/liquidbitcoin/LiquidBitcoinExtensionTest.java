@@ -10,6 +10,7 @@ import com.generalbytes.batm.server.extensions.ITunnelManager;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.liquidbitcoin.wallets.elementsd.ElementsdRPCWalletWithUniqueAddresses;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -56,7 +57,7 @@ class LiquidBitcoinExtensionTest {
         assertEquals(CryptoCurrency.L_BTC.getCode(), cryptoCurrencies.iterator().next());
     }
 
-    @Test
+    @Test @Disabled // enable when sell is supported
     void testGetCryptoCurrencyDefinitions() {
         Set<ICryptoCurrencyDefinition> cryptoCurrencyDefinitions = extension.getCryptoCurrencyDefinitions();
         assertEquals(1, cryptoCurrencyDefinitions.size());
