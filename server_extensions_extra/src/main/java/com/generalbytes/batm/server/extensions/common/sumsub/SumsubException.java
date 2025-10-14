@@ -1,24 +1,24 @@
-package com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.exception;
+package com.generalbytes.batm.server.extensions.common.sumsub;
 
 /**
  * A custom exception class that extends {@code RuntimeException}.
- * This class is utilized to represent errors specific to the SumSub
+ * This class is utilized to represent errors specific to the Sumsub
  * implementation. It provides constructors to capture error
  * messages and underlying causes for detailed exception handling.
  *
  * <p>Intended usage:
  * - To encapsulate and propagate underlying exceptions such as
- *   misconfigurations or cryptographic failures in SumSub-related
+ *   misconfigurations or cryptographic failures in Sumsub-related
  *   logic or components.
  * - To provide a meaningful abstraction for runtime errors in
- *   SumSub-related processes.
+ *   Sumsub-related processes.
  */
-public class SumSubException extends RuntimeException {
-    public SumSubException(String message, Throwable cause) {
+public class SumsubException extends RuntimeException {
+    public SumsubException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public SumSubException(Throwable cause) {
+    public SumsubException(Throwable cause) {
         super(cause);
     }
 }

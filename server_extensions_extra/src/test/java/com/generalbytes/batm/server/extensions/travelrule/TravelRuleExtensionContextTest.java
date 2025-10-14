@@ -113,4 +113,15 @@ class TravelRuleExtensionContextTest {
         assertEquals(BigDecimal.valueOf(21L), result);
     }
 
+    @Test
+    void findTravelRuleTransferByPublicId() {
+        ITravelRuleTransferData transferData = mock(ITravelRuleTransferData.class);
+
+        when(extensionContext.findTravelRuleTransferByPublicId("transfer_public_id")).thenReturn(transferData);
+
+        ITravelRuleTransferData result = travelRuleExtensionContext.findTravelRuleTransferByPublicId("transfer_public_id");
+
+        assertSame(transferData, result);
+    }
+
 }

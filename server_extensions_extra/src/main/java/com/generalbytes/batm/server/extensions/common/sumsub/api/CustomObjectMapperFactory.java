@@ -1,4 +1,4 @@
-package com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api;
+package com.generalbytes.batm.server.extensions.common.sumsub.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import si.mazi.rescu.serialization.jackson.JacksonObjectMapperFactory;

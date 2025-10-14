@@ -6,8 +6,8 @@ import com.generalbytes.batm.server.extensions.IIdentityBase;
 import com.generalbytes.batm.server.extensions.IIdentityPiece;
 import com.generalbytes.batm.server.extensions.aml.verification.ApplicantCheckResult;
 import com.generalbytes.batm.server.extensions.aml.verification.IdentityCheckWebhookException;
+import com.generalbytes.batm.server.extensions.common.sumsub.SumsubException;
 import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.digest.SumSubWebhookSecretDigest;
-import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.exception.SumSubException;
 import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.vo.ApplicantInfoResponse;
 import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.vo.ApplicantReviewedWebhook;
 import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.vo.BaseWebhookBody;
@@ -111,7 +111,7 @@ public class SumSubWebhookProcessor {
             throw new IdentityCheckWebhookException(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), "",
                     "Error getting info from SumSub.");
         } catch (Exception e) {
-            throw new SumSubException(e);
+            throw new SumsubException(e);
         }
     }
 
@@ -131,7 +131,7 @@ public class SumSubWebhookProcessor {
             throw new IdentityCheckWebhookException(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), "",
                     "Error creating SumSub session.");
         } catch (Exception e) {
-            throw new SumSubException(e);
+            throw new SumsubException(e);
         }
     }
 

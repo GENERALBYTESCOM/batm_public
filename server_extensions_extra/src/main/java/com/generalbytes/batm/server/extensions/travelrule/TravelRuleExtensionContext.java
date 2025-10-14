@@ -45,4 +45,8 @@ public class TravelRuleExtensionContext {
         return context.convertCryptoFromBaseUnit(amount, cryptocurrency);
     }
 
+    public ITravelRuleTransferData findTravelRuleTransferByPublicId(String transferPublicId) {
+        return context.findTravelRuleTransferByPublicId(transferPublicId);
+    }
+
 }

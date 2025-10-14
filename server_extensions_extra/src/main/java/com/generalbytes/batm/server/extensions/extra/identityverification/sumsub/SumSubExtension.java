@@ -4,10 +4,11 @@ import com.generalbytes.batm.server.extensions.AbstractExtension;
 import com.generalbytes.batm.server.extensions.IExtensionContext;
 import com.generalbytes.batm.server.extensions.IRestService;
 import com.generalbytes.batm.server.extensions.aml.verification.IIdentityVerificationProvider;
+import com.generalbytes.batm.server.extensions.common.sumsub.api.SumsubApiFactory;
+import com.generalbytes.batm.server.extensions.common.sumsub.api.digest.SumsubSignatureDigest;
+import com.generalbytes.batm.server.extensions.common.sumsub.api.digest.SumsubTimestampProvider;
 import com.generalbytes.batm.server.extensions.util.ExtensionParameters;
 import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.ISumSubApi;
-import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.digest.SumSubSignatureDigest;
-import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.digest.SumSubTimestampProvider;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashSet;
@@ -26,6 +27,7 @@ public class SumSubExtension extends AbstractExtension {
     private Set<IRestService> restServices = null;
 
     private SumSubInstanceModule module;
+    private SumsubApiFactory apiFactory;
 
     @Override
     public String getName() {
@@ -39,6 +41,7 @@ public class SumSubExtension extends AbstractExtension {
         module.addService(IExtensionContext.class, ctx);
         module.addService(SumSubWebhookParser.class, new SumSubWebhookParser());
         this.restServices = getServices();
+        this.apiFactory = new SumsubApiFactory();
         log.info("SumSub extension initialized");
     }
 
@@ -95,8 +98,7 @@ public class SumSubExtension extends AbstractExtension {
                                                                   String webhookSecret,
                                                                   String levelName,
                                                                   int linkExpiryInSeconds) {
-        SumSubSignatureDigest signatureDigest = new SumSubSignatureDigest(secret);
-        ISumSubApi api = createApi(token, signatureDigest);
+        ISumSubApi api = createApi(token, secret);
         SumSubApiService apiService = createSumSubApiService(api, levelName, linkExpiryInSeconds);
         SumSubWebhookProcessor webhookProcessor = createWebhookProcessor(webhookSecret, apiService);
         return new SumSubIdentityVerificationProvider(apiService, webhookProcessor);
@@ -106,8 +108,8 @@ public class SumSubExtension extends AbstractExtension {
         return new SumSubApiService(api, levelName, linkExpiryInSeconds);
     }
 
-    private ISumSubApi createApi(String token, SumSubSignatureDigest signatureDigest) {
-        return ISumSubApi.create(token, signatureDigest, new SumSubTimestampProvider());
+    private ISumSubApi createApi(String token, String secret) {
+        return apiFactory.createSumsubIdentityVerificationApi(token, secret);
     }
 
     private SumSubWebhookProcessor createWebhookProcessor(String webhookSecret, SumSubApiService apiService) {
