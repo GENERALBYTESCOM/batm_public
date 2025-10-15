@@ -9,26 +9,25 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import si.mazi.rescu.HttpStatusIOException;
 
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.CompletionException;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
+import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -78,16 +77,9 @@ class NotabeneAuthServiceTest {
         verifyAccessTokenRequested();
     }
 
-    private static Object[][] invalidGetAccessTokenResponseSource() {
-        return new Object[][]{
-            {401, "unauthorized request"},
-            {403, "forbidden request"},
-        };
-    }
-
     @ParameterizedTest
-    @MethodSource("invalidGetAccessTokenResponseSource")
-    void testRefreshAccessToken_invalidGetAccessTokenResponse400(int statusCode, String expectedError) throws HttpStatusIOException {
+    @ValueSource(ints = { 401, 403 })
+    void testRefreshAccessToken_invalidGetAccessTokenResponse400(int statusCode) throws HttpStatusIOException {
         ITravelRuleProviderCredentials providerCredentials = createTravelRuleProviderIdentification();
         HttpStatusIOException httpStatusIOException = mock(HttpStatusIOException.class);
         when(httpStatusIOException.getHttpStatusCode()).thenReturn(statusCode);
@@ -96,12 +88,9 @@ class NotabeneAuthServiceTest {
 
         when(configuration.getApiUrl()).thenReturn(NOTABENE_API_URL);
         authService.refreshAccessToken(providerCredentials);
-        try {
-            authService.getAccessToken(providerCredentials);
-            fail("Should throw an exception");
-        } catch (CompletionException e) {
-            assertEquals(expectedError, e.getMessage());
-        }
+
+        String accessToken = authService.getAccessToken(providerCredentials);
+        assertNull(accessToken);
 
         verifyAccessTokenRequested();
     }
@@ -148,42 +137,56 @@ class NotabeneAuthServiceTest {
     }
 
     @Test
-    void testGetAccessToken() throws HttpStatusIOException {
+    void testGetAccessToken() throws Exception {
         ITravelRuleProviderCredentials providerCredentials = createTravelRuleProviderIdentification();
 
         assertNull(authService.getAccessToken(providerCredentials));
 
-        when(authApi.generateAccessToken(any())).thenReturn(createAccessTokenResponse("accessToken1"));
+        when(authApi.generateAccessToken(any()))
+            .thenReturn(createAccessTokenResponse("accessToken1"))
+            .thenReturn(createAccessTokenResponse("accessToken2"));
         authService.refreshAccessToken(providerCredentials);
 
-        assertEquals("accessToken1", authService.getAccessToken(providerCredentials));
+        await().atMost(200, TimeUnit.MILLISECONDS).until(() ->
+            "accessToken1".equals(authService.getAccessToken(providerCredentials))
+        );
 
-        when(authApi.generateAccessToken(any())).thenReturn(createAccessTokenResponse("accessToken2"));
         authService.refreshAccessToken(providerCredentials);
 
-        assertEquals("accessToken2", authService.getAccessToken(providerCredentials));
+        await().atMost(200, TimeUnit.MILLISECONDS).until(() ->
+            "accessToken2".equals(authService.getAccessToken(providerCredentials))
+        );
     }
 
     @Test
-    void testRefreshAccessToken_concurrentExecution() throws InterruptedException, ExecutionException, HttpStatusIOException {
+    void testRefreshAccessToken_concurrentExecution() throws HttpStatusIOException {
         ITravelRuleProviderCredentials providerCredentials = createTravelRuleProviderIdentification();
-        NotabeneGenerateAccessTokenResponse mockResponse = createAccessTokenResponse("testToken");
-        when(authApi.generateAccessToken(any())).thenAnswer(invocation -> {
-            Thread.sleep(100); // Delay to simulate a time-consuming API call
-            return mockResponse;
+
+        when(authApi.generateAccessToken(any(NotabeneGenerateAccessTokenRequest.class))).thenAnswer(invocation -> {
+            Thread.sleep(100); // simulate network latency
+            return createAccessTokenResponse("testToken");
         });
-        ExecutorService executorService = Executors.newFixedThreadPool(5);
-        Callable<Void> task = () -> {
-            authService.refreshAccessToken(providerCredentials);
-            return null;
-        };
-        List<Future<Void>> futures = executorService.invokeAll(List.of(task, task, task, task, task));
-        for (Future<Void> future : futures) {
-            future.get();
+
+        int threadCount = 5;
+        CountDownLatch startGate = new CountDownLatch(1);
+        ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
+
+        for (int i = 0; i < threadCount; i++) {
+            executorService.submit(() -> {
+                try {
+                    startGate.await();
+                    authService.refreshAccessToken(providerCredentials);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            });
         }
-        // Calling #getAccessToken to wait for the refresh to be finished
+
+        startGate.countDown();
+
+        verify(authApi, timeout(1000).times(1))
+            .generateAccessToken(any(NotabeneGenerateAccessTokenRequest.class));
         assertEquals("testToken", authService.getAccessToken(providerCredentials));
-        verify(authApi, times(1)).generateAccessToken(any());
         executorService.shutdown();
     }
 
@@ -226,12 +229,8 @@ class NotabeneAuthServiceTest {
         when(authApi.generateAccessToken(any())).thenThrow(httpStatusIOException);
         authService.refreshAccessToken(providerCredentials);
 
-        try {
-            authService.getAccessToken(providerCredentials);
-            fail("Should throw an exception");
-        } catch (CompletionException e) {
-            assertEquals("unauthorized request", e.getMessage());
-        }
+        String accessToken = authService.getAccessToken(providerCredentials);
+        assertNull(accessToken);
 
         authService.removeAccessToken(providerCredentials);
 
@@ -240,14 +239,15 @@ class NotabeneAuthServiceTest {
     }
 
     @Test
-    void testRemoveAccessToken_accessTokenGetPending() throws HttpStatusIOException {
+    void testRemoveAccessToken_accessTokenPending() throws Exception {
         ITravelRuleProviderCredentials providerCredentials = createTravelRuleProviderIdentification();
 
-        when(authApi.generateAccessToken(any())).thenAnswer(invocation -> {
-            Thread.sleep(100); // Delay to simulate a time-consuming API call
+        when(authApi.generateAccessToken(any(NotabeneGenerateAccessTokenRequest.class))).thenAnswer(invocation -> {
+            Thread.sleep(500); // Delay to simulate a time-consuming API call
             return createAccessTokenResponse("accessToken1");
         });
         authService.refreshAccessToken(providerCredentials);
+        Thread.sleep(100); // Due to waiting for thread (future) to start, otherwise stubbing exception occurs sometime
 
         authService.removeAccessToken(providerCredentials);
 
@@ -290,6 +290,16 @@ class NotabeneAuthServiceTest {
             @Override
             public String getVaspDid() {
                 return "vaspDid";
+            }
+
+            @Override
+            public String getPublicKey() {
+                return null;
+            }
+
+            @Override
+            public String getPrivateKey() {
+                return null;
             }
         };
     }

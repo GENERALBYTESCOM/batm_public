@@ -46,6 +46,8 @@
                 <cryptocurrency>XRP</cryptocurrency><!-- BitGo Enterprise-->
                 <cryptocurrency buyonly="true">USDT</cryptocurrency>
                 <cryptocurrency buyonly="true">USDC</cryptocurrency>
+                <cryptocurrency buyonly="true">SOL</cryptocurrency>
+                <cryptocurrency buyonly="true">USDCSOL</cryptocurrency>
                 <help>Host should start with http:// or https://. num_blocks is an integer greater than 2.</help>
             </wallet>
             <wallet prefix="bitgonoforward" name="BitGo Wallet (no forward)">
@@ -67,6 +69,8 @@
                 <cryptocurrency>USDT</cryptocurrency><!-- BitGo Enterprise-->
                 <cryptocurrency>USDTTRON</cryptocurrency>
                 <cryptocurrency>USDC</cryptocurrency>
+                <cryptocurrency>SOL</cryptocurrency>
+                <cryptocurrency>USDCSOL</cryptocurrency>
                 <help>This variant of the wallet generates new addresses for each sell transaction and does not forward payments from temporary address. Host should start with http:// or https://. num_blocks is an integer greater than 2.</help>
             </wallet>
             <wallet prefix="cryptx" name="CryptX Wallet System">
@@ -424,6 +428,7 @@
             <cryptocurrency>DAI</cryptocurrency>
             <cryptocurrency>BIZZ</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
+            <cryptocurrency>SOL</cryptocurrency>
             <help>fiatcurrency parameter is optional</help>
         </ratesource>
         <wallet prefix="coinbasewallet2" name="Coinbase.com Wallet [Deprecated]" >
@@ -458,6 +463,7 @@
             <cryptocurrency buyonly="true">USDC</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
+            <cryptocurrency buyonly="true">SOL</cryptocurrency>
             <help>accountname parameter is optional</help>
         </wallet>
         <wallet prefix="coinbasewallet2noforward" name="Coinbase.com Wallet (no forward) [Deprecated]" >
@@ -494,6 +500,7 @@
             <cryptocurrency>USDC</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
+            <cryptocurrency buyonly="true">SOL</cryptocurrency>
             <help>accountname parameter is optional. This variant of the wallet generates new addresses for each transaction and does not forward payments from temporary address</help>
         </wallet>
         <exchange prefix="coinbaseexchange" name="Coinbase.com Exchange [Deprecated]">
@@ -524,6 +531,7 @@
             <cryptocurrency buyonly="true">ETH</cryptocurrency>
             <cryptocurrency>LTC</cryptocurrency>
             <cryptocurrency>BAT</cryptocurrency>
+            <cryptocurrency buyonly="true">SOL</cryptocurrency>
             <help>fiatcurrency,paymentmethod are optional</help>
         </exchange>
         <exchange prefix="poloniex" name="Poloniex">
@@ -760,9 +768,12 @@
             <cryptocurrency>XMR</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
             <cryptocurrency>XZC</cryptocurrency>
+            <cryptocurrency buyonly="true">SOL</cryptocurrency>
         </exchange>
         <ratesource prefix="binancecom" name="Binance.com">
-            <param name="fiatcurrency" />
+            <param name="apikey"/>
+            <param name="secretkey"/>
+            <param name="fiatcurrency"/>
             <cryptocurrency>BAT</cryptocurrency>
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BNB</cryptocurrency>
@@ -786,6 +797,7 @@
             <cryptocurrency>XMR</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>
             <cryptocurrency>XZC</cryptocurrency>
+            <cryptocurrency>SOL</cryptocurrency>
         </ratesource>
         <exchange prefix="binanceus" name="Binance US">
             <param name="apikey"/>
@@ -990,6 +1002,11 @@
         </ratesource>
         <cryptologo cryptocurrency="DOGE" file="doge.png"/>
         <cryptologo cryptocurrency="DOGE" file="doge.svg"/>
+        <exchange prefix="dogedemo" name="Dogecoin Demo Exchange">
+            <param name="fiatCurrency" />
+            <param name="exchangeAddress" />
+            <cryptocurrency>DOGE</cryptocurrency>
+        </exchange>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.newyorkcoin.NewyorkcoinExtension" >
         <wallet prefix="newyorkcoind" name="Newyorkcoind">
@@ -1638,6 +1655,11 @@
             <param name="walletAddress" />
             <cryptocurrency>XRP</cryptocurrency>
         </wallet>
+        <exchange prefix="xrpdemo" name="Ripple Demo Exchange">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
+            <cryptocurrency>XRP</cryptocurrency>
+        </exchange>
         <ratesource prefix="xrpfix" name ="Fix Price" >
             <param name="price" />
             <cryptocurrency>XRP</cryptocurrency>
@@ -2253,6 +2275,26 @@
         </wallet>
         <cryptologo cryptocurrency="USDC" file="usdc.png"/>
         <cryptologo cryptocurrency="USDC" file="usdc.svg"/>
+        <wallet prefix="usdcdemo" name="USDC Demo Wallet">
+            <param name="fiatCurrency"/>
+            <param name="walletAddress"/>
+            <cryptocurrency>USDC</cryptocurrency>
+        </wallet>
+        <exchange prefix="usdcdemo" name="USDC Demo Exchange">
+            <param name="fiatCurrency"/>
+            <param name="walletAddress"/>
+            <cryptocurrency>USDC</cryptocurrency>
+        </exchange>
+        <wallet prefix="usdtdemo" name="USDT Demo Wallet">
+            <param name="fiatCurrency"/>
+            <param name="walletAddress"/>
+            <cryptocurrency>USDT</cryptocurrency>
+        </wallet>
+        <exchange prefix="usdtdemo" name="USDT Demo Exchange">
+            <param name="fiatCurrency"/>
+            <param name="walletAddress"/>
+            <cryptocurrency>USDT</cryptocurrency>
+        </exchange>
         <!-- ADD your ERC20 tokens here. And don't forget to add cryptologos. -->
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.nuls.NulsExtension" >
@@ -2390,6 +2432,11 @@
             <param name="walletAddress" />
             <cryptocurrency>USDTTRON</cryptocurrency>
         </wallet>
+        <exchange prefix="usdttrondemo" name="Demo Exchange">
+            <param name="fiatCurrency"/>
+            <param name="walletAddress"/>
+            <cryptocurrency>USDTTRON</cryptocurrency>
+        </exchange>
         <cryptologo cryptocurrency="USDTTRON" file="usdttron.png"/>
         <cryptologo cryptocurrency="USDTTRON" file="usdttron.svg"/>
     </extension>
@@ -2451,5 +2498,35 @@
         </identityverificationprovider>
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.travelrule.notabene.NotabeneExtension" />
+    <extension class="com.generalbytes.batm.server.extensions.travelrule.gtr.GtrExtension" />
+    <extension class="com.generalbytes.batm.server.extensions.travelrule.sumsub.SumsubTravelRuleExtension" />
     <extension class="com.generalbytes.batm.server.extensions.extra.communication.ExternalCommunicationExtension" />
+    <extension class="com.generalbytes.batm.server.extensions.extra.solana.SolanaExtension" >
+        <wallet prefix="soldemo" name="Solana Demo Wallet">
+            <param name="fiat_currency" />
+            <param name="wallet_address" />
+            <cryptocurrency buyonly="true">SOL</cryptocurrency>
+        </wallet>
+        <wallet prefix="usdcsoldemo" name="USDC (Solana) Demo Wallet">
+            <param name="fiat_currency" />
+            <param name="wallet_address" />
+            <cryptocurrency buyonly="true">USDCSOL</cryptocurrency>
+        </wallet>
+        <ratesource prefix="solfix" name ="Fix Price" >
+            <param name="price" />
+            <param name="fiat_currency" />
+            <cryptocurrency>SOL</cryptocurrency>
+            <help>USD is default fiat currency.</help>
+        </ratesource>
+        <ratesource prefix="usdcsolfix" name ="Fix Price" >
+            <param name="price" />
+            <param name="fiat_currency" />
+            <cryptocurrency>USDCSOL</cryptocurrency>
+            <help>USD is default fiat currency.</help>
+        </ratesource>
+        <cryptologo cryptocurrency="SOL" file="sol.png"/>
+        <cryptologo cryptocurrency="SOL" file="sol.svg"/>
+        <cryptologo cryptocurrency="USDCSOL" file="usdcsol.png"/>
+        <cryptologo cryptocurrency="USDCSOL" file="usdcsol.svg"/>
+    </extension>
 </extensions>

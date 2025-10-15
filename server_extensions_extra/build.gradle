@@ -28,23 +28,27 @@ artifacts {
 }
 
 ext {
-    xchangeVersion = '5.0.14'
+    xchangeVersion = '5.2.2'
 }
 
 dependencies {
+    implementation project(":country")
     implementation project(":server_extensions_api")
     implementation project(":currencies")
 
     implementation("com.github.Polve:JavaBitcoindRpcClient:$javaBitcoindRpcVersion")
     implementation("org.slf4j:slf4j-api:1.7.28")
-    implementation("com.github.mmazi:rescu:2.1.0")
+    implementation("com.github.mmazi:rescu:3.1")
+    implementation("jakarta.ws.rs:jakarta.ws.rs-api:3.1.0")
     implementation("javax.ws.rs:javax.ws.rs-api:2.1")
     implementation("javax.servlet:javax.servlet-api:3.1.0")
-    implementation("com.fasterxml.jackson.core:jackson-annotations:2.12.0")
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.12.0")
-    implementation("com.fasterxml.jackson.core:jackson-core:2.12.0")
+    implementation("com.fasterxml.jackson.core:jackson-annotations:2.14.2")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.14.2")
+    implementation("com.fasterxml.jackson.core:jackson-core:2.14.2")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.2")
     implementation("com.google.guava:guava:30.1.1-jre")
     implementation("com.google.zxing:core:3.5.1")
+    implementation("org.apache.httpcomponents:httpclient:4.5.14")
     implementation("org.knowm.xchange:xchange-core:$xchangeVersion")
     implementation("org.knowm.xchange:xchange-bitfinex:$xchangeVersion")
     implementation("org.knowm.xchange:xchange-binance:$xchangeVersion")
@@ -99,6 +103,9 @@ dependencies {
     implementation("com.onfido:onfido-api-java:2.3.1")
     implementation("org.apache.commons:commons-lang3:3.13.0")
 
+    implementation("com.goterl:lazysodium-java:5.1.4")
+    implementation("net.java.dev.jna:jna:5.12.1")
+
     // keeping junit 4 for compatibility, will be removed soon, use junit 5 instead
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.junit.vintage:junit-vintage-engine:5.11.4")
@@ -114,6 +121,8 @@ dependencies {
     testImplementation("org.mockito:mockito-core:4.11.0")
     testImplementation("org.mockito:mockito-inline:4.11.0")
     testImplementation("org.mockito:mockito-junit-jupiter:4.11.0")
+    testImplementation("org.awaitility:awaitility:4.0.3")
+    testImplementation("org.hamcrest:hamcrest:2.2")
 }
 
 test {

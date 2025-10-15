@@ -27,7 +27,7 @@ import si.mazi.rescu.ClientConfig;
 import si.mazi.rescu.RestProxyFactory;
 
 import javax.net.ssl.SSLContext;
-import javax.ws.rs.HeaderParam;
+import jakarta.ws.rs.HeaderParam;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 

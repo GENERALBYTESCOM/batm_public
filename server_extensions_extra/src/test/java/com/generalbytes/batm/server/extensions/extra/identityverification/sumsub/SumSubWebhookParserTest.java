@@ -4,7 +4,7 @@ import com.generalbytes.batm.server.extensions.aml.verification.IdentityCheckWeb
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

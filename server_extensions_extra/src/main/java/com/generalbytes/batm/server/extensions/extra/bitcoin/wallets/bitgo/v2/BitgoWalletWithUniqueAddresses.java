@@ -26,34 +26,36 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dt
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.BitGoTransfersResponse;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto.ErrorResponseException;
 import com.generalbytes.batm.server.extensions.payment.ReceivedAmount;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import si.mazi.rescu.HttpStatusIOException;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 public class BitgoWalletWithUniqueAddresses extends BitgoWallet implements IGeneratesNewDepositCryptoAddress, IQueryableWallet {
-    private static final Logger log = LoggerFactory.getLogger(BitgoWalletWithUniqueAddresses.class);
 
     private static final String TRANSFER_STATE_CONFIRMED = "confirmed";
     private static final String TRANSFER_TYPE_RECEIVE = "receive";
-    private static final Map<String, String> newAddressCryptoCurrency = new HashMap<String, String>() {
-        {
-            put(CryptoCurrency.USDT.getCode(), "eth");
-            put(CryptoCurrency.USDTTRON.getCode(), "trx");
-            put(CryptoCurrency.USDC.getCode(), "eth");
-        }
-    };
+    private static final Map<String, String> newAddressCryptoCurrency = Map.ofEntries(
+        Map.entry(CryptoCurrency.USDT.getCode(), "eth"),
+        Map.entry(CryptoCurrency.USDTTRON.getCode(), "trx"),
+        Map.entry(CryptoCurrency.USDC.getCode(), "eth"),
+        Map.entry(CryptoCurrency.USDCSOL.getCode(), "sol")
+    );
 
-    public BitgoWalletWithUniqueAddresses(String scheme, String host, int port, String token, String walletId, String walletPassphrase, Integer numBlocks) {
-        super(scheme, host, port, token, walletId, walletPassphrase, numBlocks);
-    }
-
-    public BitgoWalletWithUniqueAddresses(String scheme, String host, int port, String token, String walletId, String walletPassphrase, Integer numBlocks, Integer feeRate, Integer maxFeeRate) {
+    public BitgoWalletWithUniqueAddresses(String scheme,
+                                          String host,
+                                          int port,
+                                          String token,
+                                          String walletId,
+                                          String walletPassphrase,
+                                          Integer numBlocks,
+                                          Integer feeRate,
+                                          Integer maxFeeRate
+    ) {
         super(scheme, host, port, token, walletId, walletPassphrase, numBlocks, feeRate, maxFeeRate);
     }
 

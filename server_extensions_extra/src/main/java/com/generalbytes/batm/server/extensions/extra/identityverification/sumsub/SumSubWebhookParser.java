@@ -3,7 +3,7 @@ package com.generalbytes.batm.server.extensions.extra.identityverification.sumsu
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.generalbytes.batm.server.extensions.aml.verification.IdentityCheckWebhookException;
-import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.CustomObjectMapperFactory;
+import com.generalbytes.batm.server.extensions.common.sumsub.api.CustomObjectMapperFactory;
 
 import javax.ws.rs.core.Response.Status;
 

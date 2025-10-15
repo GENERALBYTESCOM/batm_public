@@ -4,6 +4,9 @@ import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProvider;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProviderCredentials;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedConstruction;
@@ -71,10 +74,12 @@ class NotabeneProviderFactoryTest {
         assertNotEquals(provider1, provider2);
     }
 
-    @Test
-    void testGetProvider_unknownVaspDid() {
-        ITravelRuleProviderCredentials credentials1 = createCredentials(null);
-        ITravelRuleProviderCredentials credentials2 = createCredentials(null);
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = { "", "  ", "\t", "\n" })
+    void testGetProvider_unknownVaspDid(String vaspDid) {
+        ITravelRuleProviderCredentials credentials1 = createCredentials(vaspDid);
+        ITravelRuleProviderCredentials credentials2 = createCredentials(vaspDid);
 
         ITravelRuleProvider provider1 = notabeneProviderFactory.getProvider(credentials1);
         ITravelRuleProvider provider2 = notabeneProviderFactory.getProvider(credentials2);

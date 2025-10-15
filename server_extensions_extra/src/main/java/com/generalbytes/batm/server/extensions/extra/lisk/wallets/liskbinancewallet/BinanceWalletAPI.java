@@ -17,8 +17,8 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.lisk.wallets.liskbinancewallet;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 import java.io.IOException;
 
 @Path("/")
@@ -26,10 +26,20 @@ import java.io.IOException;
 public interface BinanceWalletAPI {
     @GET
     @Path("/api/v3/account")
-    BinanceResponse getCryptoBalance(@HeaderParam("X-MBX-APIKEY") String apiKey, @QueryParam("recvWindow") String recvWindow, @QueryParam("timestamp") String timeStamp, @QueryParam("signature") String signature ) throws IOException;
+    BinanceResponse getCryptoBalance(@HeaderParam("X-MBX-APIKEY") String apiKey,
+                                     @QueryParam("recvWindow") String recvWindow,
+                                     @QueryParam("timestamp") String timeStamp,
+                                     @QueryParam("signature") String signature) throws IOException;
 
     @POST
     @Path("wapi/v1/withdraw.html")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    BinanceSendCoinResponse sendCryptoCurrency(@HeaderParam("X-MBX-APIKEY") String apiKey, @QueryParam("asset") String asset, @QueryParam("address") String address, @QueryParam("amount") String amount, @QueryParam("name") String name, @QueryParam("recvWindow") String recvWindow, @QueryParam("timestamp") String timeStamp, @QueryParam("signature") String signature) throws IOException;
+    BinanceSendCoinResponse sendCryptoCurrency(@HeaderParam("X-MBX-APIKEY") String apiKey,
+                                               @QueryParam("asset") String asset,
+                                               @QueryParam("address") String address,
+                                               @QueryParam("amount") String amount,
+                                               @QueryParam("name") String name,
+                                               @QueryParam("recvWindow") String recvWindow,
+                                               @QueryParam("timestamp") String timeStamp,
+                                               @QueryParam("signature") String signature) throws IOException;
 }

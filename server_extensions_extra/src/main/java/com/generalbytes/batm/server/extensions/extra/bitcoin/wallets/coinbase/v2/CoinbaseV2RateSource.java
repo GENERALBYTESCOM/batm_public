@@ -31,12 +31,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class CoinbaseV2RateSource implements IRateSource{
+public class CoinbaseV2RateSource implements IRateSource {
     private static final Logger log = LoggerFactory.getLogger("batm.master.CoinbaseExchange");
 
-    private static final HashMap<String,BigDecimal> rateAmounts = new HashMap<>();
-    private static HashMap<String,Long> rateTimes = new HashMap<>();
-    private static final long MAXIMUM_ALLOWED_TIME_OFFSET = 30 * 1000;
+    private static final HashMap<String, BigDecimal> rateAmounts = new HashMap<>();
+    private static final HashMap<String, Long> rateTimes = new HashMap<>();
+    private static final long MAXIMUM_ALLOWED_TIME_OFFSET = 30 * 1000L;
 
     private final String preferredFiatCurrency;
     private final CoinbaseV2ApiWrapper api;
@@ -62,6 +62,7 @@ public class CoinbaseV2RateSource implements IRateSource{
         result.add(CryptoCurrency.DAI.getCode());
         result.add(CryptoCurrency.BIZZ.getCode());
         result.add(CryptoCurrency.XRP.getCode());
+        result.add(CryptoCurrency.SOL.getCode());
         return result;
     }
 
@@ -85,26 +86,26 @@ public class CoinbaseV2RateSource implements IRateSource{
 
     @Override
     public synchronized BigDecimal getExchangeRateLast(String cryptoCurrency, String fiatCurrency) {
-        String key = cryptoCurrency +"_" + fiatCurrency;
+        String key = cryptoCurrency + "_" + fiatCurrency;
         synchronized (rateAmounts) {
-            long now  = System.currentTimeMillis();
+            long now = System.currentTimeMillis();
             BigDecimal amount = rateAmounts.get(key);
             if (amount == null) {
                 BigDecimal result = getExchangeRateLastSync(cryptoCurrency, fiatCurrency);
-                log.debug("Called coinbase exchange for rate: " + key + " = " + result);
-                rateAmounts.put(key,result);
-                rateTimes.put(key,now+MAXIMUM_ALLOWED_TIME_OFFSET);
+                log.debug("Called coinbase exchange for rate: {} = {}", key, result);
+                rateAmounts.put(key, result);
+                rateTimes.put(key, now + MAXIMUM_ALLOWED_TIME_OFFSET);
                 return result;
-            }else {
+            } else {
                 Long expirationTime = rateTimes.get(key);
                 if (expirationTime > now) {
                     return rateAmounts.get(key);
-                }else{
+                } else {
                     //do the job;
                     BigDecimal result = getExchangeRateLastSync(cryptoCurrency, fiatCurrency);
-                    log.debug("Called coinbase exchange for rate: " + key + " = " + result);
-                    rateAmounts.put(key,result);
-                    rateTimes.put(key,now+MAXIMUM_ALLOWED_TIME_OFFSET);
+                    log.debug("Called coinbase exchange for rate: {} = {}", key, result);
+                    rateAmounts.put(key, result);
+                    rateTimes.put(key, now + MAXIMUM_ALLOWED_TIME_OFFSET);
                     return result;
                 }
             }

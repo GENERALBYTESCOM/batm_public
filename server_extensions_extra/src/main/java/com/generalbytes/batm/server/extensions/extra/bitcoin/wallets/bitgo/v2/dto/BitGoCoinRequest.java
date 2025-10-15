@@ -20,114 +20,15 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.d
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class BitGoCoinRequest {
-    private String address;
-    private String amount;
-    private String walletPassphrase;
-    private Integer numBlocks;
-    private String comment;
-    private Integer feeRate;
-    private Integer maxFeeRate;
-    private String type;
+public record BitGoCoinRequest(String address,
+                               String amount,
+                               String walletPassphrase,
+                               Integer numBlocks,
+                               String comment,
+                               Integer feeRate,
+                               Integer maxFeeRate,
+                               String type,
+                               String tokenName
+) {
 
-
-    public BitGoCoinRequest(String address, String amount, String walletPassphrase, String comment, Integer numBlocks) {
-        this.address = address;
-        this.amount = amount;
-        this.walletPassphrase = walletPassphrase;
-        this.numBlocks = numBlocks;
-        this.comment = comment;
-    }
-
-    public BitGoCoinRequest(String address,
-                            String amount,
-                            String walletPassphrase,
-                            String comment,
-                            Integer numBlocks,
-                            Integer feeRate,
-                            Integer maxFeeRate
-    ) {
-        this(address, amount, walletPassphrase, comment, numBlocks);
-
-        this.feeRate = feeRate;
-        this.maxFeeRate = maxFeeRate;
-    }
-
-    public BitGoCoinRequest(String address,
-                            String amount,
-                            String walletPassphrase,
-                            String comment,
-                            Integer numBlocks,
-                            Integer feeRate,
-                            Integer maxFeeRate,
-                            String type
-    ) {
-        this(address, amount, walletPassphrase, comment, numBlocks, feeRate, maxFeeRate);
-
-        this.type = type;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getAmount() {
-        return amount;
-    }
-
-    public void setAmount(String amount) {
-        this.amount = amount;
-    }
-
-    public String getWalletPassphrase() {
-        return walletPassphrase;
-    }
-
-    public void setWalletPassphrase(String walletPassphrase) {
-        this.walletPassphrase = walletPassphrase;
-    }
-
-    public void setNumBlocks(Integer numBlocks){
-      this.numBlocks = numBlocks;
-    }
-
-    public Integer getNumBlocks() {
-      return numBlocks;
-    }
-
-    public String getComment() {
-      return comment;
-    }
-
-    public void setComment(String comment){
-      this.comment = comment;
-    }
-
-    public Integer getFeeRate() {
-        return feeRate;
-    }
-
-    public void setFeeRate(Integer feeRate) {
-        this.feeRate = feeRate;
-    }
-
-    public Integer getMaxFeeRate() {
-        return maxFeeRate;
-    }
-
-    public void setMaxFeeRate(Integer maxFeeRate) {
-        this.maxFeeRate = maxFeeRate;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
 }

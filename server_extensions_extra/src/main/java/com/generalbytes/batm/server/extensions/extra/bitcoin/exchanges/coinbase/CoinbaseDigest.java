@@ -21,7 +21,7 @@ import org.knowm.xchange.service.BaseParamsDigest;
 import si.mazi.rescu.RestInvocation;
 
 import javax.crypto.Mac;
-import javax.ws.rs.HeaderParam;
+import jakarta.ws.rs.HeaderParam;
 import java.nio.charset.StandardCharsets;
 
 public class CoinbaseDigest  extends BaseParamsDigest {

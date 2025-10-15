@@ -17,8 +17,12 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import java.math.BigDecimal;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Converters {
 
     public static final BigDecimal BCH = BigDecimal.TEN.pow(8);
@@ -33,10 +37,12 @@ public class Converters {
     public static final BigDecimal VERUM = BigDecimal.TEN.pow(8);
     public static final BigDecimal TRX = BigDecimal.TEN.pow(6);
     public static final BigDecimal USDC = BigDecimal.TEN.pow(6);
+    public static final BigDecimal USDCSOL = BigDecimal.TEN.pow(6);
 
     public static final BigDecimal TBCH = BigDecimal.TEN.pow(8);
     public static final BigDecimal TBTC = BigDecimal.TEN.pow(8);
     public static final BigDecimal TLTC = BigDecimal.TEN.pow(8);
     public static final BigDecimal TETH = BigDecimal.TEN.pow(18);
     public static final BigDecimal TXRP = BigDecimal.TEN.pow(8);
+    public static final BigDecimal SOL = BigDecimal.TEN.pow(9);
 }
