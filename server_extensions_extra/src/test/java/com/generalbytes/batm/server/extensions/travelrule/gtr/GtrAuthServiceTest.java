@@ -72,10 +72,11 @@ class GtrAuthServiceTest {
     @Test
     void testRefreshAccessToken_concurrentExecution() {
         mockGtrConfigurationAndCredentials();
+        GtrLoginResponse gtrLoginResponse = createGtrLoginResponse();
 
         when(api.login(any(GtrLoginRequest.class))).thenAnswer(invocation -> {
             Thread.sleep(100); // simulate network latency
-            return createGtrLoginResponse();
+            return gtrLoginResponse;
         });
 
         int threadCount = 5;

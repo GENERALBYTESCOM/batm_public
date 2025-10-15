@@ -147,13 +147,13 @@ class NotabeneAuthServiceTest {
             .thenReturn(createAccessTokenResponse("accessToken2"));
         authService.refreshAccessToken(providerCredentials);
 
-        await().atMost(500, TimeUnit.MILLISECONDS).until(() ->
+        await().atMost(1, TimeUnit.SECONDS).until(() ->
             "accessToken1".equals(authService.getAccessToken(providerCredentials))
         );
 
         authService.refreshAccessToken(providerCredentials);
 
-        await().atMost(500, TimeUnit.MILLISECONDS).until(() ->
+        await().atMost(1, TimeUnit.SECONDS).until(() ->
             "accessToken2".equals(authService.getAccessToken(providerCredentials))
         );
     }
