@@ -18,7 +18,9 @@ import si.mazi.rescu.HttpStatusIOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
+import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -135,20 +137,25 @@ class NotabeneAuthServiceTest {
     }
 
     @Test
-    void testGetAccessToken() throws HttpStatusIOException {
+    void testGetAccessToken() throws Exception {
         ITravelRuleProviderCredentials providerCredentials = createTravelRuleProviderIdentification();
 
         assertNull(authService.getAccessToken(providerCredentials));
 
-        when(authApi.generateAccessToken(any())).thenReturn(createAccessTokenResponse("accessToken1"));
+        when(authApi.generateAccessToken(any()))
+            .thenReturn(createAccessTokenResponse("accessToken1"))
+            .thenReturn(createAccessTokenResponse("accessToken2"));
         authService.refreshAccessToken(providerCredentials);
 
-        assertEquals("accessToken1", authService.getAccessToken(providerCredentials));
+        await().atMost(200, TimeUnit.MILLISECONDS).until(() ->
+            "accessToken1".equals(authService.getAccessToken(providerCredentials))
+        );
 
-        when(authApi.generateAccessToken(any())).thenReturn(createAccessTokenResponse("accessToken2"));
         authService.refreshAccessToken(providerCredentials);
 
-        assertEquals("accessToken2", authService.getAccessToken(providerCredentials));
+        await().atMost(200, TimeUnit.MILLISECONDS).until(() ->
+            "accessToken2".equals(authService.getAccessToken(providerCredentials))
+        );
     }
 
     @Test
