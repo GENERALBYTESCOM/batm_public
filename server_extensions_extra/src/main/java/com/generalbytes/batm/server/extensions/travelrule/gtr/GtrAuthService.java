@@ -41,7 +41,7 @@ public class GtrAuthService {
             try {
                 tokenRequest.join();
             } catch (Exception e) {
-                log.debug("An error occurred while waiting for the GTR token request to complete.", e);
+                log.error("An error occurred while waiting for the GTR token request to complete.", e);
                 return null; // The background token refresh failed. Return null as no valid token is available.
             }
         }
