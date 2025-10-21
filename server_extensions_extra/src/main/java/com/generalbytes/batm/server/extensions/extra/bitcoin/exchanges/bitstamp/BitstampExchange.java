@@ -23,33 +23,29 @@ import com.generalbytes.batm.server.extensions.coinutil.BCHUtil;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.XChangeExchange;
 import org.knowm.xchange.ExchangeSpecification;
 import org.knowm.xchange.currency.Currency;
+import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.account.AccountInfo;
 import org.knowm.xchange.dto.account.Wallet;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.HashSet;
+import java.math.RoundingMode;
 import java.util.Set;
 
 public class BitstampExchange extends XChangeExchange {
 
-    private final Set<String> cryptoCurrencies = Collections.unmodifiableSet(new HashSet<String>() {
-        {
-            add(CryptoCurrency.BCH.getCode());
-            add(CryptoCurrency.BTC.getCode());
-            add(CryptoCurrency.ETH.getCode());
-            add(CryptoCurrency.LTC.getCode());
-            add(CryptoCurrency.XRP.getCode());
-        }
-    });
-    private final Set<String> fiatCurrencies = Collections.unmodifiableSet(new HashSet<String>() {
-        {
-            add(FiatCurrency.EUR.getCode());
-            add(FiatCurrency.GBP.getCode());
-            add(FiatCurrency.USD.getCode());
-        }
-    });
+    private final Set<String> cryptoCurrencies = Set.of(
+        CryptoCurrency.BCH.getCode(),
+        CryptoCurrency.BTC.getCode(),
+        CryptoCurrency.ETH.getCode(),
+        CryptoCurrency.LTC.getCode(),
+        CryptoCurrency.XRP.getCode()
+    );
+    private final Set<String> fiatCurrencies = Set.of(
+        FiatCurrency.EUR.getCode(),
+        FiatCurrency.GBP.getCode(),
+        FiatCurrency.USD.getCode()
+    );
 
     public BitstampExchange(String preferredFiatCurrency) {
         super(getDefaultSpecification(), preferredFiatCurrency);
@@ -119,5 +115,13 @@ public class BitstampExchange extends XChangeExchange {
             log.error("Error", e);
             return null;
         }
+    }
+
+    @Override
+    protected BigDecimal getTradableAmount(BigDecimal cryptoAmount, CurrencyPair currencyPair) {
+        if (CryptoCurrency.ETH.getCode().equals(currencyPair.getBase().getCurrencyCode())) {
+            return cryptoAmount.setScale(6, RoundingMode.FLOOR);
+        }
+        return super.getTradableAmount(cryptoAmount, currencyPair);
     }
 }
