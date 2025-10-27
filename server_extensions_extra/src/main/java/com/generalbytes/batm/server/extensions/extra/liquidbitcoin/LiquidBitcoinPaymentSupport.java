@@ -21,8 +21,11 @@ import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.extra.common.AbstractRPCPaymentSupport;
 import com.generalbytes.batm.server.extensions.extra.common.RPCClient;
+import com.generalbytes.batm.server.extensions.extra.liquidbitcoin.wallets.elementsd.ElementsdRPCClient;
+import com.generalbytes.batm.server.extensions.payment.PaymentRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import wf.bitcoin.javabitcoindrpcclient.BitcoindRpcClient;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -32,7 +35,7 @@ public class LiquidBitcoinPaymentSupport extends AbstractRPCPaymentSupport {
 
     private static final Logger log = LoggerFactory.getLogger(LiquidBitcoinPaymentSupport.class);
 
-    private LiquidBitcoinAddressValidator addressValidator = new LiquidBitcoinAddressValidator();
+    private final LiquidBitcoinAddressValidator addressValidator = new LiquidBitcoinAddressValidator();
 
     private static final long MAXIMUM_WAIT_FOR_POSSIBLE_REFUND_MILLIS = TimeUnit.DAYS.toMillis(3); // 3 days
     private static final long MAXIMUM_WATCHING_TIME_MILLIS = TimeUnit.DAYS.toMillis(3); // 3 days (exactly plus Sell Offer Expiration 5-120 minutes)
@@ -87,5 +90,11 @@ public class LiquidBitcoinPaymentSupport extends AbstractRPCPaymentSupport {
     @Override
     public String getSigHashType() {
         return "ALL";
+    }
+
+    @Override
+    public BigDecimal getTotalCoinsReceived(BitcoindRpcClient.Transaction tx, PaymentRequest paymentRequest) {
+        ElementsdRPCClient client = (ElementsdRPCClient) getClient(paymentRequest.getWallet());
+        return client.getReceivedByAddress(paymentRequest.getAddress());
     }
 }

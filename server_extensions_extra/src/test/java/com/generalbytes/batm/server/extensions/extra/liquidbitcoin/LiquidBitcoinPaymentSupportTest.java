@@ -2,6 +2,9 @@ package com.generalbytes.batm.server.extensions.extra.liquidbitcoin;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.extra.common.RPCClient;
+import com.generalbytes.batm.server.extensions.extra.liquidbitcoin.wallets.elementsd.ElementsdRPCClient;
+import com.generalbytes.batm.server.extensions.extra.liquidbitcoin.wallets.elementsd.ElementsdRPCWalletWithUniqueAddresses;
+import com.generalbytes.batm.server.extensions.payment.PaymentRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -15,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -105,6 +109,32 @@ class LiquidBitcoinPaymentSupportTest {
     @Test
     void testGetSigHashType() {
         assertEquals("ALL", paymentSupport.getSigHashType());
+    }
+
+    private static BigDecimal[] provideReceivedAmounts() {
+        return new BigDecimal[]{
+            null,
+            BigDecimal.ONE,
+        };
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideReceivedAmounts")
+    void testGetTotalCoinsReceived(BigDecimal receivedAmount) {
+        ElementsdRPCClient client = mock(ElementsdRPCClient.class);
+        ElementsdRPCWalletWithUniqueAddresses wallet = mock(ElementsdRPCWalletWithUniqueAddresses.class);
+        when(wallet.getClient()).thenReturn(client);
+        PaymentRequest paymentRequest = mock(PaymentRequest.class);
+        when(paymentRequest.getWallet()).thenReturn(wallet);
+        when(client.getReceivedByAddress(paymentRequest.getAddress())).thenReturn(receivedAmount);
+
+        BigDecimal result = paymentSupport.getTotalCoinsReceived(null, paymentRequest);
+
+        if (receivedAmount == null) {
+            assertNull(result);
+        } else {
+            assertEquals(0, receivedAmount.compareTo(result));
+        }
     }
 
     private static RPCClient mockRpcClient() {
