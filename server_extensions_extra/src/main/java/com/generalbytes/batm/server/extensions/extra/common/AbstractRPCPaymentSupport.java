@@ -466,19 +466,41 @@ public abstract class AbstractRPCPaymentSupport implements IPaymentSupport{
 
     }
 
-    public BigDecimal getTotalCoinsReceived(BitcoindRpcClient.Transaction tx, PaymentRequest request) {
-        BigDecimal totalCoinsReceived = BigDecimal.ZERO;
+    public BigDecimal getTotalCoinsReceived(BitcoindRpcClient.Transaction tx, PaymentRequest paymentRequest) {
+        String txId = tx.txId();
         List<BitcoindRpcClient.RawTransaction.Out> outputs = tx.raw().vOut();
+        if (outputs == null || outputs.isEmpty()) {
+            log.debug("getTotalCoinsReceived - No outputs for tx: {}", txId);
+            return null;
+        }
+        BigDecimal totalCoinsReceived = BigDecimal.ZERO;
         for (BitcoindRpcClient.RawTransaction.Out output : outputs) {
-            String receivingAddress = RPCClient.cleanAddressFromPossiblePrefix(output.scriptPubKey().addresses().get(0));
+            String receivingAddress = getReceivingAddress(output);
+            if (receivingAddress == null) {
+                continue;
+            }
 
-            if (receivingAddress != null) {
-                if (receivingAddress.equals(request.getAddress())) {
-                    totalCoinsReceived = totalCoinsReceived.add(new BigDecimal(output.value() +""));
-                }
+            if (receivingAddress.equals(paymentRequest.getAddress())) {
+                totalCoinsReceived = totalCoinsReceived.add(output.value());
             }
         }
         return totalCoinsReceived;
+    }
+
+    private String getReceivingAddress(BitcoindRpcClient.RawTransaction.Out output) {
+        BitcoindRpcClient.RawTransaction.Out.ScriptPubKey scriptPubKey = output.scriptPubKey();
+        if (scriptPubKey == null) {
+            return null;
+        }
+        List<String> addresses = scriptPubKey.addresses();
+        if (addresses == null || addresses.isEmpty()) {
+            return null;
+        }
+        String firstAddress = addresses.get(0);
+        if (firstAddress == null) {
+            return null;
+        }
+        return RPCClient.cleanAddressFromPossiblePrefix(firstAddress);
     }
 
     private void stopWatchingTransactions(RPCClient client, IBlockchainWatcherTransactionListener l) {
