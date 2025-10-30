@@ -22,7 +22,7 @@ import com.generalbytes.batm.server.extensions.CryptoCurrencyDefinition;
 import com.generalbytes.batm.server.extensions.payment.IPaymentSupport;
 
 public class LiquidBitcoinDefinition extends CryptoCurrencyDefinition{
-    private IPaymentSupport paymentSupport = new LiquidBitcoinPaymentSupport();
+    private final IPaymentSupport paymentSupport = new LiquidBitcoinPaymentSupport();
 
     public LiquidBitcoinDefinition() {
         super(CryptoCurrency.L_BTC.getCode(), "Liquid Network Bitcoin", "liquidnetwork","https://liquid.net/");
@@ -30,7 +30,7 @@ public class LiquidBitcoinDefinition extends CryptoCurrencyDefinition{
 
     @Override
     public IPaymentSupport getPaymentSupport() {
-        return null; // Temporarily disable SELL, until implemented
+        return paymentSupport;
     }
 
     @Override
