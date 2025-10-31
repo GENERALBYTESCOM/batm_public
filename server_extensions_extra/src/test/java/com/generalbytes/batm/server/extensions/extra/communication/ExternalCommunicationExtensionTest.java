@@ -3,13 +3,15 @@ package com.generalbytes.batm.server.extensions.extra.communication;
 import com.generalbytes.batm.server.extensions.communication.ICommunicationProvider;
 import com.generalbytes.batm.server.extensions.extra.communication.smsbranacz.SmsBranaCzFactory;
 import com.generalbytes.batm.server.extensions.extra.communication.smsbranacz.SmsBranaCzProvider;
+import com.generalbytes.batm.server.extensions.extra.communication.sozurinet.SozuriNetFactory;
+import com.generalbytes.batm.server.extensions.extra.communication.sozurinet.SozuriNetProvider;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 
@@ -23,19 +25,25 @@ class ExternalCommunicationExtensionTest {
 
     @Test
     void testGetCommunicationProviders() {
-        SmsBranaCzProvider provider = mock(SmsBranaCzProvider.class);
+        SmsBranaCzProvider smsBranaCzProvider = mock(SmsBranaCzProvider.class);
+        SozuriNetProvider sozuriNetProvider = mock(SozuriNetProvider.class);
 
         ExternalCommunicationExtension extension = new ExternalCommunicationExtension();
 
-        try (MockedStatic<SmsBranaCzFactory> factoryMock = mockStatic(SmsBranaCzFactory.class)) {
-            factoryMock.when(SmsBranaCzFactory::createProvider).thenReturn(provider);
+        try (MockedStatic<SmsBranaCzFactory> smsBranaCzFactoryMock = mockStatic(SmsBranaCzFactory.class);
+             MockedStatic<SozuriNetFactory> sozuriNetFactoryMock = mockStatic(SozuriNetFactory.class)) {
+            
+            smsBranaCzFactoryMock.when(SmsBranaCzFactory::createProvider).thenReturn(smsBranaCzProvider);
+            sozuriNetFactoryMock.when(SozuriNetFactory::createProvider).thenReturn(sozuriNetProvider);
 
             Set<ICommunicationProvider> communicationProviders = extension.getCommunicationProviders();
-            assertEquals(1, communicationProviders.size());
-            ICommunicationProvider communicationProvider = communicationProviders.iterator().next();
-            assertInstanceOf(SmsBranaCzProvider.class, communicationProvider);
+            assertEquals(2, communicationProviders.size());
+            
+            assertTrue(communicationProviders.stream().anyMatch(p -> p instanceof SmsBranaCzProvider));
+            assertTrue(communicationProviders.stream().anyMatch(p -> p instanceof SozuriNetProvider));
 
-            factoryMock.verify(SmsBranaCzFactory::createProvider);
+            smsBranaCzFactoryMock.verify(SmsBranaCzFactory::createProvider);
+            sozuriNetFactoryMock.verify(SozuriNetFactory::createProvider);
         }
     }
 }
