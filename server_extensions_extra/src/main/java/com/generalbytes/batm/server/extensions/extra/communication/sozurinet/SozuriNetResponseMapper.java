@@ -36,7 +36,6 @@ public class SozuriNetResponseMapper {
      *     "type": "promotional"
      *   }]
      * }
-     * 
      * Error:
      * {
      *   "message": "Unauthenticated."
@@ -54,9 +53,9 @@ public class SozuriNetResponseMapper {
         if (jsonResponse.getRecipients() != null && !jsonResponse.getRecipients().isEmpty()) {
             SozuriNetJsonResponse.Recipient recipient = jsonResponse.getRecipients().get(0);
             String messageId = recipient.getMessageId();
-            
+
             if (messageId != null) {
-                log.debug("SMS sent successfully with ID: {}, status: {}, statusCode: {}", 
+                log.debug("Sozuri - SMS sent successfully with ID: {}, status: {}, statusCode: {}",
                     messageId, recipient.getStatus(), recipient.getStatusCode());
                 return mapSuccessResponse(messageId, null);
             } else {

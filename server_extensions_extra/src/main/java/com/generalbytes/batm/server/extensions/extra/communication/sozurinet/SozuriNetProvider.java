@@ -50,7 +50,6 @@ public class SozuriNetProvider implements ICommunicationProvider {
         } catch (SozuriNetValidationException e) {
             return SozuriNetResponseMapper.mapErrorResponse("Invalid credentials format");
         } catch (HttpStatusIOException e) {
-            e.printStackTrace();
             log.error("HTTP error while sending SMS via SozuriNet: {}", e.getHttpStatusCode(), e);
             return SozuriNetResponseMapper.mapErrorResponse("HTTP error: " + e.getHttpStatusCode());
         } catch (IOException e) {
