@@ -210,7 +210,7 @@ public enum Country {
     PE("PE", "PER", "Peru"),
     PH("PH", "PHL", "Philippines"),
     PN("PN", "PCN", "Pitcairn"),
-    PL("PL", "POL", "Poland"),
+    PL("PL", "POL", "Poland", CountryPoland.values()),
     PT("PT", "PRT", "Portugal"),
     PR("PR", "PRI", "Puerto Rico"),
     QA("QA", "QAT", "Qatar"),
