@@ -1,6 +1,7 @@
 package com.generalbytes.batm.server.extensions.travelrule.gtr;
 
 import com.generalbytes.batm.server.extensions.travelrule.TravelRuleExtensionContext;
+import com.generalbytes.batm.server.extensions.travelrule.TravelRuleProviderException;
 import com.generalbytes.batm.server.extensions.travelrule.gtr.dto.GtrConfiguration;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +39,12 @@ public class GtrConfigurationService {
         gtrConfiguration.setAccessTokenExpirationInMinutes(getAccessTokenExpirationInMinutes());
         gtrConfiguration.setWebhooksEnabled(isGtrWebhooksEnabled());
 
-        checkConfiguration(gtrConfiguration);
+        try {
+            checkConfiguration(gtrConfiguration);
+        } catch (TravelRuleProviderException e) {
+            log.warn("GTR configuration is not valid - {}", e.getMessage());
+            return null;
+        }
 
         log.info("Using Global Travel Rule (GTR) configuration: {}", gtrConfiguration);
         return gtrConfiguration;
@@ -92,12 +98,11 @@ public class GtrConfigurationService {
     private void checkRequestIdPrefix(GtrConfiguration gtrConfiguration) {
         String prefix = gtrConfiguration.getRequestIdPrefix();
         if (StringUtils.isBlank(prefix)) {
-            log.warn("GTR configuration is not valid - request ID prefix is not set");
-            return;
+            throw new TravelRuleProviderException("request ID prefix is not set");
         }
 
         if (!prefix.matches("\\w+")) {
-            log.warn("GTR configuration is not valid - request ID prefix contains invalid characters");
+            throw new TravelRuleProviderException("request ID prefix contains invalid characters");
         }
     }
 
@@ -114,17 +119,15 @@ public class GtrConfigurationService {
                                   String certificateType
     ) {
         if (StringUtils.isBlank(relativePathInConfigDirectory)) {
-            log.warn("GTR configuration is not valid - {} certificate is not set", certificateType);
-            return;
+            throw new TravelRuleProviderException(certificateType + " certificate is not set");
         }
 
         if (!relativePathInConfigDirectory.endsWith(expectedFileExtension)) {
-            log.warn("GTR configuration is not valid - {} certificate must have '{}' extension", certificateType, expectedFileExtension);
-            return;
+            throw new TravelRuleProviderException(certificateType + " certificate must have '" + expectedFileExtension + "' extension");
         }
 
         if (!extensionContext.configFileExists(relativePathInConfigDirectory)) {
-            log.warn("GTR {} certificate not found", certificateType);
+            throw new TravelRuleProviderException("GTR " + certificateType + " certificate not found");
         }
     }
 
