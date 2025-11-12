@@ -224,4 +224,14 @@ public interface IExtension {
      */
     Set<IWalletTypeEvaluationProvider> getWalletTypeEvaluationProviders();
 
+    /**
+     * Get fiat exchange rate providers.
+     *
+     * @return Set of fiat exchange rate providers.
+     * @see IFiatExchangeRateProvider
+     */
+    default Set<IFiatExchangeRateProvider> getFiatExchangeRateProviders() {
+        return Collections.emptySet();
+    }
+
 }
