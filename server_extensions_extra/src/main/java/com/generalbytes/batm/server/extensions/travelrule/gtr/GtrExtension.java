@@ -42,7 +42,8 @@ public class GtrExtension extends AbstractExtension {
     @Override
     public Set<ITravelRuleProviderFactory> getTravelRuleProviderFactories() {
         if (configuration == null) {
-            throw new IllegalStateException("Extension not initialized yet");
+            log.warn("GTR configuration is not valid, check the configuration file");
+            return Set.of();
         }
         return Set.of(new GtrProviderFactory(configuration, extensionContext));
     }
@@ -57,7 +58,7 @@ public class GtrExtension extends AbstractExtension {
 
     private Set<IRestService> setupRestServices() {
         Set<IRestService> services = new HashSet<>();
-        if (configuration.isWebhooksEnabled()) {
+        if (configuration != null && configuration.isWebhooksEnabled()) {
             services.add(new GtrWebhookRestService());
             log.info("Global Travel Rule (GTR) webhook initialized");
         } else {

@@ -69,9 +69,9 @@ class GtrExtensionTest {
     }
 
     @Test
-    void testGetTravelRuleProviderFactories_notInitialized() {
-        IllegalStateException exception = assertThrows(IllegalStateException.class, gtrExtension::getTravelRuleProviderFactories);
-        assertEquals("Extension not initialized yet", exception.getMessage());
+    void testGetTravelRuleProviderFactories_invalidConfiguration() {
+        Set<ITravelRuleProviderFactory> factories = gtrExtension.getTravelRuleProviderFactories();
+        assertEquals(0, factories.size());
         verify(gtrExtension, never()).init(any());
     }
 
