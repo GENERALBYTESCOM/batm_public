@@ -36,13 +36,13 @@ class CountryTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = Country.class, names = {"AU", "CA", "HK", "IT", "NZ", "US"})
+    @EnumSource(value = Country.class, names = {"AU", "CA", "HK", "IT", "NZ", "US", "PL"})
     void testCountriesWithRegions(Country country) {
         assertTrue(country.hasRegions());
     }
 
     @ParameterizedTest
-    @EnumSource(value = Country.class, names = {"AU", "CA", "HK", "IT", "NZ", "US"}, mode = EnumSource.Mode.EXCLUDE)
+    @EnumSource(value = Country.class, names = {"AU", "CA", "HK", "IT", "NZ", "US", "PL"}, mode = EnumSource.Mode.EXCLUDE)
     void testCountriesWithoutRegions(Country country) {
         assertFalse(country.hasRegions());
     }
