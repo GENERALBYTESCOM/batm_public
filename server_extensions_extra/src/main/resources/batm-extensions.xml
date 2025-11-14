@@ -73,61 +73,6 @@
                 <cryptocurrency>USDCSOL</cryptocurrency>
                 <help>This variant of the wallet generates new addresses for each sell transaction and does not forward payments from temporary address. Host should start with http:// or https://. num_blocks is an integer greater than 2.</help>
             </wallet>
-            <wallet prefix="cryptx" name="CryptX Wallet System">
-                <sendtomany supported="true"/>
-                <tunnel supported="true"/>
-                <param name="host" />
-                <param name="port" />
-                <param name="api_key" />
-                <param name="wallet_id" />
-                <param name="passphrase"/>
-                <param name="priority" />
-                <param name="max_custom_fee" />
-                <cryptocurrency buyonly="true">BCH</cryptocurrency>
-                <cryptocurrency>BTC</cryptocurrency>
-                <cryptocurrency>LTC</cryptocurrency>
-                <cryptocurrency>ETH</cryptocurrency>
-                <cryptocurrency>TRX</cryptocurrency>
-                <cryptocurrency>USDT</cryptocurrency>
-                <cryptocurrency>USDTTRON</cryptocurrency>
-                <help>
-                    *host: https://api.walletpro.cryptal.com/ (required) -
-                    port: (not required) -
-                    *api_key: the API Key obtained from CryptX (required) -
-                    *walletid: the name of the wallet on CryptX (required) -
-                    passphrase: the wallet passphrase (if used) (not required) -
-                    priority: high: (default) = 2 blocks, medium = 8, low = 24, custom - also indicate the number of required blocks (e.g. custom:12) -
-                    max_custom_fee: the maximum fee (in s/vByte) when "custom" priority is used
-                </help>
-            </wallet>
-            <wallet prefix="cryptxnoforward" name="CryptX Wallet System (no forward)">
-                <sendtomany supported="true"/>
-                <tunnel supported="true"/>
-                <param name="host" />
-                <param name="port" />
-                <param name="api_key" />
-                <param name="wallet_id" />
-                <param name="passphrase"/>
-                <param name="priority" />
-                <param name="max_custom_fee" />
-                <cryptocurrency buyonly="true">BCH</cryptocurrency>
-                <cryptocurrency>BTC</cryptocurrency>
-                <cryptocurrency>LTC</cryptocurrency>
-                <cryptocurrency>ETH</cryptocurrency>
-                <cryptocurrency>TRX</cryptocurrency>
-                <cryptocurrency>USDT</cryptocurrency>
-                <cryptocurrency>USDC</cryptocurrency>
-                <cryptocurrency>USDTTRON</cryptocurrency>
-                <help>
-                    *host: https://api.walletpro.cryptal.com/ (required) -
-                    port: (not required) -
-                    *api_key: the API Key obtained from CryptX (required) -
-                    *walletid: the name of the wallet on CryptX (required) -
-                    passphrase: the wallet passphrase (if used) (not required) -
-                    priority: high: (default) = 2 blocks, medium = 8, low = 24, custom - also indicate the number of required blocks (e.g. custom:12) -
-                    max_custom_fee: the maximum fee (in s/vByte) when "custom" priority is used
-                </help>
-            </wallet>
             <ratesource prefix="btcfix" name ="Fix Price" >
                 <param name="price" />
                 <cryptocurrency>BTC</cryptocurrency>
