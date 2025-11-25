@@ -99,6 +99,7 @@ public enum FiatCurrency {
     VES("Bolívares soberanos"),
     VND("Vietnamese dong"),
     XAF("Central African CFA franc"),
+    XCD("East Caribbean dollar"),
     ZAR("South African rand"),
 
     XAU("Gold"),
