@@ -43,6 +43,7 @@ import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -279,6 +280,15 @@ public interface IExtensionContext {
      * with the provided document (ID, passport, ... ) number. Empty list if nothing is found, never null.
      */
     List<IIdentityBase> findIdentitiesBaseByDocumentNumber(String documentNumber);
+
+    /**
+     * Finds and returns identities that match all provided field values in {@link IdentityFilter}.
+     * @param filter {@link IdentityFilter} with values to search for. All non-null fields are considered (AND logic).
+     * @return Matching identities. An empty list if nothing is found.
+     */
+    default List<IIdentity> findIdentitiesByFilter(IdentityFilter filter) {
+        return Collections.emptyList();
+    }
 
     /**
      *
