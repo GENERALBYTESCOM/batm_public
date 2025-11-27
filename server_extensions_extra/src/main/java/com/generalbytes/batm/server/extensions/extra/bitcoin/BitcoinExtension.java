@@ -72,8 +72,6 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.CoinbaseWalletV2;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.CoinbaseWalletV2WithUniqueAddresses;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.ICoinbaseV2API;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryptx.v2.CryptXWallet;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryptx.v2.CryptXWithUniqueAddresses;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.math.BigDecimal;
@@ -85,10 +83,6 @@ import java.util.StringTokenizer;
 import static com.generalbytes.batm.common.currencies.CryptoCurrency.USDT;
 import static com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitflyer.BitFlyerExchange.BITFLYER_COM_BASE_URL;
 import static com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitflyer.BitFlyerExchange.BITFLYER_JP_BASE_URL;
-import static com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryptx.v2.ICryptXAPI.PRIORITY_CUSTOM;
-import static com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryptx.v2.ICryptXAPI.PRIORITY_HIGH;
-import static com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryptx.v2.ICryptXAPI.PRIORITY_LOW;
-import static com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryptx.v2.ICryptXAPI.PRIORITY_MEDIUM;
 
 public class BitcoinExtension extends AbstractExtension {
     private IExtensionContext ctx;
@@ -425,72 +419,6 @@ public class BitcoinExtension extends AbstractExtension {
                     return new CoinbaseWalletV2WithUniqueAddresses(apiWrapper, accountName);
                 }
                 return new CoinbaseWalletV2(apiWrapper, accountName);
-            } else if ("cryptx".equalsIgnoreCase(walletType) || "cryptxnoforward".equalsIgnoreCase(walletType)) {
-
-                String first = st.nextToken();
-                String scheme;
-                String host;
-                if (first.startsWith("http")) {
-                    scheme = first;
-                    host = st.nextToken().replaceAll("/", "");
-                } else {
-                    scheme = "http";
-                    host = first;
-                }
-
-                int port;
-                String token;
-                String next = st.nextToken();
-                if (next.length() > 6) {
-                    port = scheme.equals("https") ? 443 : 80;
-                    token = next;
-                } else {
-                    port = Integer.parseInt(next);
-                    token = st.nextToken();
-                }
-                String walletId = st.nextToken();
-
-                String password = null;
-	            String priority = null;
-
-	            if (st.hasMoreTokens()) {
-	                String nextToken = st.nextToken();
-	                if (!nextToken.equals(PRIORITY_LOW) && !nextToken.equals(PRIORITY_MEDIUM) &&
-                            !nextToken.equals(PRIORITY_HIGH) && !nextToken.equals(PRIORITY_CUSTOM)) {
-	                    password = nextToken;
-	                    if (password.isEmpty()) password = null;
-
-	                    if (st.hasMoreTokens()) {
-	                        priority = st.nextToken();
-	                        if (priority.isEmpty()) priority = null;
-                        }
-
-                    } else {
-	                    priority = nextToken;
-                    }
-	            }
-
-	            String customFeePrice = null;
-	            if (priority != null && priority.equals(PRIORITY_CUSTOM) && st.hasMoreTokens()) {
-		            priority = null;
-		            customFeePrice = st.nextToken();
-		            if (customFeePrice.isEmpty()) {
-			            customFeePrice = null;
-		            }
-	            }
-
-	            String customGasLimit = null;
-	            if (st.hasMoreTokens()){
-		            customGasLimit = st.nextToken();
-		            if (customGasLimit.isEmpty()) {
-			            customGasLimit = null;
-		            }
-	            }
-
-                if ("cryptxnoforward".equalsIgnoreCase(walletType)) {
-                    return new CryptXWithUniqueAddresses(scheme, host, port, token, walletId, priority, customFeePrice, customGasLimit, password);
-                }
-                return new CryptXWallet(scheme, host, port, token, walletId, priority, customFeePrice, customGasLimit, password);
             }
         }
         } catch (Exception e) {
