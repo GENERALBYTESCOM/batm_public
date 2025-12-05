@@ -23,7 +23,19 @@ import java.util.Set;
 
 public interface IFiatExchangeRateProvider {
     public Set<String> getFiatCurrenciesFrom();
+
     public Set<String> getFiatCurrenciesTo();
 
     public BigDecimal getRate(String fromCurrency, String toCurrency);
+
+    /**
+     * Determines the priority of this exchange rate provider in relation to other providers.
+     * Higher weight value indicates higher priority when multiple providers are available.
+     * Built-in providers have a weight value of {@code 0}.
+     *
+     * @return Weight value indicating the provider's priority. Returns {@code 0} if no specific priority is set.
+     */
+    default int getPriorityWeight() {
+        return 0;
+    }
 }
