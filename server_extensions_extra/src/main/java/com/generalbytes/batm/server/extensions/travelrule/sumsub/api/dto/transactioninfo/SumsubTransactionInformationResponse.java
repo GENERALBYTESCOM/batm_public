@@ -43,8 +43,8 @@ public class SumsubTransactionInformationResponse {
         private String txnId;
         @JsonFormat(pattern = SUMSUB_DATE_PATTERN)
         private OffsetDateTime txnDate;
-        private SumsubApplicant applicant;
-        private SumsubCounterparty counterparty;
+        private SumsubIdentity applicant;
+        private SumsubIdentity counterparty;
         private SumsubTransactionInfo info;
     }
 

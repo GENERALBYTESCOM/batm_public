@@ -57,16 +57,16 @@ public class SumsubWebhookValidator {
             throwException(message, "'data.applicant.institutionInfo' object is null");
         }
 
+        if (response.getData().getApplicant().getPaymentMethod() == null) {
+            throwException(message, "'data.applicant.paymentMethod' object is null");
+        }
+
         if (response.getData().getCounterparty() == null) {
             throwException(message, "'data.counterparty' object is null");
         }
 
         if (response.getData().getCounterparty().getInstitutionInfo() == null) {
             throwException(message, "'data.counterparty.institutionInfo' object is null");
-        }
-
-        if (response.getData().getCounterparty().getPaymentMethod() == null) {
-            throwException(message, "'data.counterparty.paymentMethod' object is null");
         }
     }
 

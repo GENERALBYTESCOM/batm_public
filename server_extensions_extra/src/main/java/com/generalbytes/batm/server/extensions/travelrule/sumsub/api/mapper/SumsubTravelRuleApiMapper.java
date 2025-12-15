@@ -9,8 +9,6 @@ import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferUpd
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleVasp;
 import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.SumsubTravelRuleApiConstants;
 import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.dto.SumsubVaspListResponse;
-import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.dto.transactioninfo.SumsubApplicant;
-import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.dto.transactioninfo.SumsubCounterparty;
 import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.dto.transactioninfo.SumsubIdentity;
 import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.dto.transactioninfo.SumsubInstitutionInfo;
 import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.dto.transactioninfo.SumsubPaymentMethod;
@@ -82,15 +80,15 @@ public class SumsubTravelRuleApiMapper {
         return transactionInfo;
     }
 
-    private static SumsubApplicant toSumsubApplicant(ITravelRuleTransferData transferData) {
-        SumsubApplicant applicant = new SumsubApplicant();
+    private static SumsubIdentity toSumsubApplicant(ITravelRuleTransferData transferData) {
+        SumsubIdentity applicant = new SumsubIdentity();
         mapSumsubIdentity(applicant, transferData.getOriginator(), transferData.getOriginatorVasp());
 
         return applicant;
     }
 
-    private static SumsubCounterparty toSumsubCounterparty(ITravelRuleTransferData transferData) {
-        SumsubCounterparty counterparty = new SumsubCounterparty();
+    private static SumsubIdentity toSumsubCounterparty(ITravelRuleTransferData transferData) {
+        SumsubIdentity counterparty = new SumsubIdentity();
         mapSumsubIdentity(counterparty, transferData.getBeneficiary(), transferData.getBeneficiaryVasp());
         counterparty.setPaymentMethod(toSumsubPaymentMethod(transferData));
 
@@ -184,8 +182,8 @@ public class SumsubTravelRuleApiMapper {
     public static ITravelRuleIncomingTransferEvent toITravelRuleIncomingTransferEvent(SumsubWebhookMessage message,
                                                                                       SumsubTransactionInformationResponse response
     ) {
-        SumsubApplicant originator = response.getData().getApplicant();
-        SumsubCounterparty beneficiary = response.getData().getCounterparty();
+        SumsubIdentity originator = response.getData().getCounterparty();
+        SumsubIdentity beneficiary = response.getData().getApplicant();
         return new ITravelRuleIncomingTransferEvent() {
             @Override
             public String getId() {
@@ -243,8 +241,8 @@ public class SumsubTravelRuleApiMapper {
         return request;
     }
 
-    private static ITravelRuleVasp createVasp(SumsubApplicant applicant) {
-        SumsubInstitutionInfo institutionInfo = applicant.getInstitutionInfo();
+    private static ITravelRuleVasp createVasp(SumsubIdentity counterparty) {
+        SumsubInstitutionInfo institutionInfo = counterparty.getInstitutionInfo();
         return new ITravelRuleVasp() {
             @Override
             public String getDid() {

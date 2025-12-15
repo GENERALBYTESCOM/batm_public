@@ -13,7 +13,7 @@ import lombok.Setter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SumsubInstitutionInfo {
     /**
-     * VASP DID. When used in {@link SumsubCounterparty}: if {@code null}, Sumsub will try to find the VASP based on the provided address.
+     * VASP DID. When used as Sumsub counterparty: if {@code null}, Sumsub will try to find the VASP based on the provided address.
      * If it doesn't find it, it will evaluate the wallet as UNHOSTED.
      *
      * @see <a href="https://docs.sumsub.com/reference/submit-transaction-for-non-existing-applicant">Sumsub documentation</a>
