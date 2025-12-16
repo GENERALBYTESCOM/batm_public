@@ -11,8 +11,7 @@ import com.generalbytes.batm.server.extensions.travelrule.TravelRuleProviderTran
 import com.generalbytes.batm.server.extensions.travelrule.sumsub.SumsubProvider;
 import com.generalbytes.batm.server.extensions.travelrule.sumsub.SumsubProviderRegistry;
 import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.SumsubTravelRuleApiConstants;
-import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.dto.transactioninfo.SumsubApplicant;
-import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.dto.transactioninfo.SumsubCounterparty;
+import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.dto.transactioninfo.SumsubIdentity;
 import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.dto.transactioninfo.SumsubInstitutionInfo;
 import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.dto.transactioninfo.SumsubPaymentMethod;
 import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.dto.transactioninfo.SumsubTransactionInformationResponse;
@@ -242,12 +241,12 @@ class SumsubTransferHandlerTest {
     }
 
     private static SumsubTransactionInformationResponse createSumsubTransactionInformationResponse() {
-        SumsubApplicant applicant = new SumsubApplicant();
+        SumsubIdentity applicant = new SumsubIdentity();
         applicant.setInstitutionInfo(new SumsubInstitutionInfo());
+        applicant.setPaymentMethod(new SumsubPaymentMethod());
 
-        SumsubCounterparty counterparty = new SumsubCounterparty();
+        SumsubIdentity counterparty = new SumsubIdentity();
         counterparty.setInstitutionInfo(new SumsubInstitutionInfo());
-        counterparty.setPaymentMethod(new SumsubPaymentMethod());
 
         SumsubTransactionInformationResponse.TransactionData transactionData = new SumsubTransactionInformationResponse.TransactionData();
         transactionData.setApplicant(applicant);

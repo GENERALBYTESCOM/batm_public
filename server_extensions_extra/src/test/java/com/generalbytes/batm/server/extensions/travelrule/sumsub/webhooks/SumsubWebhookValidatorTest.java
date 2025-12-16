@@ -1,8 +1,7 @@
 package com.generalbytes.batm.server.extensions.travelrule.sumsub.webhooks;
 
 import com.generalbytes.batm.server.extensions.travelrule.TravelRuleProviderException;
-import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.dto.transactioninfo.SumsubApplicant;
-import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.dto.transactioninfo.SumsubCounterparty;
+import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.dto.transactioninfo.SumsubIdentity;
 import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.dto.transactioninfo.SumsubInstitutionInfo;
 import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.dto.transactioninfo.SumsubPaymentMethod;
 import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.dto.transactioninfo.SumsubTransactionInformationResponse;
@@ -98,6 +97,21 @@ class SumsubWebhookValidatorTest {
     }
 
     @Test
+    void testValidateTransactionInformationResponse_applicant_paymentMethod() {
+        SumsubTransactionInformationResponse response = createSumsubTransactionInformationResponse();
+        response.getData().getApplicant().setPaymentMethod(null);
+
+        SumsubWebhookMessage message = getMockedSumsubWebhookMessage();
+
+        TravelRuleProviderException exception = assertThrows(
+            TravelRuleProviderException.class, () -> validator.validateTransactionInformationResponse(response, message)
+        );
+
+        assertEquals("The transaction data obtained from Sumsub is not valid, 'data.applicant.paymentMethod' object is null."
+            + " Txn ID: transfer_public_id, Sumsub transaction ID: sumsub_id", exception.getMessage());
+    }
+
+    @Test
     void testValidateTransactionInformationResponse_counterparty() {
         SumsubTransactionInformationResponse response = createSumsubTransactionInformationResponse();
         response.getData().setCounterparty(null);
@@ -124,21 +138,6 @@ class SumsubWebhookValidatorTest {
         );
 
         assertEquals("The transaction data obtained from Sumsub is not valid, 'data.counterparty.institutionInfo' object is null."
-                + " Txn ID: transfer_public_id, Sumsub transaction ID: sumsub_id", exception.getMessage());
-    }
-
-    @Test
-    void testValidateTransactionInformationResponse_counterparty_paymentMethod() {
-        SumsubTransactionInformationResponse response = createSumsubTransactionInformationResponse();
-        response.getData().getCounterparty().setPaymentMethod(null);
-
-        SumsubWebhookMessage message = getMockedSumsubWebhookMessage();
-
-        TravelRuleProviderException exception = assertThrows(
-                TravelRuleProviderException.class, () -> validator.validateTransactionInformationResponse(response, message)
-        );
-
-        assertEquals("The transaction data obtained from Sumsub is not valid, 'data.counterparty.paymentMethod' object is null."
                 + " Txn ID: transfer_public_id, Sumsub transaction ID: sumsub_id", exception.getMessage());
     }
 
@@ -304,12 +303,12 @@ class SumsubWebhookValidatorTest {
     }
 
     private static SumsubTransactionInformationResponse createSumsubTransactionInformationResponse() {
-        SumsubApplicant applicant = new SumsubApplicant();
+        SumsubIdentity applicant = new SumsubIdentity();
         applicant.setInstitutionInfo(new SumsubInstitutionInfo());
+        applicant.setPaymentMethod(new SumsubPaymentMethod());
 
-        SumsubCounterparty counterparty = new SumsubCounterparty();
+        SumsubIdentity counterparty = new SumsubIdentity();
         counterparty.setInstitutionInfo(new SumsubInstitutionInfo());
-        counterparty.setPaymentMethod(new SumsubPaymentMethod());
 
         SumsubTransactionInformationResponse.TransactionData transactionData = new SumsubTransactionInformationResponse.TransactionData();
         transactionData.setApplicant(applicant);

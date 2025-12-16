@@ -9,8 +9,7 @@ import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferUpd
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleVasp;
 import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.dto.SumsubVaspListResponse;
 import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.dto.submittransaction.SumsubSubmitTxWithoutApplicantRequest;
-import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.dto.transactioninfo.SumsubApplicant;
-import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.dto.transactioninfo.SumsubCounterparty;
+import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.dto.transactioninfo.SumsubIdentity;
 import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.dto.transactioninfo.SumsubInstitutionInfo;
 import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.dto.transactioninfo.SumsubPaymentMethod;
 import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.dto.transactioninfo.SumsubTransactionInformationResponse;
@@ -307,27 +306,27 @@ class SumsubTravelRuleApiMapperTest {
 
     private SumsubTransactionInformationResponse createSumsubTransactionInformationResponse() {
         SumsubInstitutionInfo applicantInstitutionInfo = new SumsubInstitutionInfo();
-        applicantInstitutionInfo.setInternalId("originator_vasp_did");
-        applicantInstitutionInfo.setName("originator_vasp_name");
+        applicantInstitutionInfo.setInternalId("beneficiary_vasp_did");
 
-        SumsubApplicant applicant = new SumsubApplicant();
-        applicant.setFirstName("originator_first_name");
-        applicant.setLastName("originator_last_name");
-        applicant.setType("originator_type");
+        SumsubPaymentMethod applicantPaymentMethod = new SumsubPaymentMethod();
+        applicantPaymentMethod.setAccountId("destination_address");
+
+        SumsubIdentity applicant = new SumsubIdentity();
+        applicant.setFirstName("beneficiary_first_name");
+        applicant.setLastName("beneficiary_last_name");
+        applicant.setType("beneficiary_type");
         applicant.setInstitutionInfo(applicantInstitutionInfo);
+        applicant.setPaymentMethod(applicantPaymentMethod);
 
         SumsubInstitutionInfo counterpartyInstitutionInfo = new SumsubInstitutionInfo();
-        counterpartyInstitutionInfo.setInternalId("beneficiary_vasp_did");
+        counterpartyInstitutionInfo.setInternalId("originator_vasp_did");
+        counterpartyInstitutionInfo.setName("originator_vasp_name");
 
-        SumsubPaymentMethod counterpartyPaymentMethod = new SumsubPaymentMethod();
-        counterpartyPaymentMethod.setAccountId("destination_address");
-
-        SumsubCounterparty counterparty = new SumsubCounterparty();
-        counterparty.setFirstName("beneficiary_first_name");
-        counterparty.setLastName("beneficiary_last_name");
-        counterparty.setType("beneficiary_type");
+        SumsubIdentity counterparty = new SumsubIdentity();
+        counterparty.setFirstName("originator_first_name");
+        counterparty.setLastName("originator_last_name");
+        counterparty.setType("originator_type");
         counterparty.setInstitutionInfo(counterpartyInstitutionInfo);
-        counterparty.setPaymentMethod(counterpartyPaymentMethod);
 
         SumsubTransactionInformationResponse.TransactionData transactionData = new SumsubTransactionInformationResponse.TransactionData();
         transactionData.setApplicant(applicant);
