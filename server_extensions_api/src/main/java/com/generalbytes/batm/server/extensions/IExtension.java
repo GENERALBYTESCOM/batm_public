@@ -25,6 +25,7 @@ import com.generalbytes.batm.server.extensions.aml.verification.IIdentityVerific
 import com.generalbytes.batm.server.extensions.communication.ICommunicationProvider;
 import com.generalbytes.batm.server.extensions.communication.IPhoneLookupProvider;
 import com.generalbytes.batm.server.extensions.communication.voicecall.IVoiceCallProvider;
+import com.generalbytes.batm.server.extensions.payment.external.IExternalPaymentProvider;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProvider;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProviderFactory;
 import com.generalbytes.batm.server.extensions.travelrule.IWalletTypeEvaluationProvider;
@@ -85,6 +86,15 @@ public interface IExtension {
      * @see com.generalbytes.batm.server.extensions.IPaymentProcessor
      */
     IPaymentProcessor createPaymentProcessor(String paymentProcessorLogin);
+
+    /**
+     * This method is used for creating implementation of an external payment provider
+     *
+     * @see com.generalbytes.batm.server.extensions.payment.external.IExternalPaymentProvider
+     */
+    default IExternalPaymentProvider createExternalPaymentProvider() {
+        return null;
+    }
 
     /**
      * This method is used for creating implementation of coin price source
