@@ -13,6 +13,8 @@ public interface IExternalPaymentProvider {
 
     /**
      * Initiates an external payment session based on the provided request.
+     * <p>
+     * <b>Warning:</b> The payment session initiated by this call should expire before the order expires in CAS (see CAS configuration).
      * @param request details of the payment to be initiated
      * @return details of the initiated payment session (typically a payment link)
      */
