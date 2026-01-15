@@ -6,7 +6,7 @@ group = projectGroup
 version = projectVersion
 
 dependencies {
-    implementation("org.slf4j:slf4j-api:1.7.28")
+    implementation("org.slf4j:slf4j-api:1.7.36")
     // keeping junit 4 for compatibility, will be removed soon, use junit 5 instead
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.junit.vintage:junit-vintage-engine:5.11.4")
