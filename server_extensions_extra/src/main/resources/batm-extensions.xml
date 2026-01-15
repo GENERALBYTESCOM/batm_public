@@ -764,6 +764,7 @@
             <cryptocurrency>TRX</cryptocurrency>
             <cryptocurrency>USDS</cryptocurrency>
             <cryptocurrency buyonly="true">USDT</cryptocurrency>
+            <cryptocurrency buyonly="true">USDTTRON</cryptocurrency>
             <cryptocurrency>VIA</cryptocurrency>
             <cryptocurrency>XMR</cryptocurrency>
             <cryptocurrency>XRP</cryptocurrency>

@@ -41,9 +41,11 @@ import org.knowm.xchange.dto.trade.OpenOrders;
 import org.knowm.xchange.exceptions.CurrencyPairNotValidException;
 import org.knowm.xchange.exceptions.ExchangeException;
 import org.knowm.xchange.service.account.AccountService;
+import org.knowm.xchange.service.account.params.DefaultRequestDepositAddressParams;
 import org.knowm.xchange.service.marketdata.MarketDataService;
 import org.knowm.xchange.service.trade.TradeService;
 import org.knowm.xchange.service.trade.params.DefaultWithdrawFundsParams;
+import org.knowm.xchange.service.trade.params.NetworkWithdrawFundsParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import si.mazi.rescu.HttpStatusIOException;
@@ -149,11 +151,11 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
         }
     }
 
-    private static String buildCacheKey(String cryptoCurrency, String fiatCurrency) {
+    private String buildCacheKey(String cryptoCurrency, String fiatCurrency) {
         return String.format("%s:%s", cryptoCurrency, fiatCurrency);
     }
 
-    private static String[] getCacheKeyParts(String key) {
+    private String[] getCacheKeyParts(String key) {
         return key.split(":");
     }
 
@@ -163,9 +165,10 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
             return BigDecimal.ZERO;
         }
         try {
+            String cryptocurrencyTicker = translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency);
             AccountInfo accountInfo = getExchange().getAccountService().getAccountInfo();
-            Wallet wallet = getWallet(accountInfo, cryptoCurrency);
-            BigDecimal balance = wallet.getBalance(Currency.getInstance(cryptoCurrency)).getAvailable();
+            Wallet wallet = getWallet(accountInfo, cryptocurrencyTicker);
+            BigDecimal balance = wallet.getBalance(Currency.getInstance(cryptocurrencyTicker)).getAvailable();
             log.debug("{} exchange balance request: {} = {}", name, cryptoCurrency, balance);
             return balance;
         } catch (IOException e) {
@@ -202,7 +205,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
             return null;
         }
 
-        if (CryptoCurrency.XRP.getCode().equals(cryptoCurrency)) {
+        if (CryptoCurrency.XRP.getCode().equals(cryptoCurrency) || CryptoCurrency.USDTTRON.getCode().equals(cryptoCurrency)) {
             amount = amount.setScale(6, RoundingMode.FLOOR);
         }
 
@@ -228,9 +231,18 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
         AccountService accountService = getExchange().getAccountService();
         Currency exchangeCryptoCurrency = Currency.getInstance(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency));
 
-        if (CryptoCurrency.XRP.getCode().equals(cryptoCurrency)
-            || CryptoCurrency.BNB.getCode().equals(cryptoCurrency)) {
+        if (CryptoCurrency.USDTTRON.getCode().equals(cryptoCurrency)) {
+            NetworkWithdrawFundsParams usdtTronFundsParams = NetworkWithdrawFundsParams.builder()
+                .currency(Currency.USDT)
+                .network(CryptoCurrency.TRX.getCode())
+                .address(destinationAddress)
+                .amount(amount)
+                .build();
 
+            return accountService.withdrawFunds(usdtTronFundsParams);
+        }
+
+        if (CryptoCurrency.XRP.getCode().equals(cryptoCurrency) || CryptoCurrency.BNB.getCode().equals(cryptoCurrency)) {
             String[] addressParts = destinationAddress.split(":");
             if (addressParts.length == 2) {
                 return accountService.withdrawFunds(
@@ -238,6 +250,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
                 );
             }
         }
+
         return accountService.withdrawFunds(exchangeCryptoCurrency, getWithdrawAmount(amount, cryptoCurrency), destinationAddress);
     }
 
@@ -342,9 +355,7 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
 
         AccountService accountService = getExchange().getAccountService();
         try {
-            if (CryptoCurrency.XRP.getCode().equals(cryptoCurrency)
-                || CryptoCurrency.BNB.getCode().equals(cryptoCurrency)) {
-
+            if (CryptoCurrency.XRP.getCode().equals(cryptoCurrency) || CryptoCurrency.BNB.getCode().equals(cryptoCurrency)) {
                 AddressWithTag addressWithTag = accountService.requestDepositAddressData(
                     Currency.getInstance(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency))
                 );
@@ -356,6 +367,16 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
                 }
                 return addressWithTag.getAddress() + ":" + addressWithTag.getAddressTag();
             }
+
+            if (CryptoCurrency.USDTTRON.getCode().equals(cryptoCurrency)) {
+                DefaultRequestDepositAddressParams usdtTronDepositAddressParams = DefaultRequestDepositAddressParams.builder()
+                    .currency(Currency.USDT)
+                    .network(CryptoCurrency.TRX.getCode())
+                    .build();
+
+                return accountService.requestDepositAddress(usdtTronDepositAddressParams);
+            }
+
             return accountService.requestDepositAddress(
                 Currency.getInstance(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency))
             );
@@ -888,13 +909,19 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
     }
 
     protected String translateCryptoCurrencySymbolToExchangeSpecificSymbol(String from) {
+        if (CryptoCurrency.USDTTRON.getCode().equals(from)) {
+            return CryptoCurrency.USDT.getCode();
+        }
+
         return from;
     }
 
     protected BigDecimal getWithdrawalFee(String cryptoCurrency) {
-        Currency exchangeCryptoCurrency = Currency.getInstance(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency));
-        BigDecimal withdrawalFee = exchange.getExchangeMetaData().getCurrencies().get(exchangeCryptoCurrency).getWithdrawalFee();
-        log.info("Withdrawal fee: {} {}", withdrawalFee, cryptoCurrency);
+        String cryptocurrencyTicker = translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency);
+
+        Currency exchangeCryptocurrency = Currency.getInstance(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptocurrencyTicker));
+        BigDecimal withdrawalFee = exchange.getExchangeMetaData().getCurrencies().get(exchangeCryptocurrency).getWithdrawalFee();
+        log.info("Withdrawal fee: {} {}", withdrawalFee, cryptocurrencyTicker);
         return withdrawalFee;
     }
 }
