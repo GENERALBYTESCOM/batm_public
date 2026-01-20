@@ -35,7 +35,6 @@ substitute module: 'com.fasterxml.jackson.datatype:jackson-datatype-guava', vers
 substitute module: 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8', versions: ['2.11.2', '2.19.1'], toVersion: '2.14.2'
 substitute module: 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310', versions: ['2.11.2', '2.19.1'], toVersion: '2.14.2'
 substitute module: 'org.junit.jupiter:junit-jupiter-api', versions: ['5.9.1'], toVersion: '5.11.4'
-substitute module: 'org.knowm.xchange:xchange-core', versions: ['5.2.2'], toVersion: '5.2.3'
 substitute module: 'org.bitcoinj:bitcoinj-core', versions: ['0.16.1'], toVersion: '0.16.5'
 substitute module: 'org.bouncycastle:bcprov-jdk15on', versions: ['1.66'], toVersion: '1.68'
 substitute module: 'org.bouncycastle:bcprov-jdk15to18', versions: ['1.66'], toVersion: '1.73'

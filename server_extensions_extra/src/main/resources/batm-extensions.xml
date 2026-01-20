@@ -184,16 +184,6 @@
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>XRP</cryptocurrency>
             </ratesource>
-            <ratesource prefix="bittrex" name ="Bittrex.com Exchange" >
-                <param name="fiatcurrency"/>
-                <cryptocurrency>BTC</cryptocurrency>
-                <cryptocurrency>ETH</cryptocurrency>
-                <cryptocurrency>LTC</cryptocurrency>
-                <cryptocurrency>BAY</cryptocurrency>
-                <cryptocurrency>BTBS</cryptocurrency>
-                <cryptocurrency>GQ</cryptocurrency>
-                <help>The parameter is optional (the only supported fiat currency is USDT).</help>
-            </ratesource>
             <ratesource prefix="coinmarketcap" name ="CoinMarketCap.com" >
                 <param name="fiatcurrency" />
                 <param name="api_key" />
@@ -376,17 +366,6 @@
                 <cryptocurrency buyonly="true">ETH</cryptocurrency>
                 <cryptocurrency>LTC</cryptocurrency>
                 <cryptocurrency>XRP</cryptocurrency>
-            </exchange>
-            <exchange prefix="bittrex" name="Bittrex.com Exchange">
-                <param name="apikey" />
-                <param name="apisecret" />
-                <cryptocurrency>BTC</cryptocurrency>
-                <cryptocurrency>BCH</cryptocurrency>
-                <cryptocurrency buyonly="true">ETH</cryptocurrency>
-                <cryptocurrency>LTC</cryptocurrency>
-                <cryptocurrency>BAY</cryptocurrency>
-                <cryptocurrency>BTBS</cryptocurrency>
-                <cryptocurrency>GQ</cryptocurrency>
             </exchange>
             <exchange prefix="dvchain" name="DV Chain Exchange">
                 <param name="secretKey" />

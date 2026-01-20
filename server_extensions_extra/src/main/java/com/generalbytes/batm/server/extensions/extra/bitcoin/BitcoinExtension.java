@@ -44,7 +44,6 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitfinex.
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitflyer.BitFlyerExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitpandapro.BitpandaProExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitstamp.BitstampExchange;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bittrex.BittrexExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.CoinbaseExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.ICoinbaseAPI;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coingi.CoingiExchange;
@@ -133,10 +132,6 @@ public class BitcoinExtension extends AbstractExtension {
                 String apiKey = paramTokenizer.nextToken();
                 String secretKey = paramTokenizer.nextToken();
                 return new BitstampExchange(preferredFiatCurrency, userId, apiKey, secretKey);
-            } else if ("bittrex".equalsIgnoreCase(prefix)) {
-                String apiKey = paramTokenizer.nextToken();
-                String apiSecret = paramTokenizer.nextToken();
-                return new BittrexExchange(apiKey, apiSecret, FiatCurrency.USD.getCode());
             } else if ("hitbtc".equalsIgnoreCase(prefix)) {
                 String preferredFiatCurrency = FiatCurrency.USD.getCode();
                 String apiKey = paramTokenizer.nextToken();
@@ -569,9 +564,6 @@ public class BitcoinExtension extends AbstractExtension {
                     preferredFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new BitstampExchange(preferredFiatCurrency);
-            } else if ("bittrex".equalsIgnoreCase(rsType)) {
-                String preferredFiatCurrency = st.hasMoreTokens() ? st.nextToken().toUpperCase() : FiatCurrency.USD.getCode();
-                return new BittrexExchange(preferredFiatCurrency);
             } else if ("bity".equalsIgnoreCase(rsType)) {
                 String preferredFiatCurrency = FiatCurrency.CHF.getCode();
                 if (st.hasMoreTokens()) {
