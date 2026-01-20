@@ -67,6 +67,7 @@ public class CoinmarketcapRateSource implements IRateSource {
         result.add(CryptoCurrency.ANT.getCode());
         result.add(CryptoCurrency.BAT.getCode());
         result.add(CryptoCurrency.BCH.getCode());
+        result.add(CryptoCurrency.BLK.getCode());
         result.add(CryptoCurrency.BSD.getCode());
         result.add(CryptoCurrency.BTC.getCode());
         result.add(CryptoCurrency.BTCP.getCode());
@@ -99,6 +100,7 @@ public class CoinmarketcapRateSource implements IRateSource {
         result.add(CryptoCurrency.SYS.getCode());
         result.add(CryptoCurrency.USDS.getCode());
         result.add(CryptoCurrency.USDT.getCode());
+        result.add(CryptoCurrency.VAL.getCode());
         result.add(CryptoCurrency.XMR.getCode());
         result.add(CryptoCurrency.XRP.getCode());
         result.add(CryptoCurrency.XPM.getCode());
