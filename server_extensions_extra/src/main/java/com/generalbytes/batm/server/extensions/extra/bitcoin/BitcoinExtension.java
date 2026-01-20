@@ -46,7 +46,6 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitpandap
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitstamp.BitstampExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.CoinbaseExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.ICoinbaseAPI;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coingi.CoingiExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinzix.CoinZixExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.dvchain.DVChainExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.enigma.EnigmaExchange;
@@ -153,14 +152,6 @@ public class BitcoinExtension extends AbstractExtension {
                 ICoinbaseV3Api api = CoinbaseApiFactory.createCoinbaseV3Api();
                 CoinbaseApiWrapperCdp apiWrapper = new CoinbaseApiWrapperCdp(api, privateKey, keyName);
                 return new CoinbaseExchange(apiWrapper, parameters.accountName, parameters.preferredFiatCurrency, parameters.paymentMethodName);
-            } else if ("coingi".equalsIgnoreCase(prefix)) {
-                String preferredFiatCurrency = FiatCurrency.USD.getCode();
-                String key = paramTokenizer.nextToken();
-                String privateKey = paramTokenizer.nextToken();
-                if (paramTokenizer.hasMoreTokens()) {
-                    preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase();
-                }
-                return new CoingiExchange(key, privateKey, preferredFiatCurrency);
             } else if ("dvchain".equalsIgnoreCase(prefix)) {
                 String preferredFiatCurrency = FiatCurrency.USD.getCode();
                 String apiSecret = paramTokenizer.nextToken();
@@ -581,12 +572,6 @@ public class BitcoinExtension extends AbstractExtension {
                 ICoinbaseV2API api = CoinbaseApiFactory.createCoinbaseV2ApiLegacy();
                 CoinbaseV2ApiWrapperLegacy apiWrapper = new CoinbaseV2ApiWrapperLegacy(api, null, null);
                 return new CoinbaseV2RateSource(preferredFiatCurrency, apiWrapper);
-            } else if ("coingi".equalsIgnoreCase(rsType)) {
-                String preferredFiatCurrency = FiatCurrency.USD.getCode();
-                if (st.hasMoreTokens()) {
-                    preferredFiatCurrency = st.nextToken().toUpperCase();
-                }
-                return new CoingiExchange(preferredFiatCurrency);
             } else if ("coingecko".equalsIgnoreCase(rsType)) {
                 String preferredFiatCurrency = st.hasMoreTokens() ? st.nextToken().toUpperCase() : FiatCurrency.USD.getCode();
                 return new CoinGeckoRateSource(preferredFiatCurrency);

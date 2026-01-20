@@ -557,20 +557,6 @@
             <cryptocurrency>XRP</cryptocurrency>
             <cryptocurrency>XPM</cryptocurrency>
         </ratesource>
-        <exchange prefix="coingi" name="Coingi.com">
-            <param name="key"/>
-            <param name="privatekey"/>
-            <param name="fiatcurrency"/>
-            <cryptocurrency>BTC</cryptocurrency>
-            <cryptocurrency>DOGE</cryptocurrency>
-            <cryptocurrency>LTC</cryptocurrency>
-        </exchange>
-        <ratesource prefix="coingi" name="Coingi.com">
-            <param name="fiatcurrency" />
-            <cryptocurrency>BTC</cryptocurrency>
-            <cryptocurrency>DOGE</cryptocurrency>
-            <cryptocurrency>LTC</cryptocurrency>
-        </ratesource>
         <exchange prefix="enigma" name="Enigma-Securities.com">
             <param name="username"/>
             <param name="password"/>
