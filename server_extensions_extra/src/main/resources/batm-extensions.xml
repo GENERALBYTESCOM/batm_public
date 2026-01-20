@@ -1519,6 +1519,57 @@
         </ratesource>
         <cryptologo cryptocurrency="START" file="start.png"/>
     </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.stellar.StellarCoinExtension">
+        <wallet prefix="xlm-testnet" name="xlm-testnet">
+            <param name="walletId" />
+            <param name="apikey" />
+            <param name="hostname" />
+            <cryptocurrency>XLM</cryptocurrency>
+
+        </wallet>
+        <ratesource prefix="bpventure" name="Bpventures Rate Source">
+            <param name="fiatcurrency" />
+            <cryptocurrency>XLM</cryptocurrency>
+        </ratesource>
+        <wallet prefix="xlm-public" name="xlm-public">
+            <param name="walletId" />
+            <param name="apikey" />
+            <param name="hostname" />
+            <cryptocurrency>XLM</cryptocurrency>
+        </wallet>
+        <ratesource prefix="stellar" name="Fix Price">
+            <param name="price" />
+            <cryptocurrency>XLM</cryptocurrency>
+            <help>USD is default fiat currency.</help>
+        </ratesource>
+        <cryptologo cryptocurrency="XLM" file="stellar.png" />
+        <cryptologo cryptocurrency="XLM" file="stellar.svg" />
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.stellar.StellarCoinExtension">
+        <wallet prefix="usdcxlm-testnet" name="usdcxlm-testnet">
+            <param name="walletId" />
+            <param name="apikey" />
+            <param name="hostname" />
+            <cryptocurrency>USDCXLM</cryptocurrency>
+        </wallet>
+        <ratesource prefix="bpventure" name="Bpventures Rate Source">
+            <param name="fiatcurrency" />
+            <cryptocurrency>USDCXLM</cryptocurrency>
+        </ratesource>
+        <wallet prefix="usdcxlm-public" name="usdcxlm-public">
+            <param name="walletId" />
+            <param name="apikey" />
+            <param name="hostname" />
+            <cryptocurrency>USDCXLM</cryptocurrency>
+        </wallet>
+        <ratesource prefix="stellar" name="Fix Price">
+            <param name="price" />
+            <cryptocurrency>USDCXLM</cryptocurrency>
+            <help>USD is default fiat currency.</help>
+        </ratesource>
+        <cryptologo cryptocurrency="USDCXLM" file="usdc.png" />
+        <cryptologo cryptocurrency="USDCXLM" file="usdc.svg" />
+    </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.nubits.NubitsExtension" >
         <wallet prefix="nud" name="Nud">
             <param name="protocol" />
