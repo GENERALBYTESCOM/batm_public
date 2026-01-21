@@ -26,8 +26,11 @@ import com.generalbytes.batm.server.extensions.customfields.CustomFieldDefinitio
 import com.generalbytes.batm.server.extensions.customfields.value.CustomFieldValue;
 import com.generalbytes.batm.server.extensions.exceptions.BuyException;
 import com.generalbytes.batm.server.extensions.exceptions.CashbackException;
+import com.generalbytes.batm.server.extensions.exceptions.ExternalPaymentProcessingException;
+import com.generalbytes.batm.server.extensions.exceptions.ExternalPaymentNotFoundException;
 import com.generalbytes.batm.server.extensions.exceptions.SellException;
 import com.generalbytes.batm.server.extensions.exceptions.UpdateException;
+import com.generalbytes.batm.server.extensions.payment.external.ExternalPaymentUpdate;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProviderIdentification;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferData;
 import com.generalbytes.batm.server.extensions.travelrule.IVaspIdentification;
@@ -1282,6 +1285,16 @@ public interface IExtensionContext {
      * @throws IllegalArgumentException for unsupported cryptocurrencies.
      */
     default BigDecimal convertCryptoFromBaseUnit(long amount, String cryptocurrency) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    /**
+     * Updates the status of an external payment.
+     * @param paymentUpdate External payment update details.
+     * @throws ExternalPaymentProcessingException if the payment expired or in an unexpected state.
+     * @throws ExternalPaymentNotFoundException if the payment is not found.
+     */
+    default void updateExternalPayment(ExternalPaymentUpdate paymentUpdate) throws ExternalPaymentProcessingException {
         throw new UnsupportedOperationException("Not implemented");
     }
 }
