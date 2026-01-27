@@ -18,6 +18,7 @@ class ExtensionsUtilTest {
         "user@sub.domain.example.com",     // Subdomains
         "user@sub1.com",                   // Subdomain with number
         "a@b.cd",                          // Short domain/TLD
+        "a@something.technology",          // Long domain/TLD
         "user_name@domain-one.com",        // Underscores and hyphens
     })
     void testValidEmails(String email) {
