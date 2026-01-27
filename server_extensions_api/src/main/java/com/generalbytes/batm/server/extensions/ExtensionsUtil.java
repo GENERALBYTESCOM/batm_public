@@ -21,28 +21,25 @@ package com.generalbytes.batm.server.extensions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
 import java.util.NoSuchElementException;
+import java.util.regex.Pattern;
 
 public class ExtensionsUtil {
+
+    private static final String EMAIL_REGEX = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,63}$";
+    private static final Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX);
 
     private static final Logger log = LoggerFactory.getLogger(ExtensionsUtil.class);
 
     /**
-     * Check if specified string is valid email address
-     * @param email
-     * @return
+     * Validates an email address using a standard regex.
+     * Replaces the legacy javax.mail.internet.InternetAddress approach.
      */
     public static boolean isValidEmailAddress(String email) {
-        boolean result = true;
-        try {
-            InternetAddress emailAddr = new InternetAddress(email);
-            emailAddr.validate();
-        } catch (AddressException ex) {
-            result = false;
+        if (email == null || email.isBlank()) {
+            return false;
         }
-        return result;
+        return EMAIL_PATTERN.matcher(email).matches();
     }
 
     public static String getErrorMessage(String body) {
