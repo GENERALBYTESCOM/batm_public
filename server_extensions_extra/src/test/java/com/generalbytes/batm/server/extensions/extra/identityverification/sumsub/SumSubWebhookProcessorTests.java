@@ -8,6 +8,7 @@ import com.generalbytes.batm.server.extensions.aml.verification.ApplicantCheckRe
 import com.generalbytes.batm.server.extensions.aml.verification.CheckResult;
 import com.generalbytes.batm.server.extensions.aml.verification.DocumentType;
 import com.generalbytes.batm.server.extensions.aml.verification.IdentityCheckWebhookException;
+import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.SumsubDocumentDownloader;
 import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.vo.ApplicantInfoResponse;
 import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.vo.BaseWebhookBody;
 import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.vo.CreateIdentityVerificationSessionResponse;
@@ -23,12 +24,14 @@ import si.mazi.rescu.InvocationResult;
 
 import jakarta.ws.rs.core.Response;
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
+import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -37,6 +40,7 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.anyList;
 import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -56,6 +60,8 @@ class SumSubWebhookProcessorTests {
     private SumSubWebhookParser webhookParser;
     @Mock
     private IExtensionContext ctx;
+    @Mock
+    private SumsubDocumentDownloader documentDownloader;
 
     private SumSubWebhookProcessor webhookProcessor;
 
@@ -63,7 +69,7 @@ class SumSubWebhookProcessorTests {
     void setUp() {
         webhookParser = new SumSubWebhookParser();
         SumSubApplicantReviewedResultMapper resultMapper = new SumSubApplicantReviewedResultMapper();
-        webhookProcessor = new SumSubWebhookProcessor(ctx, apiService, webhookParser, resultMapper, "webhooksecret");
+        webhookProcessor = new SumSubWebhookProcessor(ctx, apiService, webhookParser, resultMapper, "webhooksecret", documentDownloader);
     }
 
     private ApplicantInfoResponse getApplicantInfoResponseDrivers() throws Exception {
@@ -702,6 +708,7 @@ class SumSubWebhookProcessorTests {
 
         IIdentity identity = mock(IIdentity.class);
         when(identity.getState()).thenReturn(IIdentityBase.STATE_TO_BE_VERIFIED);
+        when(identity.getPublicId()).thenReturn("123");
 
         when(apiService.getApplicantByExternalId("123")).thenReturn(getApplicantInfoResponseDrivers());
         when(apiService.getInspectionInfo("5cb56e8e0a975a35f333cb84")).thenReturn(getInpsectionInfoResponse());
@@ -745,6 +752,83 @@ class SumSubWebhookProcessorTests {
         assertEquals("ON", applicantCheckResult.getState());
         assertEquals("CAN", applicantCheckResult.getCountry());
         assertEquals("22 MOUNT STREET, TORONTO, ON, CANADA, M5A1L2", applicantCheckResult.getRawAddress());
+
+        // document download is triggered in background - verify it was invoked
+        await().atMost(Duration.ofSeconds(5)).untilAsserted(() ->
+            verify(documentDownloader, atLeastOnce()).downloadAndStoreDocuments(eq("123"), eq("5cb56e8e0a975a35f333cb84"), anyList(), eq(ctx)));
+    }
+
+    @Test
+    void testPostApplicantReviewedWebhookDocumentDownloadSkippedWhenIdentityNull() throws Exception {
+        String rawPayload = """
+            {
+              "applicantId": "5cb56e8e0a975a35f333cb83",
+              "inspectionId": "5cb56e8e0a975a35f333cb84",
+              "correlationId": "req-a260b669-4f14-4bb5-a4c5-ac0218acb9a4",
+              "externalUserId": "123",
+              "levelName": "basic-kyc-level",
+              "type": "applicantReviewed",
+              "reviewResult": {
+                "reviewAnswer": "GREEN"
+              },
+              "reviewStatus": "completed",
+              "createdAtMs": "2020-02-21 13:23:19.321"
+            }""";
+
+        when(apiService.getApplicantByExternalId("123")).thenReturn(getApplicantInfoResponseDrivers());
+        when(apiService.getInspectionInfo("5cb56e8e0a975a35f333cb84")).thenReturn(getInpsectionInfoResponse());
+        when(ctx.findIdentityByIdentityId("123")).thenReturn(null);
+
+        webhookProcessor.process(rawPayload,
+            webhookParser.parse(rawPayload, BaseWebhookBody.class),
+            "5a2e30f8fc250abc21d32223a9a3e6bd884d30383351b392e7a2aa27257edce5",
+            ALG_KEY
+        );
+
+        verify(ctx, times(1)).processIdentityVerificationResult(any(), any());
+        verify(documentDownloader, never()).downloadAndStoreDocuments(anyString(), anyString(), anyList(), any());
+    }
+
+    @Test
+    void testPostApplicantReviewedWebhookDocumentDownloadSkippedWhenImagesEmpty() throws Exception {
+        String rawPayload = """
+            {
+              "applicantId": "5cb56e8e0a975a35f333cb83",
+              "inspectionId": "5cb56e8e0a975a35f333cb84",
+              "correlationId": "req-a260b669-4f14-4bb5-a4c5-ac0218acb9a4",
+              "externalUserId": "123",
+              "levelName": "basic-kyc-level",
+              "type": "applicantReviewed",
+              "reviewResult": {
+                "reviewAnswer": "GREEN"
+              },
+              "reviewStatus": "completed",
+              "createdAtMs": "2020-02-21 13:23:19.321"
+            }""";
+
+        IIdentity identity = mock(IIdentity.class);
+        when(identity.getState()).thenReturn(IIdentityBase.STATE_TO_BE_VERIFIED);
+
+        InspectionInfoResponse inspectionWithEmptyImages = webhookParser.parse("""
+            {
+                "id": "5cb56e8e0a975a35f333cb84",
+                "inspectionDate": "2024-04-17 20:40:13",
+                "applicantId": "5cb56e8e0a975a35f333cb83",
+                "images": []
+            }""", InspectionInfoResponse.class);
+
+        when(apiService.getApplicantByExternalId("123")).thenReturn(getApplicantInfoResponseDrivers());
+        when(apiService.getInspectionInfo("5cb56e8e0a975a35f333cb84")).thenReturn(inspectionWithEmptyImages);
+        when(ctx.findIdentityByIdentityId("123")).thenReturn(identity);
+
+        webhookProcessor.process(rawPayload,
+            webhookParser.parse(rawPayload, BaseWebhookBody.class),
+            "5a2e30f8fc250abc21d32223a9a3e6bd884d30383351b392e7a2aa27257edce5",
+            ALG_KEY
+        );
+
+        verify(ctx, times(1)).processIdentityVerificationResult(any(), any());
+        verify(documentDownloader, never()).downloadAndStoreDocuments(anyString(), anyString(), anyList(), any());
     }
 
     @Test

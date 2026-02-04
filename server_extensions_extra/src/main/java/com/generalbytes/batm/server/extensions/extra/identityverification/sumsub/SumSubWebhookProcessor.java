@@ -7,22 +7,26 @@ import com.generalbytes.batm.server.extensions.IIdentityPiece;
 import com.generalbytes.batm.server.extensions.aml.verification.ApplicantCheckResult;
 import com.generalbytes.batm.server.extensions.aml.verification.IdentityCheckWebhookException;
 import com.generalbytes.batm.server.extensions.common.sumsub.SumsubException;
+import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.SumsubDocumentDownloader;
 import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.digest.SumSubWebhookSecretDigest;
 import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.vo.ApplicantInfoResponse;
 import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.vo.ApplicantReviewedWebhook;
 import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.vo.BaseWebhookBody;
 import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.vo.CreateIdentityVerificationSessionResponse;
+import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.vo.InspectionImage;
 import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.vo.InspectionInfoResponse;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import si.mazi.rescu.HttpStatusIOException;
 
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * The SumSubWebhookProcessor class is responsible for processing incoming webhooks from the SumSub
@@ -37,11 +41,14 @@ import java.util.Objects;
 @AllArgsConstructor
 public class SumSubWebhookProcessor {
 
+    private static final ExecutorService documentDownloadExecutorService = Executors.newSingleThreadExecutor();
+
     private final IExtensionContext ctx;
     private final SumSubApiService apiService;
     private final SumSubWebhookParser webhookParser;
     private final SumSubApplicantReviewedResultMapper checkResultMapper;
     private final String webhookSecretKey;
+    private final SumsubDocumentDownloader documentDownloader;
 
     /**
      * Processes incoming webhook payloads by verifying their signatures and handling the webhook
@@ -95,7 +102,7 @@ public class SumSubWebhookProcessor {
             // after discussing with GB, this is intended due to some inconsistent webhook issues they have with Veriff
             // but with Sum&Substance, we need to update the state since they do ongoing monitoring,
             // and we should update the state with new webhook information
-            if (identity.getState() != IIdentityBase.STATE_TO_BE_VERIFIED) {
+            if (identity != null && identity.getState() != IIdentityBase.STATE_TO_BE_VERIFIED) {
                 // only update the state to STATE_TO_BE_VERIFIED and add a new note
                 ctx.updateIdentity(identity.getPublicId(), identity.getExternalId(), IIdentityBase.STATE_TO_BE_VERIFIED,
                         identity.getType(), identity.getCreated(), identity.getRegistered(), identity.getVipBuyDiscount(),
@@ -106,12 +113,27 @@ public class SumSubWebhookProcessor {
                         identity.getLimitCashTotalIdentity(), identity.getConfigurationCashCurrency());
             }
             ctx.processIdentityVerificationResult(rawPayload, result);
+            processDocuments(applicantReviewedWebhook, identity, inspectionInfoResponse);
         } catch (HttpStatusIOException e) {
             log.error("Error getting info from SumSub: HTTP response code: {}, body: {}, error message: {}", e.getHttpStatusCode(), e.getHttpBody(), e.getMessage());
             throw new IdentityCheckWebhookException(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), "",
                     "Error getting info from SumSub.");
         } catch (Exception e) {
             throw new SumsubException(e);
+        }
+    }
+
+    private void processDocuments(ApplicantReviewedWebhook applicantReviewedWebhook, IIdentity identity, InspectionInfoResponse inspectionInfoResponse) {
+        if (identity == null) {
+            log.info("Skipping document download, missing identity");
+            return;
+        }
+        List<InspectionImage> images = inspectionInfoResponse.getImages();
+        if (images != null && !images.isEmpty()) {
+            String identityPublicId = identity.getPublicId();
+            String inspectionId = applicantReviewedWebhook.getInspectionId();
+            documentDownloadExecutorService.submit(() ->
+                documentDownloader.downloadAndStoreDocuments(identityPublicId, inspectionId, images, ctx));
         }
     }
 

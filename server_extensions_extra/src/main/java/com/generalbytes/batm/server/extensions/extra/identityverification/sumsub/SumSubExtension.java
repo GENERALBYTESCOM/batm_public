@@ -5,10 +5,11 @@ import com.generalbytes.batm.server.extensions.IExtensionContext;
 import com.generalbytes.batm.server.extensions.IRestService;
 import com.generalbytes.batm.server.extensions.aml.verification.IIdentityVerificationProvider;
 import com.generalbytes.batm.server.extensions.common.sumsub.api.SumsubApiFactory;
-import com.generalbytes.batm.server.extensions.common.sumsub.api.digest.SumsubSignatureDigest;
-import com.generalbytes.batm.server.extensions.common.sumsub.api.digest.SumsubTimestampProvider;
 import com.generalbytes.batm.server.extensions.util.ExtensionParameters;
 import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.ISumSubApi;
+import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.SumsubDocumentClient;
+import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.SumsubDocumentDownloader;
+import com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.SumsubIdentityPieceCreator;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashSet;
@@ -100,7 +101,10 @@ public class SumSubExtension extends AbstractExtension {
                                                                   int linkExpiryInSeconds) {
         ISumSubApi api = createApi(token, secret);
         SumSubApiService apiService = createSumSubApiService(api, levelName, linkExpiryInSeconds);
-        SumSubWebhookProcessor webhookProcessor = createWebhookProcessor(webhookSecret, apiService);
+        SumsubDocumentClient documentClient = new SumsubDocumentClient(token, secret, "https://api.sumsub.com");
+        SumsubIdentityPieceCreator identityPieceCreator = new SumsubIdentityPieceCreator();
+        SumsubDocumentDownloader documentDownloader = new SumsubDocumentDownloader(documentClient, identityPieceCreator, 3, 1);
+        SumSubWebhookProcessor webhookProcessor = createWebhookProcessor(webhookSecret, apiService, documentDownloader);
         return new SumSubIdentityVerificationProvider(apiService, webhookProcessor);
     }
 
@@ -112,9 +116,9 @@ public class SumSubExtension extends AbstractExtension {
         return apiFactory.createSumsubIdentityVerificationApi(token, secret);
     }
 
-    private SumSubWebhookProcessor createWebhookProcessor(String webhookSecret, SumSubApiService apiService) {
+    private SumSubWebhookProcessor createWebhookProcessor(String webhookSecret, SumSubApiService apiService, SumsubDocumentDownloader documentDownloader) {
         return new SumSubWebhookProcessor(
-                ctx, apiService, module.getSubWebhookParser(), new SumSubApplicantReviewedResultMapper(), webhookSecret
+                ctx, apiService, module.getSubWebhookParser(), new SumSubApplicantReviewedResultMapper(), webhookSecret, documentDownloader
         );
     }
 
