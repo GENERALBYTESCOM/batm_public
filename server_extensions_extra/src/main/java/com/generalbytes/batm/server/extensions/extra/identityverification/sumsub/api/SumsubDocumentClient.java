@@ -14,8 +14,6 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-import java.util.Objects;
 
 /**
  * HTTP client for downloading document images from Sumsub API.
@@ -39,9 +37,14 @@ public class SumsubDocumentClient {
     public SumsubDocumentClient(String token, String secret, String baseUrl) {
         this.token = token;
         this.baseUrl = baseUrl.endsWith("/") ? baseUrl.substring(0, baseUrl.length() - 1) : baseUrl;
+        this.mac = createMac(secret);
+    }
+
+    private Mac createMac(String secret) {
         try {
-            this.mac = Mac.getInstance(ALGORITHM);
-            this.mac.init(new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), ALGORITHM));
+            Mac macInstance = Mac.getInstance(ALGORITHM);
+            macInstance.init(new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), ALGORITHM));
+            return macInstance;
         } catch (InvalidKeyException e) {
             throw new SumsubException("Failed to initialize SumsubDocumentClient, is the secret key configured properly?", e);
         } catch (NoSuchAlgorithmException e) {
@@ -56,7 +59,7 @@ public class SumsubDocumentClient {
      * @param imageId      the image ID from {@link com.generalbytes.batm.server.extensions.extra.identityverification.sumsub.api.vo.InspectionImage#getImageId()}
      * @return the downloaded content and its content type
      */
-    public DownloadedDocument downloadDocument(String inspectionId, String imageId) throws IOException {
+    DownloadedDocument downloadDocument(String inspectionId, String imageId) throws IOException {
         HttpURLConnection httpConnection = createHttpConnection(inspectionId, imageId);
         validateResponseCode(httpConnection, imageId);
         String contentType = getContentType(httpConnection);
@@ -106,25 +109,5 @@ public class SumsubDocumentClient {
         String combined = ts + "GET" + path;
         mac.update(combined.getBytes(StandardCharsets.UTF_8));
         return Hex.bytesToHexString(mac.doFinal());
-    }
-
-    public record DownloadedDocument(byte[] content, String contentType) {
-        @Override
-        public boolean equals(Object o) {
-            if (!(o instanceof DownloadedDocument that)) return false;
-            return Objects.deepEquals(content(), that.content()) && Objects.equals(contentType(), that.contentType());
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(Arrays.hashCode(content()), contentType());
-        }
-
-        @Override
-        public String toString() {
-            return "DownloadedDocument{" +
-                "contentType='" + contentType + '\'' +
-                '}';
-        }
     }
 }

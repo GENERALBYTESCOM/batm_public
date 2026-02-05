@@ -57,9 +57,9 @@ class SumsubDocumentDownloaderTest {
         byte[] content2 = "image2".getBytes();
 
         when(client.downloadDocument(inspectionId, "101"))
-            .thenReturn(new SumsubDocumentClient.DownloadedDocument(content1, "image/jpeg"));
+            .thenReturn(new DownloadedDocument(content1, "image/jpeg"));
         when(client.downloadDocument(inspectionId, "102"))
-            .thenReturn(new SumsubDocumentClient.DownloadedDocument(content2, "image/png"));
+            .thenReturn(new DownloadedDocument(content2, "image/png"));
 
         downloader.downloadAndStoreDocuments(identityPublicId, inspectionId, images, extensionContext);
 
@@ -88,7 +88,7 @@ class SumsubDocumentDownloaderTest {
 
         List<InspectionImage> images = Arrays.asList(mappable, unmappable, nullType, nullId);
         when(client.downloadDocument(anyString(), anyString()))
-            .thenReturn(new SumsubDocumentClient.DownloadedDocument("data".getBytes(), "image/jpeg"));
+            .thenReturn(new DownloadedDocument("data".getBytes(), "image/jpeg"));
 
         downloader.downloadAndStoreDocuments(identityPublicId, inspectionId, images, extensionContext);
 
@@ -113,7 +113,7 @@ class SumsubDocumentDownloaderTest {
         InspectionImage img = createMockImage(101, SumSubDocumentType.ID_CARD);
 
         doThrow(new IOException("Timeout"))
-            .doReturn(new SumsubDocumentClient.DownloadedDocument("data".getBytes(), "image/jpeg"))
+            .doReturn(new DownloadedDocument("data".getBytes(), "image/jpeg"))
             .when(client).downloadDocument(inspectionId, "101");
 
         downloader.downloadAndStoreDocuments(identityPublicId, inspectionId, Collections.singletonList(img), extensionContext);

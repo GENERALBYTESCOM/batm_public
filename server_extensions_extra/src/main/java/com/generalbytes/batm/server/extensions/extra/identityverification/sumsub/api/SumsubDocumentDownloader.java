@@ -45,22 +45,7 @@ public class SumsubDocumentDownloader {
         }
 
         List<InspectionImage> mappableImages = images.stream()
-            .filter(img -> {
-                if (img.getImageId() == null) {
-                    log.warn("Skipping image with null imageId");
-                    return false;
-                }
-                if (img.getIdDocDef() == null) {
-                    log.warn("Skipping image with null idDocType");
-                    return false;
-                }
-                SumSubDocumentType docType = img.getIdDocDef().getIdDocType();
-                if (!SumsubIdentityPieceCreator.isMappableDocumentType(docType)) {
-                    log.debug("Skipping unmappable document type from Sumsub: {}", docType);
-                    return false;
-                }
-                return true;
-            })
+            .filter(this::isMappableDocumentImage)
             .toList();
 
         if (mappableImages.isEmpty()) {
@@ -70,10 +55,7 @@ public class SumsubDocumentDownloader {
         List<InspectionImage> failedImages = retryDownload(mappableImages, identityPublicId, inspectionId, ctx, 1);
 
         if (!failedImages.isEmpty()) {
-            List<String> failedImageDetails = failedImages.stream()
-                .map(img -> img.getImageId() + " (" + (img.getIdDocDef() != null ? img.getIdDocDef().getIdDocType() : "unknown") + ")")
-                .toList();
-            log.error("Failed to download the following images after {} attempts: {}", maxDownloadRetries, failedImageDetails);
+            log.error("Failed to download the following images after {} attempts: {}", maxDownloadRetries, formatFailedImageDetails(failedImages));
         }
     }
 
@@ -90,7 +72,7 @@ public class SumsubDocumentDownloader {
             return Collections.emptyList();
         }
 
-        addRetryDelay(attempt);
+        waitBeforeRetry(attempt);
         return retryDownload(failedThisRound, identityPublicId, inspectionId, extensionContext, attempt + 1);
     }
 
@@ -104,20 +86,47 @@ public class SumsubDocumentDownloader {
             try {
                 SumSubDocumentType docType = image.getIdDocDef().getIdDocType();
                 log.info("Attempt {}: Downloading image ({}) for applicantId: {}", attempt, docType, identityPublicId);
-                SumsubDocumentClient.DownloadedDocument download = client.downloadDocument(inspectionId, String.valueOf(image.getImageId()));
+                DownloadedDocument download = client.downloadDocument(inspectionId, String.valueOf(image.getImageId()));
                 IIdentityPiece piece = creator.createIdentityPiece(docType, download.contentType(), download.content());
                 ctx.addIdentityPiece(identityPublicId, piece);
                 int fileSizeKiloBytes = download.content().length / 1000;
                 log.info("Sumsub document ({}, {}) downloaded: {} kB", docType, image.getImageId(), fileSizeKiloBytes);
+            } catch (IllegalArgumentException e) {
+                log.warn("Failed to download and create identity piece for image ID: {}, type: {}", image.getImageId(),
+                    image.getIdDocDef().getIdDocType(), e);
             } catch (IOException e) {
-                log.warn("Attempt {} failed for image ID: {}, type: {}, error: {}", attempt, image.getImageId(), image.getIdDocDef().getIdDocType(), e.getMessage());
+                log.warn("Attempt {} failed for image ID: {}, type: {}, error: {}", attempt, image.getImageId(),
+                    image.getIdDocDef().getIdDocType(), e.getMessage());
                 failedImages.add(image);
             }
         }
         return failedImages;
     }
 
-    private void addRetryDelay(int attempt) {
+    private boolean isMappableDocumentImage(InspectionImage img) {
+        if (img.getImageId() == null) {
+            log.warn("Skipping image with null imageId");
+            return false;
+        }
+        if (img.getIdDocDef() == null) {
+            log.warn("Skipping image with null idDocType");
+            return false;
+        }
+        SumSubDocumentType docType = img.getIdDocDef().getIdDocType();
+        if (!SumsubIdentityPieceCreator.isMappableDocumentType(docType)) {
+            log.debug("Skipping unmappable document type from Sumsub: {}", docType);
+            return false;
+        }
+        return true;
+    }
+
+    private List<String> formatFailedImageDetails(List<InspectionImage> failedImages) {
+        return failedImages.stream()
+            .map(img -> img.getImageId() + " (" + (img.getIdDocDef() != null ? img.getIdDocDef().getIdDocType() : "unknown") + ")")
+            .toList();
+    }
+
+    private void waitBeforeRetry(int attempt) {
         try {
             TimeUnit.SECONDS.sleep((long) attempt * retryDelaySeconds);
         } catch (InterruptedException e) {

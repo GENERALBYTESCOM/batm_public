@@ -77,24 +77,28 @@ class SumsubIdentityPieceCreatorTest {
         );
     }
 
-    @ParameterizedTest
-    @MethodSource("provideSelfieDocumentTypes")
-    void createIdentityPieceReturnsSelfieForSelfieVideoSelfie(SumSubDocumentType documentType) {
+    @Test
+    void createIdentityPieceReturnsSelfieForSelfie() {
         byte[] content = "selfie-data".getBytes();
         String contentType = "image/png";
 
-        IIdentityPiece piece = creator.createIdentityPiece(documentType, contentType, content);
+        IIdentityPiece piece = creator.createIdentityPiece(SumSubDocumentType.SELFIE, contentType, content);
 
         assertInstanceOf(SelfieIdentityPiece.class, piece);
         assertEquals(contentType, piece.getMimeType());
         assertArrayEquals(content, piece.getData());
     }
 
-    private static Stream<Arguments> provideSelfieDocumentTypes() {
-        return Stream.of(
-            Arguments.of(SumSubDocumentType.SELFIE),
-            Arguments.of(SumSubDocumentType.VIDEO_SELFIE)
-        );
+    @Test
+    void createIdentityPieceReturnsSelfieForVideoSelfie() {
+        byte[] content = "video-data".getBytes();
+        String contentType = "video/mp4";
+
+        IIdentityPiece piece = creator.createIdentityPiece(SumSubDocumentType.VIDEO_SELFIE, contentType, content);
+
+        assertInstanceOf(SelfieIdentityPiece.class, piece);
+        assertEquals(contentType, piece.getMimeType());
+        assertArrayEquals(content, piece.getData());
     }
 
     @Test
@@ -109,12 +113,48 @@ class SumsubIdentityPieceCreatorTest {
         assertTrue(exception.getMessage().contains("UTILITY_BILL"));
     }
 
+    @Test
+    void createIdentityPieceThrowsWhenVideoSelfieHasImageContentType() {
+        byte[] content = "data".getBytes();
+        String contentType = "image/jpeg";
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+            () -> creator.createIdentityPiece(SumSubDocumentType.VIDEO_SELFIE, contentType, content));
+
+        assertTrue(exception.getMessage().contains("VIDEO_SELFIE"));
+        assertTrue(exception.getMessage().contains("video"));
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = SumSubDocumentType.class, names = {"ID_CARD", "PASSPORT", "DRIVERS", "SELFIE"})
+    void createIdentityPieceThrowsWhenVideoContentTypeNotExpected(SumSubDocumentType docType) {
+        byte[] content = "data".getBytes();
+        String contentType = "video/mp4";
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+            () -> creator.createIdentityPiece(docType, contentType, content));
+
+        assertTrue(exception.getMessage().contains(docType.toString()));
+        assertTrue(exception.getMessage().contains("requires image content type"));
+    }
+
+    @Test
+    void createIdentityPieceThrowsWhenContentTypeIsBlank() {
+        byte[] content = "data".getBytes();
+
+        assertThrows(IllegalArgumentException.class,
+            () -> creator.createIdentityPiece(SumSubDocumentType.ID_CARD, "", content));
+        assertThrows(IllegalArgumentException.class,
+            () -> creator.createIdentityPiece(SumSubDocumentType.ID_CARD, "   ", content));
+    }
+
     @ParameterizedTest
     @EnumSource(SumSubDocumentType.class)
     void createIdentityPieceHandlesMappableDocumentTypes(SumSubDocumentType documentType) {
-        Executable createIdentityPieces = () -> creator.createIdentityPiece(documentType, "", "data".getBytes());
+        String contentType = documentType == SumSubDocumentType.VIDEO_SELFIE ? "video/mp4" : "image/jpeg";
+        Executable createIdentityPieces = () -> creator.createIdentityPiece(documentType, contentType, "data".getBytes());
         if (SumsubIdentityPieceCreator.isMappableDocumentType(documentType)) {
-            assertDoesNotThrow(() -> createIdentityPieces, "Update mapping logic if this fails - failed for: " + documentType);
+            assertDoesNotThrow(createIdentityPieces, "Update mapping logic if this fails - failed for: " + documentType);
         } else {
             assertThrows(IllegalArgumentException.class, createIdentityPieces, "Update mappable type list if this fails - failed for: " + documentType);
         }
