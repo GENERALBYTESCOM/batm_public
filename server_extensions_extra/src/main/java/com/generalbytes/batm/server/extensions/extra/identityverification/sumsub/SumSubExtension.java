@@ -24,6 +24,8 @@ public class SumSubExtension extends AbstractExtension {
     private static final String EXTENSION_PREFIX = "gbsumsub";
     // default session link expiry to seven day
     private static final int DEFAULT_LINK_EXPIRY_SECONDS = 7 * 24 * 3600;
+    private static final int DOCUMENT_DOWNLOAD_MAX_RETRIES = 3;
+    private static final int DOCUMENT_DOWNLOAD_RETRY_DELAY_SECONDS = 1;
 
     private Set<IRestService> restServices = null;
 
@@ -103,7 +105,8 @@ public class SumSubExtension extends AbstractExtension {
         SumSubApiService apiService = createSumSubApiService(api, levelName, linkExpiryInSeconds);
         SumsubDocumentClient documentClient = new SumsubDocumentClient(token, secret, "https://api.sumsub.com");
         SumsubIdentityPieceCreator identityPieceCreator = new SumsubIdentityPieceCreator();
-        SumsubDocumentDownloader documentDownloader = new SumsubDocumentDownloader(documentClient, identityPieceCreator, 3, 1);
+        SumsubDocumentDownloader documentDownloader = new SumsubDocumentDownloader(documentClient, identityPieceCreator,
+            DOCUMENT_DOWNLOAD_MAX_RETRIES, DOCUMENT_DOWNLOAD_RETRY_DELAY_SECONDS);
         SumSubWebhookProcessor webhookProcessor = createWebhookProcessor(webhookSecret, apiService, documentDownloader);
         return new SumSubIdentityVerificationProvider(apiService, webhookProcessor);
     }

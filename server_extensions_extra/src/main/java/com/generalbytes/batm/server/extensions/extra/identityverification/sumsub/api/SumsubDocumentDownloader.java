@@ -46,8 +46,12 @@ public class SumsubDocumentDownloader {
 
         List<InspectionImage> mappableImages = images.stream()
             .filter(img -> {
-                if (img.getImageId() == null || img.getIdDocDef() == null) {
-                    log.warn("Skipping image with null imageId or idDocDef");
+                if (img.getImageId() == null) {
+                    log.warn("Skipping image with null imageId");
+                    return false;
+                }
+                if (img.getIdDocDef() == null) {
+                    log.warn("Skipping image with null idDocType");
                     return false;
                 }
                 SumSubDocumentType docType = img.getIdDocDef().getIdDocType();

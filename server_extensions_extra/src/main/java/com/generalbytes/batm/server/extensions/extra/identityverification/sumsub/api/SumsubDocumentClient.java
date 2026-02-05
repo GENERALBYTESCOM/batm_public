@@ -82,7 +82,7 @@ public class SumsubDocumentClient {
         return httpConnection;
     }
 
-    private static String getContentType(HttpURLConnection httpConnection) {
+    private String getContentType(HttpURLConnection httpConnection) {
         String contentType = httpConnection.getContentType();
         if (contentType != null && contentType.contains(";")) {
             contentType = contentType.split(";")[0].trim();
@@ -93,7 +93,7 @@ public class SumsubDocumentClient {
         return contentType;
     }
 
-    private static void validateResponseCode(HttpURLConnection httpConnection, String imageId) throws IOException {
+    private void validateResponseCode(HttpURLConnection httpConnection, String imageId) throws IOException {
         if (httpConnection.getResponseCode() != HttpURLConnection.HTTP_OK) {
             try (InputStream errorStream = httpConnection.getErrorStream()) {
                 String errorResponse = errorStream != null ? new String(ByteStreams.toByteArray(errorStream), StandardCharsets.UTF_8) : "";

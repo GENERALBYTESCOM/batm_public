@@ -30,9 +30,9 @@ public class SumsubIdentityPieceCreator {
     /**
      * Creates an identity piece from the given document type, content type, and content.
      *
-     * @param docType    the Sumsub document type
+     * @param docType     the Sumsub document type
      * @param contentType the MIME type of the content
-     * @param content    the raw content bytes
+     * @param content     the raw content bytes
      * @return IdScanIdentityPiece for ID_CARD, PASSPORT, DRIVERS; SelfieIdentityPiece for SELFIE, VIDEO_SELFIE
      * @throws IllegalArgumentException if the document type is not mappable
      */
