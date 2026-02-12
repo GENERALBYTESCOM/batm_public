@@ -27,6 +27,7 @@ import si.mazi.rescu.HttpStatusIOException;
 import si.mazi.rescu.Interceptor;
 import si.mazi.rescu.RestProxyFactory;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -105,12 +106,17 @@ public class CoinGeckoRateSource implements IRateSource {
     }
 
     private final CoinGeckoV3API api;
+    private final CoinGeckoV3APIPro apiPro;
     private final String preferredFiatCurrency;
+    private final String apiKey;
 
-    public CoinGeckoRateSource(String preferredFiatCurrency) {
+    public CoinGeckoRateSource(String preferredFiatCurrency, String apiKey) {
         this.preferredFiatCurrency = preferredFiatCurrency;
+        this.apiKey = apiKey;
         Interceptor interceptor = new RateLimitingInterceptor(CoinGeckoV3API.class, 50 / 60.0, 5_000);
         api = RestProxyFactory.createProxy(CoinGeckoV3API.class, "https://api.coingecko.com/api", null, interceptor);
+        Interceptor interceptorProApi = new RateLimitingInterceptor(CoinGeckoV3APIPro.class, 50 / 60.0, 5_000);
+        apiPro = RestProxyFactory.createProxy(CoinGeckoV3APIPro.class, "https://pro-api.coingecko.com/api", null, interceptorProApi);
     }
 
     @Override
@@ -174,16 +180,21 @@ public class CoinGeckoRateSource implements IRateSource {
         try {
             String crypto = CRYPTOCURRENCIES.get(cryptoCurrency);
             String fiat = fiatCurrency.toLowerCase();
-            return api.getPrice(crypto, fiat).get(crypto).get(fiat);
+            Map<String, Map<String, BigDecimal>> prices = callGetPrice(crypto, fiat);
+            return prices.get(crypto).get(fiat);
         } catch (HttpStatusIOException e) {
             log.warn(e.getHttpBody(), e);
         } catch (Exception e) {
-            log.error("", e);
+            log.error("CoinGecko: Failed to fetch exchange rate for {}:{}", cryptoCurrency, fiatCurrency, e);
         }
         return null;
     }
 
-//    public static void main(String[] args) {
-//        System.out.println(new CoinGeckoRateSource("USD").getExchangeRateLast("XMR", "USD"));
-//    }
+    private Map<String, Map<String, BigDecimal>> callGetPrice(String crypto, String fiat) throws IOException {
+        if (apiKey != null && !apiKey.isBlank()) {
+            return apiPro.getPrice(apiKey, crypto, fiat);
+        }
+        return api.getPrice(crypto, fiat);
+    }
+
 }

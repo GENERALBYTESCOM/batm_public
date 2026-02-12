@@ -80,8 +80,15 @@ public class PrimecoinExtension extends AbstractExtension {
                 String rsType = st.nextToken();
 
                 if ("coingecko".equalsIgnoreCase(rsType)) {
-                    String preferredFiatCurrency = st.hasMoreTokens() ? st.nextToken().toUpperCase() : FiatCurrency.USD.getCode();
-                    return new CoinGeckoRateSource(preferredFiatCurrency);
+                    String preferredFiatCurrency = FiatCurrency.USD.getCode();
+                    if (st.hasMoreTokens()) {
+                        preferredFiatCurrency = st.nextToken().toUpperCase();
+                    }
+                    String apiKey = null;
+                    if (st.hasMoreTokens()) {
+                        apiKey = st.nextToken();
+                    }
+                    return new CoinGeckoRateSource(preferredFiatCurrency, apiKey);
                 } else if ("coinmarketcap".equalsIgnoreCase(rsType)) {
                     String preferredFiatCurrency = FiatCurrency.USD.getCode();
                     String apiKey = null;
