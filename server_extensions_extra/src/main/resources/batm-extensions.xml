@@ -608,6 +608,8 @@
         </ratesource>
         <ratesource prefix="coingecko" name ="CoinGecko.com" >
             <param name="fiatcurrency" />
+            <param name="apiKey" />
+            <help>To use the CoinGecko Pro API (paid plan), configure the apiKey, otherwise leave blank. The fiatcurrency property defaults to USD</help>
             <cryptocurrency>ANON</cryptocurrency>
             <cryptocurrency>ANT</cryptocurrency>
             <cryptocurrency>BAT</cryptocurrency>
