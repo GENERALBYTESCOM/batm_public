@@ -115,7 +115,8 @@ public class CoinGeckoRateSource implements IRateSource {
         this.apiKey = apiKey;
         Interceptor interceptor = new RateLimitingInterceptor(CoinGeckoV3API.class, 50 / 60.0, 5_000);
         api = RestProxyFactory.createProxy(CoinGeckoV3API.class, "https://api.coingecko.com/api", null, interceptor);
-        apiPro = RestProxyFactory.createProxy(CoinGeckoV3APIPro.class, "https://pro-api.coingecko.com/api", null, interceptor);
+        Interceptor interceptorProApi = new RateLimitingInterceptor(CoinGeckoV3APIPro.class, 50 / 60.0, 5_000);
+        apiPro = RestProxyFactory.createProxy(CoinGeckoV3APIPro.class, "https://pro-api.coingecko.com/api", null, interceptorProApi);
     }
 
     @Override
