@@ -50,7 +50,7 @@ public class GtrWebhookRestService implements IRestService {
         try {
             return requestHandler.handle(message);
         } catch (Exception e) {
-            log.error("Unexpected error while handling webhook message from Global Travel Rule.", e);
+            log.error("Unexpected error while handling webhook message from GTR.", e);
             return new GtrWebhookMessageResponse("unexpected error occurred",
                     GtrApiConstants.VerifyStatus.BENEFICIARY_INTERNAL_SERVER_ERROR);
         }

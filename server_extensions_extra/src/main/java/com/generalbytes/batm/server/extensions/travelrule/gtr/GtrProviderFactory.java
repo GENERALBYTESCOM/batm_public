@@ -8,6 +8,7 @@ import com.generalbytes.batm.server.extensions.travelrule.TravelRuleExtensionCon
 import com.generalbytes.batm.server.extensions.travelrule.gtr.api.GtrApi;
 import com.generalbytes.batm.server.extensions.travelrule.gtr.api.GtrApiConstants;
 import com.generalbytes.batm.server.extensions.travelrule.gtr.dto.GtrConfiguration;
+import com.generalbytes.batm.server.extensions.travelrule.gtr.handler.GtrNetworkTestWebhookHandler;
 import com.generalbytes.batm.server.extensions.travelrule.gtr.handler.GtrReceiveTxIdWebhookHandler;
 import com.generalbytes.batm.server.extensions.travelrule.gtr.handler.GtrVerifyAddressWebhookHandler;
 import com.generalbytes.batm.server.extensions.travelrule.gtr.mapper.GtrObjectMapper;
@@ -76,6 +77,7 @@ public class GtrProviderFactory implements ITravelRuleProviderFactory {
     private void registerWebhookRequestHandlers(TravelRuleExtensionContext context) {
         GtrWebhookHandlerService handlerService = GtrWebhookHandlerService.getInstance();
 
+        handlerService.registerHandler(GtrApiConstants.CallbackType.NETWORK_TEST, new GtrNetworkTestWebhookHandler());
         handlerService.registerHandler(GtrApiConstants.CallbackType.ADDRESS_VERIFICATION, new GtrVerifyAddressWebhookHandler(context));
         handlerService.registerHandler(GtrApiConstants.CallbackType.RECEIVE_TX_ID, new GtrReceiveTxIdWebhookHandler());
         handlerService.registerHandler(GtrApiConstants.CallbackType.PII_VERIFICATION, gtrVerifyPiiWebhookHandler);
