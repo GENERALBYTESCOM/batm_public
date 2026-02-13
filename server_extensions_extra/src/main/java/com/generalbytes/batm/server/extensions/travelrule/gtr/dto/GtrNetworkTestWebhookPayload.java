@@ -8,6 +8,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * Represents the request for network test received from GTR as a webhook message.
+ *
+ * @see <a href="https://www.globaltravelrule.com/documentation/standard2-api/callback-api-network-health-api">GTR documentation</a>
+ */
 @ToString
 @Getter
 @Setter
