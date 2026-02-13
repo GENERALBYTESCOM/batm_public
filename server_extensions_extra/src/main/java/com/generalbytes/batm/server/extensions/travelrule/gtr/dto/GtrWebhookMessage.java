@@ -52,6 +52,7 @@ public class GtrWebhookMessage {
      */
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY, property = "callbackType")
     @JsonSubTypes({
+        @JsonSubTypes.Type(value = GtrNetworkTestWebhookPayload.class, name = GtrApiConstants.CallbackType.NETWORK_TEST + ""),
         @JsonSubTypes.Type(value = GtrAddressVerifyWebhookPayload.class, name = GtrApiConstants.CallbackType.ADDRESS_VERIFICATION + ""),
         @JsonSubTypes.Type(value = GtrTxVerifyWebhookPayload.class, name = GtrApiConstants.CallbackType.TX_VERIFICATION + ""),
         @JsonSubTypes.Type(value = GtrPiiVerifyWebhookPayload.class, name = GtrApiConstants.CallbackType.PII_VERIFICATION + ""),
