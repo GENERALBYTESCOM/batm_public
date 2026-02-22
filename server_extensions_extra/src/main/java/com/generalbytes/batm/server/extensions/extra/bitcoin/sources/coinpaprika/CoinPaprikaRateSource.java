@@ -95,6 +95,7 @@ public class CoinPaprikaRateSource implements IRateSource {
         CRYPTOCURRENCIES.put(CryptoCurrency.USDT.getCode(), "usdt-tether");
         CRYPTOCURRENCIES.put(CryptoCurrency.USDTTRON.getCode(), "usdt-tether"); // using USDT for rate source
         CRYPTOCURRENCIES.put(CryptoCurrency.VIA.getCode(), "via-viacoin");
+        CRYPTOCURRENCIES.put(CryptoCurrency.VERUM.getCode(), "verum-verum-coin");
         CRYPTOCURRENCIES.put(CryptoCurrency.VOLTZ.getCode(), "voltz-voltz");
         CRYPTOCURRENCIES.put(CryptoCurrency.WDC.getCode(), "wdc-worldcoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.XMR.getCode(), "xmr-monero");
