@@ -35,6 +35,7 @@ public class BinanceComExchange extends BinanceExchange {
         SUPPORTED_FIATS.add(FiatCurrency.EUR.getCode());
         SUPPORTED_FIATS.add(FiatCurrency.GBP.getCode());
         SUPPORTED_FIATS.add(FiatCurrency.RUB.getCode());
+        SUPPORTED_FIATS.add(FiatCurrency.RON.getCode());
         SUPPORTED_FIATS.add(CryptoCurrency.BUSD.getCode());
         SUPPORTED_FIATS.add(CryptoCurrency.DAI.getCode());
         SUPPORTED_FIATS.add(CryptoCurrency.USDC.getCode());
