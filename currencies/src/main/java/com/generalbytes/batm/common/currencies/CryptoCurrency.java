@@ -41,6 +41,7 @@ public enum CryptoCurrency {
     ANT("Aragon Network Token"),
     BAT("Basic Attention Token"),
     BCH("Bitcoin Cash"),
+    BLK("Blackcoin"),
     BNB("BinanceCoin"),
     BSD("BitSend"),
     BTBS("BitBase"),
@@ -113,6 +114,7 @@ public enum CryptoCurrency {
     USDCSOL("USD Coin (Solana)"), // SPL (Solana) based
     USDT("Tether"), // ERC-20 (ethereum) based
     USDTTRON("Tether USD TRON"), // TRC20 based USDT stablecoin issued by Tether on the TRON network
+    VAL("Validity"),
     VERUM("Verum Coin"),
     VIA("Viacoin"),
     VOLTZ("VOLTZ"),
