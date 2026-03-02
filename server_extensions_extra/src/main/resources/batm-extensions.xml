@@ -355,6 +355,7 @@
                 <cryptocurrency>BCH</cryptocurrency>
                 <cryptocurrency>DASH</cryptocurrency>
                 <cryptocurrency>XMR</cryptocurrency>
+                <cryptocurrency buyonly="true">L-BTC</cryptocurrency>
             </exchange>
             <exchange prefix="bitstamp" name="Bitstamp.net Exchange">
                 <param name="fiatcurrency" />
