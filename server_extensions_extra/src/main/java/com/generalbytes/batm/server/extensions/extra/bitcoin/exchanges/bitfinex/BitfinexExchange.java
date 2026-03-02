@@ -117,7 +117,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
                 @Override
                 public String withdrawFunds(Currency currency, BigDecimal amount, String address) throws IOException {
-                    if (!mustWithdrawTypeBeSpecified(currency)) {
+                    if (!isWithdrawTypeMandatory(currency)) {
                         return super.withdrawFunds(currency, amount, address);
                     }
 
@@ -128,7 +128,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
                     }
                 }
 
-                private boolean mustWithdrawTypeBeSpecified(Currency currency) {
+                private boolean isWithdrawTypeMandatory(Currency currency) {
                     String currencyCode = currency.getCurrencyCode();
                     return "BCH".equalsIgnoreCase(currencyCode) || "LBT".equalsIgnoreCase(currencyCode);
                 }
@@ -153,7 +153,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
 
                 @Override
                 public BitfinexDepositAddressResponse requestDepositAddressRaw(String currency) throws IOException {
-                    if (!mustMethodBeSpecified(currency)) {
+                    if (!isMethodMandatory(currency)) {
                         return super.requestDepositAddressRaw(currency);
                     }
 
@@ -170,7 +170,7 @@ public class BitfinexExchange implements IExchangeAdvanced, IRateSourceAdvanced 
                     );
                 }
 
-                private boolean mustMethodBeSpecified(String currency) {
+                private boolean isMethodMandatory(String currency) {
                     return "BCH".equalsIgnoreCase(currency) || "LBT".equalsIgnoreCase(currency);
                 }
 
