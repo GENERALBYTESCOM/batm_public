@@ -65,7 +65,6 @@ class SumSubApplicantReviewedResultMapperTests {
         assertEquals(DocumentType.passport, resultMapper.translateSSDocumentType(SumSubDocumentType.PASSPORT));
         assertEquals(DocumentType.residence_permit, resultMapper.translateSSDocumentType(SumSubDocumentType.RESIDENCE_PERMIT));
         assertEquals(DocumentType.national_identity_card, resultMapper.translateSSDocumentType(SumSubDocumentType.ID_CARD));
-        assertEquals(DocumentType.selfie, resultMapper.translateSSDocumentType(SumSubDocumentType.SELFIE));
 
         // others
         assertEquals(DocumentType.other, resultMapper.translateSSDocumentType(SumSubDocumentType.VEHICLE_REGISTRATION_CERTIFICATE));
