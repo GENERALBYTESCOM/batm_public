@@ -82,6 +82,34 @@ public abstract class BinanceExchange extends XChangeExchange {
     }
 
     @Override
+    public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
+        try {
+            BigDecimal withdrawalFee = getWithdrawalFee(cryptoCurrency);
+            BigDecimal balance = getCryptoBalance(cryptoCurrency);
+            if (balance != null) {
+                BigDecimal amountPlusFee = amount.add(withdrawalFee);
+                if (balance.compareTo(amountPlusFee) >= 0) {
+                    log.info("Balance {} covers amount {} + fee {}, adding fee to withdrawal", balance, amount, withdrawalFee);
+                    amount = amountPlusFee;
+                } else if (balance.compareTo(amount) >= 0) {
+                    log.info("Balance {} covers amount {} but not + fee {}, sending amount as-is", balance, amount, withdrawalFee);
+                } else {
+                    log.info("Balance {} is less than amount {}, sending entire balance", balance, amount);
+                    amount = balance;
+                }
+            }
+        } catch (Exception e) {
+            log.warn("Could not check balance/fee for withdrawal adjustment, proceeding with original amount", e);
+        }
+
+        if (CryptoCurrency.USDT.getCode().equals(cryptoCurrency)) {
+            amount = amount.setScale(6, RoundingMode.FLOOR);
+        }
+
+        return super.sendCoins(destinationAddress, amount, cryptoCurrency, description);
+    }
+
+    @Override
     protected BigDecimal getWithdrawAmount(BigDecimal cryptoAmount, String cryptoCurrency) {
         BigDecimal minWithdrawStep = getWithdrawalMinStep(cryptoCurrency);
         return minWithdrawStep != null ? getAmountRoundedToMinStep(cryptoAmount, minWithdrawStep) : cryptoAmount;
@@ -89,18 +117,6 @@ public abstract class BinanceExchange extends XChangeExchange {
 
     protected BigDecimal getAmountRoundedToMinStep(BigDecimal cryptoAmount, BigDecimal minStep) {
         return cryptoAmount.divideToIntegralValue(minStep).multiply(minStep);
-    }
-
-    @Override
-    public String sendCoins(String destinationAddress, BigDecimal amount, String cryptoCurrency, String description) {
-        BigDecimal withdrawalFee = getWithdrawalFee(cryptoCurrency);
-        amount = amount.add(withdrawalFee);
-
-        if (CryptoCurrency.USDT.getCode().equals(cryptoCurrency)) {
-            amount = amount.setScale(6, RoundingMode.FLOOR);
-        }
-
-        return super.sendCoins(destinationAddress, amount, cryptoCurrency, description);
     }
 
     protected abstract Set<SupportedCryptoCurrency> getSupportedCryptoCurrencies();
