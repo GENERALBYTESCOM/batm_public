@@ -860,6 +860,9 @@
             <param name="apisecret" />
             <cryptocurrency buyonly="true">BTC</cryptocurrency>
             <cryptocurrency buyonly="true">ETH</cryptocurrency>
+            <cryptocurrency buyonly="true">LTC</cryptocurrency>
+            <cryptocurrency buyonly="true">USDC</cryptocurrency>
+            <cryptocurrency buyonly="true">USDT</cryptocurrency>
             <help>https://www.stillmandigital.com</help>
         </exchange>
         <ratesource prefix="stillmandigital" name="Stillman Digital">
@@ -867,6 +870,9 @@
             <param name="apisecret" />
             <cryptocurrency buyonly="true">BTC</cryptocurrency>
             <cryptocurrency buyonly="true">ETH</cryptocurrency>
+            <cryptocurrency buyonly="true">LTC</cryptocurrency>
+            <cryptocurrency buyonly="true">USDC</cryptocurrency>
+            <cryptocurrency buyonly="true">USDT</cryptocurrency>
         </ratesource>
         <cryptologo cryptocurrency="BNB" file="bnb.png"/>
         <cryptologo cryptocurrency="BNB" file="bnb.svg"/>
