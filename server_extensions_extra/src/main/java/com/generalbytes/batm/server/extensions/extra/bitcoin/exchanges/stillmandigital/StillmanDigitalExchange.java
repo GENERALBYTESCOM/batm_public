@@ -57,11 +57,15 @@ public class StillmanDigitalExchange implements IExchangeAdvanced, IRateSourceAd
     }
 
     private static final Set<String> fiatCurrencies = ImmutableSet.of(
-        FiatCurrency.USD.getCode());
+        FiatCurrency.USD.getCode(),
+        FiatCurrency.CAD.getCode());
 
     private static final Set<String> cryptoCurrencies = ImmutableSet.of(
         CryptoCurrency.BTC.getCode(),
-        CryptoCurrency.ETH.getCode());
+        CryptoCurrency.ETH.getCode(),
+        CryptoCurrency.LTC.getCode(),
+        CryptoCurrency.USDC.getCode(),
+        CryptoCurrency.USDT.getCode());
 
     @Override
     public Set<String> getCryptoCurrencies() {
