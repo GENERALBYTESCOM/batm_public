@@ -81,6 +81,11 @@ public class SumSubApplicantReviewedResultMapper {
             }
         }
 
+        log.info("Mapped ApplicantCheckResult for applicant {}: hasFirstName={}, hasLastName={}, hasDob={}, "
+                + "hasDocumentNumber={}, hasExpirationDate={}, hasRawAddress={}", applicantReviewed.getApplicantId(),
+            checkResult.getFirstName() != null, checkResult.getLastName() != null, checkResult.getBirthDate() != null,
+            checkResult.getDocumentNumber() != null, checkResult.getExpirationDate() != null, checkResult.getRawAddress() != null);
+
         return checkResult;
     }
 
@@ -134,9 +139,31 @@ public class SumSubApplicantReviewedResultMapper {
                 .findFirst().orElse(null);
 
         if (identityDocumentType != null) {
-            return documentList.stream().filter(docs -> docs.getIdDocType() == identityDocumentType).findFirst().orElse(null);
+            ApplicantDocument applicantDocument = documentList.stream()
+                .filter(docs -> docs.getIdDocType() == identityDocumentType)
+                .findFirst().orElse(null);
+            if (applicantDocument == null) {
+                logDocumentDetails("Suitable image document found but no matching document — document fields will be null",
+                    documentList, inspectionImageList);
+            }
+            return applicantDocument;
         }
+        logDocumentDetails("No suitable image document found — document fields will be null", documentList, inspectionImageList);
         return null;
+    }
+
+    private void logDocumentDetails(String reason, List<ApplicantDocument> documentList, List<InspectionImage> inspectionImageList) {
+        List<SumSubDocumentType> docTypes = documentList != null
+            ? documentList.stream().map(ApplicantDocument::getIdDocType).toList()
+            : List.of();
+        String imageDetails = inspectionImageList.stream()
+            .map(inspectionImage -> {
+                SumSubDocumentType type = inspectionImage.getIdDocDef() != null ? inspectionImage.getIdDocDef().getIdDocType() : null;
+                ReviewAnswer answer = inspectionImage.getReviewResult() != null ? inspectionImage.getReviewResult().getReviewAnswer() : null;
+                return type + ":" + answer;
+            })
+            .toList().toString();
+        log.warn("{}. idDocs count={}, types={}; inspectionImages count={}, details={}", reason, docTypes.size(), docTypes, inspectionImageList.size(), imageDetails);
     }
 
     private static boolean isReviewAnswerGreen(InspectionImage inspectionImage) {
