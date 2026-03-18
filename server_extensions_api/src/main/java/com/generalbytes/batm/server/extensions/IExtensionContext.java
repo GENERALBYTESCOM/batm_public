@@ -496,6 +496,15 @@ public interface IExtensionContext {
     void updateIdentityMarketingOptIn(String identityId, boolean agreeWithMarketingOptIn);
 
     /**
+     * Updates the show post-transaction dialog flag for the identity identified by {@code identityPublicId}.
+     *
+     * @param identityPublicId          public ID of an existing identity to be updated (must not be null)
+     * @param showPostTransactionDialog true if the post-transaction dialog should be shown, false otherwise
+     */
+    default void updateIdentityShowPostTransactionDialog(String identityPublicId, boolean showPostTransactionDialog) {
+    }
+
+    /**
      * Sets a custom field value for an identity.
      *
      * @param identityPublicId        public ID of the identity (must not be null)
