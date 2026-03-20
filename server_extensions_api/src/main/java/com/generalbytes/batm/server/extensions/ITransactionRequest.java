@@ -190,4 +190,19 @@ public interface ITransactionRequest {
         return null;
     }
 
+    /**
+     * Whether the terminal should show a post-transaction dialog to the customer.
+     */
+    default boolean isShowPostTransactionDialog() {
+        return false;
+    }
+
+    /**
+     * Custom message to display in the post-transaction dialog.
+     * @return message text, or null if default message should be used
+     */
+    default String getPostTransactionDialogMessage() {
+        return null;
+    }
+
 }
