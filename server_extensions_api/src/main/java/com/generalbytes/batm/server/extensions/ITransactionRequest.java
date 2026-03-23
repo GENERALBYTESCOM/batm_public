@@ -190,4 +190,25 @@ public interface ITransactionRequest {
         return null;
     }
 
+    /**
+     * Whether the terminal should show a post-transaction dialog to the customer.
+     */
+    default boolean shouldShowPostTransactionDialog() {
+        return false;
+    }
+
+    /**
+     * Custom message to display in the post-transaction dialog.
+     * <p>
+     * The language parameter is the language selected by the customer on the terminal,
+     * provided as a lowercase ISO 639 language code (e.g. "en", "ja", "es").
+     * </p>
+     *
+     * @param language language selected by the customer on the terminal, can be {@code null}
+     * @return message text, or {@code null} if a default message should be used
+     */
+    default String getPostTransactionDialogMessage(String language) {
+        return null;
+    }
+
 }
