@@ -193,7 +193,7 @@ public interface ITransactionRequest {
     /**
      * Whether the terminal should show a post-transaction dialog to the customer.
      */
-    default boolean isShowPostTransactionDialog() {
+    default boolean shouldShowPostTransactionDialog() {
         return false;
     }
 
