@@ -20,6 +20,7 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.AbstractExtension;
+import com.generalbytes.batm.server.extensions.DummyExchangeAndWalletAndSource;
 import com.generalbytes.batm.server.extensions.ExtensionsUtil;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
@@ -74,7 +75,6 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.ICoinbaseV2API;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryptx.v2.CryptXWallet;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryptx.v2.CryptXWithUniqueAddresses;
-import com.generalbytes.batm.server.extensions.util.DummyWalletAndExchangeAndSourceFactory;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.math.BigDecimal;
@@ -93,8 +93,6 @@ import static com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryp
 
 public class BitcoinExtension extends AbstractExtension {
     private IExtensionContext ctx;
-    private static final DummyWalletAndExchangeAndSourceFactory dummyFactory = new DummyWalletAndExchangeAndSourceFactory();
-
 
     @Override
     public void init(IExtensionContext ctx) {
@@ -250,7 +248,7 @@ public class BitcoinExtension extends AbstractExtension {
                 }
                 return new OkxExchange(preferredFiatCurrency, apiKey, secretKey, passphrase);
             } else if ("bnbdemo".equalsIgnoreCase(prefix)) {
-                return dummyFactory.createDummyWithFiatCurrencyAndAddress(paramTokenizer, CryptoCurrency.BNB);
+                return createBnbDemo(paramTokenizer);
             }
         }
         } catch (Exception e) {
@@ -497,7 +495,7 @@ public class BitcoinExtension extends AbstractExtension {
                 }
                 return new CryptXWallet(scheme, host, port, token, walletId, priority, customFeePrice, customGasLimit, password);
             } else if ("bnbdemo".equalsIgnoreCase(walletType)) {
-                return dummyFactory.createDummyWithFiatCurrencyAndAddress(st, CryptoCurrency.BNB);
+                return createBnbDemo(st);
             }
         }
         } catch (Exception e) {
@@ -714,5 +712,12 @@ public class BitcoinExtension extends AbstractExtension {
     @Override
     public Set<ICryptoCurrencyDefinition> getCryptoCurrencyDefinitions() {
         return null;
+    }
+
+    private DummyExchangeAndWalletAndSource createBnbDemo(StringTokenizer parameters) {
+        String fiatCurrency = parameters.nextToken();
+        String walletAddress = parameters.nextToken();
+
+        return new DummyExchangeAndWalletAndSource(fiatCurrency, CryptoCurrency.BNB.getCode(), walletAddress);
     }
 }
