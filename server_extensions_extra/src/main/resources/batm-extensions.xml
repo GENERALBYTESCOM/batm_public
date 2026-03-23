@@ -496,6 +496,16 @@
             <cryptocurrency>XRP</cryptocurrency>
             <help>accountname parameter is optional. This variant of the wallet generates new addresses for each transaction and does not forward payments from temporary address</help>
         </wallet>
+        <wallet prefix="bnbdemo" name="BNB Demo Wallet">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
+            <cryptocurrency>BNB</cryptocurrency>
+        </wallet>
+        <exchange prefix="bnbdemo" name="BNB Demo Exchange">
+            <param name="fiatCurrency" />
+            <param name="walletAddress" />
+            <cryptocurrency>BNB</cryptocurrency>
+        </exchange>
         <exchange prefix="coinbaseexchange" name="Coinbase.com Exchange [Deprecated]">
             <param name="apikey" />
             <param name="secretkey" />
