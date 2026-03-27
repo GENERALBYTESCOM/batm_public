@@ -40,22 +40,6 @@ public class StillmanDigitalExchange implements IExchangeAdvanced, IRateSourceAd
     private static final Logger log = LoggerFactory.getLogger("batm.master.exchange.StillmanDigitalExchange");
     public static final String SEPARATOR = "/";
 
-    private final String preferredFiatCurrency = FiatCurrency.USD.getCode();
-    private final IStillmanDigitalAPI api;
-
-    public StillmanDigitalExchange(String apiKey,
-                                   String apiSecret,
-                                   boolean useSandbox) throws GeneralSecurityException {
-        this.api = IStillmanDigitalAPI.create(apiKey, apiSecret, useSandbox);
-    }
-
-    // for tests only
-    StillmanDigitalExchange(String apiKey,
-                            String apiSecret,
-                            String baseUrl) throws GeneralSecurityException {
-        this.api = IStillmanDigitalAPI.create(apiKey, apiSecret, baseUrl);
-    }
-
     private static final Set<String> fiatCurrencies = ImmutableSet.of(
         FiatCurrency.USD.getCode(),
         FiatCurrency.CAD.getCode());
@@ -72,6 +56,23 @@ public class StillmanDigitalExchange implements IExchangeAdvanced, IRateSourceAd
         CryptoCurrency.USDC.getCode(),
         CryptoCurrency.USDT.getCode(),
         CryptoCurrency.XRP.getCode());
+
+    private final String preferredFiatCurrency = FiatCurrency.USD.getCode();
+
+    private final IStillmanDigitalAPI api;
+
+    public StillmanDigitalExchange(String apiKey,
+                                   String apiSecret,
+                                   boolean useSandbox) throws GeneralSecurityException {
+        this.api = IStillmanDigitalAPI.create(apiKey, apiSecret, useSandbox);
+    }
+
+    // for tests only
+    StillmanDigitalExchange(String apiKey,
+                            String apiSecret,
+                            String baseUrl) throws GeneralSecurityException {
+        this.api = IStillmanDigitalAPI.create(apiKey, apiSecret, baseUrl);
+    }
 
     @Override
     public Set<String> getCryptoCurrencies() {
