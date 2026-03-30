@@ -2037,8 +2037,7 @@
             <param name="projectId" />
             <param name="mnemonic" />
             <param name="gaslimit" />
-            <param name="gasPriceMultiplier" />
-            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional.</help>
             <cryptocurrency buyonly="true">DAI</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="DAI" file="dai.png"/>
@@ -2049,8 +2048,7 @@
             <param name="projectId" />
             <param name="mnemonic" />
             <param name="gaslimit" />
-            <param name="gasPriceMultiplier" />
-            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional.</help>
             <cryptocurrency buyonly="true">BIZZ</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="BIZZ" file="bizz.png"/>
@@ -2060,8 +2058,7 @@
             <param name="projectId" />
             <param name="mnemonic" />
             <param name="gaslimit" />
-            <param name="gasPriceMultiplier" />
-            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional.</help>
             <cryptocurrency>BTBS</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="BTBS" file="btbs.png"/>
@@ -2070,8 +2067,7 @@
             <param name="projectId" />
             <param name="mnemonic" />
             <param name="gaslimit" />
-            <param name="gasPriceMultiplier" />
-            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional.</help>
             <cryptocurrency>GQ</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="GQ" file="gq.png"/>
@@ -2080,8 +2076,7 @@
             <param name="projectId" />
             <param name="mnemonic" />
             <param name="gaslimit" />
-            <param name="gasPriceMultiplier" />
-            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional.</help>
             <cryptocurrency>MKR</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="MKR" file="mkr.png"/>
@@ -2090,8 +2085,7 @@
             <param name="projectId" />
             <param name="mnemonic" />
             <param name="gaslimit" />
-            <param name="gasPriceMultiplier" />
-            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional.</help>
             <cryptocurrency>BAT</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="BAT" file="bat.png"/>
@@ -2100,8 +2094,7 @@
             <param name="projectId" />
             <param name="mnemonic" />
             <param name="gaslimit" />
-            <param name="gasPriceMultiplier" />
-            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional.</help>
             <cryptocurrency>REP</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="REP" file="rep.png"/>
@@ -2110,8 +2103,7 @@
             <param name="projectId" />
             <param name="mnemonic" />
             <param name="gaslimit" />
-            <param name="gasPriceMultiplier" />
-            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional.</help>
             <cryptocurrency>JOB</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="JOB" file="jobchain.png"/>
@@ -2120,8 +2112,7 @@
             <param name="projectId" />
             <param name="mnemonic" />
             <param name="gaslimit" />
-            <param name="gasPriceMultiplier" />
-            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional.</help>
             <cryptocurrency>LMY</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="LMY" file="lunchmoney.png"/>
@@ -2130,8 +2121,7 @@
             <param name="projectId" />
             <param name="mnemonic" />
             <param name="gaslimit" />
-            <param name="gasPriceMultiplier" />
-            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional.</help>
             <cryptocurrency>ANT</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="ANT" file="ant.png"/>
@@ -2140,8 +2130,7 @@
             <param name="projectId" />
             <param name="mnemonic" />
             <param name="gaslimit" />
-            <param name="gasPriceMultiplier" />
-            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional.</help>
             <cryptocurrency>HBX</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="HBX" file="hbx.svg"/>
@@ -2149,8 +2138,7 @@
             <param name="projectId" />
             <param name="mnemonic" />
             <param name="gaslimit" />
-            <param name="gasPriceMultiplier" />
-            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional.</help>
             <cryptocurrency>VOLTZ</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="VOLTZ" file="voltz.svg"/>
@@ -2158,8 +2146,7 @@
             <param name="projectId" />
             <param name="mnemonic" />
             <param name="gaslimit" />
-            <param name="gasPriceMultiplier" />
-            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional.</help>
             <cryptocurrency>THBX</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="THBX" file="thbx.svg"/>
@@ -2167,8 +2154,7 @@
             <param name="projectId" />
             <param name="mnemonic" />
             <param name="gaslimit" />
-            <param name="gasPriceMultiplier" />
-            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional.</help>
             <cryptocurrency>MUSD</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="MUSD" file="musd.svg"/>
@@ -2188,8 +2174,7 @@
           <param name="projectId" />
           <param name="mnemonic" />
           <param name="gaslimit" />
-          <param name="gasPriceMultiplier" />
-          <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
+          <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional.</help>
           <cryptocurrency>USDS</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="USDS" file="usds.png"/>
@@ -2198,8 +2183,7 @@
             <param name="projectId" />
             <param name="mnemonic" />
             <param name="gaslimit" />
-            <param name="gasPriceMultiplier" />
-            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional.</help>
             <cryptocurrency>HT</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="HT" file="ht.png"/>
@@ -2208,8 +2192,7 @@
             <param name="projectId" />
             <param name="mnemonic" />
             <param name="gaslimit" />
-            <param name="gasPriceMultiplier" />
-            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional.</help>
             <cryptocurrency>ZPAE</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="ZPAE" file="zpae.png"/>
@@ -2218,8 +2201,7 @@
             <param name="projectId" />
             <param name="mnemonic" />
             <param name="gaslimit" />
-            <param name="gasPriceMultiplier" />
-            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional.</help>
             <cryptocurrency buyonly="true">USDT</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="USDT" file="usdt.png"/>
@@ -2228,8 +2210,7 @@
             <param name="projectId" />
             <param name="mnemonic" />
             <param name="gaslimit" />
-            <param name="gasPriceMultiplier" />
-            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional.</help>
             <cryptocurrency>WILC</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="WILC" file="wilc.png"/>
@@ -2238,8 +2219,7 @@
             <param name="projectId" />
             <param name="mnemonic" />
             <param name="gaslimit" />
-            <param name="gasPriceMultiplier" />
-            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional.</help>
             <cryptocurrency>PAXG</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="PAXG" file="paxg.png"/>
@@ -2248,8 +2228,7 @@
             <param name="projectId" />
             <param name="mnemonic" />
             <param name="gaslimit" />
-            <param name="gasPriceMultiplier" />
-            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional. gasPriceMultiplier (optional) is used to multiply the estimated gas price, e.g. "1.1" for higher priority or "0.9" for lower.</help>
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional.</help>
             <cryptocurrency buyonly="true">USDC</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="USDC" file="usdc.png"/>
