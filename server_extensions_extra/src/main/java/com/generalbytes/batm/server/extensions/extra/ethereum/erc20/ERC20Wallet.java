@@ -39,24 +39,22 @@ public class ERC20Wallet implements IWallet{
     private final Credentials credentials;
     private final Web3j w;
     private final BigInteger fixedGasLimit;
-    private final BigDecimal gasPriceMultiplier;
     private final ERC20Interface noGasContract;
 
     private static final Logger log = LoggerFactory.getLogger(ERC20Wallet.class);
 
-    public ERC20Wallet(String projectId, String mnemonicOrPassword, String tokenSymbol, int tokenDecimalPlaces, String contractAddress, BigInteger fixedGasLimit, BigDecimal gasPriceMultiplier) {
+    public ERC20Wallet(String projectId, String mnemonicOrPassword, String tokenSymbol, int tokenDecimalPlaces, String contractAddress, BigInteger fixedGasLimit) {
         this.tokenSymbol = tokenSymbol;
         this.tokenDecimalPlaces = tokenDecimalPlaces;
         this.contractAddress = contractAddress.toLowerCase();
         this.fixedGasLimit = fixedGasLimit;
-        this.gasPriceMultiplier = gasPriceMultiplier;
         this.credentials = initCredentials(mnemonicOrPassword);
         this.w = Web3j.build(new HttpService("https://mainnet.infura.io/v3/" + projectId));
         this.noGasContract = ERC20Interface.load(this.contractAddress, w, credentials, DummyContractGasProvider.INSTANCE);
     }
 
     private ERC20Interface getContract(String destinationAddress, BigInteger tokensAmount) {
-        ERC20ContractGasProvider contractGasProvider = new ERC20ContractGasProvider(contractAddress, credentials.getAddress(), destinationAddress, tokensAmount, fixedGasLimit, gasPriceMultiplier, w);
+        ERC20ContractGasProvider contractGasProvider = new ERC20ContractGasProvider(contractAddress, credentials.getAddress(), destinationAddress, tokensAmount, fixedGasLimit, w);
         return ERC20Interface.load(this.contractAddress, w, credentials, contractGasProvider);
     }
 

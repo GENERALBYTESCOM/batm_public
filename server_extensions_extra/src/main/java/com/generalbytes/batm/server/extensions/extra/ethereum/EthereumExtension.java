@@ -111,13 +111,9 @@ public class EthereumExtension extends AbstractExtension {
                     if (st.hasMoreTokens()) {
                         gasLimit = new BigInteger(st.nextToken());
                     }
-                    BigDecimal gasPriceMultiplier = BigDecimal.ONE;
-                    if (st.hasMoreTokens()) {
-                        gasPriceMultiplier = new BigDecimal(st.nextToken());
-                    }
 
                     if (projectId != null && passwordOrMnemonic != null) {
-                        return new ERC20Wallet(projectId, passwordOrMnemonic, tokenSymbol, tokenDecimalPlaces, contractAddress, gasLimit, gasPriceMultiplier);
+                        return new ERC20Wallet(projectId, passwordOrMnemonic, tokenSymbol, tokenDecimalPlaces, contractAddress, gasLimit);
                     }
                 } else if (walletType.equalsIgnoreCase("usdcdemo")) {
                     return dummyFactory.createDummyWithFiatCurrencyAndAddress(st, CryptoCurrency.USDC);
