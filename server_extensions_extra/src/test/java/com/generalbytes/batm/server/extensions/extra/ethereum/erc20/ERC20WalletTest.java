@@ -56,7 +56,6 @@ class ERC20WalletTest {
                     "USDT",
                     1,
                     "contractAddress",
-                    null,
                     null
             );
 
