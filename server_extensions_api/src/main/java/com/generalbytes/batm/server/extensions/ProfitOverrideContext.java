@@ -28,9 +28,9 @@ public interface ProfitOverrideContext {
      * The payment method used by the customer for this transaction, or {@code null} if it is not known.
      *
      * @return the payment method, or {@code null}
-     * @see PaymentMethod
+     * @see TransactionPaymentMethod
      */
-    PaymentMethod getPaymentMethod();
+    TransactionPaymentMethod getPaymentMethod();
 
     /**
      * The public ID of the customer identity associated with this transaction,
