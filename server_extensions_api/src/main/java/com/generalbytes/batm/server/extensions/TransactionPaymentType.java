@@ -1,9 +1,9 @@
 package com.generalbytes.batm.server.extensions;
 
 /**
- * Payment method used for a transaction.
+ * Payment type used for a transaction.
  */
-public enum TransactionPaymentMethod {
+public enum TransactionPaymentType {
     CASH,
     PAYMENT_CARD,
     EXTERNAL_PAYMENT

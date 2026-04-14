@@ -25,12 +25,12 @@ public interface ProfitOverrideContext {
     String getCryptocurrency();
 
     /**
-     * The payment method used by the customer for this transaction, or {@code null} if it is not known.
+     * The payment type used by the customer for this transaction, or {@code null} if it is not known.
      *
-     * @return the payment method, or {@code null}
-     * @see TransactionPaymentMethod
+     * @return the payment type, or {@code null}
+     * @see TransactionPaymentType
      */
-    TransactionPaymentMethod getPaymentMethod();
+    TransactionPaymentType getPaymentType();
 
     /**
      * The public ID of the customer identity associated with this transaction,
