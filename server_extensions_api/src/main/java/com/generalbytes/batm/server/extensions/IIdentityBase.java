@@ -164,4 +164,13 @@ public interface IIdentityBase {
      * @return phone number
      */
     String getLatestPhoneNumber();
+
+    /**
+     * Informs if the post-transaction dialog should be shown for this identity.
+     *
+     * @return {@code true} if the post-transaction dialog should be shown, {@code false} otherwise
+     */
+    default boolean isShowPostTransactionDialog() {
+        return false;
+    }
 }
