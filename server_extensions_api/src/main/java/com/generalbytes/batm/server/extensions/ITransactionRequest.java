@@ -131,6 +131,15 @@ public interface ITransactionRequest {
     String getCellPhoneUsed();
 
     /**
+     * Contains customer email address that was used during transaction
+     *
+     * @return email address
+     */
+    default String getEmailUsed() {
+        return null;
+    }
+
+    /**
      * Indicates that transaction was automatically finished by server.
      * Ie. terminal reported that 100 USD was inserted into the machine and then terminal went offline.
      * Server automatically finished transaction and sent coins to customer.
