@@ -166,6 +166,15 @@ public interface IIdentityBase {
     String getLatestPhoneNumber();
 
     /**
+     * Returns last used email address if it's known.
+     *
+     * @return email address
+     */
+    default String getLatestEmail() {
+        return null;
+    }
+
+    /**
      * Informs if the post-transaction dialog should be shown for this identity.
      *
      * @return {@code true} if the post-transaction dialog should be shown, {@code false} otherwise
