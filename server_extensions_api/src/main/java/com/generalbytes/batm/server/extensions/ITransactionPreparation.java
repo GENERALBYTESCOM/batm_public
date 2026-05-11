@@ -121,6 +121,14 @@ public interface ITransactionPreparation {
      */
     String getCellPhoneUsed();
 
+    /**
+     * Contains customer email address that was used during transaction
+     *
+     * @return email address
+     */
+    default String getEmailUsed() {
+        return null;
+    }
 
     /**
      * Returns language selected by customer on the terminal
