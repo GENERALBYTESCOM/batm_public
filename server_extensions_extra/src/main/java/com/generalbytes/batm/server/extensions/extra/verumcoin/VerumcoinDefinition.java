@@ -15,14 +15,21 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.verumcoin.wallets.verumcoind;
+package com.generalbytes.batm.server.extensions.extra.verumcoin;
 
-import java.net.MalformedURLException;
+import com.generalbytes.batm.server.extensions.CryptoCurrencyDefinition;
+import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.server.extensions.payment.IPaymentSupport;
 
-import com.generalbytes.batm.server.extensions.IGeneratesNewDepositCryptoAddress;
+public class VerumcoinDefinition extends CryptoCurrencyDefinition{
+    private IPaymentSupport paymentSupport = new VerumcoinPaymentSupport();
 
-public class VerumcoindUniqueAddressRPCWallet extends VerumcoindRPCWallet implements IGeneratesNewDepositCryptoAddress {
-    public VerumcoindUniqueAddressRPCWallet(String rpcURL, String accountName) throws MalformedURLException {
-        super(rpcURL, accountName);
+    public VerumcoinDefinition() {
+        super(CryptoCurrency.VERUM.getCode(), "Verumcoin", "verumcoin","https://verumchain.info");
+    }
+
+    @Override
+    public IPaymentSupport getPaymentSupport() {
+        return paymentSupport;
     }
 }
