@@ -25,8 +25,8 @@ Advantages of the OSW:
 ```bash
 $ sudo add-apt-repository ppa:ondrej/php
 $ sudo apt-get update
-$ sudo apt-get install php8.0
-$ sudo apt install -y php8.0-mbstring php8.0-fpm php8.0-xml php8.0-zip php8.0-mysql php8.0-common php8.0-cli unzip curl nginx
+$ sudo apt-get install php8.3
+$ sudo apt install -y php8.3-mbstring php8.3-fpm php8.3-xml php8.3-zip php8.3-mysql php8.3-common php8.3-cli unzip curl nginx
 ```
 
 ** Install composer: **
@@ -58,6 +58,11 @@ $ git clone https://github.com/GENERALBYTESCOM/batm_public.git
 * Navigate to installed folder website /operators_sample_website/website and update composer dependencies
 ```bash
 $ composer update
+```
+
+* Install JS dependencies
+```bash
+$ npm install
 ```
 
 * Check your installation on devel server and open in browser link http://127.0.0.1:8000
@@ -108,7 +113,7 @@ $ sudo nano /etc/nginx/sites-available/osw.conf
         error_page 404 /index.php;
 
         location ~ \.php$ {
-          fastcgi_pass unix:/var/run/php/php8.0-fpm.sock;
+          fastcgi_pass unix:/var/run/php/php8.3-fpm.sock;
           include snippets/fastcgi-php.conf;
           include fastcgi_params;
  
