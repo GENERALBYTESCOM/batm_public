@@ -774,7 +774,9 @@ public interface IExtensionContext {
      * @throws OrderException if the order cannot be created (e.g. invalid parameters, blacklisted
      *                        identity/phone, amount over limits, unknown identity)
      */
-    IOrderInfo createOrder(ICreateOrderRequest request) throws OrderException;
+    default IOrderInfo createOrder(ICreateOrderRequest request) throws OrderException {
+        return null;
+    }
 
     /**
      * Redeems a previously created order ({@link #createOrder(ICreateOrderRequest)}).
@@ -792,7 +794,9 @@ public interface IExtensionContext {
      * @throws OrderException if the order cannot be redeemed (e.g. unknown order id, wrong status,
      *                        downstream BUY submission failed)
      */
-    IRedeemOrderInfo redeemOrder(IRedeemOrderRequest request) throws OrderException;
+    default IRedeemOrderInfo redeemOrder(IRedeemOrderRequest request) throws OrderException {
+        return null;
+    }
 
 
     /**

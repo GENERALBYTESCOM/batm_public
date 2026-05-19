@@ -326,16 +326,6 @@ public class TestExtensionContext implements IExtensionContext {
     }
 
     @Override
-    public IOrderInfo createOrder(ICreateOrderRequest request) throws OrderException {
-        return null;
-    }
-
-    @Override
-    public IRedeemOrderInfo redeemOrder(IRedeemOrderRequest request) throws OrderException {
-        return null;
-    }
-
-    @Override
     public Map<Integer, List<IExchangeRateInfo>> getExchangeRateInfo(String terminalSerialNumber, int directions) {
         return null;
     }
