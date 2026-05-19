@@ -28,8 +28,13 @@ import com.generalbytes.batm.server.extensions.exceptions.BuyException;
 import com.generalbytes.batm.server.extensions.exceptions.CashbackException;
 import com.generalbytes.batm.server.extensions.exceptions.ExternalPaymentProcessingException;
 import com.generalbytes.batm.server.extensions.exceptions.ExternalPaymentNotFoundException;
+import com.generalbytes.batm.server.extensions.exceptions.OrderException;
 import com.generalbytes.batm.server.extensions.exceptions.SellException;
 import com.generalbytes.batm.server.extensions.exceptions.UpdateException;
+import com.generalbytes.batm.server.extensions.order.ICreateOrderRequest;
+import com.generalbytes.batm.server.extensions.order.IOrderInfo;
+import com.generalbytes.batm.server.extensions.order.IRedeemOrderInfo;
+import com.generalbytes.batm.server.extensions.order.IRedeemOrderRequest;
 import com.generalbytes.batm.server.extensions.payment.external.ExternalPaymentUpdate;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProviderIdentification;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferData;
@@ -752,6 +757,46 @@ public interface IExtensionContext {
      * @throws IllegalArgumentException if terminalSerialNumber is null or invalid
      */
     ITransactionCashbackInfo cashback(String terminalSerialNumber, BigDecimal fiatAmount, String fiatCurrency, String identityPublicId) throws CashbackException;
+
+    /**
+     * Creates a crypto order that the customer will fund by depositing cash at a GB Safe and later
+     * redeemed. The returned deposit code is what the customer enters at the Safe to associate
+     * their cash deposit with this order.
+     * <p>The order has a server-configured expiration by which the cash must be deposited.</p>
+     * <p>After cash is deposited at a Safe the server either auto-redeems the order after a
+     * configurable delay or you can short-circuit that by calling
+     * {@link #redeemOrder(IRedeemOrderRequest)}. The customer can also redeem the order at a
+     * physical BATM terminal — provided the identity referenced by {@code identityPublicId} has
+     * a phone number on file (used by the ATM's phone-based order lookup).</p>
+     *
+     * @param request order parameters (must not be null; see {@link ICreateOrderRequest})
+     * @return information about the created order, including the deposit code, never null
+     * @throws OrderException if the order cannot be created (e.g. invalid parameters, blacklisted
+     *                        identity/phone, amount over limits, unknown identity)
+     */
+    default IOrderInfo createOrder(ICreateOrderRequest request) throws OrderException {
+        return null;
+    }
+
+    /**
+     * Redeems a previously created order ({@link #createOrder(ICreateOrderRequest)}).
+     * It creates a BUY transaction against the cash that was deposited at the Safe.
+     *
+     * <p>Call after the customer has deposited cash at a GB Safe using the deposit code returned
+     * by {@link #createOrder(ICreateOrderRequest)}. The order's status must be
+     * {@link ITransactionDetails#STATUS_ORDER_CASH_DEPOSITED}. The server may also auto-redeem
+     * orders after a configurable delay, so calling this method might be optional.</p>
+     *
+     * <p>The returned {@link IRedeemOrderInfo} describes the resulting BUY transaction.</p>
+     *
+     * @param request redemption request (must not be null; see {@link IRedeemOrderRequest})
+     * @return information about the BUY transaction created by the redemption, never null
+     * @throws OrderException if the order cannot be redeemed (e.g. unknown order id, wrong status,
+     *                        downstream BUY submission failed)
+     */
+    default IRedeemOrderInfo redeemOrder(IRedeemOrderRequest request) throws OrderException {
+        return null;
+    }
 
 
     /**
