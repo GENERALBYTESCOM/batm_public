@@ -26,13 +26,8 @@ import com.generalbytes.batm.server.extensions.customfields.CustomFieldDefinitio
 import com.generalbytes.batm.server.extensions.customfields.value.CustomFieldValue;
 import com.generalbytes.batm.server.extensions.exceptions.BuyException;
 import com.generalbytes.batm.server.extensions.exceptions.CashbackException;
-import com.generalbytes.batm.server.extensions.exceptions.OrderException;
 import com.generalbytes.batm.server.extensions.exceptions.SellException;
 import com.generalbytes.batm.server.extensions.exceptions.UpdateException;
-import com.generalbytes.batm.server.extensions.order.ICreateOrderRequest;
-import com.generalbytes.batm.server.extensions.order.IOrderInfo;
-import com.generalbytes.batm.server.extensions.order.IRedeemOrderInfo;
-import com.generalbytes.batm.server.extensions.order.IRedeemOrderRequest;
 import com.generalbytes.batm.server.extensions.watchlist.WatchListQuery;
 import com.generalbytes.batm.server.extensions.watchlist.WatchListResult;
 
