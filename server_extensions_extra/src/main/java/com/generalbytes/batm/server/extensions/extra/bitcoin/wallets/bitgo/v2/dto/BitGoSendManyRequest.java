@@ -17,14 +17,18 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.util.List;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public record BitGoSendManyRequest(List<BitGoRecipient> recipients,
                                    String walletPassphrase,
                                    Integer numBlocks,
                                    String comment,
                                    String type
 ) {
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public record BitGoRecipient(String address, String amount, String tokenName) {
 
     }
