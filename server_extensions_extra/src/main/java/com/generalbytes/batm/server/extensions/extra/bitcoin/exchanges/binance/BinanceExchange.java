@@ -116,10 +116,14 @@ public abstract class BinanceExchange extends XChangeExchange {
 
     @Override
     protected BigDecimal getWithdrawalFee(String cryptoCurrency) {
-        if (!CryptoCurrency.USDTTRON.getCode().equalsIgnoreCase(cryptoCurrency)) {
-            return super.getWithdrawalFee(cryptoCurrency);
+        if (CryptoCurrency.USDTTRON.getCode().equalsIgnoreCase(cryptoCurrency)) {
+            return getUsdtTronWithdrawalFee();
         }
 
+        return super.getWithdrawalFee(cryptoCurrency);
+    }
+
+    private BigDecimal getUsdtTronWithdrawalFee() {
         try {
             BinanceAccountServiceRaw accountService = (BinanceAccountServiceRaw) getExchange().getAccountService();
             BigDecimal withdrawFee = accountService.currencyInfos().stream()
@@ -133,7 +137,7 @@ public abstract class BinanceExchange extends XChangeExchange {
                 .map(BinanceCurrencyInfo.Network::getWithdrawFee)
                 .orElse(null);
 
-            log.info("Withdrawal fee: {} {}", withdrawFee, cryptoCurrency);
+            log.info("Withdrawal fee: {} {}", withdrawFee, CryptoCurrency.USDTTRON.getCode());
             return withdrawFee;
         } catch (IOException e) {
             log.error("Failed to get USDT TRC20 withdrawal fee from Binance", e);
