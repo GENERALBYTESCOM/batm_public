@@ -22,6 +22,8 @@ import com.generalbytes.batm.server.extensions.customfields.CustomFieldDefinitio
 import com.generalbytes.batm.server.extensions.aml.verification.ApplicantCheckResult;
 import com.generalbytes.batm.server.extensions.aml.verification.IIdentityVerificationProvider;
 import com.generalbytes.batm.server.extensions.aml.verification.IdentityApplicant;
+import com.generalbytes.batm.server.extensions.aml.verification.RegisterVerificationException;
+import com.generalbytes.batm.server.extensions.aml.verification.IVerificationSessionRequest;
 import com.generalbytes.batm.server.extensions.customfields.CustomFieldDefinitionAvailability;
 import com.generalbytes.batm.server.extensions.customfields.value.CustomFieldValue;
 import com.generalbytes.batm.server.extensions.exceptions.BuyException;
@@ -1130,6 +1132,8 @@ public interface IExtensionContext {
 
     /**
      * Starts identity verification.
+     * This starts a verification process via {@link IIdentityVerificationProvider} and
+     * sends a verification link to the customer.
      *
      * @param publicIdentityId  public ID of an existing identity to be verified (must not be null)
      * @param messageToCustomer the message that will be displayed to the customer via SMS (can be null).
@@ -1138,6 +1142,20 @@ public interface IExtensionContext {
      * @return info about result of action, never null
      */
     IVerificationInfo startVerificationByIdentityId(String publicIdentityId, String messageToCustomer);
+
+    /**
+     * Registers an identity verification session started externally (e.g., in a web or mobile app).
+     * </p>
+     * This does NOT start a verification process via {@link IIdentityVerificationProvider} and
+     * does NOT send a verification link to the customer – must be handled by the caller.
+     * To start a verification process from beginning, use {@link #startVerificationByIdentityId(String, String)}.
+     *
+     * @param request session and identity details (must not be null)
+     * @throws RegisterVerificationException if the identity cannot be found or the session cannot be registered
+     */
+    default void registerVerificationSessionForIdentity(IVerificationSessionRequest request) throws RegisterVerificationException {
+        throw new UnsupportedOperationException("registerVerificationSession is not supported by this server version");
+    }
 
     /**
      * Reads the given file from the server config directory,
