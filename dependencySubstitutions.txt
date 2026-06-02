@@ -39,4 +39,4 @@ substitute module: 'org.junit.jupiter:junit-jupiter-api', versions: ['5.9.1'], t
 substitute module: 'org.bitcoinj:bitcoinj-core', versions: ['0.16.1'], toVersion: '0.16.5'
 substitute module: 'org.bouncycastle:bcprov-jdk15to18', versions: ['1.66'], toVersion: '1.73'
 substitute module: 'com.google.code.gson:gson', versions: ['2.8.9'], toVersion: '2.10.1'
-substitute module: 'org.bouncycastle:bcprov-jdk18on', versions: ['1.73', '1.78.1'], toVersion: '1.81'
+substitute module: 'org.bouncycastle:bcprov-jdk18on', versions: ['1.73', '1.78.1'], toVersion: '1.81.1'
