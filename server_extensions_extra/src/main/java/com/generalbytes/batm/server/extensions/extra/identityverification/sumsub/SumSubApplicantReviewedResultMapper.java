@@ -70,6 +70,10 @@ public class SumSubApplicantReviewedResultMapper {
 
             // set address information
             ApplicantAddress firstAddress = getFirstAddress(info.getAddresses());
+            if (firstAddress == null && applicantInfoResponse.getFixedInfo() != null) {
+                // if no address found in info, try to get it from fixedInfo
+                firstAddress = getFirstAddress(applicantInfoResponse.getFixedInfo().getAddresses());
+            }
             if (firstAddress != null) {
                 checkResult.setRawAddress(firstAddress.getFormattedAddress());
                 checkResult.setStreetAddress(firstAddress.getStreet());
