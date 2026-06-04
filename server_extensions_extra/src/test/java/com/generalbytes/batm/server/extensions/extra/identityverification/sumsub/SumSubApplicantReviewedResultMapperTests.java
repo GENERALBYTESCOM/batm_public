@@ -378,6 +378,44 @@ class SumSubApplicantReviewedResultMapperTests {
         assertNull(checkResult.getCountry());
     }
 
+    static Object[] middleNameHandlingSource() {
+        return new Object[]{
+            new Object[]{"firstName", "middleName", "firstName middleName"},
+            new Object[]{null, "middleName", "middleName"},
+            new Object[]{"firstName", null, "firstName"}
+        };
+    }
+
+    @ParameterizedTest
+    @MethodSource("middleNameHandlingSource")
+    void testMapResult_middleNameHandling(String firstName, String middleName, String expectedFirstName) {
+        ApplicantReviewedWebhook applicantReviewedWebhook = mock(ApplicantReviewedWebhook.class);
+        when(applicantReviewedWebhook.getInspectionId()).thenReturn(INSPECTION_ID);
+        when(applicantReviewedWebhook.getApplicantId()).thenReturn(APPLICANT_ID);
+        ApplicantReviewResult result = mock(ApplicantReviewResult.class);
+        when(result.getReviewAnswer()).thenReturn(ReviewAnswer.GREEN);
+        when(applicantReviewedWebhook.getReviewResult()).thenReturn(result);
+
+        ApplicantInfoResponse applicantInfoResponse = mock(ApplicantInfoResponse.class);
+        ApplicantInfo applicantInfo;
+        if (firstName != null && middleName != null) {
+            applicantInfo = createApplicantInfo();
+            when(applicantInfo.getMiddleName()).thenReturn(middleName);
+        } else {
+            applicantInfo = mock(ApplicantInfo.class);
+            when(applicantInfo.getFirstName()).thenReturn(firstName);
+            when(applicantInfo.getMiddleName()).thenReturn(middleName);
+        }
+        when(applicantInfoResponse.getInfo()).thenReturn(applicantInfo);
+
+        ApplicantCheckResult checkResult = resultMapper.mapResult(applicantReviewedWebhook, applicantInfoResponse, mock(InspectionInfoResponse.class));
+
+        assertEquals(expectedFirstName, checkResult.getFirstName());
+        if (firstName != null && middleName != null) {
+            assertEquals("lastName", checkResult.getLastName());
+        }
+    }
+
     private ApplicantInfo createApplicantInfo() {
         ApplicantInfo info = mock(ApplicantInfo.class);
         when(info.getFirstName()).thenReturn("firstName");
