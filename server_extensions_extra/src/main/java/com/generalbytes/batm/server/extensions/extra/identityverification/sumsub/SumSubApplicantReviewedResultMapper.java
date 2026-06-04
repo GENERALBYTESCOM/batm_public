@@ -55,7 +55,11 @@ public class SumSubApplicantReviewedResultMapper {
             // set personal information
             checkResult.setFirstName(info.getFirstName());
             checkResult.setLastName(info.getLastName());
-            checkResult.setBirthDate(fromLocalDate(info.getDob()));
+            LocalDate dob = info.getDob();
+            if (dob == null && applicantInfoResponse.getFixedInfo() != null) {
+                dob = applicantInfoResponse.getFixedInfo().getDob();
+            }
+            checkResult.setBirthDate(fromLocalDate(dob));
 
             // Get the IDENTITY document type from the inspection and convert to a GB document type
             ApplicantDocument ssDocument = extractIdentityDocument(info.getIdDocs(), inspectionInfoResponse.getImages());
@@ -70,6 +74,10 @@ public class SumSubApplicantReviewedResultMapper {
 
             // set address information
             ApplicantAddress firstAddress = getFirstAddress(info.getAddresses());
+            if (firstAddress == null && applicantInfoResponse.getFixedInfo() != null) {
+                // if no address found in info, try to get it from fixedInfo
+                firstAddress = getFirstAddress(applicantInfoResponse.getFixedInfo().getAddresses());
+            }
             if (firstAddress != null) {
                 checkResult.setRawAddress(firstAddress.getFormattedAddress());
                 checkResult.setStreetAddress(firstAddress.getStreet());

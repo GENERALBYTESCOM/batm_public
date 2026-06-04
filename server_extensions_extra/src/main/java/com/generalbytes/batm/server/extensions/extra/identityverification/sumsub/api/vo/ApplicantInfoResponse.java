@@ -16,6 +16,9 @@ public class ApplicantInfoResponse extends JsonObject {
     private String key;
     private String inspectionId;
     private String externalUserId;
+    // data extracted from applicant's documents by SumSub OCR/recognition
     private ApplicantInfo info;
+    // data submitted by the applicant (e.g., manually entered address)
+    private ApplicantInfo fixedInfo;
     private List<Questionnaire> questionnaires;
 }
