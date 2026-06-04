@@ -233,6 +233,65 @@ class SumSubApplicantReviewedResultMapperTests {
         assertNull(checkResult.getZip());
     }
 
+    @Test
+    void testMapResult_dobFromFixedInfoWhenInfoHasNoDob() {
+        ApplicantReviewedWebhook applicantReviewedWebhook = mock(ApplicantReviewedWebhook.class);
+        ApplicantReviewResult result = mock(ApplicantReviewResult.class);
+        when(result.getReviewAnswer()).thenReturn(ReviewAnswer.GREEN);
+        when(applicantReviewedWebhook.getReviewResult()).thenReturn(result);
+
+        ApplicantInfoResponse applicantInfoResponse = mock(ApplicantInfoResponse.class);
+        ApplicantInfo applicantInfo = mock(ApplicantInfo.class); // no dob
+        when(applicantInfoResponse.getInfo()).thenReturn(applicantInfo);
+
+        ApplicantInfo fixedInfo = mock(ApplicantInfo.class);
+        when(fixedInfo.getDob()).thenReturn(LocalDate.of(2000, Month.APRIL, 1));
+        when(applicantInfoResponse.getFixedInfo()).thenReturn(fixedInfo);
+
+        ApplicantCheckResult checkResult = resultMapper.mapResult(applicantReviewedWebhook, applicantInfoResponse, mock(InspectionInfoResponse.class));
+
+        assertEquals(getTestDate(), checkResult.getBirthDate());
+    }
+
+    @Test
+    void testMapResult_infoDobTakesPrecedenceOverFixedInfo() {
+        ApplicantReviewedWebhook applicantReviewedWebhook = mock(ApplicantReviewedWebhook.class);
+        ApplicantReviewResult result = mock(ApplicantReviewResult.class);
+        when(result.getReviewAnswer()).thenReturn(ReviewAnswer.GREEN);
+        when(applicantReviewedWebhook.getReviewResult()).thenReturn(result);
+
+        ApplicantInfoResponse applicantInfoResponse = mock(ApplicantInfoResponse.class);
+        ApplicantInfo applicantInfo = mock(ApplicantInfo.class);
+        when(applicantInfo.getDob()).thenReturn(LocalDate.of(2000, Month.APRIL, 1));
+        when(applicantInfoResponse.getInfo()).thenReturn(applicantInfo);
+
+        ApplicantInfo fixedInfo = mock(ApplicantInfo.class);
+        when(fixedInfo.getDob()).thenReturn(LocalDate.of(1999, Month.JANUARY, 1));
+        when(applicantInfoResponse.getFixedInfo()).thenReturn(fixedInfo);
+
+        ApplicantCheckResult checkResult = resultMapper.mapResult(applicantReviewedWebhook, applicantInfoResponse, mock(InspectionInfoResponse.class));
+
+        assertEquals(getTestDate(), checkResult.getBirthDate());
+    }
+
+    @Test
+    void testMapResult_noDobWhenBothInfoAndFixedInfoHaveNoDob() {
+        ApplicantReviewedWebhook applicantReviewedWebhook = mock(ApplicantReviewedWebhook.class);
+        ApplicantReviewResult result = mock(ApplicantReviewResult.class);
+        when(result.getReviewAnswer()).thenReturn(ReviewAnswer.GREEN);
+        when(applicantReviewedWebhook.getReviewResult()).thenReturn(result);
+
+        ApplicantInfoResponse applicantInfoResponse = mock(ApplicantInfoResponse.class);
+        ApplicantInfo infoWithNoDob = mock(ApplicantInfo.class); // no dob
+        when(applicantInfoResponse.getInfo()).thenReturn(infoWithNoDob);
+        ApplicantInfo fixedInfoWithNoDob = mock(ApplicantInfo.class); // no dob
+        when(applicantInfoResponse.getFixedInfo()).thenReturn(fixedInfoWithNoDob);
+
+        ApplicantCheckResult checkResult = resultMapper.mapResult(applicantReviewedWebhook, applicantInfoResponse, mock(InspectionInfoResponse.class));
+
+        assertNull(checkResult.getBirthDate());
+    }
+
     static Object[] identityDocumentMappingSource() {
         return new Object[]{
                 new Object[]{DocumentType.national_identity_card, SumSubDocumentType.ID_CARD},
