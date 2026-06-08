@@ -26,6 +26,8 @@ public class ApplicantCheckResult {
 
     private String documentNumber;
 
+    private String secondaryDocumentNumber;
+
     private Date expirationDate;
 
     private Date birthDate;
@@ -115,6 +117,14 @@ public class ApplicantCheckResult {
 
     public void setDocumentNumber(String documentNumber) {
         this.documentNumber = documentNumber;
+    }
+
+    public String getSecondaryDocumentNumber() {
+        return secondaryDocumentNumber;
+    }
+
+    public void setSecondaryDocumentNumber(String secondaryDocumentNumber) {
+        this.secondaryDocumentNumber = secondaryDocumentNumber;
     }
 
     public Date getExpirationDate() {

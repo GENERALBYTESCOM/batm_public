@@ -173,6 +173,14 @@ public interface IIdentityPiece {
     String getIdCardNumber();
 
     /**
+     * Secondary ID card number, used with TYPE_PERSONAL_INFORMATION.
+     * For example, an Australian driver's license has both a license number and a card number.
+     *
+     * @return secondary document number, or {@code null} if not present
+     */
+    default String getSecondaryIdCardNumber() { return null; }
+
+    /**
      * Returns identification of person who created this identity piece.
      *
      * @return {@link IPerson} when known, {@code null} otherwise

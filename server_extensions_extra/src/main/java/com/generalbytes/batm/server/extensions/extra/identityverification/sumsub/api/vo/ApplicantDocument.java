@@ -12,5 +12,6 @@ public class ApplicantDocument extends DocumentDefinition {
     private LocalDate issuedDate;
     private LocalDate validUntil;
     private String number;
+    private String additionalNumber;
     private LocalDate dob;
 }

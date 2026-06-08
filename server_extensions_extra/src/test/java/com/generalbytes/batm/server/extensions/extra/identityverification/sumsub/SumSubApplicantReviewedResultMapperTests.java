@@ -323,6 +323,7 @@ class SumSubApplicantReviewedResultMapperTests {
 
         assertEquals(documentType, checkResult.getDocumentType());
         assertEquals("documentNumber", checkResult.getDocumentNumber());
+        assertEquals("additionalNumber", checkResult.getSecondaryDocumentNumber());
         assertEquals(getTestDate(), checkResult.getExpirationDate());
         assertEquals("countryFromDocument", checkResult.getCountry());
     }
@@ -348,6 +349,7 @@ class SumSubApplicantReviewedResultMapperTests {
 
         assertNull(checkResult.getDocumentType());
         assertNull(checkResult.getDocumentNumber());
+        assertNull(checkResult.getSecondaryDocumentNumber());
         assertNull(checkResult.getExpirationDate());
         assertNull(checkResult.getCountry());
     }
@@ -402,6 +404,7 @@ class SumSubApplicantReviewedResultMapperTests {
         ApplicantDocument document = mock(ApplicantDocument.class);
         when(document.getIdDocType()).thenReturn(documentType);
         when(document.getNumber()).thenReturn("documentNumber");
+        when(document.getAdditionalNumber()).thenReturn("additionalNumber");
         when(document.getValidUntil()).thenReturn(LocalDate.of(2000, Month.APRIL, 1));
         when(document.getCountry()).thenReturn("countryFromDocument");
         return document;
