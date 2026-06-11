@@ -67,6 +67,7 @@ public class SumSubApplicantReviewedResultMapper {
                 // set info from a document
                 checkResult.setDocumentType(translateSSDocumentType(ssDocument.getIdDocType()));
                 checkResult.setDocumentNumber(ssDocument.getNumber());
+                checkResult.setSecondaryDocumentNumber(ssDocument.getAdditionalNumber());
                 checkResult.setExpirationDate(fromLocalDate(ssDocument.getValidUntil()));
                 // ALPHA-3 code
                 checkResult.setCountry(ssDocument.getCountry());
