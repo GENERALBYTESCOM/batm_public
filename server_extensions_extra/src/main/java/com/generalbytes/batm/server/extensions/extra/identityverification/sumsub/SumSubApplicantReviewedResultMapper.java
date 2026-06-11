@@ -53,7 +53,7 @@ public class SumSubApplicantReviewedResultMapper {
         if (applicantInfoResponse.getInfo() != null) {
             ApplicantInfo info = applicantInfoResponse.getInfo();
             // set personal information
-            checkResult.setFirstName(info.getFirstName());
+            checkResult.setFirstName(buildGivenName(info.getFirstName(), info.getMiddleName()));
             checkResult.setLastName(info.getLastName());
             LocalDate dob = info.getDob();
             if (dob == null && applicantInfoResponse.getFixedInfo() != null) {
@@ -196,5 +196,15 @@ public class SumSubApplicantReviewedResultMapper {
             return null;
         }
         return Date.from(date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    private String buildGivenName(String firstName, String middleName) {
+        if (middleName == null || middleName.isBlank()) {
+            return firstName;
+        }
+        if (firstName == null || firstName.isBlank()) {
+            return middleName;
+        }
+        return firstName + " " + middleName;
     }
 }
