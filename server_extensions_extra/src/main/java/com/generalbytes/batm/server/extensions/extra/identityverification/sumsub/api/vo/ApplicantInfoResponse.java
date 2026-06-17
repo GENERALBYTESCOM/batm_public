@@ -7,6 +7,10 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Represents the response from the SumSub API for an applicant's data.
+ * <a href="https://docs.sumsub.com/reference/get-applicant-data">API reference</a>
+ */
 @Getter
 public class ApplicantInfoResponse extends JsonObject {
     @Setter
@@ -20,5 +24,6 @@ public class ApplicantInfoResponse extends JsonObject {
     private ApplicantInfo info;
     // data submitted by the applicant (e.g., manually entered address)
     private ApplicantInfo fixedInfo;
+    private String email;
     private List<Questionnaire> questionnaires;
 }
