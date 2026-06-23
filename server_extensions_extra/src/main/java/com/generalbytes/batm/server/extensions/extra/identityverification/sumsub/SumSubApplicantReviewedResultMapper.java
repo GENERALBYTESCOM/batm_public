@@ -50,6 +50,8 @@ public class SumSubApplicantReviewedResultMapper {
         checkResult.setIdentityApplicantId(applicantReviewed.getApplicantId());
         checkResult.setResult(mapCheckResult(applicantReviewed.getReviewResult()));
 
+        checkResult.setEmail(applicantInfoResponse.getEmail());
+
         if (applicantInfoResponse.getInfo() != null) {
             ApplicantInfo info = applicantInfoResponse.getInfo();
             // set personal information

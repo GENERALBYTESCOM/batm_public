@@ -734,6 +734,9 @@ class SumSubWebhookProcessorTests {
         ApplicantCheckResult applicantCheckResult = checkResultArgumentCaptor.getValue();
         assertEquals(CheckResult.CLEAR, applicantCheckResult.getResult());
 
+        // email
+        assertEquals("christman1@gmail.com", applicantCheckResult.getEmail());
+
         // personal
         assertEquals("CHRISTIAN", applicantCheckResult.getFirstName());
         assertEquals("SMITH", applicantCheckResult.getLastName());
@@ -880,6 +883,9 @@ class SumSubWebhookProcessorTests {
 
         ApplicantCheckResult applicantCheckResult = checkResultArgumentCaptor.getValue();
         assertEquals(CheckResult.REJECTED, applicantCheckResult.getResult());
+
+        // email
+        assertEquals("christman1@gmail.com", applicantCheckResult.getEmail());
 
         // personal
         assertEquals("CHRISTIAN", applicantCheckResult.getFirstName());
