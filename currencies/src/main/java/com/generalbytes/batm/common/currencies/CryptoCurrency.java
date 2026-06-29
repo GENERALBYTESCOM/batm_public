@@ -101,6 +101,7 @@ public enum CryptoCurrency {
     SOL("Solana"),
     SPICE("Spice"),
     START("Startcoin"),
+    SUI("Sui"),
     SUM("Sumcoin"),
     SUNCASH("SunCash"),
     SYS("Syscoin"),

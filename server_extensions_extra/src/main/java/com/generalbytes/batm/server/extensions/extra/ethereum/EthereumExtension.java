@@ -26,6 +26,7 @@ import com.generalbytes.batm.server.extensions.IExchange;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.IWallet;
 import com.generalbytes.batm.server.extensions.extra.ethereum.erc20.ERC20Wallet;
+import com.generalbytes.batm.server.extensions.extra.ethereum.erc20.GethERC20Wallet;
 import com.generalbytes.batm.server.extensions.extra.ethereum.erc20.bizz.BizzDefinition;
 import com.generalbytes.batm.server.extensions.extra.ethereum.erc20.dai.DaiDefinition;
 import com.generalbytes.batm.server.extensions.extra.ethereum.sources.stasis.StasisTickerRateSource;
@@ -114,6 +115,33 @@ public class EthereumExtension extends AbstractExtension {
 
                     if (projectId != null && passwordOrMnemonic != null) {
                         return new ERC20Wallet(projectId, passwordOrMnemonic, tokenSymbol, tokenDecimalPlaces, contractAddress, gasLimit);
+                    }
+                } else if ("geth".equalsIgnoreCase(walletType)) {
+                    String nodeUrl = st.nextToken();
+                    String passwordOrMnemonic = st.nextToken();
+                    if (nodeUrl != null && passwordOrMnemonic != null) {
+                        return new GethWallet(nodeUrl, passwordOrMnemonic);
+                    }
+                } else if (walletType.startsWith("gethERC20_")) {
+                    StringTokenizer wt = new StringTokenizer(walletType, "_");
+                    wt.nextToken(); // discard "gethERC20"
+                    String tokenSymbol = wt.nextToken();
+                    int tokenDecimalPlaces = Integer.parseInt(wt.nextToken());
+                    String contractAddress = wt.nextToken();
+
+                    String nodeUrl = st.nextToken();
+                    String passwordOrMnemonic = st.nextToken();
+                    BigInteger gasLimit = null;
+                    if (st.hasMoreTokens()) {
+                        gasLimit = new BigInteger(st.nextToken());
+                    }
+                    BigDecimal gasPriceMultiplier = BigDecimal.ONE;
+                    if (st.hasMoreTokens()) {
+                        gasPriceMultiplier = new BigDecimal(st.nextToken());
+                    }
+
+                    if (nodeUrl != null && passwordOrMnemonic != null) {
+                        return new GethERC20Wallet(nodeUrl, passwordOrMnemonic, tokenSymbol, tokenDecimalPlaces, contractAddress, gasLimit, gasPriceMultiplier);
                     }
                 } else if (walletType.equalsIgnoreCase("usdcdemo")) {
                     return dummyFactory.createDummyWithFiatCurrencyAndAddress(st, CryptoCurrency.USDC);
