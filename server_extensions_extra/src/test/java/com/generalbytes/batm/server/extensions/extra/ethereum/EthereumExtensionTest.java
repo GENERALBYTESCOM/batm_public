@@ -3,11 +3,16 @@ package com.generalbytes.batm.server.extensions.extra.ethereum;
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.DummyExchangeAndWalletAndSource;
 import com.generalbytes.batm.server.extensions.IExchange;
+import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.IWallet;
+import com.generalbytes.batm.server.extensions.extra.ethereum.sources.stasis.StasisTickerRateSource;
+import com.generalbytes.batm.server.extensions.extra.ethereum.stream365.Stream365;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Set;
@@ -94,4 +99,28 @@ class EthereumExtensionTest {
         assertEquals(Set.of(expectedCryptocurrency.getCode()), dummyExchange.getCryptoCurrencies());
         assertEquals(Set.of("CZK"), dummyExchange.getFiatCurrencies());
     }
+
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {"", "   ", "::", "unknown:1:CZK"})
+    void testCreateRateSource_invalidLogin(String invalidLogin) {
+        assertNull(extension.createRateSource(invalidLogin));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"stream365", "stream365:", "stream365:something"})
+    void testCreateRateSource_stream365(String login) {
+        IRateSource rateSource = extension.createRateSource(login);
+
+        assertInstanceOf(Stream365.class, rateSource);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"stasis", "stasis:", "stasis:something"})
+    void testCreateRateSource_stasis(String login) {
+        IRateSource rateSource = extension.createRateSource(login);
+
+        assertInstanceOf(StasisTickerRateSource.class, rateSource);
+    }
+
 }
