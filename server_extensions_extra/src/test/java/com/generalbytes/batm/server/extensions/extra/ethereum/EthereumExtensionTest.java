@@ -2,6 +2,7 @@ package com.generalbytes.batm.server.extensions.extra.ethereum;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
 import com.generalbytes.batm.server.extensions.DummyExchangeAndWalletAndSource;
+import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.IExchange;
 import com.generalbytes.batm.server.extensions.IRateSource;
 import com.generalbytes.batm.server.extensions.IWallet;
@@ -10,13 +11,17 @@ import com.generalbytes.batm.server.extensions.extra.ethereum.stream365.Stream36
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
 import java.util.Set;
+import java.util.stream.Stream;
 
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -52,6 +57,13 @@ class EthereumExtensionTest {
                 "usdtdemo::address",
                 "usdtdemo:CZK:",
                 "usdtdemo:CZK",
+                // Invalid QCAD demo parameters
+                "qcaddemo",
+                "qcaddemo:",
+                "qcaddemo::",
+                "qcaddemo::address",
+                "qcaddemo:CZK:",
+                "qcaddemo:CZK",
                 // Unknown wallet
                 "unknown:CZK:address",
         };
@@ -67,6 +79,7 @@ class EthereumExtensionTest {
         return new Object[][]{
                 {"usdcdemo:CZK:address", CryptoCurrency.USDC},
                 {"usdtdemo:CZK:address", CryptoCurrency.USDT},
+                {"qcaddemo:CZK:address", CryptoCurrency.QCAD},
         };
     }
 
@@ -121,6 +134,25 @@ class EthereumExtensionTest {
         IRateSource rateSource = extension.createRateSource(login);
 
         assertInstanceOf(StasisTickerRateSource.class, rateSource);
+    }
+
+    private static Stream<Arguments> provideQcadFixRateSourceLogin() {
+        return Stream.of(
+            arguments("qcadfix:5:CAD", new BigDecimal("5"), "CAD"),
+            arguments("qcadfix:0.98", new BigDecimal("0.98"), "USD"),
+            arguments("qcadfix", BigDecimal.ONE, "USD"),
+            arguments("qcadfix:abc:CZK", BigDecimal.ONE, "CZK")
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideQcadFixRateSourceLogin")
+    void testCreateRateSource_qcadFix(String login, BigDecimal expectedRate, String expectedFiatCurrency) {
+        IRateSource rateSource = extension.createRateSource(login);
+
+        assertInstanceOf(FixPriceRateSource.class, rateSource);
+        assertEquals(expectedFiatCurrency, rateSource.getPreferredFiatCurrency());
+        assertEquals(0, expectedRate.compareTo(rateSource.getExchangeRateLast(CryptoCurrency.QCAD.getCode(), expectedFiatCurrency)));
     }
 
 }

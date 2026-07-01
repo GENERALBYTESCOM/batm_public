@@ -2253,6 +2253,23 @@
             <param name="walletAddress"/>
             <cryptocurrency>USDT</cryptocurrency>
         </exchange>
+        <cryptologo cryptocurrency="QCAD" file="qcad.png"/>
+        <wallet prefix="qcaddemo" name="QCAD Demo Wallet">
+            <param name="fiat_currency"/>
+            <param name="wallet_address"/>
+            <cryptocurrency buyonly="true">QCAD</cryptocurrency>
+        </wallet>
+        <exchange prefix="qcaddemo" name="QCAD Demo Exchange">
+            <param name="fiat_currency"/>
+            <param name="wallet_address"/>
+            <cryptocurrency buyonly="true">QCAD</cryptocurrency>
+        </exchange>
+        <ratesource prefix="qcadfix" name="Fix Price">
+            <param name="price"/>
+            <param name="fiat_currency"/>
+            <cryptocurrency>QCAD</cryptocurrency>
+            <help>USD is default fiat currency.</help>
+        </ratesource>
         <!-- ADD your ERC20 tokens here. And don't forget to add cryptologos. -->
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.nuls.NulsExtension" >
