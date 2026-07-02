@@ -2270,6 +2270,13 @@
             <cryptocurrency>QCAD</cryptocurrency>
             <help>USD is default fiat currency.</help>
         </ratesource>
+        <wallet prefix="infuraERC20_QCAD_6_0x3Fa142dD3f384414e05E71Ad0939274EdC82EC0A" name="Infura.io wallet - QCAD">
+            <param name="projectId" />
+            <param name="mnemonic" />
+            <param name="gaslimit" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional.</help>
+            <cryptocurrency buyonly="true">QCAD</cryptocurrency>
+        </wallet>
         <!-- ADD your ERC20 tokens here. And don't forget to add cryptologos. -->
     </extension>
     <extension class="com.generalbytes.batm.server.extensions.extra.nuls.NulsExtension" >
