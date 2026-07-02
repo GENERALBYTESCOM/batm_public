@@ -42,6 +42,8 @@ public class ApplicantCheckResult {
 
     private String state;
 
+    private String email;
+
     /**
      * ISO 3166 Alpha-3 code
      */
@@ -181,6 +183,14 @@ public class ApplicantCheckResult {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getCountry() {

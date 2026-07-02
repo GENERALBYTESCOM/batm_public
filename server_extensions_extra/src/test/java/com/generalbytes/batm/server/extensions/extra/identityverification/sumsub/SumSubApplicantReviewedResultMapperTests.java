@@ -73,6 +73,35 @@ class SumSubApplicantReviewedResultMapperTests {
     }
 
     @Test
+    void testMapResult_emailMappedFromTopLevelField() {
+        ApplicantReviewedWebhook applicantReviewedWebhook = mock(ApplicantReviewedWebhook.class);
+        ApplicantReviewResult result = mock(ApplicantReviewResult.class);
+        when(result.getReviewAnswer()).thenReturn(ReviewAnswer.GREEN);
+        when(applicantReviewedWebhook.getReviewResult()).thenReturn(result);
+
+        ApplicantInfoResponse applicantInfoResponse = mock(ApplicantInfoResponse.class);
+        when(applicantInfoResponse.getEmail()).thenReturn("test@example.com");
+
+        ApplicantCheckResult checkResult = resultMapper.mapResult(applicantReviewedWebhook, applicantInfoResponse, null);
+
+        assertEquals("test@example.com", checkResult.getEmail());
+    }
+
+    @Test
+    void testMapResult_emailNullWhenNotPresent() {
+        ApplicantReviewedWebhook applicantReviewedWebhook = mock(ApplicantReviewedWebhook.class);
+        ApplicantReviewResult result = mock(ApplicantReviewResult.class);
+        when(result.getReviewAnswer()).thenReturn(ReviewAnswer.GREEN);
+        when(applicantReviewedWebhook.getReviewResult()).thenReturn(result);
+
+        ApplicantInfoResponse applicantInfoResponse = mock(ApplicantInfoResponse.class);
+
+        ApplicantCheckResult checkResult = resultMapper.mapResult(applicantReviewedWebhook, applicantInfoResponse, null);
+
+        assertNull(checkResult.getEmail());
+    }
+
+    @Test
     void testMapResult_responseInfoNull() {
         ApplicantReviewedWebhook applicantReviewedWebhook = mock(ApplicantReviewedWebhook.class);
         when(applicantReviewedWebhook.getInspectionId()).thenReturn(INSPECTION_ID);
