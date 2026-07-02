@@ -18,8 +18,10 @@
 package com.generalbytes.batm.server.extensions.extra.ethereum;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.AbstractExtension;
 import com.generalbytes.batm.server.extensions.ExtensionsUtil;
+import com.generalbytes.batm.server.extensions.FixPriceRateSource;
 import com.generalbytes.batm.server.extensions.ICryptoAddressValidator;
 import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
 import com.generalbytes.batm.server.extensions.IExchange;
@@ -32,6 +34,7 @@ import com.generalbytes.batm.server.extensions.extra.ethereum.sources.stasis.Sta
 import com.generalbytes.batm.server.extensions.extra.ethereum.stream365.Stream365;
 import com.generalbytes.batm.server.extensions.util.DummyWalletAndExchangeAndSourceFactory;
 import com.google.common.collect.ImmutableSet;
+import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -39,6 +42,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+@Slf4j
 public class EthereumExtension extends AbstractExtension {
 
     private static final Set<ICryptoCurrencyDefinition> cryptoCurrencyDefinitions = ImmutableSet.of(
@@ -82,6 +86,7 @@ public class EthereumExtension extends AbstractExtension {
         result.add(CryptoCurrency.JOB.getCode());
         result.add(CryptoCurrency.WILC.getCode());
         result.add(CryptoCurrency.SHIB.getCode());
+        result.add(CryptoCurrency.QCAD.getCode());
         return result;
     }
 
@@ -119,6 +124,8 @@ public class EthereumExtension extends AbstractExtension {
                     return dummyFactory.createDummyWithFiatCurrencyAndAddress(st, CryptoCurrency.USDC);
                 } else if (walletType.equalsIgnoreCase("usdtdemo")) {
                     return dummyFactory.createDummyWithFiatCurrencyAndAddress(st, CryptoCurrency.USDT);
+                } else if (walletType.equalsIgnoreCase("qcaddemo")) {
+                    return dummyFactory.createDummyWithFiatCurrencyAndAddress(st, CryptoCurrency.QCAD);
                 }
             } catch (Exception e) {
                 ExtensionsUtil.logExtensionParamsException("createWallet", getClass().getSimpleName(), walletLogin, e);
@@ -141,6 +148,8 @@ public class EthereumExtension extends AbstractExtension {
                 return dummyFactory.createDummyWithFiatCurrencyAndAddress(st, CryptoCurrency.USDC);
             } else if ("usdtdemo".equalsIgnoreCase(exchangeType)) {
                 return dummyFactory.createDummyWithFiatCurrencyAndAddress(st, CryptoCurrency.USDT);
+            } else if ("qcaddemo".equalsIgnoreCase(exchangeType)) {
+                return dummyFactory.createDummyWithFiatCurrencyAndAddress(st, CryptoCurrency.QCAD);
             }
         } catch (Exception e) {
             ExtensionsUtil.logExtensionParamsException("createExtension", getClass().getSimpleName(), exchangeLogin, e);
@@ -150,14 +159,49 @@ public class EthereumExtension extends AbstractExtension {
 
     @Override
     public IRateSource createRateSource(String sourceLogin) {
-        if (sourceLogin != null && !sourceLogin.trim().isEmpty()) {
-            if (sourceLogin.startsWith("stream365")) {
-                return new Stream365();
-            } else if (sourceLogin.startsWith("stasis")) {
-                return new StasisTickerRateSource();
+        if (sourceLogin == null || sourceLogin.isBlank()) {
+            return null;
+        }
+
+        StringTokenizer tokenizer = new StringTokenizer(sourceLogin, ":");
+        if (!tokenizer.hasMoreTokens()) {
+            return null;
+        }
+
+        String sourceType = tokenizer.nextToken();
+        return switch (sourceType) {
+            case "stream365" -> new Stream365();
+            case "stasis" -> new StasisTickerRateSource();
+            case "qcadfix" -> createQcadFixPriceRateSource(tokenizer);
+            default -> null;
+        };
+    }
+
+    private IRateSource createQcadFixPriceRateSource(StringTokenizer tokenizer) {
+        BigDecimal rate = getRate(tokenizer);
+        String preferredFiatCurrency = getPreferredFiatCurrency(tokenizer);
+        return new FixPriceRateSource(rate, preferredFiatCurrency);
+    }
+
+    private BigDecimal getRate(StringTokenizer tokenizer) {
+        if (tokenizer.hasMoreTokens()) {
+            String rate = tokenizer.nextToken();
+            try {
+                return new BigDecimal(rate);
+            } catch (NumberFormatException e) {
+                log.warn("Parsing rate from Rate Source parameters failed, invalid rate '{}', using default '{}'", rate, BigDecimal.ONE);
             }
         }
-        return null;
+
+        return BigDecimal.ONE;
+    }
+
+    private String getPreferredFiatCurrency(StringTokenizer tokenizer) {
+        if (tokenizer.hasMoreTokens()) {
+            return tokenizer.nextToken().toUpperCase();
+        }
+
+        return FiatCurrency.USD.getCode();
     }
 
     @Override
@@ -185,7 +229,6 @@ public class EthereumExtension extends AbstractExtension {
 
         };
     }
-
 
     @Override
     public Set<ICryptoCurrencyDefinition> getCryptoCurrencyDefinitions() {

@@ -95,6 +95,7 @@ public enum CryptoCurrency {
     PAC("$PAC", "PACcoin"),
     PAXG("Paxos Gold"),
     POT("PotCoin"),
+    QCAD("Canadian Dollar Stablecoin"), // ERC-20 (ethereum) based
     REP("Augur"),
     SHIB("Shiba Inu"),
     SMART("SmartCash"),
