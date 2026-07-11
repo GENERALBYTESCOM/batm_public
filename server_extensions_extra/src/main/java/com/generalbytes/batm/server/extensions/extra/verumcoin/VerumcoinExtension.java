@@ -18,6 +18,7 @@
 package com.generalbytes.batm.server.extensions.extra.verumcoin;
 
 import com.generalbytes.batm.common.currencies.CryptoCurrency;
+import com.generalbytes.batm.server.extensions.ICryptoCurrencyDefinition;
 import com.generalbytes.batm.common.currencies.FiatCurrency;
 import com.generalbytes.batm.server.extensions.*;
 import com.generalbytes.batm.server.extensions.FixPriceRateSource;
@@ -30,6 +31,8 @@ import java.net.InetSocketAddress;
 import java.util.*;
 
 public class VerumcoinExtension extends AbstractExtension{
+
+    private static final ICryptoCurrencyDefinition DEFINITION = new VerumcoinDefinition();
 
     @Override
     public String getName() {
@@ -52,21 +55,21 @@ public class VerumcoinExtension extends AbstractExtension{
                 String password = st.nextToken();
                 String hostname = st.nextToken();
                 int port = Integer.parseInt(st.nextToken());
-                String label = "";
+                String accountName = "";
                 if (st.hasMoreTokens()) {
-                    label = st.nextToken();
+                    accountName = st.nextToken();
                 }
 
                 InetSocketAddress tunnelAddress = ctx.getTunnelManager().connectIfNeeded(walletLogin, tunnelPassword, InetSocketAddress.createUnresolved(hostname, port));
                 hostname = tunnelAddress.getHostString();
                 port = tunnelAddress.getPort();
 
-                if (protocol != null && username != null && password != null && hostname !=null && label != null) {
+                if (protocol != null && username != null && password != null && hostname !=null && accountName != null) {
                     String rpcURL = protocol +"://" + username +":" + password + "@" + hostname +":" + port;
                     if ("verumcoindnoforward".equalsIgnoreCase(walletType)) {
-                        return new VerumcoindUniqueAddressRPCWallet(rpcURL);
+                        return new VerumcoindUniqueAddressRPCWallet(rpcURL, accountName);
                     }
-                    return new VerumcoindRPCWallet(rpcURL, label);
+                    return new VerumcoindRPCWallet(rpcURL, accountName);
                 }
             }
         }
@@ -118,4 +121,12 @@ public class VerumcoinExtension extends AbstractExtension{
         result.add(CryptoCurrency.VERUM.getCode());
         return result;
     }
+
+    @Override
+    public Set<ICryptoCurrencyDefinition> getCryptoCurrencyDefinitions() {
+        Set<ICryptoCurrencyDefinition> result = new HashSet<>();
+        result.add(DEFINITION);
+        return result;
+    }
+
 }
