@@ -140,6 +140,15 @@ public interface ITransactionRequest {
     }
 
     /**
+     * Returns language selected by customer on the terminal
+     *
+     * @return
+     */
+    default String getLanguage() {
+        return null;
+    }
+
+    /**
      * Indicates that transaction was automatically finished by server.
      * Ie. terminal reported that 100 USD was inserted into the machine and then terminal went offline.
      * Server automatically finished transaction and sent coins to customer.
