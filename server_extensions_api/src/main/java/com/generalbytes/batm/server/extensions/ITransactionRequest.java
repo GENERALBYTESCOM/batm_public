@@ -207,6 +207,12 @@ public interface ITransactionRequest {
     }
 
     /**
+     * Sets whether the terminal should show a post-transaction dialog to the customer.
+     */
+    default void setShowPostTransactionDialog(boolean showPostTransactionDialog) {
+    }
+
+    /**
      * Custom message to display in the post-transaction dialog.
      * <p>
      * The language parameter is the language selected by the customer on the terminal,
@@ -218,6 +224,12 @@ public interface ITransactionRequest {
      */
     default String getPostTransactionDialogMessage(String language) {
         return null;
+    }
+
+    /**
+     * Sets a custom message to display in the post-transaction dialog.
+     */
+    default void setPostTransactionDialogMessage(String message) {
     }
 
 }
