@@ -160,6 +160,14 @@ public interface ITransactionPreparation {
         return null;
     }
 
+    /**
+     * Text to be rendered into a QR code and displayed alongside the error message.
+     *
+     * @param text QR code text, or null if no QR code should be displayed
+     */
+    default void setErrorQrCodeText(String text) {
+    }
+
 
     /**
      * Maximum cash amount that customer can insert/sell into/to machine
