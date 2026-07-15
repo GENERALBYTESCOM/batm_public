@@ -200,6 +200,14 @@ public interface ITransactionRequest {
     }
 
     /**
+     * Text to be rendered into a QR code and displayed alongside the error message.
+     *
+     * @param text QR code text, or null if no QR code should be displayed
+     */
+    default void setErrorQrCodeText(String text) {
+    }
+
+    /**
      * Whether the terminal should show a post-transaction dialog to the customer.
      */
     default boolean shouldShowPostTransactionDialog() {
