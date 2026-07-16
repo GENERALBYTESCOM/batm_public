@@ -3,6 +3,7 @@ package com.generalbytes.batm.server.extensions.order;
 import com.generalbytes.batm.server.extensions.ITransactionDetails;
 
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 
 /**
  * Information about a newly created crypto order.
@@ -34,4 +35,10 @@ public interface IOrderInfo {
 
     /** Destination crypto address bound to this order. */
     String getCryptoAddress();
+
+    /** Identity id of the person the order was created for. */
+    String getIdentityPublicId();
+
+    /** Server time by which the order must be picked up (deposited) before it expires. */
+    OffsetDateTime getExpiryServerTime();
 }
