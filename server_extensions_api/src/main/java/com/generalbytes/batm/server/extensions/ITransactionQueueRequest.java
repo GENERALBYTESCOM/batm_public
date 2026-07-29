@@ -80,4 +80,12 @@ public interface ITransactionQueueRequest {
      */
     String getIdentityPublicId();
 
+    /**
+     * Returns language selected by customer on the terminal
+     * @return
+     */
+    default String getLanguage() {
+        return null;
+    }
+
 }

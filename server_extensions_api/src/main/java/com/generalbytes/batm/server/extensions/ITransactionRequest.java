@@ -140,6 +140,15 @@ public interface ITransactionRequest {
     }
 
     /**
+     * Returns language selected by customer on the terminal
+     *
+     * @return
+     */
+    default String getLanguage() {
+        return null;
+    }
+
+    /**
      * Indicates that transaction was automatically finished by server.
      * Ie. terminal reported that 100 USD was inserted into the machine and then terminal went offline.
      * Server automatically finished transaction and sent coins to customer.
@@ -200,10 +209,24 @@ public interface ITransactionRequest {
     }
 
     /**
+     * Text to be rendered into a QR code and displayed alongside the error message.
+     *
+     * @param text QR code text, or null if no QR code should be displayed
+     */
+    default void setErrorQrCodeText(String text) {
+    }
+
+    /**
      * Whether the terminal should show a post-transaction dialog to the customer.
      */
     default boolean shouldShowPostTransactionDialog() {
         return false;
+    }
+
+    /**
+     * Sets whether the terminal should show a post-transaction dialog to the customer.
+     */
+    default void setShowPostTransactionDialog(boolean showPostTransactionDialog) {
     }
 
     /**
@@ -218,6 +241,12 @@ public interface ITransactionRequest {
      */
     default String getPostTransactionDialogMessage(String language) {
         return null;
+    }
+
+    /**
+     * Sets a custom message to display in the post-transaction dialog.
+     */
+    default void setPostTransactionDialogMessage(String message) {
     }
 
 }
