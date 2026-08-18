@@ -258,6 +258,15 @@ public interface ITransactionDetails {
     String getCellPhoneUsed();
 
     /**
+     * Contains customer email address that was used during transaction
+     *
+     * @return email address that was used during transaction
+     */
+    default String getEmailUsed() {
+        return null;
+    }
+
+    /**
      * Indicates that sell transaction was withdrawn with 0-confirmation.
      * @return
      */

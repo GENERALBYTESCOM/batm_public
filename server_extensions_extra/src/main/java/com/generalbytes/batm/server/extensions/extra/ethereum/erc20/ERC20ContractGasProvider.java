@@ -8,22 +8,26 @@ import org.web3j.abi.datatypes.Address;
 import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.protocol.Web3j;
+import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.request.Transaction;
+import org.web3j.protocol.core.methods.response.EthBlock;
 import org.web3j.protocol.core.methods.response.EthEstimateGas;
-import org.web3j.tx.ManagedTransaction;
-import org.web3j.tx.gas.ContractGasProvider;
+import org.web3j.tx.gas.ContractEIP1559GasProvider;
+import org.web3j.utils.Convert;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.Collections;
 
-public class ERC20ContractGasProvider implements ContractGasProvider {
+public class ERC20ContractGasProvider implements ContractEIP1559GasProvider {
     private static final Logger log = LoggerFactory.getLogger(ERC20ContractGasProvider.class);
+    private static final long ETH_MAINNET_CHAIN_ID = 1L;
+    private static final BigInteger MAX_PRIORITY_FEE_PER_GAS = Convert.toWei("1.5", Convert.Unit.GWEI).toBigInteger();
 
-    private final BigDecimal gasPriceMultiplier;
     private final BigInteger fixedGasLimit;
     private final Web3j w;
     private final String toAddress;
@@ -31,32 +35,62 @@ public class ERC20ContractGasProvider implements ContractGasProvider {
     private final String fromAddress;
     private final String contractAddress;
 
-    public ERC20ContractGasProvider(String contractAddress, String fromAddress, String toAddress, BigInteger tokensAmount, BigInteger fixedGasLimit, BigDecimal gasPriceMultiplier, Web3j w) {
+    public ERC20ContractGasProvider(String contractAddress, String fromAddress, String toAddress, BigInteger tokensAmount, BigInteger fixedGasLimit, Web3j w) {
         this.contractAddress = contractAddress.toLowerCase();
         this.fromAddress = fromAddress.toLowerCase();
         this.toAddress = toAddress.toLowerCase();
         this.tokensAmount = tokensAmount;
-        this.gasPriceMultiplier = gasPriceMultiplier;
         this.fixedGasLimit = fixedGasLimit;
         this.w = w;
     }
 
     @Override
     public BigInteger getGasPrice(String contractFunc) {
-        try {
-            BigInteger gasPriceWei = w.ethGasPrice().send().getGasPrice();
-            BigInteger gasPriceMultiplied = new BigDecimal(gasPriceWei).multiply(gasPriceMultiplier).toBigInteger();
-            log.info("gas price: {} * {} = {} wei", gasPriceWei, gasPriceMultiplier, gasPriceMultiplied);
-            return gasPriceMultiplied;
-        } catch (IOException e) {
-            log.error("error getting gas price, using default", e);
-            return ManagedTransaction.GAS_PRICE;
-        }
+        return null; // not called
     }
 
     @Override
     public BigInteger getGasPrice() {
         return null; // not called
+    }
+
+    @Override
+    public boolean isEIP1559Enabled() {
+        return true;
+    }
+
+    @Override
+    public long getChainId() {
+        return ETH_MAINNET_CHAIN_ID;
+    }
+
+    @Override
+    public BigInteger getMaxPriorityFeePerGas(String contractFunc) {
+        return MAX_PRIORITY_FEE_PER_GAS;
+    }
+
+    @Override
+    public BigInteger getMaxFeePerGas(String contractFunc) {
+        try {
+            BigInteger baseFee = fetchBaseFee();
+            BigInteger maxFeePerGas = baseFee.multiply(BigInteger.TWO).add(MAX_PRIORITY_FEE_PER_GAS);
+            log.info("getMaxFeePerGas - baseFee = {} Gwei, maxFeePerGas = {} Gwei",
+                Convert.fromWei(new BigDecimal(baseFee), Convert.Unit.GWEI),
+                Convert.fromWei(new BigDecimal(maxFeePerGas), Convert.Unit.GWEI)
+            );
+            return maxFeePerGas;
+        } catch (IOException e) {
+            throw new UncheckedIOException("Failed to fetch baseFee for EIP-1559 transaction", e);
+        }
+    }
+
+    private BigInteger fetchBaseFee() throws IOException {
+        EthBlock.Block pendingBlock = w.ethGetBlockByNumber(DefaultBlockParameterName.PENDING, false).send().getBlock();
+        BigInteger baseFee = pendingBlock.getBaseFeePerGas();
+        if (baseFee == null || baseFee.compareTo(BigInteger.ZERO) <= 0) {
+            throw new IOException("Could not fetch valid baseFee from pending block, got: " + baseFee);
+        }
+        return baseFee;
     }
 
     @Override

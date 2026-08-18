@@ -50,12 +50,18 @@ public class SumSubApplicantReviewedResultMapper {
         checkResult.setIdentityApplicantId(applicantReviewed.getApplicantId());
         checkResult.setResult(mapCheckResult(applicantReviewed.getReviewResult()));
 
+        checkResult.setEmail(applicantInfoResponse.getEmail());
+
         if (applicantInfoResponse.getInfo() != null) {
             ApplicantInfo info = applicantInfoResponse.getInfo();
             // set personal information
-            checkResult.setFirstName(info.getFirstName());
+            checkResult.setFirstName(buildGivenName(info.getFirstName(), info.getMiddleName()));
             checkResult.setLastName(info.getLastName());
-            checkResult.setBirthDate(fromLocalDate(info.getDob()));
+            LocalDate dob = info.getDob();
+            if (dob == null && applicantInfoResponse.getFixedInfo() != null) {
+                dob = applicantInfoResponse.getFixedInfo().getDob();
+            }
+            checkResult.setBirthDate(fromLocalDate(dob));
 
             // Get the IDENTITY document type from the inspection and convert to a GB document type
             ApplicantDocument ssDocument = extractIdentityDocument(info.getIdDocs(), inspectionInfoResponse.getImages());
@@ -63,6 +69,7 @@ public class SumSubApplicantReviewedResultMapper {
                 // set info from a document
                 checkResult.setDocumentType(translateSSDocumentType(ssDocument.getIdDocType()));
                 checkResult.setDocumentNumber(ssDocument.getNumber());
+                checkResult.setSecondaryDocumentNumber(ssDocument.getAdditionalNumber());
                 checkResult.setExpirationDate(fromLocalDate(ssDocument.getValidUntil()));
                 // ALPHA-3 code
                 checkResult.setCountry(ssDocument.getCountry());
@@ -70,6 +77,10 @@ public class SumSubApplicantReviewedResultMapper {
 
             // set address information
             ApplicantAddress firstAddress = getFirstAddress(info.getAddresses());
+            if (firstAddress == null && applicantInfoResponse.getFixedInfo() != null) {
+                // if no address found in info, try to get it from fixedInfo
+                firstAddress = getFirstAddress(applicantInfoResponse.getFixedInfo().getAddresses());
+            }
             if (firstAddress != null) {
                 checkResult.setRawAddress(firstAddress.getFormattedAddress());
                 checkResult.setStreetAddress(firstAddress.getStreet());
@@ -187,5 +198,15 @@ public class SumSubApplicantReviewedResultMapper {
             return null;
         }
         return Date.from(date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    private String buildGivenName(String firstName, String middleName) {
+        if (middleName == null || middleName.isBlank()) {
+            return firstName;
+        }
+        if (firstName == null || firstName.isBlank()) {
+            return middleName;
+        }
+        return firstName + " " + middleName;
     }
 }

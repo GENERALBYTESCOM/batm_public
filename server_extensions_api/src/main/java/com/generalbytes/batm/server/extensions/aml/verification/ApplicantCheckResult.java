@@ -26,6 +26,8 @@ public class ApplicantCheckResult {
 
     private String documentNumber;
 
+    private String secondaryDocumentNumber;
+
     private Date expirationDate;
 
     private Date birthDate;
@@ -39,6 +41,8 @@ public class ApplicantCheckResult {
     private String zip;
 
     private String state;
+
+    private String email;
 
     /**
      * ISO 3166 Alpha-3 code
@@ -117,6 +121,14 @@ public class ApplicantCheckResult {
         this.documentNumber = documentNumber;
     }
 
+    public String getSecondaryDocumentNumber() {
+        return secondaryDocumentNumber;
+    }
+
+    public void setSecondaryDocumentNumber(String secondaryDocumentNumber) {
+        this.secondaryDocumentNumber = secondaryDocumentNumber;
+    }
+
     public Date getExpirationDate() {
         return expirationDate;
     }
@@ -171,6 +183,14 @@ public class ApplicantCheckResult {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getCountry() {

@@ -25,8 +25,8 @@ import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.request.Transaction;
+import org.web3j.protocol.core.methods.response.EthBlock;
 import org.web3j.protocol.core.methods.response.EthEstimateGas;
-import org.web3j.protocol.core.methods.response.EthGasPrice;
 import org.web3j.protocol.core.methods.response.EthGetBalance;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.protocol.http.HttpService;
@@ -49,6 +49,8 @@ public class InfuraWallet implements IWallet{
     private Web3j w;
 
     private static final Logger log = LoggerFactory.getLogger(InfuraWallet.class);
+    private static final long ETH_MAINNET_CHAIN_ID = 1L;
+    private static final BigInteger MAX_PRIORITY_FEE_PER_GAS = Convert.toWei("1.5", Convert.Unit.GWEI).toBigInteger();
 
     public InfuraWallet(String projectId, String mnemonicOrPassword) {
         credentials = initCredentials(mnemonicOrPassword);
@@ -124,12 +126,11 @@ public class InfuraWallet implements IWallet{
             destinationAddress = destinationAddress.toLowerCase();
             BigInteger amountInWei = convertEthToWei(amount);
             log.info("InfuraWallet - sending {} {} (= {} wei) from {} to {}", amount, cryptoCurrency, amountInWei, credentials.getAddress(), destinationAddress);
-            RawTransactionManager transactionManager = new RawTransactionManager(w, credentials);
+            RawTransactionManager transactionManager = new RawTransactionManager(w, credentials, ETH_MAINNET_CHAIN_ID);
             BigInteger gasLimit = getGasLimit(destinationAddress, amount);
-            BigInteger gasPrice = getCurrentGasPrice();
 
-            log.info("InfuraWallet - gasPrice: {} gasLimit: {}", gasPrice, gasLimit);
-            String txId = broadcastEthTransaction(destinationAddress, amountInWei, transactionManager, gasLimit, gasPrice);
+            log.info("InfuraWallet - gasLimit: {}", gasLimit);
+            String txId = broadcastEthTransaction(destinationAddress, amountInWei, transactionManager, gasLimit);
             log.info("InfuraWallet - txId: {}, successfully broadcasted tx to send {} {} to {}", txId, amount, cryptoCurrency, destinationAddress);
             return txId;
 
@@ -139,28 +140,32 @@ public class InfuraWallet implements IWallet{
         return null;
     }
 
-    private String broadcastEthTransaction(String destinationAddress, BigInteger amountInWei, RawTransactionManager transactionManager, BigInteger gasLimit, BigInteger gasPrice) throws IOException {
-        final EthSendTransaction ethSentTransaction = transactionManager.sendTransaction(gasPrice, gasLimit, destinationAddress, "", amountInWei);
+    private String broadcastEthTransaction(String destinationAddress,
+                                           BigInteger amountInWei,
+                                           RawTransactionManager transactionManager,
+                                           BigInteger gasLimit) throws IOException {
+        BigInteger baseFee = fetchBaseFee();
+        BigInteger maxFeePerGas = baseFee.multiply(BigInteger.TWO).add(MAX_PRIORITY_FEE_PER_GAS);
+        log.info("InfuraWallet - sendEIP1559Transaction: maxPriorityFeePerGas = {} Gwei, maxFeePerGas = {} Gwei",
+            Convert.fromWei(new BigDecimal(MAX_PRIORITY_FEE_PER_GAS), Convert.Unit.GWEI),
+            Convert.fromWei(new BigDecimal(maxFeePerGas), Convert.Unit.GWEI)
+        );
+        EthSendTransaction ethSentTransaction = transactionManager.sendEIP1559Transaction(
+            ETH_MAINNET_CHAIN_ID, MAX_PRIORITY_FEE_PER_GAS, maxFeePerGas, gasLimit, destinationAddress, "", amountInWei, false
+        );
         if (ethSentTransaction.hasError()) {
             throw new IOException("error sending ETH tx: " + ethSentTransaction.getError().getMessage());
         }
         return ethSentTransaction.getTransactionHash();
     }
 
-    private BigInteger getCurrentGasPrice() throws IOException {
-        EthGasPrice ethGasPrice = w.ethGasPrice().send();
-        if (ethGasPrice == null) {
-            throw new IOException("Couldn't fetch gasPrice");
+    private BigInteger fetchBaseFee() throws IOException {
+        EthBlock.Block pendingBlock = w.ethGetBlockByNumber(DefaultBlockParameterName.PENDING, false).send().getBlock();
+        BigInteger baseFee = pendingBlock.getBaseFeePerGas();
+        if (baseFee == null || baseFee.compareTo(BigInteger.ZERO) <= 0) {
+            throw new IOException("Could not fetch valid baseFee from pending block, got: " + baseFee);
         }
-        if (ethGasPrice.hasError()) {
-            throw new IOException("Error getting gasPrice: " + ethGasPrice.getError().getMessage());
-        }
-        BigInteger recommendedGasPriceFromInfura = ethGasPrice.getGasPrice();
-        if (recommendedGasPriceFromInfura.compareTo(BigInteger.ZERO) <= 0) {
-            throw new RuntimeException("Couldn't fetch valid gasPrice, got: " + recommendedGasPriceFromInfura);
-        }
-        log.info("Gasprice from Infura: {} Gwei", Convert.fromWei(String.valueOf(recommendedGasPriceFromInfura), Convert.Unit.GWEI));
-        return recommendedGasPriceFromInfura;
+        return baseFee;
     }
 
     private BigInteger convertEthToWei(BigDecimal valueInEth) {

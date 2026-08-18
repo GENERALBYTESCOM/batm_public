@@ -131,6 +131,24 @@ public interface ITransactionRequest {
     String getCellPhoneUsed();
 
     /**
+     * Contains customer email address that was used during transaction
+     *
+     * @return email address
+     */
+    default String getEmailUsed() {
+        return null;
+    }
+
+    /**
+     * Returns language selected by customer on the terminal
+     *
+     * @return
+     */
+    default String getLanguage() {
+        return null;
+    }
+
+    /**
      * Indicates that transaction was automatically finished by server.
      * Ie. terminal reported that 100 USD was inserted into the machine and then terminal went offline.
      * Server automatically finished transaction and sent coins to customer.
@@ -188,6 +206,47 @@ public interface ITransactionRequest {
      */
     default String getErrorQrCodeText() {
         return null;
+    }
+
+    /**
+     * Text to be rendered into a QR code and displayed alongside the error message.
+     *
+     * @param text QR code text, or null if no QR code should be displayed
+     */
+    default void setErrorQrCodeText(String text) {
+    }
+
+    /**
+     * Whether the terminal should show a post-transaction dialog to the customer.
+     */
+    default boolean shouldShowPostTransactionDialog() {
+        return false;
+    }
+
+    /**
+     * Sets whether the terminal should show a post-transaction dialog to the customer.
+     */
+    default void setShowPostTransactionDialog(boolean showPostTransactionDialog) {
+    }
+
+    /**
+     * Custom message to display in the post-transaction dialog.
+     * <p>
+     * The language parameter is the language selected by the customer on the terminal,
+     * provided as a lowercase ISO 639 language code (e.g. "en", "ja", "es").
+     * </p>
+     *
+     * @param language language selected by the customer on the terminal, can be {@code null}
+     * @return message text, or {@code null} if a default message should be used
+     */
+    default String getPostTransactionDialogMessage(String language) {
+        return null;
+    }
+
+    /**
+     * Sets a custom message to display in the post-transaction dialog.
+     */
+    default void setPostTransactionDialogMessage(String message) {
     }
 
 }

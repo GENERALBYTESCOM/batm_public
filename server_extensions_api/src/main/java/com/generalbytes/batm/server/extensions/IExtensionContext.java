@@ -22,14 +22,21 @@ import com.generalbytes.batm.server.extensions.customfields.CustomFieldDefinitio
 import com.generalbytes.batm.server.extensions.aml.verification.ApplicantCheckResult;
 import com.generalbytes.batm.server.extensions.aml.verification.IIdentityVerificationProvider;
 import com.generalbytes.batm.server.extensions.aml.verification.IdentityApplicant;
+import com.generalbytes.batm.server.extensions.aml.verification.RegisterVerificationException;
+import com.generalbytes.batm.server.extensions.aml.verification.IVerificationSessionRequest;
 import com.generalbytes.batm.server.extensions.customfields.CustomFieldDefinitionAvailability;
 import com.generalbytes.batm.server.extensions.customfields.value.CustomFieldValue;
 import com.generalbytes.batm.server.extensions.exceptions.BuyException;
 import com.generalbytes.batm.server.extensions.exceptions.CashbackException;
 import com.generalbytes.batm.server.extensions.exceptions.ExternalPaymentProcessingException;
 import com.generalbytes.batm.server.extensions.exceptions.ExternalPaymentNotFoundException;
+import com.generalbytes.batm.server.extensions.exceptions.OrderException;
 import com.generalbytes.batm.server.extensions.exceptions.SellException;
 import com.generalbytes.batm.server.extensions.exceptions.UpdateException;
+import com.generalbytes.batm.server.extensions.order.ICreateOrderRequest;
+import com.generalbytes.batm.server.extensions.order.IOrderInfo;
+import com.generalbytes.batm.server.extensions.order.IRedeemOrderInfo;
+import com.generalbytes.batm.server.extensions.order.IRedeemOrderRequest;
 import com.generalbytes.batm.server.extensions.payment.external.ExternalPaymentUpdate;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleProviderIdentification;
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferData;
@@ -496,6 +503,15 @@ public interface IExtensionContext {
     void updateIdentityMarketingOptIn(String identityId, boolean agreeWithMarketingOptIn);
 
     /**
+     * Updates the show post-transaction dialog flag for the identity identified by {@code identityPublicId}.
+     *
+     * @param identityPublicId          public ID of an existing identity to be updated (must not be null)
+     * @param showPostTransactionDialog true if the post-transaction dialog should be shown, false otherwise
+     */
+    default void updateIdentityShowPostTransactionDialog(String identityPublicId, boolean showPostTransactionDialog) {
+    }
+
+    /**
      * Sets a custom field value for an identity.
      *
      * @param identityPublicId        public ID of the identity (must not be null)
@@ -743,6 +759,46 @@ public interface IExtensionContext {
      * @throws IllegalArgumentException if terminalSerialNumber is null or invalid
      */
     ITransactionCashbackInfo cashback(String terminalSerialNumber, BigDecimal fiatAmount, String fiatCurrency, String identityPublicId) throws CashbackException;
+
+    /**
+     * Creates a crypto order that the customer will fund by depositing cash at a GB Safe and later
+     * redeemed. The returned deposit code is what the customer enters at the Safe to associate
+     * their cash deposit with this order.
+     * <p>The order has a server-configured expiration by which the cash must be deposited.</p>
+     * <p>After cash is deposited at a Safe the server either auto-redeems the order after a
+     * configurable delay or you can short-circuit that by calling
+     * {@link #redeemOrder(IRedeemOrderRequest)}. The customer can also redeem the order at a
+     * physical BATM terminal — provided the identity referenced by {@code identityPublicId} has
+     * a phone number on file (used by the ATM's phone-based order lookup).</p>
+     *
+     * @param request order parameters (must not be null; see {@link ICreateOrderRequest})
+     * @return information about the created order, including the deposit code, never null
+     * @throws OrderException if the order cannot be created (e.g. invalid parameters, blacklisted
+     *                        identity/phone, amount over limits, unknown identity)
+     */
+    default IOrderInfo createOrder(ICreateOrderRequest request) throws OrderException {
+        return null;
+    }
+
+    /**
+     * Redeems a previously created order ({@link #createOrder(ICreateOrderRequest)}).
+     * It creates a BUY transaction against the cash that was deposited at the Safe.
+     *
+     * <p>Call after the customer has deposited cash at a GB Safe using the deposit code returned
+     * by {@link #createOrder(ICreateOrderRequest)}. The order's status must be
+     * {@link ITransactionDetails#STATUS_ORDER_CASH_DEPOSITED}. The server may also auto-redeem
+     * orders after a configurable delay, so calling this method might be optional.</p>
+     *
+     * <p>The returned {@link IRedeemOrderInfo} describes the resulting BUY transaction.</p>
+     *
+     * @param request redemption request (must not be null; see {@link IRedeemOrderRequest})
+     * @return information about the BUY transaction created by the redemption, never null
+     * @throws OrderException if the order cannot be redeemed (e.g. unknown order id, wrong status,
+     *                        downstream BUY submission failed)
+     */
+    default IRedeemOrderInfo redeemOrder(IRedeemOrderRequest request) throws OrderException {
+        return null;
+    }
 
 
     /**
@@ -1076,6 +1132,8 @@ public interface IExtensionContext {
 
     /**
      * Starts identity verification.
+     * This starts a verification process via {@link IIdentityVerificationProvider} and
+     * sends a verification link to the customer.
      *
      * @param publicIdentityId  public ID of an existing identity to be verified (must not be null)
      * @param messageToCustomer the message that will be displayed to the customer via SMS (can be null).
@@ -1084,6 +1142,20 @@ public interface IExtensionContext {
      * @return info about result of action, never null
      */
     IVerificationInfo startVerificationByIdentityId(String publicIdentityId, String messageToCustomer);
+
+    /**
+     * Registers an identity verification session started externally (e.g., in a web or mobile app).
+     * </p>
+     * This does NOT start a verification process via {@link IIdentityVerificationProvider} and
+     * does NOT send a verification link to the customer – must be handled by the caller.
+     * To start a verification process from beginning, use {@link #startVerificationByIdentityId(String, String)}.
+     *
+     * @param request session and identity details (must not be null)
+     * @throws RegisterVerificationException if the identity cannot be found or the session cannot be registered
+     */
+    default void registerVerificationSessionForIdentity(IVerificationSessionRequest request) throws RegisterVerificationException {
+        throw new UnsupportedOperationException("registerVerificationSession is not supported by this server version");
+    }
 
     /**
      * Reads the given file from the server config directory,

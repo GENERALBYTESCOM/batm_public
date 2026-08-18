@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2025 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2020 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -15,21 +15,17 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto;
+package com.generalbytes.batm.server.extensions.examples.externalpayment;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.generalbytes.batm.server.extensions.payment.external.ExternalPaymentStatus;
+import lombok.Data;
 
-import java.util.List;
-
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public record BitGoSendManyRequest(List<BitGoRecipient> recipients,
-                                   String walletPassphrase,
-                                   Integer numBlocks,
-                                   String comment,
-                                   String type
-) {
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    public record BitGoRecipient(String address, String amount, String tokenName) {
-
-    }
+/**
+ * Request DTO for updating the status of an external payment.
+ */
+@Data
+public class ExternalPaymentUpdateRequest {
+    private String externalPaymentId;
+    private ExternalPaymentStatus status;
+    private String updateDetails;
 }

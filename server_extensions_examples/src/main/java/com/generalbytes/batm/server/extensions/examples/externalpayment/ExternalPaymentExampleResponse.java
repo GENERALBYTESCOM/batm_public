@@ -1,5 +1,5 @@
 /*************************************************************************************
- * Copyright (C) 2014-2025 GENERAL BYTES s.r.o. All rights reserved.
+ * Copyright (C) 2014-2020 GENERAL BYTES s.r.o. All rights reserved.
  *
  * This software may be distributed and modified under the terms of the GNU
  * General Public License version 2 (GPL2) as published by the Free Software
@@ -15,21 +15,16 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.dto;
+package com.generalbytes.batm.server.extensions.examples.externalpayment;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-import java.util.List;
-
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public record BitGoSendManyRequest(List<BitGoRecipient> recipients,
-                                   String walletPassphrase,
-                                   Integer numBlocks,
-                                   String comment,
-                                   String type
-) {
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    public record BitGoRecipient(String address, String amount, String tokenName) {
-
-    }
+/**
+ * Simple response DTO for external payment REST endpoints.
+ */
+@Data
+@AllArgsConstructor
+public class ExternalPaymentExampleResponse {
+    private String message;
 }

@@ -22,10 +22,14 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.XChangeEx
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.knowm.xchange.ExchangeSpecification;
+import org.knowm.xchange.binance.dto.account.BinanceCurrencyInfo;
+import org.knowm.xchange.binance.service.BinanceAccountServiceRaw;
+import org.knowm.xchange.currency.Currency;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.account.AccountInfo;
 import org.knowm.xchange.dto.account.Wallet;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Set;
@@ -108,6 +112,37 @@ public abstract class BinanceExchange extends XChangeExchange {
     @Override
     public Set<String> getCryptoCurrencies() {
         return getSupportedCryptoCurrencies().stream().map(SupportedCryptoCurrency::getCryptoCurrency).collect(Collectors.toSet());
+    }
+
+    @Override
+    protected BigDecimal getWithdrawalFee(String cryptoCurrency) {
+        if (CryptoCurrency.USDTTRON.getCode().equalsIgnoreCase(cryptoCurrency)) {
+            return getUsdtTronWithdrawalFee();
+        }
+
+        return super.getWithdrawalFee(cryptoCurrency);
+    }
+
+    private BigDecimal getUsdtTronWithdrawalFee() {
+        try {
+            BinanceAccountServiceRaw accountService = (BinanceAccountServiceRaw) getExchange().getAccountService();
+            BigDecimal withdrawFee = accountService.currencyInfos().stream()
+                .filter(info -> Currency.USDT.equals(info.getCurrency()))
+                .findFirst()
+                .map(BinanceCurrencyInfo::getNetworks)
+                .flatMap(networks -> networks.stream()
+                    .filter(network -> CryptoCurrency.TRX.getCode().equals(network.getId()))
+                    .findFirst()
+                )
+                .map(BinanceCurrencyInfo.Network::getWithdrawFee)
+                .orElse(null);
+
+            log.info("Withdrawal fee: {} {}", withdrawFee, CryptoCurrency.USDTTRON.getCode());
+            return withdrawFee;
+        } catch (IOException e) {
+            log.error("Failed to get USDT TRC20 withdrawal fee from Binance", e);
+            return null;
+        }
     }
 
     protected BigDecimal getWithdrawalMinStep(String cryptoCurrency) {

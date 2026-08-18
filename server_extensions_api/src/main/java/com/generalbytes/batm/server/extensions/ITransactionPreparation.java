@@ -121,6 +121,14 @@ public interface ITransactionPreparation {
      */
     String getCellPhoneUsed();
 
+    /**
+     * Contains customer email address that was used during transaction
+     *
+     * @return email address
+     */
+    default String getEmailUsed() {
+        return null;
+    }
 
     /**
      * Returns language selected by customer on the terminal
@@ -150,6 +158,14 @@ public interface ITransactionPreparation {
      */
     default String getErrorQrCodeText() {
         return null;
+    }
+
+    /**
+     * Text to be rendered into a QR code and displayed alongside the error message.
+     *
+     * @param text QR code text, or null if no QR code should be displayed
+     */
+    default void setErrorQrCodeText(String text) {
     }
 
 

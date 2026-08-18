@@ -73,6 +73,35 @@ class SumSubApplicantReviewedResultMapperTests {
     }
 
     @Test
+    void testMapResult_emailMappedFromTopLevelField() {
+        ApplicantReviewedWebhook applicantReviewedWebhook = mock(ApplicantReviewedWebhook.class);
+        ApplicantReviewResult result = mock(ApplicantReviewResult.class);
+        when(result.getReviewAnswer()).thenReturn(ReviewAnswer.GREEN);
+        when(applicantReviewedWebhook.getReviewResult()).thenReturn(result);
+
+        ApplicantInfoResponse applicantInfoResponse = mock(ApplicantInfoResponse.class);
+        when(applicantInfoResponse.getEmail()).thenReturn("test@example.com");
+
+        ApplicantCheckResult checkResult = resultMapper.mapResult(applicantReviewedWebhook, applicantInfoResponse, null);
+
+        assertEquals("test@example.com", checkResult.getEmail());
+    }
+
+    @Test
+    void testMapResult_emailNullWhenNotPresent() {
+        ApplicantReviewedWebhook applicantReviewedWebhook = mock(ApplicantReviewedWebhook.class);
+        ApplicantReviewResult result = mock(ApplicantReviewResult.class);
+        when(result.getReviewAnswer()).thenReturn(ReviewAnswer.GREEN);
+        when(applicantReviewedWebhook.getReviewResult()).thenReturn(result);
+
+        ApplicantInfoResponse applicantInfoResponse = mock(ApplicantInfoResponse.class);
+
+        ApplicantCheckResult checkResult = resultMapper.mapResult(applicantReviewedWebhook, applicantInfoResponse, null);
+
+        assertNull(checkResult.getEmail());
+    }
+
+    @Test
     void testMapResult_responseInfoNull() {
         ApplicantReviewedWebhook applicantReviewedWebhook = mock(ApplicantReviewedWebhook.class);
         when(applicantReviewedWebhook.getInspectionId()).thenReturn(INSPECTION_ID);
@@ -160,6 +189,138 @@ class SumSubApplicantReviewedResultMapperTests {
         assertEquals("state", checkResult.getState());
     }
 
+    @Test
+    void testMapResult_addressFromFixedInfoWhenInfoHasNoAddress() {
+        ApplicantReviewedWebhook applicantReviewedWebhook = mock(ApplicantReviewedWebhook.class);
+        ApplicantReviewResult result = mock(ApplicantReviewResult.class);
+        when(result.getReviewAnswer()).thenReturn(ReviewAnswer.GREEN);
+        when(applicantReviewedWebhook.getReviewResult()).thenReturn(result);
+
+        ApplicantInfoResponse applicantInfoResponse = mock(ApplicantInfoResponse.class);
+        ApplicantInfo applicantInfo = createApplicantInfo(); // no addresses
+        when(applicantInfoResponse.getInfo()).thenReturn(applicantInfo);
+
+        ApplicantInfo fixedInfo = mock(ApplicantInfo.class);
+        ApplicantAddress fixedAddress = createApplicantAddress();
+        when(fixedInfo.getAddresses()).thenReturn(List.of(fixedAddress));
+        when(applicantInfoResponse.getFixedInfo()).thenReturn(fixedInfo);
+
+        ApplicantCheckResult checkResult = resultMapper.mapResult(applicantReviewedWebhook, applicantInfoResponse, mock(InspectionInfoResponse.class));
+
+        assertEquals("formattedAddress", checkResult.getRawAddress());
+        assertEquals("street", checkResult.getStreetAddress());
+        assertEquals("town", checkResult.getCity());
+        assertEquals("postCode", checkResult.getZip());
+        assertEquals("country", checkResult.getCountry());
+    }
+
+    @Test
+    void testMapResult_infoAddressTakesPrecedenceOverFixedInfo() {
+        ApplicantReviewedWebhook applicantReviewedWebhook = mock(ApplicantReviewedWebhook.class);
+        ApplicantReviewResult result = mock(ApplicantReviewResult.class);
+        when(result.getReviewAnswer()).thenReturn(ReviewAnswer.GREEN);
+        when(applicantReviewedWebhook.getReviewResult()).thenReturn(result);
+
+        ApplicantInfoResponse applicantInfoResponse = mock(ApplicantInfoResponse.class);
+        ApplicantInfo applicantInfo = createApplicantInfo();
+        ApplicantAddress infoAddress = mock(ApplicantAddress.class);
+        when(infoAddress.getFormattedAddress()).thenReturn("infoAddress");
+        when(infoAddress.getCountry()).thenReturn("infoCountry");
+        when(applicantInfo.getAddresses()).thenReturn(List.of(infoAddress));
+        when(applicantInfoResponse.getInfo()).thenReturn(applicantInfo);
+
+        ApplicantInfo fixedInfo = mock(ApplicantInfo.class);
+        ApplicantAddress fixedAddress = mock(ApplicantAddress.class);
+        when(fixedAddress.getFormattedAddress()).thenReturn("fixedAddress");
+        when(fixedInfo.getAddresses()).thenReturn(List.of(fixedAddress));
+        when(applicantInfoResponse.getFixedInfo()).thenReturn(fixedInfo);
+
+        ApplicantCheckResult checkResult = resultMapper.mapResult(applicantReviewedWebhook, applicantInfoResponse, mock(InspectionInfoResponse.class));
+
+        assertEquals("infoAddress", checkResult.getRawAddress());
+        assertEquals("infoCountry", checkResult.getCountry());
+    }
+
+    @Test
+    void testMapResult_noAddressWhenBothInfoAndFixedInfoHaveNoAddresses() {
+        ApplicantReviewedWebhook applicantReviewedWebhook = mock(ApplicantReviewedWebhook.class);
+        ApplicantReviewResult result = mock(ApplicantReviewResult.class);
+        when(result.getReviewAnswer()).thenReturn(ReviewAnswer.GREEN);
+        when(applicantReviewedWebhook.getReviewResult()).thenReturn(result);
+
+        ApplicantInfoResponse applicantInfoResponse = mock(ApplicantInfoResponse.class);
+        ApplicantInfo infoWithNoAddresses = createApplicantInfo();
+        when(applicantInfoResponse.getInfo()).thenReturn(infoWithNoAddresses);
+        ApplicantInfo fixedInfoWithNoAddresses = mock(ApplicantInfo.class); // no addresses
+        when(applicantInfoResponse.getFixedInfo()).thenReturn(fixedInfoWithNoAddresses);
+
+        ApplicantCheckResult checkResult = resultMapper.mapResult(applicantReviewedWebhook, applicantInfoResponse, mock(InspectionInfoResponse.class));
+
+        assertNull(checkResult.getRawAddress());
+        assertNull(checkResult.getStreetAddress());
+        assertNull(checkResult.getCity());
+        assertNull(checkResult.getZip());
+    }
+
+    @Test
+    void testMapResult_dobFromFixedInfoWhenInfoHasNoDob() {
+        ApplicantReviewedWebhook applicantReviewedWebhook = mock(ApplicantReviewedWebhook.class);
+        ApplicantReviewResult result = mock(ApplicantReviewResult.class);
+        when(result.getReviewAnswer()).thenReturn(ReviewAnswer.GREEN);
+        when(applicantReviewedWebhook.getReviewResult()).thenReturn(result);
+
+        ApplicantInfoResponse applicantInfoResponse = mock(ApplicantInfoResponse.class);
+        ApplicantInfo applicantInfo = mock(ApplicantInfo.class); // no dob
+        when(applicantInfoResponse.getInfo()).thenReturn(applicantInfo);
+
+        ApplicantInfo fixedInfo = mock(ApplicantInfo.class);
+        when(fixedInfo.getDob()).thenReturn(LocalDate.of(2000, Month.APRIL, 1));
+        when(applicantInfoResponse.getFixedInfo()).thenReturn(fixedInfo);
+
+        ApplicantCheckResult checkResult = resultMapper.mapResult(applicantReviewedWebhook, applicantInfoResponse, mock(InspectionInfoResponse.class));
+
+        assertEquals(getTestDate(), checkResult.getBirthDate());
+    }
+
+    @Test
+    void testMapResult_infoDobTakesPrecedenceOverFixedInfo() {
+        ApplicantReviewedWebhook applicantReviewedWebhook = mock(ApplicantReviewedWebhook.class);
+        ApplicantReviewResult result = mock(ApplicantReviewResult.class);
+        when(result.getReviewAnswer()).thenReturn(ReviewAnswer.GREEN);
+        when(applicantReviewedWebhook.getReviewResult()).thenReturn(result);
+
+        ApplicantInfoResponse applicantInfoResponse = mock(ApplicantInfoResponse.class);
+        ApplicantInfo applicantInfo = mock(ApplicantInfo.class);
+        when(applicantInfo.getDob()).thenReturn(LocalDate.of(2000, Month.APRIL, 1));
+        when(applicantInfoResponse.getInfo()).thenReturn(applicantInfo);
+
+        ApplicantInfo fixedInfo = mock(ApplicantInfo.class);
+        when(fixedInfo.getDob()).thenReturn(LocalDate.of(1999, Month.JANUARY, 1));
+        when(applicantInfoResponse.getFixedInfo()).thenReturn(fixedInfo);
+
+        ApplicantCheckResult checkResult = resultMapper.mapResult(applicantReviewedWebhook, applicantInfoResponse, mock(InspectionInfoResponse.class));
+
+        assertEquals(getTestDate(), checkResult.getBirthDate());
+    }
+
+    @Test
+    void testMapResult_noDobWhenBothInfoAndFixedInfoHaveNoDob() {
+        ApplicantReviewedWebhook applicantReviewedWebhook = mock(ApplicantReviewedWebhook.class);
+        ApplicantReviewResult result = mock(ApplicantReviewResult.class);
+        when(result.getReviewAnswer()).thenReturn(ReviewAnswer.GREEN);
+        when(applicantReviewedWebhook.getReviewResult()).thenReturn(result);
+
+        ApplicantInfoResponse applicantInfoResponse = mock(ApplicantInfoResponse.class);
+        ApplicantInfo infoWithNoDob = mock(ApplicantInfo.class); // no dob
+        when(applicantInfoResponse.getInfo()).thenReturn(infoWithNoDob);
+        ApplicantInfo fixedInfoWithNoDob = mock(ApplicantInfo.class); // no dob
+        when(applicantInfoResponse.getFixedInfo()).thenReturn(fixedInfoWithNoDob);
+
+        ApplicantCheckResult checkResult = resultMapper.mapResult(applicantReviewedWebhook, applicantInfoResponse, mock(InspectionInfoResponse.class));
+
+        assertNull(checkResult.getBirthDate());
+    }
+
     static Object[] identityDocumentMappingSource() {
         return new Object[]{
                 new Object[]{DocumentType.national_identity_card, SumSubDocumentType.ID_CARD},
@@ -191,6 +352,7 @@ class SumSubApplicantReviewedResultMapperTests {
 
         assertEquals(documentType, checkResult.getDocumentType());
         assertEquals("documentNumber", checkResult.getDocumentNumber());
+        assertEquals("additionalNumber", checkResult.getSecondaryDocumentNumber());
         assertEquals(getTestDate(), checkResult.getExpirationDate());
         assertEquals("countryFromDocument", checkResult.getCountry());
     }
@@ -216,6 +378,7 @@ class SumSubApplicantReviewedResultMapperTests {
 
         assertNull(checkResult.getDocumentType());
         assertNull(checkResult.getDocumentNumber());
+        assertNull(checkResult.getSecondaryDocumentNumber());
         assertNull(checkResult.getExpirationDate());
         assertNull(checkResult.getCountry());
     }
@@ -246,6 +409,44 @@ class SumSubApplicantReviewedResultMapperTests {
         assertNull(checkResult.getCountry());
     }
 
+    static Object[] middleNameHandlingSource() {
+        return new Object[]{
+            new Object[]{"firstName", "middleName", "firstName middleName"},
+            new Object[]{null, "middleName", "middleName"},
+            new Object[]{"firstName", null, "firstName"}
+        };
+    }
+
+    @ParameterizedTest
+    @MethodSource("middleNameHandlingSource")
+    void testMapResult_middleNameHandling(String firstName, String middleName, String expectedFirstName) {
+        ApplicantReviewedWebhook applicantReviewedWebhook = mock(ApplicantReviewedWebhook.class);
+        when(applicantReviewedWebhook.getInspectionId()).thenReturn(INSPECTION_ID);
+        when(applicantReviewedWebhook.getApplicantId()).thenReturn(APPLICANT_ID);
+        ApplicantReviewResult result = mock(ApplicantReviewResult.class);
+        when(result.getReviewAnswer()).thenReturn(ReviewAnswer.GREEN);
+        when(applicantReviewedWebhook.getReviewResult()).thenReturn(result);
+
+        ApplicantInfoResponse applicantInfoResponse = mock(ApplicantInfoResponse.class);
+        ApplicantInfo applicantInfo;
+        if (firstName != null && middleName != null) {
+            applicantInfo = createApplicantInfo();
+            when(applicantInfo.getMiddleName()).thenReturn(middleName);
+        } else {
+            applicantInfo = mock(ApplicantInfo.class);
+            when(applicantInfo.getFirstName()).thenReturn(firstName);
+            when(applicantInfo.getMiddleName()).thenReturn(middleName);
+        }
+        when(applicantInfoResponse.getInfo()).thenReturn(applicantInfo);
+
+        ApplicantCheckResult checkResult = resultMapper.mapResult(applicantReviewedWebhook, applicantInfoResponse, mock(InspectionInfoResponse.class));
+
+        assertEquals(expectedFirstName, checkResult.getFirstName());
+        if (firstName != null && middleName != null) {
+            assertEquals("lastName", checkResult.getLastName());
+        }
+    }
+
     private ApplicantInfo createApplicantInfo() {
         ApplicantInfo info = mock(ApplicantInfo.class);
         when(info.getFirstName()).thenReturn("firstName");
@@ -270,6 +471,7 @@ class SumSubApplicantReviewedResultMapperTests {
         ApplicantDocument document = mock(ApplicantDocument.class);
         when(document.getIdDocType()).thenReturn(documentType);
         when(document.getNumber()).thenReturn("documentNumber");
+        when(document.getAdditionalNumber()).thenReturn("additionalNumber");
         when(document.getValidUntil()).thenReturn(LocalDate.of(2000, Month.APRIL, 1));
         when(document.getCountry()).thenReturn("countryFromDocument");
         return document;

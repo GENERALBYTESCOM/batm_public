@@ -12,7 +12,6 @@
     <extension autoload="false" class="com.generalbytes.batm.server.extensions.examples.rest.RESTExampleExtension" />
     <extension autoload="false" class="com.generalbytes.batm.server.extensions.examples.communication.ExternalCommunicationExampleExtension" />
     <extension autoload="false" class="com.generalbytes.batm.server.extensions.examples.activeterminals.ActiveTerminalsExtension" />
-
-
+    <extension autoload="false" class="com.generalbytes.batm.server.extensions.examples.externalpayment.ExternalPaymentExampleExtension" />
 
 </extensions>
