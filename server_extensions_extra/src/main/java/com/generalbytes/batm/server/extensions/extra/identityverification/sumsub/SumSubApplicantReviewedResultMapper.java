@@ -63,6 +63,12 @@ public class SumSubApplicantReviewedResultMapper {
             }
             checkResult.setBirthDate(fromLocalDate(dob));
 
+            String tin = info.getTin();
+            if (tin == null && applicantInfoResponse.getFixedInfo() != null) {
+                tin = applicantInfoResponse.getFixedInfo().getTin();
+            }
+            checkResult.setTin(tin);
+
             // Get the IDENTITY document type from the inspection and convert to a GB document type
             ApplicantDocument ssDocument = extractIdentityDocument(info.getIdDocs(), inspectionInfoResponse.getImages());
             if (ssDocument != null) {
@@ -93,9 +99,10 @@ public class SumSubApplicantReviewedResultMapper {
         }
 
         log.info("Mapped ApplicantCheckResult for applicant {}: hasFirstName={}, hasLastName={}, hasDob={}, "
-                + "hasDocumentNumber={}, hasExpirationDate={}, hasRawAddress={}", applicantReviewed.getApplicantId(),
+                + "hasDocumentNumber={}, hasExpirationDate={}, hasRawAddress={}, hasTin={}", applicantReviewed.getApplicantId(),
             checkResult.getFirstName() != null, checkResult.getLastName() != null, checkResult.getBirthDate() != null,
-            checkResult.getDocumentNumber() != null, checkResult.getExpirationDate() != null, checkResult.getRawAddress() != null);
+            checkResult.getDocumentNumber() != null, checkResult.getExpirationDate() != null, checkResult.getRawAddress() != null,
+            checkResult.getTin() != null);
 
         return checkResult;
     }
