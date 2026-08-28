@@ -15,14 +15,11 @@
  * Web      :  http://www.generalbytes.com
  *
  ************************************************************************************/
-package com.generalbytes.batm.server.extensions.extra.verumcoin.wallets.verumcoind;
+package com.generalbytes.batm.server.extensions.extra.verumcoin.wallets;
 
-import java.net.MalformedURLException;
+import wf.bitcoin.javabitcoindrpcclient.BitcoindRpcClient.Transaction;
 
-import com.generalbytes.batm.server.extensions.IGeneratesNewDepositCryptoAddress;
-
-public class VerumcoindUniqueAddressRPCWallet extends VerumcoindRPCWallet implements IGeneratesNewDepositCryptoAddress {
-    public VerumcoindUniqueAddressRPCWallet(String rpcURL, String accountName) throws MalformedURLException {
-        super(rpcURL, accountName);
-    }
+public interface VerumcoinTransaction extends Transaction {
+    boolean instantlock();
+    boolean instantlock_internal();
 }
