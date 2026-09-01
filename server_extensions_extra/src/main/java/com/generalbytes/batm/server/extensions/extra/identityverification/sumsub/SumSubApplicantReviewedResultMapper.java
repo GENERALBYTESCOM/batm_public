@@ -54,8 +54,9 @@ public class SumSubApplicantReviewedResultMapper {
 
         if (applicantInfoResponse.getInfo() != null) {
             ApplicantInfo info = applicantInfoResponse.getInfo();
+            ApplicantInfo fixedInfo = applicantInfoResponse.getFixedInfo();
             // set personal information
-            checkResult.setFirstName(buildGivenName(info.getFirstName(), info.getMiddleName()));
+            checkResult.setFirstName(resolveGivenName(info, fixedInfo));
             checkResult.setLastName(info.getLastName());
             LocalDate dob = info.getDob();
             if (dob == null && applicantInfoResponse.getFixedInfo() != null) {
@@ -198,6 +199,22 @@ public class SumSubApplicantReviewedResultMapper {
             return null;
         }
         return Date.from(date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    /**
+     * Resolves the given name from {@code info}, falling back to {@code fixedInfo} independently
+     * for first name and middle name when either is missing, then combines them into a single value.
+     */
+    private String resolveGivenName(ApplicantInfo info, ApplicantInfo fixedInfo) {
+        String firstName = info.getFirstName();
+        if (firstName == null && fixedInfo != null) {
+            firstName = fixedInfo.getFirstName();
+        }
+        String middleName = info.getMiddleName();
+        if (middleName == null && fixedInfo != null) {
+            middleName = fixedInfo.getMiddleName();
+        }
+        return buildGivenName(firstName, middleName);
     }
 
     private String buildGivenName(String firstName, String middleName) {
