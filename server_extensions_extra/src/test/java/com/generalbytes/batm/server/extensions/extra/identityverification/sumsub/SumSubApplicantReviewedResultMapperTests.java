@@ -447,6 +447,87 @@ class SumSubApplicantReviewedResultMapperTests {
         }
     }
 
+    @Test
+    void testMapResult_middleNameFromFixedInfoWhenInfoHasNoMiddleName() {
+        ApplicantReviewedWebhook applicantReviewedWebhook = mock(ApplicantReviewedWebhook.class);
+        ApplicantReviewResult result = mock(ApplicantReviewResult.class);
+        when(result.getReviewAnswer()).thenReturn(ReviewAnswer.GREEN);
+        when(applicantReviewedWebhook.getReviewResult()).thenReturn(result);
+
+        ApplicantInfoResponse applicantInfoResponse = mock(ApplicantInfoResponse.class);
+        ApplicantInfo applicantInfo = mock(ApplicantInfo.class);
+        when(applicantInfo.getFirstName()).thenReturn("firstName");
+        when(applicantInfoResponse.getInfo()).thenReturn(applicantInfo);
+
+        ApplicantInfo fixedInfo = mock(ApplicantInfo.class);
+        when(fixedInfo.getMiddleName()).thenReturn("fixedInfoMiddleName");
+        when(applicantInfoResponse.getFixedInfo()).thenReturn(fixedInfo);
+
+        ApplicantCheckResult checkResult = resultMapper.mapResult(applicantReviewedWebhook, applicantInfoResponse, mock(InspectionInfoResponse.class));
+
+        assertEquals("firstName fixedInfoMiddleName", checkResult.getFirstName());
+    }
+
+    @Test
+    void testMapResult_infoMiddleNameTakesPrecedenceOverFixedInfo() {
+        ApplicantReviewedWebhook applicantReviewedWebhook = mock(ApplicantReviewedWebhook.class);
+        ApplicantReviewResult result = mock(ApplicantReviewResult.class);
+        when(result.getReviewAnswer()).thenReturn(ReviewAnswer.GREEN);
+        when(applicantReviewedWebhook.getReviewResult()).thenReturn(result);
+
+        ApplicantInfoResponse applicantInfoResponse = mock(ApplicantInfoResponse.class);
+        ApplicantInfo applicantInfo = mock(ApplicantInfo.class);
+        when(applicantInfo.getFirstName()).thenReturn("firstName");
+        when(applicantInfo.getMiddleName()).thenReturn("infoMiddleName");
+        when(applicantInfoResponse.getInfo()).thenReturn(applicantInfo);
+
+        ApplicantInfo fixedInfo = mock(ApplicantInfo.class);
+        when(fixedInfo.getMiddleName()).thenReturn("fixedInfoMiddleName");
+        when(applicantInfoResponse.getFixedInfo()).thenReturn(fixedInfo);
+
+        ApplicantCheckResult checkResult = resultMapper.mapResult(applicantReviewedWebhook, applicantInfoResponse, mock(InspectionInfoResponse.class));
+
+        assertEquals("firstName infoMiddleName", checkResult.getFirstName());
+    }
+
+    @Test
+    void testMapResult_firstNameFromFixedInfoWhenInfoHasNoFirstName() {
+        ApplicantReviewedWebhook applicantReviewedWebhook = mock(ApplicantReviewedWebhook.class);
+        ApplicantReviewResult result = mock(ApplicantReviewResult.class);
+        when(result.getReviewAnswer()).thenReturn(ReviewAnswer.GREEN);
+        when(applicantReviewedWebhook.getReviewResult()).thenReturn(result);
+
+        ApplicantInfoResponse applicantInfoResponse = mock(ApplicantInfoResponse.class);
+        ApplicantInfo applicantInfo = mock(ApplicantInfo.class); // no firstName, no middleName
+        when(applicantInfoResponse.getInfo()).thenReturn(applicantInfo);
+
+        ApplicantInfo fixedInfo = mock(ApplicantInfo.class);
+        when(fixedInfo.getFirstName()).thenReturn("fixedInfoFirstName");
+        when(applicantInfoResponse.getFixedInfo()).thenReturn(fixedInfo);
+
+        ApplicantCheckResult checkResult = resultMapper.mapResult(applicantReviewedWebhook, applicantInfoResponse, mock(InspectionInfoResponse.class));
+
+        assertEquals("fixedInfoFirstName", checkResult.getFirstName());
+    }
+
+    @Test
+    void testMapResult_noFirstOrMiddleNameWhenBothInfoAndFixedInfoHaveNone() {
+        ApplicantReviewedWebhook applicantReviewedWebhook = mock(ApplicantReviewedWebhook.class);
+        ApplicantReviewResult result = mock(ApplicantReviewResult.class);
+        when(result.getReviewAnswer()).thenReturn(ReviewAnswer.GREEN);
+        when(applicantReviewedWebhook.getReviewResult()).thenReturn(result);
+
+        ApplicantInfoResponse applicantInfoResponse = mock(ApplicantInfoResponse.class);
+        ApplicantInfo infoWithNoName = mock(ApplicantInfo.class);
+        when(applicantInfoResponse.getInfo()).thenReturn(infoWithNoName);
+        ApplicantInfo fixedInfoWithNoName = mock(ApplicantInfo.class);
+        when(applicantInfoResponse.getFixedInfo()).thenReturn(fixedInfoWithNoName);
+
+        ApplicantCheckResult checkResult = resultMapper.mapResult(applicantReviewedWebhook, applicantInfoResponse, mock(InspectionInfoResponse.class));
+
+        assertNull(checkResult.getFirstName());
+    }
+
     private ApplicantInfo createApplicantInfo() {
         ApplicantInfo info = mock(ApplicantInfo.class);
         when(info.getFirstName()).thenReturn("firstName");
