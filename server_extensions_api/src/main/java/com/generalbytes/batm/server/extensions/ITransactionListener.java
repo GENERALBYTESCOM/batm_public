@@ -216,4 +216,18 @@ public interface ITransactionListener {
         return TravelRuleProviderTransferStatus.IN_PROGRESS;
     }
 
+    /**
+     * Callback method that is called by server after a wallet payment (e.g. spending funds from a private key
+     * scanned from a paper wallet during a sell transaction) has been successfully sent. Not called when sending
+     * the payment fails.
+     * <p>
+     * {@link WalletPaymentSentData#getPrivateKey()} is only populated when private key forwarding is
+     * explicitly enabled on the server side, as it involves transferring highly sensitive key material to the
+     * extension. All other properties are always provided.
+     *
+     * @param data data of the wallet payment
+     */
+    default void onWalletPaymentSent(WalletPaymentSentData data) {
+    }
+
 }
