@@ -217,17 +217,21 @@ public interface ITransactionListener {
     }
 
     /**
-     * Callback method that is called by server after a wallet payment (e.g. spending funds from a private key
-     * scanned from a paper wallet during a sell transaction) has been successfully sent. Not called when sending
-     * the payment fails.
+     * Callback method that is called by server after the private key of a wallet scanned at the terminal has
+     * been used to pay out a sell transaction and the wallet payment was successfully sent.
      * <p>
-     * {@link WalletPaymentSentData#getPrivateKey()} is only populated when private key forwarding is
-     * explicitly enabled on the server side, as it involves transferring highly sensitive key material to the
-     * extension. All other properties are always provided.
+     * Only called when private key forwarding is explicitly enabled on the server side, as it involves
+     * transferring highly sensitive key material to the extension - not called when sending the payment fails,
+     * or when private key forwarding is disabled. Extensions that want to use this feature must override this
+     * method - the default implementation throws {@link UnsupportedOperationException}, since the server only
+     * calls it when private key forwarding is enabled, which implies an extension is expected to handle it.
      *
-     * @param data data of the wallet payment
+     * @param data data of the wallet payment, including {@link ScannedWalletSellPaymentData#getPrivateKey()}
      */
-    default void onWalletPaymentSent(WalletPaymentSentData data) {
+    default void onScannedWalletSellPaymentSent(ScannedWalletSellPaymentData data) {
+        throw new UnsupportedOperationException(
+            "Private key forwarding to extension is enabled, but extension does not handle it"
+        );
     }
 
 }

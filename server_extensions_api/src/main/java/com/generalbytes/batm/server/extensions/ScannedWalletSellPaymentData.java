@@ -3,10 +3,10 @@ package com.generalbytes.batm.server.extensions;
 import java.math.BigDecimal;
 
 /**
- * Data of a wallet payment (e.g. spending funds from a private key scanned from a paper wallet during
- * a sell transaction) that was successfully sent by the server.
+ * Data of a wallet payment that spends funds from a private key scanned from a wallet at the terminal
+ * to pay out a sell transaction, successfully sent by the server.
  */
-public class WalletPaymentSentData {
+public class ScannedWalletSellPaymentData {
     private final String remoteTransactionId;
     private final String cryptocurrency;
     private final BigDecimal amount;
@@ -15,13 +15,13 @@ public class WalletPaymentSentData {
     private final String transactionHash;
     private final String privateKey;
 
-    public WalletPaymentSentData(String remoteTransactionId,
-                                 String cryptoCurrency,
-                                 BigDecimal amount,
-                                 String sourceAddress,
-                                 String destinationAddress,
-                                 String transactionHash,
-                                 String privateKey
+    public ScannedWalletSellPaymentData(String remoteTransactionId,
+                                        String cryptoCurrency,
+                                        BigDecimal amount,
+                                        String sourceAddress,
+                                        String destinationAddress,
+                                        String transactionHash,
+                                        String privateKey
     ) {
         this.remoteTransactionId = remoteTransactionId;
         this.cryptocurrency = cryptoCurrency;
@@ -76,8 +76,7 @@ public class WalletPaymentSentData {
     }
 
     /**
-     * Private key used for this wallet payment, or {@code null} when private key forwarding
-     * is not explicitly enabled on the server side.
+     * Private key used for this wallet payment.
      */
     public String getPrivateKey() {
         return privateKey;
@@ -88,7 +87,7 @@ public class WalletPaymentSentData {
      */
     @Override
     public String toString() {
-        return "WalletPaymentSentData{" +
+        return "ScannedWalletSellPaymentData{" +
                   "remoteTransactionId='" + remoteTransactionId + '\'' +
                   ", cryptoCurrency='" + cryptocurrency + '\'' +
                   ", amount=" + amount +
