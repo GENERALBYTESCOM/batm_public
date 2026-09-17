@@ -15,4 +15,5 @@ public class ApplicantInfo extends JsonObject {
     private String phone;
     private List<ApplicantDocument> idDocs;
     private List<ApplicantAddress> addresses;
+    private String tin;
 }
