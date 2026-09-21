@@ -321,6 +321,65 @@ class SumSubApplicantReviewedResultMapperTests {
         assertNull(checkResult.getBirthDate());
     }
 
+    @Test
+    void testMapResult_tinFromFixedInfoWhenInfoHasNoTin() {
+        ApplicantReviewedWebhook applicantReviewedWebhook = mock(ApplicantReviewedWebhook.class);
+        ApplicantReviewResult result = mock(ApplicantReviewResult.class);
+        when(result.getReviewAnswer()).thenReturn(ReviewAnswer.GREEN);
+        when(applicantReviewedWebhook.getReviewResult()).thenReturn(result);
+
+        ApplicantInfoResponse applicantInfoResponse = mock(ApplicantInfoResponse.class);
+        ApplicantInfo applicantInfo = mock(ApplicantInfo.class); // no tin
+        when(applicantInfoResponse.getInfo()).thenReturn(applicantInfo);
+
+        ApplicantInfo fixedInfo = mock(ApplicantInfo.class);
+        when(fixedInfo.getTin()).thenReturn("fixedInfoTin");
+        when(applicantInfoResponse.getFixedInfo()).thenReturn(fixedInfo);
+
+        ApplicantCheckResult checkResult = resultMapper.mapResult(applicantReviewedWebhook, applicantInfoResponse, mock(InspectionInfoResponse.class));
+
+        assertEquals("fixedInfoTin", checkResult.getTin());
+    }
+
+    @Test
+    void testMapResult_infoTinTakesPrecedenceOverFixedInfo() {
+        ApplicantReviewedWebhook applicantReviewedWebhook = mock(ApplicantReviewedWebhook.class);
+        ApplicantReviewResult result = mock(ApplicantReviewResult.class);
+        when(result.getReviewAnswer()).thenReturn(ReviewAnswer.GREEN);
+        when(applicantReviewedWebhook.getReviewResult()).thenReturn(result);
+
+        ApplicantInfoResponse applicantInfoResponse = mock(ApplicantInfoResponse.class);
+        ApplicantInfo applicantInfo = mock(ApplicantInfo.class);
+        when(applicantInfo.getTin()).thenReturn("infoTin");
+        when(applicantInfoResponse.getInfo()).thenReturn(applicantInfo);
+
+        ApplicantInfo fixedInfo = mock(ApplicantInfo.class);
+        when(fixedInfo.getTin()).thenReturn("fixedInfoTin");
+        when(applicantInfoResponse.getFixedInfo()).thenReturn(fixedInfo);
+
+        ApplicantCheckResult checkResult = resultMapper.mapResult(applicantReviewedWebhook, applicantInfoResponse, mock(InspectionInfoResponse.class));
+
+        assertEquals("infoTin", checkResult.getTin());
+    }
+
+    @Test
+    void testMapResult_noTinWhenBothInfoAndFixedInfoHaveNoTin() {
+        ApplicantReviewedWebhook applicantReviewedWebhook = mock(ApplicantReviewedWebhook.class);
+        ApplicantReviewResult result = mock(ApplicantReviewResult.class);
+        when(result.getReviewAnswer()).thenReturn(ReviewAnswer.GREEN);
+        when(applicantReviewedWebhook.getReviewResult()).thenReturn(result);
+
+        ApplicantInfoResponse applicantInfoResponse = mock(ApplicantInfoResponse.class);
+        ApplicantInfo infoWithNoTin = mock(ApplicantInfo.class);
+        when(applicantInfoResponse.getInfo()).thenReturn(infoWithNoTin);
+        ApplicantInfo fixedInfoWithNoTin = mock(ApplicantInfo.class);
+        when(applicantInfoResponse.getFixedInfo()).thenReturn(fixedInfoWithNoTin);
+
+        ApplicantCheckResult checkResult = resultMapper.mapResult(applicantReviewedWebhook, applicantInfoResponse, mock(InspectionInfoResponse.class));
+
+        assertNull(checkResult.getTin());
+    }
+
     static Object[] identityDocumentMappingSource() {
         return new Object[]{
                 new Object[]{DocumentType.national_identity_card, SumSubDocumentType.ID_CARD},
