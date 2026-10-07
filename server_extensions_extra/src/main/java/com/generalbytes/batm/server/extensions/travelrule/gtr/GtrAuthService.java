@@ -37,7 +37,7 @@ public class GtrAuthService {
      */
     public String getAccessToken(GtrCredentials credentials) {
         CompletableFuture<String> tokenRequest = tokenRequests.get(credentials.getAccessKey());
-        if (tokenRequest != null) {
+        if (tokenRequest != null && !tokenRequest.isDone()) {
             try {
                 tokenRequest.join();
             } catch (Exception e) {
@@ -57,6 +57,8 @@ public class GtrAuthService {
      * @param credentials {@link GtrCredentials}
      */
     public void refreshAccessToken(GtrCredentials credentials) {
+        removeCompletedTokenRequest(credentials);
+
         tokenRequests.computeIfAbsent(
                 credentials.getAccessKey(),
                 accessKey -> {
@@ -66,11 +68,16 @@ public class GtrAuthService {
                             logRefreshAccessTokenFailure(throwable);
                             accessTokens.remove(accessKey);
                         }
-
-                        tokenRequests.remove(accessKey);
                     });
                     return future;
                 }
+        );
+    }
+
+    private void removeCompletedTokenRequest(GtrCredentials credentials) {
+        tokenRequests.computeIfPresent(
+            credentials.getAccessKey(),
+            (accessKey, tokenRequest) -> tokenRequest.isDone() ? null : tokenRequest
         );
     }
 
