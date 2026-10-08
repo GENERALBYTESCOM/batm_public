@@ -115,6 +115,7 @@ dependencies {
     implementation("com.onfido:onfido-api-java:2.3.1")
     implementation("org.apache.commons:commons-lang3:3.13.0")
 
+    implementation("com.mmorrell:solanaj:1.17.3")
     implementation("com.goterl:lazysodium-java:5.1.4")
     implementation("net.java.dev.jna:jna:5.12.1")
 
