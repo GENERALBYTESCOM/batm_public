@@ -17,29 +17,18 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.common;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import wf.bitcoin.javabitcoindrpcclient.BitcoinRPCException;
 import wf.bitcoin.javabitcoindrpcclient.BitcoinJSONRPCClient;
 import wf.bitcoin.javabitcoindrpcclient.GenericRpcException;
 
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.X509Certificate;
 import java.util.AbstractList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-
 public class RPCClient extends BitcoinJSONRPCClient {
-    private static final Logger log = LoggerFactory.getLogger("batm.master.extensions.RPCClient");
     private String rpcURL;
     private String cryptoCurrency;
 
@@ -48,25 +37,6 @@ public class RPCClient extends BitcoinJSONRPCClient {
         super(rpcUrl);
         this.rpcURL = rpcUrl;
         this.cryptoCurrency = cryptoCurrency;
-        setHostnameVerifier((s, sslSession) -> true);
-        try {
-            SSLContext sslcontext = SSLContext.getInstance("TLS");
-            sslcontext.init(null, new TrustManager[] {new X509TrustManager() {
-                @Override
-                public void checkClientTrusted(X509Certificate[] x509Certificates, String s) {}
-
-                @Override
-                public void checkServerTrusted(X509Certificate[] x509Certificates, String s) {}
-
-                @Override
-                public X509Certificate[] getAcceptedIssuers() { return new X509Certificate[0]; }
-            }}, null);
-            setSslSocketFactory(sslcontext.getSocketFactory());
-        } catch (NoSuchAlgorithmException e) {
-            log.error("Error", e);
-        } catch (KeyManagementException e) {
-            log.error("Error", e);
-        }
     }
 
     /**
