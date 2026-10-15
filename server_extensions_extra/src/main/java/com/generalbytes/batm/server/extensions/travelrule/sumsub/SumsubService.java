@@ -32,7 +32,7 @@ public class SumsubService {
     private final TravelRuleExtensionContext extensionContext;
     private final SumsubApiService apiService;
     private final SumsubValidator validator;
-    private final SumsubConfigurationService configurationService;
+    private final SumsubConfiguration configuration;
 
     /**
      * Get all available VASPs from Sumsub.
@@ -83,9 +83,14 @@ public class SumsubService {
 
     private String getOriginatorWalletAddress(ITravelRuleTransferData transferData) {
         String asset = transferData.getTransactionAsset();
-        String address = configurationService.getOriginatorWalletAddress(asset);
+        if (StringUtils.isBlank(asset)) {
+            log.warn("Transfer asset is not set, the transfer is sent without originator wallet address. Txn ID: {}",
+                    transferData.getPublicId());
+            return null;
+        }
+        String address = configuration.getOriginatorWalletAddresses().get(asset);
         if (address == null) {
-            log.warn("Originator wallet address for {} is not configured (key 'originatorWalletAddress.{}' in /batm/config/sumsub),"
+            log.warn("Originator wallet address for {} is not configured (key 'originator.wallet.{}.address' in /batm/config/sumsub),"
                     + " the transfer is sent without it. Txn ID: {}", asset, asset, transferData.getPublicId());
         }
         return address;

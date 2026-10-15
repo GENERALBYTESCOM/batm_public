@@ -10,11 +10,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -44,27 +44,39 @@ class SumsubConfigurationServiceTest {
     }
 
     @Test
-    void testGetOriginatorWalletAddress() {
-        mockKeyProperty("originatorWalletAddress.BTC", " bc1q_hot_wallet ");
+    void testGetSumsubConfiguration_originatorWalletAddresses() {
+        when(extensionContext.getConfigFileContent("sumsub")).thenReturn(String.join("\n",
+                "webhooksEnabled=true",
+                "originator.wallet.BTC.address= bc1q_hot_wallet ",
+                "originator.wallet.USDT-TRON.address=T_hot_wallet",
+                "originator.wallet.ETH.address=  ",
+                "originator.wallet.LTC.type=custodial",
+                "originatorWalletAddress.DOGE=D_old_key_format"
+        ));
 
-        assertEquals("bc1q_hot_wallet", configurationService.getOriginatorWalletAddress("BTC"));
+        SumsubConfiguration configuration = configurationService.getSumsubConfiguration();
+
+        assertEquals(Map.of("BTC", "bc1q_hot_wallet", "USDT-TRON", "T_hot_wallet"), configuration.getOriginatorWalletAddresses());
     }
 
     @ParameterizedTest
     @NullSource
-    @ValueSource(strings = { "", "  " })
-    void testGetOriginatorWalletAddress_notConfigured(String configuredValue) {
-        mockKeyProperty("originatorWalletAddress.BTC", configuredValue);
+    @ValueSource(strings = { "", "webhooksEnabled=true" })
+    void testGetSumsubConfiguration_originatorWalletAddresses_notConfigured(String fileContent) {
+        when(extensionContext.getConfigFileContent("sumsub")).thenReturn(fileContent);
 
-        assertNull(configurationService.getOriginatorWalletAddress("BTC"));
+        SumsubConfiguration configuration = configurationService.getSumsubConfiguration();
+
+        assertEquals(Map.of(), configuration.getOriginatorWalletAddresses());
     }
 
-    @ParameterizedTest
-    @NullSource
-    @ValueSource(strings = { "", "  " })
-    void testGetOriginatorWalletAddress_assetBlank(String asset) {
-        assertNull(configurationService.getOriginatorWalletAddress(asset));
-        verifyNoInteractions(extensionContext);
+    @Test
+    void testGetSumsubConfiguration_originatorWalletAddresses_malformedFile() {
+        when(extensionContext.getConfigFileContent("sumsub")).thenReturn("originator.wallet.BTC.address=\\uXYZ");
+
+        SumsubConfiguration configuration = configurationService.getSumsubConfiguration();
+
+        assertEquals(Map.of(), configuration.getOriginatorWalletAddresses());
     }
 
     private void mockKeyProperty(String key, String returnValue) {
