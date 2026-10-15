@@ -868,6 +868,28 @@
             <cryptocurrency buyonly="true">BTC</cryptocurrency>
             <cryptocurrency buyonly="true">ETH</cryptocurrency>
         </ratesource>
+        <exchange prefix="valr" name="VALR Exchange">
+            <param name="apikey" />
+            <param name="apisecret" />
+            <param name="preferredfiatcurrency" />
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>SOL</cryptocurrency>
+            <cryptocurrency>USDT</cryptocurrency>
+            <cryptocurrency>USDC</cryptocurrency>
+            <cryptocurrency>SUI</cryptocurrency>
+            <help>https://www.valr.com</help>
+        </exchange>
+        <ratesource prefix="valr" name="VALR">
+            <param name="apikey" />
+            <param name="apisecret" />
+            <cryptocurrency>BTC</cryptocurrency>
+            <cryptocurrency>ETH</cryptocurrency>
+            <cryptocurrency>SOL</cryptocurrency>
+            <cryptocurrency>USDT</cryptocurrency>
+            <cryptocurrency>USDC</cryptocurrency>
+            <cryptocurrency>SUI</cryptocurrency>
+        </ratesource>
         <cryptologo cryptocurrency="BNB" file="bnb.png"/>
         <cryptologo cryptocurrency="BNB" file="bnb.svg"/>
         <cryptologo cryptocurrency="KMD" file="kmd.png"/>
@@ -2032,6 +2054,13 @@
             <help>Mnemonic should be 24 words delimited by spaces</help>
             <cryptocurrency buyonly="true">ETH</cryptocurrency>
         </wallet>
+        <wallet prefix="geth" name="Geth/Erigon local node wallet">
+            <tunnel supported="true"/>
+            <param name="nodeUrl" />
+            <param name="mnemonic" />
+            <help>nodeUrl e.g. http://localhost:8545. Mnemonic should be 24 words delimited by spaces, or a plain password.</help>
+            <cryptocurrency>ETH</cryptocurrency>
+        </wallet>
         <wallet prefix="infuraERC20_DAI_18_0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359" name="Infura.io wallet - DAI">
             <!-- Hint: infuraERC20_TOKENSYMBOL_DECIMALPLACES_CONTRACTADDRESS -->
             <param name="projectId" />
@@ -2203,6 +2232,15 @@
             <param name="gaslimit" />
             <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional.</help>
             <cryptocurrency buyonly="true">USDT</cryptocurrency>
+        </wallet>
+        <wallet prefix="gethERC20_USDT_6_0xdac17f958d2ee523a2206206994597c13d831ec7" name="Geth/Erigon local node wallet - USDT">
+            <tunnel supported="true"/>
+            <param name="nodeUrl" />
+            <param name="mnemonic" />
+            <param name="gaslimit" />
+            <param name="gasPriceMultiplier" />
+            <help>nodeUrl e.g. http://localhost:8545. Mnemonic should be 24 words delimited by spaces, or a plain password. gaslimit is optional. gasPriceMultiplier (optional) e.g. "1.1" for higher priority.</help>
+            <cryptocurrency>USDT</cryptocurrency>
         </wallet>
         <cryptologo cryptocurrency="USDT" file="usdt.png"/>
         <cryptologo cryptocurrency="USDT" file="usdt.svg"/>
@@ -2494,6 +2532,20 @@
             <param name="wallet_address" />
             <cryptocurrency buyonly="true">USDCSOL</cryptocurrency>
         </wallet>
+        <wallet prefix="solanarpc" name="Solana local RPC node wallet">
+            <tunnel supported="true"/>
+            <param name="rpcUrl" />
+            <param name="secretKey" />
+            <help>rpcUrl e.g. http://localhost:8899. secretKey is the Base58-encoded 64-byte Solana secret key (same format as paper wallet).</help>
+            <cryptocurrency>SOL</cryptocurrency>
+        </wallet>
+        <wallet prefix="usdcsolrpc" name="Solana local RPC node wallet - USDC (SPL)">
+            <tunnel supported="true"/>
+            <param name="rpcUrl" />
+            <param name="secretKey" />
+            <help>rpcUrl e.g. http://localhost:8899. secretKey is the Base58-encoded 64-byte Solana secret key (same format as paper wallet).</help>
+            <cryptocurrency>USDCSOL</cryptocurrency>
+        </wallet>
         <ratesource prefix="solfix" name ="Fix Price" >
             <param name="price" />
             <param name="fiat_currency" />
@@ -2510,5 +2562,27 @@
         <cryptologo cryptocurrency="SOL" file="sol.svg"/>
         <cryptologo cryptocurrency="USDCSOL" file="usdcsol.png"/>
         <cryptologo cryptocurrency="USDCSOL" file="usdcsol.svg"/>
+    </extension>
+    <extension class="com.generalbytes.batm.server.extensions.extra.sui.SuiExtension" >
+        <wallet prefix="suirpc" name="SUI local node wallet">
+            <tunnel supported="true"/>
+            <param name="rpcUrl" />
+            <param name="privateKey" />
+            <help>rpcUrl e.g. http://localhost:9000. privateKey is the Base64-encoded 32-byte Ed25519 private key seed (same format as SUI paper wallet).</help>
+            <cryptocurrency>SUI</cryptocurrency>
+        </wallet>
+        <wallet prefix="suidemo" name="SUI Demo Wallet">
+            <param name="fiatCurrency"/>
+            <param name="walletAddress"/>
+            <cryptocurrency buyonly="true">SUI</cryptocurrency>
+        </wallet>
+        <ratesource prefix="suifix" name="Fix Price">
+            <param name="price"/>
+            <param name="fiatCurrency"/>
+            <cryptocurrency>SUI</cryptocurrency>
+            <help>USD is default fiat currency.</help>
+        </ratesource>
+        <cryptologo cryptocurrency="SUI" file="sui.png"/>
+        <cryptologo cryptocurrency="SUI" file="sui.svg"/>
     </extension>
 </extensions>
