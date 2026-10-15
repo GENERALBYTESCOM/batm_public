@@ -38,7 +38,7 @@ public class SumsubTravelRuleExtension extends AbstractExtension {
     public Set<ITravelRuleProviderFactory> getTravelRuleProviderFactories() {
         checkExtensionInitialization();
 
-        return Set.of(new SumsubProviderFactory(extensionContext));
+        return Set.of(new SumsubProviderFactory(extensionContext, configuration));
     }
 
     @Override
