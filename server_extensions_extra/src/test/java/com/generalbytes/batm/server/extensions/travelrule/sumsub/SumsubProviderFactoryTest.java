@@ -23,6 +23,8 @@ class SumsubProviderFactoryTest {
 
     @Mock
     private IExtensionContext extensionContext;
+    @Mock
+    private SumsubConfigurationService configurationService;
     @InjectMocks
     private SumsubProviderFactory factory;
 

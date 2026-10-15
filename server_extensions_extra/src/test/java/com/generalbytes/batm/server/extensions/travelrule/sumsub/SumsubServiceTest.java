@@ -59,6 +59,8 @@ class SumsubServiceTest {
     private SumsubApiService apiService;
     @Mock
     private SumsubValidator validator;
+    @Mock
+    private SumsubConfigurationService configurationService;
     @InjectMocks
     private SumsubService sumsubService;
 
@@ -98,8 +100,9 @@ class SumsubServiceTest {
             SumsubTransactionInformationResponse expectedResponse = mock(SumsubTransactionInformationResponse.class);
 
             when(extensionContext.convertCryptoFromBaseUnit(2_100_000_000L, "BTC")).thenReturn(BigDecimal.valueOf(21));
+            when(configurationService.getOriginatorWalletAddress("BTC")).thenReturn("hot_wallet_address");
             mapperMock.when(() -> SumsubTravelRuleApiMapper.toSumsubSubmitTxWithoutApplicantRequest(
-                    transferData, BigDecimal.valueOf(21)
+                    transferData, BigDecimal.valueOf(21), "hot_wallet_address"
             )).thenReturn(request);
             when(apiService.submitTransactionWithoutApplicant(credentials, request)).thenReturn(expectedResponse);
 
@@ -129,8 +132,9 @@ class SumsubServiceTest {
             SumsubSubmitTxWithoutApplicantRequest request = mock(SumsubSubmitTxWithoutApplicantRequest.class);
 
             when(extensionContext.convertCryptoFromBaseUnit(2_100_000_000L, "BTC")).thenReturn(BigDecimal.valueOf(21));
+            when(configurationService.getOriginatorWalletAddress("BTC")).thenReturn(null);
             mapperMock.when(() -> SumsubTravelRuleApiMapper.toSumsubSubmitTxWithoutApplicantRequest(
-                    transferData, BigDecimal.valueOf(21)
+                    transferData, BigDecimal.valueOf(21), null
             )).thenReturn(request);
             when(apiService.submitTransactionWithoutApplicant(credentials, request)).thenThrow(thrownException);
 
@@ -155,8 +159,9 @@ class SumsubServiceTest {
             SumsubTransactionInformationResponse expectedResponse = mock(SumsubTransactionInformationResponse.class);
 
             when(extensionContext.convertCryptoFromBaseUnit(2_100_000_000L, "BTC")).thenReturn(BigDecimal.valueOf(21));
+            when(configurationService.getOriginatorWalletAddress("BTC")).thenReturn(null);
             mapperMock.when(() -> SumsubTravelRuleApiMapper.toSumsubSubmitTxWithoutApplicantRequest(
-                    transferData, BigDecimal.valueOf(21)
+                    transferData, BigDecimal.valueOf(21), null
             )).thenReturn(request);
             when(apiService.submitTransactionWithoutApplicant(credentials, request)).thenReturn(expectedResponse);
             doThrow(thrownException).when(validator).validateSubmitTxWithoutApplicantResponse(request, expectedResponse);

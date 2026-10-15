@@ -17,6 +17,7 @@ import java.util.Set;
 public class SumsubTravelRuleExtension extends AbstractExtension {
 
     private SumsubConfiguration configuration;
+    private SumsubConfigurationService configurationService;
     private TravelRuleExtensionContext extensionContext;
 
     @Override
@@ -25,7 +26,7 @@ public class SumsubTravelRuleExtension extends AbstractExtension {
         super.init(ctx);
         extensionContext = new TravelRuleExtensionContext(ctx);
 
-        SumsubConfigurationService configurationService = new SumsubConfigurationService(extensionContext);
+        configurationService = new SumsubConfigurationService(extensionContext);
         configuration = configurationService.getSumsubConfiguration();
     }
 
@@ -38,7 +39,7 @@ public class SumsubTravelRuleExtension extends AbstractExtension {
     public Set<ITravelRuleProviderFactory> getTravelRuleProviderFactories() {
         checkExtensionInitialization();
 
-        return Set.of(new SumsubProviderFactory(extensionContext));
+        return Set.of(new SumsubProviderFactory(extensionContext, configurationService));
     }
 
     @Override

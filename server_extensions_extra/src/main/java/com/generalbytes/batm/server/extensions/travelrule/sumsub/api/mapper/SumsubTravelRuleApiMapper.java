@@ -21,6 +21,7 @@ import com.generalbytes.batm.server.extensions.travelrule.sumsub.api.dto.walleto
 import com.generalbytes.batm.server.extensions.travelrule.sumsub.webhooks.dto.SumsubWebhookMessage;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
 
@@ -53,18 +54,20 @@ public class SumsubTravelRuleApiMapper {
     /**
      * Maps {@link ITravelRuleTransferData} to {@link SumsubSubmitTxWithoutApplicantRequest}.
      *
-     * @param transferData {@link ITravelRuleTransferData}
-     * @param cryptoAmount Crypto amount in standard units.
+     * @param transferData            {@link ITravelRuleTransferData}
+     * @param cryptoAmount            Crypto amount in standard units.
+     * @param originatorWalletAddress Originator (hot) wallet address sent as the applicant's payment method, can be null.
      * @return {@link SumsubSubmitTxWithoutApplicantRequest}
      */
     public static SumsubSubmitTxWithoutApplicantRequest toSumsubSubmitTxWithoutApplicantRequest(ITravelRuleTransferData transferData,
-                                                                                                BigDecimal cryptoAmount
+                                                                                                BigDecimal cryptoAmount,
+                                                                                                String originatorWalletAddress
     ) {
         SumsubSubmitTxWithoutApplicantRequest request = new SumsubSubmitTxWithoutApplicantRequest();
         request.setTxnId(transferData.getPublicId());
         request.setType(SumsubTravelRuleApiConstants.TRAVEL_RULE_REQUEST_TYPE);
         request.setInfo(toSumsubTransactionInfo(transferData, cryptoAmount));
-        request.setApplicant(toSumsubApplicant(transferData));
+        request.setApplicant(toSumsubApplicant(transferData, originatorWalletAddress));
         request.setCounterparty(toSumsubCounterparty(transferData));
 
         return request;
@@ -80,9 +83,15 @@ public class SumsubTravelRuleApiMapper {
         return transactionInfo;
     }
 
-    private static SumsubIdentity toSumsubApplicant(ITravelRuleTransferData transferData) {
+    private static SumsubIdentity toSumsubApplicant(ITravelRuleTransferData transferData, String originatorWalletAddress) {
         SumsubIdentity applicant = new SumsubIdentity();
         mapSumsubIdentity(applicant, transferData.getOriginator(), transferData.getOriginatorVasp());
+        if (StringUtils.isNotBlank(originatorWalletAddress)) {
+            SumsubPaymentMethod paymentMethod = new SumsubPaymentMethod();
+            paymentMethod.setType(SumsubTravelRuleApiConstants.PaymentMethod.CRYPTO_TYPE);
+            paymentMethod.setAccountId(originatorWalletAddress);
+            applicant.setPaymentMethod(paymentMethod);
+        }
 
         return applicant;
     }
