@@ -22,11 +22,11 @@ public class SumsubProviderFactory implements ITravelRuleProviderFactory {
     /**
      * Constructor.
      */
-    public SumsubProviderFactory(TravelRuleExtensionContext extensionContext) {
+    public SumsubProviderFactory(TravelRuleExtensionContext extensionContext, SumsubConfiguration configuration) {
         SumsubApiFactory apiFactory = new SumsubApiFactory();
         apiService = new SumsubApiService(apiFactory);
         SumsubValidator validator = new SumsubValidator();
-        sumsubService = new SumsubService(extensionContext, apiService, validator);
+        sumsubService = new SumsubService(extensionContext, apiService, validator, configuration);
         providerRegistry = new SumsubProviderRegistry();
         SumsubWebhookValidator webhookValidator = new SumsubWebhookValidator();
         ObjectMapper objectMapper = new ObjectMapper();

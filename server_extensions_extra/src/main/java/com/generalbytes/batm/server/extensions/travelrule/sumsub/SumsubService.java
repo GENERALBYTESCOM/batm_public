@@ -32,6 +32,7 @@ public class SumsubService {
     private final TravelRuleExtensionContext extensionContext;
     private final SumsubApiService apiService;
     private final SumsubValidator validator;
+    private final SumsubConfiguration configuration;
 
     /**
      * Get all available VASPs from Sumsub.
@@ -60,9 +61,11 @@ public class SumsubService {
     ) {
         try {
             BigDecimal cryptoAmount = getCryptoAmount(outgoingTransferData);
+            String originatorWalletAddress = getOriginatorWalletAddress(outgoingTransferData);
 
-            SumsubSubmitTxWithoutApplicantRequest request
-                    = SumsubTravelRuleApiMapper.toSumsubSubmitTxWithoutApplicantRequest(outgoingTransferData, cryptoAmount);
+            SumsubSubmitTxWithoutApplicantRequest request = SumsubTravelRuleApiMapper.toSumsubSubmitTxWithoutApplicantRequest(
+                    outgoingTransferData, cryptoAmount, originatorWalletAddress
+            );
             SumsubTransactionInformationResponse response = apiService.submitTransactionWithoutApplicant(credentials, request);
 
             validator.validateSubmitTxWithoutApplicantResponse(request, response);
@@ -76,6 +79,21 @@ public class SumsubService {
             log.warn("Failed to submit transaction for non-existing applicant via Sumsub", e);
         }
         throw new TravelRuleProviderException("Failed to submit transaction for non-existing applicant via Sumsub.");
+    }
+
+    private String getOriginatorWalletAddress(ITravelRuleTransferData transferData) {
+        String asset = transferData.getTransactionAsset();
+        if (StringUtils.isBlank(asset)) {
+            log.warn("Transfer asset is not set, the transfer is sent without originator wallet address. Txn ID: {}",
+                    transferData.getPublicId());
+            return null;
+        }
+        String address = configuration.getOriginatorWalletAddresses().get(asset);
+        if (address == null) {
+            log.warn("Originator wallet address for {} is not configured (key 'originator.wallet.{}.address' in /batm/config/sumsub),"
+                    + " the transfer is sent without it. Txn ID: {}", asset, asset, transferData.getPublicId());
+        }
+        return address;
     }
 
     private BigDecimal getCryptoAmount(ITravelRuleTransferData transferData) {
