@@ -65,14 +65,20 @@ public class SolanaExtension extends AbstractExtension {
 
         try {
             StringTokenizer tokenizer = new StringTokenizer(walletLogin, ":");
-            if (tokenizer.countTokens() != 3) {
-                return null;
-            }
-
             String walletType = tokenizer.nextToken().toLowerCase();
             return switch (walletType) {
                 case "soldemo" -> createDemoWallet(tokenizer, CryptoCurrency.SOL);
                 case "usdcsoldemo" -> createDemoWallet(tokenizer, CryptoCurrency.USDCSOL);
+                case "solanarpc" -> {
+                    String rpcUrl = tokenizer.nextToken();
+                    String secretKey = tokenizer.nextToken();
+                    yield new SolanaRpcWallet(rpcUrl, secretKey, CryptoCurrency.SOL.getCode());
+                }
+                case "usdcsolrpc" -> {
+                    String rpcUrl = tokenizer.nextToken();
+                    String secretKey = tokenizer.nextToken();
+                    yield new SolanaRpcWallet(rpcUrl, secretKey, CryptoCurrency.USDCSOL.getCode());
+                }
                 default -> null;
             };
         } catch (Exception e) {
