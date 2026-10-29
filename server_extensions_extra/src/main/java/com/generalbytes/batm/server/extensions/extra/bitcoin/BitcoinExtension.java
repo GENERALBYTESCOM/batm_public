@@ -39,6 +39,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.Coinba
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.ICoinbaseV3Api;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.binance.BinanceComExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.binance.BinanceUsExchange;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.binance.BinanceUsdtNetwork;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitbuy.BitbuyExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitfinex.BitfinexExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.bitflyer.BitFlyerExchange;
@@ -181,12 +182,16 @@ public class BitcoinExtension extends AbstractExtension {
 
             } else if ("binancecom".equalsIgnoreCase(prefix)) {
                 String preferredFiatCurrency = FiatCurrency.EUR.getCode();
+                BinanceUsdtNetwork usdtNetwork = BinanceUsdtNetwork.DEFAULT;
                 String apikey = paramTokenizer.nextToken();
                 String secretKey = paramTokenizer.nextToken();
                 if (paramTokenizer.hasMoreTokens()) {
                     preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase();
                 }
-                return new BinanceComExchange(apikey, secretKey, preferredFiatCurrency);
+                if (paramTokenizer.hasMoreTokens()) {
+                    usdtNetwork = BinanceUsdtNetwork.of(paramTokenizer.nextToken());
+                }
+                return new BinanceComExchange(apikey, secretKey, preferredFiatCurrency, usdtNetwork);
 
             } else if ("binanceus".equalsIgnoreCase(prefix)) {
                 String preferredFiatCurrency = FiatCurrency.USD.getCode();

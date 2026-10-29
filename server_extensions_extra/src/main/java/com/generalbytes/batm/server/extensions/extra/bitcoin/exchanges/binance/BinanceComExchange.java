@@ -72,6 +72,10 @@ public class BinanceComExchange extends BinanceExchange {
         super(key, secret, preferredFiatCurrency, SSL_URI);
     }
 
+    public BinanceComExchange(String key, String secret, String preferredFiatCurrency, BinanceUsdtNetwork usdtNetwork) {
+        super(key, secret, preferredFiatCurrency, SSL_URI, usdtNetwork);
+    }
+
     @Override
     public Set<String> getFiatCurrencies() {
         return SUPPORTED_FIATS;
