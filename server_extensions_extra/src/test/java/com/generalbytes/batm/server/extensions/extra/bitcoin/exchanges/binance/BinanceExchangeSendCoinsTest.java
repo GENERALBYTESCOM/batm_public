@@ -2,6 +2,7 @@ package com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.binance;
 
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.XChangeExchange;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -53,10 +54,14 @@ class BinanceExchangeSendCoinsTest {
             .build()));
         when(accountService.withdrawFunds(any(WithdrawFundsParams.class))).thenReturn("withdrawalId");
 
+        setExchange(binance);
+    }
+
+    private void setExchange(BinanceComExchange binanceExchange) throws Exception {
         // getWithdrawalFee() reads the field directly, not via getExchange()
         Field exchangeField = XChangeExchange.class.getDeclaredField("exchange");
         exchangeField.setAccessible(true);
-        exchangeField.set(binance, xchange);
+        exchangeField.set(binanceExchange, xchange);
     }
 
     @ParameterizedTest
@@ -74,6 +79,41 @@ class BinanceExchangeSendCoinsTest {
         NetworkWithdrawFundsParams withdrawal = (NetworkWithdrawFundsParams) params.getValue();
         assertThat(withdrawal.getNetwork()).isEqualTo(network);
         assertThat(withdrawal.getAmount()).isEqualByComparingTo(expectedAmount);
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+        "ETH, 187.64689292, 188.046892",
+        "BSC, 187.64689292, 187.656892",
+    })
+    void testSendCoins_configuredUsdtNetwork(BinanceUsdtNetwork usdtNetwork, BigDecimal receiptAmount, BigDecimal expectedAmount)
+        throws Exception {
+        BinanceComExchange configuredBinance = new BinanceComExchange("apiKey", "secretKey", "USD", usdtNetwork);
+        setExchange(configuredBinance);
+
+        String result = configuredBinance.sendCoins(ADDRESS, receiptAmount, "USDT", "txId");
+
+        assertThat(result).isEqualTo("success");
+        ArgumentCaptor<WithdrawFundsParams> params = ArgumentCaptor.forClass(WithdrawFundsParams.class);
+        verify(accountService, times(1)).withdrawFunds(params.capture());
+        NetworkWithdrawFundsParams withdrawal = (NetworkWithdrawFundsParams) params.getValue();
+        assertThat(withdrawal.getNetwork()).isEqualTo(usdtNetwork.name());
+        assertThat(withdrawal.getAmount()).isEqualByComparingTo(expectedAmount);
+    }
+
+    @Test
+    void testSendCoins_configuredUsdtNetworkDoesNotAffectUsdtTron() throws Exception {
+        BinanceComExchange configuredBinance = new BinanceComExchange("apiKey", "secretKey", "USD", BinanceUsdtNetwork.BSC);
+        setExchange(configuredBinance);
+
+        String result = configuredBinance.sendCoins(ADDRESS, new BigDecimal("412.69417411"), "USDTTRON", "txId");
+
+        assertThat(result).isEqualTo("success");
+        ArgumentCaptor<WithdrawFundsParams> params = ArgumentCaptor.forClass(WithdrawFundsParams.class);
+        verify(accountService, times(1)).withdrawFunds(params.capture());
+        NetworkWithdrawFundsParams withdrawal = (NetworkWithdrawFundsParams) params.getValue();
+        assertThat(withdrawal.getNetwork()).isEqualTo("TRX");
+        assertThat(withdrawal.getAmount()).isEqualByComparingTo("414.194174");
     }
 
     @ParameterizedTest
@@ -95,6 +135,20 @@ class BinanceExchangeSendCoinsTest {
             .build()));
 
         catchThrowable(() -> binance.sendCoins(ADDRESS, new BigDecimal("100"), cryptoCurrency, "txId"));
+
+        verify(accountService, never()).withdrawFunds(any(WithdrawFundsParams.class));
+    }
+
+    @Test
+    void testSendCoins_configuredUsdtNetworkMissing() throws Exception {
+        BinanceComExchange configuredBinance = new BinanceComExchange("apiKey", "secretKey", "USD", BinanceUsdtNetwork.BSC);
+        setExchange(configuredBinance);
+        when(accountService.currencyInfos()).thenReturn(List.of(BinanceCurrencyInfo.builder()
+            .currency(Currency.USDT)
+            .networks(List.of(network("ETH", "0.40", false)))
+            .build()));
+
+        catchThrowable(() -> configuredBinance.sendCoins(ADDRESS, new BigDecimal("100"), "USDT", "txId"));
 
         verify(accountService, never()).withdrawFunds(any(WithdrawFundsParams.class));
     }

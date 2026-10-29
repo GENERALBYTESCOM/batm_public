@@ -10,6 +10,8 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.Coinba
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.CoinbaseV2ApiWrapperCdp;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.CoinbaseV2ApiWrapperLegacy;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.coinbase.api.ICoinbaseV3Api;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.binance.BinanceComExchange;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.binance.BinanceUsdtNetwork;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.CoinbaseExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.ICoinbaseAPI;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.bitgo.v2.BitgoWallet;
@@ -18,10 +20,16 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.CoinbaseWalletV2WithUniqueAddresses;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.ICoinbaseV2API;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.MockedConstruction;
 import org.mockito.MockedStatic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.StringTokenizer;
 import java.util.stream.Collectors;
@@ -32,7 +40,9 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockConstruction;
 import static org.mockito.Mockito.mockStatic;
 
 class BitcoinExtensionTest {
@@ -561,5 +571,43 @@ class BitcoinExtensionTest {
 
     private String getCoinbaseParams(String prefix, String apiKey, String secretKey, String accountName) {
         return getCoinbaseParams(prefix, apiKey, secretKey, accountName, null, null);
+    }
+
+    private static Stream<Arguments> binanceComUsdtNetworkProvider() {
+        return Stream.of(
+            arguments("binancecom:apiKey:secretKey:EUR:BSC", BinanceUsdtNetwork.BSC),
+            arguments("binancecom:apiKey:secretKey:EUR:bsc", BinanceUsdtNetwork.BSC),
+            arguments("binancecom:apiKey:secretKey:EUR:ETH", BinanceUsdtNetwork.ETH),
+            arguments("binancecom:apiKey:secretKey:EUR", BinanceUsdtNetwork.ETH),
+            arguments("binancecom:apiKey:secretKey", BinanceUsdtNetwork.ETH)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("binanceComUsdtNetworkProvider")
+    void testCreateExchange_BinanceComUsdtNetwork(String paramString, BinanceUsdtNetwork expectedNetwork) {
+        BitcoinExtension bitcoinExtension = new BitcoinExtension();
+        bitcoinExtension.init(new TestExtensionContext());
+
+        try (MockedConstruction<BinanceComExchange> mockedConstruction = mockConstruction(
+            BinanceComExchange.class,
+            (mock, context) -> assertEquals(List.of("apiKey", "secretKey", "EUR", expectedNetwork), context.arguments())
+        )) {
+            IExchange exchange = bitcoinExtension.createExchange(paramString);
+
+            assertInstanceOf(BinanceComExchange.class, exchange);
+            assertEquals(exchange, mockedConstruction.constructed().get(0));
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"ERC20", "BEP20", "BNB", "TRX"})
+    void testCreateExchange_BinanceComUnsupportedUsdtNetwork(String usdtNetwork) {
+        BitcoinExtension bitcoinExtension = new BitcoinExtension();
+        bitcoinExtension.init(new TestExtensionContext());
+
+        IExchange exchange = bitcoinExtension.createExchange("binancecom:apiKey:secretKey:EUR:" + usdtNetwork);
+
+        assertNull(exchange);
     }
 }
