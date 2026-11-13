@@ -46,6 +46,7 @@
                 <cryptocurrency>XRP</cryptocurrency><!-- BitGo Enterprise-->
                 <cryptocurrency buyonly="true">USDT</cryptocurrency>
                 <cryptocurrency buyonly="true">USDC</cryptocurrency>
+                <cryptocurrency buyonly="true">XAUT</cryptocurrency>
                 <cryptocurrency buyonly="true">SOL</cryptocurrency>
                 <cryptocurrency buyonly="true">USDCSOL</cryptocurrency>
                 <help>Host should start with http:// or https://. num_blocks is an integer greater than 2.</help>
@@ -69,6 +70,7 @@
                 <cryptocurrency>USDT</cryptocurrency><!-- BitGo Enterprise-->
                 <cryptocurrency>USDTTRON</cryptocurrency>
                 <cryptocurrency>USDC</cryptocurrency>
+                <cryptocurrency>XAUT</cryptocurrency>
                 <cryptocurrency>SOL</cryptocurrency>
                 <cryptocurrency>USDCSOL</cryptocurrency>
                 <help>This variant of the wallet generates new addresses for each sell transaction and does not forward payments from temporary address. Host should start with http:// or https://. num_blocks is an integer greater than 2.</help>
@@ -640,6 +642,7 @@
             <cryptocurrency>TRX</cryptocurrency>
             <cryptocurrency>USDS</cryptocurrency>
             <cryptocurrency>USDT</cryptocurrency>
+            <cryptocurrency>XAUT</cryptocurrency>
             <cryptocurrency>USDTTRON</cryptocurrency>
             <cryptocurrency>VIA</cryptocurrency>
             <cryptocurrency>VOLTZ</cryptocurrency>
@@ -709,6 +712,7 @@
             <cryptocurrency>TRTL</cryptocurrency>
             <cryptocurrency>TRX</cryptocurrency>
             <cryptocurrency>USDT</cryptocurrency>
+            <cryptocurrency>XAUT</cryptocurrency>
             <cryptocurrency>USDTTRON</cryptocurrency>
             <cryptocurrency>VIA</cryptocurrency>
             <cryptocurrency>VOLTZ</cryptocurrency>
@@ -2224,6 +2228,15 @@
         </wallet>
         <cryptologo cryptocurrency="PAXG" file="paxg.png"/>
         <cryptologo cryptocurrency="PAXG" file="paxg.svg"/>
+        <wallet prefix="infuraERC20_XAUT_6_0x68749665ff8d2d112fa859aa293f07a622782f38" name="Infura.io wallet - XAUT">
+            <param name="projectId" />
+            <param name="mnemonic" />
+            <param name="gaslimit" />
+            <help>Mnemonic should be 24 words delimited by spaces. gaslimit is optional.</help>
+            <cryptocurrency buyonly="true">XAUT</cryptocurrency>
+        </wallet>
+        <cryptologo cryptocurrency="XAUT" file="xaut.png"/>
+        <cryptologo cryptocurrency="XAUT" file="xaut.svg"/>
         <wallet prefix="infuraERC20_USDC_6_0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48" name="Infura.io wallet - USDC">
             <param name="projectId" />
             <param name="mnemonic" />

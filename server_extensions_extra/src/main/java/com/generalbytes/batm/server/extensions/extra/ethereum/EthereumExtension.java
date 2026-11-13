@@ -50,7 +50,8 @@ public class EthereumExtension extends AbstractExtension {
             new EthDefinition(),
             new BizzDefinition(),
             new UsdtDefinition(),
-            new UsdcDefinition()
+            new UsdcDefinition(),
+            new XautDefinition()
     );
     private static final DummyWalletAndExchangeAndSourceFactory dummyFactory = new DummyWalletAndExchangeAndSourceFactory();
 
@@ -87,6 +88,7 @@ public class EthereumExtension extends AbstractExtension {
         result.add(CryptoCurrency.WILC.getCode());
         result.add(CryptoCurrency.SHIB.getCode());
         result.add(CryptoCurrency.QCAD.getCode());
+        result.add(CryptoCurrency.XAUT.getCode());
         return result;
     }
 

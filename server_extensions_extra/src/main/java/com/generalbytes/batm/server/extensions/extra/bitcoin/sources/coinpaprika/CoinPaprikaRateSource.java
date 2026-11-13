@@ -82,6 +82,7 @@ public class CoinPaprikaRateSource implements IRateSource {
         CRYPTOCURRENCIES.put(CryptoCurrency.NULS.getCode(), "nuls-nuls");
         CRYPTOCURRENCIES.put(CryptoCurrency.NXT.getCode(), "nxt-nxt");
         CRYPTOCURRENCIES.put(CryptoCurrency.PAXG.getCode(), "paxg-pax-gold");
+        CRYPTOCURRENCIES.put(CryptoCurrency.XAUT.getCode(), "xaut-tether-gold");
         CRYPTOCURRENCIES.put(CryptoCurrency.POT.getCode(), "pot-potcoin");
         CRYPTOCURRENCIES.put(CryptoCurrency.REP.getCode(), "rep-augur");
         CRYPTOCURRENCIES.put(CryptoCurrency.SMART.getCode(), "smart-smartcash");
