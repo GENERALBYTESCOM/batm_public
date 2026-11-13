@@ -75,6 +75,7 @@ public class BitgoWallet implements IWallet, ICanSendMany {
         Map.entry(CryptoCurrency.TBTC.getCode(), "tbtc"),
         Map.entry(CryptoCurrency.USDC.getCode(), "usdc"),
         Map.entry(CryptoCurrency.USDCSOL.getCode(), "sol:usdc"),
+        Map.entry(CryptoCurrency.XAUT.getCode(), "xaut"), // ERC-20 (eth)
         Map.entry(CryptoCurrency.SOL.getCode(), "sol")
     );
 
@@ -91,12 +92,14 @@ public class BitgoWallet implements IWallet, ICanSendMany {
         Map.entry(CryptoCurrency.TBCH.getCode(), pow10Exp(Converters.TBCH)),
         Map.entry(CryptoCurrency.USDC.getCode(), pow10Exp(Converters.USDC)),
         Map.entry(CryptoCurrency.USDCSOL.getCode(), pow10Exp(Converters.USDCSOL)),
+        Map.entry(CryptoCurrency.XAUT.getCode(), pow10Exp(Converters.XAUT)),
         Map.entry(CryptoCurrency.SOL.getCode(), pow10Exp(Converters.SOL))
     );
 
     private static final Set<String> CRYPTOCURRENCIES_TRANSFER_TYPE = Set.of(
         CryptoCurrency.USDC.getCode(),
         CryptoCurrency.USDT.getCode(),
+        CryptoCurrency.XAUT.getCode(),
         CryptoCurrency.SOL.getCode(),
         CryptoCurrency.USDCSOL.getCode()
     );
