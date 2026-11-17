@@ -40,7 +40,25 @@ public class StillmanDigitalExchange implements IExchangeAdvanced, IRateSourceAd
     private static final Logger log = LoggerFactory.getLogger("batm.master.exchange.StillmanDigitalExchange");
     public static final String SEPARATOR = "/";
 
+    private static final Set<String> fiatCurrencies = ImmutableSet.of(
+        FiatCurrency.USD.getCode(),
+        FiatCurrency.CAD.getCode());
+
+    private static final Set<String> cryptoCurrencies = ImmutableSet.of(
+        CryptoCurrency.ADA.getCode(),
+        CryptoCurrency.BNB.getCode(),
+        CryptoCurrency.BTC.getCode(),
+        CryptoCurrency.DOGE.getCode(),
+        CryptoCurrency.ETH.getCode(),
+        CryptoCurrency.LTC.getCode(),
+        CryptoCurrency.SHIB.getCode(),
+        CryptoCurrency.SOL.getCode(),
+        CryptoCurrency.USDC.getCode(),
+        CryptoCurrency.USDT.getCode(),
+        CryptoCurrency.XRP.getCode());
+
     private final String preferredFiatCurrency = FiatCurrency.USD.getCode();
+
     private final IStillmanDigitalAPI api;
 
     public StillmanDigitalExchange(String apiKey,
@@ -55,13 +73,6 @@ public class StillmanDigitalExchange implements IExchangeAdvanced, IRateSourceAd
                             String baseUrl) throws GeneralSecurityException {
         this.api = IStillmanDigitalAPI.create(apiKey, apiSecret, baseUrl);
     }
-
-    private static final Set<String> fiatCurrencies = ImmutableSet.of(
-        FiatCurrency.USD.getCode());
-
-    private static final Set<String> cryptoCurrencies = ImmutableSet.of(
-        CryptoCurrency.BTC.getCode(),
-        CryptoCurrency.ETH.getCode());
 
     @Override
     public Set<String> getCryptoCurrencies() {
