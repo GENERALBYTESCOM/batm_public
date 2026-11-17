@@ -116,14 +116,25 @@ public abstract class BinanceExchange extends XChangeExchange {
 
     @Override
     protected BigDecimal getWithdrawalFee(String cryptoCurrency) {
+        if (CryptoCurrency.USDT.getCode().equalsIgnoreCase(cryptoCurrency)) {
+            return getUsdtWithdrawalFee(CryptoCurrency.ETH.getCode(), CryptoCurrency.USDT.getCode());
+        }
+
         if (CryptoCurrency.USDTTRON.getCode().equalsIgnoreCase(cryptoCurrency)) {
-            return getUsdtTronWithdrawalFee();
+            return getUsdtWithdrawalFee(CryptoCurrency.TRX.getCode(), CryptoCurrency.USDTTRON.getCode());
         }
 
         return super.getWithdrawalFee(cryptoCurrency);
     }
 
-    private BigDecimal getUsdtTronWithdrawalFee() {
+    /**
+     * Gets the USDT withdrawal fee of the given Binance network.
+     *
+     * @param network Binance network id, must match the one used in withdrawFunds
+     * @param cryptoCurrency CAS cryptocurrency code, for logging
+     * @return the fee, or null if it cannot be obtained
+     */
+    private BigDecimal getUsdtWithdrawalFee(String network, String cryptoCurrency) {
         try {
             BinanceAccountServiceRaw accountService = (BinanceAccountServiceRaw) getExchange().getAccountService();
             BigDecimal withdrawFee = accountService.currencyInfos().stream()
@@ -131,16 +142,16 @@ public abstract class BinanceExchange extends XChangeExchange {
                 .findFirst()
                 .map(BinanceCurrencyInfo::getNetworks)
                 .flatMap(networks -> networks.stream()
-                    .filter(network -> CryptoCurrency.TRX.getCode().equals(network.getId()))
+                    .filter(binanceNetwork -> network.equals(binanceNetwork.getId()))
                     .findFirst()
                 )
                 .map(BinanceCurrencyInfo.Network::getWithdrawFee)
                 .orElse(null);
 
-            log.info("Withdrawal fee: {} {}", withdrawFee, CryptoCurrency.USDTTRON.getCode());
+            log.info("Withdrawal fee: {} {}", withdrawFee, cryptoCurrency);
             return withdrawFee;
         } catch (IOException e) {
-            log.error("Failed to get USDT TRC20 withdrawal fee from Binance", e);
+            log.error("Failed to get {} withdrawal fee for network {} from Binance", cryptoCurrency, network, e);
             return null;
         }
     }

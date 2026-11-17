@@ -229,18 +229,20 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
 
     private String withdrawFunds(String cryptoCurrency, BigDecimal amount, String destinationAddress) throws IOException {
         AccountService accountService = getExchange().getAccountService();
-        Currency exchangeCryptoCurrency = Currency.getInstance(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency));
+
+        if (CryptoCurrency.USDT.getCode().equals(cryptoCurrency)) {
+            NetworkWithdrawFundsParams usdtEthFundsParams
+                = createUsdtNetworkWithdrawFundsParams(CryptoCurrency.ETH.getCode(), amount, destinationAddress);
+            return accountService.withdrawFunds(usdtEthFundsParams);
+        }
 
         if (CryptoCurrency.USDTTRON.getCode().equals(cryptoCurrency)) {
-            NetworkWithdrawFundsParams usdtTronFundsParams = NetworkWithdrawFundsParams.builder()
-                .currency(Currency.USDT)
-                .network(CryptoCurrency.TRX.getCode())
-                .address(destinationAddress)
-                .amount(amount)
-                .build();
-
+            NetworkWithdrawFundsParams usdtTronFundsParams
+                = createUsdtNetworkWithdrawFundsParams(CryptoCurrency.TRX.getCode(), amount, destinationAddress);
             return accountService.withdrawFunds(usdtTronFundsParams);
         }
+
+        Currency exchangeCryptoCurrency = Currency.getInstance(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency));
 
         if (CryptoCurrency.XRP.getCode().equals(cryptoCurrency) || CryptoCurrency.BNB.getCode().equals(cryptoCurrency)) {
             String[] addressParts = destinationAddress.split(":");
@@ -252,6 +254,18 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
         }
 
         return accountService.withdrawFunds(exchangeCryptoCurrency, getWithdrawAmount(amount, cryptoCurrency), destinationAddress);
+    }
+
+    private NetworkWithdrawFundsParams createUsdtNetworkWithdrawFundsParams(String network,
+                                                                            BigDecimal amount,
+                                                                            String destinationAddress
+    ) {
+        return NetworkWithdrawFundsParams.builder()
+            .currency(Currency.USDT)
+            .network(network)
+            .address(destinationAddress)
+            .amount(amount)
+            .build();
     }
 
     @Override

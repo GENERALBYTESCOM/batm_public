@@ -37,6 +37,10 @@ public class TravelRuleExtensionContext {
         return context.getConfigProperty(fileNameInConfigDirectory, key, defaultValue);
     }
 
+    public String getConfigFileContent(String fileNameInConfigDirectory) {
+        return context.getConfigFileContent(fileNameInConfigDirectory);
+    }
+
     public long convertCryptoToBaseUnit(BigDecimal amount, String cryptocurrency) {
         return context.convertCryptoToBaseUnit(amount, cryptocurrency);
     }

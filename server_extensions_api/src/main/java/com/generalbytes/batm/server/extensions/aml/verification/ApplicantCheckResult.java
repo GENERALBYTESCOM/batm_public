@@ -49,6 +49,11 @@ public class ApplicantCheckResult {
      */
     private String country;
 
+    /**
+     * Taxpayer Identification Number, country-neutral (e.g. TFN, DIC/ICO, SSN/EIN/ITIN).
+     */
+    private String tin;
+
     public String getCheckId() {
         return checkId;
     }
@@ -199,5 +204,13 @@ public class ApplicantCheckResult {
 
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    public String getTin() {
+        return tin;
+    }
+
+    public void setTin(String tin) {
+        this.tin = tin;
     }
 }

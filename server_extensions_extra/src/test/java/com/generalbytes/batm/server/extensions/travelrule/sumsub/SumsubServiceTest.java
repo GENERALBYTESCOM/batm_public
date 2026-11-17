@@ -30,6 +30,7 @@ import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -59,6 +60,8 @@ class SumsubServiceTest {
     private SumsubApiService apiService;
     @Mock
     private SumsubValidator validator;
+    @Mock
+    private SumsubConfiguration configuration;
     @InjectMocks
     private SumsubService sumsubService;
 
@@ -98,8 +101,9 @@ class SumsubServiceTest {
             SumsubTransactionInformationResponse expectedResponse = mock(SumsubTransactionInformationResponse.class);
 
             when(extensionContext.convertCryptoFromBaseUnit(2_100_000_000L, "BTC")).thenReturn(BigDecimal.valueOf(21));
+            when(configuration.getOriginatorWalletAddresses()).thenReturn(Map.of("BTC", "hot_wallet_address"));
             mapperMock.when(() -> SumsubTravelRuleApiMapper.toSumsubSubmitTxWithoutApplicantRequest(
-                    transferData, BigDecimal.valueOf(21)
+                    transferData, BigDecimal.valueOf(21), "hot_wallet_address"
             )).thenReturn(request);
             when(apiService.submitTransactionWithoutApplicant(credentials, request)).thenReturn(expectedResponse);
 
@@ -107,6 +111,55 @@ class SumsubServiceTest {
 
             assertSame(expectedResponse, response);
             verify(validator, times(1)).validateSubmitTxWithoutApplicantResponse(request, expectedResponse);
+        }
+    }
+
+    @Test
+    void testSubmitTransactionWithoutApplicant_originatorWalletAddressNotConfigured() {
+        try (MockedStatic<SumsubTravelRuleApiMapper> mapperMock = mockStatic(SumsubTravelRuleApiMapper.class)) {
+            ITravelRuleTransferData transferData = mock(ITravelRuleTransferData.class);
+            when(transferData.getTransactionAmount()).thenReturn(2_100_000_000L);
+            when(transferData.getTransactionAsset()).thenReturn("BTC");
+
+            SumsubSubmitTxWithoutApplicantRequest request = mock(SumsubSubmitTxWithoutApplicantRequest.class);
+            SumsubTransactionInformationResponse expectedResponse = mock(SumsubTransactionInformationResponse.class);
+
+            when(extensionContext.convertCryptoFromBaseUnit(2_100_000_000L, "BTC")).thenReturn(BigDecimal.valueOf(21));
+            when(configuration.getOriginatorWalletAddresses()).thenReturn(Map.of("ETH", "eth_hot_wallet_address"));
+            mapperMock.when(() -> SumsubTravelRuleApiMapper.toSumsubSubmitTxWithoutApplicantRequest(
+                    transferData, BigDecimal.valueOf(21), null
+            )).thenReturn(request);
+            when(apiService.submitTransactionWithoutApplicant(credentials, request)).thenReturn(expectedResponse);
+
+            SumsubTransactionInformationResponse response = sumsubService.submitTransactionWithoutApplicant(credentials, transferData);
+
+            assertSame(expectedResponse, response);
+            verify(validator, times(1)).validateSubmitTxWithoutApplicantResponse(request, expectedResponse);
+        }
+    }
+
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = { "", "  " })
+    void testSubmitTransactionWithoutApplicant_assetBlank(String asset) {
+        try (MockedStatic<SumsubTravelRuleApiMapper> mapperMock = mockStatic(SumsubTravelRuleApiMapper.class)) {
+            ITravelRuleTransferData transferData = mock(ITravelRuleTransferData.class);
+            when(transferData.getTransactionAmount()).thenReturn(2_100_000_000L);
+            when(transferData.getTransactionAsset()).thenReturn(asset);
+
+            SumsubSubmitTxWithoutApplicantRequest request = mock(SumsubSubmitTxWithoutApplicantRequest.class);
+            SumsubTransactionInformationResponse expectedResponse = mock(SumsubTransactionInformationResponse.class);
+
+            when(extensionContext.convertCryptoFromBaseUnit(2_100_000_000L, asset)).thenReturn(BigDecimal.valueOf(21));
+            mapperMock.when(() -> SumsubTravelRuleApiMapper.toSumsubSubmitTxWithoutApplicantRequest(
+                    transferData, BigDecimal.valueOf(21), null
+            )).thenReturn(request);
+            when(apiService.submitTransactionWithoutApplicant(credentials, request)).thenReturn(expectedResponse);
+
+            SumsubTransactionInformationResponse response = sumsubService.submitTransactionWithoutApplicant(credentials, transferData);
+
+            assertSame(expectedResponse, response);
+            verifyNoInteractions(configuration);
         }
     }
 
@@ -129,8 +182,9 @@ class SumsubServiceTest {
             SumsubSubmitTxWithoutApplicantRequest request = mock(SumsubSubmitTxWithoutApplicantRequest.class);
 
             when(extensionContext.convertCryptoFromBaseUnit(2_100_000_000L, "BTC")).thenReturn(BigDecimal.valueOf(21));
+            when(configuration.getOriginatorWalletAddresses()).thenReturn(Map.of());
             mapperMock.when(() -> SumsubTravelRuleApiMapper.toSumsubSubmitTxWithoutApplicantRequest(
-                    transferData, BigDecimal.valueOf(21)
+                    transferData, BigDecimal.valueOf(21), null
             )).thenReturn(request);
             when(apiService.submitTransactionWithoutApplicant(credentials, request)).thenThrow(thrownException);
 
@@ -155,8 +209,9 @@ class SumsubServiceTest {
             SumsubTransactionInformationResponse expectedResponse = mock(SumsubTransactionInformationResponse.class);
 
             when(extensionContext.convertCryptoFromBaseUnit(2_100_000_000L, "BTC")).thenReturn(BigDecimal.valueOf(21));
+            when(configuration.getOriginatorWalletAddresses()).thenReturn(Map.of());
             mapperMock.when(() -> SumsubTravelRuleApiMapper.toSumsubSubmitTxWithoutApplicantRequest(
-                    transferData, BigDecimal.valueOf(21)
+                    transferData, BigDecimal.valueOf(21), null
             )).thenReturn(request);
             when(apiService.submitTransactionWithoutApplicant(credentials, request)).thenReturn(expectedResponse);
             doThrow(thrownException).when(validator).validateSubmitTxWithoutApplicantResponse(request, expectedResponse);

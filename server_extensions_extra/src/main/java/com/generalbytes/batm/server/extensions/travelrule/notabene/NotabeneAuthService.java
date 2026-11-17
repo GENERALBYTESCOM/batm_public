@@ -60,7 +60,7 @@ public class NotabeneAuthService {
         }
 
         CompletableFuture<String> tokenRequest = tokenRequests.get(providerCredentials.getClientId());
-        if (tokenRequest != null) {
+        if (tokenRequest != null && !tokenRequest.isDone()) {
             try {
                 tokenRequest.join();
             } catch (Exception e) {
@@ -84,6 +84,8 @@ public class NotabeneAuthService {
             throw new IllegalArgumentException("providerCredentials cannot be null");
         }
 
+        removeCompletedTokenRequest(providerCredentials);
+
         tokenRequests.computeIfAbsent(
             providerCredentials.getClientId(),
             clientId -> {
@@ -93,11 +95,16 @@ public class NotabeneAuthService {
                         logRefreshAccessTokenFailure(throwable);
                         accessTokens.remove(clientId);
                     }
-
-                    tokenRequests.remove(clientId);
                 });
                 return future;
             }
+        );
+    }
+
+    private void removeCompletedTokenRequest(ITravelRuleProviderCredentials providerCredentials) {
+        tokenRequests.computeIfPresent(
+            providerCredentials.getClientId(),
+            (clientId, tokenRequest) -> tokenRequest.isDone() ? null : tokenRequest
         );
     }
 

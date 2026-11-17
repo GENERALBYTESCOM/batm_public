@@ -90,6 +90,18 @@ class TravelRuleExtensionContextTest {
     }
 
     @Test
+    void testGetConfigFileContent() {
+        String fileNameInConfigDirectory = "fileNameInConfigDirectory";
+        String expectedResult = "key=value";
+
+        when(extensionContext.getConfigFileContent(fileNameInConfigDirectory)).thenReturn(expectedResult);
+
+        String result = travelRuleExtensionContext.getConfigFileContent(fileNameInConfigDirectory);
+
+        assertSame(expectedResult, result);
+    }
+
+    @Test
     void testConvertCryptoToBaseUnit() {
         BigDecimal amount = BigDecimal.valueOf(21L);
         String cryptocurrency = "BTC";

@@ -21,12 +21,15 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.math.BigDecimal;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -61,7 +64,7 @@ class SumsubTravelRuleApiMapperTest {
         BigDecimal cryptoAmount = BigDecimal.valueOf(0.00000021);
 
         SumsubSubmitTxWithoutApplicantRequest request
-                = SumsubTravelRuleApiMapper.toSumsubSubmitTxWithoutApplicantRequest(transferData, cryptoAmount);
+                = SumsubTravelRuleApiMapper.toSumsubSubmitTxWithoutApplicantRequest(transferData, cryptoAmount, null);
 
         assertEquals("envelope_public_id", request.getTxnId());
         assertEquals("travelRule", request.getType());
@@ -76,6 +79,7 @@ class SumsubTravelRuleApiMapperTest {
         assertEquals("originator_secondary_name originator_primary_name", request.getApplicant().getFullName());
         assertEquals("originator_vasp_did", request.getApplicant().getInstitutionInfo().getInternalId());
         assertEquals("originator_vasp_name", request.getApplicant().getInstitutionInfo().getName());
+        assertNull(request.getApplicant().getPaymentMethod());
         assertEquals("individual", request.getCounterparty().getType());
         assertEquals("beneficiary_public_id", request.getCounterparty().getExternalUserId());
         assertEquals("beneficiary_secondary_name", request.getCounterparty().getFirstName());
@@ -85,6 +89,34 @@ class SumsubTravelRuleApiMapperTest {
         assertEquals("crypto", request.getCounterparty().getPaymentMethod().getType());
         assertEquals(expectedAddress, request.getCounterparty().getPaymentMethod().getAccountId());
         assertEquals(expectedTag, request.getCounterparty().getPaymentMethod().getMemo());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "bc1q_hot_wallet", "bitcoincash:qq_hot_wallet", "r_hot_wallet:123" })
+    void testToSumsubSubmitTxWithoutApplicantRequest_originatorWalletAddress(String originatorWalletAddress) {
+        ITravelRuleTransferData transferData = createITravelRuleTransferData("destination_address");
+
+        SumsubSubmitTxWithoutApplicantRequest request = SumsubTravelRuleApiMapper.toSumsubSubmitTxWithoutApplicantRequest(
+                transferData, BigDecimal.ONE, originatorWalletAddress
+        );
+
+        assertEquals("crypto", request.getApplicant().getPaymentMethod().getType());
+        assertEquals(originatorWalletAddress, request.getApplicant().getPaymentMethod().getAccountId());
+        assertNull(request.getApplicant().getPaymentMethod().getMemo());
+        assertEquals("destination_address", request.getCounterparty().getPaymentMethod().getAccountId());
+    }
+
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = { "", "  " })
+    void testToSumsubSubmitTxWithoutApplicantRequest_originatorWalletAddress_blank(String originatorWalletAddress) {
+        ITravelRuleTransferData transferData = createITravelRuleTransferData("destination_address");
+
+        SumsubSubmitTxWithoutApplicantRequest request = SumsubTravelRuleApiMapper.toSumsubSubmitTxWithoutApplicantRequest(
+                transferData, BigDecimal.ONE, originatorWalletAddress
+        );
+
+        assertNull(request.getApplicant().getPaymentMethod());
     }
 
     @Test

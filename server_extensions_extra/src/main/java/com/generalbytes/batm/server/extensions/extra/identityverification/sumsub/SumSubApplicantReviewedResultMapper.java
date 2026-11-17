@@ -54,14 +54,21 @@ public class SumSubApplicantReviewedResultMapper {
 
         if (applicantInfoResponse.getInfo() != null) {
             ApplicantInfo info = applicantInfoResponse.getInfo();
+            ApplicantInfo fixedInfo = applicantInfoResponse.getFixedInfo();
             // set personal information
-            checkResult.setFirstName(buildGivenName(info.getFirstName(), info.getMiddleName()));
+            checkResult.setFirstName(resolveGivenName(info, fixedInfo));
             checkResult.setLastName(info.getLastName());
             LocalDate dob = info.getDob();
             if (dob == null && applicantInfoResponse.getFixedInfo() != null) {
                 dob = applicantInfoResponse.getFixedInfo().getDob();
             }
             checkResult.setBirthDate(fromLocalDate(dob));
+
+            String tin = info.getTin();
+            if (tin == null && applicantInfoResponse.getFixedInfo() != null) {
+                tin = applicantInfoResponse.getFixedInfo().getTin();
+            }
+            checkResult.setTin(tin);
 
             // Get the IDENTITY document type from the inspection and convert to a GB document type
             ApplicantDocument ssDocument = extractIdentityDocument(info.getIdDocs(), inspectionInfoResponse.getImages());
@@ -93,9 +100,10 @@ public class SumSubApplicantReviewedResultMapper {
         }
 
         log.info("Mapped ApplicantCheckResult for applicant {}: hasFirstName={}, hasLastName={}, hasDob={}, "
-                + "hasDocumentNumber={}, hasExpirationDate={}, hasRawAddress={}", applicantReviewed.getApplicantId(),
+                + "hasDocumentNumber={}, hasExpirationDate={}, hasRawAddress={}, hasTin={}", applicantReviewed.getApplicantId(),
             checkResult.getFirstName() != null, checkResult.getLastName() != null, checkResult.getBirthDate() != null,
-            checkResult.getDocumentNumber() != null, checkResult.getExpirationDate() != null, checkResult.getRawAddress() != null);
+            checkResult.getDocumentNumber() != null, checkResult.getExpirationDate() != null, checkResult.getRawAddress() != null,
+            checkResult.getTin() != null);
 
         return checkResult;
     }
@@ -198,6 +206,22 @@ public class SumSubApplicantReviewedResultMapper {
             return null;
         }
         return Date.from(date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    /**
+     * Resolves the given name from {@code info}, falling back to {@code fixedInfo} independently
+     * for first name and middle name when either is missing, then combines them into a single value.
+     */
+    private String resolveGivenName(ApplicantInfo info, ApplicantInfo fixedInfo) {
+        String firstName = info.getFirstName();
+        if (firstName == null && fixedInfo != null) {
+            firstName = fixedInfo.getFirstName();
+        }
+        String middleName = info.getMiddleName();
+        if (middleName == null && fixedInfo != null) {
+            middleName = fixedInfo.getMiddleName();
+        }
+        return buildGivenName(firstName, middleName);
     }
 
     private String buildGivenName(String firstName, String middleName) {
