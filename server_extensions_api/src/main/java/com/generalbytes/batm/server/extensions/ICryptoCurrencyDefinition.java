@@ -62,4 +62,11 @@ public interface ICryptoCurrencyDefinition {
      * @return
      */
     boolean isRequiresTag();
+
+    /**
+     * @return whether the terminal may offer order creation for this currency
+     */
+    default boolean supportsOrder() {
+        return true;
+    }
 }
