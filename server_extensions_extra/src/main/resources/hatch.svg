@@ -5,19 +5,12 @@
 	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 120 120"
 	 style="enable-background:new 0 0 120 120;" xml:space="preserve">
 <style type="text/css">
-	.st0{fill:url(#path4251-6_1_);}
 	.st1{fill:#FFFFFF;}
 	.st2{opacity:0.5;fill:#FFFFFF;stroke:#000000;stroke-width:0.5;enable-background:new    ;}
 	.st3{fill:#00AAF6;}
 </style>
 <sodipodi:namedview  bordercolor="#666666" borderopacity="1" gridtolerance="10" guidetolerance="10" id="namedview4255" inkscape:current-layer="svg4247" inkscape:cx="68.478831" inkscape:cy="61.741873" inkscape:pageopacity="0" inkscape:pageshadow="2" inkscape:window-height="1023" inkscape:window-maximized="1" inkscape:window-width="1920" inkscape:window-x="0" inkscape:window-y="27" inkscape:zoom="6.4921875" objecttolerance="10" pagecolor="#ffffff" showgrid="false">
 	</sodipodi:namedview>
-<linearGradient id="path4251-6_1_" gradientUnits="userSpaceOnUse" x1="-887.3034" y1="832.5759" x2="-535.4548" y2="678.1893" gradientTransform="matrix(-1.0091 0 0 1.0091 -566.331 -660.8148)">
-	<stop  offset="0" style="stop-color:#1A1A1A"/>
-	<stop  offset="1" style="stop-color:#1A1A1A;stop-opacity:0"/>
-</linearGradient>
-<path id="path4251-6" inkscape:connector-curvature="0" class="st0" d="M6.7,48.1C14.1,18.3,44.2,0.2,73.9,7.7
-	c29.7,7.4,47.8,37.5,40.4,67.3c-7.4,29.7-37.5,47.8-67.3,40.4C17.3,107.9-0.8,77.8,6.7,48.1z"/>
 <path id="path4251" inkscape:connector-curvature="0" class="st1" d="M113.4,73.3c-7.3,29.5-37.2,47.4-66.7,40
 	C17.2,106-0.7,76.2,6.6,46.7C14,17.2,43.8-0.7,73.3,6.6C102.8,14,120.7,43.8,113.4,73.3z"/>
 <path id="path4985" inkscape:connector-curvature="0" class="st1" d="M56.8,74.7l3.6-13.5l8.5-3.1l2.1-7.9L70.8,50l-8.3,3l6-22.6
