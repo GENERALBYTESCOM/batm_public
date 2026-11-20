@@ -40,28 +40,6 @@
          offset="0"
          id="stop1075" />
     </linearGradient>
-    <linearGradient
-       inkscape:collect="always"
-       id="linearGradient4761">
-      <stop
-         style="stop-color:#1a1a1a;stop-opacity:1;"
-         offset="0"
-         id="stop4763" />
-      <stop
-         style="stop-color:#1a1a1a;stop-opacity:0;"
-         offset="1"
-         id="stop4765" />
-    </linearGradient>
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient4761"
-       id="linearGradient4769"
-       x1="-409.44958"
-       y1="-20.942795"
-       x2="-57.60104"
-       y2="133.44374"
-       gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(-1.0090909,0,0,-1.0090909,-74.103737,135.33971)" />
     <clipPath
        clipPathUnits="userSpaceOnUse"
        id="clipPath16">
@@ -106,11 +84,6 @@
      inkscape:window-maximized="1"
      inkscape:current-layer="svg4247"
      inkscape:document-rotation="0" />
-  <path
-     style="fill:url(#linearGradient4769);fill-opacity:1;stroke:none;stroke-opacity:1"
-     inkscape:connector-curvature="0"
-     id="path4251-6"
-     d="M 6.6612254,48.073886 C 14.074737,18.341792 44.19189,0.24725348 73.930899,7.6616275 103.65782,15.074269 121.75447,45.189649 114.33749,74.920005 106.92746,104.65554 76.810279,122.75183 47.079931,115.33918 17.342646,107.92654 -0.7522758,77.807711 6.6612254,48.073886 Z" />
   <path
      style="fill:#ffffff;stroke:none;stroke-opacity:1;fill-opacity:1"
      inkscape:connector-curvature="0"
