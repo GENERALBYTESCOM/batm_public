@@ -24,6 +24,11 @@ import com.generalbytes.batm.server.extensions.aml.verification.IIdentityVerific
 import com.generalbytes.batm.server.extensions.aml.verification.IdentityApplicant;
 import com.generalbytes.batm.server.extensions.aml.verification.RegisterVerificationException;
 import com.generalbytes.batm.server.extensions.aml.verification.IVerificationSessionRequest;
+import com.generalbytes.batm.server.extensions.compliance.ComplianceTier;
+import com.generalbytes.batm.server.extensions.compliance.ComplianceTierNotAvailableException;
+import com.generalbytes.batm.server.extensions.compliance.ComplianceTierRequiredException;
+import com.generalbytes.batm.server.extensions.compliance.IdentityLimitsRequest;
+import com.generalbytes.batm.server.extensions.compliance.StartVerificationRequest;
 import com.generalbytes.batm.server.extensions.customfields.CustomFieldDefinitionAvailability;
 import com.generalbytes.batm.server.extensions.customfields.value.CustomFieldValue;
 import com.generalbytes.batm.server.extensions.exceptions.BuyException;
@@ -1062,9 +1067,23 @@ public interface IExtensionContext {
      *                             otherwise {@link IllegalArgumentException} is thrown)
      * @param identityPublicId     public ID of the identity (must not be null)
      * @return remaining limits for the identity. Returns an empty list if no limits are configured, never null
-     * @throws IllegalArgumentException if terminalSerialNumber is null or invalid
+     * @throws IllegalArgumentException        if terminalSerialNumber is null or invalid
+     * @throws ComplianceTierRequiredException if the terminal uses a compliance scheme, which needs a compliance tier
+     * @deprecated Use {@link #getIdentityRemainingLimits(IdentityLimitsRequest)}.
      */
+    @Deprecated
     List<ILimitExtended> getIdentityRemainingLimits(String fiatCurrency, String terminalSerialNumber, String identityPublicId);
+
+    /**
+     * Returns how much of the customer's limits is still available, per limit period and transaction direction.
+     *
+     * @param request identifies the customer, terminal, currency and the compliance tier to calculate for
+     * @return the remaining limits; the limit type of each entry names the period and direction it applies to
+     * @throws ComplianceTierRequiredException     if the terminal uses a compliance scheme and the request has no compliance tier
+     * @throws ComplianceTierNotAvailableException if the terminal's compliance scheme does not configure the requested tier
+     * @throws IllegalArgumentException            if the terminal serial number is not valid
+     */
+    List<ILimitExtended> getIdentityRemainingLimits(IdentityLimitsRequest request);
 
     /**
      * Returns initial limits for the identity.
@@ -1078,9 +1097,32 @@ public interface IExtensionContext {
      *                             otherwise {@link IllegalArgumentException} is thrown)
      * @param identityPublicId     public ID of the identity (must not be null)
      * @return initial (total) limits for the identity. Returns an empty list if no limits are configured, never null
-     * @throws IllegalArgumentException if terminalSerialNumber is null or invalid
+     * @throws IllegalArgumentException        if terminalSerialNumber is null or invalid
+     * @throws ComplianceTierRequiredException if the terminal uses a compliance scheme, which needs a compliance tier
+     * @deprecated Use {@link #getIdentityInitialLimits(IdentityLimitsRequest)}.
      */
+    @Deprecated
     List<ILimitExtended> getIdentityInitialLimits(String fiatCurrency, String terminalSerialNumber, String identityPublicId);
+
+    /**
+     * Returns the customer's configured limits before any transaction history is taken into account, per limit
+     * period and transaction direction.
+     *
+     * @param request identifies the customer, terminal, currency and - for terminals using a compliance scheme -
+     *                the compliance tier to calculate for
+     * @return the configured limits; the limit type of each entry names the period and direction it applies to
+     * @throws ComplianceTierRequiredException     if the terminal uses a compliance scheme and the request has no compliance tier
+     * @throws ComplianceTierNotAvailableException if the terminal's compliance scheme does not configure the requested tier
+     * @throws IllegalArgumentException            if the terminal serial number is not valid
+     */
+    List<ILimitExtended> getIdentityInitialLimits(IdentityLimitsRequest request);
+
+    /**
+     * Returns every compliance tier configured on this server.
+     *
+     * @return all configured compliance tiers
+     */
+    List<ComplianceTier> getComplianceTiers();
 
     /**
      * Authenticates API key.
@@ -1170,15 +1212,31 @@ public interface IExtensionContext {
      *                          Message may contain '{link}' placeholder to be replaced by link to verification provider.
      *                          If this argument is null, the default text will be used.
      * @return info about result of action, never null
+     * @deprecated Use {@link #startVerificationByIdentityId(StartVerificationRequest)} instead.
      */
+    @Deprecated
     IVerificationInfo startVerificationByIdentityId(String publicIdentityId, String messageToCustomer);
+
+    /**
+     * Starts identity verification.
+     *
+     * <p>This starts a verification process via {@link IIdentityVerificationProvider} and sends a verification link to the customer.</p>
+     *
+     * <p>On a terminal using a compliance scheme, the request may state what the verification result is
+     * evaluated against once it comes back. Where it does not, the result is evaluated against the default policy of
+     * the lowest tier that registers customers.</p>
+     *
+     * @param request identifies the customer and - for terminals using a compliance scheme - what the result is evaluated against
+     * @return info about result of action, never null
+     */
+    IVerificationInfo startVerificationByIdentityId(StartVerificationRequest request);
 
     /**
      * Registers an identity verification session started externally (e.g., in a web or mobile app).
      * </p>
      * This does NOT start a verification process via {@link IIdentityVerificationProvider} and
      * does NOT send a verification link to the customer – must be handled by the caller.
-     * To start a verification process from beginning, use {@link #startVerificationByIdentityId(String, String)}.
+     * To start a verification process from beginning, use {@link #startVerificationByIdentityId(StartVerificationRequest)}.
      *
      * @param request session and identity details (must not be null)
      * @throws RegisterVerificationException if the identity cannot be found or the session cannot be registered
