@@ -453,6 +453,36 @@ public interface IExtensionContext {
     }
 
     /**
+     * Suspends an identity, permanently or until a given time. A suspended identity cannot identify itself at a terminal
+     * and cannot prepare a buy or sell transaction.
+     *
+     * <p>The suspension replaces any suspension the identity already has, including a permanent one set previously.
+     * The action is recorded in the audit log.</p>
+     *
+     * @param suspension the identity to suspend and how (must not be null, its identity public ID must not be blank)
+     * @return true if the identity was suspended, false if no identity with the given ID exists or the extension API
+     * implementation does not support suspension
+     * @throws IllegalArgumentException if the identity public ID is blank or {@link IdentitySuspension#getUntil()} is not in the future
+     */
+    default boolean suspendIdentity(IdentitySuspension suspension) {
+        return false;
+    }
+
+    /**
+     * Lifts the suspension of an identity, whether permanent, time-limited or already expired.
+     *
+     * <p>Idempotent: if the identity is not suspended, nothing changes and the call still succeeds. The action is
+     * recorded in the audit log in every case, including when the identity was not suspended.</p>
+     *
+     * @param identityPublicId public ID of the identity (must not be null)
+     * @return true if the identity is not suspended afterwards, including when it already was not; false if no identity
+     * with the given ID exists or the extension API implementation does not support suspension
+     */
+    default boolean unsuspendIdentity(String identityPublicId) {
+        return false;
+    }
+
+    /**
      * Update an existing personal info identity piece.
      *
      * <p>This method can only be used to update <b>Personal Info</b> identity pieces.
