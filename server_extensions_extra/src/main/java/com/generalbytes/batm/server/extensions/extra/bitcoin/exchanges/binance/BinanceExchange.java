@@ -37,12 +37,25 @@ import java.util.stream.Collectors;
 
 public abstract class BinanceExchange extends XChangeExchange {
 
+    private final BinanceUsdtNetwork usdtNetwork;
+
     protected BinanceExchange(String preferredFiatCurrency, String sslUri) {
         super(getDefaultSpecification(sslUri), preferredFiatCurrency);
+        this.usdtNetwork = BinanceUsdtNetwork.DEFAULT;
     }
 
     protected BinanceExchange(String key, String secret, String preferredFiatCurrency, String sslUri) {
+        this(key, secret, preferredFiatCurrency, sslUri, BinanceUsdtNetwork.DEFAULT);
+    }
+
+    protected BinanceExchange(String key,
+                              String secret,
+                              String preferredFiatCurrency,
+                              String sslUri,
+                              BinanceUsdtNetwork usdtNetwork
+    ) {
         super(getSpecification(key, secret, sslUri), preferredFiatCurrency);
+        this.usdtNetwork = usdtNetwork;
     }
 
     private static ExchangeSpecification getDefaultSpecification(String sslUri) {
@@ -115,13 +128,20 @@ public abstract class BinanceExchange extends XChangeExchange {
     }
 
     @Override
-    protected BigDecimal getWithdrawalFee(String cryptoCurrency) {
-        if (CryptoCurrency.USDT.getCode().equalsIgnoreCase(cryptoCurrency)) {
-            return getUsdtWithdrawalFee(CryptoCurrency.ETH.getCode(), CryptoCurrency.USDT.getCode());
+    protected String getWithdrawalNetwork(String cryptocurrency) {
+        if (CryptoCurrency.USDT.getCode().equalsIgnoreCase(cryptocurrency)) {
+            return usdtNetwork.name();
         }
 
-        if (CryptoCurrency.USDTTRON.getCode().equalsIgnoreCase(cryptoCurrency)) {
-            return getUsdtWithdrawalFee(CryptoCurrency.TRX.getCode(), CryptoCurrency.USDTTRON.getCode());
+        return super.getWithdrawalNetwork(cryptocurrency);
+    }
+
+    @Override
+    protected BigDecimal getWithdrawalFee(String cryptoCurrency) {
+        if (CryptoCurrency.USDT.getCode().equalsIgnoreCase(cryptoCurrency)
+            || CryptoCurrency.USDTTRON.getCode().equalsIgnoreCase(cryptoCurrency)
+        ) {
+            return getUsdtWithdrawalFee(getWithdrawalNetwork(cryptoCurrency), cryptoCurrency);
         }
 
         return super.getWithdrawalFee(cryptoCurrency);

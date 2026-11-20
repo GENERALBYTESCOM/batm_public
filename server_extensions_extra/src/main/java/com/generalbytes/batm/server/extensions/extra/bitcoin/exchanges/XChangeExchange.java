@@ -230,16 +230,10 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
     private String withdrawFunds(String cryptoCurrency, BigDecimal amount, String destinationAddress) throws IOException {
         AccountService accountService = getExchange().getAccountService();
 
-        if (CryptoCurrency.USDT.getCode().equals(cryptoCurrency)) {
-            NetworkWithdrawFundsParams usdtEthFundsParams
-                = createUsdtNetworkWithdrawFundsParams(CryptoCurrency.ETH.getCode(), amount, destinationAddress);
-            return accountService.withdrawFunds(usdtEthFundsParams);
-        }
-
-        if (CryptoCurrency.USDTTRON.getCode().equals(cryptoCurrency)) {
-            NetworkWithdrawFundsParams usdtTronFundsParams
-                = createUsdtNetworkWithdrawFundsParams(CryptoCurrency.TRX.getCode(), amount, destinationAddress);
-            return accountService.withdrawFunds(usdtTronFundsParams);
+        if (CryptoCurrency.USDT.getCode().equals(cryptoCurrency) || CryptoCurrency.USDTTRON.getCode().equals(cryptoCurrency)) {
+            NetworkWithdrawFundsParams usdtFundsParams
+                = createUsdtNetworkWithdrawFundsParams(getWithdrawalNetwork(cryptoCurrency), amount, destinationAddress);
+            return accountService.withdrawFunds(usdtFundsParams);
         }
 
         Currency exchangeCryptoCurrency = Currency.getInstance(translateCryptoCurrencySymbolToExchangeSpecificSymbol(cryptoCurrency));
@@ -937,5 +931,22 @@ public abstract class XChangeExchange implements IExchangeAdvanced, IRateSourceA
         BigDecimal withdrawalFee = exchange.getExchangeMetaData().getCurrencies().get(exchangeCryptocurrency).getWithdrawalFee();
         log.info("Withdrawal fee: {} {}", withdrawalFee, cryptocurrencyTicker);
         return withdrawalFee;
+    }
+
+    /**
+     * @param cryptocurrency cryptocurrency code
+     * @return network (as identified by the exchange) which the cryptocurrency is withdrawn to
+     * @throws IllegalArgumentException if the cryptocurrency is not withdrawn via a network
+     */
+    protected String getWithdrawalNetwork(String cryptocurrency) {
+        if (CryptoCurrency.USDT.getCode().equalsIgnoreCase(cryptocurrency)) {
+            return "ETH";
+        }
+
+        if (CryptoCurrency.USDTTRON.getCode().equalsIgnoreCase(cryptocurrency)) {
+            return "TRX";
+        }
+
+        throw new IllegalArgumentException("Cryptocurrency " + cryptocurrency + " is not withdrawn via a network");
     }
 }

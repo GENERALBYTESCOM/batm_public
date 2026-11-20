@@ -723,6 +723,7 @@
             <param name="apikey"/>
             <param name="secretkey"/>
             <param name="fiatcurrency"/>
+            <param name="usdtnetwork"/>
             <cryptocurrency>BAT</cryptocurrency>
             <cryptocurrency>BCH</cryptocurrency>
             <cryptocurrency>BNB</cryptocurrency>
@@ -748,6 +749,7 @@
             <cryptocurrency>XRP</cryptocurrency>
             <cryptocurrency>XZC</cryptocurrency>
             <cryptocurrency buyonly="true">SOL</cryptocurrency>
+            <help>fiatcurrency - optional, default is EUR; required if usdtnetwork is specified. usdtnetwork - optional, default is ETH; network USDT is withdrawn to: ETH (Ethereum, ERC20) or BSC (BNB Smart Chain, BEP20)</help>
         </exchange>
         <ratesource prefix="binancecom" name="Binance.com">
             <param name="apikey"/>
