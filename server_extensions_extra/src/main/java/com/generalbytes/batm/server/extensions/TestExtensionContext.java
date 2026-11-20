@@ -20,6 +20,9 @@ package com.generalbytes.batm.server.extensions;
 import com.generalbytes.batm.server.extensions.aml.verification.ApplicantCheckResult;
 import com.generalbytes.batm.server.extensions.aml.verification.IIdentityVerificationProvider;
 import com.generalbytes.batm.server.extensions.aml.verification.IdentityApplicant;
+import com.generalbytes.batm.server.extensions.compliance.ComplianceTier;
+import com.generalbytes.batm.server.extensions.compliance.IdentityLimitsRequest;
+import com.generalbytes.batm.server.extensions.compliance.StartVerificationRequest;
 import com.generalbytes.batm.server.extensions.customfields.CustomField;
 import com.generalbytes.batm.server.extensions.customfields.CustomFieldDefinition;
 import com.generalbytes.batm.server.extensions.customfields.CustomFieldDefinitionAvailability;
@@ -430,6 +433,21 @@ public class TestExtensionContext implements IExtensionContext {
     }
 
     @Override
+    public List<ILimitExtended> getIdentityRemainingLimits(IdentityLimitsRequest request) {
+        return null;
+    }
+
+    @Override
+    public List<ILimitExtended> getIdentityInitialLimits(IdentityLimitsRequest request) {
+        return null;
+    }
+
+    @Override
+    public List<ComplianceTier> getComplianceTiers() {
+        return null;
+    }
+
+    @Override
     public IApiAccess getAPIAccessByKey(String apiKey, ApiAccessType apiAccessType) {
         return null;
     }
@@ -476,6 +494,11 @@ public class TestExtensionContext implements IExtensionContext {
 
     @Override
     public IVerificationInfo startVerificationByIdentityId(String publicIdentityId, String messageToCustomer) {
+        return null;
+    }
+
+    @Override
+    public IVerificationInfo startVerificationByIdentityId(StartVerificationRequest request) {
         return null;
     }
 

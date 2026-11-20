@@ -1,5 +1,7 @@
 package com.generalbytes.batm.server.extensions.aml.verification;
 
+import com.generalbytes.batm.server.extensions.compliance.ComplianceContext;
+
 /**
  * Describes an identity verification session started externally (e.g. in a web or mobile app)
  * that should be registered in the server.
@@ -25,4 +27,13 @@ public interface IVerificationSessionRequest {
      * while verification is still in progress.
      */
     String getVerificationWebUrl();
+
+    /**
+     * What the verification result is evaluated against once it comes back, on a terminal using a compliance scheme.
+     * Null when the transaction the customer is about to make is not known. The result is then evaluated against
+     * the default policy of the lowest tier that registers customers.
+     */
+    default ComplianceContext getComplianceContext() {
+        return null;
+    }
 }
