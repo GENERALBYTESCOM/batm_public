@@ -49,7 +49,6 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinbase.
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.coinzix.CoinZixExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.dvchain.DVChainExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.enigma.EnigmaExchange;
-import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.hitbtc.HitbtcExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.okx.OkxExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.poloniex.PoloniexExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillmandigital.StillmanDigitalExchange;
@@ -134,11 +133,6 @@ public class BitcoinExtension extends AbstractExtension {
                 String apiKey = paramTokenizer.nextToken();
                 String secretKey = paramTokenizer.nextToken();
                 return new BitstampExchange(preferredFiatCurrency, userId, apiKey, secretKey);
-            } else if ("hitbtc".equalsIgnoreCase(prefix)) {
-                String preferredFiatCurrency = FiatCurrency.USD.getCode();
-                String apiKey = paramTokenizer.nextToken();
-                String apiSecret = paramTokenizer.nextToken();
-                return new HitbtcExchange(apiKey, apiSecret, preferredFiatCurrency);
             } else if ("coinbaseexchange".equalsIgnoreCase(prefix)) {
                 String apiKey = paramTokenizer.nextToken().trim();
                 String secretKey = paramTokenizer.nextToken().trim();

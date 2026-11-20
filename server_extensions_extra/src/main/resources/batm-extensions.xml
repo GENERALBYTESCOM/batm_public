@@ -379,20 +379,6 @@
             </exchange>
         <cryptologo cryptocurrency="SHIB" file="shib.png"/>
         <cryptologo cryptocurrency="SHIB" file="shib.svg"/>
-        <exchange prefix="hitbtc" name="HitBTC Exchange">
-            <param name="apikey" />
-            <param name="apisecret" />
-            <cryptocurrency>BTC</cryptocurrency>
-            <cryptocurrency buyonly="true">ETH</cryptocurrency>
-            <cryptocurrency>LTC</cryptocurrency>
-            <cryptocurrency>SMART</cryptocurrency>
-            <cryptocurrency>BCH</cryptocurrency>
-            <cryptocurrency>DOGE</cryptocurrency>
-            <cryptocurrency>XMR</cryptocurrency>
-            <cryptocurrency>DASH</cryptocurrency>
-            <cryptocurrency>NXT</cryptocurrency>
-            <cryptocurrency>NANO</cryptocurrency>
-        </exchange>
         <cryptologo cryptocurrency="BTC" file="btc.png"/>
         <cryptologo cryptocurrency="BTC" file="btc.svg"/>
         <cryptologo cryptocurrency="ETC" file="etc.svg"/>
