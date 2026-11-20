@@ -119,6 +119,7 @@ public enum CryptoCurrency {
     VOLTZ("VOLTZ"),
     WDC("WorldCoin"),
     WILC("Wrapped ILCOIN"),
+    XAUT("Tether Gold"), // ERC-20 (ethereum) based
     XMR("Monero"),
     XORI("CHFToken"),
     TENT("Tent"),
