@@ -53,6 +53,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.enigma.En
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.okx.OkxExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.poloniex.PoloniexExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.stillmandigital.StillmanDigitalExchange;
+import com.generalbytes.batm.server.extensions.extra.bitcoin.exchanges.valr.ValrExchange;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.bitcoinpay.BitcoinPayPP;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.paymentprocessors.coinofsale.CoinOfSalePP;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.sources.bitkub.BitKubRateSource;
@@ -234,6 +235,14 @@ public class BitcoinExtension extends AbstractExtension {
                     preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase();
                 }
                 return new OkxExchange(preferredFiatCurrency, apiKey, secretKey, passphrase);
+            } else if ("valr".equalsIgnoreCase(prefix)) {
+                String apiKey = paramTokenizer.nextToken();
+                String apiSecret = paramTokenizer.nextToken();
+                String preferredFiatCurrency = FiatCurrency.ZAR.getCode();
+                if (paramTokenizer.hasMoreTokens()) {
+                    preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase();
+                }
+                return new ValrExchange(apiKey, apiSecret, preferredFiatCurrency);
             } else if ("bnbdemo".equalsIgnoreCase(prefix)) {
                 return dummyFactory.createDummyWithFiatCurrencyAndAddress(paramTokenizer, CryptoCurrency.BNB);
             }
@@ -665,6 +674,14 @@ public class BitcoinExtension extends AbstractExtension {
                     preferredFiatCurrency = st.nextToken().toUpperCase();
                 }
                 return new OkxExchange(preferredFiatCurrency);
+            } else if ("valr".equalsIgnoreCase(rsType)) {
+                String apiKey = st.nextToken();
+                String apiSecret = st.nextToken();
+                String preferredFiatCurrency = FiatCurrency.ZAR.getCode();
+                if (st.hasMoreTokens()) {
+                    preferredFiatCurrency = st.nextToken().toUpperCase();
+                }
+                return new ValrExchange(apiKey, apiSecret, preferredFiatCurrency);
             }
         }
         } catch (Exception e) {
