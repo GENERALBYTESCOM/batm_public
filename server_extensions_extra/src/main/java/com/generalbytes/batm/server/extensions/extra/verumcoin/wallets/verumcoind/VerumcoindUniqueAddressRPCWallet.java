@@ -17,10 +17,12 @@
  ************************************************************************************/
 package com.generalbytes.batm.server.extensions.extra.verumcoin.wallets.verumcoind;
 
+import java.net.MalformedURLException;
+
 import com.generalbytes.batm.server.extensions.IGeneratesNewDepositCryptoAddress;
 
 public class VerumcoindUniqueAddressRPCWallet extends VerumcoindRPCWallet implements IGeneratesNewDepositCryptoAddress {
-    public VerumcoindUniqueAddressRPCWallet(String rpcURL) {
-        super(rpcURL, ""); // label is used only for reusing the same address
+    public VerumcoindUniqueAddressRPCWallet(String rpcURL, String accountName) throws MalformedURLException {
+        super(rpcURL, accountName);
     }
 }
