@@ -43,6 +43,7 @@ public class BitgoWalletWithUniqueAddresses extends BitgoWallet implements IGene
         Map.entry(CryptoCurrency.USDT.getCode(), "eth"),
         Map.entry(CryptoCurrency.USDTTRON.getCode(), "trx"),
         Map.entry(CryptoCurrency.USDC.getCode(), "eth"),
+        Map.entry(CryptoCurrency.XAUT.getCode(), "eth"),
         Map.entry(CryptoCurrency.USDCSOL.getCode(), "sol")
     );
 

@@ -69,6 +69,7 @@ class BitgoWalletTest {
             arguments("XRP", "xrp", "1000000", null, null),
             arguments("TBTC", "tbtc", "100000000", null, null),
             arguments("USDC", "usdc", "1000000", "transfer", null),
+            arguments("XAUT", "xaut", "1000000", "transfer", null),
             arguments("SOL", "sol", "1000000000", "transfer", null),
             arguments("USDCSOL", "sol:usdc", "1000000", "transfer", "sol:usdc")
         );
