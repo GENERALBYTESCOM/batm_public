@@ -30,8 +30,8 @@ public interface ICanSendMany {
     /**
      * <strong>WARNING:</strong>
      * <p>
-     * This method was effectively replaced by {@link ICanSendMany#sendMany(Collection, String, String, String)}
-     * with 'batchId' parameter.
+     * This method was effectively replaced by {@link ICanSendMany#sendMany(Collection, String, String, String, QueueInformation)}
+     * with 'batchId' and 'queueInformation' parameters.
      * As of now, this method is not directly used by the server and is kept for compatibility reasons.
      * <p>
      * Send coins to multiple addresses in a single transaction.
@@ -58,6 +58,22 @@ public interface ICanSendMany {
     default String sendMany(Collection<Transfer> transfers, String cryptoCurrency, String description, String batchId) {
         // Default implementation for compatibility reasons, can be overridden by implementing classes
         return sendMany(transfers, cryptoCurrency, description);
+    }
+
+    /**
+     * Send coins to multiple addresses in a single transaction, grouped by a unique batch ID.
+     * Used to reduce network fees.
+     *
+     * @param transfers amounts and destination addresses
+     * @param cryptoCurrency cryptocurrency representing the coin to be sent
+     * @param description description of the transaction contains comma separated RIDs of all transactions e.g. 'ROOOOO, ROOOO1, ROOOO2'
+     * @param batchId unique identifier of the batch of transactions
+     * @param queueInformation information about the queue that triggered this call
+     * @return transaction ID of the only transaction created or null in case of any error
+     */
+    default String sendMany(Collection<Transfer> transfers, String cryptoCurrency, String description, String batchId, QueueInformation queueInformation) {
+        // Default implementation for compatibility reasons, can be overridden by implementing classes
+        return sendMany(transfers, cryptoCurrency, description, batchId);
     }
 
     class Transfer {

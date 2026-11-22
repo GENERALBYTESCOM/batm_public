@@ -36,6 +36,26 @@ public class OutputQueueInsertConfig {
     private int secondaryDelaySeconds = 0;
     private Date unlockTime;
 
+    private final String queueName;
+
+    public OutputQueueInsertConfig() {
+        this(null);
+    }
+
+    /**
+     * @param queueName name of the Output Queue as configured in admin
+     */
+    public OutputQueueInsertConfig(String queueName) {
+        this.queueName = queueName;
+    }
+
+    /**
+     * @return name of the Output Queue as configured in admin, read only
+     */
+    public String getQueueName() {
+        return queueName;
+    }
+
     public boolean isSkipQueue() {
         return skipQueue;
     }
@@ -95,7 +115,8 @@ public class OutputQueueInsertConfig {
     @Override
     public String toString() {
         return "OutputQueueInsertConfig{" +
-            "skipQueue=" + skipQueue +
+            "queueName='" + queueName + '\'' +
+            ", skipQueue=" + skipQueue +
             ", manualApprovalRequired=" + manualApprovalRequired +
             ", delaySeconds=" + delaySeconds +
             ", insertIntoSecondaryQueue=" + insertIntoSecondaryQueue +
