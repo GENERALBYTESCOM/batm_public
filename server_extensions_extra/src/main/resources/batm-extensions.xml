@@ -128,6 +128,54 @@
                     max_custom_fee: the maximum fee (in s/vByte) when "custom" priority is used
                 </help>
             </wallet>
+            <wallet prefix="cryptal" name="Cryptal Wallet Pro">
+                <tunnel supported="true"/>
+                <param name="host" />
+                <param name="port" />
+                <param name="api_key" />
+                <param name="private_key" />
+                <param name="address_name" />
+                <cryptocurrency buyonly="true">BCH</cryptocurrency>
+                <cryptocurrency>BTC</cryptocurrency>
+                <cryptocurrency>LTC</cryptocurrency>
+                <cryptocurrency>ETH</cryptocurrency>
+                <cryptocurrency>TRX</cryptocurrency>
+                <cryptocurrency>USDT</cryptocurrency>
+                <cryptocurrency>USDC</cryptocurrency>
+                <cryptocurrency>USDTTRON</cryptocurrency>
+                <help>
+                    *host: https://api.walletpro.cryptal.com/ (required) -
+                    port: (not required) -
+                    *api_key: the Wallet Pro API key (required) -
+                    *private_key: the RSA private key of that API key, as one line of base64, or the PEM text with \n for line breaks (required) -
+                    address_name: the name of the Wallet Pro address used as this wallet's receiving address; it is found or created per coin (not required, default GB ATM) -
+                    The balance includes what a Wallet Pro auto-fill rule can swap in from another coin.
+                </help>
+            </wallet>
+            <wallet prefix="cryptalnoforward" name="Cryptal Wallet Pro (no forward)">
+                <tunnel supported="true"/>
+                <param name="host" />
+                <param name="port" />
+                <param name="api_key" />
+                <param name="private_key" />
+                <param name="address_name" />
+                <cryptocurrency buyonly="true">BCH</cryptocurrency>
+                <cryptocurrency>BTC</cryptocurrency>
+                <cryptocurrency>LTC</cryptocurrency>
+                <cryptocurrency>ETH</cryptocurrency>
+                <cryptocurrency>TRX</cryptocurrency>
+                <cryptocurrency>USDT</cryptocurrency>
+                <cryptocurrency>USDC</cryptocurrency>
+                <cryptocurrency>USDTTRON</cryptocurrency>
+                <help>
+                    *host: https://api.walletpro.cryptal.com/ (required) -
+                    port: (not required) -
+                    *api_key: the Wallet Pro API key (required) -
+                    *private_key: the RSA private key of that API key, as one line of base64, or the PEM text with \n for line breaks (required) -
+                    address_name: the name of the Wallet Pro address used as this wallet's receiving address; it is found or created per coin (not required, default GB ATM) -
+                    The balance includes what a Wallet Pro auto-fill rule can swap in from another coin.
+                </help>
+            </wallet>
             <ratesource prefix="btcfix" name ="Fix Price" >
                 <param name="price" />
                 <cryptocurrency>BTC</cryptocurrency>
