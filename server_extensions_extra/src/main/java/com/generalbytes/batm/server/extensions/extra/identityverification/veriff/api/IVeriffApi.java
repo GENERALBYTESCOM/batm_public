@@ -18,7 +18,7 @@ import java.io.IOException;
 @Produces(MediaType.APPLICATION_JSON)
 public interface IVeriffApi {
 
-    String BASE_URL = "https://stationapi.veriff.com/v1";
+    String BASE_URL = "https://api-saas.veriff.com/v1";
     String HEADER_PUBLIC_KEY = "X-AUTH-CLIENT";
     String HEADER_SIGNATURE = "X-HMAC-SIGNATURE";
 
