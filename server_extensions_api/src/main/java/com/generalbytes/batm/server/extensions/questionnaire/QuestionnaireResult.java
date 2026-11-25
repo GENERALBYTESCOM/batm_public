@@ -24,6 +24,12 @@ import java.util.List;
  */
 public class QuestionnaireResult {
 
+    /**
+     * ID of the questionnaire that was answered. Unlike the name, it does not change when the questionnaire is renamed.
+     * May be null if the questionnaire has been deleted on the server.
+     */
+    private Long questionnaireId;
+
     private String questionnaireName;
 
     private List<QuestionAnswer> answers;
@@ -33,8 +39,21 @@ public class QuestionnaireResult {
     }
 
     public QuestionnaireResult(String questionnaireName, List<QuestionAnswer> answers) {
+        this(null, questionnaireName, answers);
+    }
+
+    public QuestionnaireResult(Long questionnaireId, String questionnaireName, List<QuestionAnswer> answers) {
+        this.questionnaireId = questionnaireId;
         this.questionnaireName = questionnaireName;
         this.answers = answers;
+    }
+
+    public Long getQuestionnaireId() {
+        return questionnaireId;
+    }
+
+    public void setQuestionnaireId(Long questionnaireId) {
+        this.questionnaireId = questionnaireId;
     }
 
     public String getQuestionnaireName() {
