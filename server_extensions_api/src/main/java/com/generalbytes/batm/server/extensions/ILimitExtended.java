@@ -15,11 +15,12 @@ public interface ILimitExtended extends ILimit {
      * cpw - cash per week
      * cpm - cash per month
      * cp3m - cash per 3 floating months
+     * cp6m - cash per 6 floating months
      * cp12m - cash per 12 floating months
      * cpq - cash per calendar quarter
      * cpy - cash per calendar year
      * ct - total cash identity limit
-     * cpta - total cash limit per crypto address
+     * The shortcuts of the limits that can be overridden by an extension are available in {@link TransactionLimitKey}.
      * resulting_limit - effective current limit
      */
     String getLimitType();
