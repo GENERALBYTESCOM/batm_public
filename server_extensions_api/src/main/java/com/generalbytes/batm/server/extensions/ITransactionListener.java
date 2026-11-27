@@ -22,6 +22,8 @@ import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferDat
 import com.generalbytes.batm.server.extensions.travelrule.ITravelRuleTransferListener;
 import com.generalbytes.batm.server.extensions.travelrule.TravelRuleProviderTransferStatus;
 
+import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.Map;
 
 public interface ITransactionListener {
@@ -45,11 +47,50 @@ public interface ITransactionListener {
      * </ul>
      * This method is called for both BUY and SELL transactions.
      *
+     * <p>It is called AFTER the limits are calculated, so the limits in {@code preparation} already include any overrides returned from
+     * {@link #overrideTransactionLimits(LimitOverrideContext)}. The values returned from this method are used as they are and replace
+     * the limits sent to the terminal. They are final amounts that do not take the customer's past transactions into account,
+     * and they are not applied when the transaction is submitted.
+     * To change the limit of a period (e.g. per day or per month), use {@link #overrideTransactionLimits(LimitOverrideContext)} instead.
+     *
      * @param preparation The transaction preparation details, including calculated values.
      * @return {@link ITransactionPreparation} that may contain modified transaction details.
      */
     default ITransactionPreparation overrideTransactionPreparation(ITransactionPreparation preparation) {
         return preparation;
+    }
+
+    /**
+     * Allows the operator to lower the limits of a customer (e.g. per day or per month) for the transaction being prepared.
+     * It is called BEFORE the limits are calculated, so what the customer has already spent in the period and the limits sent to
+     * the terminal are based on the amounts returned here. It is called for both BUY and SELL transactions.
+     *
+     * <p>The result is keyed by fiat currency code (e.g. USD). The inner map holds the new limit amounts
+     * keyed by {@link TransactionLimitKey}.
+     *
+     * <ul>
+     *     <li>An amount replaces a limit that is already configured for the customer. Limits that are not configured are
+     *     never added, and limits that are not returned stay as configured.</li>
+     *     <li>An amount of {@code 0} effectively blocks the transaction. To leave a limit as configured, omit the key.</li>
+     *     <li>{@code null} or negative amounts, unknown currencies and unknown keys are ignored.</li>
+     *     <li>When several extensions override the same limit, the last one wins.</li>
+     * </ul>
+     *
+     * <p>The overrides are applied only when the transaction is prepared, not when it is submitted, so they can only lower
+     * a limit. A limit raised above the configured amount is rejected at submit.
+     *
+     * <p>The method can be called several times for the same transaction (see
+     * {@link LimitOverrideContext#getLocalTransactionId()}), so it should be fast and free of side effects.
+     * If it throws, the exception is logged and the configured limits are used.
+     *
+     * <p>To change the final values sent to the terminal (e.g. the minimum or the supply limit), use
+     * {@link #overrideTransactionPreparation(ITransactionPreparation)}, which is called later.
+     *
+     * @param context The transaction for which the limits are going to be calculated.
+     * @return The overridden limits, or {@code null} or an empty map if nothing is overridden.
+     */
+    default Map<String, Map<String, BigDecimal>> overrideTransactionLimits(LimitOverrideContext context) {
+        return Collections.emptyMap();
     }
 
     /**
